@@ -37,7 +37,6 @@ import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.NewZealand;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 
 /**
@@ -77,21 +76,21 @@ public class NewZealandCalendarTest {
 	public void testNewZealandYear2012() {
         final int year = 2012;
     	QL.info("Testing " + NewZealand.Market.NZX + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		// Sun: expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(df.getDate( 2,JANUARY,year));   // New Years Day observed
-		expectedHol.add(df.getDate( 3,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(df.getDate(23,JANUARY,year));   // Anniversary Day
-		expectedHol.add(df.getDate( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(df.getDate( 6,APRIL,year));     // Good Friday
-		expectedHol.add(df.getDate( 9,APRIL,year));     // Earter Monday
-		expectedHol.add(df.getDate(25,APRIL,year));     // Anzac Day
-        expectedHol.add(df.getDate( 4,JUNE,year));      // Queen's Birthday
-        expectedHol.add(df.getDate(22,OCTOBER,year));   // Labour Day
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		// Sun: expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
+		expectedHol.add(new Date( 2,JANUARY,year));   // New Years Day observed
+		expectedHol.add(new Date( 3,JANUARY,year));   // Day after New Years Day
+		expectedHol.add(new Date(23,JANUARY,year));   // Anniversary Day
+		expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
+		expectedHol.add(new Date( 6,APRIL,year));     // Good Friday
+		expectedHol.add(new Date( 9,APRIL,year));     // Earter Monday
+		expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
+        expectedHol.add(new Date( 4,JUNE,year));      // Queen's Birthday
+        expectedHol.add(new Date(22,OCTOBER,year));   // Labour Day
+        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -122,22 +121,22 @@ public class NewZealandCalendarTest {
 	public void testNewZealandYear2011() {
         final int year = 2011;
     	QL.info("Testing " + NewZealand.Market.NZX + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		// Sat: expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(df.getDate( 3,JANUARY,year));   // New Years Day observed
-		expectedHol.add(df.getDate( 4,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(df.getDate(24,JANUARY,year));   // Anniversary Day
-		// Sun: expectedHol.add(df.getDate( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(df.getDate(22,APRIL,year));     // Good Friday
-		expectedHol.add(df.getDate(25,APRIL,year));     // Earter Monday
-		expectedHol.add(df.getDate(25,APRIL,year));     // Anzac Day
-        expectedHol.add(df.getDate( 6,JUNE,year));      // Queen's Birthday
-        expectedHol.add(df.getDate(24,OCTOBER,year));   // Labour Day
-        // Sun: expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
-        expectedHol.add(df.getDate(27,DECEMBER,year));  // Christmas Day observed
+		// Sat: expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
+		expectedHol.add(new Date( 3,JANUARY,year));   // New Years Day observed
+		expectedHol.add(new Date( 4,JANUARY,year));   // Day after New Years Day
+		expectedHol.add(new Date(24,JANUARY,year));   // Anniversary Day
+		// Sun: expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
+		expectedHol.add(new Date(22,APRIL,year));     // Good Friday
+		expectedHol.add(new Date(25,APRIL,year));     // Earter Monday
+		expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
+        expectedHol.add(new Date( 6,JUNE,year));      // Queen's Birthday
+        expectedHol.add(new Date(24,OCTOBER,year));   // Labour Day
+        // Sun: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+        expectedHol.add(new Date(27,DECEMBER,year));  // Christmas Day observed
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -168,22 +167,22 @@ public class NewZealandCalendarTest {
 	public void testNewZealandYear2010() {
         final int year = 2010;
     	QL.info("Testing " + NewZealand.Market.NZX + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(df.getDate( 4,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(df.getDate(25,JANUARY,year));   // Anniversary Day
-		// Sat: expectedHol.add(df.getDate( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(df.getDate( 2,APRIL,year));     // Good Friday
-		expectedHol.add(df.getDate( 5,APRIL,year));     // Earter Monday
-		// Sun: expectedHol.add(df.getDate(25,APRIL,year));     // Anzac Day
-        expectedHol.add(df.getDate( 7,JUNE,year));      // Queen's Birthday
-        expectedHol.add(df.getDate(25,OCTOBER,year));   // Labour Day
-        // Sat: expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        // Sun: expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
-        expectedHol.add(df.getDate(27,DECEMBER,year));  // Christmas Day observed
-        expectedHol.add(df.getDate(28,DECEMBER,year));  // Boxing Day observed
+		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
+		expectedHol.add(new Date( 4,JANUARY,year));   // Day after New Years Day
+		expectedHol.add(new Date(25,JANUARY,year));   // Anniversary Day
+		// Sat: expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
+		expectedHol.add(new Date( 2,APRIL,year));     // Good Friday
+		expectedHol.add(new Date( 5,APRIL,year));     // Earter Monday
+		// Sun: expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
+        expectedHol.add(new Date( 7,JUNE,year));      // Queen's Birthday
+        expectedHol.add(new Date(25,OCTOBER,year));   // Labour Day
+        // Sat: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        // Sun: expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+        expectedHol.add(new Date(27,DECEMBER,year));  // Christmas Day observed
+        expectedHol.add(new Date(28,DECEMBER,year));  // Boxing Day observed
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -210,20 +209,20 @@ public class NewZealandCalendarTest {
 	public void testNewZealandYear2009() {
         final int year = 2009;
     	QL.info("Testing " + NewZealand.Market.NZX + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(df.getDate( 2,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(df.getDate(19,JANUARY,year));   // Anniversary Day
-		expectedHol.add(df.getDate( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(df.getDate(10,APRIL,year));     // Good Friday
-		expectedHol.add(df.getDate(13,APRIL,year));     // Earter Monday
-		// Sat: expectedHol.add(df.getDate(25,APRIL,year));     // Anzac Day
-        expectedHol.add(df.getDate( 1,JUNE,year));      // Queen's Birthday
-        expectedHol.add(df.getDate(26,OCTOBER,year));   // Labour Day
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(28,DECEMBER,year));  // Boxing Day
+		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
+		expectedHol.add(new Date( 2,JANUARY,year));   // Day after New Years Day
+		expectedHol.add(new Date(19,JANUARY,year));   // Anniversary Day
+		expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
+		expectedHol.add(new Date(10,APRIL,year));     // Good Friday
+		expectedHol.add(new Date(13,APRIL,year));     // Earter Monday
+		// Sat: expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
+        expectedHol.add(new Date( 1,JUNE,year));      // Queen's Birthday
+        expectedHol.add(new Date(26,OCTOBER,year));   // Labour Day
+        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(28,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -249,20 +248,20 @@ public class NewZealandCalendarTest {
 	public void testNewZealandYear2008() {
       	final int year = 2008;
     	QL.info("Testing " + NewZealand.Market.NZX + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(df.getDate( 2,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(df.getDate(21,JANUARY,year));   // Anniversary Day
-		expectedHol.add(df.getDate( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(df.getDate(21,MARCH,year));     // Good Friday
-		expectedHol.add(df.getDate(24,MARCH,year));     // Earter Monday
-		expectedHol.add(df.getDate(25,APRIL,year));     // Anzac Day
-        expectedHol.add(df.getDate( 2,JUNE,year));      // Queen's Birthday
-        expectedHol.add(df.getDate(27,OCTOBER,year));   // Labour Day
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
+		expectedHol.add(new Date( 2,JANUARY,year));   // Day after New Years Day
+		expectedHol.add(new Date(21,JANUARY,year));   // Anniversary Day
+		expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
+		expectedHol.add(new Date(21,MARCH,year));     // Good Friday
+		expectedHol.add(new Date(24,MARCH,year));     // Earter Monday
+		expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
+        expectedHol.add(new Date( 2,JUNE,year));      // Queen's Birthday
+        expectedHol.add(new Date(27,OCTOBER,year));   // Labour Day
+        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -291,20 +290,20 @@ public class NewZealandCalendarTest {
 	public void testNewZealandYear2007() {
         final int year = 2007;
     	QL.info("Testing " + NewZealand.Market.NZX + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(df.getDate( 2,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(df.getDate(22,JANUARY,year));   // Anniversary Day
-		expectedHol.add(df.getDate( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(df.getDate( 6,APRIL,year));     // Good Friday
-		expectedHol.add(df.getDate( 9,APRIL,year));     // Earter Monday
-		expectedHol.add(df.getDate(25,APRIL,year));     // Anzac Day
-        expectedHol.add(df.getDate( 4,JUNE,year));      // Queen's Birthday
-        expectedHol.add(df.getDate(22,OCTOBER,year));   // Labour Day
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
+		expectedHol.add(new Date( 2,JANUARY,year));   // Day after New Years Day
+		expectedHol.add(new Date(22,JANUARY,year));   // Anniversary Day
+		expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
+		expectedHol.add(new Date( 6,APRIL,year));     // Good Friday
+		expectedHol.add(new Date( 9,APRIL,year));     // Earter Monday
+		expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
+        expectedHol.add(new Date( 4,JUNE,year));      // Queen's Birthday
+        expectedHol.add(new Date(22,OCTOBER,year));   // Labour Day
+        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -334,21 +333,21 @@ public class NewZealandCalendarTest {
 	public void testNewZealandYear2006() {
         final int year = 2006;
     	QL.info("Testing " + NewZealand.Market.NZX + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		// expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(df.getDate( 2,JANUARY,year));   // New Year's Day observed
-		expectedHol.add(df.getDate( 3,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(df.getDate(23,JANUARY,year));   // Anniversary Day
-		expectedHol.add(df.getDate( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(df.getDate(14,APRIL,year));     // Good Friday
-		expectedHol.add(df.getDate(17,APRIL,year));     // Earter Monday
-		expectedHol.add(df.getDate(25,APRIL,year));     // Anzac Day
-        expectedHol.add(df.getDate( 5,JUNE,year));      // Queen's Birthday
-        expectedHol.add(df.getDate(23,OCTOBER,year));   // Labour Day
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		// expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
+		expectedHol.add(new Date( 2,JANUARY,year));   // New Year's Day observed
+		expectedHol.add(new Date( 3,JANUARY,year));   // Day after New Years Day
+		expectedHol.add(new Date(23,JANUARY,year));   // Anniversary Day
+		expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
+		expectedHol.add(new Date(14,APRIL,year));     // Good Friday
+		expectedHol.add(new Date(17,APRIL,year));     // Earter Monday
+		expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
+        expectedHol.add(new Date( 5,JUNE,year));      // Queen's Birthday
+        expectedHol.add(new Date(23,OCTOBER,year));   // Labour Day
+        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -379,22 +378,22 @@ public class NewZealandCalendarTest {
     public void testNewZealandYear2005() {
         final int year = 2005;
     	QL.info("Testing " + NewZealand.Market.NZX + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		// expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(df.getDate( 3,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(df.getDate( 4,JANUARY,year));   // New Years Day observed
-		expectedHol.add(df.getDate(24,JANUARY,year));   // Anniversary Day
-		// Sun: expectedHol.add(df.getDate( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(df.getDate(25,MARCH,year));     // Good Friday
-		expectedHol.add(df.getDate(28,MARCH,year));     // Earter Monday
-		expectedHol.add(df.getDate(25,APRIL,year));     // Anzac Day
-        expectedHol.add(df.getDate( 6,JUNE,year));      // Queen's Birthday
-        expectedHol.add(df.getDate(24,OCTOBER,year));   // Labour Day
-        // Sun: expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
-        expectedHol.add(df.getDate(27,DECEMBER,year));  // Christmas Day observed
+		// expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
+		expectedHol.add(new Date( 3,JANUARY,year));   // Day after New Years Day
+		expectedHol.add(new Date( 4,JANUARY,year));   // New Years Day observed
+		expectedHol.add(new Date(24,JANUARY,year));   // Anniversary Day
+		// Sun: expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
+		expectedHol.add(new Date(25,MARCH,year));     // Good Friday
+		expectedHol.add(new Date(28,MARCH,year));     // Earter Monday
+		expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
+        expectedHol.add(new Date( 6,JUNE,year));      // Queen's Birthday
+        expectedHol.add(new Date(24,OCTOBER,year));   // Labour Day
+        // Sun: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+        expectedHol.add(new Date(27,DECEMBER,year));  // Christmas Day observed
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -425,21 +424,21 @@ public class NewZealandCalendarTest {
     public void testNewZealandYear2004() {
         final int year = 2004;
     	QL.info("Testing " + NewZealand.Market.NZX + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(df.getDate( 2,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(df.getDate(19,JANUARY,year));   // Anniversary Day
-		expectedHol.add(df.getDate( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(df.getDate( 9,APRIL,year));     // Good Friday
-		expectedHol.add(df.getDate(12,APRIL,year));     // Anzac Day
-        expectedHol.add(df.getDate( 7,JUNE,year));      // Queen's Birthday
-        expectedHol.add(df.getDate(25,OCTOBER,year));   // Labour Day
-        // Sat: expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        // Sun: expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
-        expectedHol.add(df.getDate(27,DECEMBER,year));  // Christmas Day observed
-        expectedHol.add(df.getDate(28,DECEMBER,year));  // Boxing Day observed
+		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
+		expectedHol.add(new Date( 2,JANUARY,year));   // Day after New Years Day
+		expectedHol.add(new Date(19,JANUARY,year));   // Anniversary Day
+		expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
+		expectedHol.add(new Date( 9,APRIL,year));     // Good Friday
+		expectedHol.add(new Date(12,APRIL,year));     // Anzac Day
+        expectedHol.add(new Date( 7,JUNE,year));      // Queen's Birthday
+        expectedHol.add(new Date(25,OCTOBER,year));   // Labour Day
+        // Sat: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        // Sun: expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+        expectedHol.add(new Date(27,DECEMBER,year));  // Christmas Day observed
+        expectedHol.add(new Date(28,DECEMBER,year));  // Boxing Day observed
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();

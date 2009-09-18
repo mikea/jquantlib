@@ -2,7 +2,7 @@
  Copyright (C) 2007 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,7 +36,6 @@ import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,40 +46,34 @@ public class ScheduleTest {
 
     @Before
     public void init() {
-        DateFactory dateFactory = DateFactory.getFactory();
-        startDate = dateFactory.getDate(20, Month.AUGUST, 2007);
+        startDate = new Date(20, Month.AUGUST, 2007);
     }
 
     @Test
     public void testSchedule() {
-        Calendar calendar = Target.getCalendar();
-        DateFactory dateFactory = DateFactory.getFactory();
-        Period maturity = new Period(30, TimeUnit.YEARS);
-        Date maturityDate = dateFactory.getDate(startDate.getDayOfMonth(), startDate.getMonthEnum(), startDate.getYear()).adjust(
-                maturity);
-        Period accPeriodTenor = new Period(6, TimeUnit.MONTHS);
-        BusinessDayConvention modFollow = BusinessDayConvention.MODIFIED_FOLLOWING;
-        DateGenerationRule dateRule = DateGenerationRule.BACKWARD;
+        final Calendar calendar = Target.getCalendar();
+        final Period maturity = new Period(30, TimeUnit.YEARS);
+        final Date maturityDate = startDate.add(maturity);
+        final Period accPeriodTenor = new Period(6, TimeUnit.MONTHS);
+        final BusinessDayConvention modFollow = BusinessDayConvention.MODIFIED_FOLLOWING;
+        final DateGenerationRule dateRule = DateGenerationRule.BACKWARD;
 
-
-        
-        
         // TODO: make sure all sources are synchronized properly and Schedule API is consistent
-        
-        Schedule firstConstrSchedule = new Schedule(startDate, maturityDate, accPeriodTenor, calendar, modFollow, modFollow, 
-                dateRule, false, null, null);
-        
-//        // introduced to get compatibility with v.0.8.1 - becomes redundant asa we can use the dategenerationrule style...
-//        Schedule firstConstrSchedule = new Schedule(startDate, maturityDate, accPeriodTenor, calendar, modFollow, modFollow,
-//                dateRule, false, true, null, null);
 
-        
-        
-        List<Date> dates = new ArrayList<Date>();
+        final Schedule firstConstrSchedule = new Schedule(startDate, maturityDate, accPeriodTenor, calendar, modFollow, modFollow,
+                dateRule, false, null, null);
+
+        //        // introduced to get compatibility with v.0.8.1 - becomes redundant asa we can use the dategenerationrule style...
+        //        Schedule firstConstrSchedule = new Schedule(startDate, maturityDate, accPeriodTenor, calendar, modFollow, modFollow,
+        //                dateRule, false, true, null, null);
+
+
+
+        final List<Date> dates = new ArrayList<Date>();
         dates.add(startDate);
         dates.add(calendar.advance(startDate, new Period(10, TimeUnit.WEEKS),modFollow));
 
-        Schedule secondConstrSchedule = new Schedule(dates, calendar, modFollow);
+        final Schedule secondConstrSchedule = new Schedule(dates, calendar, modFollow);
 
         testDateAfter(firstConstrSchedule);
         testDateAfter(secondConstrSchedule);
@@ -89,10 +82,10 @@ public class ScheduleTest {
         testNextAndPrevDate(secondConstrSchedule);
 
         testIsRegular(firstConstrSchedule);
-       
+
     }
 
-    private void testDateAfter(Schedule schedule) {
+    private void testDateAfter(final Schedule schedule) {
         Iterator<Date> dates = schedule.getDatesAfter(startDate);
         while (dates.hasNext()) {
             assertTrue(startDate.lt(dates.next()));
@@ -105,17 +98,17 @@ public class ScheduleTest {
 
     }
 
-    private void testNextAndPrevDate(Schedule schedule) {
-        Date nextDate = schedule.getNextDate(startDate);
+    private void testNextAndPrevDate(final Schedule schedule) {
+        final Date nextDate = schedule.nextDate(startDate);
         assertTrue(nextDate.gt(startDate));
 
-        Date prevDate = schedule.getPreviousDate(nextDate);
+        final Date prevDate = schedule.previousDate(nextDate);
         assertTrue(nextDate.gt(prevDate));
 
         assertTrue(prevDate.lt(nextDate));
     }
 
-    private void testIsRegular(Schedule schedule) {
+    private void testIsRegular(final Schedule schedule) {
         for (int i = 0; i < 2; i++) {
             schedule.isRegular(i+1);
         }

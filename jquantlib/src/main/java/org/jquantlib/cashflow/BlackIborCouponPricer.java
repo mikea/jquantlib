@@ -21,8 +21,8 @@
  */
 package org.jquantlib.cashflow;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.pricingengines.BlackFormula;
@@ -60,12 +60,13 @@ public class BlackIborCouponPricer extends IborCouponPricer {
         final InterestRateIndex index = coupon_.index();
         final Handle<YieldTermStructure> rateCurve = index.termStructure();
 
-        final Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        final Date today = new Settings().getEvaluationDate();
 
-        if(paymentDate.gt(today))
+        if(paymentDate.gt(today)) {
             discount_ = rateCurve.getLink().discount(paymentDate);
-        else
+        } else {
             discount_ = 1.0;
+        }
         spreadLegValue_ = spread_ * coupon_.accrualPeriod()* discount_;
     }
 
@@ -101,13 +102,12 @@ public class BlackIborCouponPricer extends IborCouponPricer {
     @Override
     public double floorletRate(final double effectiveFloor) {
         return floorletPrice(effectiveFloor)/
-            (coupon_.accrualPeriod()*discount_);
+        (coupon_.accrualPeriod()*discount_);
     }
 
-    public double optionletPrice(final Option.Type optionType,
-                                               final double effStrike)  {
+    public double optionletPrice(final Option.Type optionType, final double effStrike)  {
         final Date fixingDate = coupon_.fixingDate();
-        if (fixingDate.le(Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate())) {
+        if (fixingDate.le(new Settings().getEvaluationDate())) {
             // the amount is determined
             double a, b;
             if (optionType==Option.Type.CALL) {
@@ -122,12 +122,12 @@ public class BlackIborCouponPricer extends IborCouponPricer {
             QL.require(capletVolatility()!=null , missing_caplet_volatility); // QA:[RG]::verified // TODO: message
             // not yet determined, use Black model
             final double fixing =
-                 BlackFormula.blackFormula(
-                       optionType,
-                       effStrike,
-                       adjustedFixing(),
-                       Math.sqrt(capletVolatility().getLink().blackVariance(fixingDate,
-                                                                   effStrike)));
+                BlackFormula.blackFormula(
+                        optionType,
+                        effStrike,
+                        adjustedFixing(),
+                        Math.sqrt(capletVolatility().getLink().blackVariance(fixingDate,
+                                effStrike)));
             return fixing * coupon_.accrualPeriod()*discount_;
         }
     }
@@ -138,16 +138,16 @@ public class BlackIborCouponPricer extends IborCouponPricer {
 
         final double fixing = coupon_.indexFixing();
 
-        if (!coupon_.isInArrears())
+        if (!coupon_.isInArrears()) {
             adjustement = 0.0;
-        else {
+        } else {
             // see Hull, 4th ed., page 550
             QL.require(capletVolatility() != null , missing_caplet_volatility); // QA:[RG]::verified // TODO: message
             final Date d1 = coupon_.fixingDate();
             final Date referenceDate = capletVolatility().getLink().referenceDate();
-            if (d1.le(referenceDate))
+            if (d1.le(referenceDate)) {
                 adjustement = 0.0;
-            else {
+            } else {
                 final Date d2 = coupon_.index().maturityDate(d1);
                 final double tau = coupon_.index().dayCounter().yearFraction(d1, d2);
                 final double variance = capletVolatility().getLink().blackVariance(d1, fixing);

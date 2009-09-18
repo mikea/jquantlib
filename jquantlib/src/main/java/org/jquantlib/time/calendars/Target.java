@@ -79,10 +79,10 @@ public class Target extends DelegateCalendar {
     	}
     
     	public boolean isBusinessDay(Date date) {
-    		Weekday w = date.getWeekday();
-    		int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-    		Month m = date.getMonthEnum();
-    		int y = date.getYear();
+    		Weekday w = date.weekday();
+    		int d = date.dayOfMonth(), dd = date.dayOfYear();
+    		Month m = date.month();
+    		int y = date.year();
     		int em = easterMonday(y);
     		if (isWeekend(w)
     		// New Year's Day

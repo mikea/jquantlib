@@ -90,10 +90,10 @@ public enum Weekday {
 
     /**
      * Returns the week day as a number where Sunday (1) till Saturday (7)
-     *
+     * 
      * @return the week day as a number where Sunday (1) till Saturday (7)
      */
-    public int toInteger() {
+    public int value() {
         return enumValue;
     }
 

@@ -23,8 +23,8 @@
 
 package org.jquantlib.cashflow;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
@@ -37,7 +37,6 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 import org.jquantlib.util.stdlibc.Std;
@@ -48,271 +47,301 @@ import org.jquantlib.util.stdlibc.Std;
  * @author Ueli Hofstetter
  * @author Richard Gomes
  */
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+
+//
+// =================== W A R N I N G ================
+//
+// This class requires a total rewrite. See: http://bugs.jquantlib.org/view.php?id=357
+
+// TODO: code review :: please verify against QL/C++ code
+
 public class CashFlows {
 
-	private final String not_enough_information_available = "not enough information available";
-	private final String no_cashflows = "no cashflows";
-	private final String unsupported_compounding_type = "unsupported compounding type";
-	private final String compounded_rate_required = "compounded rate required";
-	private final String unsupported_frequency = "unsupported frequency";
-	private final String unknown_duration_type = "unsupported duration type";
-	private final String infeasible_cashflow = "the given cash flows cannot result in the given market price due to their sign";
+    private final String not_enough_information_available = "not enough information available";
+    private final String no_cashflows = "no cashflows";
+    private final String unsupported_compounding_type = "unsupported compounding type";
+    private final String compounded_rate_required = "compounded rate required";
+    private final String unsupported_frequency = "unsupported frequency";
+    private final String unknown_duration_type = "unsupported duration type";
+    private final String infeasible_cashflow = "the given cash flows cannot result in the given market price due to their sign";
 
-	private static double basisPoint_ = 1.0e-4;
+    private static double basisPoint_ = 1.0e-4;
 
-	/**
-	 * Singleton instance for the whole application.
-	 * <p>
-	 * In an application server environment, it could be by class loader
-	 * depending on scope of the JQuantLib library to the module.
-	 *
-	 * @see <a
-	 *      href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The
-	 *      "Double-Checked Locking is Broken" Declaration </a>
-	 */
-	private static volatile CashFlows instance = null;
+    /**
+     * Singleton instance for the whole application.
+     * <p>
+     * In an application server environment, it could be by class loader
+     * depending on scope of the JQuantLib library to the module.
+     *
+     * @see <a
+     *      href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The
+     *      "Double-Checked Locking is Broken" Declaration </a>
+     */
+    private static volatile CashFlows instance = null;
 
-	//
-	// private constructors
-	//
 
-	private CashFlows() {
-		// cannot be directly instantiated
-	}
+    //
+    // private constructors
+    //
 
-	//
-	// public static methods
-	//
+    private CashFlows() {
+        // cannot be directly instantiated
+    }
 
-	public static CashFlows getInstance() {
-		if (instance == null)
-			synchronized (CashFlows.class) {
-				if (instance == null)
-					instance = new CashFlows();
-			}
-		return instance;
-	}
+    //
+    // public static methods
+    //
 
-	//
-	// public methods
-	//
+    public static CashFlows getInstance() {
+        if (instance == null) {
+            synchronized (CashFlows.class) {
+                if (instance == null) {
+                    instance = new CashFlows();
+                }
+            }
+        }
+        return instance;
+    }
 
-	public Date startDate(final Leg cashflows) {
-		Date d = DateFactory.getFactory().getMaxDate();
-		for (int i = 0; i < cashflows.size(); ++i) {
-			final Coupon c = (Coupon) cashflows.get(i);
-			if (c != null)
-				d = Std.getInstance().min(c.accrualStartDate(), d);
-		}
-		// TODO: code review :: please verify against QL/C++ code
-		QL.ensure(d.le(DateFactory.getFactory().getMaxDate()) , not_enough_information_available); // QA:[RG]::verified
-		return d;
-	}
+    //
+    // public methods
+    //
 
-	public Date maturityDate(final Leg cashflows) {
-		Date d = DateFactory.getFactory().getMinDate();
-		for (int i = 0; i < cashflows.size(); i++)
-			d = Std.getInstance().max(d, cashflows.get(i).date());
-		// TODO: code review :: please verify against QL/C++ code
-		QL.require(d.le(DateFactory.getFactory().getMinDate()) , no_cashflows);
-		return d;
-	}
+    public Date startDate(final Leg cashflows) {
+        Date d = new Date().statics().maxDate();
+        for (int i = 0; i < cashflows.size(); ++i) {
+            final Coupon c = (Coupon) cashflows.get(i);
+            if (c != null) {
+                d = Std.getInstance().min(c.accrualStartDate(), d);
+            }
+        }
+        // TODO: code review :: please verify against QL/C++ code
+        QL.ensure(d.le(new Date().statics().maxDate()) , not_enough_information_available); // QA:[RG]::verified
+        return d;
+    }
 
-	/**
-	 * NPV of the cash flows.
-	 * <p>
-	 * The NPV is the sum of the cash flows, each discounted according to the
-	 * given term structure.
-	 *
-	 * @param cashflows
-	 * @param discountCurve
-	 * @param settlementDate
-	 * @param npvDate
-	 * @param exDividendDays
-	 * @return
-	 */
-	public double npv(final Leg cashflows, final Handle<YieldTermStructure> discountCurve, final Date settlementDate,
-			final Date npvDate, final int exDividendDays) {
+    public Date maturityDate(final Leg cashflows) {
+        Date d = new Date().statics().minDate();
+        for (int i = 0; i < cashflows.size(); i++) {
+            d = Std.getInstance().max(d, cashflows.get(i).date());
+        }
+        // TODO: code review :: please verify against QL/C++ code
+        QL.require(d.le(new Date().statics().minDate()) , no_cashflows);
+        return d;
+    }
 
-		Date date = settlementDate;
-		if (date.eq(DateFactory.getFactory().getTodaysDate()))
-			date = discountCurve.getLink().referenceDate();
+    /**
+     * NPV of the cash flows.
+     * <p>
+     * The NPV is the sum of the cash flows, each discounted according to the
+     * given term structure.
+     *
+     * @param cashflows
+     * @param discountCurve
+     * @param settlementDate
+     * @param npvDate
+     * @param exDividendDays
+     * @return
+     */
+    public double npv(
+            final Leg cashflows,
+            final Handle<YieldTermStructure> discountCurve,
+            final Date settlementDate,
+            final Date npvDate,
+            final int exDividendDays) {
 
-		double totalNPV = 0.0;
-		for (int i = 0; i < cashflows.size(); ++i)
-			if (!cashflows.get(i).hasOccurred(date.increment(exDividendDays)))
-				totalNPV += cashflows.get(i).amount() * discountCurve.getLink().discount(cashflows.get(i).date());
+        Date date = settlementDate;
+        if (date.isNull()) {
+            date = discountCurve.getLink().referenceDate();
+        }
 
-		if (npvDate.eq(DateFactory.getFactory().getTodaysDate()))
-			return totalNPV;
-		else
-			return totalNPV / discountCurve.getLink().discount(npvDate);
-	}
+        double totalNPV = 0.0;
+        for (int i = 0; i < cashflows.size(); ++i) {
+            if (!cashflows.get(i).hasOccurred(date.add(exDividendDays))) {
+                totalNPV += cashflows.get(i).amount() * discountCurve.getLink().discount(cashflows.get(i).date());
+            }
+        }
 
-	public double npv(final Leg leg, final Handle<YieldTermStructure> discountCurve) {
-		return npv(leg, discountCurve, DateFactory.getFactory().getTodaysDate(), DateFactory.getFactory().getTodaysDate(), 0);
-	}
+        if (npvDate.isNull()) {
+            return totalNPV;
+        } else {
+            return totalNPV / discountCurve.getLink().discount(npvDate);
+        }
+    }
 
-	/**
-	 * NPV of the cash flows.
-	 * <p>
-	 * The NPV is the sum of the cash flows, each discounted according to the
-	 * given constant interest rate. The result is affected by the choice of the
-	 * interest-rate compounding and the relative frequency and day counter.
-	 */
-	public double npv(final Leg cashflows, final InterestRate irr, final Date settlementDate) {
+    public double npv(
+            final Leg leg,
+            final Handle<YieldTermStructure> discountCurve) {
+        return npv(leg, discountCurve, new Date(), new Date(), 0);
+    }
 
-		Date date = settlementDate;
-		if (date.eq(DateFactory.getFactory().getTodaysDate())) {
-			date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-			;
-		}
+    /**
+     * NPV of the cash flows.
+     * <p>
+     * The NPV is the sum of the cash flows, each discounted according to the
+     * given constant interest rate. The result is affected by the choice of the
+     * interest-rate compounding and the relative frequency and day counter.
+     */
+    public double npv(final Leg cashflows, final InterestRate irr, final Date settlementDate) {
 
-		final YieldTermStructure flatRate = new FlatForward(date, irr.rate(), irr.dayCounter(), irr.compounding(), irr.frequency());
-		return npv(cashflows, new Handle<YieldTermStructure>(flatRate), date, date, 0);
-	}
+        Date date = settlementDate;
+        if (date.isNull()) {
+            date = new Settings().getEvaluationDate();
+        }
 
-	public double npv(final Leg leg, final InterestRate interestRate) {
-		return npv(leg, interestRate, DateFactory.getFactory().getTodaysDate());
-	}
+        final YieldTermStructure flatRate = new FlatForward(date, irr.rate(), irr.dayCounter(), irr.compounding(), irr.frequency());
+        return npv(cashflows, new Handle<YieldTermStructure>(flatRate), date, date, 0);
+    }
 
-	/**
-	 * Basis-point sensitivity of the cash flows.
-	 * <p>
-	 * The result is the change in NPV due to a uniform 1-basis-point change in
-	 * the rate paid by the cash flows. The change for each coupon is discounted
-	 * according to the given term structure.
-	 */
-	public double bps(final Leg cashflows, final Handle<YieldTermStructure> discountCurve, final Date settlementDate,
-			final Date npvDate) {
-		return bps(cashflows, discountCurve, settlementDate, npvDate, 0);
-	}
+    public double npv(final Leg leg, final InterestRate interestRate) {
+        return npv(leg, interestRate, new Date());
+    }
 
-	/**
-	 * Basis-point sensitivity of the cash flows.
-	 * <p>
-	 * The result is the change in NPV due to a uniform 1-basis-point change in
-	 * the rate paid by the cash flows. The change for each coupon is discounted
-	 * according to the given term structure.
-	 */
-	public double bps(final Leg cashflows, final Handle<YieldTermStructure> discountCurve, final Date settlementDate,
-			final Date npvDate, final int exDividendDays) {
+    /**
+     * Basis-point sensitivity of the cash flows.
+     * <p>
+     * The result is the change in NPV due to a uniform 1-basis-point change in
+     * the rate paid by the cash flows. The change for each coupon is discounted
+     * according to the given term structure.
+     */
+    public double bps(final Leg cashflows, final Handle<YieldTermStructure> discountCurve, final Date settlementDate,
+            final Date npvDate) {
+        return bps(cashflows, discountCurve, settlementDate, npvDate, 0);
+    }
 
-		Date date = settlementDate;
-		if (date.eq(DateFactory.getFactory().getTodaysDate()))
-			date = discountCurve.getLink().referenceDate();
+    /**
+     * Basis-point sensitivity of the cash flows.
+     * <p>
+     * The result is the change in NPV due to a uniform 1-basis-point change in
+     * the rate paid by the cash flows. The change for each coupon is discounted
+     * according to the given term structure.
+     */
+    public double bps(final Leg cashflows, final Handle<YieldTermStructure> discountCurve, final Date settlementDate,
+            final Date npvDate, final int exDividendDays) {
 
-		final BPSCalculator calc = new BPSCalculator(discountCurve, npvDate);
-		for (int i = 0; i < cashflows.size(); ++i)
-			if (!cashflows.get(i).hasOccurred(date.increment(exDividendDays)))
-				cashflows.get(i).accept(calc);
-		return basisPoint_ * calc.result();
-	}
+        Date date = settlementDate;
+        if (date.isNull()) {
+            date = discountCurve.getLink().referenceDate();
+        }
 
-	public double bps(final Leg leg, final Handle<YieldTermStructure> discountCurve) {
-		return bps(leg, discountCurve, DateFactory.getFactory().getTodaysDate(), DateFactory.getFactory().getTodaysDate(), 0);
-	}
+        final BPSCalculator calc = new BPSCalculator(discountCurve, npvDate);
+        for (int i = 0; i < cashflows.size(); ++i) {
+            if (!cashflows.get(i).hasOccurred(date.add(exDividendDays))) {
+                cashflows.get(i).accept(calc);
+            }
+        }
+        return basisPoint_ * calc.result();
+    }
 
-	/**
-	 * Basis-point sensitivity of the cash flows.
-	 * <p>
-	 * The result is the change in NPV due to a uniform 1-basis-point change in
-	 * the rate paid by the cash flows. The change for each coupon is discounted
-	 * according to the given constant interest rate. The result is affected by
-	 * the choice of the interest-rate compounding and the relative frequency
-	 * and day counter.
-	 */
-	public double bps(final Leg cashflows, final InterestRate irr, final Date settlementDate) {
-		Date date = settlementDate;
-		if (date.eq(DateFactory.getFactory().getTodaysDate())) {
-			date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-		}
+    public double bps(final Leg leg, final Handle<YieldTermStructure> discountCurve) {
+        return bps(leg, discountCurve, new Date(), new Date(), 0);
+    }
 
-		final YieldTermStructure flatRate = new FlatForward(date, irr.rate(), irr.dayCounter(), irr.compounding(), irr.frequency());
-		return bps(cashflows, new Handle<YieldTermStructure>(flatRate), date, date);
-	}
+    /**
+     * Basis-point sensitivity of the cash flows.
+     * <p>
+     * The result is the change in NPV due to a uniform 1-basis-point change in
+     * the rate paid by the cash flows. The change for each coupon is discounted
+     * according to the given constant interest rate. The result is affected by
+     * the choice of the interest-rate compounding and the relative frequency
+     * and day counter.
+     */
+    public double bps(final Leg cashflows, final InterestRate irr, final Date settlementDate) {
+        Date date = settlementDate;
+        if (date.isNull()) {
+            date = new Settings().getEvaluationDate();
+        }
 
-	public double bps(final Leg leg, final InterestRate interestRate) {
-		return bps(leg, interestRate, DateFactory.getFactory().getTodaysDate());
-	}
+        final YieldTermStructure flatRate = new FlatForward(date, irr.rate(), irr.dayCounter(), irr.compounding(), irr.frequency());
+        return bps(cashflows, new Handle<YieldTermStructure>(flatRate), date, date);
+    }
 
-	/**
-	 * At-the-money rate of the cash flows.
-	 * <p>
-	 * The result is the fixed rate for which a fixed rate cash flow vector,
-	 * equivalent to the input vector, has the required NPV according to the
-	 * given term structure. If the required NPV is not given, the input cash
-	 * flow vector's NPV is used instead.
-	 */
-	public double atmRate(final Leg leg, final Handle<YieldTermStructure> discountCurve, final Date settlementDate,
-			final Date npvDate, final int exDividendDays, double npv) {
-		final double bps = bps(leg, discountCurve, settlementDate, npvDate, exDividendDays);
-		if (npv == 0)
-			npv = npv(leg, discountCurve, settlementDate, npvDate, exDividendDays);
-		return basisPoint_ * npv / bps;
-	}
+    public double bps(final Leg leg, final InterestRate interestRate) {
+        return bps(leg, interestRate, new Date());
+    }
 
-	public double atmRate(final Leg leg, final Handle<YieldTermStructure> discountCurve) {
-		return atmRate(leg, discountCurve, DateFactory.getFactory().getTodaysDate(), DateFactory.getFactory().getTodaysDate(), 0, 0);
-	}
+    /**
+     * At-the-money rate of the cash flows.
+     * <p>
+     * The result is the fixed rate for which a fixed rate cash flow vector,
+     * equivalent to the input vector, has the required NPV according to the
+     * given term structure. If the required NPV is not given, the input cash
+     * flow vector's NPV is used instead.
+     */
+    public double atmRate(final Leg leg, final Handle<YieldTermStructure> discountCurve, final Date settlementDate,
+            final Date npvDate, final int exDividendDays, double npv) {
+        final double bps = bps(leg, discountCurve, settlementDate, npvDate, exDividendDays);
+        if (npv == 0) {
+            npv = npv(leg, discountCurve, settlementDate, npvDate, exDividendDays);
+        }
+        return basisPoint_ * npv / bps;
+    }
 
-	/**
-	 * Internal rate of return.
-	 * <p>
-	 * The IRR is the interest rate at which the NPV of the cash flows equals
-	 * the given market price. The function verifies the theoretical existance
-	 * of an IRR and numerically establishes the IRR to the desired precision.
-	 */
-	public double irr(final Leg cashflows, final double marketPrice, final DayCounter dayCounter, final Compounding compounding,
-			final Frequency frequency, final Date settlementDate, final double tolerance, final int maxIterations,
-			final double guess) {
+    public double atmRate(final Leg leg, final Handle<YieldTermStructure> discountCurve) {
+        return atmRate(leg, discountCurve, new Date(), new Date(), 0, 0);
+    }
 
-		Date date = settlementDate;
-		if (date.eq(DateFactory.getFactory().getTodaysDate())) {
-			date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-		}
+    /**
+     * Internal rate of return.
+     * <p>
+     * The IRR is the interest rate at which the NPV of the cash flows equals
+     * the given market price. The function verifies the theoretical existance
+     * of an IRR and numerically establishes the IRR to the desired precision.
+     */
+    public double irr(final Leg cashflows, final double marketPrice, final DayCounter dayCounter, final Compounding compounding,
+            final Frequency frequency, final Date settlementDate, final double tolerance, final int maxIterations,
+            final double guess) {
 
-		// depending on the sign of the market price, check that cash
-		// flows of the opposite sign have been specified (otherwise
-		// IRR is nonsensical.)
+        Date date = settlementDate;
+        if (date.isNull()) {
+            date = new Settings().getEvaluationDate();
+        }
 
-		int lastSign = sign(-marketPrice), signChanges = 0;
-		for (int i = 0; i < cashflows.size(); ++i)
-			if (!cashflows.get(i).hasOccurred(date)) {
-				final int thisSign = sign(cashflows.get(i).amount());
-				if (lastSign * thisSign < 0)
-					signChanges++;
-				if (thisSign != 0)
-					lastSign = thisSign;
-			}
+        // depending on the sign of the market price, check that cash
+        // flows of the opposite sign have been specified (otherwise
+        // IRR is nonsensical.)
 
-		QL.ensure(signChanges > 0 , infeasible_cashflow); // QA:[RG]::verified
+        int lastSign = sign(-marketPrice), signChanges = 0;
+        for (int i = 0; i < cashflows.size(); ++i) {
+            if (!cashflows.get(i).hasOccurred(date)) {
+                final int thisSign = sign(cashflows.get(i).amount());
+                if (lastSign * thisSign < 0) {
+                    signChanges++;
+                }
+                if (thisSign != 0) {
+                    lastSign = thisSign;
+                }
+            }
+        }
 
-		/*
-		 * THIS COMMENT COMES UNMODIFIED FROM QL/C++ SOURCES
-		 *
-		 * The following is commented out due to the lack of a QL_WARN macro
-		 *
-		 * if (signChanges > 1) { // Danger of non-unique solution // Check the
-		 * aggregate cash flows (Norstrom) Real aggregateCashFlow = marketPrice;
-		 * signChanges = 0; for (Size i = 0; i < cashflows.size(); ++i) { Real
-		 * nextAggregateCashFlow = aggregateCashFlow + cashflows[i]->amount();
-		 * if (aggregateCashFlow * nextAggregateCashFlow < 0.0) signChanges++;
-		 * aggregateCashFlow = nextAggregateCashFlow; } if (signChanges > 1)
-		 * QL_WARN( "danger of non-unique solution"); }
-		 */
+        QL.ensure(signChanges > 0 , infeasible_cashflow); // QA:[RG]::verified
 
-		final Brent solver = new Brent();
-		solver.setMaxEvaluations(maxIterations);
-		return solver.solve(new IRRFinder(cashflows, marketPrice, dayCounter, compounding, frequency, date), tolerance, guess,
-				guess / 10.0);
-	}
+        /*
+         * THIS COMMENT COMES UNMODIFIED FROM QL/C++ SOURCES
+         *
+         * The following is commented out due to the lack of a QL_WARN macro
+         *
+         * if (signChanges > 1) { // Danger of non-unique solution // Check the
+         * aggregate cash flows (Norstrom) Real aggregateCashFlow = marketPrice;
+         * signChanges = 0; for (Size i = 0; i < cashflows.size(); ++i) { Real
+         * nextAggregateCashFlow = aggregateCashFlow + cashflows[i]->amount();
+         * if (aggregateCashFlow * nextAggregateCashFlow < 0.0) signChanges++;
+         * aggregateCashFlow = nextAggregateCashFlow; } if (signChanges > 1)
+         * QL_WARN( "danger of non-unique solution"); }
+         */
 
-	public double irr(final Leg leg, final double marketPrice, final DayCounter dayCounter, final Compounding compounding) {
-		return irr(leg, marketPrice, dayCounter, compounding, Frequency.NO_FREQUENCY, DateFactory.getFactory().getTodaysDate(),
-				1.0e-10, 10000, 0.05);
-	}
+        final Brent solver = new Brent();
+        solver.setMaxEvaluations(maxIterations);
+        return solver.solve(new IRRFinder(cashflows, marketPrice, dayCounter, compounding, frequency, date), tolerance, guess,
+                guess / 10.0);
+    }
+
+    public double irr(final Leg leg, final double marketPrice, final DayCounter dayCounter, final Compounding compounding) {
+        return irr(
+                leg, marketPrice, dayCounter, compounding,
+                Frequency.NO_FREQUENCY, new Date(),
+                1.0e-10, 10000, 0.05);
+    }
 
     /**
      * Cash-flow duration.
@@ -329,170 +358,178 @@ public class CashFlows {
      * {@latex[ D_ \mathrm Macaulay}} = \left( 1 + \frac{y}{N} \right) D_{\mathrm{modified}} } where
      * {@latex$ y } is the IRR and {@latex$ N } is the number of cash flows per year.
      */
-	public double duration(final Leg leg, final InterestRate y, final Duration duration, final Date settlementDate) {
+    public double duration(final Leg leg, final InterestRate y, final Duration duration, final Date settlementDate) {
 
-		Date date = settlementDate;
-		if (date.eq(DateFactory.getFactory().getTodaysDate())) {
-			date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-		}
+        Date date = settlementDate;
+        if (date.isNull()) {
+            date = new Settings().getEvaluationDate();
+        }
 
-		switch (duration) {
-		case Simple:
-			return simpleDuration(leg, y, date);
-		case Modified:
-			return modifiedDuration(leg, y, date);
-		case Macaulay:
-			return macaulayDuration(leg, y, date);
-		default:
-			throw new LibraryException(unknown_duration_type); // QA:[RG]::verified
-		}
-	}
+        switch (duration) {
+        case Simple:
+            return simpleDuration(leg, y, date);
+        case Modified:
+            return modifiedDuration(leg, y, date);
+        case Macaulay:
+            return macaulayDuration(leg, y, date);
+        default:
+            throw new LibraryException(unknown_duration_type); // QA:[RG]::verified
+        }
+    }
 
-	public double duration(final Leg leg, final InterestRate y) {
-		return duration(leg, y, Duration.Modified, DateFactory.getFactory().getTodaysDate());
-	}
+    public double duration(final Leg leg, final InterestRate y) {
+        return duration(leg, y, Duration.Modified, new Date());
+    }
 
-	/**
-	 * Cash-flow convexity
-	 * <p>
-	 * The convexity of a string of cash flows is defined as {@latex[ C = \frac 1}{P} \frac{\partial^2 P}{\partial y^2} } where
-	 * {@latex$ P } is the present value of the cash flows according to the given IRR {@latex$ y }.
-	 */
-	public double convexity(final Leg cashFlows, final InterestRate rate, final Date settlementDate) {
+    /**
+     * Cash-flow convexity
+     * <p>
+     * The convexity of a string of cash flows is defined as {@latex[ C = \frac 1}{P} \frac{\partial^2 P}{\partial y^2} } where
+     * {@latex$ P } is the present value of the cash flows according to the given IRR {@latex$ y }.
+     */
+    public double convexity(final Leg cashFlows, final InterestRate rate, final Date settlementDate) {
 
-		Date date = settlementDate;
-		if (date.eq(DateFactory.getFactory().getTodaysDate())) {
-			date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-		}
+        Date date = settlementDate;
+        if (date.isNull()) {
+            date = new Settings().getEvaluationDate();
+        }
 
-		final DayCounter dayCounter = rate.dayCounter();
+        final DayCounter dayCounter = rate.dayCounter();
 
-		double P = 0.0;
-		double d2Pdy2 = 0.0;
-		final double y = rate.rate();
-		final int N = rate.frequency().toInteger();
+        double P = 0.0;
+        double d2Pdy2 = 0.0;
+        final double y = rate.rate();
+        final int N = rate.frequency().toInteger();
 
-		for (int i = 0; i < cashFlows.size(); ++i)
-			if (!cashFlows.get(i).hasOccurred(date)) {
-				final double t = dayCounter.yearFraction(date, cashFlows.get(i).date());
-				final double c = cashFlows.get(i).amount();
-				final double B = rate.discountFactor(t);
+        for (int i = 0; i < cashFlows.size(); ++i) {
+            if (!cashFlows.get(i).hasOccurred(date)) {
+                final double t = dayCounter.yearFraction(date, cashFlows.get(i).date());
+                final double c = cashFlows.get(i).amount();
+                final double B = rate.discountFactor(t);
 
-				P += c * B;
-				switch (rate.compounding()) {
-				case SIMPLE:
-					d2Pdy2 += c * 2.0 * B * B * B * t * t;
-					break;
-				case COMPOUNDED:
-					d2Pdy2 += c * B * t * (N * t + 1) / (N * (1 + y / N) * (1 + y / N));
-					break;
-				case CONTINUOUS:
-					d2Pdy2 += c * B * t * t;
-					break;
-				case SIMPLE_THEN_COMPOUNDED:
-				default:
-					throw new LibraryException(unsupported_compounding_type); // QA:[RG]::verified
-				}
-			}
+                P += c * B;
+                switch (rate.compounding()) {
+                case SIMPLE:
+                    d2Pdy2 += c * 2.0 * B * B * B * t * t;
+                    break;
+                case COMPOUNDED:
+                    d2Pdy2 += c * B * t * (N * t + 1) / (N * (1 + y / N) * (1 + y / N));
+                    break;
+                case CONTINUOUS:
+                    d2Pdy2 += c * B * t * t;
+                    break;
+                case SIMPLE_THEN_COMPOUNDED:
+                default:
+                    throw new LibraryException(unsupported_compounding_type); // QA:[RG]::verified
+                }
+            }
+        }
 
-		if (P == 0.0) return 0.0; // no cashflows
-		return d2Pdy2 / P;
-	}
+        if (P == 0.0) {
+            return 0.0; // no cashflows
+        }
+        return d2Pdy2 / P;
+    }
 
-	public double convexity(final Leg leg, final InterestRate y) {
-		return convexity(leg, y, DateFactory.getFactory().getTodaysDate());
-	}
-
-
-
-
-
+    public double convexity(final Leg leg, final InterestRate y) {
+        return convexity(leg, y, new Date());
+    }
 
 
 
-	private double simpleDuration(final Leg cashflows, final InterestRate rate, final Date settlementDate) {
 
-		double P = 0.0;
-		double tP = 0.0;
 
-		for (int i = 0; i < cashflows.size(); ++i)
-			if (!cashflows.get(i).hasOccurred(settlementDate)) {
-				final double t = rate.dayCounter().yearFraction(settlementDate, cashflows.get(i).date());
-				final double c = cashflows.get(i).amount();
-				final double B = rate.discountFactor(t);
 
-				P += c * B;
-				tP += t * c * B;
-			}
 
-		if (P == 0.0)
-			// no cashflows
-			return 0.0;
 
-		return tP / P;
-	}
+    private double simpleDuration(final Leg cashflows, final InterestRate rate, final Date settlementDate) {
 
-	private double modifiedDuration(final Leg cashflows, final InterestRate rate, final Date settlementDate) {
+        double P = 0.0;
+        double tP = 0.0;
 
-		double P = 0.0;
-		double dPdy = 0.0;
-		final double y = rate.rate();
-		final int N = rate.frequency().toInteger();
+        for (int i = 0; i < cashflows.size(); ++i) {
+            if (!cashflows.get(i).hasOccurred(settlementDate)) {
+                final double t = rate.dayCounter().yearFraction(settlementDate, cashflows.get(i).date());
+                final double c = cashflows.get(i).amount();
+                final double B = rate.discountFactor(t);
 
-		for (int i = 0; i < cashflows.size(); ++i)
-			if (!cashflows.get(i).hasOccurred(settlementDate)) {
-				final double t = rate.dayCounter().yearFraction(settlementDate, cashflows.get(i).date());
-				final double c = cashflows.get(i).amount();
-				final double B = rate.discountFactor(t);
+                P += c * B;
+                tP += t * c * B;
+            }
+        }
 
-				P += c * B;
-				switch (rate.compounding()) {
-				case SIMPLE:
-					dPdy -= c * B * B * t;
-					break;
-				case COMPOUNDED:
-					dPdy -= c * B * t / (1 + y / N);
-					break;
-				case CONTINUOUS:
-					dPdy -= c * B * t;
-					break;
-				case SIMPLE_THEN_COMPOUNDED:
-				default:
-					throw new LibraryException(unsupported_compounding_type); // QA:[RG]::verified
-				}
-			}
+        if (P == 0.0) {
+            // no cashflows
+            return 0.0;
+        }
 
-		if (P == 0.0)
-			// no cashflows
-			return 0.0;
-		return -dPdy / P;
-	}
+        return tP / P;
+    }
 
-	private double macaulayDuration(final Leg cashflows, final InterestRate rate, final Date settlementDate) {
+    private double modifiedDuration(final Leg cashflows, final InterestRate rate, final Date settlementDate) {
 
-		final double y = rate.rate();
-		final int N = rate.frequency().toInteger();
-		QL.require(rate.compounding().equals(Compounding.COMPOUNDED), compounded_rate_required);
-		QL.require(N>=1, unsupported_frequency);
-		return (1 + y / N) * modifiedDuration(cashflows, rate, settlementDate);
-	}
+        double P = 0.0;
+        double dPdy = 0.0;
+        final double y = rate.rate();
+        final int N = rate.frequency().toInteger();
 
-	private int sign(final double x) {
-		if (x == 0)
-			return 0;
-		else if (x > 0)
-			return 1;
-		else
-			return -1;
-	}
+        for (int i = 0; i < cashflows.size(); ++i) {
+            if (!cashflows.get(i).hasOccurred(settlementDate)) {
+                final double t = rate.dayCounter().yearFraction(settlementDate, cashflows.get(i).date());
+                final double c = cashflows.get(i).amount();
+                final double B = rate.discountFactor(t);
+
+                P += c * B;
+                switch (rate.compounding()) {
+                case SIMPLE:
+                    dPdy -= c * B * B * t;
+                    break;
+                case COMPOUNDED:
+                    dPdy -= c * B * t / (1 + y / N);
+                    break;
+                case CONTINUOUS:
+                    dPdy -= c * B * t;
+                    break;
+                case SIMPLE_THEN_COMPOUNDED:
+                default:
+                    throw new LibraryException(unsupported_compounding_type); // QA:[RG]::verified
+                }
+            }
+        }
+
+        if (P == 0.0) {
+            // no cashflows
+            return 0.0;
+        }
+        return -dPdy / P;
+    }
+
+    private double macaulayDuration(final Leg cashflows, final InterestRate rate, final Date settlementDate) {
+
+        final double y = rate.rate();
+        final int N = rate.frequency().toInteger();
+        QL.require(rate.compounding().equals(Compounding.COMPOUNDED), compounded_rate_required);
+        QL.require(N>=1, unsupported_frequency);
+        return (1 + y / N) * modifiedDuration(cashflows, rate, settlementDate);
+    }
+
+    private int sign(final double x) {
+        if (x == 0) {
+            return 0;
+        } else if (x > 0) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
 
     final public int previousCashFlow(final Leg leg) {
-        return previousCashFlow(leg, Date.NULL_DATE);
+        return previousCashFlow(leg, new Date());
     }
 
     final public int previousCashFlow(final Leg leg, Date refDate) {
-        if (refDate == Date.NULL_DATE) {
-            refDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        if (refDate.isNull()) {
+            refDate = new Settings().getEvaluationDate();
         }
 
         if (!(leg.get(0).hasOccurred(refDate))) {
@@ -505,7 +542,7 @@ public class CashFlows {
     }
 
     final public double previousCouponRate(final Leg cashFlows) {
-        return previousCouponRate(cashFlows, Date.NULL_DATE);
+        return previousCouponRate(cashFlows, new Date());
     }
 
     final public double previousCouponRate(final Leg cashFlows, final Date settlement) {
@@ -514,7 +551,7 @@ public class CashFlows {
     }
 
     final public double nextCouponRate(final Leg leg) {
-        return nextCouponRate(leg, Date.NULL_DATE);
+        return nextCouponRate(leg, new Date());
     }
 
     final public double nextCouponRate(final Leg cashFlows, final Date settlement) {
@@ -530,13 +567,14 @@ public class CashFlows {
      * @return
      */
     final public CashFlow nextCashFlow(final Leg cashFlows, Date settlement) {
-        if (settlement == Date.NULL_DATE) {
-            settlement = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        if (settlement.isNull()) {
+            settlement = new Settings().getEvaluationDate();
         }
         for (int i = 0; i < cashFlows.size(); ++i) {
             // the first coupon paying after d is the one we're after
-            if (!cashFlows.get(i).hasOccurred(settlement))
+            if (!cashFlows.get(i).hasOccurred(settlement)) {
                 return cashFlows.get(i);
+            }
         }
         return null;// cashFlows.get(cashFlows.size());
     }
@@ -550,19 +588,20 @@ public class CashFlows {
      * @return
      */
     final public int nextCashFlowIndex(final Leg cashFlows, Date settlement) {
-        if (settlement == Date.NULL_DATE) {
-            settlement = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        if (settlement.isNull()) {
+            settlement = new Settings().getEvaluationDate();
         }
         for (int i = 0; i < cashFlows.size(); ++i) {
             // the first coupon paying after d is the one we're after
-            if (!cashFlows.get(i).hasOccurred(settlement))
+            if (!cashFlows.get(i).hasOccurred(settlement)) {
                 return i;
+            }
         }
         return cashFlows.size();
     }
 
     final public CashFlow nextCashFlow(final Leg cashFlows) {
-        return nextCashFlow(cashFlows, Date.NULL_DATE);
+        return nextCashFlow(cashFlows, new Date());
     }
 
     /**
@@ -585,7 +624,7 @@ public class CashFlows {
     }
 
     final public double yieldValueBasisPoint(final Leg leg, final InterestRate y) {
-        return yieldValueBasisPoint(leg, y, Date.NULL_DATE);
+        return yieldValueBasisPoint(leg, y, new Date());
 
     }
 
@@ -654,79 +693,80 @@ public class CashFlows {
     }
 
     final private double basisPointValue(final Leg leg, final InterestRate y) {
-        return basisPointValue(leg, y, Date.NULL_DATE);
+        return basisPointValue(leg, y, new Date());
     }
 
 
 
-	//
-	// public Enums
-	//
+    //
+    // public Enums
+    //
 
-	/**
-	 * Duration type
-	 */
-	public enum Duration {
-		Simple, Macaulay, Modified
-	}
+    /**
+     * Duration type
+     */
+    public enum Duration {
+        Simple, Macaulay, Modified
+    }
 
 
-	//
-	// private inner classes
-	//
+    //
+    // private inner classes
+    //
 
-	private class IRRFinder implements Ops.DoubleOp {
+    private class IRRFinder implements Ops.DoubleOp {
 
-		private final Leg cashflows_;
-		private final double marketPrice_;
-		private final DayCounter dayCounter_;
-		private final Compounding compounding_;
-		private final Frequency frequency_;
-		private final Date settlementDate_;
+        private final Leg cashflows_;
+        private final double marketPrice_;
+        private final DayCounter dayCounter_;
+        private final Compounding compounding_;
+        private final Frequency frequency_;
+        private final Date settlementDate_;
 
-		public IRRFinder(final Leg cashflows, final double marketPrice, final DayCounter dayCounter, final Compounding compounding,
-				final Frequency frequency, final Date settlementDate) {
-			this.cashflows_ = cashflows;
-			this.marketPrice_ = marketPrice;
-			this.dayCounter_ = dayCounter;
-			this.compounding_ = compounding;
-			this.frequency_ = frequency;
-			this.settlementDate_ = settlementDate;
-		}
+        public IRRFinder(final Leg cashflows, final double marketPrice, final DayCounter dayCounter, final Compounding compounding,
+                final Frequency frequency, final Date settlementDate) {
+            this.cashflows_ = cashflows;
+            this.marketPrice_ = marketPrice;
+            this.dayCounter_ = dayCounter;
+            this.compounding_ = compounding;
+            this.frequency_ = frequency;
+            this.settlementDate_ = settlementDate;
+        }
 
-		@Override
-		public double op(final double guess) {
-			final InterestRate rate = new InterestRate(guess, dayCounter_, compounding_, frequency_);
-			final double NPV = npv(cashflows_, rate, settlementDate_);
-			return marketPrice_ - NPV;
-		}
-	}
+        @Override
+        public double op(final double guess) {
+            final InterestRate rate = new InterestRate(guess, dayCounter_, compounding_, frequency_);
+            final double NPV = npv(cashflows_, rate, settlementDate_);
+            return marketPrice_ - NPV;
+        }
+    }
 
-	private class BPSCalculator implements TypedVisitor<Object> {
+    private class BPSCalculator implements TypedVisitor<Object> {
 
-		private static final String UNKNOWN_VISITABLE = "unknow visitable object";
+        private static final String UNKNOWN_VISITABLE = "unknow visitable object";
 
-		private final Handle<YieldTermStructure> termStructure;
-		private final Date npvDate;
+        private final Handle<YieldTermStructure> termStructure;
+        private final Date npvDate;
 
-		private double result;
+        private double result;
 
-		public BPSCalculator(final Handle<YieldTermStructure> termStructure, final Date npvDate) {
-			this.termStructure = termStructure;
-			this.npvDate = npvDate;
-			this.result = 0.0;
-		}
+        public BPSCalculator(final Handle<YieldTermStructure> termStructure, final Date npvDate) {
+            this.termStructure = termStructure;
+            this.npvDate = npvDate;
+            this.result = 0.0;
+        }
 
-		public double result() {
-			if (npvDate.eq(DateFactory.getFactory().getTodaysDate()))
-				return result;
-			else
-				return result / termStructure.getLink().discount(npvDate);
-		}
+        public double result() {
+            if (npvDate.isNull()) {
+                return result;
+            } else {
+                return result / termStructure.getLink().discount(npvDate);
+            }
+        }
 
-		//
-		// private inner classes
-		//
+        //
+        // private inner classes
+        //
 
         private class CashFlowVisitor implements Visitor<Object> {
             @Override
@@ -743,20 +783,22 @@ public class CashFlows {
             }
         }
 
-		//
-		// implements TypedVisitor
-		//
+        //
+        // implements TypedVisitor
+        //
 
-		@Override
-		public Visitor<Object> getVisitor(final Class<? extends Object> klass) {
-			if (klass == CashFlow.class)
-				return new CashFlowVisitor();
-			if (klass == Coupon.class)
-				return new CouponVisitor();
+        @Override
+        public Visitor<Object> getVisitor(final Class<? extends Object> klass) {
+            if (klass == CashFlow.class) {
+                return new CashFlowVisitor();
+            }
+            if (klass == Coupon.class) {
+                return new CouponVisitor();
+            }
 
-			throw new LibraryException(UNKNOWN_VISITABLE); // QA:[RG]::verified
-		}
+            throw new LibraryException(UNKNOWN_VISITABLE); // QA:[RG]::verified
+        }
 
-	}
+    }
 
 }

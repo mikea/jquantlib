@@ -24,13 +24,12 @@ package org.jquantlib.examples;
 
 import static org.jquantlib.util.Month.FEBRUARY;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
 
 /**
@@ -44,19 +43,21 @@ import org.jquantlib.util.StopClock;
 public class BermudanSwaption {
 
     public BermudanSwaption() {
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
         QL.info("\n\n::::: " + BermudanSwaption.class.getSimpleName() + " :::::");
     }
 
     public void run() throws Exception {
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         final StopClock clock = new StopClock();
         clock.startClock();
 
-        final Date todaysDate = DateFactory.getFactory().getDate(15, FEBRUARY, 2002);
+        final Date todaysDate = new Date(15, FEBRUARY, 2002);
 
         // TODO: code review :: please verify against QL/C++ code
         final Calendar calendar = new AbstractCalendar() {
@@ -69,8 +70,8 @@ public class BermudanSwaption {
             }
         };
 
-        final Date settlementDate = DateFactory.getFactory().getDate(19, FEBRUARY, 2002);
-        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(todaysDate);
+        final Date settlementDate = new Date(19, FEBRUARY, 2002);
+        new Settings().setEvaluationDate(todaysDate);
 
         // TODO: code review :: please verify against QL/C++ code
 

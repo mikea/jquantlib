@@ -253,8 +253,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
     @Override
     public InterestRate zeroRate(final /*@Time*/ double  time, final Compounding comp, final Frequency freq, final boolean extrapolate) {
         /*@Time*/ double t = time;
-        if (t==0.0)
+        if (t==0.0) {
             t = 0.0001;
+        }
         /*@CompoundFactor*/ final double compound = 1/discount(t, extrapolate);
         return InterestRate.impliedRate(compound, t, this.dayCounter(), comp, freq);
     }
@@ -301,8 +302,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
             /*@DiscountFactor*/ final double discount2 = discount(d2, extrapolate);
             /*@CompoundFactor*/ final double compound = discount1 / discount2;
             return InterestRate.impliedRate(compound, d1, d2, dayCounter, comp, freq);
-        } else
+        } else {
             throw new LibraryException("d1 later than d2"); // QA:[RG]::verified // TODO: message
+        }
     }
 
     /* (non-Javadoc)
@@ -329,7 +331,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
     public InterestRate forwardRate(final /*@Time*/ double  time1, final /*@Time*/ double  time2, final Compounding comp, final Frequency freq, final boolean extrapolate) {
         /*@Time*/ final double t1 = time1;
         /*@Time*/ double t2 = time2;
-        if (t2==t1) t2 = t1+0.0001;
+        if (t2==t1) {
+            t2 = t1+0.0001;
+        }
         QL.require(t1 <= t2 , "time1 must be <= time2"); // QA:[RG]::verified // TODO: message
         /*@DiscountFactor*/ final double discount1 = discount(t1, extrapolate);
         /*@DiscountFactor*/ final double discount2 = discount(t2, extrapolate);
@@ -351,7 +355,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      */
     @Override
     public InterestRate forwardRate(final Date d, final Period p, final DayCounter dayCounter, final Compounding comp, final Frequency freq, final boolean extrapolate) {
-        return forwardRate(d, d.getDateAfter(p), dayCounter, comp, freq, extrapolate);
+        return forwardRate(d, d.add(p), dayCounter, comp, freq, extrapolate);
     }
 
 
@@ -401,8 +405,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
     public /*@Rate*/ double parRate(final int tenor, final Date startDate, final Frequency freq, final boolean extrapolate) {
         final Date[] dates = new Date[tenor + 1];
         dates[0] = startDate;
-        for (int i = 1; i <= tenor; i++)
-            dates[i] = startDate.getDateAfter(new Period(i, TimeUnit.YEARS));
+        for (int i = 1; i <= tenor; i++) {
+            dates[i] = startDate.add(new Period(i, TimeUnit.YEARS));
+        }
         return parRate(dates, freq, extrapolate);
     }
 
@@ -412,8 +417,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
     @Override
     public /*@Rate*/ double parRate(final Date[] dates, final Frequency freq, final boolean extrapolate) {
         /*@Time*/ final double [] times = new /*@Time*/ double [dates.length];
-        for (int i = 0; i < dates.length; i++)
+        for (int i = 0; i < dates.length; i++) {
             times[i] = timeFromReference(dates[i]);
+        }
         return parRate(times, freq, extrapolate);
     }
 
@@ -426,8 +432,9 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
         /*@Time*/ final double last = times[times.length - 1];
         checkRange(last, extrapolate);
         /*@DiscountFactor*/ double sum = 0.0;
-        for (int i = 1; i < times.length; i++)
+        for (int i = 1; i < times.length; i++) {
             sum += discountImpl(times[i]);
+        }
         /*@Rate*/ double result = discountImpl(times[0]) - discountImpl(last);
         final int freq = frequency.toInteger();
         result *= freq/sum;

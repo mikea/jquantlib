@@ -42,63 +42,69 @@ import org.jquantlib.util.Date;
 //TODO: Work in progress
 public class ConvertibleBond extends Bond {
 
-	protected double conversionRatio;
-	protected List<Dividend> dividends;
-	protected List<Callability> callability;
-	protected Handle<Quote> creditSpread;
-	protected Option option;
+    protected double conversionRatio;
+    protected List<Dividend> dividends;
+    protected List<Callability> callability;
+    protected Handle<Quote> creditSpread;
+    protected Option option;
 
-	public ConvertibleBond(final StochasticProcess process,
-				          final Exercise exercise,
-				          final PricingEngine engine,
-				          final double conversionRatio,
-				          final List<Dividend> dividends,
-				          final List<Callability> callability,
-				          final Handle<Quote> creditSpread,
-				          final Date issueDate,
-				          final int settlementDays,
-				          final DayCounter dayCounter,
-				          final Schedule schedule,
-				          final double redemption){
-		super(settlementDays, 100.0, schedule.getCalendar(), dayCounter, schedule.businessDayConvention());
-		this.conversionRatio = conversionRatio;
-		this.dividends = dividends;
-		this.callability = callability;
-		this.creditSpread = creditSpread;
+    public ConvertibleBond(final StochasticProcess process,
+            final Exercise exercise,
+            final PricingEngine engine,
+            final double conversionRatio,
+            final List<Dividend> dividends,
+            final List<Callability> callability,
+            final Handle<Quote> creditSpread,
+            final Date issueDate,
+            final int settlementDays,
+            final DayCounter dayCounter,
+            final Schedule schedule,
+            final double redemption){
+        super(settlementDays, 100.0, schedule.getCalendar(), dayCounter, schedule.businessDayConvention());
+        this.conversionRatio = conversionRatio;
+        this.dividends = dividends;
+        this.callability = callability;
+        this.creditSpread = creditSpread;
 
-		this.issueDate_ = issueDate;
+        this.issueDate_ = issueDate;
         this.datedDate = schedule.date(0);
         this.maturityDate_ = schedule.date(schedule.size()-1);
-        frequency = schedule.tenor().frequency();
+        this.frequency = schedule.tenor().frequency();
 
         setPricingEngine(engine);
 
-        registerWith(process);
-        registerWith(creditSpread);
+        // TODO: code review :: please verify against QL/C++ code
+        // seems like we should have this.process and this.creditSpread
 
-	}
+        process.addObserver(this);
+        creditSpread.addObserver(this);
+        //XXX:registerWith
+        //registerWith(process);
+        //registerWith(creditSpread);
 
-	public double getConversionRatio() {
-		return conversionRatio;
-	}
+    }
 
-	public List<Dividend> getDividents(){
-		return dividends;
-	}
+    public double getConversionRatio() {
+        return conversionRatio;
+    }
 
-	public List<Callability> getCallability(){
-		return callability;
-	}
+    public List<Dividend> getDividents(){
+        return dividends;
+    }
 
-	public Handle<Quote> getCreditSpread(){
-		return creditSpread;
-	}
+    public List<Callability> getCallability(){
+        return callability;
+    }
 
-	@Override
+    public Handle<Quote> getCreditSpread(){
+        return creditSpread;
+    }
+
+    @Override
     protected void performCalculations(){
-		option.setPricingEngine(engine);
+        option.setPricingEngine(engine);
         NPV = option.getNPV();
         errorEstimate = 0.0;
-	}
+    }
 
 }

@@ -36,7 +36,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.testsuite.daycounters;
 
@@ -53,7 +53,6 @@ import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Brazil;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 import org.junit.Test;
 
@@ -66,281 +65,282 @@ import org.junit.Test;
  */
 public class DayCountersTest {
 
-	public DayCountersTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	}
+    public DayCountersTest() {
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+    }
 
-	private static class SingleCase {
-	    private final ActualActual.Convention convention;
-	    private final Date start;
-	    private final Date end;
-	    private final Date refStart;
-	    private final Date refEnd;
-	    private final /*@Time*/ double  result;
+    private static class SingleCase {
+        private final ActualActual.Convention convention;
+        private final Date start;
+        private final Date end;
+        private final Date refStart;
+        private final Date refEnd;
+        private final /*@Time*/ double  result;
 
-	    public SingleCase(
-    			final ActualActual.Convention convention,
-    			final Date start,
-    			final Date end,
+        public SingleCase(
+                final ActualActual.Convention convention,
+                final Date start,
+                final Date end,
                 final /*@Time*/ double result) {
-	    	this(convention, start, end, Date.NULL_DATE, Date.NULL_DATE, result);
-	    }
+            this(convention, start, end, new Date(), new Date(), result);
+        }
 
-	    public SingleCase(
-	    			final ActualActual.Convention convention,
-	    			final Date start,
-	    			final Date end,
-	    			final Date refStart,
-	    			final Date refEnd,
-	                final /*@Time*/ double result) {
-	    	this.convention = convention;
-	    	this.start = start;
-	    	this.end = end;
-	    	this.refStart = refStart;
-	    	this.refEnd = refEnd;
-	    	this.result = result;
-	    }
+        public SingleCase(
+                final ActualActual.Convention convention,
+                final Date start,
+                final Date end,
+                final Date refStart,
+                final Date refEnd,
+                final /*@Time*/ double result) {
+            this.convention = convention;
+            this.start = start;
+            this.end = end;
+            this.refStart = refStart;
+            this.refEnd = refEnd;
+            this.result = result;
+        }
 
-	    private String dumpDate(final Date date) {
-	    	if (date == null) {
-	    		return "null";
-	    	} else {
-	    		return date.getISOFormat();
-	    	}
-	    }
-
-
-	    @Override
-	    public String toString() {
-	    	final StringBuilder sb = new StringBuilder();
-	    	sb.append("[ ");
-	    	sb.append(convention).append(", ");
-	    	sb.append(dumpDate(start)).append(", ");
-	    	sb.append(dumpDate(end)).append(", ");
-	    	sb.append(dumpDate(refStart)).append(", ");
-	    	sb.append(dumpDate(refEnd));
-	    	sb.append(" ]");
-	    	return sb.toString();
-	    }
-	}
+        private String dumpDate(final Date date) {
+            if (date == null) {
+                return "null";
+            } else {
+                return date.isoDate().toString();
+            }
+        }
 
 
-	@Test
-	public void testActualActual() {
-
-	    QL.info("Testing actual/actual day counters...");
-
-	    final SingleCase testCases[] = new SingleCase[] {
-	        // first example
-	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getFactory().getDate(1,Month.NOVEMBER,2003), DateFactory.getFactory().getDate(1,Month.MAY,2004),
-	                   0.497724380567),
-	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getFactory().getDate(1,Month.NOVEMBER,2003), DateFactory.getFactory().getDate(1,Month.MAY,2004),
-	                   DateFactory.getFactory().getDate(1,Month.NOVEMBER,2003), DateFactory.getFactory().getDate(1,Month.MAY,2004),
-	                   0.500000000000),
-	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getFactory().getDate(1,Month.NOVEMBER,2003), DateFactory.getFactory().getDate(1,Month.MAY,2004),
-	                   0.497267759563),
-	        // short first calculation period (first period)
-	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getFactory().getDate(1,Month.FEBRUARY,1999), DateFactory.getFactory().getDate(1,Month.JULY,1999),
-	                   0.410958904110),
-	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getFactory().getDate(1,Month.FEBRUARY,1999), DateFactory.getFactory().getDate(1,Month.JULY,1999),
-	                   DateFactory.getFactory().getDate(1,Month.JULY,1998), DateFactory.getFactory().getDate(1,Month.JULY,1999),
-	                   0.410958904110),
-	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getFactory().getDate(1,Month.FEBRUARY,1999), DateFactory.getFactory().getDate(1,Month.JULY,1999),
-	                   0.410958904110),
-	        // short first calculation period (second period)
-	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getFactory().getDate(1,Month.JULY,1999), DateFactory.getFactory().getDate(1,Month.JULY,2000),
-	                   1.001377348600),
-	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getFactory().getDate(1,Month.JULY,1999), DateFactory.getFactory().getDate(1,Month.JULY,2000),
-	                   DateFactory.getFactory().getDate(1,Month.JULY,1999), DateFactory.getFactory().getDate(1,Month.JULY,2000),
-	                   1.000000000000),
-	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getFactory().getDate(1,Month.JULY,1999), DateFactory.getFactory().getDate(1,Month.JULY,2000),
-	                   1.000000000000),
-	        // long first calculation period (first period)
-	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getFactory().getDate(15,Month.AUGUST,2002), DateFactory.getFactory().getDate(15,Month.JULY,2003),
-	                   0.915068493151),
-	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getFactory().getDate(15,Month.AUGUST,2002), DateFactory.getFactory().getDate(15,Month.JULY,2003),
-	                   DateFactory.getFactory().getDate(15,Month.JANUARY,2003), DateFactory.getFactory().getDate(15,Month.JULY,2003),
-	                   0.915760869565),
-	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getFactory().getDate(15,Month.AUGUST,2002), DateFactory.getFactory().getDate(15,Month.JULY,2003),
-	                   0.915068493151),
-	        // long first calculation period (second period)
-	        /* Warning: the ISDA case is in disagreement with mktc1198.pdf */
-	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getFactory().getDate(15,Month.JULY,2003), DateFactory.getFactory().getDate(15,Month.JANUARY,2004),
-	                   0.504004790778),
-	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getFactory().getDate(15,Month.JULY,2003), DateFactory.getFactory().getDate(15,Month.JANUARY,2004),
-	                   DateFactory.getFactory().getDate(15,Month.JULY,2003), DateFactory.getFactory().getDate(15,Month.JANUARY,2004),
-	                   0.500000000000),
-	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getFactory().getDate(15,Month.JULY,2003), DateFactory.getFactory().getDate(15,Month.JANUARY,2004),
-	                   0.504109589041),
-	        // short final calculation period (penultimate period)
-	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getFactory().getDate(30,Month.JULY,1999), DateFactory.getFactory().getDate(30,Month.JANUARY,2000),
-	                   0.503892506924),
-	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getFactory().getDate(30,Month.JULY,1999), DateFactory.getFactory().getDate(30,Month.JANUARY,2000),
-	                   DateFactory.getFactory().getDate(30,Month.JULY,1999), DateFactory.getFactory().getDate(30,Month.JANUARY,2000),
-	                   0.500000000000),
-	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getFactory().getDate(30,Month.JULY,1999), DateFactory.getFactory().getDate(30,Month.JANUARY,2000),
-	                   0.504109589041),
-	        // short final calculation period (final period)
-	        new SingleCase(ActualActual.Convention.ISDA,
-	                   DateFactory.getFactory().getDate(30,Month.JANUARY,2000), DateFactory.getFactory().getDate(30,Month.JUNE,2000),
-	                   0.415300546448),
-	        new SingleCase(ActualActual.Convention.ISMA,
-	                   DateFactory.getFactory().getDate(30,Month.JANUARY,2000), DateFactory.getFactory().getDate(30,Month.JUNE,2000),
-	                   DateFactory.getFactory().getDate(30,Month.JANUARY,2000), DateFactory.getFactory().getDate(30,Month.JULY,2000),
-	                   0.417582417582),
-	        new SingleCase(ActualActual.Convention.AFB,
-	                   DateFactory.getFactory().getDate(30,Month.JANUARY,2000), DateFactory.getFactory().getDate(30,Month.JUNE,2000),
-	                   0.41530054644)
-	    };
-
-	    for (int i=0; i<testCases.length-1; i++) {
-	        final ActualActual dayCounter =  ActualActual.getDayCounter(testCases[i].convention);
-	        final Date d1 = testCases[i].start;
-	        final Date d2 = testCases[i].end;
-	        final Date rd1 = testCases[i].refStart;
-	        final Date rd2 = testCases[i].refEnd;
-
-	        QL.info(testCases[i].toString());
-
-	        /*@Time*/ final double  calculated = dayCounter.yearFraction(d1, d2, rd1, rd2);
-
-	        if (abs(calculated-testCases[i].result) > 1.0e-10) {
-	        	final String period = "period: " + d1 + " to " + d2;
-	        	String refPeriod = "";
-	            if (testCases[i].convention == ActualActual.Convention.ISMA) {
-	                refPeriod = "referencePeriod: " + rd1 + " to " + rd2;
-	            }
-	            fail(dayCounter.name() + ":\n"
-	                       + period + "\n"
-	                       + refPeriod + "\n"
-	                       + "    calculated: " + calculated + "\n"
-	                       + "    expected:   " + testCases[i].result);
-	        }
-	    }
-	}
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder();
+            sb.append("[ ");
+            sb.append(convention).append(", ");
+            sb.append(dumpDate(start)).append(", ");
+            sb.append(dumpDate(end)).append(", ");
+            sb.append(dumpDate(refStart)).append(", ");
+            sb.append(dumpDate(refEnd));
+            sb.append(" ]");
+            return sb.toString();
+        }
+    }
 
 
-	@Test
-	public void testSimple() {
+    @Test
+    public void testActualActual() {
 
-	    QL.info("Testing simple day counter...");
+        QL.info("Testing actual/actual day counters...");
 
-	    final Period p[] = new Period[] { new Period(3, TimeUnit.MONTHS), new Period(6, TimeUnit.MONTHS), new Period(1, TimeUnit.YEARS) };
-	    /*@Time*/ final double expected[] = { 0.25, 0.5, 1.0 };
+        final SingleCase testCases[] = new SingleCase[] {
+                // first example
+                new SingleCase(ActualActual.Convention.ISDA,
+                        new Date(1,Month.NOVEMBER,2003), new Date(1,Month.MAY,2004),
+                        0.497724380567),
+                        new SingleCase(ActualActual.Convention.ISMA,
+                                new Date(1,Month.NOVEMBER,2003), new Date(1,Month.MAY,2004),
+                                new Date(1,Month.NOVEMBER,2003), new Date(1,Month.MAY,2004),
+                                0.500000000000),
+                                new SingleCase(ActualActual.Convention.AFB,
+                                        new Date(1,Month.NOVEMBER,2003), new Date(1,Month.MAY,2004),
+                                        0.497267759563),
+                                        // short first calculation period (first period)
+                                        new SingleCase(ActualActual.Convention.ISDA,
+                                                new Date(1,Month.FEBRUARY,1999), new Date(1,Month.JULY,1999),
+                                                0.410958904110),
+                                                new SingleCase(ActualActual.Convention.ISMA,
+                                                        new Date(1,Month.FEBRUARY,1999), new Date(1,Month.JULY,1999),
+                                                        new Date(1,Month.JULY,1998), new Date(1,Month.JULY,1999),
+                                                        0.410958904110),
+                                                        new SingleCase(ActualActual.Convention.AFB,
+                                                                new Date(1,Month.FEBRUARY,1999), new Date(1,Month.JULY,1999),
+                                                                0.410958904110),
+                                                                // short first calculation period (second period)
+                                                                new SingleCase(ActualActual.Convention.ISDA,
+                                                                        new Date(1,Month.JULY,1999), new Date(1,Month.JULY,2000),
+                                                                        1.001377348600),
+                                                                        new SingleCase(ActualActual.Convention.ISMA,
+                                                                                new Date(1,Month.JULY,1999), new Date(1,Month.JULY,2000),
+                                                                                new Date(1,Month.JULY,1999), new Date(1,Month.JULY,2000),
+                                                                                1.000000000000),
+                                                                                new SingleCase(ActualActual.Convention.AFB,
+                                                                                        new Date(1,Month.JULY,1999), new Date(1,Month.JULY,2000),
+                                                                                        1.000000000000),
+                                                                                        // long first calculation period (first period)
+                                                                                        new SingleCase(ActualActual.Convention.ISDA,
+                                                                                                new Date(15,Month.AUGUST,2002), new Date(15,Month.JULY,2003),
+                                                                                                0.915068493151),
+                                                                                                new SingleCase(ActualActual.Convention.ISMA,
+                                                                                                        new Date(15,Month.AUGUST,2002), new Date(15,Month.JULY,2003),
+                                                                                                        new Date(15,Month.JANUARY,2003), new Date(15,Month.JULY,2003),
+                                                                                                        0.915760869565),
+                                                                                                        new SingleCase(ActualActual.Convention.AFB,
+                                                                                                                new Date(15,Month.AUGUST,2002), new Date(15,Month.JULY,2003),
+                                                                                                                0.915068493151),
+                                                                                                                // long first calculation period (second period)
+                                                                                                                /* Warning: the ISDA case is in disagreement with mktc1198.pdf */
+                                                                                                                new SingleCase(ActualActual.Convention.ISDA,
+                                                                                                                        new Date(15,Month.JULY,2003), new Date(15,Month.JANUARY,2004),
+                                                                                                                        0.504004790778),
+                                                                                                                        new SingleCase(ActualActual.Convention.ISMA,
+                                                                                                                                new Date(15,Month.JULY,2003), new Date(15,Month.JANUARY,2004),
+                                                                                                                                new Date(15,Month.JULY,2003), new Date(15,Month.JANUARY,2004),
+                                                                                                                                0.500000000000),
+                                                                                                                                new SingleCase(ActualActual.Convention.AFB,
+                                                                                                                                        new Date(15,Month.JULY,2003), new Date(15,Month.JANUARY,2004),
+                                                                                                                                        0.504109589041),
+                                                                                                                                        // short final calculation period (penultimate period)
+                                                                                                                                        new SingleCase(ActualActual.Convention.ISDA,
+                                                                                                                                                new Date(30,Month.JULY,1999), new Date(30,Month.JANUARY,2000),
+                                                                                                                                                0.503892506924),
+                                                                                                                                                new SingleCase(ActualActual.Convention.ISMA,
+                                                                                                                                                        new Date(30,Month.JULY,1999), new Date(30,Month.JANUARY,2000),
+                                                                                                                                                        new Date(30,Month.JULY,1999), new Date(30,Month.JANUARY,2000),
+                                                                                                                                                        0.500000000000),
+                                                                                                                                                        new SingleCase(ActualActual.Convention.AFB,
+                                                                                                                                                                new Date(30,Month.JULY,1999), new Date(30,Month.JANUARY,2000),
+                                                                                                                                                                0.504109589041),
+                                                                                                                                                                // short final calculation period (final period)
+                                                                                                                                                                new SingleCase(ActualActual.Convention.ISDA,
+                                                                                                                                                                        new Date(30,Month.JANUARY,2000), new Date(30,Month.JUNE,2000),
+                                                                                                                                                                        0.415300546448),
+                                                                                                                                                                        new SingleCase(ActualActual.Convention.ISMA,
+                                                                                                                                                                                new Date(30,Month.JANUARY,2000), new Date(30,Month.JUNE,2000),
+                                                                                                                                                                                new Date(30,Month.JANUARY,2000), new Date(30,Month.JULY,2000),
+                                                                                                                                                                                0.417582417582),
+                                                                                                                                                                                new SingleCase(ActualActual.Convention.AFB,
+                                                                                                                                                                                        new Date(30,Month.JANUARY,2000), new Date(30,Month.JUNE,2000),
+                                                                                                                                                                                        0.41530054644)
+        };
 
-	    // 4 years should be enough
-	    final Date first = DateFactory.getFactory().getDate(1,Month.JANUARY,2002);
-	    final Date last  = DateFactory.getFactory().getDate(31,Month.DECEMBER,2005);
-	    final DayCounter dayCounter = new SimpleDayCounter();
+        for (int i=0; i<testCases.length-1; i++) {
+            final ActualActual dayCounter =  ActualActual.getDayCounter(testCases[i].convention);
+            final Date d1 = testCases[i].start;
+            final Date d2 = testCases[i].end;
+            final Date rd1 = testCases[i].refStart;
+            final Date rd2 = testCases[i].refEnd;
 
-	    for (final Date start = first; start.le(last); start.increment()) {
-	        for (int i=0; i<expected.length-1; i++) {
-	            final Date end = start.getDateAfter(p[i]);
-	            /*@Time*/ final double  calculated = dayCounter.yearFraction(start, end);
+            QL.info(testCases[i].toString());
 
-	        	if (abs(calculated-expected[i]) > 1.0e-12)
-	                fail("from " + start + " to " + end + ":\n"
-	                        + "    calculated: " + calculated + "\n"
-	                        + "    expected:   " + expected[i]);
-	        }
-	    }
-	}
+            /*@Time*/ final double  calculated = dayCounter.yearFraction(d1, d2, rd1, rd2);
 
-	@Test
-	public void testOne() {
+            if (abs(calculated-testCases[i].result) > 1.0e-10) {
+                final String period = "period: " + d1 + " to " + d2;
+                String refPeriod = "";
+                if (testCases[i].convention == ActualActual.Convention.ISMA) {
+                    refPeriod = "referencePeriod: " + rd1 + " to " + rd2;
+                }
+                fail(dayCounter.name() + ":\n"
+                        + period + "\n"
+                        + refPeriod + "\n"
+                        + "    calculated: " + calculated + "\n"
+                        + "    expected:   " + testCases[i].result);
+            }
+        }
+    }
 
-	    QL.info("Testing 1/1 day counter...");
 
-	    final Period p[] = new Period[]{ new Period(3, TimeUnit.MONTHS), new Period(6, TimeUnit.MONTHS), new Period(1, TimeUnit.YEARS) };
-	    /*@Time*/ final double expected[] = new double[] { 1.0, 1.0, 1.0 };
+    @Test
+    public void testSimple() {
 
-	    // 1 years should be enough
-	    final Date first = DateFactory.getFactory().getDate(1,Month.JANUARY,2004);
-	    final Date last  = DateFactory.getFactory().getDate(31,Month.DECEMBER,2004);
-	    final DayCounter dayCounter = new SimpleDayCounter();
+        QL.info("Testing simple day counter...");
 
-	    for (final Date start = first; start.le(last); start.increment()) {
-	        for (int i=0; i<expected.length-1; i++) {
-	            final Date end = start.getDateAfter(p[i]);
-	            /*@Time*/ final double  calculated = dayCounter.yearFraction(start, end);
+        final Period p[] = new Period[] { new Period(3, TimeUnit.MONTHS), new Period(6, TimeUnit.MONTHS), new Period(1, TimeUnit.YEARS) };
+        /*@Time*/ final double expected[] = { 0.25, 0.5, 1.0 };
 
-	            if (abs(calculated-expected[i]) <= 1.0e-12) {
-	                fail("from " + start + " to " + end + ":\n"
-	                           + "    calculated: " + calculated + "\n"
-	                           + "    expected:   " + expected[i]);
-	            }
-	        }
-	    }
-	}
+        // 4 years should be enough
+        final Date first = new Date(1,Month.JANUARY,2002);
+        final Date last  = new Date(31,Month.DECEMBER,2005);
+        final DayCounter dayCounter = new SimpleDayCounter();
 
-	//TODO: Sounds like this test method from the C++ codes actually test nothing!
-	//abs(calculated - expected[i]) <= 1.0e-12? making sense? could always pass. Daniel
-	@Test
-	public void testBusiness252() {
+        for (final Date start = first; start.le(last); start.inc()) {
+            for (int i=0; i<expected.length-1; i++) {
+                final Date end = start.add(p[i]);
+                /*@Time*/ final double  calculated = dayCounter.yearFraction(start, end);
 
-	    QL.info("Testing business/252 day counter...");
+                if (abs(calculated-expected[i]) > 1.0e-12) {
+                    fail("from " + start + " to " + end + ":\n"
+                            + "    calculated: " + calculated + "\n"
+                            + "    expected:   " + expected[i]);
+                }
+            }
+        }
+    }
 
-	    final Date testDates[] = {
-	    DateFactory.getFactory().getDate(1,Month.FEBRUARY,2002),
-	    DateFactory.getFactory().getDate(4,Month.FEBRUARY,2002),
-	    DateFactory.getFactory().getDate(16,Month.MAY,2003),
-	    DateFactory.getFactory().getDate(17,Month.DECEMBER,2003),
-	    DateFactory.getFactory().getDate(17,Month.DECEMBER,2004),
-	    DateFactory.getFactory().getDate(19,Month.DECEMBER,2005),
-	    DateFactory.getFactory().getDate(2,Month.JANUARY,2006),
-	    DateFactory.getFactory().getDate(13,Month.MARCH,2006),
-	    DateFactory.getFactory().getDate(15,Month.MAY,2006),
-	    DateFactory.getFactory().getDate(17,Month.MARCH,2006),
-	    DateFactory.getFactory().getDate(15,Month.MAY,2006),
-	    DateFactory.getFactory().getDate(26,Month.JULY,2006) };
+    @Test
+    public void testOne() {
 
-	    /*@Time*/ final double expected[] = {
-	        0.0039682539683,
-	        1.2738095238095,
-	        0.6031746031746,
-	        0.9960317460317,
-	        1.0000000000000,
-	        0.0396825396825,
-	        0.1904761904762,
-	        0.1666666666667,
-	        -0.1507936507937,
-	        0.1507936507937,
-	        0.2023809523810
-	        };
+        QL.info("Testing 1/1 day counter...");
 
-	    final DayCounter dayCounter = new Business252(Brazil.getCalendar(Brazil.Market.SETTLEMENT));
+        final Period p[] = new Period[]{ new Period(3, TimeUnit.MONTHS), new Period(6, TimeUnit.MONTHS), new Period(1, TimeUnit.YEARS) };
+        /*@Time*/ final double expected[] = new double[] { 1.0, 1.0, 1.0 };
 
-	    for (int i=1; i<testDates.length-1; i++) {
-	    	final Date start = testDates[i-1];
-	    	final Date end = testDates[i];
-	    	/*@Time*/ final double  calculated = dayCounter.yearFraction(start, end);
-	        System.out.println(calculated);
-	    	assertFalse(dayCounter.getClass().getName()
-					+"\n from "+start
-					+"\n to "+end
-					+"\n calculated: "+calculated
-					+"\n expected:   "+expected[i],
-					abs(calculated - expected[i]) <= 1.0e-12);
-	    }
-	}
+        // 1 years should be enough
+        final Date first = new Date(1,Month.JANUARY,2004);
+        final Date last  = new Date(31,Month.DECEMBER,2004);
+        final DayCounter dayCounter = new SimpleDayCounter();
+
+        for (final Date start = first; start.le(last); start.inc()) {
+            for (int i=0; i<expected.length-1; i++) {
+                final Date end = start.add(p[i]);
+                /*@Time*/ final double  calculated = dayCounter.yearFraction(start, end);
+
+                if (abs(calculated-expected[i]) <= 1.0e-12) {
+                    fail("from " + start + " to " + end + ":\n"
+                            + "    calculated: " + calculated + "\n"
+                            + "    expected:   " + expected[i]);
+                }
+            }
+        }
+    }
+
+    //TODO: Sounds like this test method from the C++ codes actually test nothing!
+    //abs(calculated - expected[i]) <= 1.0e-12? making sense? could always pass. Daniel
+    @Test
+    public void testBusiness252() {
+
+        QL.info("Testing business/252 day counter...");
+
+        final Date testDates[] = {
+                new Date(1,Month.FEBRUARY,2002),
+                new Date(4,Month.FEBRUARY,2002),
+                new Date(16,Month.MAY,2003),
+                new Date(17,Month.DECEMBER,2003),
+                new Date(17,Month.DECEMBER,2004),
+                new Date(19,Month.DECEMBER,2005),
+                new Date(2,Month.JANUARY,2006),
+                new Date(13,Month.MARCH,2006),
+                new Date(15,Month.MAY,2006),
+                new Date(17,Month.MARCH,2006),
+                new Date(15,Month.MAY,2006),
+                new Date(26,Month.JULY,2006) };
+
+        /*@Time*/ final double expected[] = {
+                0.0039682539683,
+                1.2738095238095,
+                0.6031746031746,
+                0.9960317460317,
+                1.0000000000000,
+                0.0396825396825,
+                0.1904761904762,
+                0.1666666666667,
+                -0.1507936507937,
+                0.1507936507937,
+                0.2023809523810
+        };
+
+        final DayCounter dayCounter = new Business252(Brazil.getCalendar(Brazil.Market.SETTLEMENT));
+
+        for (int i=1; i<testDates.length-1; i++) {
+            final Date start = testDates[i-1];
+            final Date end = testDates[i];
+            /*@Time*/ final double  calculated = dayCounter.yearFraction(start, end);
+            System.out.println(calculated);
+            assertFalse(dayCounter.getClass().getName()
+                    +"\n from "+start
+                    +"\n to "+end
+                    +"\n calculated: "+calculated
+                    +"\n expected:   "+expected[i],
+                    abs(calculated - expected[i]) <= 1.0e-12);
+        }
+    }
 
 
 }

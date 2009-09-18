@@ -36,7 +36,6 @@ import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Norway;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 
 /**
@@ -77,22 +76,22 @@ public class NorwayCalendarTest {
 	public void testNorwayYear2012() {
        	final int year = 2012;
     	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		// Sun: expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
-		// Sun: expectedHol.add(df.getDate( 1,APRIL,year));		// Palm Sunday
-		expectedHol.add(df.getDate( 5,APRIL,year));		// Maundy Thursday
-		expectedHol.add(df.getDate( 6,APRIL,year));		// Good Friday
-		// Sun: expectedHol.add(df.getDate( 8,APRIL,year));     // Easter Day
-		expectedHol.add(df.getDate( 9,APRIL,year));     // Easter Monday
-		expectedHol.add(df.getDate( 1,MAY,year));		// Official holiday
-        expectedHol.add(df.getDate(17,MAY,year));		// Ascension Day
-        expectedHol.add(df.getDate(17,MAY,year));		// Constitution Day
-        // Sun: expectedHol.add(df.getDate(27,MAY,year));   	// Whit Sunday
-        expectedHol.add(df.getDate(28,MAY,year));   	// Whit Monday
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		// Sun: expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		// Sun: expectedHol.add(new Date( 1,APRIL,year));		// Palm Sunday
+		expectedHol.add(new Date( 5,APRIL,year));		// Maundy Thursday
+		expectedHol.add(new Date( 6,APRIL,year));		// Good Friday
+		// Sun: expectedHol.add(new Date( 8,APRIL,year));     // Easter Day
+		expectedHol.add(new Date( 9,APRIL,year));     // Easter Monday
+		expectedHol.add(new Date( 1,MAY,year));		// Official holiday
+        expectedHol.add(new Date(17,MAY,year));		// Ascension Day
+        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
+        // Sun: expectedHol.add(new Date(27,MAY,year));   	// Whit Sunday
+        expectedHol.add(new Date(28,MAY,year));   	// Whit Monday
+        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -123,23 +122,23 @@ public class NorwayCalendarTest {
 	public void testNorwayYear2011() {
         final int year = 2011;
     	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 
-		// Sat: expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
-		// Sun: expectedHol.add(df.getDate(17,APRIL,year));		// Palm Sunday
-		expectedHol.add(df.getDate(21,APRIL,year));		// Maundy Thursday
-		expectedHol.add(df.getDate(22,APRIL,year));		// Good Friday
-		// Sun: expectedHol.add(df.getDate(24,APRIL,year));     // Easter Day
-		expectedHol.add(df.getDate(25,APRIL,year));     // Easter Monday
-		// Sun: expectedHol.add(df.getDate( 1,MAY,year));		// Official holiday
-        expectedHol.add(df.getDate(17,MAY,year));		// Constitution Day
-        expectedHol.add(df.getDate( 2,JUNE,year));		// Ascension Day
-        // Sun: expectedHol.add(df.getDate(12,JUNE,year));   	// Whit Sunday
-        expectedHol.add(df.getDate(13,JUNE,year));   	// Whit Monday
-        // Sun: expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		// Sat: expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		// Sun: expectedHol.add(new Date(17,APRIL,year));		// Palm Sunday
+		expectedHol.add(new Date(21,APRIL,year));		// Maundy Thursday
+		expectedHol.add(new Date(22,APRIL,year));		// Good Friday
+		// Sun: expectedHol.add(new Date(24,APRIL,year));     // Easter Day
+		expectedHol.add(new Date(25,APRIL,year));     // Easter Monday
+		// Sun: expectedHol.add(new Date( 1,MAY,year));		// Official holiday
+        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
+        expectedHol.add(new Date( 2,JUNE,year));		// Ascension Day
+        // Sun: expectedHol.add(new Date(12,JUNE,year));   	// Whit Sunday
+        expectedHol.add(new Date(13,JUNE,year));   	// Whit Monday
+        // Sun: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -170,23 +169,23 @@ public class NorwayCalendarTest {
 	public void testNorwayYear2010() {
         final int year = 2010;
     	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 
-		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
-		// Sun: expectedHol.add(df.getDate(28,MARCH,year));		// Palm Sunday
-		expectedHol.add(df.getDate( 1,APRIL,year));		// Maundy Thursday
-		expectedHol.add(df.getDate( 2,APRIL,year));		// Good Friday
-		// Sun: expectedHol.add(df.getDate( 4,APRIL,year));     // Easter Day
-		expectedHol.add(df.getDate( 5,APRIL,year));     // Easter Monday
-		// Sat: expectedHol.add(df.getDate( 1,MAY,year));		// Official holiday
-        expectedHol.add(df.getDate(13,MAY,year));		// Ascension Day
-        expectedHol.add(df.getDate(17,MAY,year));		// Constitution Day
-        // Sun: expectedHol.add(df.getDate(23,MAY,year));   	// Whit Sunday
-        expectedHol.add(df.getDate(24,MAY,year));   	// Whit Monday
-        // Sat: expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        // Sun: expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		// Sun: expectedHol.add(new Date(28,MARCH,year));		// Palm Sunday
+		expectedHol.add(new Date( 1,APRIL,year));		// Maundy Thursday
+		expectedHol.add(new Date( 2,APRIL,year));		// Good Friday
+		// Sun: expectedHol.add(new Date( 4,APRIL,year));     // Easter Day
+		expectedHol.add(new Date( 5,APRIL,year));     // Easter Monday
+		// Sat: expectedHol.add(new Date( 1,MAY,year));		// Official holiday
+        expectedHol.add(new Date(13,MAY,year));		// Ascension Day
+        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
+        // Sun: expectedHol.add(new Date(23,MAY,year));   	// Whit Sunday
+        expectedHol.add(new Date(24,MAY,year));   	// Whit Monday
+        // Sat: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        // Sun: expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -219,23 +218,23 @@ public class NorwayCalendarTest {
 	public void testNorwayYear2009() {
       	final int year = 2009;
     	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 
-		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
-		// Sun: expectedHol.add(df.getDate( 5,APRIL,year));		// Palm Sunday
-		expectedHol.add(df.getDate( 9,APRIL,year));		// Maundy Thursday
-		expectedHol.add(df.getDate(10,APRIL,year));		// Good Friday
-		// Sun: expectedHol.add(df.getDate(12,APRIL,year));     // Easter Day
-		expectedHol.add(df.getDate(13,APRIL,year));     // Easter Monday
-		expectedHol.add(df.getDate( 1,MAY,year));		// Official holiday
-        // Sun: expectedHol.add(df.getDate(17,MAY,year));		// Constitution Day
-        expectedHol.add(df.getDate(21,MAY,year));		// Ascension Day
-        // Sun: expectedHol.add(df.getDate(31,MAY,year));   	// Whit Sunday
-        expectedHol.add(df.getDate( 1,JUNE,year));   	// Whit Monday
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        // Sat: expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		// Sun: expectedHol.add(new Date( 5,APRIL,year));		// Palm Sunday
+		expectedHol.add(new Date( 9,APRIL,year));		// Maundy Thursday
+		expectedHol.add(new Date(10,APRIL,year));		// Good Friday
+		// Sun: expectedHol.add(new Date(12,APRIL,year));     // Easter Day
+		expectedHol.add(new Date(13,APRIL,year));     // Easter Monday
+		expectedHol.add(new Date( 1,MAY,year));		// Official holiday
+        // Sun: expectedHol.add(new Date(17,MAY,year));		// Constitution Day
+        expectedHol.add(new Date(21,MAY,year));		// Ascension Day
+        // Sun: expectedHol.add(new Date(31,MAY,year));   	// Whit Sunday
+        expectedHol.add(new Date( 1,JUNE,year));   	// Whit Monday
+        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        // Sat: expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -267,23 +266,23 @@ public class NorwayCalendarTest {
 	public void testNorwayYear2008() {
       	final int year = 2008;
     	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 
-		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
-		// Sun: expectedHol.add(df.getDate(16,MARCH,year));		// Palm Sunday
-		expectedHol.add(df.getDate(20,MARCH,year));		// Maundy Thursday
-		expectedHol.add(df.getDate(21,MARCH,year));		// Good Friday
-		// Sun: expectedHol.add(df.getDate(23,MARCH,year));     // Easter Day
-		expectedHol.add(df.getDate(24,MARCH,year));     // Easter Monday
-		expectedHol.add(df.getDate( 1,MAY,year));		// Official holiday
-        expectedHol.add(df.getDate( 1,MAY,year));		// Ascension Day
-        // Sun: expectedHol.add(df.getDate(11,MAY,year));   	// Whit Sunday
-        expectedHol.add(df.getDate(12,MAY,year));   	// Whit Monday
-        // Sat: expectedHol.add(df.getDate(17,MAY,year));		// Constitution Day
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		// Sun: expectedHol.add(new Date(16,MARCH,year));		// Palm Sunday
+		expectedHol.add(new Date(20,MARCH,year));		// Maundy Thursday
+		expectedHol.add(new Date(21,MARCH,year));		// Good Friday
+		// Sun: expectedHol.add(new Date(23,MARCH,year));     // Easter Day
+		expectedHol.add(new Date(24,MARCH,year));     // Easter Monday
+		expectedHol.add(new Date( 1,MAY,year));		// Official holiday
+        expectedHol.add(new Date( 1,MAY,year));		// Ascension Day
+        // Sun: expectedHol.add(new Date(11,MAY,year));   	// Whit Sunday
+        expectedHol.add(new Date(12,MAY,year));   	// Whit Monday
+        // Sat: expectedHol.add(new Date(17,MAY,year));		// Constitution Day
+        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -314,22 +313,22 @@ public class NorwayCalendarTest {
 	public void testNorwayYear2007() {
         final int year = 2007;
     	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
-		// Sun: expectedHol.add(df.getDate( 1,APRIL,year));		// Palm Sunday
-		expectedHol.add(df.getDate( 5,APRIL,year));		// Maundy Thursday
-		expectedHol.add(df.getDate( 6,APRIL,year));		// Good Friday
-		// Sun: expectedHol.add(df.getDate( 8,APRIL,year));     // Easter Day
-		expectedHol.add(df.getDate( 9,APRIL,year));     // Easter Monday
-		expectedHol.add(df.getDate( 1,MAY,year));		// Official holiday
-        expectedHol.add(df.getDate(17,MAY,year));		// Constitution Day
-        expectedHol.add(df.getDate(17,MAY,year));		// Ascension Day
-        // Sun: expectedHol.add(df.getDate(27,MAY,year));   	// Whit Sunday
-        expectedHol.add(df.getDate(28,MAY,year));   	// Whit Monday
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		// Sun: expectedHol.add(new Date( 1,APRIL,year));		// Palm Sunday
+		expectedHol.add(new Date( 5,APRIL,year));		// Maundy Thursday
+		expectedHol.add(new Date( 6,APRIL,year));		// Good Friday
+		// Sun: expectedHol.add(new Date( 8,APRIL,year));     // Easter Day
+		expectedHol.add(new Date( 9,APRIL,year));     // Easter Monday
+		expectedHol.add(new Date( 1,MAY,year));		// Official holiday
+        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
+        expectedHol.add(new Date(17,MAY,year));		// Ascension Day
+        // Sun: expectedHol.add(new Date(27,MAY,year));   	// Whit Sunday
+        expectedHol.add(new Date(28,MAY,year));   	// Whit Monday
+        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -362,22 +361,22 @@ public class NorwayCalendarTest {
 	public void testNorwayYear2006() {
         final int year = 2006;
     	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		// Sun: expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
-		// Sun: expectedHol.add(df.getDate( 9,APRIL,year));		// Palm Sunday
-		expectedHol.add(df.getDate(13,APRIL,year));		// Maundy Thursday
-		expectedHol.add(df.getDate(14,APRIL,year));		// Good Friday
-		// Sun: expectedHol.add(df.getDate(16,APRIL,year));     // Easter Day
-		expectedHol.add(df.getDate(17,APRIL,year));     // Easter Monday
-		expectedHol.add(df.getDate( 1,MAY,year));		// Official holiday
-        expectedHol.add(df.getDate(17,MAY,year));		// Constitution Day
-        expectedHol.add(df.getDate(25,MAY,year));		// Ascension Day
-        // Sun: expectedHol.add(df.getDate( 4,JUNE,year));   	// Whit Sunday
-        expectedHol.add(df.getDate( 5,JUNE,year));   	// Whit Monday
-        expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		// Sun: expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		// Sun: expectedHol.add(new Date( 9,APRIL,year));		// Palm Sunday
+		expectedHol.add(new Date(13,APRIL,year));		// Maundy Thursday
+		expectedHol.add(new Date(14,APRIL,year));		// Good Friday
+		// Sun: expectedHol.add(new Date(16,APRIL,year));     // Easter Day
+		expectedHol.add(new Date(17,APRIL,year));     // Easter Monday
+		expectedHol.add(new Date( 1,MAY,year));		// Official holiday
+        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
+        expectedHol.add(new Date(25,MAY,year));		// Ascension Day
+        // Sun: expectedHol.add(new Date( 4,JUNE,year));   	// Whit Sunday
+        expectedHol.add(new Date( 5,JUNE,year));   	// Whit Monday
+        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -408,22 +407,22 @@ public class NorwayCalendarTest {
     public void testNorwayYear2005() {
         final int year = 2005;
     	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		// Sat: expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
-		// Sun: expectedHol.add(df.getDate(20,APRIL,year));		// Palm Sunday
-		expectedHol.add(df.getDate(24,MARCH,year));		// Maundy Thursday
-		expectedHol.add(df.getDate(25,MARCH,year));		// Good Friday
-		// Sun: expectedHol.add(df.getDate(27,MARCH,year));     // Easter Day
-		expectedHol.add(df.getDate(28,MARCH,year));     // Easter Monday
-		// Sun: expectedHol.add(df.getDate( 1,MAY,year));		// Official holiday
-        expectedHol.add(df.getDate( 5,MAY,year));		// Ascension Day
-        // Sun: expectedHol.add(df.getDate(15,MAY,year));   	// Whit Sunday
-        expectedHol.add(df.getDate(16,MAY,year));   	// Whit Monday
-        expectedHol.add(df.getDate(17,MAY,year));		// Constitution Day
-        // Sun: expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		// Sat: expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		// Sun: expectedHol.add(new Date(20,APRIL,year));		// Palm Sunday
+		expectedHol.add(new Date(24,MARCH,year));		// Maundy Thursday
+		expectedHol.add(new Date(25,MARCH,year));		// Good Friday
+		// Sun: expectedHol.add(new Date(27,MARCH,year));     // Easter Day
+		expectedHol.add(new Date(28,MARCH,year));     // Easter Monday
+		// Sun: expectedHol.add(new Date( 1,MAY,year));		// Official holiday
+        expectedHol.add(new Date( 5,MAY,year));		// Ascension Day
+        // Sun: expectedHol.add(new Date(15,MAY,year));   	// Whit Sunday
+        expectedHol.add(new Date(16,MAY,year));   	// Whit Monday
+        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
+        // Sun: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -454,22 +453,22 @@ public class NorwayCalendarTest {
     public void testNorwayYear2004() {
         final int year = 2004;
     	QL.info("Testing " + Norway.Market.OsloBors + " holidays list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate( 1,JANUARY,year));	// New Year's Day
-		// Sun: expectedHol.add(df.getDate( 4,APRIL,year));		// Palm Sunday
-		expectedHol.add(df.getDate( 8,APRIL,year));		// Maundy Thursday
-		expectedHol.add(df.getDate( 9,APRIL,year));		// Good Friday
-		// Sun: expectedHol.add(df.getDate(11,APRIL,year));     // Easter Day
-		expectedHol.add(df.getDate(12,APRIL,year));     // Easter Monday
-		// Sat: expectedHol.add(df.getDate( 1,MAY,year));		// Official holiday
-        expectedHol.add(df.getDate(17,MAY,year));		// Constitution Day
-        expectedHol.add(df.getDate(20,MAY,year));		// Ascension Day
-        // Sun: expectedHol.add(df.getDate(30,MAY,year));   	// Whit Sunday
-        expectedHol.add(df.getDate(31,MAY,year));   	// Whit Monday
-        // Sat: expectedHol.add(df.getDate(25,DECEMBER,year));  // Christmas Day
-        // Sun: expectedHol.add(df.getDate(26,DECEMBER,year));  // Boxing Day
+		expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		// Sun: expectedHol.add(new Date( 4,APRIL,year));		// Palm Sunday
+		expectedHol.add(new Date( 8,APRIL,year));		// Maundy Thursday
+		expectedHol.add(new Date( 9,APRIL,year));		// Good Friday
+		// Sun: expectedHol.add(new Date(11,APRIL,year));     // Easter Day
+		expectedHol.add(new Date(12,APRIL,year));     // Easter Monday
+		// Sat: expectedHol.add(new Date( 1,MAY,year));		// Official holiday
+        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
+        expectedHol.add(new Date(20,MAY,year));		// Ascension Day
+        // Sun: expectedHol.add(new Date(30,MAY,year));   	// Whit Sunday
+        expectedHol.add(new Date(31,MAY,year));   	// Whit Monday
+        // Sat: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        // Sun: expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();

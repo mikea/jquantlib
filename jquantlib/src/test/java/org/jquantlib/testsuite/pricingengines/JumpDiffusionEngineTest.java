@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
@@ -36,17 +35,8 @@ import org.junit.Test;
 
 public class JumpDiffusionEngineTest {
 
-    private final Settings settings;
-    private final Date today;
-
     public JumpDiffusionEngineTest() {
         QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-
-        // TODO: code review
-        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        this.today = settings.getEvaluationDate();
-        //        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        //        this.today = DateFactory.getFactory().getTodaysDate(); //TODO: code review
     }
 
 
@@ -218,6 +208,8 @@ public class JumpDiffusionEngineTest {
                 new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.75,  2.23, 1e-2)  // Haug 2.17
         };
 
+        final Date today = new Settings().getEvaluationDate();
+
         final DayCounter dc = Actual360.getDayCounter();
         final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
         final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
@@ -240,7 +232,7 @@ public class JumpDiffusionEngineTest {
         for (final HaugMertonData value : values) {
             final StrikedTypePayoff payoff = new PlainVanillaPayoff(value.type, value.strike);
 
-            final Date exDate = today.getDateAfter((int) (value.t * 360 + 0.5));
+            final Date exDate = today.add((int) (value.t * 360 + 0.5));
             final Exercise exercise = new EuropeanExercise(exDate);
 
             spot.getLink().setValue(value.s);
@@ -264,16 +256,18 @@ public class JumpDiffusionEngineTest {
             final double totalVol = Math.sqrt(value.jumpIntensity * jVol * jVol + diffusionVol * diffusionVol);
             final double volError = Math.abs(totalVol - value.v);
 
-            if (volError >= 1.0e-13)
+            if (volError >= 1.0e-13) {
                 throw new ArithmeticException(" mismatch");
+            }
 
             final EuropeanOption option = new EuropeanOption(stochProcess, payoff, exercise, engine);
 
             final double /* @Real */calculated = option.getNPV();
             final double /* @Real */error = Math.abs(calculated - value.result);
-            if (error > value.tol)
+            if (error > value.tol) {
                 REPORT_FAILURE_2("value", payoff, exercise, value.s, value.q, value.r, today, value.v,
                         value.jumpIntensity, value.gamma, value.result, calculated, error, value.tol);
+            }
         }
     }
 
@@ -345,8 +339,10 @@ public class JumpDiffusionEngineTest {
         // A tolerance of 1.0e-08 is usually sufficient to get reasonable results
         final PricingEngine engine = new JumpDiffusionEngine(baseEngine, 1e-08);
 
-        for (final Type type : types)
-            for (final double strike : strikes)
+        final Date today = new Settings().getEvaluationDate();
+
+        for (final Type type : types) {
+            for (final double strike : strikes) {
                 for (final double element : jInt) {
                     jumpIntensity.getLink().setValue(element);
                     for (final double element2 : mLJ) {
@@ -354,24 +350,25 @@ public class JumpDiffusionEngineTest {
                         for (final double element3 : jV) {
                             jumpVol.getLink().setValue(element3);
                             for (final double residualTime : residualTimes) {
-                                final Date exDate = today.getDateAfter((int) (residualTime * 360 + 0.5));
+                                final Date exDate = today.add((int) (residualTime * 360 + 0.5));
                                 final Exercise exercise = new EuropeanExercise(exDate);
 
                                 for (int kk = 0; kk < 1; kk++) {
                                     // option to check
-                                    if (kk == 0)
+                                    if (kk == 0) {
                                         payoff = new PlainVanillaPayoff(type, strike);
-                                    else if (kk == 1)
+                                    } else if (kk == 1) {
                                         payoff = new CashOrNothingPayoff(type, strike, 100.0);
-                                    else if (kk == 2)
+                                    } else if (kk == 2) {
                                         payoff = new AssetOrNothingPayoff(type, strike);
-                                    else if (kk == 3)
+                                    } else if (kk == 3) {
                                         payoff = new GapPayoff(type, strike, 100.0);
+                                    }
                                     final EuropeanOption option = new EuropeanOption(stochProcess, payoff, exercise, engine);
 
-                                    for (final double u : underlyings)
-                                        for (final double q : qRates)
-                                            for (final double r : rRates)
+                                    for (final double u : underlyings) {
+                                        for (final double q : qRates) {
+                                            for (final double r : rRates) {
                                                 for (final double v : vols) {
                                                     spot.getLink().setValue(u);
                                                     qRate.getLink().setValue(q);
@@ -425,16 +422,16 @@ public class JumpDiffusionEngineTest {
                                                         vol.getLink().setValue(v);
                                                         expected.put("vega", (value_p - value_m) / (2 * dv));
 
-                                                        final Date yesterday = today.getPreviousDay();
-                                                        final Date tomorrow = today.getNextDay();
+                                                        final Date yesterday = today.sub(1);
+                                                        final Date tomorrow = today.add(1);
                                                         final double dT = dc.yearFraction(yesterday, tomorrow);
-                                                        settings.setEvaluationDate(yesterday);
+                                                        new Settings().setEvaluationDate(yesterday);
                                                         value_m = option.getNPV();
-                                                        settings.setEvaluationDate(tomorrow);
+                                                        new Settings().setEvaluationDate(tomorrow);
                                                         value_p = option.getNPV();
                                                         expected.put("theta", (value_p - value_m) / dT);
 
-                                                        settings.setEvaluationDate(today);
+                                                        new Settings().setEvaluationDate(today);
 
                                                         // compare
                                                         // compare
@@ -446,19 +443,25 @@ public class JumpDiffusionEngineTest {
                                                             final Double tol = tolerance.get(greek);
 
                                                             final double error = Utilities.relativeError(expct, calcl, u);
-                                                            if (error > tol)
+                                                            if (error > tol) {
                                                                 // TODO improve error message
                                                                 // REPORT_FAILURE(greek, payoff, exercise, u, q, r, today, v, expct,
                                                                 // calcl, error, tol);
                                                                 Assert.fail("Failed on greek: " + greek);
+                                                            }
                                                         }
                                                     }
                                                 }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
+            }
+        }
     }
 
 

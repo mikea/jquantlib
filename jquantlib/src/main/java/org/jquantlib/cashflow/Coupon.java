@@ -25,7 +25,6 @@ package org.jquantlib.cashflow;
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
@@ -61,27 +60,29 @@ public abstract class Coupon extends CashFlow {
             final Date paymentDate,
             final Date accrualStartDate,
             final Date accrualEndDate){
-        this(nominal, paymentDate, accrualStartDate, accrualEndDate, Date.NULL_DATE, Date.NULL_DATE);
+        this(nominal, paymentDate, accrualStartDate, accrualEndDate, new Date(), new Date());
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
     }
 
     public Coupon(final double nominal,
-    		final Date paymentDate,
-    		final Date accrualStartDate,
-    		final Date accrualEndDate,
-    		final Date refPeriodStart,
-    		final Date refPeriodEnd){
-    	this.nominal = nominal;
-    	this.paymentDate = paymentDate;
-    	this.accrualStartDate = accrualStartDate;
-    	this.accrualEndDate = accrualEndDate;
-    	this.refPeriodStart = refPeriodEnd;
-    	this.refPeriodEnd = refPeriodEnd;
+            final Date paymentDate,
+            final Date accrualStartDate,
+            final Date accrualEndDate,
+            final Date refPeriodStart,
+            final Date refPeriodEnd){
+        this.nominal = nominal;
+        this.paymentDate = paymentDate;
+        this.accrualStartDate = accrualStartDate;
+        this.accrualEndDate = accrualEndDate;
+        this.refPeriodStart = refPeriodEnd;
+        this.refPeriodEnd = refPeriodEnd;
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
     }
 
 
@@ -122,14 +123,14 @@ public abstract class Coupon extends CashFlow {
 
     public double accrualPeriod() {
         return dayCounter().yearFraction(accrualStartDate,
-                                         accrualEndDate,
-                                         refPeriodStart,
-                                         refPeriodEnd);
+                accrualEndDate,
+                refPeriodStart,
+                refPeriodEnd);
     }
 
     public int accrualDays() {
         return dayCounter().dayCount(accrualStartDate,
-                                     accrualEndDate);
+                accrualEndDate);
     }
 
 
@@ -139,9 +140,7 @@ public abstract class Coupon extends CashFlow {
 
     @Override
     public Date date() {
-    	//FIXME: return a clone!!!!!
-    	return DateFactory.getFactory().getDate(paymentDate.getDayOfMonth(), paymentDate.getMonth(), paymentDate.getYear());
-        //return paymentDate;
+        return paymentDate.clone();
     }
 
 

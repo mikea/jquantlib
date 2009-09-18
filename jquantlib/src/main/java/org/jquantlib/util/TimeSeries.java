@@ -61,46 +61,51 @@ public class TimeSeries<T> {
 
     public TimeSeries() {
         final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
-        if (Double.class.isAssignableFrom(klass))
+        if (Double.class.isAssignableFrom(klass)) {
             this.delegate = new TimeSeriesDouble();
-        else if (IntervalPrice.class.isAssignableFrom(klass))
+        } else if (IntervalPrice.class.isAssignableFrom(klass)) {
             this.delegate = new TimeSeriesIntervalPrice();
-        else
+        } else {
             throw new LibraryException("only Double and IntervalPrice are supported"); // QA:[RG]::verified // TODO: message
+        }
     }
 
     public TimeSeries(final Date[] dates, final double[] values) {
         final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
-        if (Double.class.isAssignableFrom(klass))
+        if (Double.class.isAssignableFrom(klass)) {
             this.delegate = new TimeSeriesDouble(dates, values);
-        else
+        } else {
             throw new LibraryException("only double[] is supported"); // QA:[RG]::verified // TODO: message
+        }
     }
 
     public TimeSeries(final Date[] dates, final Double[] values) {
         final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
-        if (Double.class.isAssignableFrom(klass))
+        if (Double.class.isAssignableFrom(klass)) {
             this.delegate = new TimeSeriesDouble(dates, values);
-        else
+        } else {
             throw new LibraryException("only Double[] is supported"); // QA:[RG]::verified // TODO: message
+        }
     }
 
     public TimeSeries(final Date[] dates, final IntervalPrice[] values) {
         final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
-        if (IntervalPrice.class.isAssignableFrom(klass))
+        if (IntervalPrice.class.isAssignableFrom(klass)) {
             this.delegate = new TimeSeriesIntervalPrice(dates, values);
-        else
+        } else {
             throw new LibraryException("only IntervalPrice[] is supported"); // QA:[RG]::verified // TODO: message
+        }
     }
 
     public TimeSeries(final Date startingDate, final List<T> values) {
         final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
-        if (Double.class.isAssignableFrom(klass))
+        if (Double.class.isAssignableFrom(klass)) {
             this.delegate = new TimeSeriesDouble(startingDate, (List<Double>)values);
-        else if (IntervalPrice.class.isAssignableFrom(klass))
+        } else if (IntervalPrice.class.isAssignableFrom(klass)) {
             this.delegate = new TimeSeriesIntervalPrice(startingDate, (List<IntervalPrice>)values);
-        else
+        } else {
             throw new LibraryException("only List<Double> and List<IntervalPrice> are supported"); // QA:[RG]::verified // TODO: message
+        }
     }
 
 
@@ -258,8 +263,9 @@ public class TimeSeries<T> {
         public TimeSeriesIntervalPrice(final Date[] dates, final IntervalPrice[] values) {
             this();
             QL.require(dates.length == values.length , "sizes mismatch"); // QA:[RG]::verified // TODO: message
-            for (int i = 0; i < dates.length; i++)
+            for (int i = 0; i < dates.length; i++) {
                 this.addIntervalPrice(dates[i], values[i]) ;
+            }
         }
 
         public TimeSeriesIntervalPrice(final Date startingDate, final List<IntervalPrice> values) {
@@ -267,7 +273,7 @@ public class TimeSeries<T> {
             Date tmp = startingDate;
             for (int i = 0; i < values.size();) {
                 this.addIntervalPrice(tmp, values.get(i++)) ;
-                tmp = startingDate.getDateAfter(i);
+                tmp = startingDate.add(i);
             }
         }
 
@@ -336,15 +342,17 @@ public class TimeSeries<T> {
         public TimeSeriesDouble(final Date[] dates, final double[] values) {
             this();
             QL.require(dates.length == values.length , "sizes mismatch"); // QA:[RG]::verified // TODO: message
-            for (int i = 0; i < dates.length; i++)
+            for (int i = 0; i < dates.length; i++) {
                 this.add(dates[i], values[i]) ;
+            }
         }
 
         public TimeSeriesDouble(final Date[] dates, final Double[] values) {
             this();
             QL.require(dates.length == values.length , "sizes mismatch"); // QA:[RG]::verified // TODO: message
-            for (int i = 0; i < dates.length; i++)
+            for (int i = 0; i < dates.length; i++) {
                 this.add(dates[i], values[i]) ;
+            }
         }
 
         public TimeSeriesDouble(final Date startingDate, final List<Double> values) {
@@ -352,7 +360,7 @@ public class TimeSeries<T> {
             Date tmp = startingDate;
             for (int i = 0; i < values.size();) {
                 add(tmp, values.get(i++)) ;
-                tmp = startingDate.getDateAfter(i);
+                tmp = startingDate.add(i);
             }
         }
 

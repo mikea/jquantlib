@@ -17,7 +17,6 @@ import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Italy;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 
 /**
@@ -41,17 +40,17 @@ public class ItalyCalendarTest {
 	public void testItalyYear2004() {
 		final int year = 2004;
 		QL.info("Testing Italy holiday list for the year " + year);
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate(1,JANUARY,year));
+		expectedHol.add(new Date(1,JANUARY,year));
 
-		final Date goodFriday = df.getDate(9,APRIL,year);
+		final Date goodFriday = new Date(9,APRIL,year);
 		expectedHol.add(goodFriday);
-		expectedHol.add(df.getDate(12,APRIL,year));
-		final Date christmasEve = df.getDate(24,DECEMBER,year);
+		expectedHol.add(new Date(12,APRIL,year));
+		final Date christmasEve = new Date(24,DECEMBER,year);
 		expectedHol.add(christmasEve);
-		final Date newYearEve = df.getDate(31,DECEMBER,year);
+		final Date newYearEve = new Date(31,DECEMBER,year);
 		expectedHol.add(newYearEve);
 
 		// Call the Holiday Check
@@ -62,10 +61,10 @@ public class ItalyCalendarTest {
 		expectedHol.remove(christmasEve);
 		expectedHol.remove(newYearEve);
 
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(2,JUNE,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
-		expectedHol.add(df.getDate(8,DECEMBER,year));
+		expectedHol.add(new Date(6,JANUARY,year));
+		expectedHol.add(new Date(2,JUNE,year));
+		expectedHol.add(new Date(1,NOVEMBER,year));
+		expectedHol.add(new Date(8,DECEMBER,year));
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
 
@@ -73,16 +72,16 @@ public class ItalyCalendarTest {
 	public void testItalyYear2006() {
 		final int year = 2006;
 		QL.info("Testing Italy holiday list for the year " + year);
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		final Date goodFriday = df.getDate(14,APRIL,year);
+		final Date goodFriday = new Date(14,APRIL,year);
 		expectedHol.add(goodFriday);
-		expectedHol.add(df.getDate(17,APRIL,year));
-		expectedHol.add(df.getDate(1,MAY,year));
-		expectedHol.add(df.getDate(15,AUGUST,year));
-		expectedHol.add(df.getDate(25,DECEMBER,year));
-		expectedHol.add(df.getDate(26,DECEMBER,year));
+		expectedHol.add(new Date(17,APRIL,year));
+		expectedHol.add(new Date(1,MAY,year));
+		expectedHol.add(new Date(15,AUGUST,year));
+		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(26,DECEMBER,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -90,11 +89,11 @@ public class ItalyCalendarTest {
 
 		expectedHol.remove(goodFriday);
 
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(25,APRIL,year));
-		expectedHol.add(df.getDate(2,JUNE,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
-		expectedHol.add(df.getDate(8,DECEMBER,year));
+		expectedHol.add(new Date(6,JANUARY,year));
+		expectedHol.add(new Date(25,APRIL,year));
+		expectedHol.add(new Date(2,JUNE,year));
+		expectedHol.add(new Date(1,NOVEMBER,year));
+		expectedHol.add(new Date(8,DECEMBER,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -103,20 +102,20 @@ public class ItalyCalendarTest {
 	public void testItalyYear2007() {
 		final int year = 2007;
 		QL.info("Testing Italy holiday list for the year " + year);
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate(1,JANUARY,year));
-		final Date goodFriday = df.getDate(6,APRIL,year);
+		expectedHol.add(new Date(1,JANUARY,year));
+		final Date goodFriday = new Date(6,APRIL,year);
 		expectedHol.add(goodFriday);
-		expectedHol.add(df.getDate(9,APRIL,year));
-		expectedHol.add(df.getDate(1,MAY,year));
-		expectedHol.add(df.getDate(15,AUGUST,year));
-		final Date christmasEve = df.getDate(24,DECEMBER,year);
+		expectedHol.add(new Date(9,APRIL,year));
+		expectedHol.add(new Date(1,MAY,year));
+		expectedHol.add(new Date(15,AUGUST,year));
+		final Date christmasEve = new Date(24,DECEMBER,year);
 		expectedHol.add(christmasEve);
-		expectedHol.add(df.getDate(25,DECEMBER,year));
-		expectedHol.add(df.getDate(26,DECEMBER,year));
-		final Date newYearEve = df.getDate(31,DECEMBER,year);
+		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(26,DECEMBER,year));
+		final Date newYearEve = new Date(31,DECEMBER,year);
 		expectedHol.add(newYearEve);
 
 		// Call the Holiday Check
@@ -127,8 +126,8 @@ public class ItalyCalendarTest {
 		expectedHol.remove(christmasEve);
 		expectedHol.remove(newYearEve);
 
-		expectedHol.add(df.getDate(25,APRIL,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
+		expectedHol.add(new Date(25,APRIL,year));
+		expectedHol.add(new Date(1,NOVEMBER,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -137,20 +136,20 @@ public class ItalyCalendarTest {
 	public void testItalyYear2008() {
 		final int year = 2008;
 		QL.info("Testing Italy holiday list for the year " + year);
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate(1,JANUARY,year));
-		final Date goodFriday = df.getDate(21,MARCH,year);
+		expectedHol.add(new Date(1,JANUARY,year));
+		final Date goodFriday = new Date(21,MARCH,year);
 		expectedHol.add(goodFriday);
-		expectedHol.add(df.getDate(24,MARCH,year));
-		expectedHol.add(df.getDate(1,MAY,year));
-		expectedHol.add(df.getDate(15,AUGUST,year));
-		final Date christmasEve = df.getDate(24,DECEMBER,year);
+		expectedHol.add(new Date(24,MARCH,year));
+		expectedHol.add(new Date(1,MAY,year));
+		expectedHol.add(new Date(15,AUGUST,year));
+		final Date christmasEve = new Date(24,DECEMBER,year);
 		expectedHol.add(christmasEve);
-		expectedHol.add(df.getDate(25,DECEMBER,year));
-		expectedHol.add(df.getDate(26,DECEMBER,year));
-		final Date newYearEve = df.getDate(31,DECEMBER,year);
+		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(26,DECEMBER,year));
+		final Date newYearEve = new Date(31,DECEMBER,year);
 		expectedHol.add(newYearEve);
 
 		// Call the Holiday Check
@@ -161,9 +160,9 @@ public class ItalyCalendarTest {
 		expectedHol.remove(christmasEve);
 		expectedHol.remove(newYearEve);
 
-		expectedHol.add(df.getDate(25,APRIL,year));
-		expectedHol.add(df.getDate(2,JUNE,year));
-		expectedHol.add(df.getDate(8,DECEMBER,year));
+		expectedHol.add(new Date(25,APRIL,year));
+		expectedHol.add(new Date(2,JUNE,year));
+		expectedHol.add(new Date(8,DECEMBER,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -172,18 +171,18 @@ public class ItalyCalendarTest {
 	public void testItalyYear2009() {
 		final int year = 2009;
 		QL.info("Testing Italy holiday list for the year " + year);
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate(1,JANUARY,year));
-		final Date goodFriday = df.getDate(10,APRIL,year);
+		expectedHol.add(new Date(1,JANUARY,year));
+		final Date goodFriday = new Date(10,APRIL,year);
 		expectedHol.add(goodFriday);
-		expectedHol.add(df.getDate(13,APRIL,year));
-		expectedHol.add(df.getDate(1,MAY,year));
-		final Date christmasEve = df.getDate(24,DECEMBER,year);
+		expectedHol.add(new Date(13,APRIL,year));
+		expectedHol.add(new Date(1,MAY,year));
+		final Date christmasEve = new Date(24,DECEMBER,year);
 		expectedHol.add(christmasEve);
-		expectedHol.add(df.getDate(25,DECEMBER,year));
-		final Date newYearEve = df.getDate(31,DECEMBER,year);
+		expectedHol.add(new Date(25,DECEMBER,year));
+		final Date newYearEve = new Date(31,DECEMBER,year);
 		expectedHol.add(newYearEve);
 
 		// Call the Holiday Check
@@ -194,9 +193,9 @@ public class ItalyCalendarTest {
 		expectedHol.remove(christmasEve);
 		expectedHol.remove(newYearEve);
 
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(2,JUNE,year));
-		expectedHol.add(df.getDate(8,DECEMBER,year));
+		expectedHol.add(new Date(6,JANUARY,year));
+		expectedHol.add(new Date(2,JUNE,year));
+		expectedHol.add(new Date(8,DECEMBER,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -205,16 +204,16 @@ public class ItalyCalendarTest {
 	public void testItalyYear2010() {
 		final int year = 2010;
 		QL.info("Testing Italy holiday list for the year " + year);
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(df.getDate(1,JANUARY,year));
-		final Date goodFriday = df.getDate(2,APRIL,year);
+		expectedHol.add(new Date(1,JANUARY,year));
+		final Date goodFriday = new Date(2,APRIL,year);
 		expectedHol.add(goodFriday);
-		expectedHol.add(df.getDate(5,APRIL,year));
-		final Date christmasEve = df.getDate(24,DECEMBER,year);
+		expectedHol.add(new Date(5,APRIL,year));
+		final Date christmasEve = new Date(24,DECEMBER,year);
 		expectedHol.add(christmasEve);
-		final Date newYearEve = df.getDate(31,DECEMBER,year);
+		final Date newYearEve = new Date(31,DECEMBER,year);
 		expectedHol.add(newYearEve);
 
 		// Call the Holiday Check
@@ -225,10 +224,10 @@ public class ItalyCalendarTest {
 		expectedHol.remove(christmasEve);
 		expectedHol.remove(newYearEve);
 
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(2,JUNE,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
-		expectedHol.add(df.getDate(8,DECEMBER,year));
+		expectedHol.add(new Date(6,JANUARY,year));
+		expectedHol.add(new Date(2,JUNE,year));
+		expectedHol.add(new Date(1,NOVEMBER,year));
+		expectedHol.add(new Date(8,DECEMBER,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -237,14 +236,14 @@ public class ItalyCalendarTest {
 
 		final int year = 2011;
 		QL.info("Testing Italy holiday list for the year " + year);
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		final Date goodFriday = df.getDate(22,APRIL,year);
+		final Date goodFriday = new Date(22,APRIL,year);
 		expectedHol.add(goodFriday);
-		expectedHol.add(df.getDate(25,APRIL,year));
-		expectedHol.add(df.getDate(15,AUGUST,year));
-		expectedHol.add(df.getDate(26,DECEMBER,year));
+		expectedHol.add(new Date(25,APRIL,year));
+		expectedHol.add(new Date(15,AUGUST,year));
+		expectedHol.add(new Date(26,DECEMBER,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -252,10 +251,10 @@ public class ItalyCalendarTest {
 
 		expectedHol.remove(goodFriday);
 
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(2,JUNE,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
-		expectedHol.add(df.getDate(8,DECEMBER,year));
+		expectedHol.add(new Date(6,JANUARY,year));
+		expectedHol.add(new Date(2,JUNE,year));
+		expectedHol.add(new Date(1,NOVEMBER,year));
+		expectedHol.add(new Date(8,DECEMBER,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -265,21 +264,21 @@ public class ItalyCalendarTest {
 	public void testItalyYear2012() {
 		final int year = 2012;
 		QL.info("Testing Italy holiday list for the year " + year);
-        final DateFactory df = DateFactory.getFactory();
+        
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		final Date goodFriday = df.getDate(6,APRIL,year);
+		final Date goodFriday = new Date(6,APRIL,year);
 		expectedHol.add(goodFriday);
-		expectedHol.add(df.getDate(9,APRIL,year));
-		expectedHol.add(df.getDate(1,MAY,year));
+		expectedHol.add(new Date(9,APRIL,year));
+		expectedHol.add(new Date(1,MAY,year));
 
-		expectedHol.add(df.getDate(15, AUGUST,year));
-		final Date christmasEve = df.getDate(24,DECEMBER,year);
+		expectedHol.add(new Date(15, AUGUST,year));
+		final Date christmasEve = new Date(24,DECEMBER,year);
 		expectedHol.add(christmasEve);
-		expectedHol.add(df.getDate(25,DECEMBER,year));
-		expectedHol.add(df.getDate(26,DECEMBER,year));
+		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(26,DECEMBER,year));
 
-		final Date newYearEve = df.getDate(31,DECEMBER,year);
+		final Date newYearEve = new Date(31,DECEMBER,year);
 		expectedHol.add(newYearEve);
 
 		// Call the Holiday Check
@@ -290,9 +289,9 @@ public class ItalyCalendarTest {
 		expectedHol.remove(christmasEve);
 		expectedHol.remove(newYearEve);
 
-		expectedHol.add(df.getDate(6,JANUARY,year));
-		expectedHol.add(df.getDate(25,APRIL,year));
-		expectedHol.add(df.getDate(1,NOVEMBER,year));
+		expectedHol.add(new Date(6,JANUARY,year));
+		expectedHol.add(new Date(25,APRIL,year));
+		expectedHol.add(new Date(1,NOVEMBER,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}

@@ -36,7 +36,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.termstructures.yieldcurves;
 
@@ -51,160 +51,165 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
 public class FlatForward extends AbstractYieldTermStructure {
 
-	private final Handle<? extends Quote> forward;
-	private final Compounding compounding;
-	private final Frequency frequency;
-	private InterestRate rate;
+    private final Handle<? extends Quote> forward;
+    private final Compounding compounding;
+    private final Frequency frequency;
+    private InterestRate rate;
 
 
-	// --------------------------------------------
+    // --------------------------------------------
 
     public FlatForward(
-    		final Date referenceDate,
+            final Date referenceDate,
             final Handle<? extends Quote> forward,
             final DayCounter dayCounter,
             final Compounding compounding,
             final Frequency frequency) {
-		super(referenceDate, new NullCalendar(), dayCounter);
-		this.forward = forward;
-		this.compounding = compounding;
-		this.frequency = frequency;
+        super(referenceDate, new NullCalendar(), dayCounter);
+        this.forward = forward;
+        this.compounding = compounding;
+        this.frequency = frequency;
 
-		registerWith(this.forward);
-		updateRate();
-	}
+        this.forward.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.forward);
+
+        updateRate();
+    }
 
     public FlatForward(
-			final Date referenceDate,
+            final Date referenceDate,
             final Handle<? extends Quote> forward,
             final DayCounter dayCounter,
             final Compounding compounding) {
-		this(referenceDate, forward, dayCounter, compounding, Frequency.ANNUAL);
-	}
-
-	public FlatForward(
-				final Date referenceDate,
-	            final Handle<? extends Quote> forward,
-	            final DayCounter dayCounter) {
-		this(referenceDate, forward, dayCounter, Compounding.CONTINUOUS);
-	}
-
-	// --------------------------------------------
+        this(referenceDate, forward, dayCounter, compounding, Frequency.ANNUAL);
+    }
 
     public FlatForward(
-			final Date referenceDate,
-			final /*@Rate*/ double forward,
-			final DayCounter dayCounter,
-			final Compounding compounding,
-			final Frequency frequency) {
-		super(referenceDate, new NullCalendar(), dayCounter);
-		this.forward = new Handle<SimpleQuote>(new SimpleQuote(forward));
-		this.compounding = compounding;
-		this.frequency = frequency;
-		updateRate();
-	}
+            final Date referenceDate,
+            final Handle<? extends Quote> forward,
+            final DayCounter dayCounter) {
+        this(referenceDate, forward, dayCounter, Compounding.CONTINUOUS);
+    }
+
+    // --------------------------------------------
 
     public FlatForward(
-			final Date referenceDate,
+            final Date referenceDate,
+            final /*@Rate*/ double forward,
+            final DayCounter dayCounter,
+            final Compounding compounding,
+            final Frequency frequency) {
+        super(referenceDate, new NullCalendar(), dayCounter);
+        this.forward = new Handle<SimpleQuote>(new SimpleQuote(forward));
+        this.compounding = compounding;
+        this.frequency = frequency;
+        updateRate();
+    }
+
+    public FlatForward(
+            final Date referenceDate,
             final /*@Rate*/ double forward,
             final DayCounter dayCounter,
             final Compounding compounding) {
-		this(referenceDate, forward, dayCounter, compounding, Frequency.ANNUAL);
-	}
+        this(referenceDate, forward, dayCounter, compounding, Frequency.ANNUAL);
+    }
 
     public FlatForward(
-			final Date referenceDate,
+            final Date referenceDate,
             final /*@Rate*/ double forward,
             final DayCounter dayCounter) {
-		this(referenceDate, forward, dayCounter, Compounding.CONTINUOUS);
-	}
+        this(referenceDate, forward, dayCounter, Compounding.CONTINUOUS);
+    }
 
-	// --------------------------------------------
+    // --------------------------------------------
 
     public FlatForward(
-    		final int settlementDays,
+            final int settlementDays,
             final Calendar calendar,
             final Handle<? extends Quote> forward,
             final DayCounter dayCounter,
             final Compounding compounding,
             final Frequency frequency) {
-		super(settlementDays, calendar, dayCounter);
-		this.forward = forward;
-		this.compounding = compounding;
-		this.frequency = frequency;
+        super(settlementDays, calendar, dayCounter);
+        this.forward = forward;
+        this.compounding = compounding;
+        this.frequency = frequency;
 
-		registerWith(this.forward);
-		updateRate();
-	}
+        this.forward.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.forward);
 
-    public FlatForward(
-    			final int settlementDays,
-                final Calendar calendar,
-                final Handle<? extends Quote> forward,
-                final DayCounter dayCounter) {
-    	this(settlementDays, calendar, forward, dayCounter, Compounding.CONTINUOUS);
+        updateRate();
     }
 
     public FlatForward(
-    			final int settlementDays,
-                final Calendar calendar,
-                final Handle<? extends Quote> forward,
-                final DayCounter dayCounter,
-                final Compounding compounding) {
-    	this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.ANNUAL);
+            final int settlementDays,
+            final Calendar calendar,
+            final Handle<? extends Quote> forward,
+            final DayCounter dayCounter) {
+        this(settlementDays, calendar, forward, dayCounter, Compounding.CONTINUOUS);
     }
 
-	// --------------------------------------------
+    public FlatForward(
+            final int settlementDays,
+            final Calendar calendar,
+            final Handle<? extends Quote> forward,
+            final DayCounter dayCounter,
+            final Compounding compounding) {
+        this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.ANNUAL);
+    }
+
+    // --------------------------------------------
 
     public FlatForward(
-    		final int settlementDays,
+            final int settlementDays,
             final Calendar calendar,
             final /*@Rate*/ double forward,
             final DayCounter dayCounter,
             final Compounding compounding,
             final Frequency frequency) {
-		super(settlementDays, calendar, dayCounter);
-		this.forward = new Handle<Quote>(new SimpleQuote(forward));
-		this.compounding = compounding;
-		this.frequency = frequency;
-		updateRate();
-	}
-
-    public FlatForward(
-    			final int settlementDays,
-                final Calendar calendar,
-                final /*@Rate*/ double forward,
-                final DayCounter dayCounter) {
-    	this(settlementDays, calendar, forward, dayCounter, Compounding.CONTINUOUS);
+        super(settlementDays, calendar, dayCounter);
+        this.forward = new Handle<Quote>(new SimpleQuote(forward));
+        this.compounding = compounding;
+        this.frequency = frequency;
+        updateRate();
     }
 
     public FlatForward(
-    			final int settlementDays,
-                final Calendar calendar,
-                final /*@Rate*/ double forward,
-                final DayCounter dayCounter,
-                final Compounding compounding) {
-    	this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.ANNUAL);
+            final int settlementDays,
+            final Calendar calendar,
+            final /*@Rate*/ double forward,
+            final DayCounter dayCounter) {
+        this(settlementDays, calendar, forward, dayCounter, Compounding.CONTINUOUS);
     }
 
-	// --------------------------------------------
+    public FlatForward(
+            final int settlementDays,
+            final Calendar calendar,
+            final /*@Rate*/ double forward,
+            final DayCounter dayCounter,
+            final Compounding compounding) {
+        this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.ANNUAL);
+    }
+
+    // --------------------------------------------
 
     private void updateRate() {
         rate = new InterestRate(forward.getLink().op(), this.dayCounter(), this.compounding, this.frequency);
     }
 
     public final Compounding compounding() {
-    	return compounding;
+        return compounding;
     }
 
     public final Frequency compoundingFrequency() {
-    	return frequency;
+        return frequency;
     }
 
 
@@ -223,7 +228,7 @@ public class FlatForward extends AbstractYieldTermStructure {
 
     @Override
     public final Date maxDate() {
-        return DateFactory.getFactory().getMaxDate();
+        return new Date().statics().maxDate();
     }
 
 

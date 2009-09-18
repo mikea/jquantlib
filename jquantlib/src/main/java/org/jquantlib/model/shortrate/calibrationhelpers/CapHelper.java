@@ -10,6 +10,8 @@ import org.jquantlib.model.CalibrationHelper;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.time.BusinessDayConvention;
+import org.jquantlib.time.DateGenerationRule;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
@@ -21,44 +23,44 @@ import org.jquantlib.util.Observer;
 // TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class CapHelper extends CalibrationHelper {
-    
-    public CapHelper(Period length, 
-            Handle<Quote> volatility, 
-            IborIndex index, 
+
+    public CapHelper(final Period length,
+            final Handle<Quote> volatility,
+            final IborIndex index,
             // data for ATM swap-rate calculation
-            Frequency fixedLegFrequency,
-            DayCounter fixedLegDayCounter,
-            boolean includeFirstSwaplet,
-            Handle<YieldTermStructure> termStructure){
-        this(length, volatility, index, fixedLegFrequency, fixedLegDayCounter, 
+            final Frequency fixedLegFrequency,
+            final DayCounter fixedLegDayCounter,
+            final boolean includeFirstSwaplet,
+            final Handle<YieldTermStructure> termStructure){
+        this(length, volatility, index, fixedLegFrequency, fixedLegDayCounter,
                 includeFirstSwaplet,termStructure, false);
     }
-    
-    public CapHelper(Period length, 
-            Handle<Quote> volatility, 
-            IborIndex index, 
+
+    public CapHelper(final Period length,
+            final Handle<Quote> volatility,
+            final IborIndex index,
             // data for ATM swap-rate calculation
-            Frequency fixedLegFrequency,
-            DayCounter fixedLegDayCounter,
-            boolean includeFirstSwaplet,
-            Handle<YieldTermStructure> termStructure,
-            boolean calibrateVolatility){
+            final Frequency fixedLegFrequency,
+            final DayCounter fixedLegDayCounter,
+            final boolean includeFirstSwaplet,
+            final Handle<YieldTermStructure> termStructure,
+            final boolean calibrateVolatility){
         super(volatility, termStructure, calibrateVolatility);
-       
-        Period indexTenor = index.tenor();
-        double fixedRate = 0.04; //dummy value
+
+        final Period indexTenor = index.tenor();
+        final double fixedRate = 0.04; //dummy value
         Date startDate, maturity;
         if(includeFirstSwaplet){
             startDate = termStructure.getLink().referenceDate();
-            maturity = termStructure.getLink().referenceDate().increment(length);
+            maturity = termStructure.getLink().referenceDate().add(length);
         }
         else{
-            startDate = termStructure.getLink().referenceDate().increment(indexTenor);
-            maturity = termStructure.getLink().referenceDate().increment(length);
+            startDate = termStructure.getLink().referenceDate().add(indexTenor);
+            maturity = termStructure.getLink().referenceDate().add(length);
         }
-        
-        IborIndex dummyIndex = new IborIndex("dummy", 
-                indexTenor, 
+
+        final IborIndex dummyIndex = new IborIndex("dummy",
+                indexTenor,
                 index.fixingDays(),
                 index.currency(),
                 index.fixingCalendar(),
@@ -66,22 +68,26 @@ public class CapHelper extends CalibrationHelper {
                 index.isEndOfMonth(),
                 termStructure.getLink().dayCounter(),
                 termStructure);
-                
-        double [] nominals = {1,1.0};
-        
-        Schedule floatSchedule = new Schedule(startDate, maturity,
-                index.tenor(), index.fixingCalendar(), 
-                index.getConvention(),
-                index.getConvention(), false, false);
-        
+
+        final double [] nominals = {1,1.0};
+
+
+        // TODO: code review :: please verify against QL/C++ code
+        final Schedule fixedSchedule = new Schedule(
+                startDate, maturity,
+                new Period(fixedLegFrequency), index.fixingCalendar(),
+                BusinessDayConvention.UNADJUSTED, BusinessDayConvention.UNADJUSTED,
+                DateGenerationRule.FORWARD, false);
+
         //TODO: Code review :: incomplete code
-        if (true)
+        if (true) {
             throw new UnsupportedOperationException("Work in progress");
-        
-        
+        }
+
+
         /*
         Leg floatingLeg = new IborL
-        
+
          Leg fixedLeg = FixedRateLeg(nominals,
                                     fixedSchedule,
                                     std::vector<Rate>(1, fixedRate),
@@ -96,18 +102,18 @@ public class CapHelper extends CalibrationHelper {
                                               std::vector<Rate>(1, fairRate),
                                               termStructure, engine_));
         marketValue_ = blackPrice(volatility_->value());*/
-        
-        
+
+
     }
 
     @Override
-    public void addTimesTo(ArrayList<Time> times) {
+    public void addTimesTo(final ArrayList<Time> times) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
-    public double blackPrice(double volatility) {
+    public double blackPrice(final double volatility) {
         // TODO Auto-generated method stub
         return 0;
     }
@@ -119,9 +125,9 @@ public class CapHelper extends CalibrationHelper {
     }
 
     @Override
-    public void addObserver(Observer observer) {
+    public void addObserver(final Observer observer) {
         delegatedObservable.addObserver(observer);
-        
+
     }
 
     @Override
@@ -130,15 +136,15 @@ public class CapHelper extends CalibrationHelper {
     }
 
     @Override
-    public void deleteObserver(Observer observer) {
+    public void deleteObserver(final Observer observer) {
         delegatedObservable.deleteObservers();
-        
+
     }
 
     @Override
     public void deleteObservers() {
         delegatedObservable.deleteObservers();
-        
+
     }
 
     @Override
@@ -149,22 +155,22 @@ public class CapHelper extends CalibrationHelper {
     @Override
     public void notifyObservers() {
         delegatedObservable.notifyObservers();
-        
+
     }
 
     @Override
-    public void notifyObservers(Object arg) {
+    public void notifyObservers(final Object arg) {
         delegatedObservable.notifyObservers(arg);
-        
+
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        
-        
-    }
-    private Observable delegatedObservable = new DefaultObservable(this);
+    public void update(final Observable o, final Object arg) {
 
-   
+
+    }
+    private final Observable delegatedObservable = new DefaultObservable(this);
+
+
 
 }

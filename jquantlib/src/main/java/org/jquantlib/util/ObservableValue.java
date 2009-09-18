@@ -39,7 +39,7 @@ public class ObservableValue<T> implements Observable {
         delegatedObservable.notifyObservers();
     }
 
-    public T getValue() {
+    public T value() {
         return value;
     }
 

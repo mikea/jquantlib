@@ -150,12 +150,12 @@ public class Thirty360 extends AbstractDayCounter {
 
     @Override
     public final int dayCount(final Date d1, final Date d2) /* @ReadOnly */{
-        final int dd1 = d1.getDayOfMonth();
-        final int dd2 = d2.getDayOfMonth();
-        final int mm1 = d1.getMonth();
-        final int mm2 = d2.getMonth();
-        final int yy1 = d1.getYear();
-        final int yy2 = d2.getYear();
+        final int dd1 = d1.dayOfMonth();
+        final int dd2 = d2.dayOfMonth();
+        final int mm1 = d1.month().value();
+        final int mm2 = d2.month().value();
+        final int yy1 = d1.year();
+        final int yy2 = d2.year();
         return delegate.getDayCount(dd1, dd2, mm1, mm2, yy1, yy2);
 
     }
@@ -249,10 +249,12 @@ public class Thirty360 extends AbstractDayCounter {
 
         @Override
         public final int getDayCount(int dd1, int dd2, final int mm1, final int mm2, final int yy1, final int yy2) {
-            if (mm1 == 2 && dd1 > 27)
+            if (mm1 == 2 && dd1 > 27) {
                 dd1 = 30;
-            if (mm2 == 2 && dd2 > 27)
+            }
+            if (mm2 == 2 && dd2 > 27) {
                 dd2 = 30;
+            }
             return compute(dd1,dd2,mm1,mm2,yy1,yy2);
         }
     }

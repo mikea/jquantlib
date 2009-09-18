@@ -36,7 +36,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.termstructures.yieldcurves;
 
@@ -61,24 +61,27 @@ import org.jquantlib.util.Date;
  */
 public class ForwardSpreadedTermStructure extends ForwardRateStructure {
 
-	//
+    //
     // private fields
     //
 
     private final Handle<YieldTermStructure> originalCurve;
-	private final Handle<Quote> spread;
+    private final Handle<Quote> spread;
 
 
-	//
-	// public constructors
-	//
+    //
+    // public constructors
+    //
 
     public ForwardSpreadedTermStructure(final Handle<YieldTermStructure> h, final Handle<Quote> spread) {
         this.originalCurve = h;
         this.spread = spread;
 
-        registerWith(this.originalCurve);
-        registerWith(this.spread);
+        this.originalCurve.addObserver(this);
+        this.spread.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.originalCurve);
+        //registerWith(this.spread);
     }
 
 

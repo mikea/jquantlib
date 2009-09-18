@@ -104,33 +104,33 @@ public class Ukraine extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            final int m = date.getMonth();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final int m = date.month().value();
+            final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
                     // New Year's Day (possibly moved to Monday)
                     || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY))
-                            && m == Month.JANUARY.toInteger())
+                            && m == Month.JANUARY.value())
                             // Orthodox Christmas
                             || ((d == 7 || ((d == 8 || d == 9) && w == Weekday.MONDAY))
-                                    && m == Month.JANUARY.toInteger())
+                                    && m == Month.JANUARY.value())
                                     // Women's Day
                                     || ((d == 8 || ((d == 9 || d == 10) && w == Weekday.MONDAY))
-                                            && m == Month.MARCH.toInteger())
+                                            && m == Month.MARCH.value())
                                             // Orthodox Easter Monday
                                             || (dd == em)
                                             // Holy Trinity Day
                                             || (dd == em+49)
                                             // Workers Solidarity Days
-                                            || ((d == 1 || d == 2 || (d == 3 && w ==  Weekday.MONDAY)) && m == Month.MAY.toInteger())
+                                            || ((d == 1 || d == 2 || (d == 3 && w ==  Weekday.MONDAY)) && m == Month.MAY.value())
                                             // Victory Day
-                                            || ((d == 9 || ((d == 10 || d == 11) && w ==  Weekday.MONDAY)) && m == Month.MAY.toInteger())
+                                            || ((d == 9 || ((d == 10 || d == 11) && w ==  Weekday.MONDAY)) && m == Month.MAY.value())
                                             // Constitution Day
-                                            || (d == 28 && m == Month.JUNE.toInteger())
+                                            || (d == 28 && m == Month.JUNE.value())
                                             // Independence Day
-                                            || (d == 24 && m == Month.AUGUST.toInteger()))
+                                            || (d == 24 && m == Month.AUGUST.value()))
                 return false;
             return true;
         }

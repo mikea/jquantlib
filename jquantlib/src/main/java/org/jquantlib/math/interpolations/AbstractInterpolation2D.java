@@ -25,6 +25,7 @@ package org.jquantlib.math.interpolations;
 import static org.jquantlib.math.Closeness.isClose;
 
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 
@@ -217,33 +218,37 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     @Override
     // FIXME: code review here: compare against original C++ code
     public int locateX(final double x) /* @ReadOnly */ {
-        if (x <= vx.first())
+        if (x <= vx.first()) {
             return 0;
-        else if (x > vx.last())
+        } else if (x > vx.last()) {
             return vx.size()-2;
-        else
+        } else {
             return vx.upperBound(x) - 1;
+        }
     }
 
     @Override
     // FIXME: code review here: compare against original C++ code
     public int locateY(final double y) /* @ReadOnly */ {
-        if (y <= vy.first())
+        if (y <= vy.first()) {
             return 0;
-        else if (y > vy.last())
+        } else if (y > vy.last()) {
             return vy.size()-2;
-        else
+        } else {
             return vy.upperBound(y) - 1;
+        }
     }
 
     @Override
     public boolean isInRange(final double x, final double y) {
-        QL.assertion(extraSafetyChecksX(), "unsorted values on array X"); // QA:[RG]::verified // TODO: message
+        QL.require(extraSafetyChecksX(), "unsorted values on array X"); // QA:[RG]::verified // TODO: message
         final double x1 = xMin(), x2 = xMax();
         final boolean xIsInrange = (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
-        if (!xIsInrange) return false;
+        if (!xIsInrange) {
+            return false;
+        }
 
-        QL.assertion(extraSafetyChecksY(), "unsorted values on array Y"); // QA:[RG]::verified // TODO: message
+        QL.require(extraSafetyChecksY(), "unsorted values on array Y"); // QA:[RG]::verified // TODO: message
         final double y1 = yMin(), y2 = yMax();
         return (y >= y1 && y <= y2) || isClose(y,y1) || isClose(y,y2);
     }
@@ -253,17 +258,23 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     //
 
     private boolean extraSafetyChecksX() {
-        for (int i=0; i<vx.size()-1; i++) {
-            if (vx.get(i) > vx.get(i+1))
-                return false;
+        if (new Settings().isExtraSafetyChecks()) {
+            for (int i=0; i<vx.size()-1; i++) {
+                if (vx.get(i) > vx.get(i+1)) {
+                    return false;
+                }
+            }
         }
         return true;
     }
 
     private boolean extraSafetyChecksY() {
-        for (int i=0; i<vy.size()-1; i++) {
-            if (vy.get(i) > vy.get(i+1))
-                return false;
+        if (new Settings().isExtraSafetyChecks()) {
+            for (int i=0; i<vy.size()-1; i++) {
+                if (vy.get(i) > vy.get(i+1)) {
+                    return false;
+                }
+            }
         }
         return true;
     }

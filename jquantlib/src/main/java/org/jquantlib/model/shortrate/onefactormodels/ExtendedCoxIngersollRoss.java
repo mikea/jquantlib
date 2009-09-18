@@ -26,6 +26,7 @@ package org.jquantlib.model.shortrate.onefactormodels;
 
 import org.jquantlib.QL;
 import org.jquantlib.instruments.Option;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.distributions.NonCentralChiSquaredDistribution;
 import org.jquantlib.math.matrixutilities.Array;
@@ -98,15 +99,16 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         QL.require(strike > 0.0 , strike_must_be_positive); // QA:[RG]::verified // TODO: message
         final double discountT = termstructureConsistentModel.termStructure().getLink().discount(t);
         final double discountS = termstructureConsistentModel.termStructure().getLink().discount(s);
-        if(t<Constants.QL_EPSILON)
+        if(t<Constants.QL_EPSILON) {
             switch (type) {
             case CALL:
                 return Math.max(discountS - strike, 0);
             case PUT:
                 return Math.max(strike - discountS, 0);
             default:
-                QL.assertion(unsupported_option_type);
+                throw new LibraryException(unsupported_option_type);
             }
+        }
         final double sigma2 = sigma() * sigma();
         final double h = Math.sqrt(k() * k() + 2 * sigma2);
         final double r0 = termstructureConsistentModel.termStructure().getLink().forwardRate(0.0, 0.0, Compounding.CONTINUOUS,
@@ -126,10 +128,11 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         final double z = Math.log(super.A(t, s) / strike) / b;
         final double call = discountS * chis.op(2.0 * z * (rho + psi + b)) - strike * discountT
         * chit.op(2.0 * z * (rho + psi));
-        if (type.equals(Option.Type.CALL))
+        if (type.equals(Option.Type.CALL)) {
             return call;
-        else
+        } else {
             return call - discountS + strike * discountT;
+        }
 
     }
 

@@ -194,47 +194,47 @@ public class UnitedStates extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth();
-            final int dd = date.getDayOfYear();
-            final int m = date.getMonth();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth();
+            final int dd = date.dayOfYear();
+            final int m = date.month().value();
+            final int y = date.year();
             final int em = easterMonday(y);
 
             if (isWeekend(w)
                     // New Year's Day (possibly moved to Monday if on Sunday)
                     || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .toInteger())
+                            .value())
                             // (or to Friday if on Saturday)
                             || (d == 31 && w == Weekday.FRIDAY && m == Month.DECEMBER
-                                    .toInteger())
+                                    .value())
                                     // Martin Luther King's birthday (third Monday in January)
-                                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY.toInteger())
+                                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY.value())
                                     // Washington's birthday (third Monday in February)
-                                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY.toInteger())
+                                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY.value())
                                     // Good Friday
                                     || ((dd == em - 3) && (y >= 2008))
                                     // Memorial Day (last Monday in May)
                                     || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
-                                            .toInteger())
+                                            .value())
                                             // Independence Day (Monday if Sunday or Friday if Saturday)
                                             || ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
-                                                    .toInteger())
+                                                    .value())
                                                     // Labor Day (first Monday in September)
                                                     || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
-                                                            .toInteger())
+                                                            .value())
                                                             // Columbus Day (second Monday in October)
                                                             || ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.OCTOBER
-                                                                    .toInteger())
+                                                                    .value())
                                                                     // Veteran's Day (Monday if Sunday or Friday if Saturday)
                                                                     || ((d == 11 || (d == 12 && w == Weekday.MONDAY) || (d == 10 && w == Weekday.FRIDAY)) && m == Month.NOVEMBER
-                                                                            .toInteger())
+                                                                            .value())
                                                                             // Thanksgiving Day (fourth Thursday in November)
                                                                             || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
-                                                                                    .toInteger())
+                                                                                    .value())
                                                                                     // Christmas (Monday if Sunday or Friday if Saturday)
                                                                                     || ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
-                                                                                            .toInteger()))
+                                                                                            .value()))
                 return false;
             return true;
         }
@@ -248,73 +248,73 @@ public class UnitedStates extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            final int m = date.getMonth();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final int m = date.month().value();
+            final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
                     // New Year's Day (possibly moved to Monday if on Sunday)
                     || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .toInteger())
+                            .value())
                             // Washington's birthday (third Monday in February)
                             || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY
-                                    .toInteger())
+                                    .value())
                                     // Good Friday
                                     || (dd == em - 3)
                                     // Memorial Day (last Monday in May)
                                     || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
-                                            .toInteger())
+                                            .value())
                                             // Independence Day (Monday if Sunday or Friday if Saturday)
                                             || ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
-                                                    .toInteger())
+                                                    .value())
                                                     // Labor Day (first Monday in September)
                                                     || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
-                                                            .toInteger())
+                                                            .value())
                                                             // Thanksgiving Day (fourth Thursday in November)
                                                             || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
-                                                                    .toInteger())
+                                                                    .value())
                                                                     // Christmas (Monday if Sunday or Friday if Saturday)
                                                                     || ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
-                                                                            .toInteger()))
+                                                                            .value()))
                 return false;
 
             if (y >= 1998) {
                 if (// Martin Luther King's birthday (third Monday in January)
                         ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY
-                                .toInteger())
+                                .value())
                                 // President Reagan's funeral
-                                || (y == 2004 && m == Month.JUNE.toInteger() && d == 11)
+                                || (y == 2004 && m == Month.JUNE.value() && d == 11)
                                 // September 11, 2001
-                                || (y == 2001 && m == Month.SEPTEMBER.toInteger() && (11 <= d && d <= 14))
+                                || (y == 2001 && m == Month.SEPTEMBER.value() && (11 <= d && d <= 14))
                                 // President Ford's funeral
-                                || (y == 2007 && m == Month.JANUARY.toInteger() && d == 2))
+                                || (y == 2007 && m == Month.JANUARY.value() && d == 2))
                     return false;
             } else if (y <= 1980) {
                 if (// Presidential election days
-                        ((y % 4 == 0) && m == Month.NOVEMBER.toInteger() && d <= 7 && w == Weekday.TUESDAY)
+                        ((y % 4 == 0) && m == Month.NOVEMBER.value() && d <= 7 && w == Weekday.TUESDAY)
                         // 1977 Blackout
-                        || (y == 1977 && m == Month.JULY.toInteger() && d == 14)
+                        || (y == 1977 && m == Month.JULY.value() && d == 14)
                         // Funeral of former President Lyndon B. Johnson.
-                        || (y == 1973 && m == Month.JANUARY.toInteger() && d == 25)
+                        || (y == 1973 && m == Month.JANUARY.value() && d == 25)
                         // Funeral of former President Harry S. Truman
-                        || (y == 1972 && m == Month.DECEMBER.toInteger() && d == 28)
+                        || (y == 1972 && m == Month.DECEMBER.value() && d == 28)
                         // National Day of Participation for the lunar
                         // exploration.
-                        || (y == 1969 && m == Month.JULY.toInteger() && d == 21)
+                        || (y == 1969 && m == Month.JULY.value() && d == 21)
                         // Funeral of former President Eisenhower.
-                        || (y == 1969 && m == Month.MARCH.toInteger() && d == 31)
+                        || (y == 1969 && m == Month.MARCH.value() && d == 31)
                         // Closed all day - heavy snow.
-                        || (y == 1969 && m == Month.FEBRUARY.toInteger() && d == 10)
+                        || (y == 1969 && m == Month.FEBRUARY.value() && d == 10)
                         // Day after Independence Day.
-                        || (y == 1968 && m == Month.JULY.toInteger() && d == 5)
+                        || (y == 1968 && m == Month.JULY.value() && d == 5)
                         // June 12-Dec. 31, 1968
                         // Four day week (closed on Wednesdays) - Paperwork
                         // Crisis
                         || (y == 1968 && dd >= 163 && w == Weekday.WEDNESDAY))
                     return false;
             } else if (// Nixon's funeral
-                    (y == 1994 && m == Month.APRIL.toInteger() && d == 27))
+                    (y == 1994 && m == Month.APRIL.value() && d == 27))
                 return false;
             return true;
         }
@@ -328,44 +328,44 @@ public class UnitedStates extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            final int m = date.getMonth();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final int m = date.month().value();
+            final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
                     // New Year's Day (possibly moved to Monday if on Sunday)
                     || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .toInteger())
+                            .value())
                             // Martin Luther King's birthday (third Monday in January)
                             || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY
-                                    .toInteger())
+                                    .value())
                                     // Washington's birthday (third Monday in February)
                                     || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY
-                                            .toInteger())
+                                            .value())
                                             // Good Friday
                                             || (dd == em - 3)
                                             // Memorial Day (last Monday in May)
                                             || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
-                                                    .toInteger())
+                                                    .value())
                                                     // Independence Day (Monday if Sunday or Friday if Saturday)
                                                     || ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
-                                                            .toInteger())
+                                                            .value())
                                                             // Labor Day (first Monday in September)
                                                             || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
-                                                                    .toInteger())
+                                                                    .value())
                                                                     // Columbus Day (second Monday in October)
                                                                     || ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.OCTOBER
-                                                                            .toInteger())
+                                                                            .value())
                                                                             // Veteran's Day (Monday if Sunday or Friday if Saturday)
                                                                             || ((d == 11 || (d == 12 && w == Weekday.MONDAY) || (d == 10 && w == Weekday.FRIDAY)) && m == Month.NOVEMBER
-                                                                                    .toInteger())
+                                                                                    .value())
                                                                                     // Thanksgiving Day (fourth Thursday in November)
                                                                                     || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
-                                                                                            .toInteger())
+                                                                                            .value())
                                                                                             // Christmas (Monday if Sunday or Friday if Saturday)
                                                                                             || ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
-                                                                                                    .toInteger()))
+                                                                                                    .value()))
                 return false;
             return true;
         }
@@ -379,28 +379,28 @@ public class UnitedStates extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth();
-            final int m = date.getMonth();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth();
+            final int m = date.month().value();
             if (isWeekend(w)
                     // New Year's Day (possibly moved to Monday if on Sunday)
                     || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .toInteger())
+                            .value())
                             // Memorial Day (last Monday in May)
                             || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
-                                    .toInteger())
+                                    .value())
                                     // Independence Day (Monday if Sunday)
                                     || ((d == 4 || (d == 5 && w == Weekday.MONDAY)) && m == Month.JULY
-                                            .toInteger())
+                                            .value())
                                             // Labor Day (first Monday in September)
                                             || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
-                                                    .toInteger())
+                                                    .value())
                                                     // Thanksgiving Day (fourth Thursday in November)
                                                     || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
-                                                            .toInteger())
+                                                            .value())
                                                             // Christmas (Monday if Sunday)
                                                             || ((d == 25 || (d == 26 && w == Weekday.MONDAY)) && m == Month.DECEMBER
-                                                                    .toInteger()))
+                                                                    .value()))
                 return false;
             return true;
         }

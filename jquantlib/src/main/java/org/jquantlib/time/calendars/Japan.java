@@ -132,10 +132,10 @@ public class Japan extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth();
-            final Month m = date.getMonthEnum();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth();
+            final Month m = date.month();
+            final int y = date.year();
 
             // equinox calculation : TODO: is double usage the right type ???
             final double exact_vernal_equinox_time = 20.69115;

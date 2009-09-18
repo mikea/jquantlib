@@ -71,10 +71,10 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     //
 
     public SwapRateHelper(
-                final Handle<Quote> rate,
-                final SwapIndex swapIndex,
-                final Handle<Quote> spread,
-                final Period fwdStart) {
+            final Handle<Quote> rate,
+            final SwapIndex swapIndex,
+            final Handle<Quote> spread,
+            final Period fwdStart) {
         super(rate);
         this.tenor = swapIndex.tenor();
         this.calendar = swapIndex.fixingCalendar();
@@ -85,21 +85,25 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         this.spread = spread;
         this.fwdStart = fwdStart;
 
-        registerWith(this.iborIndex);
-        registerWith(this.spread);
+        this.iborIndex.addObserver(this);
+        this.spread.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.iborIndex);
+        //registerWith(this.spread);
+
         initializeDates();
     }
 
     public SwapRateHelper(
-                final Handle<Quote> rate,
-                final Period tenor,
-                final Calendar calendar,
-                final Frequency fixedFrequency,
-                final BusinessDayConvention fixedConvention,
-                final DayCounter fixedDayCount,
-                final IborIndex iborIndex,
-                final Handle<Quote> spread,
-                final Period fwdStart) {
+            final Handle<Quote> rate,
+            final Period tenor,
+            final Calendar calendar,
+            final Frequency fixedFrequency,
+            final BusinessDayConvention fixedConvention,
+            final DayCounter fixedDayCount,
+            final IborIndex iborIndex,
+            final Handle<Quote> spread,
+            final Period fwdStart) {
         super(rate);
         this.tenor = tenor;
         this.calendar = calendar;
@@ -110,21 +114,25 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         this.spread =spread;
         this.fwdStart =fwdStart;
 
-        registerWith(this.iborIndex);
-        registerWith(this.spread);
+        this.iborIndex.addObserver(this);
+        this.spread.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.iborIndex);
+        //registerWith(this.spread);
+
         initializeDates();
     }
 
     public SwapRateHelper(
-                final /*@Rate*/ double rate,
-                final Period tenor,
-                final Calendar calendar,
-                final Frequency fixedFrequency,
-                final BusinessDayConvention fixedConvention,
-                final DayCounter fixedDayCount,
-                final IborIndex iborIndex,
-                final Handle<Quote> spread,
-                final Period fwdStart) {
+            final /*@Rate*/ double rate,
+            final Period tenor,
+            final Calendar calendar,
+            final Frequency fixedFrequency,
+            final BusinessDayConvention fixedConvention,
+            final DayCounter fixedDayCount,
+            final IborIndex iborIndex,
+            final Handle<Quote> spread,
+            final Period fwdStart) {
         super(rate);
         this.tenor = tenor;
         this.calendar = calendar;
@@ -135,16 +143,20 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         this.spread = spread;
         this.fwdStart = fwdStart;
 
-        registerWith(this.iborIndex);
-        registerWith(this.spread);
+        this.iborIndex.addObserver(this);
+        this.spread.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.iborIndex);
+        //registerWith(this.spread);
+
         initializeDates();
     }
 
     public SwapRateHelper(
-                final /*@Rate*/ double rate,
-                final SwapIndex swapIndex,
-                final Handle<Quote> spread,
-                final Period fwdStart) {
+            final /*@Rate*/ double rate,
+            final SwapIndex swapIndex,
+            final Handle<Quote> spread,
+            final Period fwdStart) {
         super(rate);
         this.tenor = swapIndex.tenor();
         this.calendar = swapIndex.fixingCalendar();
@@ -155,8 +167,12 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         this.spread = spread;
         this.fwdStart = fwdStart;
 
-        registerWith(this.iborIndex);
-        registerWith(this.spread);
+        this.iborIndex.addObserver(this);
+        this.spread.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.iborIndex);
+        //registerWith(this.spread);
+
         initializeDates();
     }
 
@@ -171,31 +187,31 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     @Override
     //TODO: solve macros
     protected void initializeDates() {
-         // dummy ibor index with curve/swap arguments
-         final IborIndex clonedIborIndex = iborIndex.clone(this.termStructureHandle);
+        // dummy ibor index with curve/swap arguments
+        final IborIndex clonedIborIndex = iborIndex.clone(this.termStructureHandle);
 
-         // do not pass the spread here, as it might be a Quote i.e. it can dinamically change
-         this.swap = new MakeVanillaSwap(tenor, clonedIborIndex, 0.0, fwdStart)
-             .withFixedLegDayCount(fixedDayCount)
-             .withFixedLegTenor(new Period(fixedFrequency))
-             .withFixedLegConvention(fixedConvention)
-             .withFixedLegTerminationDateConvention(fixedConvention)
-             .withFixedLegCalendar(calendar)
-             .withFloatingLegCalendar(calendar).value();
+        // do not pass the spread here, as it might be a Quote i.e. it can dinamically change
+        this.swap = new MakeVanillaSwap(tenor, clonedIborIndex, 0.0, fwdStart)
+        .withFixedLegDayCount(fixedDayCount)
+        .withFixedLegTenor(new Period(fixedFrequency))
+        .withFixedLegConvention(fixedConvention)
+        .withFixedLegTerminationDateConvention(fixedConvention)
+        .withFixedLegCalendar(calendar)
+        .withFloatingLegCalendar(calendar).value();
 
-         this.earliestDate = swap.startDate();
+        this.earliestDate = swap.startDate();
 
-         // Usually...
-         this.latestDate = swap.maturityDate();
+        // Usually...
+        this.latestDate = swap.maturityDate();
 
-         // ...but due to adjustments, the last floating coupon might need a later date for fixing
-         // #ifdef QL_USE_INDEXED_COUPON
-         final FloatingRateCoupon lastFloating = (FloatingRateCoupon) swap.floatingLeg().last();
-         final Date fixingValueDate = iborIndex.valueDate(lastFloating.fixingDate());
-         final Date endValueDate = iborIndex.maturityDate(fixingValueDate);
-         latestDate = Std.getInstance().max(latestDate, endValueDate);
-         // #endif
-     }
+        // ...but due to adjustments, the last floating coupon might need a later date for fixing
+        // #ifdef QL_USE_INDEXED_COUPON
+        final FloatingRateCoupon lastFloating = (FloatingRateCoupon) swap.floatingLeg().last();
+        final Date fixingValueDate = iborIndex.valueDate(lastFloating.fixingDate());
+        final Date endValueDate = iborIndex.maturityDate(fixingValueDate);
+        latestDate = Std.getInstance().max(latestDate, endValueDate);
+        // #endif
+    }
 
 
     /**
@@ -207,57 +223,57 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     public void setTermStructure(final YieldTermStructure t) {
         // TODO: code review :: please verify against QL/C++ code
         // ---- termStructureHandle.linkTo( shared_ptr<YieldTermStructure>(t, no_deletion), false);
-         termStructureHandle.setLink(t, false);
+        termStructureHandle.setLink(t, false);
 
-         super.setTermStructure(t);
-     }
+        super.setTermStructure(t);
+    }
 
 
     /* (non-Javadoc)
      * @see org.jquantlib.termstructures.BootstrapHelper#getImpliedQuote()
      */
-     @Override
+    @Override
     public /*@Price*/ double impliedQuote() /* @ReadOnly */ {
-         QL.require(termStructure != null , "term structure not set"); // QA:[RG]::verified // TODO: message
+        QL.require(termStructure != null , "term structure not set"); // QA:[RG]::verified // TODO: message
 
-         // we didn't register as observers - force calculation
-         swap.recalculate();
+        // we didn't register as observers - force calculation
+        swap.recalculate();
 
-         // weak implementation... to be improved
-         /*@Price*/ final double floatingLegNPV = swap.floatingLegNPV();
-         /*@Spread*/ final double spread = this.spread.empty() ? 0.0 : this.spread.getLink().op();
-         /*@Price*/ final double spreadNPV = swap.floatingLegBPS()/basisPoint*spread;
-         /*@Price*/ final double totNPV = - (floatingLegNPV+spreadNPV);
-         /*@Price*/ final double result = totNPV/(swap.fixedLegBPS()/basisPoint);
-         return result;
-     }
+        // weak implementation... to be improved
+        /*@Price*/ final double floatingLegNPV = swap.floatingLegNPV();
+        /*@Spread*/ final double spread = this.spread.empty() ? 0.0 : this.spread.getLink().op();
+        /*@Price*/ final double spreadNPV = swap.floatingLegBPS()/basisPoint*spread;
+        /*@Price*/ final double totNPV = - (floatingLegNPV+spreadNPV);
+        /*@Price*/ final double result = totNPV/(swap.fixedLegBPS()/basisPoint);
+        return result;
+    }
 
-     public /*@Spread*/ double spread() /* @ReadOnly */ {
-         return spread.empty() ? 0.0 : spread.getLink().op();
-     }
+    public /*@Spread*/ double spread() /* @ReadOnly */ {
+        return spread.empty() ? 0.0 : spread.getLink().op();
+    }
 
-     public VanillaSwap swap() /* @ReadOnly */ {
-         return swap;
-     }
+    public VanillaSwap swap() /* @ReadOnly */ {
+        return swap;
+    }
 
-     public final Period forwardStart() /* @ReadOnly */ {
-         return fwdStart;
-     }
+    public final Period forwardStart() /* @ReadOnly */ {
+        return fwdStart;
+    }
 
 
-     //
-     // implements TypedVisitable
-     //
+    //
+    // implements TypedVisitable
+    //
 
-     // TODO: code review :: object model needs to be validated and eventually refactored
-     // TODO: code review :: please verify against QL/C++ code
-//     public void accept(final TypedVisitor<Event> v) {
-//         Visitor<Event> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
-//         if (v1 != null) {
-//             v1.visit(this);
-//         } else {
-//             super.accept(v);
-//         }
-//     }
+    // TODO: code review :: object model needs to be validated and eventually refactored
+    // TODO: code review :: please verify against QL/C++ code
+    //     public void accept(final TypedVisitor<Event> v) {
+    //         Visitor<Event> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
+    //         if (v1 != null) {
+    //             v1.visit(this);
+    //         } else {
+    //             super.accept(v);
+    //         }
+    //     }
 
 }

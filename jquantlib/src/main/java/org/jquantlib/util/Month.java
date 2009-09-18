@@ -53,7 +53,7 @@ public enum Month {
      *
      * @return the ordinal number of this Month
      */
-    public int toInteger() {
+    public int value() {
         return enumValue;
     }
 

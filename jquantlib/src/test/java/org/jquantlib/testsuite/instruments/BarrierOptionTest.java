@@ -22,9 +22,8 @@
 
 package org.jquantlib.testsuite.instruments;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.fail;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
@@ -47,19 +46,13 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 
 public class BarrierOptionTest {
 
-    private final Settings settings;
-    private final Date today;
-
 
     public BarrierOptionTest() {
         QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        this.today = settings.getEvaluationDate();
     }
 
 
@@ -163,6 +156,8 @@ public class BarrierOptionTest {
                 //---- new NewBarrierOptionData( BarrierType.DownOut,    45.0,    0.0,  Option.Type.PUT,     50,  50.0,-0.05, 0.10, 1.00, 0.50,   5.477, 1.0e-3 )
         };
 
+        final Date today = new Settings().getEvaluationDate();
+
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
         final SimpleQuote qRate = new SimpleQuote(0.0);
@@ -173,7 +168,7 @@ public class BarrierOptionTest {
         final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
 
         for (final NewBarrierOptionData value : values) {
-            final Date exDate = today.getDateAfter( timeToDays(value.t) );
+            final Date exDate = today.add( timeToDays(value.t) );
             final Exercise exercise = new EuropeanExercise(exDate);
 
             spot.setValue(value.s);
@@ -201,11 +196,12 @@ public class BarrierOptionTest {
             final double calculated = barrierOption.getNPV();
             final double expected = value.result;
             final double error = Math.abs(calculated-expected);
-            if (error>value.tol)
+            if (error>value.tol) {
                 REPORT_FAILURE("value", value.barrierType, value.barrier,
                         value.rebate, payoff, exercise, value.s,
                         value.q, value.r, today, value.v,
                         expected, calculated, error, value.tol);
+            }
 
         }
     }
@@ -243,7 +239,7 @@ public class BarrierOptionTest {
         final double q = 0.02;
 
         final DayCounter dc = Actual360.getDayCounter();
-        final Date today = DateFactory.getFactory().getTodaysDate();
+        final Date today = new Date().statics().todaysDate();
         final Handle<Quote> underlying = new Handle<Quote>(new SimpleQuote(underlyingPrice));
 
         final Handle<Quote> qH_SME = new Handle<Quote>(new SimpleQuote(q));
@@ -257,7 +253,7 @@ public class BarrierOptionTest {
 
         final PricingEngine engine = new AnalyticBarrierEngine();
 
-        final Date exDate = today.getDateAfter(360);
+        final Date exDate = today.add(360);
 
         final Exercise exercise = new EuropeanExercise(exDate);
 
@@ -278,9 +274,10 @@ public class BarrierOptionTest {
             final double error = Math.abs(calculated - expected);
             final double maxErrorAllowed = 1.0e-3;
 
-            if (error > maxErrorAllowed)
+            if (error > maxErrorAllowed) {
                 REPORT_FAILURE("value", value.barrierType, value.barrier, rebate, callPayoff, exercise, underlyingPrice, q,
                         r, today, value.volatility, expected, calculated, error, maxErrorAllowed);
+            }
         }
     }
 
@@ -305,7 +302,7 @@ public class BarrierOptionTest {
         final double q = 0.00;
 
         final DayCounter dc = Actual360.getDayCounter();
-        final Date today = DateFactory.getFactory().getTodaysDate();
+        final Date today = new Date().statics().todaysDate();
         final Handle<Quote> underlying = new Handle<Quote>(new SimpleQuote(underlyingPrice));
 
         final Handle<Quote> qH_SME = new Handle<Quote>(new SimpleQuote(q));
@@ -319,7 +316,7 @@ public class BarrierOptionTest {
 
         final PricingEngine engine = new AnalyticBarrierEngine();
 
-        final Date exDate = today.getDateAfter(360);
+        final Date exDate = today.add(360);
 
         final Exercise exercise = new EuropeanExercise(exDate);
 
@@ -340,9 +337,10 @@ public class BarrierOptionTest {
             final double error = Math.abs(calculated - expected);
             final double maxErrorAllowed = 1.0e-3;
 
-            if (error > maxErrorAllowed)
+            if (error > maxErrorAllowed) {
                 REPORT_FAILURE("value", value.barrierType, value.barrier, rebate, callPayoff, exercise, underlyingPrice, q,
                         r, today, value.volatility, expected, calculated, error, maxErrorAllowed);
+            }
         }
 
         final double maxMcRelativeErrorAllowed = 0.01;
@@ -385,7 +383,7 @@ public class BarrierOptionTest {
             final Exercise exercise, final double s, final double q, final double r, final Date today,
             final double v, final double expected, final double calculated,
             final double error, final double tolerance) {
-        TestCase.fail("\n" + barrierType + " " + exercise
+        fail("\n" + barrierType + " " + exercise
                 + payoff.optionType() + " option with "
                 + payoff.getClass().getSimpleName() + " payoff:\n"
                 + "    underlying value: " +  s + "\n"

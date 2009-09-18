@@ -132,11 +132,15 @@ public abstract class NewInstrument extends Instrument {
      * @see PricingEngine
      */
     public final void setPricingEngine(final PricingEngine engine) {
-        if (this.engine != null)
+        if (this.engine != null) {
             this.engine.deleteObserver(this);
+        }
         this.engine = engine;
-        if (this.engine != null)
-            registerWith(this.engine);
+        if (this.engine != null) {
+            this.engine.addObserver(this);
+            //XXX:registerWith
+            //registerWith(this.engine);
+        }
         update(this, null);
     }
 

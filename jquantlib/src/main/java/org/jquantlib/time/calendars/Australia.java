@@ -120,11 +120,11 @@ public class Australia extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth();
-            final Month m = date.getMonthEnum();
-            final int y = date.getYear();
-            final int dd = date.getDayOfYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth();
+            final Month m = date.month();
+            final int y = date.year();
+            final int dd = date.dayOfYear();
             final int em = easterMonday(y);
 
             if (isWeekend(w)
@@ -162,11 +162,11 @@ public class Australia extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth();
-            final Month m = date.getMonthEnum();
-            final int y = date.getYear();
-            final int dd = date.getDayOfYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth();
+            final Month m = date.month();
+            final int y = date.year();
+            final int dd = date.dayOfYear();
             final int em = easterMonday(y);
 
             if (isWeekend(w)

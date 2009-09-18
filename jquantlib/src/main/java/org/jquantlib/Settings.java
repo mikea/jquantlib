@@ -22,11 +22,10 @@
 
 package org.jquantlib;
 
-import java.util.prefs.Preferences;
+import java.util.Map;
+import java.util.TreeMap;
 
-import org.jquantlib.lang.annotation.PackagePrivate;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 
 /**
  * Settings for the application.
@@ -36,110 +35,126 @@ import org.jquantlib.util.DateFactory;
  * sequence of operations defined by the application.
  *
  */
-
-//
-//TODO: code review :: see bottom of this file for original C++ defines
-//
-// Some ideas about OSGi
-// 1. Use interfaces from OSGi and not classes from Sun
-// 2. Use the default implementation provided by SpringFramework
-//
-// Some ideas about the API
-// 1. Create another layer on top of OSGi which provides the configurations we need, hiding the details.
-// 2. Organize our layers as QuantLib. See config.hpp and userconfig.hpp
-//
-
 public class Settings {
 
-    private static boolean defaultTodaysPayments = false;
-    private static boolean defaultRefineHighPrecision = false;
-
-    /**
-     * This field determines whether payments expected to happen at the
-     * <i>current evaluation date</i> are considered.
-     *
-     * @see #isTodaysPayments()
-     */
-    private boolean todaysPayments;
+    //    /**
+    //     * Define this to have singletons return different instances for different sessions.
+    //     * <p>
+    //     * You will have to provide and link with the library a sessionId() function in
+    //     * namespace QuantLib, returning a different session id for each session.
+    //     */
+    //    private static final String ENABLE_SESSIONS = "ENABLE_SESSIONS";
 
     /**
      * Define this if negative yield rates should be allowed. This might not be safe.
-     *
-     * @see #isNegativeRates
      */
-    private boolean negativeRates;
+    private static final String NEGATIVE_RATES = "NEGATIVE_RATES";
 
     /**
-     * This field keeps the current evaluation date.
-     *
-     * <p>
-     * Notice that the current evaluation date <b>is not necessarily</b> the
-     * current date or today's date in other words. In the specific situation
-     * when the evaluation date is never defined explicitly, then today's date
-     * is assume by default.
+     * Define this if extra safety checks should be performed. This can degrade performance.
      */
-    private Date evaluationDate;
+    private static final String EXTRA_SAFETY_CHECKS = "EXTRA_SAFETY_CHECKS";
 
     /**
-     * Chooses Halley's method
-     * <p>
+     * Define this if payments occurring today should enter the NPV of an instrument.
+     */
+    private static final String TODAYS_PAYMENTS = "TODAYS_PAYMENTS";
+
+    /**
+     * Define this to use indexed coupons instead of par coupons in floating legs.
+     */
+    private static final String USE_INDEXED_COUPON = "USE_INDEXED_COUPON";
+
+
+    /**
+     * ENFORCE_TODAYS_HISTORIC_FIXINGS
+     */
+    private static final String ENFORCES_TODAYS_HISTORIC_FIXINGS = "ENFORCES_TODAYS_HISTORIC_FIXINGS";
+
+
+    /**
      * The relative error of the approximation has absolute value less than 1.15e-9.
      * One iteration of Halley's rational method (third order) gives full machine precision.
      */
-    private boolean refineHighPrecision;
-
-
-    /**
-     * Default constructor
-     *
-     * @see defaultExtraSafefyChecks
-     * @see defaultEnforcesTodaysHistoricFixings
-     * @see defaultTodaysPayments
-     */
-    @PackagePrivate Settings() {
-        setDefaults();
-    }
+    private static final String REFINE_TO_FULL_MACHINE_PRECISION_USING_HALLEYS_METHOD = "REFINE_TO_FULL_MACHINE_PRECISION_USING_HALLEYS_METHOD";
 
     /**
-     * This constructor is provided so that application settings can be
-     * initialized via implementation independent Preferences.
-     *
-     * @param prefs
-     *            is a Preferences object
+     * Changes the value of field evaluationDate.
+     * <p>
+     * Notice that a successful change of evaluationDate notifies all its listeners.
      */
-    @PackagePrivate Settings(final Preferences prefs) {
-        if (prefs != null) {
-            this.todaysPayments = prefs.getBoolean("TodaysPayments", defaultTodaysPayments);
-            this.refineHighPrecision = prefs.getBoolean("RefineHighPrecision", defaultRefineHighPrecision);
-            this.evaluationDate = DateFactory.getFactory().getTodaysDate();
-        } else {
-            setDefaults();
-        }
-    }
+    private static final String EVALUATION_DATE = "EVALUATION_DATE";
 
-    private void setDefaults() {
-        this.todaysPayments = defaultTodaysPayments;
-        this.evaluationDate = DateFactory.getFactory().getTodaysDate();
-        this.refineHighPrecision = defaultRefineHighPrecision;
-    }
 
-    /**
-     * @return the value of field todaysPayments
-     *
-     * @see #todaysPayments
-     */
-    public boolean isTodaysPayments() {
-        return todaysPayments;
-    }
 
-    /**
-     * @return the value of field negativeRates
-     *
-     * @see #{@link #negativeRates}
-     */
+    //  /**
+    //   * Define this if you want to disable deprecated code.
+    //   */
+    //  private static final String DISABLE_DEPRECATED = "DISABLE_DEPRECATED";
+
+
+
     public boolean isNegativeRates() {
-        return negativeRates;
+        final Object var = attrs.get().get(NEGATIVE_RATES);
+        return var==null? false : (Boolean) var;
     }
+
+    public boolean isExtraSafetyChecks() {
+        final Object var = attrs.get().get(EXTRA_SAFETY_CHECKS);
+        return var==null? false : (Boolean) var;
+    }
+
+    public boolean isTodaysPayments() {
+        final Object var = attrs.get().get(TODAYS_PAYMENTS);
+        return var==null? false : (Boolean) var;
+    }
+
+    public boolean isUseIndexedCoupon() {
+        final Object var = attrs.get().get(USE_INDEXED_COUPON);
+        return var==null? false : (Boolean) var;
+    }
+
+    public boolean isEnforcesTodaysHistoricFixings() {
+        final Object var = attrs.get().get(ENFORCES_TODAYS_HISTORIC_FIXINGS);
+        return var==null? false : (Boolean) var;
+    }
+
+    //TODO change to isRefineToFullMachinePrecisionUsingHalleysMethod
+    public boolean isRefineHighPrecision() {
+        final Object var = attrs.get().get(REFINE_TO_FULL_MACHINE_PRECISION_USING_HALLEYS_METHOD);
+        return var==null? false : (Boolean) var;
+    }
+
+
+
+    public void setNegativeRates(final boolean negativeRates) {
+        attrs.get().put(NEGATIVE_RATES, negativeRates);
+    }
+
+    public void setExtraSafetyChecks(final boolean extraSafetyChecks) {
+        attrs.get().put(EXTRA_SAFETY_CHECKS, extraSafetyChecks);
+    }
+
+    public void setTodaysPayments(final boolean todaysPayments) {
+        attrs.get().put(TODAYS_PAYMENTS, todaysPayments);
+    }
+
+    public void setUseIndexedCoupon(final boolean todaysPayments) {
+        attrs.get().put(USE_INDEXED_COUPON, todaysPayments);
+    }
+
+
+    public void setEnforcesTodaysHistoricFixings(final boolean enforceTodaysHistoricFixings) {
+        attrs.get().put(ENFORCES_TODAYS_HISTORIC_FIXINGS, enforceTodaysHistoricFixings);
+    }
+
+    //TODO change to setRefineToFullMachinePrecisionUsingHalleysMethod
+    public void setRefineHighPrecision(final boolean refineToFullMachinePrecisionUsingHalleysMethod) {
+        attrs.get().put(REFINE_TO_FULL_MACHINE_PRECISION_USING_HALLEYS_METHOD, refineToFullMachinePrecisionUsingHalleysMethod);
+    }
+
+
+
 
     /**
      * @return the value of field evaluationDate
@@ -147,16 +162,7 @@ public class Settings {
      * @see #evaluationDate
      */
     public Date getEvaluationDate() {
-        return evaluationDate;
-    }
-
-    /**
-     * Changes the value of field todaysPayments
-     *
-     * @see #todaysPayments
-     */
-    public void setTodaysPayments(final boolean todaysPayments) {
-        this.todaysPayments = todaysPayments;
+        return (DateProxy) attrs.get().get(EVALUATION_DATE);
     }
 
     /**
@@ -169,100 +175,60 @@ public class Settings {
      * @see #evaluationDate
      */
     public void setEvaluationDate(final Date evaluationDate) {
-        this.evaluationDate.getUpdatable().update(evaluationDate);
-        //        QL.debug(evaluationDate);
+        final DateProxy proxy = (DateProxy) attrs.get().get(EVALUATION_DATE);
+        proxy.assign(evaluationDate);
     }
 
-    /**
-     * @return the value of Halley's method high machine precision setting
-     * <p>
-     * The relative error of the approximation has absolute value less than 1.15e-9.
-     * One iteration of Halley's rational method (third order) gives full machine precision.
-     *
-     * @see #refineHighPrecision
-     */
-    public boolean isRefineHighPrecision() {
-        return refineHighPrecision;
+
+
+    //
+    // private inner classes
+    //
+
+    private static final ThreadAttributes attrs = new ThreadAttributes();
+
+    private static class ThreadAttributes extends ThreadLocal<Map<String,Object>> {
+        @Override
+        public Map<String,Object> initialValue() {
+            final Map<String, Object> map = new TreeMap<String, Object>();
+            map.put(ENFORCES_TODAYS_HISTORIC_FIXINGS, false);
+            map.put(NEGATIVE_RATES, false);
+            map.put(EXTRA_SAFETY_CHECKS, true);
+            map.put(TODAYS_PAYMENTS, true);
+            map.put(USE_INDEXED_COUPON, false);
+            map.put(REFINE_TO_FULL_MACHINE_PRECISION_USING_HALLEYS_METHOD, false);
+            map.put(EVALUATION_DATE, new DateProxy());
+            return map;
+        }
     }
 
-    /**
-     * Changes the value of Halley's method high machine precision setting
-     * <p>
-     * The relative error of the approximation has absolute value less than 1.15e-9.
-     * One iteration of Halley's rational method (third order) gives full machine precision.
-     *
-     * @see #refineHighPrecision
-     */
-    public void setRefineHighPrecision(final boolean refineHighPrecision) {
-        this.refineHighPrecision = refineHighPrecision;
+
+    //
+    // private inner classes
+    //
+
+    private static class DateProxy extends Date {
+
+        // outside world cannot instantiate
+        private DateProxy() {
+            super();
+        }
+
+        private Date date() /* @ReadOnly */ {
+            if (isNull()) {
+                return this.todaysDate();
+            } else {
+                return this;
+            }
+        }
+
+        private Date assign(final Date date) {
+            super.assign(date.serialNumber());
+            System.err.println("Quantity of observers="+super.countObservers());
+            super.notifyObservers();
+            return this;
+        }
+
     }
 
 }
-
-
-
-
-/***************************************************************
-User configuration section:
-modify the following definitions to suit your preferences.
-
-Do not modify this file if you are using a Linux/Unix system:
-it will not be read by the compiler. The definitions below
-will be provided by running ./configure instead.
- ****************************************************************/
-
-///* Define this if error messages should include current function
-//information. */
-//#ifndef QL_ERROR_FUNCTIONS
-////#   define QL_ERROR_FUNCTIONS
-//#endif
-//
-///* Define this if error messages should include file and line information. */
-//#ifndef QL_ERROR_LINES
-////#   define QL_ERROR_LINES
-//#endif
-//
-///* Define this if tracing messages should be allowed (whether they are
-//actually emitted will depend on run-time settings.) */
-//#ifndef QL_ENABLE_TRACING
-////#   define QL_ENABLE_TRACING
-//#endif
-//
-///* Define this if negative yield rates should be allowed. This might not be
-//safe. */
-//#ifndef QL_NEGATIVE_RATES
-////#   define QL_NEGATIVE_RATES
-//#endif
-//
-///* Define this if extra safety checks should be performed. This can degrade
-//performance. */
-//#ifndef QL_EXTRA_SAFETY_CHECKS
-////#   define QL_EXTRA_SAFETY_CHECKS
-//#endif
-//
-///* Define this if payments occurring today should enter the NPV of an
-//instrument. */
-//#ifndef QL_TODAYS_PAYMENTS
-////#   define QL_TODAYS_PAYMENTS
-//#endif
-//
-///* Define this if you want to disable deprecated code. */
-//#ifndef QL_DISABLE_DEPRECATED
-////#   define QL_DISABLE_DEPRECATED
-//#endif
-//
-///* Define this to use indexed coupons instead of par coupons in floating
-//legs. */
-//#ifndef QL_USE_INDEXED_COUPON
-////#   define QL_USE_INDEXED_COUPON
-//#endif
-//
-///* Define this to have singletons return different instances for
-//different sessions. You will have to provide and link with the
-//library a sessionId() function in namespace QuantLib, returning a
-//different session id for each session.*/
-//#ifndef QL_ENABLE_SESSIONS
-////#   define QL_ENABLE_SESSIONS
-//#endif
-
-

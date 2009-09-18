@@ -75,14 +75,21 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         super(termStructure.getLink().forwardRate(0.0, 0.0, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate(),
                 a, 0.0, sigma, 0.0);
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         termStructureConsistentModelClass = new TermStructureConsistentModelClass(termStructure);
         b_ = new NullParameter();
         lambda_ = new NullParameter();
         generateArguments();
-        registerWith(termStructure);
+
+        // TODO: code review :: please verify against QL/C++ code
+        // seems like we should have this.termStructure
+
+        termStructure.addObserver(this);
+        //XXX:registerWith
+        //registerWith(termStructure);
     }
 
     @Override
@@ -137,10 +144,11 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
 
         final double /* @Real */_a = a();
         double /* @Real */v;
-        if (_a < Math.sqrt(Constants.QL_EPSILON))
+        if (_a < Math.sqrt(Constants.QL_EPSILON)) {
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(maturity);
-        else
+        } else {
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(0.5 * (1.0 - Math.exp(-2.0 * _a * maturity)) / _a);
+        }
         final double /* @Real */f = termStructureConsistentModelClass.termStructure().getLink().discount(bondMaturity);
         final double /* @Real */k = termStructureConsistentModelClass.termStructure().getLink().discount(maturity) * strike;
 

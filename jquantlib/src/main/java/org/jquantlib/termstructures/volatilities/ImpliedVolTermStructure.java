@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.termstructures.volatilities;
 
@@ -61,13 +61,16 @@ import org.jquantlib.util.Visitor;
  */
 public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
 
-	private final Handle<BlackVolTermStructure> originalTS;
+    private final Handle<BlackVolTermStructure> originalTS;
 
-	public ImpliedVolTermStructure(final Handle<BlackVolTermStructure> originalTS, final Date referenceDate) {
-		super(referenceDate);
-		this.originalTS = originalTS;
-		registerWith(originalTS);
-	}
+    public ImpliedVolTermStructure(final Handle<BlackVolTermStructure> originalTS, final Date referenceDate) {
+        super(referenceDate);
+        this.originalTS = originalTS;
+
+        this.originalTS.addObserver(this);
+        //XXX:registerWith
+        //registerWith(originalTS);
+    }
 
 
     //
@@ -86,44 +89,44 @@ public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
     }
 
 
-	//
-	// Override BlackVolTermStructure
-	//
+    //
+    // Override BlackVolTermStructure
+    //
 
-	@Override
-	protected double blackVarianceImpl(/* @Time */final double t, /* @Price */final double strike) /* @ReadOnly */{
-		// timeShift (and/or variance) variance at evaluation date cannot be cached since the original curve could change between
-		// invocations of this method
-		/* @Time */ final double timeShift = dayCounter().yearFraction(originalTS.getLink().referenceDate(), referenceDate());
+    @Override
+    protected double blackVarianceImpl(/* @Time */final double t, /* @Price */final double strike) /* @ReadOnly */{
+        // timeShift (and/or variance) variance at evaluation date cannot be cached since the original curve could change between
+        // invocations of this method
+        /* @Time */ final double timeShift = dayCounter().yearFraction(originalTS.getLink().referenceDate(), referenceDate());
 
-		// t is relative to the current reference date and needs to be converted to the time relative to the reference date of the
-		// original curve
-		return originalTS.getLink().blackForwardVariance(timeShift, timeShift + t, strike, true);
-	}
+        // t is relative to the current reference date and needs to be converted to the time relative to the reference date of the
+        // original curve
+        return originalTS.getLink().blackForwardVariance(timeShift, timeShift + t, strike, true);
+    }
 
-	@Override
-	public /*@Price*/ double maxStrike() /* @ReadOnly */ {
-		return originalTS.getLink().maxStrike();
-	}
+    @Override
+    public /*@Price*/ double maxStrike() /* @ReadOnly */ {
+        return originalTS.getLink().maxStrike();
+    }
 
-	@Override
-	public /*@Price*/ double minStrike() /* @ReadOnly */ {
-		return originalTS.getLink().minStrike();
-	}
+    @Override
+    public /*@Price*/ double minStrike() /* @ReadOnly */ {
+        return originalTS.getLink().minStrike();
+    }
 
 
-	//
-	// implements TypedVisitable
-	//
+    //
+    // implements TypedVisitable
+    //
 
-	@Override
-	public void accept(final TypedVisitor<TermStructure> v) {
-		final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
-		} else {
-			super.accept(v);
-		}
-	}
+    @Override
+    public void accept(final TypedVisitor<TermStructure> v) {
+        final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null) {
+            v1.visit(this);
+        } else {
+            super.accept(v);
+        }
+    }
 
 }

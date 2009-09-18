@@ -25,8 +25,8 @@ package org.jquantlib.examples;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.cashflow.Callability;
 import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.cashflow.FixedDividend;
@@ -53,13 +53,13 @@ import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.DateGenerationRule;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
 
 /**
@@ -72,24 +72,24 @@ import org.jquantlib.util.StopClock;
 //TODO: Work in progress ---- PLEASE INDICATE WHEN WORKING ON THIS EXAMPLE - Ueli
 public class ConvertibleBonds {
 
-	public ConvertibleBonds(){
+    public ConvertibleBonds(){
         if (System.getProperty("EXPERIMENTAL")==null) {
             throw new UnsupportedOperationException("Work in progress");
         }
-		QL.info("\n\n::::: "+ConvertibleBonds.class.getSimpleName()+" :::::");
-	}
+        QL.info("\n\n::::: "+ConvertibleBonds.class.getSimpleName()+" :::::");
+    }
 
-	public void run(){
-	    // Debugging...
+    public void run(){
+        // Debugging...
 
-		final StopClock clock = new StopClock();
-		clock.startClock();
-		QL.info("Started calculation at: " + clock.getElapsedTime());
+        final StopClock clock = new StopClock();
+        clock.startClock();
+        QL.info("Started calculation at: " + clock.getElapsedTime());
 
-		// actually never used.....
-		final Option.Type type = Option.Type.PUT;
+        // actually never used.....
+        final Option.Type type = Option.Type.PUT;
 
-		final double underlying = 36.0;
+        final double underlying = 36.0;
         final double spreadRate = 0.005;
 
         final double dividendYield = 0.02;
@@ -102,28 +102,31 @@ public class ConvertibleBonds {
         final double conversionRatio = redemption/underlying;
 
         final Calendar calendar = Target.getCalendar();
-        //adjust today to the next business...
-        final Date today = calendar.adjust(DateFactory.getFactory().getTodaysDate());
-        QL.info("Today's date is adjusted by the default business day convention is: " + today.getShortFormat());
+        //adjust today to the next business day...
+        final Date today = calendar.adjust(new Date().statics().todaysDate());
+        QL.info("Today's date is adjusted by the default business day convention is: " + today.shortDate());
         // set the evaluation date to the adjusted today's date
-        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
-        QL.info("Set the global evaluation date to the adjusted today's date: " + Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate().getShortFormat());
+        new Settings().setEvaluationDate(today);
+        QL.info("Set the global evaluation date to the adjusted today's date: " + today.shortDate());
 
         //Set up settlement, exercise and issue dates
         final Date settlementDate = calendar.advance(today, settlementDays, TimeUnit.DAYS);
-        QL.info("SettlementDate is: " + settlementDate.getShortFormat());
-        QL.info("Check that we haven't messed up with references --> today's date is still: " + today.getShortFormat());
+        QL.info("SettlementDate is: " + settlementDate.shortDate());
+        QL.info("Check that we haven't messed up with references --> today's date is still: " + today.shortDate());
         final Date exerciseDate = calendar.advance(settlementDate, length, TimeUnit.YEARS);
-        QL.info("Excercise date is: " + exerciseDate.getShortFormat());
+        QL.info("Excercise date is: " + exerciseDate.shortDate());
         final Date issueDate = calendar.advance(exerciseDate, -length, TimeUnit.YEARS);
-        QL.info("Issue date is: " + issueDate.getShortFormat());
+        QL.info("Issue date is: " + issueDate.shortDate());
 
-        //Fix businessday convention and compounding?? frequency
+        //Fix business day convention and compounding?? frequency
         final BusinessDayConvention convention = BusinessDayConvention.MODIFIED_FOLLOWING;
         final Frequency frequency = Frequency.ANNUAL;
 
-        final Schedule schedule = new Schedule(issueDate,exerciseDate,new Period(frequency),calendar,convention, convention, true, false);
-
+        final Schedule schedule = new Schedule(
+                issueDate, exerciseDate,
+                new Period(frequency), calendar,
+                convention, convention,
+                DateGenerationRule.BACKWARD, false);
 
         final List<Dividend> dividends = new ArrayList<Dividend>();
         final List<Callability> callability = new ArrayList<Callability>();
@@ -143,19 +146,19 @@ public class ConvertibleBonds {
         final double[] putPrices = { 105.0 };
 
         for(int i=0; i<callLength.length; i++){
-        	callability.add(new SoftCallability(new Callability.Price(callPrices[i], Callability.Price.Type.CLEAN),
-        										schedule.date(callLength[i]),
-        										1.20));
+            callability.add(new SoftCallability(new Callability.Price(callPrices[i], Callability.Price.Type.CLEAN),
+                    schedule.date(callLength[i]),
+                    1.20));
         }
 
         for (int j=0; j<putLength.length; j++) {
             callability.add(new Callability(new Callability.Price(putPrices[j],Callability.Price.Type.CLEAN),
-                                           Callability.Type.PUT,
-                                           schedule.date(putLength[j])));
+                    Callability.Type.PUT,
+                    schedule.date(putLength[j])));
         }
 
         // Assume dividends are paid every 6 months.
-        for (final Date d = today.increment(new Period(6, TimeUnit.MONTHS)); d.lt(exerciseDate); d.increment(new Period(6, TimeUnit.MONTHS))) {
+        for (final Date d = today.add(new Period(6, TimeUnit.MONTHS)); d.lt(exerciseDate); d.addAssign(new Period(6, TimeUnit.MONTHS))) {
             dividends.add(new FixedDividend(1.0, d));
         }
 
@@ -177,18 +180,18 @@ public class ConvertibleBonds {
         final StringBuilder ruleBuilder = new StringBuilder();
         final StringBuilder dblruleBuilder = new StringBuilder();
         for(int i=0; i<totalWidth; i++){
-        	ruleBuilder.append('-');
-        	dblruleBuilder.append('=');
+            ruleBuilder.append('-');
+            dblruleBuilder.append('=');
         }
         final String rule = ruleBuilder.toString(), dblrule=dblruleBuilder.toString();
 
         System.out.println(dblrule);
         System.out.println("Tsiveriotis-Fernandes method");
         System.out.println(dblrule);
-//        std::cout << std::setw(widths[0]) << std::left << "Tree type"
-//                  << std::setw(widths[1]) << std::left << "European"
-//                  << std::setw(widths[1]) << std::left << "American"
-//                  << std::endl;
+        //        std::cout << std::setw(widths[0]) << std::left << "Tree type"
+        //                  << std::setw(widths[1]) << std::left << "European"
+        //                  << std::setw(widths[1]) << std::left << "American"
+        //                  << std::endl;
         System.out.println(rule);
 
         final Exercise exercise = new EuropeanExercise(exerciseDate);
@@ -200,9 +203,9 @@ public class ConvertibleBonds {
         final Handle<BlackVolTermStructure> flatVolTS = new Handle(new BlackConstantVol(settlementDate, volatility, dayCounter));
 
         final StochasticProcess stochasticProcess = new BlackScholesMertonProcess(underlyingH,
-                                              								flatDividendTS,
-                                              								flatTermStructure,
-                                              								flatVolTS);
+                flatDividendTS,
+                flatTermStructure,
+                flatVolTS);
 
         final int timeSteps = 801;
 
@@ -214,34 +217,34 @@ public class ConvertibleBonds {
         final PricingEngine engine = new BinomialConvertibleEngine<JarrowRudd>(timeSteps);
 
         final ConvertibleFixedCouponBond europeanBond = new ConvertibleFixedCouponBond(
-                                stochasticProcess, exercise, engine,
-                                conversionRatio, dividends, callability,
-                                creditSpread, issueDate, settlementDays,
-                                coupons, bondDayCount, schedule, redemption);
+                stochasticProcess, exercise, engine,
+                conversionRatio, dividends, callability,
+                creditSpread, issueDate, settlementDays,
+                coupons, bondDayCount, schedule, redemption);
 
         final ConvertibleFixedCouponBond americanBond = new ConvertibleFixedCouponBond(
-                                stochasticProcess, amExercise, engine,
-                                conversionRatio, dividends, callability,
-                                creditSpread, issueDate, settlementDays,
-                                coupons, bondDayCount, schedule, redemption);
+                stochasticProcess, amExercise, engine,
+                conversionRatio, dividends, callability,
+                creditSpread, issueDate, settlementDays,
+                coupons, bondDayCount, schedule, redemption);
         final String method = "Jarrow-Rudd";
         europeanBond.setPricingEngine(new BinomialConvertibleEngine<JarrowRudd>(timeSteps));
         americanBond.setPricingEngine(new BinomialConvertibleEngine<JarrowRudd>(timeSteps));
-//        std::cout << std::setw(widths[0]) << std::left << method
-//                  << std::fixed
-//                  << std::setw(widths[1]) << std::left << europeanBond.NPV()
-//                  << std::setw(widths[2]) << std::left << americanBond.NPV()
-//                  << std::endl;
+        //        std::cout << std::setw(widths[0]) << std::left << method
+        //                  << std::fixed
+        //                  << std::setw(widths[1]) << std::left << europeanBond.NPV()
+        //                  << std::setw(widths[2]) << std::left << americanBond.NPV()
+        //                  << std::endl;
 
 
-      //TODO: Work in progress
+        //TODO: Work in progress
 
-		clock.stopClock();
-		clock.log();
-	}
+        clock.stopClock();
+        clock.log();
+    }
 
-	public static void main (final String [] args){
-		new ConvertibleBonds().run();
-	}
+    public static void main (final String [] args){
+        new ConvertibleBonds().run();
+    }
 
 }

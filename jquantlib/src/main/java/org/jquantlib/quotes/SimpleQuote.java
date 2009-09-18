@@ -59,6 +59,17 @@ public class SimpleQuote extends Quote {
         }
     }
 
+
+    //
+    // overrides Object
+    //
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
+
+
     //
     // implements FunctionDouble
     //

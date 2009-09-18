@@ -55,15 +55,19 @@ public abstract class CalibrationHelper implements Observer, Observable {
             final Handle<YieldTermStructure> termStructure,
             final boolean calibrateVolatility) {
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         this.volatility_ = volatility;
         this.termStructure_ = termStructure;
         this.calibrateVolatility_ = calibrateVolatility;
 
-        registerWith(termStructure_);
-        registerWith(volatility_);
+        this.volatility_.addObserver(this);
+        this.termStructure_.addObserver(this);
+        //XXX:registerWith
+        //registerWith(termStructure_);
+        //registerWith(volatility_);
     }
 
     // abstract double blackPrice (double /*@Volatility*/ volatility);
@@ -138,15 +142,16 @@ public abstract class CalibrationHelper implements Observer, Observable {
     // implements Observer
     //
 
-    @Override
-    public void registerWith(final Observable o) {
-        o.addObserver(this);
-    }
-
-    @Override
-    public void unregisterWith(final Observable o) {
-        o.deleteObserver(this);
-    }
+    //XXX:registerWith
+    //    @Override
+    //    public void registerWith(final Observable o) {
+    //        o.addObserver(this);
+    //    }
+    //
+    //    @Override
+    //    public void unregisterWith(final Observable o) {
+    //        o.deleteObserver(this);
+    //    }
 
     @Override
     public void update(final Observable o, final Object arg) {

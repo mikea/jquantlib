@@ -42,7 +42,6 @@ import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.Indonesia;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,33 +70,33 @@ public class IndonesiaCalendarTest {
         QL.info("Testing Indonesia's holiday list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
         // New Year
-        expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(2, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(26, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(9, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(26, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(10, APRIL, year));
+        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(2, JANUARY, year));
+        expectedHol.add(new Date(26, JANUARY, year));
+        expectedHol.add(new Date(9, MARCH, year));
+        expectedHol.add(new Date(26, MARCH, year));
+        expectedHol.add(new Date(10, APRIL, year));
         // Ascension Thursday
-        expectedHol.add(DateFactory.getFactory().getDate(21, MAY, year));
+        expectedHol.add(new Date(21, MAY, year));
 
         // Waisak
-        expectedHol.add(DateFactory.getFactory().getDate(20, JULY, year));
+        expectedHol.add(new Date(20, JULY, year));
 
         // Independence Day
-        expectedHol.add(DateFactory.getFactory().getDate(17, AUGUST, year));
-        expectedHol.add(DateFactory.getFactory().getDate(18, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(22, SEPTEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(23, SEPTEMBER, year));
+        expectedHol.add(new Date(17, AUGUST, year));
+        expectedHol.add(new Date(18, SEPTEMBER, year));
+        expectedHol.add(new Date(21, SEPTEMBER, year));
+        expectedHol.add(new Date(22, SEPTEMBER, year));
+        expectedHol.add(new Date(23, SEPTEMBER, year));
 
         // Ied Adha
-        expectedHol.add(DateFactory.getFactory().getDate(27, NOVEMBER, year));
+        expectedHol.add(new Date(27, NOVEMBER, year));
 
         // Christmas
-        expectedHol.add(DateFactory.getFactory().getDate(18, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(24, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
+        expectedHol.add(new Date(18, DECEMBER, year));
+        expectedHol.add(new Date(24, DECEMBER, year));
+        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(31, DECEMBER, year));
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
@@ -109,41 +108,41 @@ public class IndonesiaCalendarTest {
         QL.info("Testing Indonesia's holiday list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
         // New Year
-        expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(10, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(11, JANUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(7, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(8, FEBRUARY, year));
-        expectedHol.add(DateFactory.getFactory().getDate(7, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(20, MARCH, year));
-        expectedHol.add(DateFactory.getFactory().getDate(21, MARCH, year));
+        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(10, JANUARY, year));
+        expectedHol.add(new Date(11, JANUARY, year));
+        expectedHol.add(new Date(7, FEBRUARY, year));
+        expectedHol.add(new Date(8, FEBRUARY, year));
+        expectedHol.add(new Date(7, MARCH, year));
+        expectedHol.add(new Date(20, MARCH, year));
+        expectedHol.add(new Date(21, MARCH, year));
         // Ascension Thursday
-        expectedHol.add(DateFactory.getFactory().getDate(1, MAY, year));
+        expectedHol.add(new Date(1, MAY, year));
 
         // National leaves
-        expectedHol.add(DateFactory.getFactory().getDate(20, MAY, year));
+        expectedHol.add(new Date(20, MAY, year));
 
         // Waisak
-        expectedHol.add(DateFactory.getFactory().getDate(30, JULY, year));
+        expectedHol.add(new Date(30, JULY, year));
 
         // Independence Day
-        expectedHol.add(DateFactory.getFactory().getDate(18, AUGUST, year));
-        expectedHol.add(DateFactory.getFactory().getDate(30, SEPTEMBER, year));
+        expectedHol.add(new Date(18, AUGUST, year));
+        expectedHol.add(new Date(30, SEPTEMBER, year));
 
         // National leaves
-        expectedHol.add(DateFactory.getFactory().getDate(1, OCTOBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(2, OCTOBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(3, OCTOBER, year));
+        expectedHol.add(new Date(1, OCTOBER, year));
+        expectedHol.add(new Date(2, OCTOBER, year));
+        expectedHol.add(new Date(3, OCTOBER, year));
 
 
         // Ied Adha
-        expectedHol.add(DateFactory.getFactory().getDate(8, DECEMBER, year));
+        expectedHol.add(new Date(8, DECEMBER, year));
 
         // Christmas
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(new Date(25, DECEMBER, year));
 
-        expectedHol.add(DateFactory.getFactory().getDate(29, DECEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(31, DECEMBER, year));
+        expectedHol.add(new Date(29, DECEMBER, year));
+        expectedHol.add(new Date(31, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -157,37 +156,37 @@ public class IndonesiaCalendarTest {
         QL.info("Testing Indonesia's holiday list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
         // New Year
-        expectedHol.add(DateFactory.getFactory().getDate(1, JANUARY, year));
+        expectedHol.add(new Date(1, JANUARY, year));
 
         // Nyepi
-        expectedHol.add(DateFactory.getFactory().getDate(19, MARCH, year));
+        expectedHol.add(new Date(19, MARCH, year));
 
         // Good Friday
-        expectedHol.add(DateFactory.getFactory().getDate(6, APRIL, year));
+        expectedHol.add(new Date(6, APRIL, year));
 
         // Ascension Thursday
-        expectedHol.add(DateFactory.getFactory().getDate(17, MAY, year));
+        expectedHol.add(new Date(17, MAY, year));
 
         // National leaves
-        expectedHol.add(DateFactory.getFactory().getDate(18, MAY, year));
+        expectedHol.add(new Date(18, MAY, year));
 
         // Waisak
-        expectedHol.add(DateFactory.getFactory().getDate(1, JUNE, year));
+        expectedHol.add(new Date(1, JUNE, year));
 
         // Independence Day
-        expectedHol.add(DateFactory.getFactory().getDate(17, AUGUST, year));
+        expectedHol.add(new Date(17, AUGUST, year));
 
         // National leaves
-        expectedHol.add(DateFactory.getFactory().getDate(12, OCTOBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(15, OCTOBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(16, OCTOBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(24, OCTOBER, year));
+        expectedHol.add(new Date(12, OCTOBER, year));
+        expectedHol.add(new Date(15, OCTOBER, year));
+        expectedHol.add(new Date(16, OCTOBER, year));
+        expectedHol.add(new Date(24, OCTOBER, year));
 
         // Ied Adha
-        expectedHol.add(DateFactory.getFactory().getDate(20, DECEMBER, year));
+        expectedHol.add(new Date(20, DECEMBER, year));
 
         // Christmas
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(new Date(25, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -201,45 +200,45 @@ public class IndonesiaCalendarTest {
         QL.info("Testing Indonesia's holiday list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
         // New Year -- weekend in yr 2006
-        // expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+        // expectedHol.add(new Date(1,JANUARY,year));
 
         // Idul Adha
-        expectedHol.add(DateFactory.getFactory().getDate(10, JANUARY, year));
+        expectedHol.add(new Date(10, JANUARY, year));
 
         // Moslem's New Year Day
-        expectedHol.add(DateFactory.getFactory().getDate(31, JANUARY, year));
+        expectedHol.add(new Date(31, JANUARY, year));
 
         // Nyepi
-        expectedHol.add(DateFactory.getFactory().getDate(30, MARCH, year));
+        expectedHol.add(new Date(30, MARCH, year));
 
         // Birthday of Prophet Muhammad SAW
-        expectedHol.add(DateFactory.getFactory().getDate(10, APRIL, year));
+        expectedHol.add(new Date(10, APRIL, year));
 
         // Good Friday
-        expectedHol.add(DateFactory.getFactory().getDate(14, APRIL, year));
+        expectedHol.add(new Date(14, APRIL, year));
 
         // Ascension Thursday
-        expectedHol.add(DateFactory.getFactory().getDate(25, MAY, year));
+        expectedHol.add(new Date(25, MAY, year));
 
         // Independence Day
-        expectedHol.add(DateFactory.getFactory().getDate(17, AUGUST, year));
+        expectedHol.add(new Date(17, AUGUST, year));
 
         // Ascension of Prophet Muhammad SAW
-        expectedHol.add(DateFactory.getFactory().getDate(21, AUGUST, year));
+        expectedHol.add(new Date(21, AUGUST, year));
 
         // National leaves
-        expectedHol.add(DateFactory.getFactory().getDate(23, OCTOBER, year));
+        expectedHol.add(new Date(23, OCTOBER, year));
 
         // Idul Fitri
-        expectedHol.add(DateFactory.getFactory().getDate(24, OCTOBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(25, OCTOBER, year));
+        expectedHol.add(new Date(24, OCTOBER, year));
+        expectedHol.add(new Date(25, OCTOBER, year));
 
         // National Leaves
-        expectedHol.add(DateFactory.getFactory().getDate(26, OCTOBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(27, OCTOBER, year));
+        expectedHol.add(new Date(26, OCTOBER, year));
+        expectedHol.add(new Date(27, OCTOBER, year));
 
         // Christmas
-        expectedHol.add(DateFactory.getFactory().getDate(25, DECEMBER, year));
+        expectedHol.add(new Date(25, DECEMBER, year));
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
@@ -252,54 +251,54 @@ public class IndonesiaCalendarTest {
         QL.info("Testing Indonesia's holiday list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
         // New Year -- weekend in yr 2005
-        // expectedHol.add(DateFactory.getFactory().getDate(1,JANUARY,year));
+        // expectedHol.add(new Date(1,JANUARY,year));
 
         // Idul Adha
-        expectedHol.add(DateFactory.getFactory().getDate(21, JANUARY, year));
+        expectedHol.add(new Date(21, JANUARY, year));
 
         // Imlek
-        expectedHol.add(DateFactory.getFactory().getDate(9, FEBRUARY, year));
+        expectedHol.add(new Date(9, FEBRUARY, year));
 
         // Moslem's New Year Day
-        expectedHol.add(DateFactory.getFactory().getDate(10, FEBRUARY, year));
+        expectedHol.add(new Date(10, FEBRUARY, year));
 
         // Nyepi
-        expectedHol.add(DateFactory.getFactory().getDate(11, MARCH, year));
+        expectedHol.add(new Date(11, MARCH, year));
 
         // Good Friday
-        expectedHol.add(DateFactory.getFactory().getDate(25, MARCH, year));
+        expectedHol.add(new Date(25, MARCH, year));
 
         // Birthday of Prophet Muhammad SAW
-        expectedHol.add(DateFactory.getFactory().getDate(22, APRIL, year));
+        expectedHol.add(new Date(22, APRIL, year));
 
         // Ascension Thursday
-        expectedHol.add(DateFactory.getFactory().getDate(5, MAY, year));
+        expectedHol.add(new Date(5, MAY, year));
 
         // Waisak
-        expectedHol.add(DateFactory.getFactory().getDate(24, MAY, year));
+        expectedHol.add(new Date(24, MAY, year));
 
         // Independence Day
-        expectedHol.add(DateFactory.getFactory().getDate(17, AUGUST, year));
+        expectedHol.add(new Date(17, AUGUST, year));
 
         // Ascension of Prophet Muhammad SAW
-        expectedHol.add(DateFactory.getFactory().getDate(2, SEPTEMBER, year));
+        expectedHol.add(new Date(2, SEPTEMBER, year));
 
         // National Leaves
-        expectedHol.add(DateFactory.getFactory().getDate(2, NOVEMBER, year));
+        expectedHol.add(new Date(2, NOVEMBER, year));
 
         // Idul Fitri
-        expectedHol.add(DateFactory.getFactory().getDate(3, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(4, NOVEMBER, year));
+        expectedHol.add(new Date(3, NOVEMBER, year));
+        expectedHol.add(new Date(4, NOVEMBER, year));
 
         // National Leaves
-        expectedHol.add(DateFactory.getFactory().getDate(7, NOVEMBER, year));
-        expectedHol.add(DateFactory.getFactory().getDate(8, NOVEMBER, year));
+        expectedHol.add(new Date(7, NOVEMBER, year));
+        expectedHol.add(new Date(8, NOVEMBER, year));
 
         // Christmas -- weekend in yr 2005
-        // expectedHol.add(DateFactory.getFactory().getDate(25,DECEMBER,year));
+        // expectedHol.add(new Date(25,DECEMBER,year));
 
         // National Leaves
-        expectedHol.add(DateFactory.getFactory().getDate(26, DECEMBER, year));
+        expectedHol.add(new Date(26, DECEMBER, year));
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);

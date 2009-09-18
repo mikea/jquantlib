@@ -125,10 +125,10 @@ public class Poland extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            final Month m = date.getMonthEnum();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final Month m = date.month();
+            final int y = date.year();
             final int em = easterMonday(y);
 
             if (isWeekend(w)
@@ -169,10 +169,10 @@ public class Poland extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            final Month m = date.getMonthEnum();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final Month m = date.month();
+            final int y = date.year();
             final int em = easterMonday(y);
 
             if (isWeekend(w)

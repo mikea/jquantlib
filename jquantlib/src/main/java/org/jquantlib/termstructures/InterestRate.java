@@ -117,24 +117,26 @@ public class InterestRate {
 
         /* @Rate */final double r = rate;
 
-        if (compound == Compounding.SIMPLE)
+        if (compound == Compounding.SIMPLE) {
             // 1+r*t
             return 1.0 + r * t;
-        else if (compound == Compounding.COMPOUNDED)
+        } else if (compound == Compounding.COMPOUNDED) {
             // (1+r/f)^(f*t)
             return Math.pow((1 + r / freq), (freq * t));
-        else if (compound == Compounding.CONTINUOUS)
+        } else if (compound == Compounding.CONTINUOUS) {
             // e^(r*t)
             return Math.exp((r * t));
-        else if (compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
-            if (t < (1 / (double) freq))
+        } else if (compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
+            if (t < (1 / (double) freq)) {
                 // 1+r*t
                 return 1.0 + r * t;
-            else
+            } else {
                 // (1+(r/f))^(f*t)
                 return Math.pow((1 + r / freq), (freq * t));
-        } else
+            }
+        } else {
             throw new LibraryException("unknown compounding convention"); // QA:[RG]::verified // TODO: message
+        }
     }
 
     // --- inspectors
@@ -189,7 +191,7 @@ public class InterestRate {
      * @category discount/compound factor calculations
      */
     public final/* @DiscountFactor */double discountFactor(final Date d1, final Date d2) {
-        return discountFactor(d1, d2, Date.NULL_DATE);
+        return discountFactor(d1, d2, new Date());
     }
 
     /**
@@ -202,7 +204,7 @@ public class InterestRate {
      * @category discount/compound factor calculations
      */
     public final/* @DiscountFactor */double discountFactor(final Date d1, final Date d2, final Date refStart) {
-        return discountFactor(d1, d2, refStart, Date.NULL_DATE);
+        return discountFactor(d1, d2, refStart, new Date());
     }
 
     /**
@@ -281,12 +283,13 @@ public class InterestRate {
             rate = Math.log(c) / t;
             break;
         case SIMPLE_THEN_COMPOUNDED:
-            if (t <= (1 / f))
+            if (t <= (1 / f)) {
                 // rate = (compound - 1)/time
                 rate = (c - 1) / t;
-            else
+            } else {
                 // rate = (compound^(1/(f*t))-1)*f
                 rate = (Math.pow(c, (1 / (f * t))) - 1) * f;
+            }
             break;
         default:
             throw new LibraryException("unknown compounding convention"); // QA:[RG]::verified // TODO: message
@@ -317,27 +320,31 @@ public class InterestRate {
 
     @Override
     public String toString() {
-        if (rate == 0.0)
+        if (rate == 0.0) {
             return "null interest rate";
+        }
 
         final StringBuilder sb = new StringBuilder();
         sb.append(rate).append(' ').append(dc).append(' ');
-        if (compound == Compounding.SIMPLE)
+        if (compound == Compounding.SIMPLE) {
             sb.append("simple compounding");
-        else if (compound == Compounding.COMPOUNDED) {
-            if ((freq == Frequency.NO_FREQUENCY.toInteger()) || (freq == Frequency.ONCE.toInteger()))
+        } else if (compound == Compounding.COMPOUNDED) {
+            if ((freq == Frequency.NO_FREQUENCY.toInteger()) || (freq == Frequency.ONCE.toInteger())) {
                 throw new IllegalArgumentException(freq + " frequency not allowed for this interest rate");
-            else
+            } else {
                 sb.append(freq + " compounding");
-        } else if (compound == Compounding.CONTINUOUS)
+            }
+        } else if (compound == Compounding.CONTINUOUS) {
             sb.append("continuous compounding");
-        else if (compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
-            if ((freq == Frequency.NO_FREQUENCY.toInteger()) || (freq == Frequency.ONCE.toInteger()))
+        } else if (compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
+            if ((freq == Frequency.NO_FREQUENCY.toInteger()) || (freq == Frequency.ONCE.toInteger())) {
                 throw new IllegalArgumentException(freq + " frequency not allowed for this interest rate");
-            else
+            } else {
                 sb.append("simple compounding up to " + (12 / freq) + " months, then " + freq + " compounding");
-        } else
+            }
+        } else {
             throw new LibraryException("unknown compounding convention"); // QA:[RG]::verified // TODO: message
+        }
         return sb.toString();
     }
 

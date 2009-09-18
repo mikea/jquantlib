@@ -24,12 +24,11 @@ package org.jquantlib.termstructures.volatilities;
 
 import java.util.List;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
@@ -70,8 +69,7 @@ public abstract class SmileSection implements Observable {
         exerciseDate_ = d;
         dc_ = dc;
         // FIXME: should be compared to new Date()...
-        final Date refDate = (!referenceDate.eq(DateFactory.getFactory().getTodaysDate())) ? referenceDate
-                : Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        final Date refDate = (!referenceDate.isToday()) ? referenceDate : new Settings().getEvaluationDate();
         QL.ensure(d.gt(refDate) , "expiry date must be greater than reference date"); // QA:[RG]::verified // TODO: message
         exerciseTime_ = dc_.yearFraction(refDate, d);
     }

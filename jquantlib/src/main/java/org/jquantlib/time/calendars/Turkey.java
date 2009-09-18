@@ -100,58 +100,58 @@ public class Turkey extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth();
-            final int m = date.getMonth();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth();
+            final int m = date.month().value();
+            final int y = date.year();
             if (isWeekend(w)
                     // New Year's Day
-                    || (d == 1 && m == Month.JANUARY.toInteger())
+                    || (d == 1 && m == Month.JANUARY.value())
                     // 23 nisan / National Holiday
-                    || (d == 23 && m == Month.APRIL.toInteger())
+                    || (d == 23 && m == Month.APRIL.value())
                     // 19 may/ National Holiday
-                    || (d == 19 && m == Month.MAY.toInteger())
+                    || (d == 19 && m == Month.MAY.value())
                     // 30 aug/ National Holiday
-                    || (d == 30 && m == Month.AUGUST.toInteger())
+                    || (d == 30 && m == Month.AUGUST.value())
                     ///29 ekim  National Holiday
-                    || (d == 29 && m == Month.OCTOBER.toInteger()))
+                    || (d == 29 && m == Month.OCTOBER.value()))
                 return false;
 
             // Local Holidays
             if (y == 2004) {
                 // kurban
-                if ((m == Month.FEBRUARY.toInteger() && d <= 4)
+                if ((m == Month.FEBRUARY.value() && d <= 4)
                         // ramazan
-                        || (m == Month.NOVEMBER.toInteger() && d >= 14 && d <= 16))
+                        || (m == Month.NOVEMBER.value() && d >= 14 && d <= 16))
                     return false;
             } else if (y == 2005) {
                 // kurban
-                if ((m == Month.JANUARY.toInteger() && d >= 19 && d <= 21)
+                if ((m == Month.JANUARY.value() && d >= 19 && d <= 21)
                         // ramazan
-                        || (m ==  Month.NOVEMBER.toInteger() && d >= 2 && d <= 5))
+                        || (m ==  Month.NOVEMBER.value() && d >= 2 && d <= 5))
                     return false;
             } else if (y == 2006) {
                 // kurban
-                if ((m == Month.JANUARY.toInteger() && d >= 9 && d <= 13)
+                if ((m == Month.JANUARY.value() && d >= 9 && d <= 13)
                         // ramazan
-                        || (m == Month.OCTOBER.toInteger() && d >= 23 && d <= 25)
+                        || (m == Month.OCTOBER.value() && d >= 23 && d <= 25)
                         // kurban
-                        || (m == Month.DECEMBER.toInteger() && d >= 30))
+                        || (m == Month.DECEMBER.value() && d >= 30))
                     return false;
             } else if (y == 2007) {
                 // kurban
-                if ((m == Month.JANUARY.toInteger() && d <= 4)
+                if ((m == Month.JANUARY.value() && d <= 4)
                         // ramazan
-                        || (m == Month.OCTOBER.toInteger() && d >= 11 && d <= 14)
+                        || (m == Month.OCTOBER.value() && d >= 11 && d <= 14)
                         // kurban
-                        || (m == Month.DECEMBER.toInteger() && d >= 19 && d <= 23))
+                        || (m == Month.DECEMBER.value() && d >= 19 && d <= 23))
                     return false;
             } else if (y == 2008)
                 // ramazan
-                if ((m == Month.SEPTEMBER.toInteger() && d >= 29)
-                        || (m == Month.OCTOBER.toInteger() && d <= 2)
+                if ((m == Month.SEPTEMBER.value() && d >= 29)
+                        || (m == Month.OCTOBER.value() && d <= 2)
                         // kurban
-                        || (m == Month.DECEMBER.toInteger() && d >= 7 && d <= 11))
+                        || (m == Month.DECEMBER.value() && d >= 7 && d <= 11))
                     return false;
             return true;
         }

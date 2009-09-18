@@ -98,6 +98,15 @@ public class Handle<T extends Observable> implements Observable {
         link.setLink(observable, registerAsObserver);
     }
 
+    //
+    // overrides Object
+    //
+
+    @Override
+    public String toString() {
+        return link.toString();
+    }
+
 
     //
     // implements Observable interface
@@ -146,8 +155,8 @@ public class Handle<T extends Observable> implements Observable {
     //
 
     private class Link implements Observable, Observer {
-        // TODO: refactor messages?
-        static private final String EMPTY_HANDLE = "empty Handle cannot be dereferenced";
+
+        static private final String EMPTY_HANDLE = "empty Handle cannot be dereferenced"; // TODO: message
 
         //
         // private fields
@@ -196,15 +205,28 @@ public class Handle<T extends Observable> implements Observable {
         public final void setLink(final T observable, final boolean registerAsObserver) {
             // remove this from observable
             if ((this.observable!=observable) || (this.isObserver!=registerAsObserver)) {
-                if (this.observable!=null && this.isObserver)
+                if (this.observable!=null && this.isObserver) {
                     this.observable.deleteObserver(this);
+                }
                 this.observable = observable;
                 this.isObserver = registerAsObserver;
-                if (this.observable!=null && this.isObserver)
+                if (this.observable!=null && this.isObserver) {
                     this.observable.addObserver(this);
-                if (this.observable!=null)
+                }
+                if (this.observable!=null) {
                     this.observable.notifyObservers();
+                }
             }
+        }
+
+
+        //
+        // overrides Object
+        //
+
+        @Override
+        public String toString() {
+            return observable==null ? "none" : observable.toString();
         }
 
 
@@ -212,15 +234,16 @@ public class Handle<T extends Observable> implements Observable {
         // Implements Observer
         //
 
-        @Override
-        public void registerWith(final Observable o) {
-            o.addObserver(this);
-        }
-
-        @Override
-        public void unregisterWith(final Observable o) {
-            o.deleteObserver(this);
-        }
+        //XXX:registerWith
+        //        @Override
+        //        public void registerWith(final Observable o) {
+        //            o.addObserver(this);
+        //        }
+        //
+        //        @Override
+        //        public void unregisterWith(final Observable o) {
+        //            o.deleteObserver(this);
+        //        }
 
         @Override
         public final void update(final Observable o, final Object arg) {

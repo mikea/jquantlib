@@ -22,8 +22,8 @@
 
 package org.jquantlib.math.distributions;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Constants;
@@ -113,7 +113,7 @@ public class InverseCumulativeNormal implements InverseCumulative {
         QL.require(sigma > 0.0 , SIGMA_MUST_BE_POSITIVE); // QA:[RG]::verified // TODO: message
         this.average = average;
         this.sigma = sigma;
-        this.highPrecision = Configuration.getSystemConfiguration(null).getGlobalSettings().isRefineHighPrecision();
+        this.highPrecision = new Settings().isRefineHighPrecision();
     }
 
 
@@ -139,8 +139,9 @@ public class InverseCumulativeNormal implements InverseCumulative {
                 x = 1.0;
             } else if (Math.abs(x) < Constants.QL_EPSILON) {
                 x = 0.0;
-            } else
+            } else {
                 throw new LibraryException(SIGMA_MUST_BE_POSITIVE); // QA:[RG]::verified
+            }
         }
 
         if (x < xlow) {

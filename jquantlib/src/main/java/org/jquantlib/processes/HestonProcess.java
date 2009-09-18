@@ -79,8 +79,9 @@ public class HestonProcess extends StochasticProcess {
         // Seems like constructor which takes a Discretization must belong to
         // StochasticProcess and not StochasticProcess1D
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         this.riskFreeRate_ = (riskFreeRate);
         this.dividendYield_ = (dividendYield);
@@ -93,9 +94,14 @@ public class HestonProcess extends StochasticProcess {
         this.discretization_ = (d);
 
         // TODO: code review :: please verify against QL/C++ code
-        registerWith(riskFreeRate_);
-        registerWith(dividendYield_);
-        registerWith(s0_);
+
+        this.riskFreeRate_.addObserver(this);
+        this.dividendYield_.addObserver(this);
+        this.s0_.addObserver(this);
+        //XXX:registerWith
+        //registerWith(riskFreeRate_);
+        //registerWith(dividendYield_);
+        //registerWith(s0_);
     }
 
     // TODO: code review :: please verify against QL/C++ code
@@ -272,14 +278,16 @@ public class HestonProcess extends StochasticProcess {
             ncp = 4 * kappav_ * Math.exp(-kappav_ * dt) / (sigmav_ * sigmav_ * (1 - Math.exp(-kappav_ * dt))) * x01;
 
             p = new CumulativeNormalDistribution().op(dw1);
-            if (p < 0.0)
+            if (p < 0.0) {
                 p = 0.0;
-            else if (p >= 1.0)
+            } else if (p >= 1.0) {
                 p = 1.0 - Constants.QL_EPSILON;
+            }
 
             retVal[1] = sigmav_ * sigmav_ * (1 - Math.exp(-kappav_ * dt)) / (4 * kappav_);
-            if (true)
+            if (true) {
                 throw new UnsupportedOperationException("Work in progress");
+            }
 
             dy = (mu - rhov_ / sigmav_ * kappav_ * (thetav_ - vol * vol)) * dt + vol * sqrhov_ * dw0 * sdt;
 

@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -34,7 +34,7 @@ import org.jquantlib.util.Date;
  * @note This day counter should be used together with NullCalendar, which
  *       ensures that dates at whole-month distances share the same day of
  *       month. It is <b>not</b> guaranteed to work with any other calendar.
- *       
+ * 
  * @author Srinivas Hasti
  */
 public class SimpleDayCounter extends AbstractDayCounter {
@@ -49,21 +49,25 @@ public class SimpleDayCounter extends AbstractDayCounter {
         return "Simple";
     }
 
+    @Override
     public final int dayCount(final Date dateStart, final Date dateEnd) {
         return fallback.dayCount(dateStart, dateEnd);
     }
 
-    public final double yearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart,
+    public final double yearFraction(
+            final Date dateStart,
+            final Date dateEnd,
+            final Date refPeriodStart,
             final Date refPeriodEnd) {
-        int dm1 = dateStart.getDayOfMonth();
-        int dm2 = dateEnd.getDayOfMonth();
-        int mm1 = dateStart.getMonth();
-        int mm2 = dateEnd.getMonth();
-        int yy1 = dateStart.getYear();
-        int yy2 = dateEnd.getYear();
+        final int dm1 = dateStart.dayOfMonth();
+        final int dm2 = dateEnd.dayOfMonth();
+        final int mm1 = dateStart.month().value();
+        final int mm2 = dateEnd.month().value();
+        final int yy1 = dateStart.year();
+        final int yy2 = dateEnd.year();
 
         if (dm1 == dm2 ||
-        // e.g., Aug 30 -> Feb 28 ?
+                // e.g., Aug 30 -> Feb 28 ?
                 (dm1 > dm2 && dateEnd.isEndOfMonth()) ||
                 // e.g., Feb 28 -> Aug 30 ?
                 (dm1 < dm2 && dateStart.isEndOfMonth())) {
@@ -74,7 +78,7 @@ public class SimpleDayCounter extends AbstractDayCounter {
     }
 
     public final double yearFraction(final Date dateStart, final Date dateEnd) {
-        return this.yearFraction(dateStart, dateEnd, Date.NULL_DATE, Date.NULL_DATE);
+        return this.yearFraction(dateStart, dateEnd, new Date(), new Date());
     }
 
 }

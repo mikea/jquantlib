@@ -107,10 +107,15 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         this.localVolatility = new RelinkableHandle<LocalVolTermStructure>(LocalVolTermStructure.class);
         this.updated = false;
 
-        registerWith(this.x0);
-        registerWith(this.riskFreeRate);
-        registerWith(this.dividendYield);
-        registerWith(this.blackVolatility);
+        this.x0.addObserver(this);
+        this.riskFreeRate.addObserver(this);
+        this.dividendYield.addObserver(this);
+        this.blackVolatility.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.x0);
+        //registerWith(this.riskFreeRate);
+        //registerWith(this.dividendYield);
+        //registerWith(this.blackVolatility);
     }
 
     @Override
@@ -216,8 +221,9 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
             // exception if we are not able
             // to identify the correct interface to be used.
             throw new LibraryException("unrecognized volatility curve"); // QA:[RG]::verified // FIXME: message
-        } else
+        } else {
             return localVolatility;
+        }
     }
 
 }

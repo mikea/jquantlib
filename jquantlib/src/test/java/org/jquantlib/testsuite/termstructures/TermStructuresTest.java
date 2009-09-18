@@ -35,13 +35,12 @@ copy of the license along with this program; if not, please email
 This program is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.testsuite.termstructures;
 
 import static org.junit.Assert.fail;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
@@ -60,313 +59,310 @@ import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 
 
 public class TermStructuresTest {
 
-    private final Settings settings;
     private final Calendar calendar;
-	private final int settlementDays;
-	private final YieldTermStructure termStructure;
-	private final YieldTermStructure dummyTermStructure;
-    private final Date today;
+    private final int settlementDays;
+    private final YieldTermStructure termStructure;
+    private final YieldTermStructure dummyTermStructure;
 
 
-	public TermStructuresTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+    public TermStructuresTest() {
+        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 
         QL.error("***** INITIALIZATION INCOMPLETE :: waiting for implementation of Swaps and PiecewiseYieldTermStructure *****");
 
-        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
         this.calendar = Target.getCalendar();
         this.settlementDays = 2;
         this.termStructure = null;
         this.dummyTermStructure = null;
-        this.today = settings.getEvaluationDate();
+
+        //TODO: remove comments
+        //		calendar = org.jquantlib.time.calendars.Target.getCalendar();
+        //        settlementDays = 2;
+        //        org.jquantlib.util.Date today = calendar.advance(org.jquantlib.util.DateFactory.getFactory().getTodaysDate());
+        //        org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
+        //        org.jquantlib.util.Date settlement = calendar.advance(today,settlementDays,TimeUnit.DAYS);
+        //
+        //        Datum depositData[] = new Datum[] {
+        //        		new Datum( 1, TimeUnit.MONTHS, 4.581 ),
+        //        		new Datum( 2, TimeUnit.MONTHS, 4.573 ),
+        //        		new Datum( 3, TimeUnit.MONTHS, 4.557 ),
+        //        		new Datum( 6, TimeUnit.MONTHS, 4.496 ),
+        //        		new Datum( 9, TimeUnit.MONTHS, 4.490 )
+        //        };
+        //
+        //        Datum swapData[] =  new Datum[] {
+        ////TODO: remove comments when we have implemented Swaps and related classes, etc
+        ////        		  new Datum(  1, TimeUnit.YEARS, 4.54 ),
+        ////                new Datum(  5, TimeUnit.YEARS, 4.99 ),
+        ////                new Datum( 10, TimeUnit.YEARS, 5.47 ),
+        ////                new Datum( 20, TimeUnit.YEARS, 5.89 ),
+        ////                new Datum( 30, TimeUnit.YEARS, 5.96 )
+        //        };
+        //
+        //        int deposits = depositData.length;
+        //        int swaps = swapData.length;
+        //
+        //        RateHelper<YieldTermStructure> instruments[] = new RateHelper[deposits+swaps];
+        //
+        //
+        //        for (int i=0; i<deposits; i++) {
+        //            instruments[i] = new DepositRateHelper<YieldTermStructure>(
+        //            						depositData[i].rate/100,
+        //            						new Period(depositData[i].n, depositData[i].units),
+        //                                    settlementDays, calendar,
+        //                                    BusinessDayConvention.MODIFIED_FOLLOWING, true,
+        //                                    Actual360.getDayCounter());
+        //        }
+        //
+        //
+        //       IborIndex index = new IborIndex(
+        //       							"dummy",
+        //       							new Period(6,TimeUnit.MONTHS),
+        //       							settlementDays,
+        //       							calendar,
+        //								null,
+        //								BusinessDayConvention.MODIFIED_FOLLOWING,
+        //								false,
+        //								Actual360.getDayCounter());
+
+        //TODO: remove comments when we have implemented Swaps and related classes, etc
+        //        for (int i=0; i<swaps; ++i) {
+        //            instruments[i+deposits] = new SwapRateHelper(
+        //            						swapData[i].rate/100,
+        //            						new Period(swapData[i].n, swapData[i].units),
+        //                                    calendar, Frequency.ANNUAL,
+        //                                    BusinessDayConvention.UNADJUSTED, Thirty360.getDayCounter(),
+        //                                    index);
+        //        }
 
 
-//TODO: remove comments
-//		calendar = org.jquantlib.time.calendars.Target.getCalendar();
-//        settlementDays = 2;
-//        org.jquantlib.util.Date today = calendar.advance(org.jquantlib.util.DateFactory.getFactory().getTodaysDate());
-//        org.jquantlib.Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(today);
-//        org.jquantlib.util.Date settlement = calendar.advance(today,settlementDays,TimeUnit.DAYS);
-//
-//        Datum depositData[] = new Datum[] {
-//        		new Datum( 1, TimeUnit.MONTHS, 4.581 ),
-//        		new Datum( 2, TimeUnit.MONTHS, 4.573 ),
-//        		new Datum( 3, TimeUnit.MONTHS, 4.557 ),
-//        		new Datum( 6, TimeUnit.MONTHS, 4.496 ),
-//        		new Datum( 9, TimeUnit.MONTHS, 4.490 )
-//        };
-//
-//        Datum swapData[] =  new Datum[] {
-////TODO: remove comments when we have implemented Swaps and related classes, etc
-////        		  new Datum(  1, TimeUnit.YEARS, 4.54 ),
-////                new Datum(  5, TimeUnit.YEARS, 4.99 ),
-////                new Datum( 10, TimeUnit.YEARS, 5.47 ),
-////                new Datum( 20, TimeUnit.YEARS, 5.89 ),
-////                new Datum( 30, TimeUnit.YEARS, 5.96 )
-//        };
-//
-//        int deposits = depositData.length;
-//        int swaps = swapData.length;
-//
-//        RateHelper<YieldTermStructure> instruments[] = new RateHelper[deposits+swaps];
-//
-//
-//        for (int i=0; i<deposits; i++) {
-//            instruments[i] = new DepositRateHelper<YieldTermStructure>(
-//            						depositData[i].rate/100,
-//            						new Period(depositData[i].n, depositData[i].units),
-//                                    settlementDays, calendar,
-//                                    BusinessDayConvention.MODIFIED_FOLLOWING, true,
-//                                    Actual360.getDayCounter());
-//        }
-//
-//
-//       IborIndex index = new IborIndex(
-//       							"dummy",
-//       							new Period(6,TimeUnit.MONTHS),
-//       							settlementDays,
-//       							calendar,
-//								null,
-//								BusinessDayConvention.MODIFIED_FOLLOWING,
-//								false,
-//								Actual360.getDayCounter());
-
-//TODO: remove comments when we have implemented Swaps and related classes, etc
-//        for (int i=0; i<swaps; ++i) {
-//            instruments[i+deposits] = new SwapRateHelper(
-//            						swapData[i].rate/100,
-//            						new Period(swapData[i].n, swapData[i].units),
-//                                    calendar, Frequency.ANNUAL,
-//                                    BusinessDayConvention.UNADJUSTED, Thirty360.getDayCounter(),
-//                                    index);
-//        }
-
-
-//TODO: remove comments
-//        termStructure = new PiecewiseYieldDiscountCurve<LogLinear>(settlement, instruments, Actual360.getDayCounter());
-//
-//        dummyTermStructure = new PiecewiseYieldDiscountCurve<LogLinear>(settlement, instruments, Actual360.getDayCounter());
+        //TODO: remove comments
+        //        termStructure = new PiecewiseYieldDiscountCurve<LogLinear>(settlement, instruments, Actual360.getDayCounter());
+        //
+        //        dummyTermStructure = new PiecewiseYieldDiscountCurve<LogLinear>(settlement, instruments, Actual360.getDayCounter());
     }
 
 
-	@Test
-	public void testReferenceChange() {
-	    QL.info("Testing term structure against evaluation date change...");
+    @Test
+    public void testReferenceChange() {
+        QL.info("Testing term structure against evaluation date change...");
 
-	    final YieldTermStructure localTermStructure = new FlatForward(settlementDays, new NullCalendar(), 0.03, Actual360.getDayCounter());
+        final YieldTermStructure localTermStructure = new FlatForward(settlementDays, new NullCalendar(), 0.03, Actual360.getDayCounter());
 
-	    final int days[] = { 10, 30, 60, 120, 360, 720 };
-	    /*@DiscountFactor*/ final double[] expected = new /*@DiscountFactor*/ double[days.length];
+        final int days[] = { 10, 30, 60, 120, 360, 720 };
+        /*@DiscountFactor*/ final double[] expected = new /*@DiscountFactor*/ double[days.length];
 
-	    for (int i=0; i<days.length; i++) {
-            final Date anotherDay = today.plus(days[i]);
-	        expected[i] = localTermStructure.discount(anotherDay);
-	    }
+        final Date today = new Settings().getEvaluationDate();
 
-	    final Date nextMonth = today.plus(30);
-	    settings.setEvaluationDate(nextMonth);
-	    /*@DiscountFactor*/ final double[] calculated = new /*@DiscountFactor*/ double[days.length];
+        for (int i=0; i<days.length; i++) {
+            final Date anotherDay = today.add(days[i]);
+            expected[i] = localTermStructure.discount(anotherDay);
+        }
 
-	    for (int i=0; i<days.length; i++) {
-	        final Date anotherDay = nextMonth.plus(days[i]);
-	        calculated[i] = localTermStructure.discount(anotherDay);
-	    }
+        final Date nextMonth = today.add(30);
+        new Settings().setEvaluationDate(nextMonth);
+        /*@DiscountFactor*/ final double[] calculated = new /*@DiscountFactor*/ double[days.length];
 
-	    for (int i=0; i<days.length; i++) {
-	    	if (!Closeness.isClose(expected[i],calculated[i]))
-	            fail("\n  Discount at " + days[i] + " days:\n"
-	                        + "    before date change: " + expected[i] + "\n"
-	                        + "    after date change:  " + calculated[i]);
-	    }
-	}
+        for (int i=0; i<days.length; i++) {
+            final Date anotherDay = nextMonth.add(days[i]);
+            calculated[i] = localTermStructure.discount(anotherDay);
+        }
+
+        for (int i=0; i<days.length; i++) {
+            if (!Closeness.isClose(expected[i],calculated[i])) {
+                fail("\n  Discount at " + days[i] + " days:\n"
+                        + "    before date change: " + expected[i] + "\n"
+                        + "    after date change:  " + calculated[i]);
+            }
+        }
+    }
 
 
-	@Test
-	public void testImplied() {
-	    QL.info("Testing consistency of implied term structure...");
+    @Test
+    public void testImplied() {
+        QL.info("Testing consistency of implied term structure...");
         QL.error("***** TEST FAILED :: waiting for implementation of PiecewiseYieldTermStructure *****");
 
-//	    final double tolerance = 1.0e-10;
-//	    final Date today = settings.getEvaluationDate();
-//	    final Date newToday = today.plus(Period.ONE_YEAR_FORWARD.times(3));
-//	    final Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
-//	    final Date testDate = newSettlement.plus(Period.ONE_YEAR_FORWARD.times(5));
-//
-//	    final YieldTermStructure implied = new ImpliedTermStructure<YieldTermStructure>(
-//	    		new Handle<YieldTermStructure>(termStructure), newSettlement);
-//
-//	    final /*@DiscountFactor*/ double baseDiscount = termStructure.discount(newSettlement);
-//	    final /*@DiscountFactor*/ double discount = termStructure.discount(testDate);
-//	    final /*@DiscountFactor*/ double impliedDiscount = implied.discount(testDate);
-//
-//        if (Math.abs(discount - baseDiscount*impliedDiscount) > tolerance)
-//        	fail("unable to reproduce discount from implied curve\n"
-//	            + "    calculated: " + baseDiscount*impliedDiscount + "\n"
-//	            + "    expected:   " + discount);
-	}
+        //	    final double tolerance = 1.0e-10;
+        //	    final Date today = settings.getEvaluationDate();
+        //	    final Date newToday = today.plus(Period.ONE_YEAR_FORWARD.times(3));
+        //	    final Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
+        //	    final Date testDate = newSettlement.plus(Period.ONE_YEAR_FORWARD.times(5));
+        //
+        //	    final YieldTermStructure implied = new ImpliedTermStructure<YieldTermStructure>(
+        //	    		new Handle<YieldTermStructure>(termStructure), newSettlement);
+        //
+        //	    final /*@DiscountFactor*/ double baseDiscount = termStructure.discount(newSettlement);
+        //	    final /*@DiscountFactor*/ double discount = termStructure.discount(testDate);
+        //	    final /*@DiscountFactor*/ double impliedDiscount = implied.discount(testDate);
+        //
+        //        if (Math.abs(discount - baseDiscount*impliedDiscount) > tolerance)
+        //        	fail("unable to reproduce discount from implied curve\n"
+        //	            + "    calculated: " + baseDiscount*impliedDiscount + "\n"
+        //	            + "    expected:   " + discount);
+    }
 
 
-	/**
+    /**
      * This test should be using PiecewiseYieldCurve but was changed to use another TermStructure for the time being whilst
      * PiecewiseYieldCurve is not available.
      */
-	@Test
-	public void testImpliedObs() {
-	    QL.info("Testing observability of implied term structure...");
+    @Test
+    public void testImpliedObs() {
+        QL.info("Testing observability of implied term structure...");
 
-        final Date today = calendar.advance(DateFactory.getFactory().getTodaysDate());
-	    final Date newToday = today.plus(Period.ONE_YEAR_FORWARD.times(3));
-	    final Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
+        final Date today = calendar.advance(new Date().statics().todaysDate());
+        final Date newToday = today.add(Period.ONE_YEAR_FORWARD.times(3));
+        final Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
 
-	    // final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>() {};
+        // final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>() {};
         final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(YieldTermStructure.class);
-	    final YieldTermStructure implied = new ImpliedTermStructure<YieldTermStructure>(h, newSettlement);
+        final YieldTermStructure implied = new ImpliedTermStructure<YieldTermStructure>(h, newSettlement);
 
-	    final Flag flag = new Flag();
-	    implied.addObserver(flag);
+        final Flag flag = new Flag();
+        implied.addObserver(flag);
 
-	    // TODO: initialization needed (dependent of PiecewiseYieldCurve)
-	    // h.setLink(termStructure);
+        // TODO: initialization needed (dependent of PiecewiseYieldCurve)
+        // h.setLink(termStructure);
 
-	    // -------------------------------------------------------------------------------------------------------------
-	    // XXX: This code was added instead. Please remove when PiecewiseYieldCurve becomes ready
-	    //
-	    final Quote quote = new SimpleQuote(100.0);
+        // -------------------------------------------------------------------------------------------------------------
+        // XXX: This code was added instead. Please remove when PiecewiseYieldCurve becomes ready
+        //
+        final Quote quote = new SimpleQuote(100.0);
         final Flag anotherFlag = new Flag();
         quote.addObserver(anotherFlag);
-	    h.setLink(new FlatForward(today, new Handle<Quote>(quote), Actual360.getDayCounter()));
+        h.setLink(new FlatForward(today, new Handle<Quote>(quote), Actual360.getDayCounter()));
         if (!anotherFlag.isUp()) {
             fail("Observer was not notified of term structure change");
         }
         //
         // -------------------------------------------------------------------------------------------------------------
 
-	    if (!flag.isUp()) {
-	    	fail("Observer was not notified of term structure change");
-	    }
-	}
+        if (!flag.isUp()) {
+            fail("Observer was not notified of term structure change");
+        }
+    }
 
 
-	@Test
-	public void testFSpreaded() {
-	    QL.info("Testing consistency of forward-spreaded term structure...");
-	    QL.error("***** TEST FAILED :: waiting for translation of ForwardSpreadedTermStructure *****");
+    @Test
+    public void testFSpreaded() {
+        QL.info("Testing consistency of forward-spreaded term structure...");
+        QL.error("***** TEST FAILED :: waiting for translation of ForwardSpreadedTermStructure *****");
 
-//	    final double tolerance = 1.0e-10;
-//	    final Quote me = new SimpleQuote(0.01);
-//	    final Handle<Quote> mh = new Handle(me);
-//
-//	    YieldTermStructure spreaded = new ForwardSpreadedTermStructure( new Handle<YieldTermStructure>(termStructure), mh);
-//	    Date testDate = termStructure.referenceDate().increment(5 * Period.ONE_YEAR_FORWARD.length());
-//	    DayCounter tsdc  = termStructure.dayCounter();
-//	    DayCounter sprdc = spreaded.dayCounter();
-//
-//	    // FIXME :: code review:: could be:: /*@Rate*/ double forward = ... ?????
-//	    InterestRate forward = termStructure.forwardRate(testDate, testDate, tsdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
-//
-//	    // FIXME :: code review:: could be:: /*@Rate*/ double spreadedForward = ... ?????
-//	    InterestRate spreadedForward = spreaded.forwardRate(testDate, testDate, sprdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
-//
-//        if (Math.abs(forward.rate() - (spreadedForward.rate() - me.evaluate())) > tolerance) {
-//            fail("unable to reproduce forward from spreaded curve\n"
-//                    + "    calculated: " + (spreadedForward.rate() - me.evaluate()) + "\n"
-//                    + "    expected:   " + forward.rate()
-//                );
-//        }
-	}
-
-
-	@Test
-	public void testFSpreadedObs() {
-	    QL.info("Testing observability of forward-spreaded term structure...");
-	    QL.error("***** TEST FAILED :: waiting for translation of ForwardSpreadedTermStructure *****");
-
-//	    SimpleQuote me = new SimpleQuote(0.01);
-//	    Handle<Quote> mh = new Handle<Quote>(me);
-//	    RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(); //(dummyTermStructure_);
-//	    YieldTermStructure spreaded = new ForwardSpreadedTermStructure(h, mh);
-//
-//	    Flag flag = new Flag();
-//	    spreaded.addObserver(flag);
-//	    h.setLink(termStructure);
-//	    if (!flag.isUp()) {
-//	        fail("Observer was not notified of term structure change");
-//	    }
-//
-//	    flag.lower();
-//	    me.setValue(0.005);
-//	    if (!flag.isUp()) {
-//	        fail("Observer was not notified of spread change");
-//	    }
-	}
+        //	    final double tolerance = 1.0e-10;
+        //	    final Quote me = new SimpleQuote(0.01);
+        //	    final Handle<Quote> mh = new Handle(me);
+        //
+        //	    YieldTermStructure spreaded = new ForwardSpreadedTermStructure( new Handle<YieldTermStructure>(termStructure), mh);
+        //	    Date testDate = termStructure.referenceDate().increment(5 * Period.ONE_YEAR_FORWARD.length());
+        //	    DayCounter tsdc  = termStructure.dayCounter();
+        //	    DayCounter sprdc = spreaded.dayCounter();
+        //
+        //	    // FIXME :: code review:: could be:: /*@Rate*/ double forward = ... ?????
+        //	    InterestRate forward = termStructure.forwardRate(testDate, testDate, tsdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
+        //
+        //	    // FIXME :: code review:: could be:: /*@Rate*/ double spreadedForward = ... ?????
+        //	    InterestRate spreadedForward = spreaded.forwardRate(testDate, testDate, sprdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
+        //
+        //        if (Math.abs(forward.rate() - (spreadedForward.rate() - me.evaluate())) > tolerance) {
+        //            fail("unable to reproduce forward from spreaded curve\n"
+        //                    + "    calculated: " + (spreadedForward.rate() - me.evaluate()) + "\n"
+        //                    + "    expected:   " + forward.rate()
+        //                );
+        //        }
+    }
 
 
-	@Test
-	public void testZSpreaded() {
-	    QL.info("Testing consistency of zero-spreaded term structure...");
-	    QL.error("***** TEST FAILED :: waiting for translation of ZeroSpreadedTermStructure *****");
+    @Test
+    public void testFSpreadedObs() {
+        QL.info("Testing observability of forward-spreaded term structure...");
+        QL.error("***** TEST FAILED :: waiting for translation of ForwardSpreadedTermStructure *****");
 
-//	    double tolerance = 1.0e-10;
-//	    Quote me = new SimpleQuote(0.01);
-//	    Handle<Quote> mh = new Handle(me);
-//	    YieldTermStructure spreaded = new ZeroSpreadedTermStructure(new Handle<YieldTermStructure>(termStructure), mh);
-//	    Date testDate = termStructure.referenceDate().increment(5 * Period.ONE_YEAR_FORWARD.length());
-//	    DayCounter rfdc  = termStructure.dayCounter();
-//
-//	    // FIXME :: code review:: could be:: /*@Rate*/ double zero = ... ?????
-//	    InterestRate zero = termStructure.zeroRate(testDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
-//
-//	    // FIXME :: code review:: could be:: /*@Rate*/ double spreadedZero = ... ?????
-//	    InterestRate spreadedZero = spreaded.zeroRate(testDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
-//
-//	    if (Math.abs(zero.rate() - (spreadedZero.rate() - me.evaluate())) > tolerance) {
-//	        fail(
-//	                "unable to reproduce zero yield from spreaded curve\n"
-//	                + "    calculated: " + (spreadedZero.rate() - me.evaluate()) + "\n"
-//	                + "    expected:   " + zero.rate());
-//	    }
-	}
+        //	    SimpleQuote me = new SimpleQuote(0.01);
+        //	    Handle<Quote> mh = new Handle<Quote>(me);
+        //	    RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(); //(dummyTermStructure_);
+        //	    YieldTermStructure spreaded = new ForwardSpreadedTermStructure(h, mh);
+        //
+        //	    Flag flag = new Flag();
+        //	    spreaded.addObserver(flag);
+        //	    h.setLink(termStructure);
+        //	    if (!flag.isUp()) {
+        //	        fail("Observer was not notified of term structure change");
+        //	    }
+        //
+        //	    flag.lower();
+        //	    me.setValue(0.005);
+        //	    if (!flag.isUp()) {
+        //	        fail("Observer was not notified of spread change");
+        //	    }
+    }
 
 
-	@Test
-	public void testZSpreadedObs() {
-	    QL.info("Testing observability of zero-spreaded term structure...");
-	    QL.error("***** TEST FAILED :: waiting for translation of ZeroSpreadedTermStructure *****");
+    @Test
+    public void testZSpreaded() {
+        QL.info("Testing consistency of zero-spreaded term structure...");
+        QL.error("***** TEST FAILED :: waiting for translation of ZeroSpreadedTermStructure *****");
 
-//	    SimpleQuote me = new SimpleQuote(0.01);
-//	    Handle<Quote> mh = new Handle<Quote>(me);
-//
-//	    RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(dummyTermStructure);
-//	    YieldTermStructure spreaded = new ZeroSpreadedTermStructure(h, mh);
-//
-//	    Flag flag = new Flag();
-//	    spreaded.addObserver(flag);
-//	    h.setLink(termStructure);
-//
-//        if (!flag.isUp()) {
-//            fail("Observer was not notified of term structure change");
-//	    }
-//
-//	    flag.lower();
-//	    me.setValue(0.005);
-//        if (!flag.isUp()) {
-//            fail("Observer was not notified of spread change");
-//	    }
-	}
+        //	    double tolerance = 1.0e-10;
+        //	    Quote me = new SimpleQuote(0.01);
+        //	    Handle<Quote> mh = new Handle(me);
+        //	    YieldTermStructure spreaded = new ZeroSpreadedTermStructure(new Handle<YieldTermStructure>(termStructure), mh);
+        //	    Date testDate = termStructure.referenceDate().increment(5 * Period.ONE_YEAR_FORWARD.length());
+        //	    DayCounter rfdc  = termStructure.dayCounter();
+        //
+        //	    // FIXME :: code review:: could be:: /*@Rate*/ double zero = ... ?????
+        //	    InterestRate zero = termStructure.zeroRate(testDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
+        //
+        //	    // FIXME :: code review:: could be:: /*@Rate*/ double spreadedZero = ... ?????
+        //	    InterestRate spreadedZero = spreaded.zeroRate(testDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY);
+        //
+        //	    if (Math.abs(zero.rate() - (spreadedZero.rate() - me.evaluate())) > tolerance) {
+        //	        fail(
+        //	                "unable to reproduce zero yield from spreaded curve\n"
+        //	                + "    calculated: " + (spreadedZero.rate() - me.evaluate()) + "\n"
+        //	                + "    expected:   " + zero.rate());
+        //	    }
+    }
+
+
+    @Test
+    public void testZSpreadedObs() {
+        QL.info("Testing observability of zero-spreaded term structure...");
+        QL.error("***** TEST FAILED :: waiting for translation of ZeroSpreadedTermStructure *****");
+
+        //	    SimpleQuote me = new SimpleQuote(0.01);
+        //	    Handle<Quote> mh = new Handle<Quote>(me);
+        //
+        //	    RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(dummyTermStructure);
+        //	    YieldTermStructure spreaded = new ZeroSpreadedTermStructure(h, mh);
+        //
+        //	    Flag flag = new Flag();
+        //	    spreaded.addObserver(flag);
+        //	    h.setLink(termStructure);
+        //
+        //        if (!flag.isUp()) {
+        //            fail("Observer was not notified of term structure change");
+        //	    }
+        //
+        //	    flag.lower();
+        //	    me.setValue(0.005);
+        //        if (!flag.isUp()) {
+        //            fail("Observer was not notified of spread change");
+        //	    }
+    }
 
 
 
-	//
-	// private inner classes
-	//
+    //
+    // private inner classes
+    //
 
-	private static class Datum {
+    private static class Datum {
         public int n;
         public TimeUnit units;
         public double rate;

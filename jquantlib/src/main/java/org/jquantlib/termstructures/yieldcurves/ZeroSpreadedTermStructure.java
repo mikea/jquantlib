@@ -13,66 +13,69 @@ import org.jquantlib.util.Date;
 
 public class ZeroSpreadedTermStructure extends ZeroYieldStructure  {
 
-	//
+    //
     // private fields
     //
 
     private final Handle<YieldTermStructure> originalCurve;
-	private final Handle<Quote> spread;
-	private final Compounding comp;
-	private final Frequency freq;
+    private final Handle<Quote> spread;
+    private final Compounding comp;
+    private final Frequency freq;
 
 
-	//
-	// public constructors
-	//
+    //
+    // public constructors
+    //
 
-	public ZeroSpreadedTermStructure(
-	        final Handle<YieldTermStructure> h,
-			final Handle<Quote> spread, final Compounding comp , final Frequency freq,
-			final DayCounter dc){
-		this.originalCurve = h;
-		this.spread = spread;
-		this.comp = comp;
-		this.freq = freq;
+    public ZeroSpreadedTermStructure(
+            final Handle<YieldTermStructure> h,
+            final Handle<Quote> spread, final Compounding comp , final Frequency freq,
+            final DayCounter dc){
+        this.originalCurve = h;
+        this.spread = spread;
+        this.comp = comp;
+        this.freq = freq;
 
-        registerWith(this.originalCurve);
-        registerWith(this.spread);
-	}
+        this.originalCurve.addObserver(this);
+        this.spread.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.originalCurve);
+        //registerWith(this.spread);
+    }
 
 
-	//
-	// public methods
-	//
+    //
+    // public methods
+    //
 
-	public double forwardImpl(final double t){
+    public double forwardImpl(final double t){
         return originalCurve.getLink().
         forwardRate(t, t, comp, freq, true).rate()
         + spread.getLink().op();
     }
 
 
-	//
-	// overrides ZeroYieldStructure
-	//
+    //
+    // overrides ZeroYieldStructure
+    //
 
-	@Override
-	protected double zeroYieldImpl(final double t) {
-		//org.comment: to be fixed: user-defined daycounter should be used
-		final InterestRate zeroRate = originalCurve.getLink().
-		zeroRate(t, comp, freq, true);
-		final InterestRate spreadedRate =
-			new InterestRate(zeroRate.rate() + spread.getLink().op(),
-				zeroRate.dayCounter(),
-				zeroRate.compounding(),
-				zeroRate.frequency());
-		return spreadedRate.equivalentRate(t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
-	}
+    @Override
+    protected double zeroYieldImpl(final double t) {
+        //org.comment: to be fixed: user-defined daycounter should be used
+        final InterestRate zeroRate = originalCurve.getLink().
+        zeroRate(t, comp, freq, true);
+        final InterestRate spreadedRate =
+            new InterestRate(zeroRate.rate() + spread.getLink().op(),
+                    zeroRate.dayCounter(),
+                    zeroRate.compounding(),
+                    zeroRate.frequency());
+        return spreadedRate.equivalentRate(t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+    }
 
 
-	//
-	// overrides TermStructure
-	//
+    //
+    // overrides TermStructure
+    //
 
     @Override
     public Calendar calendar() {

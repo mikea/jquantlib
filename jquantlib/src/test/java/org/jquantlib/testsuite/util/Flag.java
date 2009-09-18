@@ -30,41 +30,42 @@ import org.jquantlib.util.Observer;
  */
 public class Flag implements Observer {
 
-	private boolean	up;
+    private boolean	up;
 
-	public Flag() {
-		up = false;
-	}
-
-	public void raise() {
-		up = true;
-	}
-
-	public void lower() {
-		up = false;
-	}
-
-	public boolean isUp() /* @ReadOnly */{
-		return up;
-	}
-
-	//
-	// implements Observer
-	//
-
-	@Override
-    public void registerWith(final Observable o) {
-        o.addObserver(this);
+    public Flag() {
+        up = false;
     }
 
-    @Override
-    public void unregisterWith(final Observable o) {
-        o.deleteObserver(this);
+    public void raise() {
+        up = true;
     }
 
+    public void lower() {
+        up = false;
+    }
+
+    public boolean isUp() /* @ReadOnly */{
+        return up;
+    }
+
+    //
+    // implements Observer
+    //
+
+    //XXX:registerWith
+    //	@Override
+    //    public void registerWith(final Observable o) {
+    //        o.addObserver(this);
+    //    }
+    //
+    //    @Override
+    //    public void unregisterWith(final Observable o) {
+    //        o.deleteObserver(this);
+    //    }
+
     @Override
-	public void update(final Observable observable, final Object o) {
-		raise();
-	}
+    public void update(final Observable observable, final Object o) {
+        raise();
+    }
 
 }

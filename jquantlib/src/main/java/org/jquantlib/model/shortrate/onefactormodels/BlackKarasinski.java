@@ -67,8 +67,9 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
     public BlackKarasinski(final Handle<YieldTermStructure> termStructure, final double a, final double sigma){
         super(2);
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         termstructureConsistentModel = new TermStructureConsistentModelClass(termStructure);
         this.a_ = arguments_.get(0);
@@ -76,7 +77,13 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
         //FIXME: bug?
         this.a_ = new ConstantParameter(a, new PositiveConstraint());
         this.sigma_ = new ConstantParameter(sigma, new PositiveConstraint());
-        registerWith(termStructure);
+
+        // TODO: code review :: please verify against QL/C++ code
+        // seems like we should have this.termStructure
+
+        termStructure.addObserver(this);
+        //XXX:registerWith
+        //registerWith(termStructure);
     }
 
     public double /* @Real */a() {

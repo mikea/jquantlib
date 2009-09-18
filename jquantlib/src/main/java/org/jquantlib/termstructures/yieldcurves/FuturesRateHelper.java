@@ -58,7 +58,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
             final DayCounter dayCounter,
             final Handle<Quote> convAdj) {
         super(price, null, null, null);
-        QL.require(IMM.getDefaultIMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
+        QL.require(new IMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
         earliestDate = immDate;
         latestDate = calendar.advance(
                 immDate,
@@ -80,7 +80,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
             final DayCounter dayCounter,
             final double conv) {
         super(price);
-        QL.require(IMM.getDefaultIMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
+        QL.require(new IMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
         convAdj = new Handle<Quote>(new SimpleQuote(conv));
         earliestDate = immDate;
         latestDate = calendar.advance(
@@ -97,7 +97,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
             final IborIndex i,
             final double conv) {
         super(price);
-        QL.require(IMM.getDefaultIMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
+        QL.require(new IMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
         convAdj = new Handle<Quote>(new SimpleQuote(conv));
         earliestDate = immDate;
         final Calendar cal = i.fixingCalendar();

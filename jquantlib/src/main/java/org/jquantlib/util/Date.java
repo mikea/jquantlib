@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Srinivas Hasti
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,636 +15,961 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.util;
 
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Period;
+import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
 
 /**
  * Date class to represent time in days.
  * 
- * @author Srinivas Hasti
+ * @author Richard Gomes
  * 
  */
-public interface Date extends Observable, Comparable<Date> {
+public class Date implements Observable, Comparable<Date>, Cloneable {
 
-    /**
-     * Returns Month of the year
-     * 
-     * @return a number which represents a month [1..12]
-     */
-    public int getMonth();
+    private /* @NonNegative */int serialNumber;
 
-    /**
-     * @see Month
-     * @return the month as an <code>enum</code>
-     */
-    public Month getMonthEnum();
+    private static final int MinimumSerialNumber = 367; // Jan 1st, 1901
+    private static final int MaximumSerialNumber = 73050; // Dec 31st, 2099
 
-    /**
-     * Returns year of the date
-     * 
-     * @return the year
-     */
-    public int getYear();
+    static final int monthLength[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-    /**
-     * Increments the date by one day
-     * 
-     * @return <code>this</code> Date incremented
-     */
-    public Date increment();
+    private static final int monthLeapLength[] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-    /**
-     * Decrements the date by one day
-     * 
-     * @return <code>this</code> Date decremented
-     */
-    public Date decrement();
-
-    /**
-     * Increments the date by a given number of days
-     * 
-     * @param days
-     *            is the quantity of days
-     * @return <code>this</code> Date incremented by a given number of days
-     */
-    public Date increment(final int days);
-
-    /**
-     * Decrements the date by a given number of days
-     * 
-     * @param days
-     *            is the quantity of days
-     * @return <code>this</code> Date decremented by a given number of days
-     */
-    public Date decrement(final int days);
-
-    /**
-     * Increments the date by a given period
-     * 
-     * @param period
-     * @return <code>this</code> Date incremented by a given Period
-     * 
-     * @see Period
-     */
-    public Date increment(final Period period);
-
-    /**
-     * Decrements the date by a given period
-     * 
-     * @param period
-     * @return <code>this</code> Date decremented by a given Period
-     * 
-     * @see Period
-     */
-    public Date decrement(final Period period);
-
-    /**
-     * @param days
-     * @return a date which represents <code>this</code> date plus a given number of days.
-     */
-    public Date plus(final int days);
-
-    /**
-     * @param days
-     * @return a date which represents <code>this</code> date minus a given number of days.
-     */
-    public Date minus(final int days);
-
-    /**
-     * @param period
-     * @return a date which represents <code>this</code> date plus a given Period.
-     * 
-     * @see Period
-     */
-    public Date plus(final Period period);
-
-    /**
-     * @param period
-     * @return a date which represents <code>this</code> date minus a given Period.
-     * 
-     * @see Period
-     */
-    public Date minus(final Period period);
-
-    /**
-     * Move the date by a given <code>Period</code>
-     * 
-     * @param p
-     *            is the Period
-     * @return <code>this</code> Date moved by a given Period
-     */
-    public Date adjust(final Period p);
-
-    /**
-     * Tests if this Date belongs to a leap year
-     * 
-     * @return <code>true</code> if a leap year; <code>false</code>
-     *         otherwise
-     */
-    public boolean isLeap();
-
-    /**
-     * Returns a new Date instance which contains the next week day matching a
-     * parameter
-     * 
-     * @param dayOfWeek
-     *            is the desired day of week
-     * @return a new Date object which contains the next week day matching a
-     *         parameter
-     */
-    public Date getNextWeekday(final Weekday dayOfWeek);
-    
-    /**
-     * Returns Nth weekday of the month represented by the current
-     * date
-     * 
-     * @return
-     */
-    public Date getNthWeekday(int n, Weekday weekday);
-
-    /**
-     * Returns a new Date instance representing next day from the current
-     * instance
-     * 
-     * @return next day
-     */
-    public Date getNextDay();
-
-    /**
-     * Returns a new Date instance representing previous day from the current
-     * instance
-     * 
-     * @return
-     */
-    public Date getPreviousDay();
-
-    /**
-     * Returns a new Date instance representing date in future or past by the
-     * period specified.
-     * 
-     * @param p
-     * @return new Date separated by specified period
-     */
-    public Date getDateAfter(Period p);
-
-    /**
-     * @return the week day of this Date as a <code>enum</code>
-     */
-    public Weekday getWeekday();
-
-    /**
-     * Returns day of the month. Number in range [1-31]
-     * 
-     * @return the day of month
-     */
-    public int getDayOfMonth();
-
-    /**
-     * Returns day of the year. Number in range [1-366]
-     * 
-     * @return the day of year
-     */
-    public int getDayOfYear();
-
-    /**
-     * Returns Date representing month end
-     * 
-     * @return a new Date which represents the last day of this month
-     */
-    public Date getEndOfMonth();
-
-    /**
-     * Tells if this date is at the end of month
-     * 
-     * @return <code>true</code> if this Date is at the end of month;
-     *         <code>false</code> otherwise
-     */
-    public boolean isEndOfMonth();
-
-    /**
-     * Compares if <code>this</code> Date is less than to a given Date
-     * 
-     * @param date
-     *            is the date to be compared against <code>this</code> Date
-     * @return f <code>this</code> Date is less than to a given Date
-     */
-    public boolean lt(final Date date);
-
-    /**
-     * Compares if <code>this</code> Date is less than to a Date represented
-     * by the parameters.
-     * 
-     * @param date
-     *            is the date to be compared against <code>this</code> Date
-     * @return f <code>this</code> Date is less than to a given Date
-     */
-    public boolean lt(int day, Month month, int year);
-
-    /**
-     * Compares if <code>this</code> Date is less than or equal to a given
-     * Date
-     * 
-     * @param date
-     *            is the date to be compared against <code>this</code> Date
-     * @return f <code>this</code> Date is less than or equal to a given Date
-     */
-    public boolean le(final Date date);
-
-    /**
-     * Compares if <code>this</code> Date is less than or equal to a Date
-     * represented by the parameters.
-     * 
-     * @param date
-     *            is the date to be compared against <code>this</code> Date
-     * @return f <code>this</code> Date is less than or equal to a given Date
-     */
-    public boolean le(int day, Month month, int year);
-
-    /**
-     * Compares if <code>this</code> Date is greater than to a given Date
-     * 
-     * @param date
-     *            is the date to be compared against <code>this</code> Date
-     * @return f <code>this</code> Date is greater than to a given Date
-     */
-    public boolean gt(final Date date);
-
-    /**
-     * Compares if <code>this</code> Date is greater than to a Date
-     * represented by the parameters
-     * 
-     * @param date
-     *            is the date to be compared against <code>this</code> Date
-     * @return f <code>this</code> Date is greater than to a given Date
-     */
-    public boolean gt(int day, Month month, int year);
-
-    /**
-     * Compares if <code>this</code> Date is greater than or equal to a given
-     * Date
-     * 
-     * @param date
-     *            is the date to be compared against <code>this</code> Date
-     * @return f <code>this</code> Date is greater than or equal to a given
-     *         Date
-     */
-    public boolean ge(final Date date);
-
-    /**
-     * Compares if <code>this</code> Date is greater than or equal to a Date
-     * represented by the parameters
-     * 
-     * @param date
-     *            is the date to be compared against <code>this</code> Date
-     * @return f <code>this</code> Date is greater than or equal to a given
-     *         Date
-     */
-    public boolean ge(int day, Month month, int year);
-
-    /**
-     * Compares if <code>this</code> Date is equal to a given Date
-     * 
-     * @param date
-     *            is the date to be compared against <code>this</code> Date
-     * @return f <code>this</code> Date is equal to a given Date
-     */
-    public boolean eq(final Date date);
-
-    /**
-     * Compares if <code>this</code> Date is equal to a Date represented by
-     * the parameters
-     * 
-     * @param date
-     *            is the date to be compared against <code>this</code> Date
-     * @return f <code>this</code> Date is equal to a given Date
-     */
-    public boolean eq(int day, Month month, int year);
-    
-
-    /**
-     * Returns the String representing this Date in a long format. This is the
-     * same format as returned by toString method
-     * 
-     * @return the String representing this Date in a long format
-     * @see Date#toString
-     */
-    public String getLongFormat();
-
-    /**
-     * Returns the String representing this Date in a short format
-     * 
-     * @return the String representing this Date in a short format
-     */
-    public String getShortFormat();
-
-    /**
-     * Returns the String representing this Date in ISO format
-     * 
-     * @return the String representing this Date in ISO format
-     */
-    public String getISOFormat();
-
-    /**
-     * To determine number of days to/from another Date. If specified date is in
-     * the past, negative value is returned. If specified date is in future,
-     * positive value is returned. 0 is returned if specified date represents
-     * same as current date.
-     * 
-     * @param date
-     * @return negative value if argument is in future, 0 for same Date,
-     *         positive for a Date in future
-     */
-    public int getDayCount(Date date);
-
-    /**
-     * Returns a new Date instance that is n days after or before the current
-     * date. If n is <0 date returned is in the past and if n > 0 date returned
-     * is in the future. When n =0, Date returned is equal to current instance.
-     * 
-     * @param i
-     * @return
-     */
-    public Date getDateAfter(int n);
-    
-    /**
-     * Returns Updatable reference that can be used to replace with new value.
-     * 
-     * @return
-     */
-    public Updatable<Date> getUpdatable();
-
-    /**
-     * To use it in place of non initialized date object reference.
-     * 
-     * @note the method <i>compareTo</i> always throws {@link UnsupportedOperationException}
-     */
-    public final Date NULL_DATE = new Date() {
-    	static private final String NULL_DATE_STR = "NULL Date";
-    	
-        @Override
-        public int hashCode() {
-            return super.hashCode();
-        }
-        
-        @Override
-        public boolean equals(Object another) {
-            return super.equals(another);
-        }
-        
-        @Override
-        public int compareTo(Date o) {
-            throw new UnsupportedOperationException();
-		}
-
-        @Override
-        public Date decrement() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date decrement(int days) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date decrement(Period period) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date plus(int days) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date plus(Period period) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date minus(int days) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date minus(Period period) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int getDayCount(Date date) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int getDayOfMonth() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int getDayOfYear() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date getEndOfMonth() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public String getISOFormat() {
-            return NULL_DATE_STR;
-        }
-
-        @Override
-        public String getLongFormat() {
-            return NULL_DATE_STR;
-        }
-
-        @Override
-        public int getMonth() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Month getMonthEnum() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date getNextWeekday(Weekday dayOfWeek) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public String getShortFormat() {
-            return NULL_DATE_STR;
-        }
-
-        @Override
-        public Weekday getWeekday() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int getYear() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean gt(Date date) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date increment() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date increment(int days) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date increment(Period period) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date adjust(Period p) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean isEndOfMonth() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean isLeap() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean eq(Date date) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean ge(Date date) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean le(Date date) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean lt(Date date) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date getDateAfter(Period p) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date getNextDay() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date getPreviousDay() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean eq(int day, Month month, int year) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean ge(int day, Month month, int year) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean gt(int day, Month month, int year) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean le(int day, Month month, int year) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean lt(int day, Month month, int year) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void addObserver(Observer observer) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int countObservers() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void deleteObserver(Observer observer) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void deleteObservers() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public List<Observer> getObservers() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void notifyObservers() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void notifyObservers(Object arg) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Date getDateAfter(int n) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Updatable<Date> getUpdatable() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-		public Date getNthWeekday(int n, Weekday weekday) {
-            throw new UnsupportedOperationException();
-		}
-
+    private static final int monthOffset[] = {
+        0, 31, 59, 90, 120, 151,        // Jan - Jun
+        181, 212, 243, 273, 304, 334,   // Jun - Dec
+        365 // used in dayOfMonth to bracket day
     };
+
+    private static final int monthLeapOffset[] = {
+        0, 31, 60, 91, 121, 152,        // Jan - Jun
+        182, 213, 244, 274, 305, 335,   // Jun - Dec
+        366 // used in dayOfMonth to bracket day
+    };
+
+    // the list of all December 31st in the preceding year
+    // e.g. for 1901 yearOffset[1] is 366, that is, December 31 1900
+    private static final int yearOffset[] = {
+        // 1900-1909
+        0, 366, 731, 1096, 1461, 1827, 2192, 2557, 2922, 3288,
+        // 1910-1919
+        3653, 4018, 4383, 4749, 5114, 5479, 5844, 6210, 6575, 6940,
+        // 1920-1929
+        7305, 7671, 8036, 8401, 8766, 9132, 9497, 9862, 10227, 10593,
+        // 1930-1939
+        10958, 11323, 11688, 12054, 12419, 12784, 13149, 13515, 13880, 14245,
+        // 1940-1949
+        14610, 14976, 15341, 15706, 16071, 16437, 16802, 17167, 17532, 17898,
+        // 1950-1959
+        18263, 18628, 18993, 19359, 19724, 20089, 20454, 20820, 21185, 21550,
+        // 1960-1969
+        21915, 22281, 22646, 23011, 23376, 23742, 24107, 24472, 24837, 25203,
+        // 1970-1979
+        25568, 25933, 26298, 26664, 27029, 27394, 27759, 28125, 28490, 28855,
+        // 1980-1989
+        29220, 29586, 29951, 30316, 30681, 31047, 31412, 31777, 32142, 32508,
+        // 1990-1999
+        32873, 33238, 33603, 33969, 34334, 34699, 35064, 35430, 35795, 36160,
+        // 2000-2009
+        36525, 36891, 37256, 37621, 37986, 38352, 38717, 39082, 39447, 39813,
+        // 2010-2019
+        40178, 40543, 40908, 41274, 41639, 42004, 42369, 42735, 43100, 43465,
+        // 2020-2029
+        43830, 44196, 44561, 44926, 45291, 45657, 46022, 46387, 46752, 47118,
+        // 2030-2039
+        47483, 47848, 48213, 48579, 48944, 49309, 49674, 50040, 50405, 50770,
+        // 2040-2049
+        51135, 51501, 51866, 52231, 52596, 52962, 53327, 53692, 54057, 54423,
+        // 2050-2059
+        54788, 55153, 55518, 55884, 56249, 56614, 56979, 57345, 57710, 58075,
+        // 2060-2069
+        58440, 58806, 59171, 59536, 59901, 60267, 60632, 60997, 61362, 61728,
+        // 2070-2079
+        62093, 62458, 62823, 63189, 63554, 63919, 64284, 64650, 65015, 65380,
+        // 2080-2089
+        65745, 66111, 66476, 66841, 67206, 67572, 67937, 68302, 68667, 69033,
+        // 2090-2099
+        69398, 69763, 70128, 70494, 70859, 71224, 71589, 71955, 72320, 72685,
+        // 2100
+        73050 };
+
+    private static final boolean yearIsLeap[] = {
+        // 1900 is leap in agreement with Excel's bug
+        // 1900 is out of valid date range anyway
+        // 1900-1909
+        true, false, false, false, true, false, false, false, true, false,
+        // 1910-1919
+        false, false, true, false, false, false, true, false, false, false,
+        // 1920-1929
+        true, false, false, false, true, false, false, false, true, false,
+        // 1930-1939
+        false, false, true, false, false, false, true, false, false, false,
+        // 1940-1949
+        true, false, false, false, true, false, false, false, true, false,
+        // 1950-1959
+        false, false, true, false, false, false, true, false, false, false,
+        // 1960-1969
+        true, false, false, false, true, false, false, false, true, false,
+        // 1970-1979
+        false, false, true, false, false, false, true, false, false, false,
+        // 1980-1989
+        true, false, false, false, true, false, false, false, true, false,
+        // 1990-1999
+        false, false, true, false, false, false, true, false, false, false,
+        // 2000-2009
+        true, false, false, false, true, false, false, false, true, false,
+        // 2010-2019
+        false, false, true, false, false, false, true, false, false, false,
+        // 2020-2029
+        true, false, false, false, true, false, false, false, true, false,
+        // 2030-2039
+        false, false, true, false, false, false, true, false, false, false,
+        // 2040-2049
+        true, false, false, false, true, false, false, false, true, false,
+        // 2050-2059
+        false, false, true, false, false, false, true, false, false, false,
+        // 2060-2069
+        true, false, false, false, true, false, false, false, true, false,
+        // 2070-2079
+        false, false, true, false, false, false, true, false, false, false,
+        // 2080-2089
+        true, false, false, false, true, false, false, false, true, false,
+        // 2090-2099
+        false, false, true, false, false, false, true, false, false, false,
+        // 2100
+        false };
+
+
+
+
+    //
+    // public constructors
+    //
+
+    /**
+     *  Default constructor returning a null date.
+     */
+    public Date() {
+        this(0);
+    }
+
+    /**
+     *  Constructor taking a serial number as given by Applix or Excel.
+     * 
+     * @param serialNumber
+     * @return
+     */
+    public Date(final int serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    /**
+     *  More traditional constructor.
+     * 
+     * @param d
+     * @param m
+     * @param y
+     */
+    public Date(final int day, final Month month, final int year) {
+        this(fromDMY(day, month.value(), year));
+    }
+
+    /**
+     *  More traditional constructor.
+     * 
+     * @param d
+     * @param m
+     * @param y
+     */
+    public Date(final int day, final int month, final int year) {
+        this(fromDMY(day, month, year));
+    }
+
+
+    //
+    // public methods :: inspectors
+    //
+
+    public Weekday weekday() /* @ReadOnly */ {
+        final int w = serialNumber % 7;
+        return Weekday.valueOf(w == 0 ? 7 : w);
+    }
+
+    public int dayOfMonth() /* @ReadOnly */ {
+        return dayOfYear() - monthOffset(month().value(), statics.isLeap(year()));
+    }
+
+    /**
+     * One-based (Jan 1st = 1)
+     * 
+     * @return
+     */
+    public int dayOfYear() /* @ReadOnly */ {
+        return serialNumber - yearOffset(year());
+    }
+
+    public Month month() /* @ReadOnly */ {
+        final int d = dayOfYear(); // dayOfYear is 1 based
+        int m = d / 30 + 1;
+        final boolean leap = statics.isLeap(year());
+        while (d <= monthOffset(m, leap)) {
+            --m;
+        }
+        while (d > monthOffset(m + 1, leap)) {
+            ++m;
+        }
+        return Month.valueOf(m);
+    }
+
+    public int year() /* @ReadOnly */ {
+        int y = (serialNumber / 365) + 1900;
+        if (serialNumber <= yearOffset(y)) {
+            --y;
+        }
+        return y;
+    }
+
+    public int serialNumber() /* @ReadOnly */ {
+        return this.serialNumber;
+    }
+
+
+    //
+    // public methods :: name date algebra
+    //
+
+    /**
+     *  increments date by the given number of days
+     * 
+     *  @return this
+     */
+    //-- Date& operator+=(BigInteger days);
+    public Date addAssign(final int days) {
+        serialNumber += days;
+        checkSerialNumber();
+        delegatedObservable.notifyObservers();
+        return this;
+    }
+
+    /**
+     *  increments date by the given period
+     * 
+     *  @return this
+     */
+    //-- Date& operator+=(const Period&);
+    public Date addAssign(final Period period) {
+        serialNumber = advance(this, period.length(), period.units());
+        checkSerialNumber();
+        delegatedObservable.notifyObservers();
+        return this;
+    }
+
+    /**
+     *  decrement date by the given number of days
+     * 
+     *  @return this
+     */
+    //-- Date& operator-=(BigInteger days);
+    public Date subAssign(final int days) {
+        serialNumber -= days;
+        checkSerialNumber();
+        delegatedObservable.notifyObservers();
+        return this;
+    }
+
+    /**
+     *  decrements date by the given period
+     * 
+     *  @return this
+     */
+    //-- Date& operator-=(const Period&);
+    public Date subAssign(final Period period) {
+        serialNumber = advance(this, -1 * period.length(), period.units());
+        checkSerialNumber();
+        delegatedObservable.notifyObservers();
+        return this;
+    }
+
+
+    //    /**
+    //     *  1-day pre-increment
+    //     *
+    //     *  @return this
+    //     */
+    //    //-- Date& operator++();
+    //    Date inc();
+
+    /**
+     *  1-day post-increment
+     * 
+     *  @return this
+     */
+    //-- Date operator++(int );
+    public Date inc() {
+        serialNumber++;
+        checkSerialNumber();
+        return this;
+    }
+
+    //    /**
+    //     *  1-day pre-decrement
+    //     *
+    //     *  @return this
+    //     */
+    //    //-- Date& operator--();
+    //    Date dec();
+
+    /**
+     *  1-day post-decrement
+     * 
+     *  @return this
+     */
+    //-- Date operator--(int );
+    public Date dec() {
+        serialNumber--;
+        checkSerialNumber();
+        return this;
+    }
+
+
+
+    /**
+     *  returns a new date incremented by the given number of days
+     * 
+     *  @return a new instance
+     */
+    //-- Date operator+(BigInteger days) const;
+    public Date add(final int days) /* @ReadOnly */ {
+        return new Date(this.serialNumber + days);
+    }
+
+
+    /**
+     *  returns a new date incremented by the given period
+     * 
+     *  @return a new instance
+     */
+    //-- Date operator+(const Period&) const;
+    public Date add(final Period period) /* @ReadOnly */ {
+        return new Date( advance(this, period.length(), period.units()) );
+    }
+
+    /**
+     *  returns a new date decremented by the given number of days
+     * 
+     *  @return a new instance
+     */
+    //-- Date operator-(BigInteger days) const;
+    public Date sub(final int days) /* @ReadOnly */ {
+        return new Date(this.serialNumber - days);
+    }
+
+    /**
+     *  returns a new date decremented by the given period
+     * 
+     *  @return a new instance
+     */
+    //-- Date operator-(const Period&) const;
+    public Date sub(final Period period) /* @ReadOnly */ {
+        return new Date( advance(this, -1 * period.length(), period.units()) );
+    }
+
+    /**
+     * Difference in days between dates
+     */
+    //-- BigInteger operator-(const Date&, const Date&);
+    public int sub(final Date another) {
+        return another.serialNumber - serialNumber;
+    }
+
+
+    //
+    // public methods :: relates Date
+    //
+
+    //-- bool operator==(const Date&, const Date&);
+    public boolean eq(final Date another) {
+        return serialNumber == another.serialNumber;
+    }
+
+    //-- bool operator!=(const Date&, const Date&);
+    public boolean ne(final Date another) {
+        return serialNumber != another.serialNumber;
+    }
+
+    //-- bool operator<(const Date&, const Date&);
+    public boolean lt(final Date another) {
+        return serialNumber < another.serialNumber;
+    }
+
+    //-- bool operator<=(const Date&, const Date&);
+    public boolean le(final Date another) {
+        return serialNumber <= another.serialNumber;
+    }
+
+    //-- bool operator>(const Date&, const Date&);
+    public boolean gt(final Date another) {
+        return serialNumber > another.serialNumber;
+    }
+
+    //-- bool operator>=(const Date&, const Date&);
+    public boolean ge(final Date another) {
+        return serialNumber >= another.serialNumber;
+    }
+
+
+    //
+    // public methods :: not originally defined in QuantLib/C++
+    //
+
+    /**
+     * @return true if this Date is <i>null or non-valid date</i>
+     */
+    public boolean isNull() {
+        return this.serialNumber<=0;
+    }
+
+    public final boolean isToday() {
+        final java.util.Calendar cal = java.util.Calendar.getInstance();
+        final int d = cal.get(java.util.Calendar.DAY_OF_MONTH);
+        final int m = cal.get(java.util.Calendar.MONTH);
+        final int y = cal.get(java.util.Calendar.YEAR);
+        return serialNumber == fromDMY(d, m, y);
+    }
+
+
+    //
+    // public methods :: convenience methods (also declared in inner class Statics
+    //
+
+    /**
+     * Convenience method to {@link Statics#isLeap(int)}
+     */
+    public final boolean isLeap() {
+        return statics.isLeap(year());
+    }
+
+    /**
+     * Convenience method to {@link Statics#endOfMonth(Date)}
+     */
+    public final Date endOfMonth() {
+        return statics.endOfMonth(this);
+    }
+
+    /**
+     * Convenience method to {@link Statics#isEndOfMonth(Date)}
+     */
+    public final boolean isEndOfMonth() {
+        return statics.isEndOfMonth(this);
+    }
+
+    /**
+     * Convenience method to {@link Statics#nextWeekday(Date, Weekday)}
+     */
+    public final Date nextWeekday(final Weekday w) {
+        return statics.nextWeekday(this, w);
+    }
+
+    /**
+     * Convenience method to {@link Statics#nthWeekday(int, Weekday, Month, int)}
+     */
+    public final Date nthWeekday(final int n, final Weekday w) {
+        final int m = this.month().value();
+        final int y = year();
+        return statics.nthWeekday(n, w, m, y);
+    }
+
+
+
+    //
+    // public methods :: provide access to inner classes
+    //
+
+    /**
+     * Returns a {@link Statics} class which mimicks access to static methods
+     * 
+     * @see Statics
+     */
+    public final Statics statics() {
+        return statics;
+    }
+
+    /**
+     * Provides access to a long date formatter.
+     * <p>
+     * The only useful method is <code>toString()</code> which returns a date formated as Mon, dd yyyy
+     * 
+     * @return
+     */
+    public Object longDate() {
+        return new LongDate();
+    }
+
+    /**
+     * Provides access to a long date formatter.
+     * <p>
+     * The only useful method is <code>toString()</code> which returns a date formated as mm/dd/yyyy
+     * 
+     * @return
+     */
+    public Object shortDate() {
+        return new ShortDate();
+    }
+
+    /**
+     * Provides access to a ISO date formatter.
+     * <p>
+     * The only useful method is <code>toString()</code> which returns a date formated as yyyy-mm-dd
+     * 
+     * @return
+     */
+    public Object isoDate() {
+        return new ISODate();
+    }
+
+
+    //
+    // implements Comparable<Date>
+    //
+
+    @Override
+    public int compareTo(final Date o) {
+        if (this.equals(o)){
+            return 0;
+        }
+        if (this.le(o)) {
+            return -1;
+        }
+        return 1;
+    }
+
+
+    //
+    // implements Observable
+    //
+
+    /**
+     * Implements multiple inheritance via delegate pattern to an inner class
+     */
+    private final Observable delegatedObservable = new DefaultObservable(this);
+
+    public final void addObserver(final Observer observer) {
+        delegatedObservable.addObserver(observer);
+    }
+
+    public final int countObservers() {
+        return delegatedObservable.countObservers();
+    }
+
+    public final void deleteObserver(final Observer observer) {
+        delegatedObservable.deleteObserver(observer);
+    }
+
+    public final void notifyObservers() {
+        delegatedObservable.notifyObservers();
+    }
+
+    public final void notifyObservers(final Object arg) {
+        delegatedObservable.notifyObservers(arg);
+    }
+
+    public final void deleteObservers() {
+        delegatedObservable.deleteObservers();
+    }
+
+    public final List<Observer> getObservers() {
+        return delegatedObservable.getObservers();
+    }
+
+
+    //
+    // Overrides Object
+    //
+
+    @Override
+    public int hashCode() {
+        return this.serialNumber;
+    }
+
+    @Override
+    public boolean equals(final Object anObject) {
+        if (anObject==null) {
+            return false;
+        }
+        if (!(anObject instanceof Date)) {
+            return false;
+        }
+        return eq((Date)anObject);
+    }
+
+    @Override
+    //-- std::ostream& operator<<(std::ostream&, const Date&);
+    public String toString() {
+        return longDate().toString();
+    }
+
+
+    //
+    // implements Cloneable
+    //
+
+    @Override
+    public Date clone() {
+        return new Date(serialNumber);
+    }
+
+
+
+    //
+    // public inner classes
+    //
+
+    private static final Statics statics = new Statics();
+
+    /**
+     * This class provides non-static methods which originally were
+     * declared static in QuantLib/C++
+     */
+    public static final class Statics {
+
+        private Statics() {
+            // outside world cannot instantiate
+        }
+
+        /**
+         * Today's date.
+         *
+         * @return a new instance
+         */
+        public final Date todaysDate() {
+            final java.util.Calendar cal = java.util.Calendar.getInstance();
+            final int d = cal.get(java.util.Calendar.DAY_OF_MONTH);
+            final int m = cal.get(java.util.Calendar.MONTH);
+            final int y = cal.get(java.util.Calendar.YEAR);
+            return new Date(d, m + 1, y);
+        }
+
+        /**
+         * Earliest allowed date
+         * 
+         * @return a new instance
+         */
+        public final Date minDate() {
+            return new Date(MinimumSerialNumber);
+        }
+
+        /**
+         * Latest allowed date
+         * 
+         * @return a new instance
+         */
+        public final Date maxDate() {
+            return new Date(MaximumSerialNumber);
+        }
+
+        /**
+         * Whether the given year is a leap one
+         * 
+         * @param y
+         * @return
+         */
+        public final boolean isLeap(final int y) {
+            return yearIsLeap[y - 1900];
+        }
+
+        /**
+         * Last day of the month to which the given date belongs
+         * 
+         * @return a new instance
+         */
+        public final Date endOfMonth(final Date d) {
+            final int m = d.month().value();
+            final int y = d.year();
+            return new Date(monthLength(m, isLeap(y)), m, y);
+        }
+
+        /**
+         * Whether a date is the last day of its month
+         * 
+         * @return
+         */
+        public final boolean isEndOfMonth(final Date d) {
+            return (d.dayOfMonth() == monthLength(d.month().value(), isLeap(d.year())));
+        }
+
+        /**
+         * Next given weekday following or equal to the given date
+         * <p>
+         * E.g., the Friday following Tuesday, January 15th, 2002 was January 18th, 2002.
+         * 
+         * @see http://www.cpearson.com/excel/DateTimeWS.htm
+         * 
+         * @return a new instance
+         */
+        public final Date nextWeekday(final Date d, final Weekday w) {
+            final int wd = d.weekday().value();
+            final int dow = w.value();
+            return new Date(d.serialNumber + (wd > dow ? 7 : 0) - wd + dow);
+        }
+
+        /**
+         * n-th given weekday in the given month and year
+         * <p>
+         * E.g., the 4th Thursday of March, 1998 was March 26th, 1998.
+         * 
+         * @see http://www.cpearson.com/excel/DateTimeWS.htm
+         * 
+         * @param n
+         * @param w
+         * @param m
+         * @param y
+         * 
+         * @return a new instance
+         */
+        public final Date nthWeekday(final int n, final Weekday w, final Month m, final int y) {
+            return nthWeekday(n, w, m.value(), y);
+        }
+
+        /**
+         * Returns a new Date which is the n-th week day of a certain month/year
+         * 
+         * @param nth is the desired week
+         * @param dayOfWeek is the desired week day
+         * @param month is the desired month
+         * @param year is the desired year
+         * 
+         * @return a new instance
+         */
+        public final Date nthWeekday(final int nth, final Weekday dayOfWeek, final int month, final int year) {
+            QL.require(nth > 0, "zeroth day of week in a given (month, year) is undefined"); // QA:[RG]::verified //TODO: message
+            QL.require(nth < 6, "no more than 5 weekday in a given (month, year)"); // QA:[RG]::verified //TODO: message
+            final int m = month;
+            final int y = year;
+            final int dow = dayOfWeek.value();
+            // FIXME: code review
+            final int first = new Date(1, m, y).weekday().value();
+            final int skip = nth - (dow >= first ? 1 : 0);
+            return new Date(1 + dow - first + skip * 7, m, y);
+        }
+
+    }
+
+
+    private final class LongDate {
+        @Override
+        public final String toString() {
+            if ( isNull() ) {
+                return "null date";
+            } else {
+                final StringBuilder sb = new StringBuilder();
+                final Formatter formatter = new Formatter(sb, Locale.US);
+                formatter.format("%s %d, %d", month(), dayOfMonth(), year());
+                return sb.toString();
+            }
+        }
+    }
+
+    private final class ShortDate {
+        @Override
+        public final String toString() {
+            if ( isNull() ) {
+                return "null date";
+            } else {
+                final StringBuilder sb = new StringBuilder();
+                final Formatter formatter = new Formatter(sb, Locale.US);
+                formatter.format("%02d/%02d/%4d", month().value(), dayOfMonth(), year());
+                return sb.toString();
+            }
+        }
+    }
+
+    private final class ISODate {
+        @Override
+        public final String toString() {
+            if ( isNull() ) {
+                return "null date";
+            } else {
+                final StringBuilder sb = new StringBuilder();
+                final Formatter formatter = new Formatter(sb, Locale.US);
+                formatter.format("%04d-%02d-%02d", year(), month().value(), dayOfMonth());
+                return sb.toString();
+            }
+        }
+    }
+
+
+
+    //
+    // private methods
+    //
+
+    private void checkSerialNumber() {
+        QL.ensure(serialNumber >= MinimumSerialNumber && serialNumber <= MaximumSerialNumber ,
+        "Date's serial number is outside allowed range"); // QA:[RG]::verified // TODO: message
+    }
+
+
+    private int advance(final Date date, final int n, final TimeUnit units) {
+        switch (units) {
+        case DAYS:
+            return (n+date.serialNumber);
+        case WEEKS:
+            return (7 * n + date.serialNumber);
+        case MONTHS: {
+            int d = date.dayOfMonth();
+            int m = date.month().value() + n;
+            int y = date.year();
+            while (m > 12) {
+                m -= 12;
+                y += 1;
+            }
+            while (m < 1) {
+                m += 12;
+                y -= 1;
+            }
+
+            QL.ensure(y >= 1900 && y <= 2099 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
+            final int length = monthLength(m, statics.isLeap(y));
+            if (d > length) {
+                d = length;
+            }
+            final int result = fromDMY(d, m, y);
+            //QL.debug("{}", result);
+            return result;
+        }
+        case YEARS: {
+            int d = date.dayOfMonth();
+            final int m = date.month().value();
+            final int y = date.year() + n;
+
+            QL.ensure(y >= 1900 && y <= 2099 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
+            if (d == 29 && m == Month.FEBRUARY.value() && !statics.isLeap(y)) {
+                d = 28;
+            }
+
+            final int result = fromDMY(d, m, y);
+            //QL.debug("{}", result);
+            return result;
+        }
+        default:
+            throw new LibraryException("undefined time units"); // QA:[RG]::verified // TODO: message
+        }
+    }
+
+
+    //
+    // protected methods
+    //
+    // These methods were not declared in QuantLib/C++
+    //
+
+
+    /**
+     * Assigns the today's date to this instance
+     * 
+     * @note Does not trigger notifications
+     * 
+     * @return this instance
+     * 
+     * @see DateProxy
+     */
+    //TODO: consider @PackagePrivate
+    protected final Date todaysDate() {
+        final java.util.Calendar cal = java.util.Calendar.getInstance();
+        final int d = cal.get(java.util.Calendar.DAY_OF_MONTH);
+        final int m = cal.get(java.util.Calendar.MONTH);
+        final int y = cal.get(java.util.Calendar.YEAR);
+        this.serialNumber = fromDMY(d, m, y);
+        return this;
+    }
+
+
+    /**
+     * Assigns a new serialNumber to this instance.
+     * 
+     * @note Does not trigger notifications
+     * 
+     * @return this instance
+     * 
+     * @see DateProxy
+     */
+    //TODO: consider @PackagePrivate
+    protected final Date assign(final int serialNumber) {
+        this.serialNumber = serialNumber;
+        return this;
+    }
+
+
+
+    //
+    // private static methods
+    //
+
+    /**
+     * This method is intended to calculate the integer value of a (day, month, year)
+     * 
+     * @param d is the day as a number
+     * @param m is the month as a number
+     * @param y is the year as a number
+     * @return
+     */
+    private static final int fromDMY(final int d, final int m, final int y) {
+        QL.require(y > 1900 && y < 2100 , "year out of bound. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
+        QL.require(m > 0 && m < 13 , "month outside January-December range [1,12]"); // QA:[RG]::verified // TODO: message
+        final boolean leap = statics.isLeap(y);
+        final int len = monthLength(m, leap);
+        final int offset = monthOffset(m, leap);
+        QL.ensure(d > 0 && d <= len , "day outside month day-range"); // QA:[RG]::verified // TODO: message
+        final int result = d + offset + yearOffset(y);
+        return result;
+    }
+
+    /**
+     * Returns the length of a certain month
+     * 
+     * @param m is the desired month, as a number
+     * @param leapYear if <code>true</code> means a leap year
+     * @return the length of a certain month
+     */
+    private static final int monthLength(final int m, final boolean leapYear) {
+        return (leapYear ? monthLeapLength[m - 1] : monthLength[m - 1]);
+    }
+
+    /**
+     * Returns the offset of a certain month
+     * 
+     * @param m is the desired month, as a number. If you specify 13, you will get the number of days of a year
+     * @param leapYear if <code>true</code> means a leap year
+     * @return the offset of a certain month or the length of an year
+     * @see DefaultDate#yearOffset
+     */
+    private static final int monthOffset(final int m, final boolean leapYear) {
+        return (leapYear ? monthLeapOffset[m - 1] : monthOffset[m - 1]);
+    }
+
+    /**
+     * Returns the offset of a certain year
+     *
+     * @param y
+     *            is the desired year
+     * @return the offset of a certain year
+     */
+    private static final int yearOffset(final int y) {
+        return yearOffset[y - 1900];
+    }
 
 }

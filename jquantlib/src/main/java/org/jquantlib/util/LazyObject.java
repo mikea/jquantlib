@@ -152,22 +152,24 @@ public abstract class LazyObject implements Observer, Observable {
     // implements Observer
     //
 
-    @Override
-    public void registerWith(final Observable o) {
-        o.addObserver(this);
-    }
-
-    @Override
-    public void unregisterWith(final Observable o) {
-        o.deleteObserver(this);
-    }
+    // XXX:registerWith
+    //    @Override
+    //    public void registerWith(final Observable o) {
+    //        o.addObserver(this);
+    //    }
+    //
+    //    @Override
+    //    public void unregisterWith(final Observable o) {
+    //        o.deleteObserver(this);
+    //    }
 
     public void update(final Observable o, final Object arg) {
         // observers don't expect notifications from frozen objects
         // LazyObject forwards notifications only once until it has been
         // recalculated
-        if (!frozen && calculated)
+        if (!frozen && calculated) {
             notifyObservers(arg);
+        }
         calculated = false;
     }
 

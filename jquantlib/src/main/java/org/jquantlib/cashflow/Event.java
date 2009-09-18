@@ -24,7 +24,6 @@ package org.jquantlib.cashflow;
 
 import java.util.List;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.util.Date;
@@ -47,139 +46,141 @@ public abstract class Event implements Observable, TypedVisitable<Object> {
     //
 
     /**
-	 * This private field is automatically initialized by constructor which
-	 * picks up it's value from {@link Settings} singleton. This procedure
-	 * caches values from the singleton, intending to avoid contention in
-	 * heavily multi-threaded environments.
-	 */
-	// TODO: make this property dynamically configurable
-	private final boolean todaysPayments = Configuration.getSystemConfiguration(null).getGlobalSettings().isTodaysPayments();;
+     * This private field is automatically initialized by constructor which
+     * picks up it's value from {@link Settings} singleton. This procedure
+     * caches values from the singleton, intending to avoid contention in
+     * heavily multi-threaded environments.
+     */
+    // TODO: make this property dynamically configurable
+    private final boolean todaysPayments = new Settings().isTodaysPayments();;
 
 
-	//
-	// protected constructors
-	//
+    //
+    // protected constructors
+    //
 
-	protected Event() {
-	    // only descendent classes can instantiate
-	}
-
-
-	//
-	// public abstract methods
-	//
-
-	/**
-	 * Keeps the date at which the event occurs
-	 */
-	public abstract Date date() /* @ReadOnly */;
+    protected Event() {
+        // only descendent classes can instantiate
+    }
 
 
-	//
-	// public methods
-	//
+    //
+    // public abstract methods
+    //
 
-	/**
-	 * Returns true if an event has already occurred before a date where the
-	 * current date may or may not be considered accordingly to defaults taken
-	 * from {@link Settings}
-	 *
-	 * @param d is a Date
-	 * @return true if an event has already occurred before a date
-	 *
-	 * @see Settings.todaysPayments
-	 * @see todaysPayments
-	 */
+    /**
+     * Keeps the date at which the event occurs
+     */
+    public abstract Date date() /* @ReadOnly */;
 
 
-	/**
-	 * Returns true if an event has already occurred before a date
-	 * <p>
+    //
+    // public methods
+    //
+
+    /**
+     * Returns true if an event has already occurred before a date where the
+     * current date may or may not be considered accordingly to defaults taken
+     * from {@link Settings}
+     *
+     * @param d is a Date
+     * @return true if an event has already occurred before a date
+     *
+     * @see Settings.todaysPayments
+     * @see todaysPayments
+     */
+
+
+    /**
+     * Returns true if an event has already occurred before a date
+     * <p>
      * If {@link Settings#isTodaysPayments()} is true, then a payment event has not
      * occurred if the input date is the same as the event date,
      * and so includeToday should be defaulted to true.
      * <p>
      * This should be the only place in the code that is affected
      * directly by {@link Settings#isTodaysPayments()}
-	 */
+     */
     public boolean hasOccurred(final Date d) /* @ReadOnly */ {
         return hasOccurred(d, todaysPayments);
     }
 
-	/**
-	 * Returns true if an event has already occurred before a date where it is
-	 * explicitly defined whether the current date must considered.
-	 *
-	 * @param d is a Date
-	 * @return true if an event has already occurred before a date
-	 */
-	public boolean hasOccurred(final Date d, final boolean includeToday) /* @ReadOnly */{
-		if (includeToday)
+    /**
+     * Returns true if an event has already occurred before a date where it is
+     * explicitly defined whether the current date must considered.
+     *
+     * @param d is a Date
+     * @return true if an event has already occurred before a date
+     */
+    public boolean hasOccurred(final Date d, final boolean includeToday) /* @ReadOnly */{
+        if (includeToday) {
             return date().compareTo(d) < 0;
-        else
+        } else {
             return date().compareTo(d) <= 0;
-	}
+        }
+    }
 
 
-	//
-	// implements Observable
-	//
+    //
+    // implements Observable
+    //
 
-	/**
-	 * Implements multiple inheritance via delegate pattern to an inner class
-	 *
-	 * @see Observable
-	 * @see DefaultObservable
-	 */
-	private final DefaultObservable delegatedObservable = new DefaultObservable(this);
-
-    @Override
-	public void addObserver(final Observer observer) {
-		delegatedObservable.addObserver(observer);
-	}
+    /**
+     * Implements multiple inheritance via delegate pattern to an inner class
+     *
+     * @see Observable
+     * @see DefaultObservable
+     */
+    private final DefaultObservable delegatedObservable = new DefaultObservable(this);
 
     @Override
-	public int countObservers() {
-		return delegatedObservable.countObservers();
-	}
+    public void addObserver(final Observer observer) {
+        delegatedObservable.addObserver(observer);
+    }
 
     @Override
-	public void deleteObserver(final Observer observer) {
-		delegatedObservable.deleteObserver(observer);
-	}
+    public int countObservers() {
+        return delegatedObservable.countObservers();
+    }
 
     @Override
-	public void notifyObservers() {
-		delegatedObservable.notifyObservers();
-	}
+    public void deleteObserver(final Observer observer) {
+        delegatedObservable.deleteObserver(observer);
+    }
 
     @Override
-	public void notifyObservers(final Object arg) {
-		delegatedObservable.notifyObservers(arg);
-	}
+    public void notifyObservers() {
+        delegatedObservable.notifyObservers();
+    }
 
-	@Override
-	public void deleteObservers() {
-		delegatedObservable.deleteObservers();
-	}
+    @Override
+    public void notifyObservers(final Object arg) {
+        delegatedObservable.notifyObservers(arg);
+    }
 
-	@Override
-	public List<Observer> getObservers() {
-		return delegatedObservable.getObservers();
-	}
+    @Override
+    public void deleteObservers() {
+        delegatedObservable.deleteObservers();
+    }
+
+    @Override
+    public List<Observer> getObservers() {
+        return delegatedObservable.getObservers();
+    }
 
 
-	//
-	// implements TypedVisitable
-	//
+    //
+    // implements TypedVisitable
+    //
 
-	@Override
-	public void accept(final TypedVisitor<Object> v) {
-		final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null)
+    @Override
+    public void accept(final TypedVisitor<Object> v) {
+        final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             throw new LibraryException("null event visitor"); // QA:[RG]::verified //TODO: message
-	}
+        }
+    }
 
 }

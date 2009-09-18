@@ -40,11 +40,12 @@ public class FixedRateLeg extends Leg {
         couponRates_ = new InterestRate[]{new InterestRate(couponRate, paymentDayCounter_, Compounding.SIMPLE)};
 
         //TODO: Code review :: incomplete code
-        if (true)
+        if (true) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
-//        couponRates_.clear();
-//        couponRates_.set(0, new InterestRate(couponRate, paymentDayCounter_, Compounding.SIMPLE));
+        //        couponRates_.clear();
+        //        couponRates_.set(0, new InterestRate(couponRate, paymentDayCounter_, Compounding.SIMPLE));
         return this;
     }
 
@@ -55,8 +56,9 @@ public class FixedRateLeg extends Leg {
 
     public FixedRateLeg withCouponRates(/* @Rate */final double [] couponRates) {
         couponRates_ = new InterestRate[couponRates.length];
-        for(int i = 0; i<couponRates.length; i++)
+        for(int i = 0; i<couponRates.length; i++) {
             couponRates_[i] = new InterestRate(couponRates[i], paymentDayCounter_, Compounding.SIMPLE);
+        }
         return this;
     }
 
@@ -95,7 +97,7 @@ public class FixedRateLeg extends Leg {
             QL.require(firstPeriodDayCounter_!=null && !firstPeriodDayCounter_.equals(paymentDayCounter_) , "regular first coupon does not allow a first-period day count"); // QA:[RG]::verified // TODO: message
             leg.add(new FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter_, start, end, start, end));
         } else {
-            Date ref = end.decrement(schedule_.tenor());
+            Date ref = end.sub(schedule_.tenor());
             ref = calendar.adjust(ref, schedule_.businessDayConvention());
             // FIXME: empty() method on dayCounter missing --> substituted by == null (probably incorrect)
             final DayCounter dc = (firstPeriodDayCounter_ == null) ? paymentDayCounter_ : firstPeriodDayCounter_;
@@ -106,14 +108,16 @@ public class FixedRateLeg extends Leg {
             start = end;
             end = schedule_.date(i);
             paymentDate = calendar.adjust(end, paymentAdjustment_);
-            if ((i - 1) < couponRates_.length)
+            if ((i - 1) < couponRates_.length) {
                 rate = couponRates_[i - 1];
-            else
+            } else {
                 rate = couponRates_[couponRates_.length - 1];
-            if ((i - 1) < notionals_.length)
+            }
+            if ((i - 1) < notionals_.length) {
                 nominal = notionals_[i - 1];
-            else
+            } else {
                 nominal = notionals_[notionals_.length - 1];
+            }
             leg.add(new FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter_, start, end, start, end));
         }
 
@@ -123,18 +127,20 @@ public class FixedRateLeg extends Leg {
             start = end;
             end = schedule_.date(N - 1);
             paymentDate = calendar.adjust(end, paymentAdjustment_);
-            if ((N - 2) < couponRates_.length)
+            if ((N - 2) < couponRates_.length) {
                 rate = couponRates_[N - 2];
-            else
+            } else {
                 rate = couponRates_[couponRates_.length - 1];
-            if ((N - 2) < notionals_.length)
+            }
+            if ((N - 2) < notionals_.length) {
                 nominal = notionals_[N - 2];
-            else
+            } else {
                 nominal = notionals_[notionals_.length - 1];
-            if (schedule_.isRegular(N - 1))
+            }
+            if (schedule_.isRegular(N - 1)) {
                 leg.add(new FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter_, start, end, start, end));
-            else {
-                Date ref = start.increment(schedule_.tenor());
+            } else {
+                Date ref = start.add(schedule_.tenor());
                 ref = calendar.adjust(ref, schedule_.businessDayConvention());
                 leg.add(new FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter_, start, end, start, ref));
             }

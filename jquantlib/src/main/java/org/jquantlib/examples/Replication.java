@@ -13,18 +13,17 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 /*  This example showcases the CompositeInstrument class. Such class
     is used to build a static replication of a down-and-out barrier
     option, as outlined in Section 10.2 of Mark Joshi's "The Concepts
     and Practice of Mathematical Finance" to which we refer the
     reader.
-*/
+ */
 
 package org.jquantlib.examples;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
@@ -43,49 +42,45 @@ import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 import org.jquantlib.util.StopClock;
 
 public class Replication {
-    
+
     public static String fmt = "%-45s %-15s %-15s\n";
-    
-    public static void main(String[] args) {
+
+    public static void main(final String[] args) {
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
         System.out.println("\n\n::::: "+Replication.class.getSimpleName()+" :::::");
-    
+
         try{
-            StopClock clock = new StopClock();
+            final StopClock clock = new StopClock();
             clock.startClock();
-            
-            Date today = DateFactory.getFactory().getDate(29, Month.MAY, 2006);
-            
-            //FIXME: throws nullpointer
-            Settings settings = Configuration.newConfiguration(null).newSettings();
-            settings.setEvaluationDate(today);
-            
+
+            final Date today = new Date(29, Month.MAY, 2006);
+            new Settings().setEvaluationDate(today);
+
             //the option to replicate
-            BarrierType barrierType = BarrierType.DownOut;
-            double barrier = 70.0;
-            double rebate = 0.0;
-            Option.Type type = Option.Type.PUT;
-            double underlyingValue = 100;
-            Handle<SimpleQuote> underlying = new Handle<SimpleQuote>(new SimpleQuote(underlyingValue));
-            
-            double strike = 100.0;
-            Handle<SimpleQuote> riskFreeRate = new Handle<SimpleQuote>(new SimpleQuote(0.04));
-            Handle<SimpleQuote> volatility = new Handle<SimpleQuote>(new SimpleQuote(0.20));
-            Date maturity = today.getDateAfter(Period.ONE_YEAR_FORWARD);
-            
+            final BarrierType barrierType = BarrierType.DownOut;
+            final double barrier = 70.0;
+            final double rebate = 0.0;
+            final Option.Type type = Option.Type.PUT;
+            final double underlyingValue = 100;
+            final Handle<SimpleQuote> underlying = new Handle<SimpleQuote>(new SimpleQuote(underlyingValue));
+
+            final double strike = 100.0;
+            final Handle<SimpleQuote> riskFreeRate = new Handle<SimpleQuote>(new SimpleQuote(0.04));
+            final Handle<SimpleQuote> volatility = new Handle<SimpleQuote>(new SimpleQuote(0.20));
+            final Date maturity = today.add(Period.ONE_YEAR_FORWARD);
+
             System.out.println("\n");
-            
+
             //write column headings - we don't need these values ...
-            int widths[] = {45, 15, 15};
-            int totalWidth = widths[0] + widths[1]+ widths[2];
-            
+            final int widths[] = {45, 15, 15};
+            final int totalWidth = widths[0] + widths[1]+ widths[2];
+
             System.out.println("Initial Market conditions");
             System.out.printf(fmt, "Option", "NPV", "Error");
             /*
@@ -102,30 +97,30 @@ public class Replication {
                   << std::endl;
             std::cout << rule << std::endl;
              */
-            
+
             //bootstrap the yield/vol curves
-            DayCounter dayCounter = Actual365Fixed.getDayCounter();
-            Handle<Quote> h1 = new Handle<Quote>(riskFreeRate.getLink());
-            Handle<Quote> h2 = new Handle<Quote>(volatility.getLink());
-            Handle<YieldTermStructure> flatRate = new Handle<YieldTermStructure>(new FlatForward(0, new NullCalendar(), h1, dayCounter));
-            Handle<BlackConstantVol> flatVol = new Handle<BlackConstantVol>(new BlackConstantVol(0, new NullCalendar(), h2, dayCounter));
-            
+            final DayCounter dayCounter = Actual365Fixed.getDayCounter();
+            final Handle<Quote> h1 = new Handle<Quote>(riskFreeRate.getLink());
+            final Handle<Quote> h2 = new Handle<Quote>(volatility.getLink());
+            final Handle<YieldTermStructure> flatRate = new Handle<YieldTermStructure>(new FlatForward(0, new NullCalendar(), h1, dayCounter));
+            final Handle<BlackConstantVol> flatVol = new Handle<BlackConstantVol>(new BlackConstantVol(0, new NullCalendar(), h2, dayCounter));
+
             //instantiate the option
-            Exercise exercise = new EuropeanExercise(maturity);
-            Payoff payoff = new PlainVanillaPayoff(type, strike);
-            
+            final Exercise exercise = new EuropeanExercise(maturity);
+            final Payoff payoff = new PlainVanillaPayoff(type, strike);
+
             //FIXME:Review BlackScholes, GeneralizedBlackScholesStochasticProcess
             //Handle<StochasticProcess> stochasticProcess = new Handle<StochasticProcess>(new GeneralizedBlackScholesProcess(underlying, flatRate, flatVol));
-            
-            
+
+
         }
-        
-        catch(Exception ex){
+
+        catch(final Exception ex){
             ex.printStackTrace();
         }
         finally{
-            
+
         }
 
-}
+    }
 }

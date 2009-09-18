@@ -23,8 +23,8 @@
 
 package org.jquantlib.cashflow;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.quotes.Handle;
@@ -107,8 +107,9 @@ public class FloatingRateCoupon extends Coupon implements Observer {
             final boolean isInArrears) {
         super(nominal, paymentDate, startDate, endDate, refPeriodStart, refPeriodEnd);
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         // TODO: code review :: please verify against QL/C++ code
         QL.require(gearing > 0 , null_gearing); // QA:[RG]::verified
@@ -119,15 +120,22 @@ public class FloatingRateCoupon extends Coupon implements Observer {
         this.spread = spread;
         this.isInArrears = isInArrears;
 
-        if (dayCounter != null)
+        if (dayCounter != null) {
             this.dayCounter = dayCounter;
-        else
+        } else {
             this.dayCounter = index_.dayCounter();
+        }
 
-        final Date evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        final Date evaluationDate = new Settings().getEvaluationDate();
 
-        registerWith(this.index_);
-        registerWith(evaluationDate);
+        // TODO: code review :: please verify against QL/C++ code
+        // seems like we should have this.evaluationDate
+
+        this.index_.addObserver(this);
+        evaluationDate.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.index_);
+        //registerWith(evaluationDate);
     }
 
 
@@ -135,13 +143,19 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     // public methods
     //
 
-// TODO: code review :: please verify against QL/C++ code
+    // TODO: code review :: please verify against QL/C++ code
     public void setPricer(final FloatingRateCouponPricer pricer){
         QL.require(pricer != null , no_adequate_pricer_given);
 
-        if (this.pricer != null) unregisterWith(this.pricer);
+        if (this.pricer != null) {
+            this.pricer.deleteObserver(this);
+            //XXX:registerWith
+            //unregisterWith(this.pricer);
+        }
         this.pricer = pricer;
-        registerWith(this.pricer);
+        this.pricer.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.pricer);
         update();
     }
 
@@ -232,15 +246,16 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     // implements Observer
     //
 
-    @Override
-    public void registerWith(final Observable o) {
-        o.addObserver(this);
-    }
-
-    @Override
-    public void unregisterWith(final Observable o) {
-        o.deleteObserver(this);
-    }
+    //XXX:registerWith
+    //    @Override
+    //    public void registerWith(final Observable o) {
+    //        o.addObserver(this);
+    //    }
+    //
+    //    @Override
+    //    public void unregisterWith(final Observable o) {
+    //        o.deleteObserver(this);
+    //    }
 
     @Override
     public void update(final Observable o, final Object arg) {
@@ -255,10 +270,11 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     @Override
     public void accept(final TypedVisitor<Object> v) {
         final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null)
+        if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             super.accept(v);
+        }
     }
 
 }

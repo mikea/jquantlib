@@ -116,10 +116,10 @@ public class China extends DelegateCalendar {
 
         @Override
         public final boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth();
-            final Month m = date.getMonthEnum();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth();
+            final Month m = date.month();
+            final int y = date.year();
 
             if (isWeekend(w)
                     // New Year's Day

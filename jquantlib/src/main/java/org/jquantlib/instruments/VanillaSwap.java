@@ -83,19 +83,22 @@ public class VanillaSwap extends Swap {
         this.paymentConvention = paymentConvention;
 
         final Leg fixedLeg = new FixedRateLeg(fixedSchedule, fixedDayCount)
-            .withNotionals(nominal)
-            .withCouponRates(fixedRate)
-            .withPaymentAdjustment(paymentConvention).Leg();
+        .withNotionals(nominal)
+        .withCouponRates(fixedRate)
+        .withPaymentAdjustment(paymentConvention).Leg();
 
         final Leg floatingLeg = new IborLeg(floatingSchedule, iborIndex)
-            .withNotionals(nominal)
-            .withPaymentDayCounter(floatingDayCount)
-            .withPaymentAdjustment(paymentConvention)
-            .withFixingDays(iborIndex.fixingDays())   // TODO: code review :: please verify against QL/C++ code
-            .withSpreads(spread).Leg();
+        .withNotionals(nominal)
+        .withPaymentDayCounter(floatingDayCount)
+        .withPaymentAdjustment(paymentConvention)
+        .withFixingDays(iborIndex.fixingDays())   // TODO: code review :: please verify against QL/C++ code
+        .withSpreads(spread).Leg();
 
-        for (final CashFlow item : floatingLeg)
-            registerWith(item);
+        for (final CashFlow item : floatingLeg) {
+            item.addObserver(this);
+            //XXX:registerWith
+            //registerWith(item);
+        }
 
         super.legs.add(fixedLeg);
         super.legs.add(floatingLeg);
@@ -166,7 +169,9 @@ public class VanillaSwap extends Swap {
     @Override
     public void setupArguments(final Arguments args) /* @ReadOnly */ {
         super.setupArguments(args);
-        if (!args.getClass().isAssignableFrom(VanillaSwapArguments.class)) return;
+        if (!args.getClass().isAssignableFrom(VanillaSwapArguments.class)) {
+            return;
+        }
 
         final VanillaSwapArguments arguments = (VanillaSwapArguments) args;
 
@@ -226,14 +231,18 @@ public class VanillaSwap extends Swap {
             fairSpread = Constants.NULL_REAL;
         }
 
-        if (Double.isNaN(fairRate))
+        if (Double.isNaN(fairRate)) {
             // calculate it from other results
-            if (!Double.isNaN(legBPS[0]))
+            if (!Double.isNaN(legBPS[0])) {
                 fairRate = fixedRate- NPV/(legBPS[0]/basisPoint);
-        if (Double.isNaN(fairSpread))
+            }
+        }
+        if (Double.isNaN(fairSpread)) {
             // ditto
-            if (!Double.isNaN(legBPS[1]))
+            if (!Double.isNaN(legBPS[1])) {
                 fairSpread = spread - NPV/(legBPS[1]/basisPoint);
+            }
+        }
     }
 
 

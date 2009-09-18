@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,12 +35,12 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.examples;
 
 
-import org.jquantlib.Configuration;
+import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.AmericanExercise;
@@ -76,7 +76,6 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 import org.jquantlib.util.StopClock;
 
@@ -89,41 +88,41 @@ import org.jquantlib.util.StopClock;
  */
 public class EquityOptions {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
+    /**
+     * @param args
+     */
+    public static void main(final String[] args) {
 
-		System.out.println("\n\n::::: "+EquityOptions.class.getSimpleName()+" :::::");
+        System.out.println("\n\n::::: "+EquityOptions.class.getSimpleName()+" :::::");
 
-		StopClock clock = new StopClock();
-		clock.startClock();
+        final StopClock clock = new StopClock();
+        clock.startClock();
 
-		Option.Type type = Option.Type.PUT;
-		double strike = 40.0;
-		double underlying = 36.0;
-		/*@Rate*/double riskFreeRate = 0.06;
-		double volatility = 0.2;
-		double dividendYield = 0.00;
+        final Option.Type type = Option.Type.PUT;
+        final double strike = 40.0;
+        final double underlying = 36.0;
+        /*@Rate*/final double riskFreeRate = 0.06;
+        final double volatility = 0.2;
+        final double dividendYield = 0.00;
 
-		Date todaysDate = DateFactory.getFactory().getDate(15, Month.MAY, 1998);
-		Date settlementDate = DateFactory.getFactory().getDate(17, Month.MAY, 1998);
-		Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(todaysDate);
+        final Date todaysDate = new Date(15, Month.MAY, 1998);
+        final Date settlementDate = new Date(17, Month.MAY, 1998);
+        new Settings().setEvaluationDate(todaysDate);
 
-		Date maturity = DateFactory.getFactory().getDate(17, Month.MAY, 1999);
-		DayCounter dayCounter = Actual365Fixed.getDayCounter();
+        final Date maturity = new Date(17, Month.MAY, 1999);
+        final DayCounter dayCounter = Actual365Fixed.getDayCounter();
 
-		// write column headings
-		//                 "         1         2         3         4         5         6         7         8"
-		//                 "12345678901234567890123456789012345678901234567890123456789012345678901234567890"
-		System.out.println("                            Method      European      Bermudan      American");
-		System.out.println("================================== ============= ============= =============");
+        // write column headings
+        //                 "         1         2         3         4         5         6         7         8"
+        //                 "12345678901234567890123456789012345678901234567890123456789012345678901234567890"
+        System.out.println("                            Method      European      Bermudan      American");
+        System.out.println("================================== ============= ============= =============");
 
-		// Define exercise for European Options
-		Exercise europeanExercise = new EuropeanExercise(maturity);
+        // Define exercise for European Options
+        final Exercise europeanExercise = new EuropeanExercise(maturity);
 
-		// Define exercise for Bermudan Options
-		/*
+        // Define exercise for Bermudan Options
+        /*
 		int bermudanForwards = 4;
 		Date[] exerciseDates = new Date[bermudanForwards];
 		for (int i = 1; i < bermudanForwards; i++) {
@@ -131,44 +130,44 @@ public class EquityOptions {
 		        exerciseDates[i] = forward;
 		    }
 	    Exercise bermudanExercise = new BermudanExercise(exerciseDates);
-	    */
+         */
 
-		// Define exercise for American Options
-		Exercise americanExercise = new AmericanExercise(settlementDate, maturity);
+        // Define exercise for American Options
+        final Exercise americanExercise = new AmericanExercise(settlementDate, maturity);
 
-		// bootstrap the yield/dividend/volatility curves
-        Handle<Quote> underlyingH = new Handle<Quote>(new SimpleQuote(underlying));
-        Handle<YieldTermStructure> flatDividendTS = new Handle<YieldTermStructure>(new FlatForward(settlementDate, dividendYield, dayCounter));
-        Handle<YieldTermStructure> flatTermStructure = new Handle<YieldTermStructure>(new FlatForward(settlementDate, riskFreeRate, dayCounter));
-        Handle<BlackVolTermStructure> flatVolTS = new Handle<BlackVolTermStructure>(new BlackConstantVol(settlementDate, volatility, dayCounter));
+        // bootstrap the yield/dividend/volatility curves
+        final Handle<Quote> underlyingH = new Handle<Quote>(new SimpleQuote(underlying));
+        final Handle<YieldTermStructure> flatDividendTS = new Handle<YieldTermStructure>(new FlatForward(settlementDate, dividendYield, dayCounter));
+        final Handle<YieldTermStructure> flatTermStructure = new Handle<YieldTermStructure>(new FlatForward(settlementDate, riskFreeRate, dayCounter));
+        final Handle<BlackVolTermStructure> flatVolTS = new Handle<BlackVolTermStructure>(new BlackConstantVol(settlementDate, volatility, dayCounter));
 
-		Payoff payoff = new PlainVanillaPayoff(type, strike);
-		StochasticProcess stochasticProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
+        final Payoff payoff = new PlainVanillaPayoff(type, strike);
+        final StochasticProcess stochasticProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
 
-		// European Options
-		VanillaOption europeanOption = new EuropeanOption(stochasticProcess, payoff, europeanExercise);
-		
+        // European Options
+        final VanillaOption europeanOption = new EuropeanOption(stochasticProcess, payoff, europeanExercise);
+
         // Bermundan options (can be thought as a collection of European Options)
-		//VanillaOption bermudanOption = new VanillaOption(stochasticProcess,payoff, bermudanExercise, null);
-		
-		// American Options
-		// FIXME: see http://bugs.jquantlib.org/view.php?id=202
-		VanillaOption americanOption = new VanillaOption(stochasticProcess, payoff, americanExercise, null);
+        //VanillaOption bermudanOption = new VanillaOption(stochasticProcess,payoff, bermudanExercise, null);
 
-		// define line formatting
-		//              "         0         1         2         3         4         5         6         7         8"
-		//              "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
-		//              "Method                                       European      Bermudan      American      ";
-		//              "12345678901234567890123456789012345678901234 123.567890123 123.567890123 123.567890123";
-		String fmt    = "%34s %13.9f %13.9f %13.9f\n";
-		String fmttbd = "%34s %13.9f %13.9f %13.9f  (TO BE DONE)\n";
+        // American Options
+        // FIXME: see http://bugs.jquantlib.org/view.php?id=202
+        final VanillaOption americanOption = new VanillaOption(stochasticProcess, payoff, americanExercise, null);
 
-		// Analytic formulas:
+        // define line formatting
+        //              "         0         1         2         3         4         5         6         7         8"
+        //              "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
+        //              "Method                                       European      Bermudan      American      ";
+        //              "12345678901234567890123456789012345678901234 123.567890123 123.567890123 123.567890123";
+        final String fmt    = "%34s %13.9f %13.9f %13.9f\n";
+        final String fmttbd = "%34s %13.9f %13.9f %13.9f  (TO BE DONE)\n";
 
-		// Black-Scholes for European
-		String method = "Black-Scholes";
-		europeanOption.setPricingEngine(new AnalyticEuropeanEngine());
-		System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, Double.NaN });
+        // Analytic formulas:
+
+        // Black-Scholes for European
+        String method = "Black-Scholes";
+        europeanOption.setPricingEngine(new AnalyticEuropeanEngine());
+        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, Double.NaN });
 
         // Barone-Adesi and Whaley approximation for American
         method = "Barone-Adesi/Whaley";
@@ -184,14 +183,14 @@ public class EquityOptions {
         method = "Ju Quadratic";
         americanOption.setPricingEngine(new JuQuadraticApproximationEngine());
         System.out.printf(fmt, new Object[] { method, Double.NaN, Double.NaN, americanOption.getNPV() } );
-        
+
         // Integral
         method = "Integral";
         europeanOption.setPricingEngine(new IntegralEngine());
-		System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, Double.NaN });
+        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, Double.NaN });
 
         int timeSteps = 801;
-        
+
         // Binomial method
         method = "Binomial Jarrow-Rudd";
         //XXX System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
@@ -253,58 +252,58 @@ public class EquityOptions {
         //
         //
         //
-        
+
         // Finite differences
         method = "Finite differences";
         europeanOption.setPricingEngine(new FDEuropeanEngine((BlackScholesMertonProcess)stochasticProcess, timeSteps, timeSteps-1, false));
         //TODO: bermudanOption.setPricingEngine(new FDBermudanEngine(timeSteps,timeSteps-1));
         americanOption.setPricingEngine(new FDAmericanEngine((BlackScholesMertonProcess)stochasticProcess,timeSteps,timeSteps-1, false));
         System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() });
-        
+
         //
         //
         //
-        
-        
+
+
         // Monte Carlo Method
         timeSteps = 1;
-        int mcSeed = 42;
-        int nSamples = 32768; // 2^15
-        int maxSamples = 1048576; // 2^20
-        
+        final int mcSeed = 42;
+        final int nSamples = 32768; // 2^15
+        final int maxSamples = 1048576; // 2^20
+
         method = "Monte Carlo (crude)";
         System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-// ========================================================================================
-//        europeanOption.setPricingEngine(
-//            new MCEuropeanEngine(
-//                "PseudoRandom", timeSteps, 252,
-//                false, false, false,
-//                nSamples, 0.02, maxSamples, mcSeed));
-//        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
-// ========================================================================================
+        // ========================================================================================
+        //        europeanOption.setPricingEngine(
+        //            new MCEuropeanEngine(
+        //                "PseudoRandom", timeSteps, 252,
+        //                false, false, false,
+        //                nSamples, 0.02, maxSamples, mcSeed));
+        //        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
+        // ========================================================================================
 
         method = "Monte Carlo (Sobol)";
         System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        europeanOption.setPricingEngine(
-//            new MCEuropeanEngine(
-//                "LowDiscrepancy", timeSteps, 252,
-//                false, false, false,
-//                nSamples, 0.02, maxSamples, mcSeed));
-//        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
-//
+        //        europeanOption.setPricingEngine(
+        //            new MCEuropeanEngine(
+        //                "LowDiscrepancy", timeSteps, 252,
+        //                false, false, false,
+        //                nSamples, 0.02, maxSamples, mcSeed));
+        //        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
+        //
 
         method = "Monte Carlo (Longstaff Schwartz)";
         System.out.printf(fmttbd, new Object[] { method, Double.NaN, Double.NaN, Double.NaN });
-//        MakeMCAmericanEngine<PseudoRandom>().withSteps(100)
-//            .withAntitheticVariate()
-//            .withCalibrationSamples(4096)
-//            .withTolerance(0.02)
-// .           withSeed(mcSeed);
-//        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
+        //        MakeMCAmericanEngine<PseudoRandom>().withSteps(100)
+        //            .withAntitheticVariate()
+        //            .withCalibrationSamples(4096)
+        //            .withTolerance(0.02)
+        // .           withSeed(mcSeed);
+        //        System.out.printf(fmt, method, europeanOption.NPV(), Double.NaN, Double.NaN);
 
-		clock.stopClock();
-		clock.log();
+        clock.stopClock();
+        clock.log();
 
-	}
+    }
 
 }

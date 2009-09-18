@@ -22,10 +22,10 @@
 
 package org.jquantlib.testsuite.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.DateParser;
 import org.junit.After;
 import org.junit.Before;
@@ -38,41 +38,39 @@ import org.junit.Test;
  * 
  */
 public class DateParserTest {
-	
-	DateFactory df = DateFactory.getFactory();
-	
-	@Before
-	public void setUp() throws Exception {
-	}
 
-	@After
-	public void tearDown() throws Exception {
-	}
+    @Before
+    public void setUp() throws Exception {
+    }
 
-	@Test
-	public void testParseISO() {
-		String dtStr =  "2009-09-05";
-		
-		Date expectedDt = df.getDate(05,9,2009);
-		Date unExpectedDt = df.getDate(05,9,2008);
-		
-		Date parsedDt = DateParser.parseISO(dtStr);
-		assertTrue(expectedDt.eq(parsedDt));
-		assertFalse(unExpectedDt.eq(parsedDt));
-	}
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	@Test
-	public void testParse() {
-		String dtStr =  "2009/09/05";
-		String fmtStr = "yyyy/MM/dd";
-		
-		Date expectedDt = df.getDate(05,9,2009);
-		Date unExpectedDt = df.getDate(05,9,2008);
-		
-		Date parsedDt = DateParser.parse(dtStr, fmtStr);
-		assertTrue(expectedDt.eq(parsedDt));
-		assertFalse(unExpectedDt.eq(parsedDt));
-		
-	}
+    @Test
+    public void testParseISO() {
+        final String dtStr =  "2009-09-05";
+
+        final Date expectedDt = new Date(05,9,2009);
+        final Date unExpectedDt = new Date(05,9,2008);
+
+        final Date parsedDt = DateParser.parseISO(dtStr);
+        assertTrue(expectedDt.eq(parsedDt));
+        assertFalse(unExpectedDt.eq(parsedDt));
+    }
+
+    @Test
+    public void testParse() {
+        final String dtStr =  "2009/09/05";
+        final String fmtStr = "yyyy/MM/dd";
+
+        final Date expectedDt = new Date(05,9,2009);
+        final Date unExpectedDt = new Date(05,9,2008);
+
+        final Date parsedDt = DateParser.parse(dtStr, fmtStr);
+        assertTrue(expectedDt.eq(parsedDt));
+        assertFalse(unExpectedDt.eq(parsedDt));
+
+    }
 
 }

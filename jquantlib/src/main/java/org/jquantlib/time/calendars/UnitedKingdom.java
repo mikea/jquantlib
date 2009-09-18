@@ -147,38 +147,38 @@ public class UnitedKingdom extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            final int m = date.getMonth();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final int m = date.month().value();
+            final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
                     // New Year's Day (possibly moved to Monday)
                     || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .toInteger())
+                            .value())
                             // Good Friday
                             || (dd == em - 3)
                             // Easter Monday
                             || (dd == em)
                             // first Monday of May (Early May Bank Holiday)
-                            || (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
+                            || (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.value())
                             // last Monday of May (Spring Bank Holiday)
                             || (d >= 25 && w == Weekday.MONDAY
-                                    && m == Month.MAY.toInteger() && y != 2002)
+                                    && m == Month.MAY.value() && y != 2002)
                                     // last Monday of August (Summer Bank Holiday)
                                     || (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST
-                                            .toInteger())
+                                            .value())
                                             // Christmas (possibly moved to Monday or Tuesday)
                                             || ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-                                                    .toInteger())
+                                                    .value())
                                                     // Boxing Day (possibly moved to Monday or Tuesday)
                                                     || ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-                                                            .toInteger())
+                                                            .value())
                                                             // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
                                                             // June 4rd, 2002 only (special Spring Bank Holiday)
-                                                            || ((d == 3 || d == 4) && m == Month.JUNE.toInteger() && y == 2002)
+                                                            || ((d == 3 || d == 4) && m == Month.JUNE.value() && y == 2002)
                                                             // December 31st, 1999 only
-                                                            || (d == 31 && m == Month.DECEMBER.toInteger() && y == 1999))
+                                                            || (d == 31 && m == Month.DECEMBER.value() && y == 1999))
                 return false;
             return true;
         }
@@ -192,38 +192,38 @@ public class UnitedKingdom extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            final int m = date.getMonth();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final int m = date.month().value();
+            final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
                     // New Year's Day (possibly moved to Monday)
                     || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .toInteger())
+                            .value())
                             // Good Friday
                             || (dd == em - 3)
                             // Easter Monday
                             || (dd == em)
                             // first Monday of May (Early May Bank Holiday)
-                            || (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
+                            || (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.value())
                             // last Monday of May (Spring Bank Holiday)
                             || (d >= 25 && w == Weekday.MONDAY
-                                    && m == Month.MAY.toInteger() && y != 2002)
+                                    && m == Month.MAY.value() && y != 2002)
                                     // last Monday of August (Summer Bank Holiday)
                                     || (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST
-                                            .toInteger())
+                                            .value())
                                             // Christmas (possibly moved to Monday or Tuesday)
                                             || ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-                                                    .toInteger())
+                                                    .value())
                                                     // Boxing Day (possibly moved to Monday or Tuesday)
                                                     || ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-                                                            .toInteger())
+                                                            .value())
                                                             // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
                                                             // June 4rd, 2002 only (special Spring Bank Holiday)
-                                                            || ((d == 3 || d == 4) && m == Month.JUNE.toInteger() && y == 2002)
+                                                            || ((d == 3 || d == 4) && m == Month.JUNE.value() && y == 2002)
                                                             // December 31st, 1999 only
-                                                            || (d == 31 && m == Month.DECEMBER.toInteger() && y == 1999))
+                                                            || (d == 31 && m == Month.DECEMBER.value() && y == 1999))
                 return false;
             return true;
         }
@@ -237,38 +237,38 @@ public class UnitedKingdom extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            final int m = date.getMonth();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final int m = date.month().value();
+            final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
                     // New Year's Day (possibly moved to Monday)
                     || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .toInteger())
+                            .value())
                             // Good Friday
                             || (dd == em - 3)
                             // Easter Monday
                             || (dd == em)
                             // first Monday of May (Early May Bank Holiday)
-                            || (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.toInteger())
+                            || (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.value())
                             // last Monday of May (Spring Bank Holiday)
                             || (d >= 25 && w == Weekday.MONDAY
-                                    && m == Month.MAY.toInteger() && y != 2002)
+                                    && m == Month.MAY.value() && y != 2002)
                                     // last Monday of August (Summer Bank Holiday)
                                     || (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST
-                                            .toInteger())
+                                            .value())
                                             // Christmas (possibly moved to Monday or Tuesday)
                                             || ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-                                                    .toInteger())
+                                                    .value())
                                                     // Boxing Day (possibly moved to Monday or Tuesday)
                                                     || ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-                                                            .toInteger())
+                                                            .value())
                                                             // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
                                                             // June 4rd, 2002 only (special Spring Bank Holiday)
-                                                            || ((d == 3 || d == 4) && m == Month.JUNE.toInteger() && y == 2002)
+                                                            || ((d == 3 || d == 4) && m == Month.JUNE.value() && y == 2002)
                                                             // December 31st, 1999 only
-                                                            || (d == 31 && m == Month.DECEMBER.toInteger() && y == 1999))
+                                                            || (d == 31 && m == Month.DECEMBER.value() && y == 1999))
                 return false;
             return true;
         }

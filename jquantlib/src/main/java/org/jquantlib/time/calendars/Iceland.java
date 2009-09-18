@@ -82,15 +82,15 @@ public class Iceland extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
+            final Weekday w = date.weekday();
 
-            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            final int m = date.getMonth();
-            final int y = date.getYear();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final int m = date.month().value();
+            final int y = date.year();
             final int em = easterMonday(y);
             if(isWeekend(w)
                     // New Year's Day (possibly moved to Monday)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY.toInteger())
+                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY.value())
                     // Holy Thursday
                     || (dd == em-4)
                     // Good Friday
@@ -98,21 +98,21 @@ public class Iceland extends DelegateCalendar {
                     // Easter Monday
                     || (dd == em)
                     // First day of Summer
-                    || (d >= 19 && d <= 25 && w == Weekday.THURSDAY && m == Month.APRIL.toInteger())
+                    || (d >= 19 && d <= 25 && w == Weekday.THURSDAY && m == Month.APRIL.value())
                     // Ascension Thursday
                     || (dd == em+38)
                     // Pentecost Monday
                     || (dd == em+49)
                     // Labour Day
-                    || (d == 1 && m == Month.MAY.toInteger())
+                    || (d == 1 && m == Month.MAY.value())
                     // Independence Day
-                    || (d == 17 && m == Month.JUNE.toInteger())
+                    || (d == 17 && m == Month.JUNE.value())
                     // Commerce Day
-                    || (d <= 7 && w == Weekday.MONDAY && m == Month.AUGUST.toInteger())
+                    || (d <= 7 && w == Weekday.MONDAY && m == Month.AUGUST.value())
                     // Christmas
-                    || (d == 25 && m == Month.DECEMBER.toInteger())
+                    || (d == 25 && m == Month.DECEMBER.value())
                     // Boxing Day
-                    || (d == 26 && m == Month.DECEMBER.toInteger()))
+                    || (d == 26 && m == Month.DECEMBER.value()))
 
                 return false;
 

@@ -80,10 +80,16 @@ public class LocalVolSurface extends LocalVolTermStructure {
         this.dividendTS_ = dividendTS;
         this.underlying_ = underlying;
 
-        registerWith(this.blackTS_);
-        registerWith(this.riskFreeTS_);
-        registerWith(this.dividendTS_);
-        registerWith(this.underlying_);
+
+        this.blackTS_.addObserver(this);
+        this.riskFreeTS_.addObserver(this);
+        this.dividendTS_.addObserver(this);
+        this.underlying_.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.blackTS_);
+        //registerWith(this.riskFreeTS_);
+        //registerWith(this.dividendTS_);
+        //registerWith(this.underlying_);
     }
 
     public LocalVolSurface(
@@ -97,9 +103,13 @@ public class LocalVolSurface extends LocalVolTermStructure {
         this.dividendTS_ = dividendTS;
         this.underlying_ = new Handle<Quote>(new SimpleQuote(underlying));
 
-        registerWith(this.blackTS_);
-        registerWith(this.riskFreeTS_);
-        registerWith(this.dividendTS_);
+        this.blackTS_.addObserver(this);
+        this.riskFreeTS_.addObserver(this);
+        this.dividendTS_.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.blackTS_);
+        //registerWith(this.riskFreeTS_);
+        //registerWith(this.dividendTS_);
     }
 
 
@@ -178,9 +188,9 @@ public class LocalVolSurface extends LocalVolTermStructure {
             dwdt = (wpt - wmt) / (2.0 * dt);
         }
 
-        if (dwdy == 0.0 && d2wdy2 == 0.0)
+        if (dwdy == 0.0 && d2wdy2 == 0.0) {
             return Math.sqrt(dwdt);
-        else {
+        } else {
             final double den1 = 1.0 - y / w * dwdy;
             final double den2 = 0.25 * (-0.25 - 1.0 / w + y * y / w / w) * dwdy * dwdy;
             final double den3 = 0.5 * d2wdy2;
@@ -205,10 +215,11 @@ public class LocalVolSurface extends LocalVolTermStructure {
     @Override
     public void accept(final TypedVisitor<TermStructure> v) {
         final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null)
+        if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             super.accept(v);
+        }
     }
 
 }

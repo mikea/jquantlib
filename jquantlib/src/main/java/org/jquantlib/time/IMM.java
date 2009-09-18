@@ -42,11 +42,9 @@
 
 package org.jquantlib.time;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 
 /**
@@ -59,40 +57,6 @@ import org.jquantlib.util.Month;
  */
 //TODO: Improve comments
 public class IMM {
-    /**
-     * @see <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The "Double-Checked Locking is Broken" Declaration </a>
-     */
-    private static volatile IMM DEFAULT_IMM;
-
-    private final Configuration configuration;
-    private final Settings settings;
-
-    /**
-     * To create a IMM with user Settings and Configuration
-     *
-     * @param config
-     * @param settings
-     */
-    // TODO: code review
-    public IMM(final Configuration config, final Settings settings){
-        this.configuration = config;
-        this.settings = settings;
-    }
-
-    /**
-     * Returns IMM with Global Configuration and Settings
-     * @return
-     */
-    public static IMM getDefaultIMM(){
-        if (DEFAULT_IMM == null)
-            synchronized (IMM.class) {
-                if (DEFAULT_IMM == null)
-                    DEFAULT_IMM = new IMM(
-                            Configuration.getSystemConfiguration(null),
-                            Configuration.getSystemConfiguration(null).getGlobalSettings());
-            }
-        return DEFAULT_IMM;
-    }
 
     /**
      * Checks if Date is an IMM date or not
@@ -113,16 +77,20 @@ public class IMM {
      * @return
      */
     public boolean isIMMdate(final Date date, final boolean mainCycle) {
-        if (date.getWeekday()!=Weekday.WEDNESDAY)
+        if (date.weekday()!=Weekday.WEDNESDAY) {
             return false;
+        }
 
-        final int d = date.getDayOfMonth();
-        if (d<15 || d>21)
+        final int d = date.dayOfMonth();
+        if (d<15 || d>21) {
             return false;
+        }
 
-        if (!mainCycle) return true;
+        if (!mainCycle) {
+            return true;
+        }
 
-        final Month m = date.getMonthEnum();
+        final Month m = date.month();
         return (m==Month.MARCH || m==Month.JUNE || m==Month.SEPTEMBER || m==Month.DECEMBER);
     }
 
@@ -145,18 +113,24 @@ public class IMM {
      * @return
      */
     public boolean isIMMcode(final String in, final boolean mainCycle) {
-        if (in.length() != 2)
+        if (in.length() != 2) {
             return false;
+        }
 
-        if ("0123456789".indexOf(in.charAt(1))==-1)
+        if ("0123456789".indexOf(in.charAt(1))==-1) {
             return false;
+        }
 
         String str1;
-        if (mainCycle) str1 = "hmzuHMZU";
-        else           str1 = "fghjkmnquvxzFGHJKMNQUVXZ";
+        if (mainCycle) {
+            str1 = "hmzuHMZU";
+        } else {
+            str1 = "fghjkmnquvxzFGHJKMNQUVXZ";
+        }
 
-        if (str1.indexOf(in.charAt(0))==-1)
+        if (str1.indexOf(in.charAt(0))==-1) {
             return false;
+        }
 
         return true;
     }
@@ -168,7 +142,7 @@ public class IMM {
      * @return
      */
     public Date date(final String immCode) {
-        return date(immCode, Date.NULL_DATE);
+        return date(immCode, new Date());
     }
 
     /**
@@ -185,10 +159,11 @@ public class IMM {
         QL.require(isIMMcode(immCode, false) , "not a valid IMM code"); // QA:[RG]::verified // TODO: message
 
         Date referenceDate;
-        if (Date.NULL_DATE.equals(refDate))
-            referenceDate = settings.getEvaluationDate();
-        else
+        if (refDate.isNull()) {
+            referenceDate = new Settings().getEvaluationDate();
+        } else {
             referenceDate = refDate;
+        }
 
         final char code = immCode.charAt(0);
         final Month m = Month.valueOf(code);
@@ -197,12 +172,15 @@ public class IMM {
 
         /* year<1900 are not valid QuantLib years: to avoid a run-time
            exception few lines below we need to add 10 years right away */
-        if (y==0 && referenceDate.getYear()<=1909) y+=10;
-        final int yMod = (referenceDate.getYear() % 10);
-        y += referenceDate.getYear() - yMod;
-        final Date result = nextDate(DateFactory.getFactory().getDate(1, m, y), false);
-        if (result.lt(referenceDate))
-            return nextDate(DateFactory.getFactory().getDate(1, m, y+10), false);
+        if (y==0 && referenceDate.year()<=1909) {
+            y+=10;
+        }
+        final int yMod = (referenceDate.year() % 10);
+        y += referenceDate.year() - yMod;
+        final Date result = nextDate(new Date(1, m, y), false);
+        if (result.lt(referenceDate)) {
+            return nextDate(new Date(1, m, y+10), false);
+        }
 
         return result;
     }
@@ -213,7 +191,7 @@ public class IMM {
      * @return
      */
     public Date nextDate() {
-        return nextDate(Date.NULL_DATE, true);
+        return nextDate(new Date(), true);
     }
 
     /**
@@ -228,8 +206,10 @@ public class IMM {
     }
 
     /**
-     * next IMM date following the given date. * When <code>Date.NULL_DATE</code> is passed, <code>Settings.getEvaluationDate</code> is used as
-     * a reference date.
+     * next IMM date following the given date.
+     * <p>
+     * 
+     * When <code>Date.NULL_DATE</code> is passed, <code>Settings.getEvaluationDate</code> is used as a reference date.
      *
      * @param date
      * @param mainCycle
@@ -239,29 +219,31 @@ public class IMM {
      */
     public Date nextDate(final Date date, final boolean mainCycle) {
         Date refDate;
-        if (Date.NULL_DATE.equals(date))
-            refDate = settings.getEvaluationDate();
-        else
+        if (date.isNull()) {
+            refDate = new Settings().getEvaluationDate();
+        } else {
             refDate = date;
+        }
 
-        int y = refDate.getYear();
-        int m = refDate.getMonth();
+        int y = refDate.year();
+        int m = refDate.month().value();
 
         final int offset = mainCycle ? 3 : 1;
         int skipMonths = offset-(m%offset);
-        if (skipMonths != offset || refDate.getDayOfMonth() > 21) {
+        if (skipMonths != offset || refDate.dayOfMonth() > 21) {
             skipMonths += m;
-            if (skipMonths<=12)
+            if (skipMonths<=12) {
                 m = skipMonths;
-            else {
+            } else {
                 m = skipMonths-12;
                 y += 1;
             }
         }
 
-        Date result = DateFactory.getFactory().getNthWeekday(3, Weekday.WEDNESDAY, Month.valueOf(m), y);
-        if (result.le(refDate))
-            result = nextDate(DateFactory.getFactory().getDate(22, Month.valueOf(m), y), mainCycle);
+        Date result = date.statics().nthWeekday(3, Weekday.WEDNESDAY, Month.valueOf(m), y);
+        if (result.le(refDate)) {
+            result = nextDate(new Date(22, Month.valueOf(m), y), mainCycle);
+        }
         return result;
     }
 
@@ -274,7 +256,7 @@ public class IMM {
      * @return
      */
     public Date nextDate(final String immCode) {
-        return nextDate(immCode, true, Date.NULL_DATE);
+        return nextDate(immCode, true, new Date());
     }
 
 
@@ -286,7 +268,7 @@ public class IMM {
      * @return
      */
     public Date nextDate(final String immCode, final boolean mainCycle) {
-        return nextDate(immCode, mainCycle, Date.NULL_DATE);
+        return nextDate(immCode, mainCycle, new Date());
     }
 
 
@@ -302,7 +284,7 @@ public class IMM {
      */
     public Date nextDate(final String IMMcode, final boolean mainCycle, final Date referenceDate)  {
         final Date immDate = date(IMMcode, referenceDate);
-        return nextDate(immDate.increment(), mainCycle);
+        return nextDate(immDate.inc(), mainCycle);
     }
 
 
@@ -312,7 +294,7 @@ public class IMM {
      * @return
      */
     public String nextCode() {
-        return nextCode(Date.NULL_DATE);
+        return nextCode(new Date());
     }
 
     /**
@@ -359,7 +341,7 @@ public class IMM {
      * @return
      */
     public String nextCode(final String immCode, final boolean mainCycle) {
-        return nextCode(immCode, mainCycle, Date.NULL_DATE);
+        return nextCode(immCode, mainCycle, new Date());
     }
 
 
@@ -373,9 +355,7 @@ public class IMM {
      * International Money Market section of the Chicago Mercantile
      * Exchange.
      */
-    public String nextCode(final String immCode,
-            final boolean mainCycle,
-            final Date referenceDate) {
+    public String nextCode(final String immCode, final boolean mainCycle, final Date referenceDate) {
         final Date date = nextDate(immCode, mainCycle, referenceDate);
         return code(date);
     }
@@ -391,8 +371,8 @@ public class IMM {
     public  String code(final Date date) {
         QL.require(isIMMdate(date, false) , "not an IMM date"); // QA:[RG]::verified // TODO: message
 
-        final int y = date.getYear() % 10;
-        final char code = date.getMonthEnum().getImmChar();
+        final int y = date.year() % 10;
+        final char code = date.month().getImmChar();
         final StringBuilder sb = new StringBuilder();
         sb.append(code).append(y);
 

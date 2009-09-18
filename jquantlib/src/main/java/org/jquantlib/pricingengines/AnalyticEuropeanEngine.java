@@ -46,6 +46,7 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
+import org.jquantlib.util.Date;
 
 /**
  * Pricing engine for European vanilla options using analytical formulae
@@ -116,7 +117,8 @@ public class AnalyticEuropeanEngine extends VanillaOptionEngine {
         final DayCounter rfdc = process.riskFreeRate().getLink().dayCounter();
         final DayCounter divdc = process.dividendYield().getLink().dayCounter();
         final DayCounter voldc = process.blackVolatility().getLink().dayCounter();
-        /* @Time */double t = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(), arguments.exercise.lastDate());
+        final Date refDate = process.riskFreeRate().getLink().referenceDate();
+        /* @Time */double t = rfdc.yearFraction(refDate, arguments.exercise.lastDate());
         results.rho = black.rho(t);
 
         t = divdc.yearFraction(process.dividendYield().getLink().referenceDate(), arguments.exercise.lastDate());

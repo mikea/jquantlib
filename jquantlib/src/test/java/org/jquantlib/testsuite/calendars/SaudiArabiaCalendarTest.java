@@ -34,7 +34,6 @@ import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.SaudiArabia;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 
 /**
@@ -58,20 +57,20 @@ public class SaudiArabiaCalendarTest {
 	public void testSaudiArabiaYear2004() {
       	final int year = 2004;
       	QL.info("Testing SaudiArabia's holiday list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		// Eid Al-Adha -- 5 is on Thu,6 is on Fri, weekend in yr 2004
-		expectedHol.add(df.getDate(1,FEBRUARY,year));
-		expectedHol.add(df.getDate(2,FEBRUARY,year));
-		expectedHol.add(df.getDate(3,FEBRUARY,year));
-		expectedHol.add(df.getDate(4,FEBRUARY,year));
+		expectedHol.add(new Date(1,FEBRUARY,year));
+		expectedHol.add(new Date(2,FEBRUARY,year));
+		expectedHol.add(new Date(3,FEBRUARY,year));
+		expectedHol.add(new Date(4,FEBRUARY,year));
     	//National Day -- weekend in 2004
-    	//expectedHol.add(df.getDate(23,SEPTEMBER,year));
+    	//expectedHol.add(new Date(23,SEPTEMBER,year));
 		// Eid Al-Fitr -- 25,26 falls on thur,fri respectively, weekend in yr 2005
-        expectedHol.add(df.getDate(27,NOVEMBER,year));
-		expectedHol.add(df.getDate(28,NOVEMBER,year));
-		expectedHol.add(df.getDate(29,NOVEMBER,year));
+        expectedHol.add(new Date(27,NOVEMBER,year));
+		expectedHol.add(new Date(28,NOVEMBER,year));
+		expectedHol.add(new Date(29,NOVEMBER,year));
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
@@ -82,20 +81,20 @@ public class SaudiArabiaCalendarTest {
     public void testSaudiArabiaYear2005() {
       	final int year = 2005;
       	QL.info("Testing SaudiArabia's holiday list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		// Eid Al-Adha -- 21 is on Fri, weekend in yr 2005
-		expectedHol.add(df.getDate(22,JANUARY,year));
-		expectedHol.add(df.getDate(23,JANUARY,year));
-		expectedHol.add(df.getDate(24,JANUARY,year));
-		expectedHol.add(df.getDate(25,JANUARY,year));
+		expectedHol.add(new Date(22,JANUARY,year));
+		expectedHol.add(new Date(23,JANUARY,year));
+		expectedHol.add(new Date(24,JANUARY,year));
+		expectedHol.add(new Date(25,JANUARY,year));
     	//National Day -- weekend in 2005
-    	//expectedHol.add(df.getDate(23,SEPTEMBER,year));
+    	//expectedHol.add(new Date(23,SEPTEMBER,year));
 		// Eid Al-Fitr -- 17,18 falls on thur,fri , weekend in yr 2005
-        expectedHol.add(df.getDate(14,NOVEMBER,year));
-		expectedHol.add(df.getDate(15,NOVEMBER,year));
-		expectedHol.add(df.getDate(16,NOVEMBER,year));
+        expectedHol.add(new Date(14,NOVEMBER,year));
+		expectedHol.add(new Date(15,NOVEMBER,year));
+		expectedHol.add(new Date(16,NOVEMBER,year));
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
@@ -106,11 +105,11 @@ public class SaudiArabiaCalendarTest {
     public void testSaudiArabiaYear2006() {
       	final int year = 2006;
       	QL.info("Testing SaudiArabia's holiday list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
         final List<Date> expectedHol = new ArrayList<Date>();
 
     	//National Day
-    	expectedHol.add(df.getDate(23,SEPTEMBER,year));
+    	expectedHol.add(new Date(23,SEPTEMBER,year));
 
       	// Call the Holiday Check
       	final CalendarUtil cbt = new CalendarUtil();
@@ -122,11 +121,11 @@ public class SaudiArabiaCalendarTest {
     public void testSaudiArabiaYear2007() {
       	final int year = 2007;
       	QL.info("Testing SaudiArabia's holiday list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
         final List<Date> expectedHol = new ArrayList<Date>();
 
     	//National Day
-    	expectedHol.add(df.getDate(23,SEPTEMBER,year));
+    	expectedHol.add(new Date(23,SEPTEMBER,year));
 
       	// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -138,11 +137,11 @@ public class SaudiArabiaCalendarTest {
     public void testSaudiArabiaYear2008() {
       	final int year = 2008;
       	QL.info("Testing SaudiArabia's holiday list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
         final List<Date> expectedHol = new ArrayList<Date>();
 
     	//National Day
-    	expectedHol.add(df.getDate(23,SEPTEMBER,year));
+    	expectedHol.add(new Date(23,SEPTEMBER,year));
 
       	// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -154,11 +153,11 @@ public class SaudiArabiaCalendarTest {
     public void testSaudiArabiaYear2009() {
       	final int year = 2009;
       	QL.info("Testing SaudiArabia's holiday list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
         final List<Date> expectedHol = new ArrayList<Date>();
 
     	//National Day
-    	expectedHol.add(df.getDate(23,SEPTEMBER,year));
+    	expectedHol.add(new Date(23,SEPTEMBER,year));
 
       	// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -170,11 +169,11 @@ public class SaudiArabiaCalendarTest {
     public void testSaudiArabiaYear2010() {
       	final int year = 2010;
       	QL.info("Testing SaudiArabia's holiday list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
         final List<Date> expectedHol = new ArrayList<Date>();
 
     	//National Day - On a Thursday and hence a weekend
-    	//expectedHol.add(df.getDate(23,SEPTEMBER,year));
+    	//expectedHol.add(new Date(23,SEPTEMBER,year));
 
       	// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -186,11 +185,11 @@ public class SaudiArabiaCalendarTest {
     public void testSaudiArabiaYear2011() {
       	final int year = 2011;
       	QL.info("Testing SaudiArabia's holiday list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
         final List<Date> expectedHol = new ArrayList<Date>();
 
     	//National Day On a Friday and hence a weekend
-    	//expectedHol.add(df.getDate(23,SEPTEMBER,year));
+    	//expectedHol.add(new Date(23,SEPTEMBER,year));
 
       	// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -202,11 +201,11 @@ public class SaudiArabiaCalendarTest {
     public void testSaudiArabiaYear2012() {
       	final int year = 2012;
       	QL.info("Testing SaudiArabia's holiday list for the year " + year + "...");
-        final DateFactory df = DateFactory.getFactory();
+        
         final List<Date> expectedHol = new ArrayList<Date>();
 
     	//National Day
-    	expectedHol.add(df.getDate(23,SEPTEMBER,year));
+    	expectedHol.add(new Date(23,SEPTEMBER,year));
 
       	// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();

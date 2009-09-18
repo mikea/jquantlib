@@ -40,6 +40,7 @@
 package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeNode;
@@ -132,8 +133,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             final/* @Price */double accuracy,
             final I interpolator) {
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         final TypeNode root = new TypeTokenTree(this.getClass()).getRoot();
         final Class<?> cparam = root.get(0).getElement();
@@ -152,8 +154,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         } else if (ZeroYield.class.isAssignableFrom(cparam)) {
             this.baseCurve = new InterpolatedZeroCurve(referenceDate, dayCounter, interpolator);
             this.traits = new ZeroYield();
-        } else
+        } else {
             throw new LibraryException("only Discount, ForwardRate and ZeroYield are supported"); // QA:[RG]::verified // TODO: message
+        }
 
         this.instruments = instruments;
         this.accuracy = accuracy;
@@ -169,8 +172,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             final/* @Price */double accuracy,
             final I interpolator) {
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         final TypeNode root = new TypeTokenTree(this.getClass()).getRoot();
         final Class<?> cparam = root.get(0).getElement();
@@ -189,8 +193,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         } else if (ZeroYield.class.isAssignableFrom(cparam)) {
             this.baseCurve = new InterpolatedZeroCurve(settlementDays, calendar, dayCounter, interpolator);
             this.traits = new ZeroYield();
-        } else
+        } else {
             throw new LibraryException("only Discount, ForwardRate and ZeroYield are supported"); // QA:[RG]::verified // TODO: message
+        }
 
         this.instruments = instruments;
         this.accuracy = accuracy;
@@ -202,8 +207,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         QL.require(instruments.length>0 , "no instrument given");
 
         // sort rate helpers
-        for (final RateHelper instrument : instruments)
+        for (final RateHelper instrument : instruments) {
             instrument.setTermStructure(this); // TODO: code review
+        }
 
         // TODO: Std.sort(instruments_, new RateHelperSorter());
 
@@ -214,7 +220,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             QL.require(m1.eq(m2) , "two instruments have the same maturity");
         }
         for (final RateHelper instrument : instruments) {
-            registerWith(instrument);
+            instrument.addObserver(this);
+            // XXX:registerWith
+            //registerWith(instrument);
         }
     }
 
@@ -226,14 +234,16 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
     @Override
     public void performCalculations() /* @ReadOnly */ {
         // check that there is no instruments with invalid quote
-        for (final RateHelper instrument2 : instruments)
+        for (final RateHelper instrument2 : instruments) {
             QL.require(instrument2.referenceQuote() != Constants.NULL_REAL , "instrument with null price"); // TODO: message
+        }
 
         // setup vectors
         final int n = instruments.length;
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n; i++) {
             // don't try this at home!
             instruments[i].setTermStructure(this); // TODO: code review : const_cast<PiecewiseYieldCurve<C,I>*>(this));
+        }
         this.dates = new Date[n + 1];
         this.times = new Array(n + 1);
         this.data = new Array(n + 1);
@@ -256,29 +266,33 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         for (int iteration = 0;; iteration++) {
             final Array previousData = this.data.clone();
             for (int i = 1; i < n + 1; i++) {
-                if (iteration == 0)
+                if (iteration == 0) {
                     // extend interpolation a point at a time
-                    if (this.interpolator.global() && i < 2)
+                    if (this.interpolator.global() && i < 2) {
                         // not enough points for splines
                         this.interpolation = new Linear().interpolate(times.constIterator(), data.constIterator());
-                    else
+                    } else {
                         this.interpolation = this.interpolator.interpolate(times.constIterator(), data.constIterator());
+                    }
+                }
                 this.interpolation.update();
                 final RateHelper instrument = instruments[i - 1];
                 /* @Price */double guess;
-                if (iteration > 0)
+                if (iteration > 0) {
                     // use perturbed value from previous loop
                     guess = 0.99 * this.data.get(i);
-                else if (i > 1)
+                } else if (i > 1) {
                     // extrapolate
                     guess = traits.guess(this, this.dates[i]);
-                else
+                } else {
                     guess = traits.initialGuess();
+                }
                 // bracket
                 /* @Price */final double min = traits.minValueAfter(i, this.data);
                 /* @Price */final double max = traits.maxValueAfter(i, this.data);
-                if (guess <= min || guess >= max)
+                if (guess <= min || guess >= max) {
                     guess = (min + max) / 2.0;
+                }
                 try {
                     final ObjectiveFunction<C, I> f = new ObjectiveFunction<C, I>(this, instrument, i);
                     this.data.set(i, solver.solve(f, accuracy, guess, min, max));
@@ -287,14 +301,17 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
                 }
             }
             // check exit conditions
-            if (this.interpolator.global())
+            if (this.interpolator.global()) {
                 break; // no need for convergence loop
+            }
 
             double improvement = 0.0;
-            for (int i = 1; i < n + 1; i++)
+            for (int i = 1; i < n + 1; i++) {
                 improvement += Math.abs(this.data.get(i) - previousData.get(i));
-            if (improvement <= n * accuracy) // convergence reached
+            }
+            if (improvement <= n * accuracy) {
                 break;
+            }
 
             QL.require(iteration <= maxIterations , "convergence not reached"); // TODO: message
         }
@@ -545,19 +562,19 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
         public InterpolatedDiscountCurve(final DayCounter dayCounter, final I interpolator) {
             super(dayCounter);
-            this.isNegativeRates = settings.isNegativeRates();
+            this.isNegativeRates = new Settings().isNegativeRates();
             container.interpolator = (interpolator!=null) ? interpolator : (I) new LogLinear();
         }
 
         public InterpolatedDiscountCurve(final Date referenceDate, final DayCounter dayCounter, final I interpolator) {
             super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review :: default calendar
-            this.isNegativeRates = settings.isNegativeRates();
+            this.isNegativeRates = new Settings().isNegativeRates();
             container.interpolator = (interpolator!=null) ? interpolator : (I) new LogLinear();
         }
 
         public InterpolatedDiscountCurve(final int settlementDays, final Calendar calendar, final DayCounter dayCounter, final I interpolator) {
             super(settlementDays, calendar, dayCounter);
-            this.isNegativeRates = settings.isNegativeRates();
+            this.isNegativeRates = new Settings().isNegativeRates();
             container.interpolator = (interpolator!=null) ? interpolator : (I) new LogLinear();
         }
 
@@ -574,7 +591,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             QL.require(dates.length == discounts.size() , "dates/discount factors count mismatch"); // QA:[RG]::verified // TODO: message
             QL.require(discounts.first() == 1.0 , "the first discount must be == 1.0 to flag the corrsponding date as settlement date"); // QA:[RG]::verified // TODO: message
 
-            isNegativeRates = settings.isNegativeRates();
+            isNegativeRates = new Settings().isNegativeRates();
 
             container.times = new Array(dates.length);
             for (int i = 1; i < dates.length; i++) {
@@ -616,8 +633,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         @Override
         public final Pair<Date, Double>[] nodes() /* @ReadOnly */{
             final Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
-            for (int i = 0; i < dates.length; i++)
+            for (int i = 0; i < dates.length; i++) {
                 results[i] = new Pair<Date, Double>(dates[i], data.get(i));
+            }
             return results;
         }
 
@@ -691,7 +709,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             QL.require(dates.length > 1 , "too few dates"); // QA:[RG]::verified // TODO: message
             QL.require(dates.length == forwards.size() , "dates/yields count mismatch"); // QA:[RG]::verified // TODO: message
 
-            isNegativeRates = settings.isNegativeRates();
+            isNegativeRates = new Settings().isNegativeRates();
             container.times = new Array(dates.length);
             for (int i = 1; i < dates.length; i++) {
                 QL.require(dates[i].gt(dates[i-1]) , "dates must be in ascending order"); // QA:[RG]::verified// TODO: message
@@ -731,8 +749,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         @Override
         public final Pair<Date, Double>[] nodes() /* @ReadOnly */{
             final Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
-            for (int i = 0; i < dates.length; i++)
+            for (int i = 0; i < dates.length; i++) {
                 results[i] = new Pair<Date, Double>(dates[i], data.get(i));
+            }
             return results;
         }
 
@@ -768,10 +787,11 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
         @Override
         public /*@Rate*/ double zeroYieldImpl(/*@Time*/final double t) /* @ReadOnly */{
-            if (t == 0.0)
+            if (t == 0.0) {
                 return forwardImpl(0.0);
-            else
+            } else {
                 return interpolation.primitive(t, true) / t;
+            }
         }
 
     }
@@ -828,8 +848,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         @Override
         public final Pair<Date, Double>[] nodes() /* @ReadOnly */{
             final Pair<Date, /*@Rate*/Double>[] results = new Pair /* <Date, @Rate Double> */[dates.length];
-            for (int i = 0; i < dates.length; i++)
+            for (int i = 0; i < dates.length; i++) {
                 results[i] = new Pair<Date, Double>(dates[i], data.get(i));
+            }
             return results;
         }
 

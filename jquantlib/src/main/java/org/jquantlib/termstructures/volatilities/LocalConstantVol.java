@@ -47,7 +47,6 @@ import org.jquantlib.termstructures.LocalVolTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 
 // Local constant volatility, no time dependence, no asset dependence
 
@@ -59,71 +58,77 @@ import org.jquantlib.util.DateFactory;
  */
 public class LocalConstantVol extends LocalVolTermStructure {
 
-	private final Handle<Quote> volatility_;
-	private final DayCounter dayCounter_;
+    private final Handle<Quote> volatility_;
+    private final DayCounter dayCounter_;
 
-	public LocalConstantVol(
-			final Date referenceDate,
-			final /*@Volatility*/ double volatility,
-			final DayCounter dayCounter) {
-		super(referenceDate);
-		this.volatility_ = new Handle<Quote>(new SimpleQuote(volatility));
-		this.dayCounter_ = dayCounter;
-	}
+    public LocalConstantVol(
+            final Date referenceDate,
+            final /*@Volatility*/ double volatility,
+            final DayCounter dayCounter) {
+        super(referenceDate);
+        this.volatility_ = new Handle<Quote>(new SimpleQuote(volatility));
+        this.dayCounter_ = dayCounter;
+    }
 
-	public LocalConstantVol(
-			final Date referenceDate,
-			final Handle<Quote> volatility,
-			final DayCounter dayCounter) {
-		super(referenceDate);
-		this.volatility_ = volatility;
-		this.dayCounter_ = dayCounter;
-		registerWith(this.volatility_);
-	}
+    public LocalConstantVol(
+            final Date referenceDate,
+            final Handle<Quote> volatility,
+            final DayCounter dayCounter) {
+        super(referenceDate);
+        this.volatility_ = volatility;
+        this.dayCounter_ = dayCounter;
 
-	public LocalConstantVol(
-			final int settlementDays,
-			final Calendar cal,
-			final /*@Volatility*/ double volatility,
-			final DayCounter dayCounter) {
-		super(settlementDays, new NullCalendar());
-		this.volatility_ = new Handle<Quote>(new SimpleQuote(volatility));
-		this.dayCounter_ = dayCounter;
-	}
+        this.volatility_.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.volatility_);
+    }
 
-	public LocalConstantVol(
-			final int settlementDays,
-			final Calendar cal,
-			final Handle<Quote> volatility,
-			final DayCounter dayCounter) {
-		super(settlementDays, new NullCalendar());
-		this.volatility_ = volatility;
-		this.dayCounter_ = dayCounter;
-		registerWith(this.volatility_);
-	}
+    public LocalConstantVol(
+            final int settlementDays,
+            final Calendar cal,
+            final /*@Volatility*/ double volatility,
+            final DayCounter dayCounter) {
+        super(settlementDays, new NullCalendar());
+        this.volatility_ = new Handle<Quote>(new SimpleQuote(volatility));
+        this.dayCounter_ = dayCounter;
+    }
 
-	@Override
+    public LocalConstantVol(
+            final int settlementDays,
+            final Calendar cal,
+            final Handle<Quote> volatility,
+            final DayCounter dayCounter) {
+        super(settlementDays, new NullCalendar());
+        this.volatility_ = volatility;
+        this.dayCounter_ = dayCounter;
+
+        this.volatility_.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.volatility_);
+    }
+
+    @Override
     public final DayCounter dayCounter() {
-		return dayCounter_;
-	}
+        return dayCounter_;
+    }
 
-	public final Date maxDate() {
-		return DateFactory.getFactory().getMaxDate();
-	}
+    public final Date maxDate() {
+        return new Date().statics().maxDate();
+    }
 
-	@Override
-	public final /*@Price*/ double minStrike() {
-		return Double.NEGATIVE_INFINITY;
-	}
+    @Override
+    public final /*@Price*/ double minStrike() {
+        return Double.NEGATIVE_INFINITY;
+    }
 
-	@Override
-	public final /*@Price*/ double maxStrike() {
-		return Double.POSITIVE_INFINITY;
-	}
+    @Override
+    public final /*@Price*/ double maxStrike() {
+        return Double.POSITIVE_INFINITY;
+    }
 
-	@Override
-	protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
-		return this.volatility_.getLink().op();
-	}
+    @Override
+    protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
+        return this.volatility_.getLink().op();
+    }
 
 }

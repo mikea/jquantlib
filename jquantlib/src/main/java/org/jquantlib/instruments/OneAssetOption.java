@@ -37,15 +37,15 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.instruments;
 
 import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.math.AbstractSolver1D;
 import org.jquantlib.math.Ops;
@@ -97,9 +97,12 @@ public class OneAssetOption extends Option {
     //
 
     public OneAssetOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
-    	super(payoff, exercise, engine);
+        super(payoff, exercise, engine);
         this.stochasticProcess = process;
-        registerWith(this.stochasticProcess);
+
+        this.stochasticProcess.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.stochasticProcess);
     }
 
     //
@@ -225,7 +228,7 @@ public class OneAssetOption extends Option {
 
     @Override
     public boolean isExpired() /* @ReadOnly */ {
-        final Date evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        final Date evaluationDate = new Settings().getEvaluationDate();
         return exercise.lastDate().le( evaluationDate );
     }
 
@@ -251,8 +254,9 @@ public class OneAssetOption extends Option {
         // set up stopping times
         final int n = exercise.size();
         final List<Double> list = new ArrayDoubleList(n);
-        for (int i=0; i<n; ++i)
+        for (int i=0; i<n; ++i) {
             list.add(/*@Time*/ stochasticProcess.getTime(exercise.date(i)));
+        }
         optionArguments.stoppingTimes = list;
     }
 
@@ -307,8 +311,8 @@ public class OneAssetOption extends Option {
     protected void setupExpired() /* @ReadOnly */ {
         super.setupExpired();
         delta = deltaForward = elasticity = gamma = theta =
-        thetaPerDay = vega = rho = dividendRho =
-        itmCashProbability = 0.0;
+            thetaPerDay = vega = rho = dividendRho =
+                itmCashProbability = 0.0;
     }
 
 
@@ -336,49 +340,49 @@ public class OneAssetOption extends Option {
         //
 
         public ImpliedVolHelper(final PricingEngine engine, final double targetValue)  {
-        	this.impliedEngine = engine;
-        	this.targetValue = targetValue;
+            this.impliedEngine = engine;
+            this.targetValue = targetValue;
 
             // obtain arguments from pricing engine
             final Arguments tmpArgs = impliedEngine.getArguments();
             QL.require(tmpArgs instanceof OneAssetOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
             final OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments)tmpArgs;
 
-        	// Make a new stochastic process in order not to modify the given one.
-        	// stateVariable, dividendTS and riskFreeTS can be copied since
-        	// they won't be modified.
-        	// Here the requirement for a Black-Scholes process is hard-coded.
-        	// Making it work for a generic process would need some reflection
-        	// technique (which is possible, but requires some thought),
-			// hence its postponement.
+            // Make a new stochastic process in order not to modify the given one.
+            // stateVariable, dividendTS and riskFreeTS can be copied since
+            // they won't be modified.
+            // Here the requirement for a Black-Scholes process is hard-coded.
+            // Making it work for a generic process would need some reflection
+            // technique (which is possible, but requires some thought),
+            // hence its postponement.
 
-        	// obtain original process from arguments
+            // obtain original process from arguments
             final GeneralizedBlackScholesProcess originalProcess = (GeneralizedBlackScholesProcess)oneAssetArguments.stochasticProcess;
-        	QL.require(originalProcess!=null , "Black-Scholes process required"); // QA:[RG]::verified // TODO: message
+            QL.require(originalProcess!=null , "Black-Scholes process required"); // QA:[RG]::verified // TODO: message
 
-        	// initialize arguments for calculation of implied volatility
-        	this.vol = new Handle<Quote>(new SimpleQuote(0.0));
-        	final Handle<? extends Quote> stateVariable = originalProcess.stateVariable();
-        	final Handle<YieldTermStructure> dividendYield = originalProcess.dividendYield();
-        	final Handle<YieldTermStructure> riskFreeRate = originalProcess.riskFreeRate();
-        	final Handle<BlackVolTermStructure> blackVol = originalProcess.blackVolatility();
+            // initialize arguments for calculation of implied volatility
+            this.vol = new Handle<Quote>(new SimpleQuote(0.0));
+            final Handle<? extends Quote> stateVariable = originalProcess.stateVariable();
+            final Handle<YieldTermStructure> dividendYield = originalProcess.dividendYield();
+            final Handle<YieldTermStructure> riskFreeRate = originalProcess.riskFreeRate();
+            final Handle<BlackVolTermStructure> blackVol = originalProcess.blackVolatility();
 
-        	// calculate implied volatility
-        	final Handle<BlackVolTermStructure> volatility = new Handle<BlackVolTermStructure>(
-        													new BlackConstantVol(
-        															blackVol.getLink().referenceDate(),
-        															vol,
-        															blackVol.getLink().dayCounter()));
+            // calculate implied volatility
+            final Handle<BlackVolTermStructure> volatility = new Handle<BlackVolTermStructure>(
+                    new BlackConstantVol(
+                            blackVol.getLink().referenceDate(),
+                            vol,
+                            blackVol.getLink().dayCounter()));
 
-        	// build a new stochastic process
-        	final StochasticProcess process = new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);
+            // build a new stochastic process
+            final StochasticProcess process = new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);
 
-        	// set up a new stochastic process back to the engine's arguments
-        	oneAssetArguments.stochasticProcess = process;
+            // set up a new stochastic process back to the engine's arguments
+            oneAssetArguments.stochasticProcess = process;
 
-        	// obtain results from pricing engine and keep for further use
-        	QL.require(impliedEngine.getResults() instanceof OneAssetOptionResults , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
-        	impliedResults = (OneAssetOptionResults)impliedEngine.getResults();
+            // obtain results from pricing engine and keep for further use
+            QL.require(impliedEngine.getResults() instanceof OneAssetOptionResults , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+            impliedResults = (OneAssetOptionResults)impliedEngine.getResults();
         }
 
 
@@ -388,11 +392,11 @@ public class OneAssetOption extends Option {
 
         @Override
         public final double op(final /* @Volatility */ double x) /* @ReadOnly */ {
-			final SimpleQuote quote = (SimpleQuote)vol.getLink();
-			quote.setValue(x);
-			this.impliedEngine.calculate();
-			return impliedResults.value - targetValue;
-		}
+            final SimpleQuote quote = (SimpleQuote)vol.getLink();
+            quote.setValue(x);
+            this.impliedEngine.calculate();
+            return impliedResults.value - targetValue;
+        }
 
     }
 

@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -36,7 +36,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.daycounters;
 
@@ -53,16 +53,16 @@ public abstract class AbstractDayCounter implements DayCounter {
     //
     // protected default constructor
     //
-    
+
     protected AbstractDayCounter() {}
-    
+
     //
     // implements DayCounter
     //
-    
+
     @Override
-	public int dayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
-		return dateStart.getDayCount(dateEnd);
-	}
-    
+    public int dayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
+        return dateStart.sub(dateEnd);
+    }
+
 }

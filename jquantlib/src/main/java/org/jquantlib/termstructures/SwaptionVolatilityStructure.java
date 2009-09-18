@@ -140,22 +140,25 @@ public abstract class SwaptionVolatilityStructure extends AbstractTermStructure 
 
     public void checkRange(final double optionTime, final double swapLength, final double k, final boolean extrapolate) {
         super.checkRange(optionTime, extrapolate);
-        if (swapLength < 0.0)
+        if (swapLength < 0.0) {
             throw new IllegalArgumentException("negative swapLength (" + swapLength + ") given");
-        if (!extrapolate && !allowsExtrapolation() && swapLength > maxSwapLength())
+        }
+        if (!extrapolate && !allowsExtrapolation() && swapLength > maxSwapLength()) {
             throw new IllegalArgumentException("swapLength (" + swapLength + ") is past max curve swapLength (" + maxSwapLength()
                     + ")");
-        if (!extrapolate && !allowsExtrapolation() && (k < minStrike() || k > maxStrike()))
+        }
+        if (!extrapolate && !allowsExtrapolation() && (k < minStrike() || k > maxStrike())) {
             throw new IllegalArgumentException("strike (" + k + ") is outside the curve domain [" + minStrike() + "," + maxStrike()
                     + "]");
+        }
     }
 
     public double maxSwapLength() {
-        return timeFromReference(referenceDate().increment(maxSwapTenor()));
+        return timeFromReference(referenceDate().add(maxSwapTenor()));
     }
 
     public Pair<Double, Double> convertDates(final Date optionDate, final Period swapTenor) {
-        final Date end = optionDate.increment(swapTenor);
+        final Date end = optionDate.add(swapTenor);
         // TODO: code review :: please verify against QL/C++ code
         QL.require(end.gt(optionDate) , "negative swap tenorgiven"); // QA:[RG]::verified // TODO: message
         final double optionTime = timeFromReference(optionDate);
@@ -165,14 +168,17 @@ public abstract class SwaptionVolatilityStructure extends AbstractTermStructure 
 
     protected void checkRange(final Date optionDate, final Period swapTenor, final double k, final boolean extrapolate) {
         super.checkRange(timeFromReference(optionDate), extrapolate);
-        if (swapTenor.length() <= 0)
+        if (swapTenor.length() <= 0) {
             throw new IllegalArgumentException("negative swap tenor (" + swapTenor + ") given");
-        if (!extrapolate && !allowsExtrapolation() && swapTenor.gt(maxSwapTenor()))
+        }
+        if (!extrapolate && !allowsExtrapolation() && swapTenor.gt(maxSwapTenor())) {
             throw new IllegalArgumentException("swap tenor (" + swapTenor + ") is past max tenor (" + maxSwapTenor() + ")");
+        }
         //TODO: review
-        if (!extrapolate && !allowsExtrapolation() && (k >= minStrike() && k <= maxStrike()))
+        if (!extrapolate && !allowsExtrapolation() && (k >= minStrike() && k <= maxStrike())) {
             throw new IllegalArgumentException("strike (" + k + ") is outside the curve domain [" + minStrike() + "," + maxStrike()
                     + "]");
+        }
 
     }
 }

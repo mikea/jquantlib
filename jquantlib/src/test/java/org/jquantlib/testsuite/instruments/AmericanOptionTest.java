@@ -59,7 +59,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
@@ -88,19 +87,12 @@ import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 
 public class AmericanOptionTest {
 
-    private final Settings settings;
-    private final Date today;
-
-
     public AmericanOptionTest() {
         QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
-        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        this.today = DateFactory.getFactory().getTodaysDate(); //TODO: code review
     }
 
     @Test
@@ -115,7 +107,7 @@ public class AmericanOptionTest {
                 // From "Option pricing formulas", Haug, McGraw-Hill 1998, VBA
                 new AmericanOptionData(Option.Type.PUT, 40.00, 36.00, 0.00, 0.06, 1.00, 0.20, 4.4531) };
 
-        settings.setEvaluationDate(today);
+        final Date today = new Settings().getEvaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
@@ -134,7 +126,7 @@ public class AmericanOptionTest {
             final StrikedTypePayoff payoff = new PlainVanillaPayoff(value.type, value.strike);
 
             final int daysToExpiry = (int) (value.t * 360 + 0.5);
-            final Date exDate = DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear()).increment(daysToExpiry);
+            final Date exDate = today.clone().addAssign(daysToExpiry);
             final Exercise exercise = new AmericanExercise(today, exDate);
 
             spot.setValue(value.s);
@@ -148,11 +140,12 @@ public class AmericanOptionTest {
             final double /* @Real */calculated = option.getNPV();
             final double /* @Real */error = Math.abs(calculated - value.result);
 
-            if (error > tolerance)
+            if (error > tolerance) {
                 reportFailure(
                         "value", payoff, exercise,
                         value.s, value.q, value.r, today, value.v,
                         value.result, calculated, error, tolerance);
+            }
         }
 
     }
@@ -206,7 +199,8 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35, 9.5104),
                 new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 5.8823) };
 
-        // final Date today = DateFactory.getFactory().getTodaysDate();
+        final Date today = new Settings().getEvaluationDate();
+
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
         final SimpleQuote qRate = new SimpleQuote(0.0);
@@ -222,7 +216,7 @@ public class AmericanOptionTest {
 
         for (final AmericanOptionData value : values) {
             final StrikedTypePayoff payoff = new PlainVanillaPayoff(value.type, value.strike);
-            final Date exDate = today.getDateAfter(timeToDays(value.t));
+            final Date exDate = today.add(timeToDays(value.t));
             final Exercise exercise = new AmericanExercise(today, exDate);
 
             spot.setValue(value.s);
@@ -237,11 +231,12 @@ public class AmericanOptionTest {
             final double /* @Real */calculated = option.getNPV();
             final double /* @Real */error = Math.abs(calculated - value.result);
 
-            if (error > tolerance)
+            if (error > tolerance) {
                 reportFailure(
                         "value", payoff, exercise,
                         value.s, value.q, value.r, today, value.v,
                         value.result, calculated, error, tolerance);
+            }
         }
     }
 
@@ -322,9 +317,7 @@ public class AmericanOptionTest {
 
         QL.info("Testing Ju approximation for American options...");
 
-        //XXX final Date today = DateFactory.getFactory().getTodaysDate();
-        //XXX Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        settings.setEvaluationDate(today);
+        final Date today = new Settings().getEvaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
@@ -342,7 +335,7 @@ public class AmericanOptionTest {
         for (final AmericanOptionData juValue : juValues) {
 
             final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValue.type, juValue.strike);
-            final Date exDate = today.getDateAfter(timeToDays(juValue.t));
+            final Date exDate = today.add(timeToDays(juValue.t));
             final Exercise exercise = new AmericanExercise(today, exDate);
 
             spot.setValue(juValue.s);
@@ -357,11 +350,12 @@ public class AmericanOptionTest {
             final double calculated = option.getNPV();
             final double error = Math.abs(calculated - juValue.result);
 
-            if (error > tolerance)
+            if (error > tolerance) {
                 reportFailure(
                         "value", payoff, exercise,
                         juValue.s, juValue.q, juValue.r, today, juValue.v,
                         juValue.result, calculated, error, tolerance);
+            }
         }
     }
 
@@ -441,8 +435,7 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
 
-        settings.setEvaluationDate(today);
-
+        final Date today = new Settings().getEvaluationDate();
         final double tolerance = 8.0e-2;
 
         for (final AmericanOptionData juValue : juValues) {
@@ -457,7 +450,7 @@ public class AmericanOptionTest {
             final SimpleQuote vol = new SimpleQuote(0.0);
             final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
             final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValue.type, juValue.strike);
-            final Date exDate = today.getDateAfter(timeToDays(juValue.t));
+            final Date exDate = today.add(timeToDays(juValue.t));
             final Exercise exercise = new AmericanExercise(today, exDate);
 
             spot.setValue(juValue.s);
@@ -476,11 +469,12 @@ public class AmericanOptionTest {
             final double calculated = option.getNPV();
             final double error = Math.abs(calculated - juValue.result);
 
-            if (error > tolerance)
+            if (error > tolerance) {
                 reportFailure(
                         "value", payoff, exercise,
                         juValue.s, juValue.q, juValue.r, today, juValue.v,
                         juValue.result, calculated, error, tolerance);
+            }
 
         }
     }
@@ -514,9 +508,8 @@ public class AmericanOptionTest {
         final int years[] = { 1, 2 };
         final double vols[] = { 0.11, 0.50, 1.20 };
 
+        final Date today = new Settings().getEvaluationDate();
         final DayCounter dc = Actual360.getDayCounter();
-
-        settings.setEvaluationDate(today);
 
         final SimpleQuote spot = new SimpleQuote(0.0);
         final SimpleQuote qRate = new SimpleQuote(0.0);
@@ -526,11 +519,11 @@ public class AmericanOptionTest {
         final SimpleQuote vol = new SimpleQuote(0.0);
         final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
 
-        for (final Type type : types)
-            for (final double strike : strikes)
+        for (final Type type : types) {
+            for (final double strike : strikes) {
                 for (final int year : years) {
 
-                    final Date exDate = today.getDateAfter(new Period(year, TimeUnit.YEARS));
+                    final Date exDate = today.add(new Period(year, TimeUnit.YEARS));
                     final Exercise exercise = new AmericanExercise(today, exDate);
                     final StrikedTypePayoff payoff = new PlainVanillaPayoff(type, strike);
 
@@ -550,9 +543,9 @@ public class AmericanOptionTest {
                     }
                     final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
 
-                    for (final double u : underlyings)
-                        for (final double q : qRates)
-                            for (final double r : rRates)
+                    for (final double u : underlyings) {
+                        for (final double q : qRates) {
+                            for (final double r : rRates) {
                                 for (final double v : vols) {
                                     spot.setValue(u);
                                     qRate.setValue(q);
@@ -578,12 +571,12 @@ public class AmericanOptionTest {
                                         expected.put("gamma", (delta_p - delta_m) / (2 * du));
 
                                         // perturb date and get theta
-                                        final Date yesterday = today.getPreviousDay();
-                                        final Date tomorrow = today.getNextDay();
+                                        final Date yesterday = today.sub(1);
+                                        final Date tomorrow = today.add(1);
                                         final double dT = dc.yearFraction(yesterday, tomorrow);
-                                        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(yesterday);
+                                        new Settings().setEvaluationDate(yesterday);
                                         value_m = option.getNPV();
-                                        Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(tomorrow);
+                                        new Settings().setEvaluationDate(tomorrow);
                                         value_p = option.getNPV();
                                         expected.put("theta", (value_p - value_m) / dT);
 
@@ -593,15 +586,21 @@ public class AmericanOptionTest {
                                             final double calcl = calculated.get(greek.getKey());
                                             final double tol = tolerance.get(greek.getKey());
                                             final double error = Utilities.relativeError(expct, calcl, u);
-                                            if (error > tol)
+                                            if (error > tol) {
                                                 reportFailure(
                                                         greek.getKey(), payoff, exercise,
                                                         u, q, r, today, v,
                                                         expct, calcl, error, tol);
+                                            }
                                         }
                                     }
                                 }
+                            }
+                        }
+                    }
                 }
+            }
+        }
     }
 
     private void reportFailure(

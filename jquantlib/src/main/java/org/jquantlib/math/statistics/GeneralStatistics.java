@@ -315,7 +315,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     public double min() {
         if (getSampleSize() <= 1)
             throw new IllegalArgumentException(empyt_sample_set);
-        return MathUtil.min(samples);
+        return cmp.min(samples);
     }
 
     /*! returns the maximum sample value */
@@ -323,7 +323,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     public double max() {
         if (getSampleSize() <= 1)
             throw new IllegalArgumentException(unsufficient_sample_size);
-        return MathUtil.max(samples);
+        return cmp.max(samples);
     }
 
     /*! \f$ y \f$-th percentile, defined as the value \f$ \bar{x} \f$
@@ -564,14 +564,17 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     // from class MathUtil below:
     //
 
-    private static class MathUtil {
+    
+    private static Comparator cmp = new Comparator(); 
+    
+    private static class Comparator {
 
-        public static Double min(final List<Pair<Double, Double>> values) {
+        public double min(final List<Pair<Double, Double>> values) {
             if (System.getProperty("EXPERIMENTAL") == null)
                 throw new UnsupportedOperationException("Work in progress");
 
             // simplest algo in the first release
-            Double std = 0.0;
+            double std = 0.0;
 
             for (final Pair<Double, Double> element : values)
                 if (std > (Double) element.getFirst())
@@ -580,12 +583,12 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
             return std;
         }
 
-        public static Double max(final List<Pair<Double, Double>> values) {
+        public double max(final List<Pair<Double, Double>> values) {
             if (System.getProperty("EXPERIMENTAL") == null)
                 throw new UnsupportedOperationException("Work in progress");
 
             // simplest algo in the first release
-            Double std = 0.0;
+            double std = 0.0;
 
             for (final Pair<Double, Double> element : values)
                 if (std < (Double) element.getFirst())
@@ -593,41 +596,6 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
 
             return std;
         }
-
-        //        // more generic methods, don't know if they are useful...
-        //        public static <T extends Number> T max(List<Pair<Number, Number>> values) {
-        //            if (System.getProperty("EXPERIMENTAL") == null) {
-        //                throw new UnsupportedOperationException("Work in progress");
-        //            }
-        //
-        //            // simplest algo in the first release
-        //            Number std = 0.0;
-        //
-        //            for (Pair<Number, Number> element : values) {
-        //                if (std.doubleValue() > ((Number) element.getFirst()).doubleValue()) {
-        //                    std = (Number) element.getFirst();
-        //                }
-        //            }
-        //
-        //            return (T) std;
-        //        }
-        //
-        //        public static <T extends Number> T min(List<Pair<Number, Number>> values) {
-        //            if (System.getProperty("EXPERIMENTAL") == null) {
-        //                throw new UnsupportedOperationException("Work in progress");
-        //            }
-        //
-        //            // simplest algo in the first release
-        //            Number std = 0.0;
-        //
-        //            for (Pair<Number, Number> element : values) {
-        //                if (std.doubleValue() < ((Number) element.getFirst()).doubleValue()) {
-        //                    std = (Number) element.getFirst();
-        //                }
-        //            }
-        //
-        //            return (T) std;
-        //        }
 
     }
 

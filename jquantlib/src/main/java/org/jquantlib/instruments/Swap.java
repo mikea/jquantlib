@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.CashFlows;
 import org.jquantlib.cashflow.Leg;
@@ -63,8 +63,9 @@ public class Swap extends NewInstrument {
 
     public Swap(final Leg firstLeg, final Leg secondLeg) {
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         this.legs = new ArrayList<Leg>();
         this.payer = new double[2];
@@ -75,15 +76,20 @@ public class Swap extends NewInstrument {
         payer[0] = -1.0;
         payer[1] = +1.0;
 
-        for (int i = 0; i < legs.size(); i++)
-            for (final CashFlow item : legs.get(i))
-                registerWith(item);
+        for (int i = 0; i < legs.size(); i++) {
+            for (final CashFlow item : legs.get(i)) {
+                item.addObserver(this);
+                //XXX:registerWith
+                //registerWith(item);
+            }
+        }
     }
 
     public Swap(final List<Leg> legs, final boolean[] payer) {
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         this.legs = legs;
         this.payer = new double[legs.size()];
@@ -92,11 +98,16 @@ public class Swap extends NewInstrument {
         this.legBPS = new double[legs.size()];
 
         for (int j = 0; j < this.legs.size(); j++) {
-            if (payer[j])
+            if (payer[j]) {
                 this.payer[j] = -1.0;
-            for (int i = 0; i < legs.size(); i++)
-                for (final CashFlow item : legs.get(i))
-                    registerWith(item);
+            }
+            for (int i = 0; i < legs.size(); i++) {
+                for (final CashFlow item : legs.get(i)) {
+                    item.addObserver(this);
+                    //XXX:registerWith
+                    //registerWith(item);
+                }
+            }
         }
     }
 
@@ -106,8 +117,9 @@ public class Swap extends NewInstrument {
     //
 
     protected Swap(final int legs) {
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         this.legs   = new ArrayList<Leg>();
         this.payer  = new double[legs];
@@ -123,16 +135,18 @@ public class Swap extends NewInstrument {
     public Date startDate() /* @ReadOnly */{
         QL.require(legs.size() > 0 , "no legs given"); // QA:[RG]::verified // TODO: message
         Date d = CashFlows.getInstance().startDate(this.legs.get(0));
-        for (int j = 1; j < this.legs.size(); j++)
+        for (int j = 1; j < this.legs.size(); j++) {
             d = Std.getInstance().min(d, CashFlows.getInstance().startDate(this.legs.get(j)));
+        }
         return d;
     }
 
     public Date maturityDate() /* @ReadOnly */{
         QL.require(legs.size() > 0 , "no legs given"); // QA:[RG]::verified // TODO: message
         Date d = CashFlows.getInstance().maturityDate(this.legs.get(0));
-        for (int j = 1; j < this.legs.size(); j++)
+        for (int j = 1; j < this.legs.size(); j++) {
             d = Std.getInstance().max(d, CashFlows.getInstance().maturityDate(this.legs.get(j)));
+        }
         return d;
     }
 
@@ -143,11 +157,14 @@ public class Swap extends NewInstrument {
 
     @Override
     public boolean isExpired() /* @ReadOnly */{
-        final Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-        for (int i = 0; i < legs.size(); i++)
-            for (final CashFlow item : legs.get(i))
-                if (!item.hasOccurred(today))
+        final Date today = new Settings().getEvaluationDate();
+        for (int i = 0; i < legs.size(); i++) {
+            for (final CashFlow item : legs.get(i)) {
+                if (!item.hasOccurred(today)) {
                     return false;
+                }
+            }
+        }
         return true;
     }
 
@@ -180,14 +197,16 @@ public class Swap extends NewInstrument {
         if (results.legNPV.length > 0) {
             QL.require(results.legNPV.length == legNPV.length , "wrong number of leg NPV returned"); // QA:[RG]::verified // TODO: message
             legNPV = results.legNPV;
-        } else
+        } else {
             Arrays.fill(legNPV, Constants.NULL_REAL);
+        }
 
         if (results.legBPS.length > 0) {
             QL.require(results.legBPS.length == legBPS.length , "wrong number of leg BPS returned"); // QA:[RG]::verified // TODO: message
             legBPS = results.legBPS;
-        } else
+        } else {
             Arrays.fill(legBPS, Constants.NULL_REAL);
+        }
     }
 
 }

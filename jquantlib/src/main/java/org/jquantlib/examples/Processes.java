@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2009 Apratim Rajendra
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -42,7 +42,6 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.time.calendars.UnitedStates;
 import org.jquantlib.time.calendars.UnitedStates.Market;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.StopClock;
 
 /**
@@ -52,101 +51,110 @@ import org.jquantlib.util.StopClock;
  *
  */
 public class Processes {
-	
-	public static void main(String args[]){
-		
-		System.out.println("\n\n::::: "+Processes.class.getSimpleName()+" :::::");
-		
-		StopClock clock = new StopClock(); 
-		clock.startClock();
-		
-		System.out.println("//============================StochasticProcess1D/LinearDiscretization=========================");
-		
-		//Creating stock quote handle
-		SimpleQuote stockQuote = new SimpleQuote(5.6);
-		RelinkableHandle<Quote>  handleToStockQuote = new RelinkableHandle<Quote>(stockQuote);
-		
-		//Creating black volatility term structure
-		Date today = DateFactory.getFactory().getTodaysDate();
-		
-		//Following is the time axis
-		Date[] dates = {today.getDateAfter(10),today.getDateAfter(15),today.getDateAfter(20),today.getDateAfter(25),today.getDateAfter(30),today.getDateAfter(40)};
-		
-		//Following is the volatility axis
-		double[] volatilities = {0.1,0.2,0.3,0.4,0.5,0.6};
-		
-		//Following is the curve
-		BlackVarianceTermStructure varianceCurve = new BlackVarianceCurve(today,dates,volatilities,Actual365Fixed.getDayCounter(),false);
-		((BlackVarianceCurve)varianceCurve).setInterpolation();
-		
-		//Dividend termstructure
-		SimpleQuote dividendQuote = new SimpleQuote(0.3);
-		RelinkableHandle<Quote>  handleToInterestRateQuote = new RelinkableHandle<Quote>(dividendQuote);
-		YieldTermStructure dividendTermStructure = new FlatForward(2,UnitedStates.getCalendar(Market.NYSE),handleToInterestRateQuote,Actual365Fixed.getDayCounter(),Compounding.CONTINUOUS,Frequency.DAILY);
-	
-		//Risk free term structure
-		SimpleQuote riskFreeRateQuote = new SimpleQuote(0.3);
-		RelinkableHandle<Quote>  handleToRiskFreeRateQuote = new RelinkableHandle<Quote>(riskFreeRateQuote);
-		YieldTermStructure riskFreeTermStructure = new FlatForward(2,UnitedStates.getCalendar(Market.NYSE),handleToRiskFreeRateQuote,Actual365Fixed.getDayCounter(),Compounding.CONTINUOUS,Frequency.DAILY);
-	
-		//Creating the process
-		StochasticProcess1D process = new GeneralizedBlackScholesProcess(handleToStockQuote,new RelinkableHandle<YieldTermStructure>(dividendTermStructure),new RelinkableHandle<YieldTermStructure>(riskFreeTermStructure),new RelinkableHandle<BlackVolTermStructure>(varianceCurve),new EulerDiscretization()); 
-		
-		//Calculating the drift of the stochastic process after time = 18th day from today with value of the stock as specified from the quote
-		//The drift = (riskFreeForwardRate - dividendForwardRate) - (Variance/2)
-		System.out.println("The drift of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.drift(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().op()));
-		
-		//Calculating the diffusion of the process after time = 18th day from today with value of the stock as specified from the quote
-		//The diffusion = volatiltiy of the stochastic process
-		System.out.println("The diffusion of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.diffusion(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().op()));
-		
-		//Calulating the standard deviation of the process after time = 18th day from today with value of the stock as specified from the quote
-		//The standard deviation = volatility*sqrt(dt)
-		System.out.println("The stdDeviation of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.stdDeviation(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().op(), 0.01));
-		
-		//Calulating the variance of the process after time = 18th day from today with value of the stock as specified from the quote
-		//The variance = volatility*volatility*dt
-		System.out.println("The variance of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.variance(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().op(), 0.01));
-		
-		//Calulating the expected value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
-		//The expectedValue = intialValue*exp(drift*dt)-----can be obtained by integrating----->dx/x= drift*dt  
-		System.out.println("Expected value = "+process.expectation(process.getTime(today.getDateAfter(18)), handleToStockQuote.getLink().op(), 0.01));
-		
-		//Calulating the exact value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
-		//The exact value = intialValue*exp(drift*dt)*exp(volatility*sqrt(dt))-----can be obtained by integrating----->dx/x= drift*dt+volatility*sqrt(dt)
-		System.out.println("Exact value = "+process.evolve(process.getTime(today.getDateAfter(18)), 6.7, .001, new NormalDistribution().op(Math.random())));
-		
-		//Calculating the drift of the stochastic process after time = 18th day from today with value of the stock as specified from the quote
-		//The drift = (riskFreeForwardRate - dividendForwardRate) - (Variance/2)
-		Array drift = process.drift(process.getTime(today.getDateAfter(18)), new Array().fill(5.6));
-		System.out.println("The drift of the process after time = 18th day from today with value of the stock as specified from the quote");
-		
-		//Calculating the diffusion of the process after time = 18th day from today with value of the stock as specified from the quote
-		//The diffusion = volatiltiy of the stochastic process
-		Matrix diffusion = process.diffusion(process.getTime(today.getDateAfter(18)), new Array().fill(5.6));
-		System.out.println("The diffusion of the process after time = 18th day from today with value of the stock as specified from the quote");
-	
-		//Calulating the standard deviation of the process after time = 18th day from today with value of the stock as specified from the quote
-		//The standard deviation = volatility*sqrt(dt)
-		Matrix stdDeviation = process.stdDeviation(process.getTime(today.getDateAfter(18)), new Array().fill(5.6), 0.01);
-		System.out.println("The stdDeviation of the process after time = 18th day from today with value of the stock as specified from the quote");
-		
-		//Calulating the expected value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
-		//The expectedValue = intialValue*exp(drift*dt)-----can be obtained by integrating----->dx/x= drift*dt  
-		Array expectation = process.expectation(process.getTime(today.getDateAfter(18)), new Array().fill(5.6), 0.01);
-		System.out.println("Expected value = "+expectation.first());	
-		
-		//Calulating the exact value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
-		//The exact value = intialValue*exp(drift*dt)*exp(volatility*sqrt(dt))-----can be obtained by integrating----->dx/x= drift*dt+volatility*sqrt(dt)
-		Array evolve = process.evolve(process.getTime(today.getDateAfter(18)), new Array().fill(6.7), .001, new Array().fill(new NormalDistribution().op(Math.random()) ));
-		System.out.println("Exact value = "+evolve.first());	
-		
-		//Calculating covariance of the process
-		Matrix covariance = process.covariance(process.getTime(today.getDateAfter(18)),  new Array().fill(5.6), 0.01);
-		System.out.println("Covariance = "+covariance.get(0, 0));			
-			
-		clock.stopClock(); 
-		clock.log(); 
-	}
+
+    public static void main(final String args[]){
+
+        System.out.println("\n\n::::: "+Processes.class.getSimpleName()+" :::::");
+
+        final StopClock clock = new StopClock();
+        clock.startClock();
+
+        final Date today  = new Date().statics().todaysDate();
+        final Date date10 = today.clone().addAssign(10);
+        final Date date15 = today.clone().addAssign(15);
+        final Date date18 = today.clone().addAssign(18);
+        final Date date20 = today.clone().addAssign(20);
+        final Date date25 = today.clone().addAssign(25);
+        final Date date30 = today.clone().addAssign(30);
+        final Date date40 = today.clone().addAssign(40);
+
+
+        System.out.println("//============================StochasticProcess1D/LinearDiscretization=========================");
+
+        //Creating stock quote handle
+        final SimpleQuote stockQuote = new SimpleQuote(5.6);
+        final RelinkableHandle<Quote>  handleToStockQuote = new RelinkableHandle<Quote>(stockQuote);
+
+        //Creating black volatility term structure
+
+        //Following is the time axis
+        final Date[] dates = { date10.clone(), date15.clone(), date20.clone(), date25.clone(), date30.clone(), date40.clone() };
+
+        //Following is the volatility axis
+        final double[] volatilities = {0.1,0.2,0.3,0.4,0.5,0.6};
+
+        //Following is the curve
+        final BlackVarianceTermStructure varianceCurve = new BlackVarianceCurve(today, dates,volatilities, Actual365Fixed.getDayCounter(), false);
+        ((BlackVarianceCurve)varianceCurve).setInterpolation();
+
+        //Dividend termstructure
+        final SimpleQuote dividendQuote = new SimpleQuote(0.3);
+        final RelinkableHandle<Quote>  handleToInterestRateQuote = new RelinkableHandle<Quote>(dividendQuote);
+        final YieldTermStructure dividendTermStructure = new FlatForward(2,UnitedStates.getCalendar(Market.NYSE),handleToInterestRateQuote,Actual365Fixed.getDayCounter(),Compounding.CONTINUOUS,Frequency.DAILY);
+
+        //Risk free term structure
+        final SimpleQuote riskFreeRateQuote = new SimpleQuote(0.3);
+        final RelinkableHandle<Quote>  handleToRiskFreeRateQuote = new RelinkableHandle<Quote>(riskFreeRateQuote);
+        final YieldTermStructure riskFreeTermStructure = new FlatForward(2,UnitedStates.getCalendar(Market.NYSE),handleToRiskFreeRateQuote,Actual365Fixed.getDayCounter(),Compounding.CONTINUOUS,Frequency.DAILY);
+
+        //Creating the process
+        final StochasticProcess1D process = new GeneralizedBlackScholesProcess(handleToStockQuote,new RelinkableHandle<YieldTermStructure>(dividendTermStructure),new RelinkableHandle<YieldTermStructure>(riskFreeTermStructure),new RelinkableHandle<BlackVolTermStructure>(varianceCurve),new EulerDiscretization());
+
+        //Calculating the drift of the stochastic process after time = 18th day from today with value of the stock as specified from the quote
+        //The drift = (riskFreeForwardRate - dividendForwardRate) - (Variance/2)
+        System.out.println("The drift of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.drift(process.getTime(date18.clone()), handleToStockQuote.getLink().op()));
+
+        //Calculating the diffusion of the process after time = 18th day from today with value of the stock as specified from the quote
+        //The diffusion = volatiltiy of the stochastic process
+        System.out.println("The diffusion of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.diffusion(process.getTime(date18.clone()), handleToStockQuote.getLink().op()));
+
+        //Calulating the standard deviation of the process after time = 18th day from today with value of the stock as specified from the quote
+        //The standard deviation = volatility*sqrt(dt)
+        System.out.println("The stdDeviation of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.stdDeviation(process.getTime(date18.clone()), handleToStockQuote.getLink().op(), 0.01));
+
+        //Calulating the variance of the process after time = 18th day from today with value of the stock as specified from the quote
+        //The variance = volatility*volatility*dt
+        System.out.println("The variance of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.variance(process.getTime(date18.clone()), handleToStockQuote.getLink().op(), 0.01));
+
+        //Calulating the expected value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
+        //The expectedValue = intialValue*exp(drift*dt)-----can be obtained by integrating----->dx/x= drift*dt
+        System.out.println("Expected value = "+process.expectation(process.getTime(date18.clone()), handleToStockQuote.getLink().op(), 0.01));
+
+        //Calulating the exact value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
+        //The exact value = intialValue*exp(drift*dt)*exp(volatility*sqrt(dt))-----can be obtained by integrating----->dx/x= drift*dt+volatility*sqrt(dt)
+        System.out.println("Exact value = "+process.evolve(process.getTime(date18.clone()), 6.7, .001, new NormalDistribution().op(Math.random())));
+
+        //Calculating the drift of the stochastic process after time = 18th day from today with value of the stock as specified from the quote
+        //The drift = (riskFreeForwardRate - dividendForwardRate) - (Variance/2)
+        final Array drift = process.drift(process.getTime(date18.clone()), new Array().fill(5.6));
+        System.out.println("The drift of the process after time = 18th day from today with value of the stock as specified from the quote");
+
+        //Calculating the diffusion of the process after time = 18th day from today with value of the stock as specified from the quote
+        //The diffusion = volatiltiy of the stochastic process
+        final Matrix diffusion = process.diffusion(process.getTime(date18.clone()), new Array().fill(5.6));
+        System.out.println("The diffusion of the process after time = 18th day from today with value of the stock as specified from the quote");
+
+        //Calulating the standard deviation of the process after time = 18th day from today with value of the stock as specified from the quote
+        //The standard deviation = volatility*sqrt(dt)
+        final Matrix stdDeviation = process.stdDeviation(process.getTime(date18.clone()), new Array().fill(5.6), 0.01);
+        System.out.println("The stdDeviation of the process after time = 18th day from today with value of the stock as specified from the quote");
+
+        //Calulating the expected value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
+        //The expectedValue = intialValue*exp(drift*dt)-----can be obtained by integrating----->dx/x= drift*dt
+        final Array expectation = process.expectation(process.getTime(date18.clone()), new Array().fill(5.6), 0.01);
+        System.out.println("Expected value = "+expectation.first());
+
+        //Calulating the exact value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
+        //The exact value = intialValue*exp(drift*dt)*exp(volatility*sqrt(dt))-----can be obtained by integrating----->dx/x= drift*dt+volatility*sqrt(dt)
+        final Array evolve = process.evolve(process.getTime(date18.clone()), new Array().fill(6.7), .001, new Array().fill(new NormalDistribution().op(Math.random()) ));
+        System.out.println("Exact value = "+evolve.first());
+
+        //Calculating covariance of the process
+        final Matrix covariance = process.covariance(process.getTime(date18.clone()),  new Array().fill(5.6), 0.01);
+        System.out.println("Covariance = "+covariance.get(0, 0));
+
+        clock.stopClock();
+        clock.log();
+    }
 
 }

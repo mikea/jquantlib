@@ -44,6 +44,7 @@ package org.jquantlib.math.interpolations;
 import static org.jquantlib.math.Closeness.isClose;
 
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.lang.iterators.ConstIterator;
 
 
@@ -110,12 +111,13 @@ public abstract class AbstractInterpolation implements Interpolation {
     }
 
     protected int locate(final double x) /* @ReadOnly */ {
-        if (x <= vx.first())
+        if (x <= vx.first()) {
             return 0;
-        else if (x > vx.last())
+        } else if (x > vx.last()) {
             return vx.size()-2;
-        else
+        } else {
             return vx.upperBound(x) - 1;
+        }
     }
 
 
@@ -184,7 +186,7 @@ public abstract class AbstractInterpolation implements Interpolation {
 
     @Override
     public final boolean isInRange(final double x) {
-        QL.assertion(extraSafetyChecks(), "unsorted values on array X"); // QA:[RG]::verified // TODO: message
+        QL.require(extraSafetyChecks(), "unsorted values on array X"); // QA:[RG]::verified // TODO: message
         final double x1 = xMin(), x2 = xMax();
         return (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
     }
@@ -192,7 +194,7 @@ public abstract class AbstractInterpolation implements Interpolation {
     @Override
     public void update() {
         QL.require(vx.size() >= 2 , "not enough points to interpolate"); // QA:[RG]::verified // TODO: message
-        QL.assertion(extraSafetyChecks(), "unsorted values on array X"); // QA:[RG]::verified // TODO: message
+        QL.require(extraSafetyChecks(), "unsorted values on array X"); // QA:[RG]::verified // TODO: message
     }
 
 
@@ -201,9 +203,12 @@ public abstract class AbstractInterpolation implements Interpolation {
     //
 
     private boolean extraSafetyChecks() {
-        for (int i=0; i<vx.size()-1; i++) {
-            if (vx.get(i) > vx.get(i+1))
-                return false;
+        if (new Settings().isExtraSafetyChecks()) {
+            for (int i=0; i<vx.size()-1; i++) {
+                if (vx.get(i) > vx.get(i+1)) {
+                    return false;
+                }
+            }
         }
         return true;
     }

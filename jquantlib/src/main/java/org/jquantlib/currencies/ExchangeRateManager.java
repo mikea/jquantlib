@@ -44,8 +44,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.currencies.America.PEHCurrency;
 import org.jquantlib.currencies.America.PEICurrency;
 import org.jquantlib.currencies.America.PENCurrency;
@@ -68,7 +68,6 @@ import org.jquantlib.currencies.Europe.TRLCurrency;
 import org.jquantlib.currencies.Europe.TRYCurrency;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 
 /**
@@ -147,8 +146,9 @@ public class ExchangeRateManager {
      * getInstance().
      */
     private ExchangeRateManager() {
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
         addKnownRates();
     }
 
@@ -176,8 +176,8 @@ public class ExchangeRateManager {
      * @param rate
      */
     public void add(final ExchangeRate rate) {
-        add(rate, DateFactory.getFactory().getMinDate(), DateFactory.getFactory().getMaxDate());
-
+        final Date.Statics statics = new Date().statics();
+        add(rate, statics.minDate(), statics.maxDate());
     }
 
     /**
@@ -188,7 +188,7 @@ public class ExchangeRateManager {
      * @return
      */
     public ExchangeRate lookup(final Currency source, final Currency target) {
-        return lookup(source, target, DateFactory.getFactory().getTodaysDate(), ExchangeRate.Type.Derived);
+        return lookup(source, target, new Date().statics().todaysDate(), ExchangeRate.Type.Derived);
     }
 
     public ExchangeRate lookup(final Currency source, final Currency target, final Date date) {
@@ -213,8 +213,8 @@ public class ExchangeRateManager {
             return new ExchangeRate(source, target, 1.0);
         }
 
-        if (date.eq(DateFactory.getFactory().getTodaysDate())) {
-            date = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        if (date.isToday()) {
+            date = new Settings().getEvaluationDate();
         }
 
         if (type == ExchangeRate.Type.Direct) {
@@ -272,40 +272,90 @@ public class ExchangeRateManager {
      * Adds obsoleted currencies to the repository.
      */
     private void addKnownRates() {
+        final Date.Statics statics = new Date().statics();
+        final Date maxDate = statics.maxDate();
         // currencies obsoleted by Euro
-        add(new ExchangeRate(new EURCurrency(), new ATSCurrency(), 13.7603), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                1999), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new EURCurrency(), new BEFCurrency(), 40.3399), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                1999), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new EURCurrency(), new DEMCurrency(), 1.95583), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                1999), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new EURCurrency(), new ESPCurrency(), 166.386), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                1999), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new EURCurrency(), new FIMCurrency(), 5.94573), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                1999), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new EURCurrency(), new FRFCurrency(), 6.55957), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                1999), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new EURCurrency(), new GRDCurrency(), 340.750), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                2001), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new EURCurrency(), new IEPCurrency(), 0.787564), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                1999), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new EURCurrency(), new ITLCurrency(), 1936.27), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                1999), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new EURCurrency(), new LUFCurrency(), 40.3399), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                1999), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new EURCurrency(), new NLGCurrency(), 2.20371), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                1999), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new EURCurrency(), new PTECurrency(), 200.482), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                1999), DateFactory.getFactory().getMaxDate());
+        add(new ExchangeRate(
+                new EURCurrency(),
+                new ATSCurrency(), 13.7603),
+                new Date(1, Month.JANUARY,1999),
+                maxDate);
+        add(new ExchangeRate(
+                new EURCurrency(),
+                new BEFCurrency(), 40.3399),
+                new Date(1, Month.JANUARY, 1999),
+                maxDate);
+        add(new ExchangeRate(
+                new EURCurrency(),
+                new DEMCurrency(), 1.95583),
+                new Date(1, Month.JANUARY, 1999),
+                maxDate);
+        add(new ExchangeRate(
+                new EURCurrency(),
+                new ESPCurrency(), 166.386),
+                new Date(1, Month.JANUARY, 1999),
+                maxDate);
+        add(new ExchangeRate(
+                new EURCurrency(),
+                new FIMCurrency(), 5.94573),
+                new Date(1, Month.JANUARY, 1999),
+                maxDate);
+        add(new ExchangeRate(
+                new EURCurrency(),
+                new FRFCurrency(), 6.55957),
+                new Date(1, Month.JANUARY, 1999),
+                maxDate);
+        add(new ExchangeRate(
+                new EURCurrency(),
+                new GRDCurrency(), 340.750),
+                new Date(1, Month.JANUARY, 2001),
+                maxDate);
+        add(new ExchangeRate(
+                new EURCurrency(),
+                new IEPCurrency(), 0.787564),
+                new Date(1, Month.JANUARY, 1999),
+                maxDate);
+        add(new ExchangeRate(
+                new EURCurrency(),
+                new ITLCurrency(), 1936.27),
+                new Date(1, Month.JANUARY, 1999),
+                maxDate);
+        add(new ExchangeRate(
+                new EURCurrency(),
+                new LUFCurrency(), 40.3399),
+                new Date(1, Month.JANUARY, 1999),
+                maxDate);
+        add(new ExchangeRate(
+                new EURCurrency(),
+                new NLGCurrency(), 2.20371),
+                new Date(1, Month.JANUARY, 1999),
+                maxDate);
+        add(new ExchangeRate(
+                new EURCurrency(),
+                new PTECurrency(), 200.482),
+                new Date(1, Month.JANUARY, 1999),
+                maxDate);
         // other obsoleted currencies
-        add(new ExchangeRate(new TRYCurrency(), new TRLCurrency(), 1000000.0), DateFactory.getFactory().getDate(1, Month.JANUARY,
-                2005), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new RONCurrency(), new ROLCurrency(), 10000.0), DateFactory.getFactory().getDate(1, Month.JULY, 2005),
-                DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new PENCurrency(), new PEICurrency(), 1000000.0), DateFactory.getFactory()
-                .getDate(1, Month.JULY, 1991), DateFactory.getFactory().getMaxDate());
-        add(new ExchangeRate(new PEICurrency(), new PEHCurrency(), 1000.0), DateFactory.getFactory().getDate(1, Month.FEBRUARY,
-                1985), DateFactory.getFactory().getMaxDate());
+        add(new ExchangeRate(
+                new TRYCurrency(),
+                new TRLCurrency(), 1000000.0),
+                new Date(1, Month.JANUARY, 2005),
+                maxDate);
+        add(new ExchangeRate(
+                new RONCurrency(),
+                new ROLCurrency(), 10000.0),
+                new Date(1, Month.JULY, 2005),
+                maxDate);
+        add(new ExchangeRate(
+                new PENCurrency(),
+                new PEICurrency(), 1000000.0),
+                new Date(1, Month.JULY, 1991),
+                maxDate);
+        add(new ExchangeRate(
+                new PEICurrency(),
+                new PEHCurrency(), 1000.0),
+                new Date(1, Month.FEBRUARY, 1985),
+                maxDate);
     }
 
     /**
@@ -317,8 +367,9 @@ public class ExchangeRateManager {
      * @return The found exchange rate. ExchangeRate
      */
     private ExchangeRate directLookup(final Currency source, final Currency target, final Date date) {
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         ExchangeRate rate = null;
         QL.require(((rate = fetch(source, target, date)) != null) , "no direct conversion available");  // QA:[RG]::verified // TODO: message
@@ -364,27 +415,27 @@ public class ExchangeRateManager {
                 // ...whose other currency is not forbidden...
                 final Entry e = data_.get(key).get(0);
                 final Currency other =
-                // if
-                (source == e.rate.source()) ?
-                // then
-                e.rate.target()
-                        :
-                        // else
-                        e.rate.source();
-                if (match(forbidden, other.numericCode()) == (forbidden.length - 1)) {
-                    // ...and which carries information for the requested date.
-                    final ExchangeRate head = fetch(source, other, date);
-                    try {
-                        if (head != null) {
-                            final ExchangeRate tail = smartLookup(other, target, date, forbidden);
-                            // ..we're done.
-                            return ExchangeRate.chain(head, tail);
-                        }
-                    } catch (final Exception ex) {
-                        // fall through...
-                        // otherwise, we just discard this rate.
-                    }
-                }
+                    // if
+                    (source == e.rate.source()) ?
+                            // then
+                            e.rate.target()
+                            :
+                                // else
+                                e.rate.source();
+                            if (match(forbidden, other.numericCode()) == (forbidden.length - 1)) {
+                                // ...and which carries information for the requested date.
+                                final ExchangeRate head = fetch(source, other, date);
+                                try {
+                                    if (head != null) {
+                                        final ExchangeRate tail = smartLookup(other, target, date, forbidden);
+                                        // ..we're done.
+                                        return ExchangeRate.chain(head, tail);
+                                    }
+                                } catch (final Exception ex) {
+                                    // fall through...
+                                    // otherwise, we just discard this rate.
+                                }
+                            }
             }
         }
 

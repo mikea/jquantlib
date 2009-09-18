@@ -10,47 +10,46 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 
 public class FixedRateBond extends Bond {
-	
-	protected Frequency frequency_;
-	protected DayCounter dayCounter_;
-	
-	/**
-	 * 
-	 * @param settlementDays
-	 * @param faceAmount
-	 * @param schedule
-	 * @param coupons
-	 * @param accrualDayCounter
-	 * @param paymentConvention default: Following
-	 * @param redemption default: 100
-	 * @param issueDate default: new Date()
-	 */
-    public FixedRateBond(/*@Natural*/int settlementDays,
-    		/*@Real*/double faceAmount,
+
+    protected Frequency frequency_;
+    protected DayCounter dayCounter_;
+
+    /**
+     * 
+     * @param settlementDays
+     * @param faceAmount
+     * @param schedule
+     * @param coupons
+     * @param accrualDayCounter
+     * @param paymentConvention default: Following
+     * @param redemption default: 100
+     * @param issueDate default: new Date()
+     */
+    public FixedRateBond(/*@Natural*/final int settlementDays,
+            /*@Real*/final double faceAmount,
             final Schedule schedule,
             final double[] coupons,
             final DayCounter accrualDayCounter,
-            BusinessDayConvention paymentConvention,
-            /*Real*/double redemption,
+            final BusinessDayConvention paymentConvention,
+            /*Real*/final double redemption,
             final Date  issueDate){
-    	super(settlementDays, schedule.getCalendar(), issueDate);
-    	frequency_ = schedule.tenor().frequency();
-    	dayCounter_ = accrualDayCounter;
-    	//maturityDate_ = schedule.endDate();
-    	cashFlows_ = new FixedRateLeg(schedule, accrualDayCounter)
-    	.withNotionals(faceAmount)
+        super(settlementDays, schedule.getCalendar(), issueDate);
+        frequency_ = schedule.tenor().frequency();
+        dayCounter_ = accrualDayCounter;
+        //maturityDate_ = schedule.endDate();
+        cashFlows_ = new FixedRateLeg(schedule, accrualDayCounter)
+        .withNotionals(faceAmount)
         .withCouponRates(coupons)
         .withPaymentAdjustment(paymentConvention);
-    	
-    	addRedemptionsToCashflows(new double[]{redemption});
-    	
-    	QL.ensure(!cashFlows().isEmpty(), "bond with no cashflows!");
-    	QL.ensure(redemptions_.size() == 1, "multiple redemptions created");
+
+        addRedemptionsToCashflows(new double[]{redemption});
+
+        QL.ensure(!cashFlows().isEmpty(), "bond with no cashflows!");
+        QL.ensure(redemptions_.size() == 1, "multiple redemptions created");
     }
-    
+
     /**
      * 
      * @param settlementDays
@@ -69,79 +68,79 @@ public class FixedRateBond extends Bond {
      * @param rule default: Backward
      * @param endOfMonth default: false
      */
-    public FixedRateBond(/*@Natural*/int settlementDays,
+    public FixedRateBond(/*@Natural*/final int settlementDays,
             final Calendar  calendar,
-            /*@Real*/ double faceAmount,
+            /*@Real*/ final double faceAmount,
             final Date  startDate,
             final Date  maturityDate,
             final Period  tenor,
             final double[] coupons,
             final DayCounter  accrualDayCounter,
-            BusinessDayConvention accrualConvention,
-            BusinessDayConvention paymentConvention,
-            /*@Real*/ double redemption,
+            final BusinessDayConvention accrualConvention,
+            final BusinessDayConvention paymentConvention,
+            /*@Real*/ final double redemption,
             final Date  issueDate ,
             final Date  stubDate ,
-            DateGenerationRule  rule  ,
-            boolean endOfMonth){
-    	 super(settlementDays, calendar, issueDate);
-         frequency_=(tenor.frequency());
-    	 dayCounter_=(accrualDayCounter);
-    	 maturityDate_ = DateFactory.getFactory().getDate(maturityDate.getDayOfMonth(), maturityDate.getMonth(), maturityDate.getYear());
+            final DateGenerationRule  rule  ,
+            final boolean endOfMonth){
+        super(settlementDays, calendar, issueDate);
+        frequency_=(tenor.frequency());
+        dayCounter_=(accrualDayCounter);
+        maturityDate_ = maturityDate.clone();
 
-           Date firstDate = Date.NULL_DATE;
-           Date nextToLastDate = Date.NULL_DATE;
-           switch (rule) {
-             case BACKWARD:
-               firstDate = Date.NULL_DATE;
-               nextToLastDate = DateFactory.getFactory().getDate(stubDate);
-               break;
-             case FORWARD:
-               firstDate = DateFactory.getFactory().getDate(stubDate);
-               nextToLastDate = Date.NULL_DATE;
-               break;
-             case ZERO:
-            	 reportFalseDateGenerationRule(stubDate, rule);
-            	 break;
-             case THIRD_WEDNESDAY:
-            	 reportFalseDateGenerationRule(stubDate, rule);
-            	 break;
-             case  TWENTIEHT:
-            	 reportFalseDateGenerationRule(stubDate, rule);
-            	 break;
-             case  TWENTIEHTIMM:
-            	 reportFalseDateGenerationRule(stubDate, rule);
-            	 break;
-             default:
-             QL.error("unknown DateGeneration::Rule (" + rule + ")");
-           }
+        Date firstDate = new Date();
+        Date nextToLastDate = new Date();
+        switch (rule) {
+        case BACKWARD:
+            firstDate = new Date();
+            nextToLastDate = stubDate.clone();
+            break;
+        case FORWARD:
+            firstDate = stubDate.clone();
+            nextToLastDate = new Date();
+            break;
+        case ZERO:
+            reportFalseDateGenerationRule(stubDate, rule);
+            break;
+        case THIRD_WEDNESDAY:
+            reportFalseDateGenerationRule(stubDate, rule);
+            break;
+        case  TWENTIEHT:
+            reportFalseDateGenerationRule(stubDate, rule);
+            break;
+        case  TWENTIEHTIMM:
+            reportFalseDateGenerationRule(stubDate, rule);
+            break;
+        default:
+            QL.error("unknown DateGeneration::Rule (" + rule + ")");
+        }
 
-           Schedule schedule = new Schedule(startDate, maturityDate_, tenor,
-                             calendar_, accrualConvention, accrualConvention,
-                             rule, endOfMonth,
-                             firstDate, nextToLastDate);
+        final Schedule schedule = new Schedule(startDate, maturityDate_, tenor,
+                calendar_, accrualConvention, accrualConvention,
+                rule, endOfMonth,
+                firstDate, nextToLastDate);
 
-           cashFlows_ = new FixedRateLeg(schedule, accrualDayCounter)
-               .withNotionals(faceAmount)
-               .withCouponRates(coupons)
-               .withPaymentAdjustment(paymentConvention);
+        cashFlows_ = new FixedRateLeg(schedule, accrualDayCounter)
+        .withNotionals(faceAmount)
+        .withCouponRates(coupons)
+        .withPaymentAdjustment(paymentConvention);
 
-           addRedemptionsToCashflows(new double[]{redemption});
+        addRedemptionsToCashflows(new double[]{redemption});
 
-           QL.ensure(!cashFlows().isEmpty(), "bond with no cashflows!");
-           QL.ensure(redemptions_.size() == 1, "multiple redemptions created");
+        QL.ensure(!cashFlows().isEmpty(), "bond with no cashflows!");
+        QL.ensure(redemptions_.size() == 1, "multiple redemptions created");
     }
-    
+
     public Frequency frequency(){
-    	return frequency_;
+        return frequency_;
     }
-    
+
     public DayCounter dayCounter(){
-    	return dayCounter_;
+        return dayCounter_;
     }
-    
-    private void reportFalseDateGenerationRule(Date stubDate, DateGenerationRule rule){
-    	QL.error("stub date ("+ stubDate + ") not allowed with " +
+
+    private void reportFalseDateGenerationRule(final Date stubDate, final DateGenerationRule rule){
+        QL.error("stub date ("+ stubDate + ") not allowed with " +
                 rule + " DateGeneration::Rule");
     }
 }

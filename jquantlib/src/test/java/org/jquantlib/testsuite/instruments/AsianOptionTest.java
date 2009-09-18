@@ -40,15 +40,14 @@
 
 package org.jquantlib.testsuite.instruments;
 
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import junit.framework.TestCase;
-
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
@@ -76,7 +75,6 @@ import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.junit.Test;
 
 /**
@@ -84,13 +82,8 @@ import org.junit.Test;
  */
 public class AsianOptionTest {
 
-    private final Settings settings;
-    private final Date today;
-
     public AsianOptionTest() {
         QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
-        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
-        this.today = settings.getEvaluationDate();
     }
 
 
@@ -101,6 +94,8 @@ public class AsianOptionTest {
 
         // data from "Implementing Derivatives Model",
         // Clewlow, Strickland, p.118-123
+
+        final Date today = new Settings().getEvaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
 
@@ -127,8 +122,7 @@ public class AsianOptionTest {
         /* @Real */final double strike = 100.0;
         final StrikedTypePayoff payoff = new PlainVanillaPayoff(type, strike);
 
-        final Date exerciseDate = DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear())
-                .increment(360);
+        final Date exerciseDate = today.clone().addAssign(360);
         final Exercise exercise = new EuropeanExercise(exerciseDate);
 
         QL.info("Exercise: " + exerciseDate);
@@ -137,12 +131,10 @@ public class AsianOptionTest {
 
         final List<Date> fixingDates = new ArrayList<Date>(futureFixings);
         final int dt = (int) (360.0 / (futureFixings) + 0.5);
-        fixingDates.add(DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear())
-                .increment(dt));
+        fixingDates.add(today.clone().addAssign(dt));
         for (int j = 1; j < futureFixings; j++) {
             final Date prevDate = fixingDates.get(j - 1);
-            fixingDates.add(DateFactory.getFactory().getDate(prevDate.getDayOfMonth(), prevDate.getMonthEnum(), prevDate.getYear())
-                    .increment(dt));
+            fixingDates.add(prevDate.clone().addAssign(dt));
         }
 
         QL.info("Average Dates:\n");
@@ -199,12 +191,13 @@ public class AsianOptionTest {
         final StochasticProcess process = new BlackScholesMertonProcess(new Handle<Quote>(spot), new Handle<YieldTermStructure>(qTS),
                 new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
 
+        final Date today = new Settings().getEvaluationDate();
+
         for (final Type type : types) {
             for (final double strike : strikes) {
                 for (final int length : lengths) {
 
-                    final Date exerciseDate = DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(),
-                            today.getYear() + length);
+                    final Date exerciseDate = new Date(today.dayOfMonth(), today.month(), today.year() + length);
                     final EuropeanExercise maturity = new EuropeanExercise(exerciseDate);
 
                     final PlainVanillaPayoff payoff = new PlainVanillaPayoff(type, strike);
@@ -214,11 +207,11 @@ public class AsianOptionTest {
 
                     final List<Date> fixingDates = new ArrayList<Date>();
 
-                    final Date d = DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear());
+                    final Date d = today.clone();
                     final Period THREEMONTH = new Period(3, TimeUnit.MONTHS);
-                    d.adjust(new Period(3, TimeUnit.MONTHS));
-                    for (d.adjust(THREEMONTH); d.le(maturity.lastDate()); d.adjust(THREEMONTH)) {
-                        fixingDates.add(DateFactory.getFactory().getDate(d.getDayOfMonth(), d.getMonthEnum(), d.getYear()));
+                    d.addAssign(new Period(3, TimeUnit.MONTHS));
+                    for (d.addAssign(THREEMONTH); d.le(maturity.lastDate()); d.addAssign(THREEMONTH)) {
+                        fixingDates.add(d.clone());
                     }
 
                     final PricingEngine engine = new AnalyticDiscreteGeometricAveragePriceAsianEngine();
@@ -286,15 +279,15 @@ public class AsianOptionTest {
                                         expected.put("vega", (value_p - value_m) / (2 * dv));
 
                                         // perturb date and get theta
-                                        final Date yesterday = today.getPreviousDay();
-                                        final Date tomorrow = today.getNextDay();
+                                        final Date yesterday = today.sub(1);
+                                        final Date tomorrow = today.add(1);
                                         final double dT = dc.yearFraction(yesterday, tomorrow);
-                                        settings.setEvaluationDate(yesterday);
+                                        new Settings().setEvaluationDate(yesterday);
                                         value_m = option.getNPV();
-                                        settings.setEvaluationDate(tomorrow);
+                                        new Settings().setEvaluationDate(tomorrow);
                                         value_p = option.getNPV();
                                         expected.put("theta", (value_p - value_m) / dT);
-                                        settings.setEvaluationDate(today);
+                                        new Settings().setEvaluationDate(today);
                                         // compare
                                         for (final Entry<String, Double> greek : calculated.entrySet()) {
                                             final double expct = expected.get(greek.getKey());
@@ -321,7 +314,7 @@ public class AsianOptionTest {
             final List<Date> fixingDates, final StrikedTypePayoff payoff, final Exercise exercise, final double s, final double q, final double r, final Date today,
             final double v, final double expected, final double calculated, final double tolerance) {
 
-        TestCase.fail(exercise + " Asian option with " + averageType + " and " + payoff + " payoff:\n" + "    running variable: "
+        fail(exercise + " Asian option with " + averageType + " and " + payoff + " payoff:\n" + "    running variable: "
                 + runningAccumulator + "\n" + "    past fixings:     " + pastFixings + "\n" + "    future fixings:   "
                 + fixingDates.size() + "\n" + "    underlying value: " + s + "\n" + "    strike:           " + payoff.strike()
                 + "\n" + "    dividend yield:   " + q + "\n" + "    risk-free rate:   " + r + "\n" + "    reference date:   "
@@ -337,6 +330,9 @@ public class AsianOptionTest {
         QL.info("Testing analytic continuous geometric average-price Asians...");
         final DayCounter dc = Actual360.getDayCounter();
         // data from "Option Pricing Formulas", Haug, pag.96-97
+
+        final Date today = new Settings().getEvaluationDate();
+
         QL.info("Today: " + today);
 
         final SimpleQuote spot = new SimpleQuote(80.0);
@@ -356,8 +352,7 @@ public class AsianOptionTest {
         final Option.Type type = Option.Type.PUT;
         /* @Real */final double strike = 85.0;
 
-        final Date exerciseDate = DateFactory.getFactory().getDate(
-                today.getDayOfMonth(), today.getMonthEnum(), today.getYear()).increment(90);
+        final Date exerciseDate = today.clone().addAssign(90);
 
         /* @Size */int pastFixings = Integer.MAX_VALUE;
         /* @Real */double runningAccumulator = Double.NaN;
@@ -384,7 +379,7 @@ public class AsianOptionTest {
         final List<Date> fixingDates = new ArrayList<Date>(91);
 
         for (/* @Size */int i = 0; i < 91; i++) {
-            fixingDates.add(DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(), today.getYear()).increment(i));
+            fixingDates.add(today.clone().addAssign(i));
         }
         final PricingEngine engine2 = new AnalyticDiscreteGeometricAveragePriceAsianEngine();
         final DiscreteAveragingAsianOption option2 = new DiscreteAveragingAsianOption(averageType, runningAccumulator, pastFixings,
@@ -433,12 +428,13 @@ public class AsianOptionTest {
                 new Handle<Quote>(spot), new Handle<YieldTermStructure>(qTS),
                 new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
 
+        final Date today = new Settings().getEvaluationDate();
+
         for (final Type type : types) {
             for (final double strike : strikes) {
                 for (final int length : lengths) {
 
-                    final Date exerciseDate = DateFactory.getFactory().getDate(today.getDayOfMonth(), today.getMonthEnum(),
-                            today.getYear() + length);
+                    final Date exerciseDate = new Date(today.dayOfMonth(), today.month(), today.year() + length);
                     final EuropeanExercise maturity = new EuropeanExercise(exerciseDate);
 
                     final PricingEngine engine = new AnalyticContinuousGeometricAveragePriceasianEngine();
@@ -510,15 +506,15 @@ public class AsianOptionTest {
                                         expected.put("vega", (value_p - value_m) / (2 * dv));
 
                                         // perturb date and get theta
-                                        final Date yesterday = today.getPreviousDay();
-                                        final Date tomorrow = today.getNextDay();
+                                        final Date yesterday = today.sub(1);
+                                        final Date tomorrow = today.add(1);
                                         /* @Time */final double dT = dc.yearFraction(yesterday, tomorrow);
-                                        settings.setEvaluationDate(yesterday);
+                                        new Settings().setEvaluationDate(yesterday);
                                         value_m = option.getNPV();
-                                        settings.setEvaluationDate(tomorrow);
+                                        new Settings().setEvaluationDate(tomorrow);
                                         value_p = option.getNPV();
                                         expected.put("theta", (value_p - value_m) / dT);
-                                        settings.setEvaluationDate(today);
+                                        new Settings().setEvaluationDate(today);
                                         // compare
                                         for (final Entry<String, Double> greek : calculated.entrySet()) {
                                             /* @Real */final double expct = expected.get(greek.getKey());

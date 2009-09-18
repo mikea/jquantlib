@@ -73,8 +73,9 @@ public abstract class StochasticProcess implements Observable, Observer {
 
     //FIXME: code review :: constructor added in order to get Praneet's work compiling
     protected StochasticProcess() {
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
     }
 
     /**
@@ -201,15 +202,16 @@ public abstract class StochasticProcess implements Observable, Observer {
     // implements Observer
     //
 
-    @Override
-    public void registerWith(final Observable o) {
-        o.addObserver(this);
-    }
-
-    @Override
-    public void unregisterWith(final Observable o) {
-        o.deleteObserver(this);
-    }
+    //XXX:registerWith
+    //    @Override
+    //    public void registerWith(final Observable o) {
+    //        o.addObserver(this);
+    //    }
+    //
+    //    @Override
+    //    public void unregisterWith(final Observable o) {
+    //        o.deleteObserver(this);
+    //    }
 
     @Override
     public void update(final Observable o, final Object arg) {

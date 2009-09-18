@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -31,7 +31,6 @@ import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 import org.junit.Test;
 
@@ -43,37 +42,35 @@ public class TestCalendarReferences {
 
     @Test
     public void testCalendarAdvance() {
-        Calendar calendar = Target.getCalendar();
-        DateFactory dateFactory = DateFactory.getFactory();
-        Date today = dateFactory.getDate(20, Month.JUNE, 2008);
-        Period thirtyYears = new Period(30, TimeUnit.YEARS);
+        final Calendar calendar = Target.getCalendar();
+        final Date today = new Date(20, Month.JUNE, 2008);
+        final Period thirtyYears = new Period(30, TimeUnit.YEARS);
 
         // check advance should return different reference
         Date nextDate = calendar.advance(today);
         assertNotSame(today, nextDate);
-        
+
         nextDate = calendar.advance(today, 10, TimeUnit.DAYS);
         assertNotSame(today, nextDate);
-        
+
         nextDate = calendar.advance(today, thirtyYears, BusinessDayConvention.FOLLOWING);
         assertNotSame(today, nextDate);
-        
-        
+
+
         nextDate = calendar.advance(today, thirtyYears, BusinessDayConvention.FOLLOWING, true);
         assertNotSame(today, nextDate);
-        
+
         nextDate = calendar.advance(today, 10, TimeUnit.DAYS, BusinessDayConvention.FOLLOWING, true);
         assertNotSame(today, nextDate);
     }
-    
+
     @Test
     public void testCalendarAdjust(){
-        Calendar calendar = Target.getCalendar();
-        DateFactory dateFactory = DateFactory.getFactory();
-        Date today = dateFactory.getDate(20, Month.JUNE, 2008);
-        
+        final Calendar calendar = Target.getCalendar();
+        final Date today = new Date(20, Month.JUNE, 2008);
+
         // check advance should return same reference
-        Date nextDate = calendar.adjust(today, BusinessDayConvention.FOLLOWING);
+        final Date nextDate = calendar.adjust(today, BusinessDayConvention.FOLLOWING);
         assertSame(today, nextDate);
     }
 }

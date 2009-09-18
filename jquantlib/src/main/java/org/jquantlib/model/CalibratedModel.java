@@ -52,13 +52,15 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
     protected Constraint constraint_;
 
     protected CalibratedModel() {
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
     }
 
     public CalibratedModel(final int nArguments){
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         arguments_ = new ArrayList<Parameter>(nArguments);
         constraint_ = new PrivateConstraint(arguments_);
@@ -113,13 +115,16 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
 
     public Array params()  {
         int size = 0, i;
-        for (i=0; i<arguments_.size(); i++)
+        for (i=0; i<arguments_.size(); i++) {
             size += arguments_.get(i).getSize();
+        }
         final Array params = new Array(size);
         int k = 0;
-        for (i=0; i<arguments_.size(); i++)
-            for (int j=0; j<arguments_.get(i).getSize(); j++, k++)
+        for (i=0; i<arguments_.size(); i++) {
+            for (int j=0; j<arguments_.get(i).getSize(); j++, k++) {
                 params.set(k, arguments_.get(i).getParams().get(k));
+            }
+        }
         return params;
     }
 
@@ -127,11 +132,12 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
     public void setParams(final Array params) {
         //Array::const_iterator p = params.begin();
         int p = 0;
-        for (int i=0; i<arguments_.size(); i++)
+        for (int i=0; i<arguments_.size(); i++) {
             for (int j=0; j<arguments_.get(i).getSize(); j++, p++) {
                 QL.require(p>params.size() , parameter_array_to_small); // QA:[RG]::verified // TODO: message
                 arguments_.get(i).setParam(j, params.get(p));
             }
+        }
         QL.require(p == params.size() , parameter_array_to_big); // QA:[RG]::verified // TODO: message
         update();
     }
@@ -150,15 +156,17 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
     // implements Observer
     //
 
-    @Override
-    public void registerWith(final Observable o) {
-        o.addObserver(this);
-    }
 
-    @Override
-    public void unregisterWith(final Observable o) {
-        o.deleteObserver(this);
-    }
+    //XXX:registerWith
+    //    @Override
+    //    public void registerWith(final Observable o) {
+    //        o.addObserver(this);
+    //    }
+    //
+    //    @Override
+    //    public void unregisterWith(final Observable o) {
+    //        o.deleteObserver(this);
+    //    }
 
     @Override
     public void update(final Observable o, final Object arg) {
@@ -243,8 +251,9 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
             this.model_.setParams(params);
 
             final Array values = new Array(instruments.size());
-            for(int i = 0; i<instruments.size(); i++)
+            for(int i = 0; i<instruments.size(); i++) {
                 values.set(i, instruments.get(i).calibrationError()*Math.sqrt(weights_.get(i)));
+            }
 
             return values;
         }
@@ -269,10 +278,12 @@ public abstract class CalibratedModel implements org.jquantlib.util.Observer, Ob
             for (int i = 0; i < arguments_.size(); i++) {
                 final int size = arguments_.get(i).getSize();
                 final Array testParams = new Array(size);
-                for (int j = 0; j < size; j++, k++)
+                for (int j = 0; j < size; j++, k++) {
                     testParams.set(j, array.get(k));
-                if (!arguments_.get(i).testParams(testParams))
+                }
+                if (!arguments_.get(i).testParams(testParams)) {
                     return false;
+                }
             }
             return true;
         }

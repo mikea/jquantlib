@@ -17,7 +17,9 @@ public class DiscountingSwapEngine extends SwapEngine implements Observer {
 
     public DiscountingSwapEngine(final Handle<YieldTermStructure> discountCurve) /* @ReadOnly */ {
         this.discountCurve = discountCurve;
-        registerWith(this.discountCurve.getLink());
+        this.discountCurve.getLink().addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.discountCurve.getLink());
     }
 
     @Override
@@ -33,22 +35,23 @@ public class DiscountingSwapEngine extends SwapEngine implements Observer {
             results.legBPS[i] = arguments.payer[i] * CashFlows.getInstance().bps(arguments.legs.get(i), discountCurve);
             results.value += results.legNPV[i];
         }
-     }
+    }
 
 
     //
     // implements Observer
     //
 
-    @Override
-    public void registerWith(final Observable o) {
-        o.addObserver(this);
-    }
-
-    @Override
-    public void unregisterWith(final Observable o) {
-        o.deleteObserver(this);
-    }
+    //XXX:registerWith
+    //    @Override
+    //    public void registerWith(final Observable o) {
+    //        o.addObserver(this);
+    //    }
+    //
+    //    @Override
+    //    public void unregisterWith(final Observable o) {
+    //        o.deleteObserver(this);
+    //    }
 
     @Override
     // TODO: code review :: please verify against QL/C++ code

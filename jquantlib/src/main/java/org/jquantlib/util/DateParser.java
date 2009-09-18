@@ -22,9 +22,6 @@
 
 package org.jquantlib.util;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import org.jquantlib.QL;
 
 
@@ -53,8 +50,9 @@ public class DateParser {
         final int month = Integer.parseInt(str.substring(5, 7));
         final int day = Integer.parseInt(str.substring(8, 10));
 
-        QL.debug(DateFactory.getFactory().getDate(day, Month.valueOf(month), year).toString());
-        return DateFactory.getFactory().getDate(day, Month.valueOf(month), year);
+        final Date date = new Date(day, Month.valueOf(month), year);
+        QL.debug(date.isoDate().toString());
+        return date;
     }
 
     /**
@@ -74,24 +72,29 @@ public class DateParser {
         slist = str.split("/");
         flist = fmt.split("/");
 
-        if (slist.length != flist.length)
-            return Date.NULL_DATE;
+        Date date;
 
-        for (int i = 0; i < flist.length; i++) {
-            final String sub = flist[i];
-            if (sub.equalsIgnoreCase("dd"))
-                d = Integer.parseInt(slist[i]);
-            else if (sub.equalsIgnoreCase("mm"))
-                m = Integer.parseInt(slist[i]);
-            else if (sub.equalsIgnoreCase("yyyy")) {
-                y = Integer.parseInt(slist[i]);
-                if (y < 100)
-                    y += 2000;
+        if (slist.length != flist.length) {
+            date = new Date();
+        } else {
+            for (int i = 0; i < flist.length; i++) {
+                final String sub = flist[i];
+                if (sub.equalsIgnoreCase("dd")) {
+                    d = Integer.parseInt(slist[i]);
+                } else if (sub.equalsIgnoreCase("mm")) {
+                    m = Integer.parseInt(slist[i]);
+                } else if (sub.equalsIgnoreCase("yyyy")) {
+                    y = Integer.parseInt(slist[i]);
+                    if (y < 100) {
+                        y += 2000;
+                    }
+                }
             }
+            date = new Date(d, m, y);
         }
 
-        QL.debug(DateFactory.getFactory().getDate(d, Month.valueOf(m), y).toString());
-        return DateFactory.getFactory().getDate(d, Month.valueOf(m), y);
+        QL.debug(date.isoDate().toString());
+        return date;
     }
 
 }

@@ -41,7 +41,6 @@ package org.jquantlib.termstructures;
 
 import java.util.List;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
@@ -86,13 +85,6 @@ import org.jquantlib.util.Observer;
 public abstract class AbstractTermStructure implements TermStructure {
 
     static private final String THIS_METHOD_MUST_BE_OVERRIDDEN = "This method must be overridden";
-
-
-    //
-    // protected fields
-    //
-
-    protected final Settings settings;
 
 
     //
@@ -193,7 +185,6 @@ public abstract class AbstractTermStructure implements TermStructure {
         this.calendar = null;
         this.settlementDays = 0;
         this.dayCounter = dc;
-        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
 
         // When Case 1 or Case 3
         this.moving = false;
@@ -236,7 +227,6 @@ public abstract class AbstractTermStructure implements TermStructure {
         this.settlementDays = 0;
         this.calendar = calendar;
         this.dayCounter = dc;
-        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
 
         // When Case 1 or Case 3
         this.moving = false;
@@ -245,7 +235,9 @@ public abstract class AbstractTermStructure implements TermStructure {
 
         // initialize reference date with this class as observer
         this.referenceDate = referenceDate;
-        registerWith(this.referenceDate);
+        this.referenceDate.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.referenceDate);
     }
 
     /**
@@ -279,13 +271,14 @@ public abstract class AbstractTermStructure implements TermStructure {
         this.settlementDays = settlementDays;
         this.calendar = calendar;
         this.dayCounter = dc;
-        this.settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
 
         // When Case 2
         this.moving = true;
         this.updated = false;
-        this.today = settings.getEvaluationDate();
-        registerWith(today);
+        this.today = new Settings().getEvaluationDate();
+        this.today.addObserver(this);
+        //XXX:registerWith
+        //registerWith(today);
 
         // initialize reference date without any observers
         this.referenceDate = null;
@@ -356,11 +349,12 @@ public abstract class AbstractTermStructure implements TermStructure {
      */
     @Override
     public Date referenceDate() {
-        if (moving)
+        if (moving) {
             if (!updated) {
                 referenceDate = calendar().advance(today, settlementDays, TimeUnit.DAYS);
                 updated = true;
             }
+        }
 
         // i.e: Case 3
         QL.require(referenceDate!=null , THIS_METHOD_MUST_BE_OVERRIDDEN); // QA:[RG]::verified // TODO: message
@@ -402,20 +396,22 @@ public abstract class AbstractTermStructure implements TermStructure {
     // implements Observer
     //
 
-    @Override
-    public void registerWith(final Observable o) {
-        o.addObserver(this);
-    }
-
-    @Override
-    public void unregisterWith(final Observable o) {
-        o.deleteObserver(this);
-    }
+    //XXX:registerWith
+    //    @Override
+    //    public void registerWith(final Observable o) {
+    //        o.addObserver(this);
+    //    }
+    //
+    //    @Override
+    //    public void unregisterWith(final Observable o) {
+    //        o.deleteObserver(this);
+    //    }
 
     @Override
     public void update(final Observable o, final Object arg) {
-        if (moving)
+        if (moving) {
             updated = false;
+        }
         notifyObservers();
     }
 

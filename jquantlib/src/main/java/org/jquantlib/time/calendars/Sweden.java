@@ -107,10 +107,10 @@ public class Sweden extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth(),dd = date.getDayOfYear();;
-            final int m = date.getMonth();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth(),dd = date.dayOfYear();;
+            final int m = date.month().value();
+            final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
                     // Good Friday
@@ -122,26 +122,26 @@ public class Sweden extends DelegateCalendar {
                     // Whit Monday
                     || (dd == em+49)
                     // New Year's Day
-                    || (d == 1  && m == Month.JANUARY.toInteger())
+                    || (d == 1  && m == Month.JANUARY.value())
                     // Epiphany
-                    || (d == 6  && m == Month.JANUARY.toInteger())
+                    || (d == 6  && m == Month.JANUARY.value())
                     // May Day
-                    || (d == 1  && m == Month.MAY.toInteger())
+                    || (d == 1  && m == Month.MAY.value())
                     // June 6 id National Day but is not a holiday.
                     // It has been debated wheter or not this day should be
                     // declared as a holiday.
                     // As of 2002 the Stockholmborsen is open that day
                     // || (d == 6  && m == June)
                     // Midsummer Eve (Friday between June 18-24)
-                    || (w == Weekday.FRIDAY && (d >= 18 && d <= 24) && m == Month.JUNE.toInteger())
+                    || (w == Weekday.FRIDAY && (d >= 18 && d <= 24) && m == Month.JUNE.value())
                     // Christmas Eve
-                    || (d == 24 && m == Month.DECEMBER.toInteger())
+                    || (d == 24 && m == Month.DECEMBER.value())
                     // Christmas Day
-                    || (d == 25 && m == Month.DECEMBER.toInteger())
+                    || (d == 25 && m == Month.DECEMBER.value())
                     // Boxing Day
-                    || (d == 26 && m == Month.DECEMBER.toInteger())
+                    || (d == 26 && m == Month.DECEMBER.value())
                     // New Year's Eve
-                    || (d == 31 && m == Month.DECEMBER.toInteger()))
+                    || (d == 31 && m == Month.DECEMBER.value()))
                 return false;
             return true;
         }

@@ -108,40 +108,40 @@ public class CzechRepublic extends DelegateCalendar {
 
         @Override
         public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.getWeekday();
-            final int d = date.getDayOfMonth(), dd = date.getDayOfYear();
-            final int m = date.getMonth();
-            final int y = date.getYear();
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final int m = date.month().value();
+            final int y = date.year();
             final int em = easterMonday(y);
 
             if (isWeekend(w)
                     // New Year's Day
-                    || (d == 1 && m == Month.JANUARY.toInteger())
+                    || (d == 1 && m == Month.JANUARY.value())
                     // Easter Monday
                     || (dd == em)
                     // Labour Day
-                    || (d == 1 && m == Month.MAY.toInteger())
+                    || (d == 1 && m == Month.MAY.value())
                     // Liberation Day
-                    || (d == 8 && m == Month.MAY.toInteger())
+                    || (d == 8 && m == Month.MAY.value())
                     // SS. Cyril and Methodius
-                    || (d == 5 && m == Month.JULY.toInteger())
+                    || (d == 5 && m == Month.JULY.value())
                     // Jan Hus Day
-                    || (d == 6 && m == Month.JULY.toInteger())
+                    || (d == 6 && m == Month.JULY.value())
                     // Czech Statehood Day
-                    || (d == 28 && m == Month.SEPTEMBER.toInteger())
+                    || (d == 28 && m == Month.SEPTEMBER.value())
                     // Independence Day
-                    || (d == 28 && m == Month.OCTOBER.toInteger())
+                    || (d == 28 && m == Month.OCTOBER.value())
                     // Struggle for Freedom and Democracy Day
-                    || (d == 17 && m == Month.NOVEMBER.toInteger())
+                    || (d == 17 && m == Month.NOVEMBER.value())
                     // Christmas Eve
-                    || (d == 24 && m == Month.DECEMBER.toInteger())
+                    || (d == 24 && m == Month.DECEMBER.value())
                     // Christmas
-                    || (d == 25 && m == Month.DECEMBER.toInteger())
+                    || (d == 25 && m == Month.DECEMBER.value())
                     // St. Stephen
-                    || (d == 26 && m == Month.DECEMBER.toInteger())
+                    || (d == 26 && m == Month.DECEMBER.value())
                     // unidentified closing days for stock exchange
-                    || (d == 2 && m == Month.JANUARY.toInteger() && y == 2004)
-                    || (d == 31 && m == Month.DECEMBER.toInteger() && y == 2004))
+                    || (d == 2 && m == Month.JANUARY.value() && y == 2004)
+                    || (d == 31 && m == Month.DECEMBER.value() && y == 2004))
                 return false;
             return true;
         }

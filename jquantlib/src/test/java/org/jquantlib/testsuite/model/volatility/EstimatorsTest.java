@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.testsuite.model.volatility;
 
@@ -46,44 +46,43 @@ import org.jquantlib.model.volatility.ConstantEstimator;
 import org.jquantlib.model.volatility.SimpleLocalEstimator;
 import org.jquantlib.model.volatility.VolatilityCompositor;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DefaultDate;
 import org.jquantlib.util.Month;
 import org.jquantlib.util.TimeSeries;
 import org.junit.Test;
 
 public class EstimatorsTest {
 
-	private final TimeSeries<Double> ts;
+    private final TimeSeries<Double> ts;
 
-	public EstimatorsTest() {
+    public EstimatorsTest() {
         QL.info("Testing volatility model construction...");
 
         final Date[] dates = new Date[] {
-                new DefaultDate(25, Month.MARCH, 2005),
-                new DefaultDate(29, Month.MARCH, 2005),
-                new DefaultDate(15, Month.MARCH, 2005),
-                new DefaultDate(21, Month.MARCH, 2005),
-                new DefaultDate(27, Month.MARCH, 2005) };
+                new Date(25, Month.MARCH, 2005),
+                new Date(29, Month.MARCH, 2005),
+                new Date(15, Month.MARCH, 2005),
+                new Date(21, Month.MARCH, 2005),
+                new Date(27, Month.MARCH, 2005) };
 
         final double[] values = new double[] { 1.2, 2.3, 0.3, 2.0, 2.5 };
 
         this.ts = new TimeSeries<Double>(dates, values) { /* anonymous */ };
     }
 
-	@Test
-	public void testSECalculate() {
-	    final SimpleLocalEstimator sle = new SimpleLocalEstimator(1/360.0);
-	    final TimeSeries<Double> locale = sle.calculate(ts);
-		assertNotNull(locale) ;
-	}
+    @Test
+    public void testSECalculate() {
+        final SimpleLocalEstimator sle = new SimpleLocalEstimator(1/360.0);
+        final TimeSeries<Double> locale = sle.calculate(ts);
+        assertNotNull(locale) ;
+    }
 
-	@Test
-	public void testCECalculate() {
-	    final SimpleLocalEstimator sle = new SimpleLocalEstimator(1/360.0);
-	    final TimeSeries<Double> locale = sle.calculate(ts);
-		final VolatilityCompositor ce = new ConstantEstimator(1);
-		final TimeSeries<Double> value = ce.calculate(locale);
-		assertNotNull(value) ;
-	}
+    @Test
+    public void testCECalculate() {
+        final SimpleLocalEstimator sle = new SimpleLocalEstimator(1/360.0);
+        final TimeSeries<Double> locale = sle.calculate(ts);
+        final VolatilityCompositor ce = new ConstantEstimator(1);
+        final TimeSeries<Double> value = ce.calculate(locale);
+        assertNotNull(value) ;
+    }
 
 }

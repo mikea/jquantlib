@@ -80,8 +80,9 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
         super(5);
 
         //TODO: Code review :: incomplete code
-        if (true)
+        if (true) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         termStructureConsistentModelClass = new TermStructureConsistentModelClass(termStructure);
         a_ = (arguments_.get(0) /* [0] */);
@@ -92,7 +93,13 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
         rho_ = (arguments_.get(4) /* []4] */);
 
         generateArguments();
-        registerWith(termStructure);
+
+        // TODO: code review :: please verify against QL/C++ code
+        // seems like we should have this.termStructure
+
+        termStructure.addObserver(this);
+        //XXX:registerWith
+        //registerWith(termStructure);
     }
 
     public G2(final Handle<YieldTermStructure> termStructure) {
@@ -147,8 +154,8 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
 
     protected double /* @Real */A(final double /* @Time */t, final double /* @Time */T) {
         return termStructureConsistentModelClass.termStructure().getLink().discount(T)
-                / termStructureConsistentModelClass.termStructure().getLink().discount(t)
-                * Math.exp(0.5 * (V(T - t) - V(T) + V(t)));
+        / termStructureConsistentModelClass.termStructure().getLink().discount(t)
+        * Math.exp(0.5 * (V(T - t) - V(T) + V(t)));
     }
 
     protected double /* @Real */B(final double /* @Real */x, final double /* @Time */t) {
@@ -163,7 +170,7 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
         final double /* @Real */valuex = cx * cx * (t + (2.0 * expat - 0.5 * expat * expat - 1.5) / a());
         final double /* @Real */valuey = cy * cy * (t + (2.0 * expbt - 0.5 * expbt * expbt - 1.5) / b());
         final double /* @Real */value = 2.0 * rho() * cx * cy
-                * (t + (expat - 1.0) / a() + (expbt - 1.0) / b() - (expat * expbt - 1.0) / (a() + b()));
+        * (t + (expat - 1.0) / a() + (expbt - 1.0) / b() - (expat * expbt - 1.0) / (a() + b()));
         return valuex + valuey + value;
     }
 
@@ -196,8 +203,8 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
         final double /* @Real */sigma2 = sigma() * sigma();
         final double /* @Real */eta2 = eta() * eta();
         final double /* @Real */value = 0.5 * sigma2 * temp1 * temp1 * (1.0 - Math.exp(-2.0 * a() * t)) / a3 + 0.5 * eta2 * temp2 * temp2
-                * (1.0 - Math.exp(-2.0 * b() * t)) / b3 + 2.0 * rho() * sigma() * eta() / (a() * b() * (a() + b())) * temp1 * temp2
-                * temp;
+        * (1.0 - Math.exp(-2.0 * b() * t)) / b3 + 2.0 * rho() * sigma() * eta() / (a() * b() * (a() + b())) * temp1 * temp2
+        * temp;
         return Math.sqrt(value);
     }
 
@@ -229,9 +236,9 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
         static class Impl extends Parameter.Impl {
 
             public Impl(final Handle<YieldTermStructure> termStructure, final double /* @Real */a, final double /* @Real */sigma, final double /*
-                                                                                                                              * @Real
-                                                                                                                              */b,
-                    final double /* @Real */eta, final double /* @Real */rho) {
+             * @Real
+             */b,
+             final double /* @Real */eta, final double /* @Real */rho) {
                 termStructure_ = (termStructure);
                 a_ = (a);
                 sigma_ = (sigma);
@@ -340,7 +347,7 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
             for (i = 0; i < size_; i++) {
                 final double /* @Real */h2 = h1 + Bb_.get(i) * sigmay_ * Math.sqrt(1.0 - rhoxy_ * rhoxy_);
                 final double /* @Real */kappa = -Bb_.get(i)
-                        * (muy_ - 0.5 * txy * txy * sigmay_ * sigmay_ * Bb_.get(i) + rhoxy_ * sigmay_ * (x - mux_) / sigmax_);
+                * (muy_ - 0.5 * txy * txy * sigmay_ * sigmay_ * Bb_.get(i) + rhoxy_ * sigmay_ * (x - mux_) / sigmax_);
                 // operator overloading problem again
                 value -= lambda.get(i) * Math.exp(kappa) * /* phi(-w_*h2) */phi.op(-w_ * h2);
             }
@@ -384,6 +391,6 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
     @Override
     public double discountBond(final double now, final double maturity, final Array factors) {
         throw new UnsupportedOperationException(
-                "not sure whether this is a quantlib error - looks like they forgot to overwrite a virtual method");
+        "not sure whether this is a quantlib error - looks like they forgot to overwrite a virtual method");
     }
 }

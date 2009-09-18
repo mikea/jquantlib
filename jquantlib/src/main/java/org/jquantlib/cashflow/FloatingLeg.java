@@ -16,22 +16,23 @@ import org.jquantlib.util.Date;
 public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, FloatingCouponType, CappedFlooredCouponType> extends Leg {
 
     public FloatingLeg(
-                final Array nominals,
-                final Schedule schedule,
-                final InterestRateIndexType index,
-                final DayCounter paymentDayCounter,
-                final BusinessDayConvention paymentAdj,
-                final Array fixingDays,
-                final Array gearings,
-                final Array spreads,
-                final Array caps,
-                final Array floors,
-                final boolean isInArrears,
-                final boolean isZero) {
+            final Array nominals,
+            final Schedule schedule,
+            final InterestRateIndexType index,
+            final DayCounter paymentDayCounter,
+            final BusinessDayConvention paymentAdj,
+            final Array fixingDays,
+            final Array gearings,
+            final Array spreads,
+            final Array caps,
+            final Array floors,
+            final boolean isInArrears,
+            final boolean isZero) {
         super(schedule.size() - 1);
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         //
         //FIXME: This class is generic but we are not handling generic parameters properly.
@@ -62,50 +63,52 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
             refEnd = end = schedule.date(i + 1);
             paymentDate = calendar.adjust(end, paymentAdj);
 
-            if (i == 0 && !schedule.isRegular(i + 1))
-                refStart = calendar.adjust(end.decrement(schedule.tenor()), paymentAdj);
-            if (i == n - 1 && !schedule.isRegular(i + 1))
-                refEnd = calendar.adjust(start.increment(schedule.tenor()), paymentAdj);
-            if (Detail.get(gearings, i, 1.0) == 0.0)
+            if (i == 0 && !schedule.isRegular(i + 1)) {
+                refStart = calendar.adjust(end.sub(schedule.tenor()), paymentAdj);
+            }
+            if (i == n - 1 && !schedule.isRegular(i + 1)) {
+                refEnd = calendar.adjust(start.add(schedule.tenor()), paymentAdj);
+            }
+            if (Detail.get(gearings, i, 1.0) == 0.0) {
                 add(new FixedRateCoupon(Detail.get(nominals, i, new Double(1.0)),
-                                    paymentDate, Detail.effectiveFixedRate(spreads,caps,floors,i),
-                                    paymentDayCounter,
-                                    start, end, refStart, refEnd));
-            else if (Detail.noOption(caps, floors, i)){
+                        paymentDate, Detail.effectiveFixedRate(spreads,caps,floors,i),
+                        paymentDayCounter,
+                        start, end, refStart, refEnd));
+            } else if (Detail.noOption(caps, floors, i)){
                 //try{
                     //get the generic type
-                    final Class<?> fctklass = new TypeTokenTree(this.getClass()).getRoot().get(1).getElement();
-                    //construct a new instance using reflection. first get the constructor ...
-                    FloatingCouponType frc;
-                    try {
-                        frc = (FloatingCouponType) fctklass.getConstructor(
-                                Date.class,
-                                int.class,
-                                Date.class,
-                                Date.class,
-                                int.class,
-                                InterestRateIndex.class,
-                                double.class,
-                                double.class,
-                                Date.class,
-                                Date.class,
-                                DayCounter.class,
-                                boolean.class)
-                         //then create a new instance
-                        .newInstance(paymentDate,
-                            Detail.get(nominals, i, new Double(1.0)),
-                            start, end,
-                            Detail.get(fixingDays, i, index.fixingDays()),
-                            index,
-                            Detail.get(gearings, i, 1.0),
-                            Detail.get(spreads, i, 0.0),
-                            refStart, refEnd,
-                            paymentDayCounter, isInArrears);
-                    } catch (final Exception e) {
-                        throw new LibraryException("Couldn't construct new instance from generic type"); // QA:[RG]::verified // TODO: message
-                    }
-                add((CashFlow)frc);
+                final Class<?> fctklass = new TypeTokenTree(this.getClass()).getRoot().get(1).getElement();
+                //construct a new instance using reflection. first get the constructor ...
+                FloatingCouponType frc;
+                try {
+                    frc = (FloatingCouponType) fctklass.getConstructor(
+                            Date.class,
+                            int.class,
+                            Date.class,
+                            Date.class,
+                            int.class,
+                            InterestRateIndex.class,
+                            double.class,
+                            double.class,
+                            Date.class,
+                            Date.class,
+                            DayCounter.class,
+                            boolean.class)
+                            //then create a new instance
+                            .newInstance(paymentDate,
+                                    Detail.get(nominals, i, new Double(1.0)),
+                                    start, end,
+                                    Detail.get(fixingDays, i, index.fixingDays()),
+                                    index,
+                                    Detail.get(gearings, i, 1.0),
+                                    Detail.get(spreads, i, 0.0),
+                                    refStart, refEnd,
+                                    paymentDayCounter, isInArrears);
+                } catch (final Exception e) {
+                    throw new LibraryException("Couldn't construct new instance from generic type"); // QA:[RG]::verified // TODO: message
                 }
+                add((CashFlow)frc);
+            }
             else {
                 final Class<?> cfcklass = new TypeTokenTree(this.getClass()).getRoot().get(2).getElement();
                 CappedFlooredCouponType cfctc;
@@ -124,22 +127,22 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
                             Date.class,
                             DayCounter.class,
                             boolean.class)
-                     //then create a new instance
-                    .newInstance(paymentDate,
+                            //then create a new instance
+                            .newInstance(paymentDate,
 
-                        Detail.get(nominals, i, new Double(1.0)),
-                        start, end,
-                        Detail.get(fixingDays, i, index.fixingDays()),
-                        index,
-                        Detail.get(gearings, i, 1.0),
-                        Detail.get(spreads, i, 0.0),
-                        refStart, refEnd,
-                        paymentDayCounter, isInArrears);
+                                    Detail.get(nominals, i, new Double(1.0)),
+                                    start, end,
+                                    Detail.get(fixingDays, i, index.fixingDays()),
+                                    index,
+                                    Detail.get(gearings, i, 1.0),
+                                    Detail.get(spreads, i, 0.0),
+                                    refStart, refEnd,
+                                    paymentDayCounter, isInArrears);
                 } catch (final Exception e) {
                     throw new LibraryException("Couldn't construct new instance from generic type"); // QA:[RG]::verified // TODO: message
                 }
-            add((CashFlow)cfctc);
-         }
+                add((CashFlow)cfctc);
+            }
         }
     }
 }

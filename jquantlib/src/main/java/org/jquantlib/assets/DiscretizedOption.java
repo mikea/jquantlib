@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.matrixutilities.Array;
 
 /**
@@ -38,71 +39,74 @@ import org.jquantlib.math.matrixutilities.Array;
 // TODO: complete mandatoryTimes
 public class DiscretizedOption extends DiscretizedAsset {
 
-	protected Exercise.Type exerciseType;
-	protected List<Double> exerciseTimes;
-	protected DiscretizedAsset underlying;
+    protected Exercise.Type exerciseType;
+    protected List<Double> exerciseTimes;
+    protected DiscretizedAsset underlying;
 
-	public DiscretizedOption(final DiscretizedAsset underlying,
-			final Exercise.Type exerciseType, final List<Double> exerciseTimes) {
-		this.underlying = underlying;
-		this.exerciseType = exerciseType;
-		this.exerciseTimes = exerciseTimes;
-	}
+    public DiscretizedOption(final DiscretizedAsset underlying,
+            final Exercise.Type exerciseType, final List<Double> exerciseTimes) {
+        this.underlying = underlying;
+        this.exerciseType = exerciseType;
+        this.exerciseTimes = exerciseTimes;
+    }
 
-	@Override
+    @Override
     public void reset(final int size) {
-	    QL.require(method() == underlying.method() , "option and underlying were initialized on different methods");
-		values = new Array(size);
-		adjustValues();
-	}
+        QL.require(method() == underlying.method() , "option and underlying were initialized on different methods");
+        values = new Array(size);
+        adjustValues();
+    }
 
-	@Override
+    @Override
     public List</* Time */Double> mandatoryTimes() {
-		final List</* Time */Double> times = underlying.mandatoryTimes();
-		// discard negative times...
-		/** TODO: ** */
-		/*
-		 * List<Double>::const_iterator i =
-		 * std::find_if(exerciseTimes_.begin(),exerciseTimes_.end(),
-		 * std::bind2nd(std::greater_equal<Time>(),0.0)); // and add the
-		 * positive ones times.insert(times.end(), i, exerciseTimes_.end());
-		 */
-		return times;
-	}
+        final List</* Time */Double> times = underlying.mandatoryTimes();
+        // discard negative times...
+        /** TODO: ** */
+        /*
+         * List<Double>::const_iterator i =
+         * std::find_if(exerciseTimes_.begin(),exerciseTimes_.end(),
+         * std::bind2nd(std::greater_equal<Time>(),0.0)); // and add the
+         * positive ones times.insert(times.end(), i, exerciseTimes_.end());
+         */
+        return times;
+    }
 
-	protected void applyExerciseCondition() {
-		for (int i = 0; i < values.size(); i++)
-			values.set(i, Math.max(underlying.values().get(i), values.get(i)));
-	}
+    protected void applyExerciseCondition() {
+        for (int i = 0; i < values.size(); i++) {
+            values.set(i, Math.max(underlying.values().get(i), values.get(i)));
+        }
+    }
 
-	@Override
+    @Override
     public void postAdjustValuesImpl() {
-		/*
-		 * In the real world, with time flowing forward, first any payment is
-		 * settled and only after options can be exercised. Here, with time
-		 * flowing backward, options must be exercised before performing the
-		 * adjustment.
-		 */
-		underlying.partialRollback(time());
-		underlying.preAdjustValues();
-		int i;
-		switch (exerciseType) {
-		case AMERICAN:
-			if (time >= exerciseTimes.get(0) && time <= exerciseTimes.get(1))
-				applyExerciseCondition();
-			break;
-		case BERMUDAN:
-		case EUROPEAN:
-			for (i = 0; i < exerciseTimes.size(); i++) {
-				/* Time */final double t = exerciseTimes.get(i);
-				if (t >= 0.0 && isOnTime(t))
-					applyExerciseCondition();
-			}
-			break;
-		default:
-			QL.assertion("invalid exercise type"); // QA:[RG]::verified // TODO: message
-		}
-		underlying.postAdjustValues();
-	}
+        /*
+         * In the real world, with time flowing forward, first any payment is
+         * settled and only after options can be exercised. Here, with time
+         * flowing backward, options must be exercised before performing the
+         * adjustment.
+         */
+        underlying.partialRollback(time());
+        underlying.preAdjustValues();
+        int i;
+        switch (exerciseType) {
+        case AMERICAN:
+            if (time >= exerciseTimes.get(0) && time <= exerciseTimes.get(1)) {
+                applyExerciseCondition();
+            }
+            break;
+        case BERMUDAN:
+        case EUROPEAN:
+            for (i = 0; i < exerciseTimes.size(); i++) {
+                /* Time */final double t = exerciseTimes.get(i);
+                if (t >= 0.0 && isOnTime(t)) {
+                    applyExerciseCondition();
+                }
+            }
+            break;
+        default:
+            throw new LibraryException("invalid exercise type"); // QA:[RG]::verified // TODO: message
+        }
+        underlying.postAdjustValues();
+    }
 
 }

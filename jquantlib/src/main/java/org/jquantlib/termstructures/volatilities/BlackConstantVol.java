@@ -36,7 +36,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.termstructures.volatilities;
 
@@ -49,7 +49,6 @@ import org.jquantlib.termstructures.BlackVolatilityTermStructure;
 import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
@@ -66,55 +65,61 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     private final DayCounter dayCounter;
 
     public BlackConstantVol(final Date referenceDate, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
-    	super(referenceDate);
-    	this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
-    	this.dayCounter = dayCounter;
+        super(referenceDate);
+        this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
+        this.dayCounter = dayCounter;
     }
 
     public BlackConstantVol(final Date referenceDate, final Handle<? extends Quote> volatility, final DayCounter dayCounter) {
-    	super(referenceDate);
-    	this.volatility = volatility;
-    	this.dayCounter = dayCounter;
-    	registerWith(volatility);
+        super(referenceDate);
+        this.volatility = volatility;
+        this.dayCounter = dayCounter;
+
+        this.volatility.addObserver(this);
+        //XXX:registerWith
+        //registerWith(volatility);
     }
 
     public BlackConstantVol(final int settlementDays, final Calendar calendar, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
-    	super(settlementDays, calendar);
-    	this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
-    	this.dayCounter = dayCounter;
+        super(settlementDays, calendar);
+        this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
+        this.dayCounter = dayCounter;
     }
 
     public BlackConstantVol(final int settlementDays, final Calendar calendar, final Handle<? extends Quote> volatility, final DayCounter dayCounter) {
-    	super(settlementDays, calendar);
-    	this.volatility = volatility;
-    	this.dayCounter = dayCounter;
-    	registerWith(volatility);
+        super(settlementDays, calendar);
+        this.volatility = volatility;
+        this.dayCounter = dayCounter;
+
+        this.volatility.addObserver(this);
+        //XXX:registerWith
+        //registerWith(volatility);
     }
 
-	public BlackConstantVol(final Date referenceDate,
-		final Calendar calendar, final /*@Volatility*/ double volatility,
-		final DayCounter dayCounter){
+    public BlackConstantVol(final Date referenceDate,
+            final Calendar calendar, final /*@Volatility*/ double volatility,
+            final DayCounter dayCounter){
 
-    	super(referenceDate,calendar);
+        super(referenceDate,calendar);
 
-    	this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
-    	this.dayCounter = dayCounter;
+        this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
+        this.dayCounter = dayCounter;
 
-	}
+    }
 
 
-	//
-	// Overrides TermStructure
-	//
+    //
+    // Overrides TermStructure
+    //
 
-	@Override
+    @Override
     public final DayCounter dayCounter() {
-    	return dayCounter;
+        return dayCounter;
     }
 
     @Override
     public final Date maxDate() {
-        return DateFactory.getFactory().getMaxDate();
+        return new Date().statics().maxDate();
     }
 
 
@@ -124,13 +129,13 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
 
     @Override
     public final /*@Price*/ double minStrike() {
-    	return Double.NEGATIVE_INFINITY;
-	}
+        return Double.NEGATIVE_INFINITY;
+    }
 
-	@Override
+    @Override
     public final /*@Price*/ double maxStrike() {
-    	return Double.POSITIVE_INFINITY;
-	}
+        return Double.POSITIVE_INFINITY;
+    }
 
     @Override
     protected final /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
@@ -138,18 +143,18 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     }
 
 
-	//
-	// implements TypedVisitable
-	//
+    //
+    // implements TypedVisitable
+    //
 
-	@Override
-	public void accept(final TypedVisitor<TermStructure> v) {
-		final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
-		} else {
-			super.accept(v);
-		}
-	}
+    @Override
+    public void accept(final TypedVisitor<TermStructure> v) {
+        final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null) {
+            v1.visit(this);
+        } else {
+            super.accept(v);
+        }
+    }
 
 }

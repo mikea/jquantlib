@@ -22,7 +22,7 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import org.jquantlib.Configuration;
+import org.jquantlib.Settings;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.RateHelper;
@@ -58,8 +58,10 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
         super();
 
         // TODO: code review :: please verify against QL/C++ code
-        this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-        registerWith(this.evaluationDate);
+        this.evaluationDate = new Settings().getEvaluationDate();
+        this.evaluationDate.addObserver(this);
+        // XXX:registerWith
+        //registerWith(this.evaluationDate);
     }
 
 
@@ -69,21 +71,27 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
 
     public RelativeDateRateHelper(/*@Price*/ final double d) {
         super(d);
-        this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-        registerWith(this.evaluationDate);
+        this.evaluationDate = new Settings().getEvaluationDate();
+        this.evaluationDate.addObserver(this);
+        // XXX:registerWith
+        //registerWith(this.evaluationDate);
     }
 
     public RelativeDateRateHelper(final Handle<Quote> quote) {
         super(quote);
-        this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-        registerWith(this.evaluationDate);
+        this.evaluationDate = new Settings().getEvaluationDate();
+        this.evaluationDate.addObserver(this);
+        // XXX:registerWith
+        //registerWith(this.evaluationDate);
     }
 
 
     public RelativeDateRateHelper(final Handle<Quote> quote, final T termStructure, final Date earliestDate, final Date latestDate) {
         super(quote, termStructure, earliestDate, latestDate);
-        this.evaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
-        registerWith(this.evaluationDate);
+        this.evaluationDate = new Settings().getEvaluationDate();
+        this.evaluationDate.addObserver(this);
+        // XXX:registerWith
+        //registerWith(this.evaluationDate);
     }
 
 
@@ -100,7 +108,7 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
 
     @Override
     public void update(final Observable o, final Object arg) {
-        final Date newEvaluationDate = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+        final Date newEvaluationDate = new Settings().getEvaluationDate();
         if (!evaluationDate.equals(newEvaluationDate)) {
             evaluationDate = newEvaluationDate;
             initializeDates();

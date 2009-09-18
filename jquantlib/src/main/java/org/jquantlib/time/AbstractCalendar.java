@@ -29,7 +29,6 @@ import java.util.List;
 import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.slf4j.helpers.MessageFormatter;
 
 
@@ -59,8 +58,9 @@ public abstract class AbstractCalendar implements Calendar {
     public void addHoliday(final Date d) {
         // if it's already a holiday, leave the calendar alone.
         // Otherwise, add it.
-        if (isBusinessDay(d))
+        if (isBusinessDay(d)) {
             addedHolidays.add(d);
+        }
     }
 
     public void removeHoliday(final Date d) {
@@ -84,8 +84,9 @@ public abstract class AbstractCalendar implements Calendar {
      * {@inheritDoc}
      */
     public boolean isBusinessDay(final Date date) {
-        if (isAddedHoliday(date))
+        if (isAddedHoliday(date)) {
             return false;
+        }
         return true;
     }
 
@@ -109,32 +110,39 @@ public abstract class AbstractCalendar implements Calendar {
     public final Date adjust(final Date d, final BusinessDayConvention c) {
         QL.require(d != null , "date not specified"); // QA:[RG]::verified // TODO: message
 
-        if (c == BusinessDayConvention.UNADJUSTED)
+        if (c == BusinessDayConvention.UNADJUSTED) {
             return d;
+        }
 
         final Date d1 = d;
         if (c == BusinessDayConvention.FOLLOWING || c == BusinessDayConvention.MODIFIED_FOLLOWING) {
-            while (isHoliday(d1))
-                d1.increment();
-            if (c == BusinessDayConvention.MODIFIED_FOLLOWING)
-                if (d1.getMonth() != d.getMonth())
+            while (isHoliday(d1)) {
+                d1.inc();
+            }
+            if (c == BusinessDayConvention.MODIFIED_FOLLOWING) {
+                if (d1.month() != d.month()) {
                     return adjust(d, BusinessDayConvention.PRECEDING);
+                }
+            }
         } else if (c == BusinessDayConvention.PRECEDING || c == BusinessDayConvention.MODIFIED_PRECEDING) {
-            while (isHoliday(d1))
-                d1.decrement();
-            if (c == BusinessDayConvention.MODIFIED_PRECEDING && d1.getMonth() != d.getMonth())
+            while (isHoliday(d1)) {
+                d1.dec();
+            }
+            if (c == BusinessDayConvention.MODIFIED_PRECEDING && d1.month() != d.month()) {
                 return adjust(d, BusinessDayConvention.FOLLOWING);
-        } else
+            }
+        } else {
             throw new LibraryException("unknown business-day convention"); // QA:[RG]::verified
+        }
         return d1;
     }
 
     public final boolean isEndOfMonth(final Date date) {
-        return (date.getMonth() != advance(date.getNextDay()).getMonth());
+        return (date.month() != advance(date.add(1)).month());
     }
 
     public final Date getEndOfMonth(final Date date) {
-        return adjust(date.getEndOfMonth(), BusinessDayConvention.PRECEDING);
+        return adjust(date.statics().endOfMonth(date), BusinessDayConvention.PRECEDING);
     }
 
     public final boolean isHoliday(final Date date) {
@@ -169,33 +177,37 @@ public abstract class AbstractCalendar implements Calendar {
     public final Date advance(final Date date, final int units, final TimeUnit unit, final BusinessDayConvention c, final boolean endOfMonth) {
         QL.require(date != null , "date not specified"); // QA:[RG]::verified // TODO: message
 
-        Date d1 = DateFactory.getFactory().getDate(date.getDayOfMonth(), date.getMonthEnum(), date.getYear());
+        Date d1 = date.clone();
         int n = units;
-        if (n == 0)
+        if (n == 0) {
             return adjust(d1, c);
-        else if (unit == TimeUnit.DAYS) {
-            if (n > 0)
+        } else if (unit == TimeUnit.DAYS) {
+            if (n > 0) {
                 while (n > 0) {
-                    d1.increment();
-                    while (isHoliday(d1))
-                        d1.increment();
+                    d1.inc();
+                    while (isHoliday(d1)) {
+                        d1.inc();
+                    }
                     n--;
                 }
-            else
+            } else {
                 while (n < 0) {
-                    d1.decrement();
-                    while (isHoliday(d1))
-                        d1.decrement();
+                    d1.dec();
+                    while (isHoliday(d1)) {
+                        d1.dec();
+                    }
                     n++;
                 }
+            }
             return d1;
         } else if (unit == TimeUnit.WEEKS) {
-            d1 = d1.adjust(new Period(n, unit));
+            d1 = d1.addAssign(new Period(n, unit));
             return adjust(d1, c);
         } else {
-            d1 = d1.adjust(new Period(n, unit));
-            if (endOfMonth && (unit == TimeUnit.MONTHS || unit == TimeUnit.YEARS) && isEndOfMonth(d1))
+            d1 = d1.addAssign(new Period(n, unit));
+            if (endOfMonth && (unit == TimeUnit.MONTHS || unit == TimeUnit.YEARS) && isEndOfMonth(d1)) {
                 return getEndOfMonth(d1);
+            }
             return adjust(d1, c);
         }
     }
@@ -211,32 +223,38 @@ public abstract class AbstractCalendar implements Calendar {
     public long businessDaysBetween(final Date from, final Date to, final boolean includeFirst, final boolean includeLast) {
         int wd = 0;
         if (from.equals(to)) {
-            if (isBusinessDay(from) && (includeFirst || includeLast))
+            if (isBusinessDay(from) && (includeFirst || includeLast)) {
                 wd = 1;
+            }
         } else {
             if (from.lt(to)) {
                 Date d = from;
                 while (d.le(to)) {
-                    if (isBusinessDay(d))
+                    if (isBusinessDay(d)) {
                         wd++;
-                    d = d.getDateAfter(1);
+                    }
+                    d = d.inc();
                 }
             } else if (from.gt(to)) {
                 Date d = to;
                 while (d.le(from)) {
-                    if (isBusinessDay(d))
+                    if (isBusinessDay(d)) {
                         wd++;
-                    d = d.getDateAfter(1);
+                    }
+                    d = d.inc();
                 }
             }
 
-            if (isBusinessDay(from) && !includeFirst)
+            if (isBusinessDay(from) && !includeFirst) {
                 wd--;
-            if (isBusinessDay(to) && !includeLast)
+            }
+            if (isBusinessDay(to) && !includeLast) {
                 wd--;
+            }
 
-            if (from.gt(to))
+            if (from.gt(to)) {
                 wd = -wd;
+            }
         }
 
         return wd;
@@ -248,10 +266,12 @@ public abstract class AbstractCalendar implements Calendar {
             final String msg = MessageFormatter.format("{} should be after {}", new Object[] { to, from });
             throw new IllegalStateException(msg);
         }
-        final Date startDate = from.getDateAfter(0);
-        for (Date d = startDate; d.le(to); d = d.getDateAfter(1))
-            if (isHoliday(d) && (includeWeekEnds || !isWeekend(d.getWeekday())))
+        final Date startDate = from.clone();
+        for (Date d = startDate; d.le(to); d = d.add(1)) {
+            if (isHoliday(d) && (includeWeekEnds || !isWeekend(d.weekday()))) {
                 holidays.add(d);
+            }
+        }
 
         return holidays;
     }

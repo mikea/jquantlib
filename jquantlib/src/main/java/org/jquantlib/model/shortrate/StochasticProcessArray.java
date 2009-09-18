@@ -50,16 +50,20 @@ public class StochasticProcessArray extends StochasticProcess {
 
     public StochasticProcessArray(final List<StochasticProcess1D> processes, final Matrix correlation) {
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         QL.require(!processes.isEmpty() , no_process_given); // QA:[RG]::verified // TODO: message
         QL.require(correlation.rows() == processes.size() , mismatch_processnumber_sizecorrelationmatrix); // QA:[RG]::verified // TODO: message
 
         this.processes_ = processes;
         this.sqrtCorrelation_ = PseudoSqrt.pseudoSqrt(correlation, SalvagingAlgorithm.Spectral);
-        for (int i=0; i<processes_.size(); i++)
-            registerWith(processes_.get(i));
+        for (int i=0; i<processes_.size(); i++) {
+            processes_.get(i).addObserver(this);
+            //XXX:registerWith
+            //registerWith(processes_.get(i));
+        }
     }
 
     //TODO: verify what method should survive: size() or getSize()
@@ -70,8 +74,9 @@ public class StochasticProcessArray extends StochasticProcess {
     @Override
     public Array initialValues()  {
         final double[] tmp = new double[size()];
-        for (int i=0; i<size(); ++i)
+        for (int i=0; i<size(); ++i) {
             tmp[i] = processes_.get(i).x0();
+        }
         return new Array( tmp );
     }
 
@@ -83,8 +88,9 @@ public class StochasticProcessArray extends StochasticProcess {
     @Override
     public Array drift(final /* @Time */double t, final Array x) {
         final double[] tmp = new double[size()];
-        for (int i=0; i<size(); i++)
+        for (int i=0; i<size(); i++) {
             tmp[i] = processes_.get(i).drift(t, x.get(i));
+        }
         return new Array( tmp );
     }
 
@@ -101,8 +107,9 @@ public class StochasticProcessArray extends StochasticProcess {
     @Override
     public Array expectation(final /*@Time*/double t0, final Array x0, final /*@Time*/double dt)  {
         final double [] tmp = new double[size()];
-        for (int i=0; i<size(); i++)
+        for (int i=0; i<size(); i++) {
             tmp[i] = processes_.get(i).expectation(t0, x0.get(i), dt);
+        }
         return new Array(tmp);
     }
 
@@ -127,8 +134,9 @@ public class StochasticProcessArray extends StochasticProcess {
 
         final Array dz = sqrtCorrelation_.mul(dw);
         final double[] tmp = new double[size()];
-        for (int i=0; i<size(); i++)
+        for (int i=0; i<size(); i++) {
             tmp[i] = processes_.get(i).evolve(t0, x0.get(i), dt, dz.get(i));
+        }
 
         return new Array(tmp);
     }
@@ -136,8 +144,9 @@ public class StochasticProcessArray extends StochasticProcess {
     @Override
     public Array apply(final Array x0, final Array dx)  {
         final double [] tmp = new double[size()];
-        for (int i=0; i<size(); i++)
+        for (int i=0; i<size(); i++) {
             tmp[i] = processes_.get(i).apply(x0.get(i), dx.get(i));
+        }
         return new Array(tmp);
     }
 

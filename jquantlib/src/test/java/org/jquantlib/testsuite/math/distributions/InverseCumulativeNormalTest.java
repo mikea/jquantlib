@@ -26,7 +26,6 @@ package org.jquantlib.testsuite.math.distributions;
 
 import static org.junit.Assert.fail;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.math.distributions.InverseCumulativeNormal;
@@ -75,7 +74,7 @@ public class InverseCumulativeNormalTest {
                 {0.99, 2.3263478740408412}};
 
 
-        final Settings settings = Configuration.getSystemConfiguration(null).getGlobalSettings();
+        final Settings settings = new Settings();
 
         //FIXME: obtain original value :: this is a thread safety problem :(
         final boolean oldHighPrecision = settings.isRefineHighPrecision();

@@ -27,7 +27,6 @@ import java.util.List;
 import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
 import org.jquantlib.util.Month;
 import org.junit.Assert;
 
@@ -42,8 +41,8 @@ public class CalendarUtil {
     protected void checkHolidayList(final List<Date> expected, final Calendar c, final int year) {
 
         final List<Date> calculated = c.getHolidayList(
-                DateFactory.getFactory().getDate(1, Month.JANUARY, year),
-                DateFactory.getFactory().getDate(31, Month.DECEMBER, year),
+                new Date(1, Month.JANUARY, year),
+                new Date(31, Month.DECEMBER, year),
                 false);
 
         int error = 0;
@@ -53,14 +52,14 @@ public class CalendarUtil {
 
         for (final Date date : expected) {
             if (!calculated.contains(date)) {
-                sb.append("  >> Holiday expected but not calculated: ").append(date.getWeekday()).append(", ").append(date).append('\n');
+                sb.append("  >> Holiday expected but not calculated: ").append(date.weekday()).append(", ").append(date).append('\n');
                 error++;
             }
         }
 
         for (final Date date : calculated) {
             if (!expected.contains(date)) {
-                sb.append("  >> Holiday calculated but not expected: ").append(date.getWeekday()).append(", ").append(date).append('\n');
+                sb.append("  >> Holiday calculated but not expected: ").append(date.weekday()).append(", ").append(date).append('\n');
                 error++;
             }
         }

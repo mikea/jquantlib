@@ -22,8 +22,8 @@
 
 package org.jquantlib.cashflow;
 
-import org.jquantlib.Configuration;
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.indexes.InterestRateIndex;
@@ -90,44 +90,47 @@ public class IborCoupon extends FloatingRateCoupon {
         // #ifdef QL_USE_INDEXED_COUPON
         // return index_->fixing(fixingDate());
         // #else
-        if (isInArrears())
+        if (isInArrears()) {
             return index_.fixing(fixingDate());
-        else {
+        } else {
             final Handle<YieldTermStructure> termStructure = index_.termStructure();
             QL.require(termStructure != null , null_term_structure);  // QA:[RG]::verified // TODO: message
-            final Date today = Configuration.getSystemConfiguration(null).getGlobalSettings().getEvaluationDate();
+            final Date today = new Settings().getEvaluationDate();
             final Date fixing_date = fixingDate();
             if (fixing_date.lt(today)) {
                 // must have been fixed
                 // FIXME ...
 
                 //TODO: Code review :: incomplete code
-                if (System.getProperty("EXPERIMENTAL") == null)
+                if (System.getProperty("EXPERIMENTAL") == null) {
                     throw new UnsupportedOperationException("Work in progress");
+                }
 
                 final double pastFixing = 0;// IndexManager.getInstance().getHistory( index_.getName())[fixing_date.g];
                 QL.require(pastFixing > 0 , "Missing fixing");  // QA:[RG]::verified // TODO: message
                 return pastFixing;
             }
-            if (fixing_date == today)
+            if (fixing_date == today) {
                 // might have been fixed
                 try {
                     // FIXME....
                     final double pastFixing = 0;// IndexManager.getInstance().getHistory(index_.name())[fixing_date];
-                    if (pastFixing != 0)
+                    if (pastFixing != 0) {
                         return pastFixing;
-                    else
+                    } else {
                         ; // fall through and forecast
+                    }
                 } catch (final Exception e) {
                     ; // fall through and forecast
                 }
-                final Date fixingValueDate = index_.fixingCalendar().advance(fixing_date, index_.fixingDays(), TimeUnit.DAYS);
-                final double startDiscount = termStructure.getLink().discount(fixingValueDate);
-                // ???
-                final Date temp = index_.fixingCalendar().advance(accrualEndDate, -(fixingDays()), TimeUnit.DAYS);
-                final double endDiscount = termStructure.getLink().discount(
-                        index_.fixingCalendar().advance(temp, index_.fixingDays(), TimeUnit.DAYS));
-                return (startDiscount / endDiscount - 1.0) / accrualPeriod();
+            }
+            final Date fixingValueDate = index_.fixingCalendar().advance(fixing_date, index_.fixingDays(), TimeUnit.DAYS);
+            final double startDiscount = termStructure.getLink().discount(fixingValueDate);
+            // ???
+            final Date temp = index_.fixingCalendar().advance(accrualEndDate, -(fixingDays()), TimeUnit.DAYS);
+            final double endDiscount = termStructure.getLink().discount(
+                    index_.fixingCalendar().advance(temp, index_.fixingDays(), TimeUnit.DAYS));
+            return (startDiscount / endDiscount - 1.0) / accrualPeriod();
         }
     }
 
@@ -139,10 +142,11 @@ public class IborCoupon extends FloatingRateCoupon {
     @Override
     public void accept(final TypedVisitor<Object> v) {
         final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null)
+        if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             super.accept(v);
+        }
     }
 
 }

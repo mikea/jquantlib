@@ -65,7 +65,10 @@ public class Stock extends Instrument {
     public Stock(final Handle<Quote> quote) {
         QL.require(quote != null , NULL_QUOTE); // QA:[RG]::verified
         this.quote = quote;
-        registerWith(this.quote);
+
+        this.quote.addObserver(this);
+        //XXX:registerWith
+        //registerWith(this.quote);
     }
 
     //

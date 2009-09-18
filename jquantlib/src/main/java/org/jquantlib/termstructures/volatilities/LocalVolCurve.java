@@ -51,83 +51,86 @@ import org.jquantlib.util.Visitor;
 
 public class LocalVolCurve extends LocalVolTermStructure {
 
-	private final BlackVarianceCurve blackVarianceCurve_;
+    private final BlackVarianceCurve blackVarianceCurve_;
 
-	public LocalVolCurve(final Handle<BlackVarianceCurve> curve) {
-		super(curve.getLink().dayCounter());
-		blackVarianceCurve_ = curve.getLink();
-		registerWith(blackVarianceCurve_);
-	}
+    public LocalVolCurve(final Handle<BlackVarianceCurve> curve) {
+        super(curve.getLink().dayCounter());
+        blackVarianceCurve_ = curve.getLink();
+
+        this.blackVarianceCurve_.addObserver(this);
+        //XXX:registerWith
+        //registerWith(blackVarianceCurve_);
+    }
 
 
-	//
-	// Overrides TermStructure
-	//
-
-	@Override
-	public final Date referenceDate() {
-		return blackVarianceCurve_.referenceDate();
-	}
+    //
+    // Overrides TermStructure
+    //
 
     @Override
-	public final DayCounter dayCounter() {
-		return blackVarianceCurve_.dayCounter();
-	}
+    public final Date referenceDate() {
+        return blackVarianceCurve_.referenceDate();
+    }
 
     @Override
-	public final Date maxDate() {
-		return blackVarianceCurve_.maxDate();
-	}
+    public final DayCounter dayCounter() {
+        return blackVarianceCurve_.dayCounter();
+    }
+
+    @Override
+    public final Date maxDate() {
+        return blackVarianceCurve_.maxDate();
+    }
 
 
     //
     // Overrides LocalVolTermStructure
     //
 
-	@Override
-	public final /*@Price*/ double minStrike() {
-		return Double.NEGATIVE_INFINITY;
-	}
+    @Override
+    public final /*@Price*/ double minStrike() {
+        return Double.NEGATIVE_INFINITY;
+    }
 
-	@Override
-	public final /*@Price*/ double maxStrike() {
-		return Double.POSITIVE_INFINITY;
-	}
+    @Override
+    public final /*@Price*/ double maxStrike() {
+        return Double.POSITIVE_INFINITY;
+    }
 
-	/**
-	 * The relation
-	 * {@latex[ \int_0^T \sigma_L^2(t)dt = \sigma_B^2 T }
-	 * holds, where
-	 * {@latex$ \sigma_L(t) }
-	 * is the local volatility at time {@latex$ t } and {@latex$ \sigma_B(T) }
-	 * is the Black volatility for maturity {@latex$ T }.
-	 * <p>
-	 * From the above, the formula
-	 * {@latex[ \sigma_L(t) = \sqrt{\frac{\mathrm{d}}{\mathrm{d}t}\sigma_B^2(t)t} }
-	 * can be deduced which is here implemented.
-	 */
-	@Override
-	protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
-		/*@Time*/ final double m = maturity;
-		/*@Time*/ final double dt = 1.0 / 365.0;
-		/*@Variance*/ final double var1 = blackVarianceCurve_.blackVariance(/*@Time*/ maturity, strike, true);
-		/*@Variance*/ final double var2 = blackVarianceCurve_.blackVariance(/*@Time*/ m + dt, strike, true);
-		final double derivative = (var2 - var1) / dt;
-		return Math.sqrt(derivative);
-	}
+    /**
+     * The relation
+     * {@latex[ \int_0^T \sigma_L^2(t)dt = \sigma_B^2 T }
+     * holds, where
+     * {@latex$ \sigma_L(t) }
+     * is the local volatility at time {@latex$ t } and {@latex$ \sigma_B(T) }
+     * is the Black volatility for maturity {@latex$ T }.
+     * <p>
+     * From the above, the formula
+     * {@latex[ \sigma_L(t) = \sqrt{\frac{\mathrm{d}}{\mathrm{d}t}\sigma_B^2(t)t} }
+     * can be deduced which is here implemented.
+     */
+    @Override
+    protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
+        /*@Time*/ final double m = maturity;
+        /*@Time*/ final double dt = 1.0 / 365.0;
+        /*@Variance*/ final double var1 = blackVarianceCurve_.blackVariance(/*@Time*/ maturity, strike, true);
+        /*@Variance*/ final double var2 = blackVarianceCurve_.blackVariance(/*@Time*/ m + dt, strike, true);
+        final double derivative = (var2 - var1) / dt;
+        return Math.sqrt(derivative);
+    }
 
-	//
-	// implements TypedVisitable
-	//
+    //
+    // implements TypedVisitable
+    //
 
-	@Override
-	public void accept(final TypedVisitor<TermStructure> v) {
-		final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
-		} else {
-			super.accept(v);
-		}
-	}
+    @Override
+    public void accept(final TypedVisitor<TermStructure> v) {
+        final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null) {
+            v1.visit(this);
+        } else {
+            super.accept(v);
+        }
+    }
 
 }
