@@ -224,7 +224,7 @@ public class Settings {
 
         private Date assign(final Date date) {
             super.assign(date.serialNumber());
-            System.err.println("Quantity of observers="+super.countObservers());
+            // System.err.println("Quantity of observers="+super.countObservers());
             super.notifyObservers();
             return this;
         }
