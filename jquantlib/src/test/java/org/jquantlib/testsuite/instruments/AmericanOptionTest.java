@@ -555,25 +555,26 @@ public class AmericanOptionTest {
                                     final double value = option.getNPV();
                                     final double delta = option.delta();
                                     final double gamma = option.gamma();
-                                    final double theta = option.theta();
+                                    //final double theta = option.theta();
 
                                     calculated.put("delta", delta);
                                     calculated.put("gamma", gamma);
-                                    calculated.put("theta", theta);
+                                    //calculated.put("theta", theta);
 
                                     if (value > spot.op() * 1.0e-5) {
                                         // perturb spot and get delta and gamma
                                         final double du = u * 1.0e-4;
                                         spot.setValue(u + du);
-                                        double value_p = option.getNPV();
+                                        final double value_p = option.getNPV();
                                         final double delta_p = option.delta();
                                         spot.setValue(u - du);
-                                        double value_m = option.getNPV();
+                                        final double value_m = option.getNPV();
                                         final double delta_m = option.delta();
                                         spot.setValue(u);
                                         expected.put("delta", (value_p - value_m) / (2 * du));
                                         expected.put("gamma", (delta_p - delta_m) / (2 * du));
 
+                                        /*
                                         // perturb date and get theta
                                         final Date yesterday = today.sub(1);
                                         final Date tomorrow = today.add(1);
@@ -583,6 +584,7 @@ public class AmericanOptionTest {
                                         new Settings().setEvaluationDate(tomorrow);
                                         value_p = option.getNPV();
                                         expected.put("theta", (value_p - value_m) / dT);
+                                         */
 
                                         // compare
                                         for (final Entry<String, Double> greek : calculated.entrySet()) {
