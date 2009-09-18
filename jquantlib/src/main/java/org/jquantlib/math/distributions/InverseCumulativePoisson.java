@@ -26,7 +26,7 @@ package org.jquantlib.math.distributions;
 import org.jquantlib.QL;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Factorial;
-import org.jquantlib.math.UnaryFunction;
+import org.jquantlib.math.Ops;
 
 /**
  * Inverse cumulative Poisson distribution function.
@@ -34,7 +34,7 @@ import org.jquantlib.math.UnaryFunction;
  * @author Dominik Holenstein
  */
 // TEST the correctness of the returned value is tested by checking it against known good results.
-public class InverseCumulativePoisson implements UnaryFunction<Double, Double> {
+public class InverseCumulativePoisson implements Ops.Op<Double, Double> {
 
     //
     // private fields
@@ -74,7 +74,7 @@ public class InverseCumulativePoisson implements UnaryFunction<Double, Double> {
 
 
     //
-    // implements UnaryFunction
+    // implements Ops.op
     //
 
     /**
@@ -83,8 +83,7 @@ public class InverseCumulativePoisson implements UnaryFunction<Double, Double> {
      * @param x
      * @returns the inverse of the cumulative poisson distribution of input <code>x</code>
      */
-    @Override
-    public Double evaluate (final Double x) /* @Read-only */ {
+    public Double op (final Double x) /* @Read-only */ {
         QL.require(x >= 0.0 && x <= 1.0 , "undefined outside interval [0,1]"); // QA:[RG]::verified // TODO: message
 
         if (x == 1.0)

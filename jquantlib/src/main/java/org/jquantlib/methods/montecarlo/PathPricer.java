@@ -40,7 +40,7 @@
 
 package org.jquantlib.methods.montecarlo;
 
-import org.jquantlib.math.UnaryFunction;
+import org.jquantlib.math.Ops;
 
 
 /**
@@ -53,7 +53,7 @@ import org.jquantlib.math.UnaryFunction;
  * @author Richard Gomes
  */
 //FIXME: study how to solve warning on usage of type Double
-public abstract class PathPricer<PathType> implements UnaryFunction<PathType, Double> {
+public abstract class PathPricer<PathType> implements Ops.Op<PathType, Double> {
 
 	public PathPricer() {
         if (System.getProperty("EXPERIMENTAL")==null) {
@@ -61,6 +61,6 @@ public abstract class PathPricer<PathType> implements UnaryFunction<PathType, Do
         }
 	}
 	
-	public abstract Double evaluate(final PathType path);
+	public abstract Double op(final PathType path);
 
 }

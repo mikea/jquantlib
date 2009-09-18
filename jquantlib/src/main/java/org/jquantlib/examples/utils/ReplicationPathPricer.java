@@ -67,7 +67,7 @@ public class ReplicationPathPricer extends PathPricer<Path> {
 	private/* @Volatility */double sigma_;
 
 	@Override
-	public Double evaluate(Path path) {
+	public Double op(Path path) {
 		if (System.getProperty("EXPERIMENTAL") == null) {
 			throw new UnsupportedOperationException("Work in progress");
 		}
