@@ -71,7 +71,7 @@ public class SimpleQuote extends Quote {
 
 
     //
-    // implements FunctionDouble
+    // implements Ops.Op
     //
 
     @Override

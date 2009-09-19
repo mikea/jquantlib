@@ -259,18 +259,18 @@ public interface Algebra<T> {
      * product to a pair of vectors is a matrix. The name contrasts with the inner product, which takes as input a pair of vectors
      * and produces a scalar.
      * <p>
-     * Given a vector {@latex$ \mathbf u} = (u_1, u_2, \dots, u_m) } with ''m'' elements and a vector {@latex$ \mathbf v}= (v_1,
-     * v_2, \dots, v_n) } with ''n'' elements, their outer product {@latex$ \mathbf u} \otimes \mathbf{v} } is defined as the
-     * {@latex$ m \times n } matrix {@latex$ \mathbf A} } obtained by multiplying each element of <math>\mathbf{u}</math> by each
-     * element of {@latex$ \mathbf v} }:
+     * Given a vector {@latex$ \mathbf{u} = (u_1, u_2, \dots, u_m) } with ''m'' elements and a vector {@latex$ \mathbf{v} = (v_1,
+     * v_2, \dots, v_n) } with ''n'' elements, their outer product {@latex$ \mathbf{u} \otimes \mathbf{v} } is defined as the
+     * {@latex$ m \times n } matrix {@latex$ \mathbf{A} } obtained by multiplying each element of {@latex$ \mathbf{u} } by each
+     * element of {@latex$ \mathbf{v} }:
      * <p>
-     * {@latex[ \mathbf u} \otimes \mathbf{v} = \mathbf{A} =
+     * {@latex[ \mathbf{u} \otimes \mathbf{v} = \mathbf{A} =
      * \begin{bmatrix}u_1v_1 & u_1v_2 & \dots & u_1v_n \\
      *                u_2v_1 & u_2v_2 & \dots & u_2v_n \\
      *                \vdots & \vdots & \ddots & \vdots\\
      *                u_mv_1 & u_mv_2 & \dots & u_mv_n \end{bmatrix} }
      * <p>
-     * Note that <math>\mathbf{A} \mathbf{v} = \mathbf{u} \Vert v \Vert ^2.</math>
+     * Note that {@latex$ \mathbf{A} \mathbf{v} = \mathbf{u} \Vert v \Vert ^2 }.
      *
      * @param another Iterator
      * @return the outer product between this Matrix and another Matrix
@@ -284,18 +284,18 @@ public interface Algebra<T> {
      * product to a pair of vectors is a matrix. The name contrasts with the inner product, which takes as input a pair of vectors
      * and produces a scalar.
      * <p>
-     * Given a vector {@latex$ \mathbf u} = (u_1, u_2, \dots, u_m) } with ''m'' elements and a vector {@latex$ \mathbf v}= (v_1,
-     * v_2, \dots, v_n) } with ''n'' elements, their outer product {@latex$ \mathbf u} \otimes \mathbf{v} } is defined as the
-     * {@latex$ m \times n } matrix {@latex$ \mathbf A} } obtained by multiplying each element of <math>\mathbf{u}</math> by each
-     * element of {@latex$ \mathbf v} }:
+     * Given a vector {@latex$ \mathbf{u} = (u_1, u_2, \dots, u_m) } with ''m'' elements and a vector {@latex$ \mathbf{v} = (v_1,
+     * v_2, \dots, v_n) } with ''n'' elements, their outer product {@latex$ \mathbf{u} \otimes \mathbf{v} } is defined as the
+     * {@latex$ m \times n } matrix {@latex$ \mathbf{A} } obtained by multiplying each element of {@latex$ \mathbf{u} } by each
+     * element of {@latex$ \mathbf{v} }:
      * <p>
-     * {@latex[ \mathbf u} \otimes \mathbf{v} = \mathbf{A} =
+     * {@latex[ \mathbf{u} \otimes \mathbf{v} = \mathbf{A} =
      * \begin{bmatrix}u_1v_1 & u_1v_2 & \dots & u_1v_n \\
      *                u_2v_1 & u_2v_2 & \dots & u_2v_n \\
      *                \vdots & \vdots & \ddots & \vdots\\
      *                u_mv_1 & u_mv_2 & \dots & u_mv_n \end{bmatrix} }
      * <p>
-     * Note that <math>\mathbf{A} \mathbf{v} = \mathbf{u} \Vert v \Vert ^2.</math>
+     * Note that {@latex$ \mathbf{A} \mathbf{v} = \mathbf{u} \Vert v \Vert ^2 }.
      *
      * @param another Iterator
      * @param from is the start element, inclusive

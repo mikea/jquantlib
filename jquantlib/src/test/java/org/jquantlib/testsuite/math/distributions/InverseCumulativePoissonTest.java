@@ -37,24 +37,24 @@ import org.junit.Test;
 
 public class InverseCumulativePoissonTest {
 
-	public InverseCumulativePoissonTest() {
-		QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
-	}
+    public InverseCumulativePoissonTest() {
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+    }
 
-	@Test
-	public void testInverseCumulativePoissonDistribution() {
-		QL.info("running InverseCumulativePoissonDistribution test ....");
-		final InverseCumulativePoisson icp = new InverseCumulativePoisson(1.0);
-		final double data[] = { 0.2, 0.5, 0.9, 0.98, 0.99, 0.999, 0.9999, 0.99995,
-				0.99999, 0.999999, 0.9999999, 0.99999999 };
+    @Test
+    public void testInverseCumulativePoissonDistribution() {
+        QL.info("running InverseCumulativePoissonDistribution test ....");
+        final InverseCumulativePoisson icp = new InverseCumulativePoisson(1.0);
+        final double data[] = { 0.2, 0.5, 0.9, 0.98, 0.99, 0.999, 0.9999, 0.99995,
+                0.99999, 0.999999, 0.9999999, 0.99999999 };
 
-		for (int i = 0; i < data.length; i++) {
-			if (!Closeness.isClose(icp.evaluate(data[i]), i)) {
-				fail("failed to reproduce known value for x = " + data[i]
-						+ "\n" + "calculated: " + data[i] + "\n" + "expected: "
-						+ i);
-			}
-		}
-		QL.info("... test finished.");
-	}
+        for (int i = 0; i < data.length; i++) {
+            if (!Closeness.isClose(icp.op(data[i]), i)) {
+                fail("failed to reproduce known value for x = " + data[i]
+                                                                       + "\n" + "calculated: " + data[i] + "\n" + "expected: "
+                                                                       + i);
+            }
+        }
+        QL.info("... test finished.");
+    }
 }
