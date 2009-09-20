@@ -36,7 +36,7 @@ import com.sun.tools.doclets.internal.toolkit.taglets.Taglet;
  * <p>amsfonts,latexsym,amsmath,amsthm,amscd,amssymb,eucal,exscale,dsfont,icomma,bm</p>
  * 
  * Requirements: (La)TeX Installation, ImageMagick, ghostscript<br>
- *   
+ * 
  * @author Stephan Dlugosz
  */
 public abstract class LaTeXTaglet implements Taglet {
@@ -50,7 +50,7 @@ public abstract class LaTeXTaglet implements Taglet {
     public boolean inField() {
         return true;
     }
-	
+
     /**
      * Will return true since <code>@latex</code>
      * can be used in constructor documentation.
@@ -61,7 +61,7 @@ public abstract class LaTeXTaglet implements Taglet {
     public boolean inConstructor() {
         return true;
     }
-    
+
     /**
      * Will return true since <code>@latex</code>
      * can be used in method documentation.
@@ -72,7 +72,7 @@ public abstract class LaTeXTaglet implements Taglet {
     public boolean inMethod() {
         return true;
     }
-    
+
     /**
      * Will return true since <code>@latex</code>
      * can be used in method documentation.
@@ -105,147 +105,149 @@ public abstract class LaTeXTaglet implements Taglet {
     public boolean inType() {
         return true;
     }
-    
+
     public abstract boolean isInlineTag();
-    
-    
+
+
     /**
      * @param tag
      * @param conf
      * @return String that is printed in the corresponding html file
      */
     public abstract String toString(Tag tag, Configuration conf);
-    
+
     /**
      * @param tags
      * @param conf
      * @return String that is printed in the corresponding html file
      */
     public abstract String toString(Tag[] tags, Configuration conf);
-    
-    
-    
-    
+
+
+
+
     private File getCanonicalFile(final String str) throws IOException {
-    	File file;
-    	if (str==null) {
-    		file = new File("").getCanonicalFile();
-    	} else {
-    		file = new File(str).getCanonicalFile();
-    	}
-    	return file;
-    }
-    
-    private File getCanonicalFile(final String paths, final File file) {
-    	StringTokenizer st = new StringTokenizer(paths, File.pathSeparator);
-    	for (; st.hasMoreTokens(); ) {
-    		File path;
-			try {
-				path = getCanonicalFile(st.nextToken());
-			} catch (IOException e) {
-				continue;
-			}
-    		if (file.toString().indexOf(path.toString())==0) {
-    			return path;
-    		}
-    	}
-    	throw new IllegalStateException();
+        File file;
+        if (str==null) {
+            file = new File("").getCanonicalFile();
+        } else {
+            file = new File(str).getCanonicalFile();
+        }
+        return file;
     }
 
-    
+    private File getCanonicalFile(final String paths, final File file) {
+        final StringTokenizer st = new StringTokenizer(paths, File.pathSeparator);
+        for (; st.hasMoreTokens(); ) {
+            File path;
+            try {
+                path = getCanonicalFile(st.nextToken());
+            } catch (final IOException e) {
+                continue;
+            }
+            if (file.toString().indexOf(path.toString())==0) {
+                return path;
+            }
+        }
+        throw new IllegalStateException();
+    }
+
+
     static private long sequence = 0;
-    
-    
-    
+
+
+
     /**
      * @param LaTeXCode
-     * @param conf 
+     * @param conf
      * @param ownLine true if Equation is set into its own line
      * @return String name of png file of the formula
      */
-    protected String createPicture(Tag LaTeXCode, Configuration conf, boolean ownLine) {
+    protected String createPicture(final Tag LaTeXCode, final Configuration conf, final boolean ownLine) {
         String path = null;
-        String name = null;        
-    	
+        String name = null;
+
         try {
-        	File destDir = getCanonicalFile(conf.destDirName);
-        	// XXX System.out.println("destDir="+destDir);
+            final File destDir = getCanonicalFile(conf.destDirName);
+            // XXX System.out.println("destDir="+destDir);
 
-        	File javaFile = new File(LaTeXCode.position().file().toString());
-        	name = javaFile.getName();
-        	// XXX System.out.println("java="+javaFile);
-        	// XXX System.out.println("name="+name);
+            final File javaFile = new File(LaTeXCode.position().file().toString());
+            name = javaFile.getName();
+            // XXX System.out.println("java="+javaFile);
+            // XXX System.out.println("name="+name);
 
-        	File srcDir = getCanonicalFile(conf.sourcepath, javaFile);
-        	// XXX System.out.println("srcDir="+srcDir);
+            final File srcDir = getCanonicalFile(conf.sourcepath, javaFile);
+            // XXX System.out.println("srcDir="+srcDir);
 
-        	String relative = javaFile.toString().substring(srcDir.toString().length());
-        	// XXX System.out.println("relative="+relative);
-        	String paket=relative.substring(0, relative.length()-name.length());
-        	// XXX System.out.println("package="+paket);
-        	
-        	long msec = new Date().getTime();
-        	
+            final String relative = javaFile.toString().substring(srcDir.toString().length());
+            // XXX System.out.println("relative="+relative);
+            final String paket=relative.substring(0, relative.length()-name.length());
+            // XXX System.out.println("package="+paket);
+
+            final long msec = new Date().getTime();
+
             path = destDir+paket;
             name = javaFile.getName()+"-"+msec+"."+sequence;
-            sequence += 1;
+            sequence++;
             // XXX System.out.println("path:"+path);
             // XXX System.out.println("name:"+name);
-            // XXX System.out.println("tex:"+path+name+".tex");
-            
-            Writer fw= new FileWriter(path+name+".tex"); //$NON-NLS-1$
+            System.out.println("tex:"+path+name+".tex");
+
+            final Writer fw= new FileWriter(path+name+".tex"); //$NON-NLS-1$
             fw.write("\\documentclass{article}\n"); //$NON-NLS-1$
-        	fw.write("\\usepackage{amsfonts,latexsym,amsmath,amsthm,amscd,amssymb,eucal,exscale,dsfont,icomma,bm}\n"); //$NON-NLS-1$
+            fw.write("\\usepackage{amsfonts,latexsym,amsmath,amsthm,amscd,amssymb,eucal,exscale,dsfont,icomma,bm}\n"); //$NON-NLS-1$
             fw.write("\\newcommand{\\mx}[1]{\\mathbf{\\bm{#1}}} % Matrix command\n");
             fw.write("\\newcommand{\\vc}[1]{\\mathbf{\\bm{#1}}} % Vector command\n");
             fw.write("\\newcommand{\\T}{\\text{T}}             % Transpose\n");
             fw.write("\\pagestyle{empty}\n");
-        	fw.write("\\begin{document}\n");
-        	if (ownLine) {
-        		fw.write("\\["); // fw.write("\\begin{equation}\n");
-        	} else {
-        		fw.write("$");
-        	}
-        	fw.write(LaTeXCode.text());
-        	if (ownLine) {
-        		fw.write("\\]"); // fw.write("\n\\end{equation}");
-        	} else {
-        		fw.write("$");
-        	}
-        	fw.write("\\end{document}\n");
+            fw.write("\\begin{document}\n");
+            if (ownLine) {
+                fw.write("\\["); // fw.write("\\begin{equation}\n");
+            } else {
+                fw.write("$");
+            }
+            fw.write(LaTeXCode.text());
+            if (ownLine) {
+                fw.write("\\]"); // fw.write("\n\\end{equation}");
+            } else {
+                fw.write("$");
+            }
+            fw.write("\\end{document}\n");
             fw.close();
-        } catch(IOException ex) {
+        } catch(final IOException ex) {
             ex.printStackTrace();
         }
-        
-    	// System.out.println("***"+LaTeXCode.text()+"***");
 
-    	StringBuilder cmd = new StringBuilder();
+        // System.out.println("***"+LaTeXCode.text()+"***");
+
+        final StringBuilder cmd = new StringBuilder();
         cmd.append("tagtex ").append(path).append(' ').append(name);
-        // XXX System.out.println("call: " + cmd.toString());
+        System.out.println("running: " + cmd.toString());
 
-        Runtime rt = Runtime.getRuntime();
+        final Runtime rt = Runtime.getRuntime();
         Process p=null;
         StreamHandler errorHandler=null;
         StreamHandler outputHandler=null;
         try {
-        	p=rt.exec(cmd.toString());
-        	errorHandler = new StreamHandler(p.getErrorStream(), System.err);
+            p=rt.exec(cmd.toString());
+            errorHandler = new StreamHandler(p.getErrorStream(), System.err);
             outputHandler = new StreamHandler(p.getInputStream(), System.out);
-        } catch (IOException ex) {
-        	ex.printStackTrace();
+        } catch (final IOException ex) {
+            ex.printStackTrace();
         }
         errorHandler.start();
         outputHandler.start();
-        
+
         try {
-            int exitVal = p.waitFor();
-            if (exitVal!=0) throw new IllegalStateException(cmd.toString());
-        } catch(InterruptedException ex) {
-        	ex.printStackTrace(System.err);
+            final int exitVal = p.waitFor();
+            if (exitVal!=0) {
+                throw new IllegalStateException(cmd.toString());
+            }
+        } catch(final InterruptedException ex) {
+            ex.printStackTrace(System.err);
         }
-        
-        // XXX System.out.println("png:"+name+".png");
+
+        System.out.println("png:"+name+".png");
         return name+".png"; //$NON-NLS-1$
     }
 }

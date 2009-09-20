@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sf.latextaglet</groupId>
   <artifactId>latextaglet</artifactId>
-  <name>${project.artifactId}</name>
-  <version>0.1.0</version>
+  <name>LatexTaglet</name>
+  <version>0.1.1</version>
   <description>LaTeXTaglet is a taglet which adds equations to your JavaDocs.</description>
   <url>${maven.deploy.site.url}/${project.artifactId}</url>
   
   <prerequisites> 
-      <maven>2.0.8</maven>
+      <maven>2.2.1</maven>
   </prerequisites>
   
   <issueManagement>
@@ -66,18 +66,20 @@
     <url>http://www.jquantlib.org/</url>
   </organization>
   <build>
-    <extensions>
+  
+    <!-- extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-webdav</artifactId>
-        <version>1.0-beta-2</version>
       </extension>
-    </extensions>
+    </extensions -->
+    
     <plugins>
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
-        <artifactId>maven-buildnumber-plugin</artifactId>
-        <version>0.9.4</version>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>1.0-beta-3</version>
         <executions>
           <execution>
             <phase>validate</phase>
@@ -91,27 +93,29 @@
           <doUpdate>${maven.buildNumber.doUpdate}</doUpdate>
         </configuration>
       </plugin>
+
       <plugin>
         <artifactId>maven-scm-plugin</artifactId>
-        <version>1.0-beta-3</version>
+        <version>1.2</version>
         <configuration>
           <goals>install</goals>
           <startDate>YYYY-MM-DD</startDate>
           <endDate>YYYY-MM-DD</endDate>
         </configuration>
       </plugin>
+      
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>${maven.compile.source}</source>
           <target>${maven.compile.target}</target>
-		  <!-- 
           <compilerArguments>
-            <bootclasspath>${settings.localRepository}/com/sun/rt/${maven.compile.runtime}/rt-${maven.compile.runtime}.jar</bootclasspath>
+            <verbose />
+            <!-- classpath>${java.home}/lib/rt.jar:${java.home}/lib/tools.jar</classpath -->
           </compilerArguments>
-          -->
         </configuration>
       </plugin>
+      
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
@@ -135,6 +139,7 @@
           </archive>
         </configuration>
       </plugin>
+      
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
@@ -160,6 +165,7 @@
           </archive>
         </configuration>
       </plugin>
+      
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <configuration>
@@ -180,6 +186,7 @@
           </tasks>
         </configuration>
       </plugin>
+    
     </plugins>
   </build>
 
@@ -199,6 +206,7 @@
         <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
       </properties>
     </profile>
+    
     <profile>
       <id>[mode=dev]</id>
       <activation>
@@ -212,6 +220,7 @@
         <profile.manifest.app.mode>dev</profile.manifest.app.mode>
       </properties>
     </profile>
+    
     <profile>
       <id>[mode=test]</id>
       <activation>
@@ -224,6 +233,7 @@
         <profile.manifest.app.mode>test</profile.manifest.app.mode>
       </properties>
     </profile>
+    
     <profile>
       <id>[mode=prod]</id>
       <activation>
@@ -236,6 +246,7 @@
         <profile.manifest.app.mode>prod</profile.manifest.app.mode>
       </properties>
     </profile>
+    
     <profile>
       <id>[realm=default]</id>
       <activation>
@@ -252,43 +263,41 @@
   </profiles>
 
   <repositories>
+  
     <repository>
-      <releases />
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
       <id>central</id>
       <name>Central Maven2 repository</name>
       <url>http://repo1.maven.org/maven2</url>
+      <releases> <enabled>true</enabled> </releases>
+      <snapshots><enabled>false</enabled></snapshots>
     </repository>
+    
     <repository>
-      <releases />
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
       <id>ibiblio</id>
       <name>Ibiblio Maven2 repository</name>
       <url>http://mirrors.ibiblio.org/pub/mirrors/maven2</url>
+      <releases> <enabled>true</enabled> </releases>
+      <snapshots><enabled>false</enabled></snapshots>
     </repository>
+    
     <repository>
-      <releases />
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>inhouse</id>
-      <name>Inhouse Release Repository</name>
-      <url>${maven.deploy.repository.url}/inhouse</url>
+      <id>artifactory-releases</id>
+      <name>artifactory-releases</name>
+      <url>${maven.deploy.repository.url}/external-free</url>
+      <releases> <enabled>true</enabled> </releases>
+      <snapshots><enabled>false</enabled></snapshots>
     </repository>
+
+
     <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots />
-      <id>inhouse_snapshot</id>
-      <name>Inhouse Snapshot Repository</name>
-      <url>${maven.deploy.repository.url}/inhouse_snapshot</url>
+      <id>artifactory-snapshots</id>
+      <name>artifactory-snapshots</name>
+      <url>${maven.deploy.repository.url}/external-free</url>
+      <releases> <enabled>false</enabled> </releases>
+      <snapshots><enabled>true</enabled>  </snapshots>
     </repository>
-    <repository>
+
+    <!-- repository>
       <releases />
       <snapshots>
         <enabled>false</enabled>
@@ -296,17 +305,10 @@
       <id>external_free</id>
       <name>External Free Repository</name>
       <url>${maven.deploy.repository.url}/external_free</url>
-    </repository>
-    <repository>
-      <releases />
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>external_non_free</id>
-      <name>External Non-Free Repository</name>
-      <url>${maven.deploy.repository.url}/external_non_free</url>
-    </repository>
+    </repository -->
+    
   </repositories>
+  
   <pluginRepositories>
     <pluginRepository>
       <id>tlc</id>
@@ -314,12 +316,17 @@
       <url>http://commons.ucalgary.ca/pub/m2</url>
     </pluginRepository>
   </pluginRepositories>
+  
   <dependencies>
+
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.1</version>
+          <groupId>com.sun</groupId>
+          <artifactId>tools</artifactId>
+          <version>${maven.compile.source}</version>
+          <scope>system</scope>
+          <systemPath>${java.home}/../lib/tools.jar</systemPath>
     </dependency>
+    
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
@@ -335,7 +342,16 @@
       <artifactId>slide-webdavlib</artifactId>
       <version>2.1</version>
     </dependency>
+    
     <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.1</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- 
+    dependency>
       <groupId>it.could</groupId>
       <artifactId>webdav</artifactId>
       <version>0.4</version>
@@ -346,112 +362,129 @@
       <artifactId>jetty</artifactId>
       <version>4.2.12</version>
       <scope>test</scope>
-    </dependency>
+    </dependency
+    -->
 
-    <dependency>
-          <groupId>com.sun</groupId>
-          <artifactId>tools</artifactId>
-          <version>1.4.2</version>
-          <scope>system</scope>
-          <systemPath>${java.home}/../lib/tools.jar</systemPath>
-    </dependency>
-
-	<!--
-	***** STILL TESTING *****
-	
-	Note: This is a 'self-dependency'
-	This dependency can be resolved without problems
-	once the first version of *this* artifact is deployed.
-
-    <dependency>
-		<groupId>net.sf.latextaglet</groupId>
-		<artifactId>latextaglet</artifactId>
-		<version>0.1.0</version>
-    </dependency>
-	-->
-       
   </dependencies>
+  
   <reporting>
     <plugins>
     
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-
-                    <show>private</show>
-                    <use>true</use>
-                    <splitindex>true</splitindex>
-                    <stylesheet>maven</stylesheet>
-                    <encoding>UTF-8</encoding>
-                    <docencoding>UTF-8</docencoding>
-                    <charset>UTF-8</charset>
-                    <verbose>true</verbose>
-                    
-                    <windowtitle>LaTeXtaglet v${project.version} API Javadocs</windowtitle>
-                    
-                    <header>
-                        
-	                        &lt;b>LaTeXtaglet &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font>
-                        
-                    </header>
-                    
-                    <bottom><![CDATA[
-                        
-	                        <font size="-1">
-						    <a href="http://sourceforge.net/tracker/?group_id=205911">
-						    Submit a bug or feature</a>
-						    <br/><br/>
-						    LaTeXtaglet is free software: you can redistribute it and/or modify it
-						    under the terms of the QuantLib license.  You should have received a
-						    copy of the license along with this program; if not, please email
-						    mailto:jquant-devel@lists.sourceforge.net. The license is also available online at
-						    <a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
-						    </font>
-					    
-					]]></bottom>
-
-		            <links>
-			            <link>http://java.sun.com/j2se/${java.src.version}/docs/api/</link>
-			            <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
-			            <link>http://logging.apache.org/log4j/docs/api/</link>
-                        <link>http://junit.sourceforge.net/javadoc/</link>
-		            </links>
-
-                    <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
-                    <docletArtifact>
-                        <groupId>gr.spinellis</groupId>
-                        <artifactId>UmlGraph</artifactId>
-                        <version>4.9.0</version>
-                    </docletArtifact>
-
-                    <!-- UMLGraph-5.0 not working at the moment 
-                    <doclet>org.umlgraph.doclet.UmlGraph</doclet>
-                    <docletArtifact>
-                        <groupId>gr.spinellis</groupId>
-                        <artifactId>UmlGraph</artifactId>
-                        <version>5.0</version>
-                    </docletArtifact>
-                    -->
-
-                    <additionalparam>
-                        -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify
-                        -postfixpackage -nodefontsize 9
-                        -nodefontpackagesize 7
-                        -tagletpath ${HOME}/.m2/repository/net/sf/latextaglet/latextaglet/0.1.0/latextaglet-0.1.0.jar
-                        -taglet net.sf.latextaglet.LaTeXBlockEquationTaglet
-                        -taglet net.sf.latextaglet.LaTeXEquationTaglet
-                        -taglet net.sf.latextaglet.LaTeXInlineTaglet
-                    </additionalparam>
-                </configuration>
-            </plugin>   
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <destDir>apidocs/${project.version}</destDir>
+          <outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
+          <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}</reportOutputDirectory>
+          <show>private</show>
+          <use>true</use>
+          <splitindex>true</splitindex>
+          <!-- stylesheet>maven</stylesheet -->
+          <encoding>UTF-8</encoding>
+          <docencoding>UTF-8</docencoding>
+          <charset>UTF-8</charset>
+          <verbose>true</verbose>
+          <windowtitle>LaTeXtaglet v${project.version} API Javadocs</windowtitle>
+          <header>
+                   &lt;b>LaTeXtaglet &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font>
+          </header>
+          <bottom>
+            <![CDATA[
+              <font size="-1">
+				<a href="http://sourceforge.net/tracker/?group_id=205911">
+				Submit a bug or feature</a>
+				<br/><br/>
+				LaTeXtaglet is free software: you can redistribute it and/or modify it
+				under the terms of the QuantLib license.  You should have received a
+				copy of the license along with this program; if not, please email
+				mailto:jquant-devel@lists.sourceforge.net. The license is also available online at
+				<a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
+			  </font>
+			]]>
+		  </bottom>
+		  <links>
+		          <link>http://java.sun.com/j2se/6/docs/api/</link>
+		          <link>http://jakarta.apache.org/commons/logging/apidocs/</link>
+		          <link>http://logging.apache.org/log4j/docs/api/</link>
+		          <link>http://junit.sourceforge.net/javadoc/</link>
+		  </links>
+		  
+          <!--  WORKS FINE WITH UmlGraph 4.9.0 -->
+          <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
+          <docletArtifact>
+            <groupId>gr.spinellis</groupId>
+            <artifactId>UmlGraph</artifactId>
+            <version>4.9.0</version>
+          </docletArtifact>
+          
+          <!--  DOES NOT WORK WITH UmlGraph 5.0, 5.1 and 5.2 -->
+          <!-- 
+          <doclet>org.umlgraph.doclet.UmlGraph</doclet>
+          <docletArtifact>
+              <groupId>gr.spinellis</groupId>
+              <artifactId>UmlGraph</artifactId>
+              <version>5.2</version>
+          </docletArtifact>
+          -->
+          
+          <taglets>
+            <taglet>
+              <tagletClass>net.sf.latextaglet.LaTeXBlockEquationTaglet</tagletClass>
+              <tagletpath>${basedir}/target/${project.artifactId}-${project.version}.jar</tagletpath>
+              <tagletArtifact>
+			    <groupId>net.sf.latextaglet</groupId>
+			    <artifactId>latextaglet</artifactId>
+			    <version>0.1.1</version>
+              </tagletArtifact>
+            </taglet>
+            <taglet>
+              <tagletClass>net.sf.latextaglet.LaTeXEquationTaglet</tagletClass>
+              <tagletpath>${basedir}/target/${project.artifactId}-${project.version}.jar</tagletpath>
+              <tagletArtifact>
+			    <groupId>net.sf.latextaglet</groupId>
+			    <artifactId>latextaglet</artifactId>
+			    <version>0.1.1</version>
+              </tagletArtifact>
+            </taglet>
+            <taglet>
+              <tagletClass>net.sf.latextaglet.LaTeXInlineTaglet</tagletClass>
+              <tagletpath>${basedir}/target/${project.artifactId}-${project.version}.jar</tagletpath>
+              <tagletArtifact>
+			    <groupId>net.sf.latextaglet</groupId>
+			    <artifactId>latextaglet</artifactId>
+			    <version>0.1.1</version>
+              </tagletArtifact>
+            </taglet>
+          </taglets>
+          
+          <additionalparam>
+              -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify
+              -postfixpackage -nodefontsize 9
+              -nodefontpackagesize 7
+          </additionalparam>
+          <useStandardDocletOptions>true</useStandardDocletOptions>
+          
+          <!-- 
+              -tagletpath ${basedir}/target/${project.artifactId}-${project.version}.jar
+              -taglet net.sf.latextaglet.LaTeXBlockEquationTaglet
+              -taglet net.sf.latextaglet.LaTeXEquationTaglet
+              -taglet net.sf.latextaglet.LaTeXInlineTaglet
+          -->
+              
+        </configuration>
+      </plugin>   
 
       <plugin>
         <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.1</version>
       </plugin>
+      
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>taglist-maven-plugin</artifactId>
+        <version>2.4</version>
         <configuration>
           <tags>
             <tag>TODO</tag>
@@ -463,8 +496,10 @@
           </tags>
         </configuration>
       </plugin>
+      
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
+        <version>2.4</version>
         <configuration>
           <linkXref>true</linkXref>
           <sourceEncoding>utf-8</sourceEncoding>
@@ -490,24 +525,31 @@
           </reportSet>
         </reportSets>
       </plugin>
+      
     </plugins>
   </reporting>
+  
   <distributionManagement>
     <repository>
-      <id>inhouse-jquantlib.org</id>
-      <name>Inhouse Release Repository</name>
-      <url>dav:${maven.deploy.repository.url}/inhouse</url>
+        <id>artifactory-releases</id>
+        <name>artifactory-releases</name>
+        <url>${maven.deploy.repository.url}/inhouse-releases</url>
     </repository>
+  
     <snapshotRepository>
-      <id>inhouse_snapshot-jquantlib.org</id>
-      <name>Inhouse Snapshot Repository</name>
-      <url>dav:${maven.deploy.repository.url}/inhouse_snapshot</url>
+        <id>artifactory-snapshots</id>
+        <name>artifactory-snapshots</name>
+        <url>${maven.deploy.repository.url}/inhouse-snapshots</url>
     </snapshotRepository>
+    
     <site>
-      <id>stagingSite-jquantlib.org</id>
-      <url>dav:${maven.deploy.site.url}/${project.artifactId}</url>
+      <id>site</id>
+      <name>${project.name} site by Maven</name>
+      <url>${maven.deploy.site.url}/${project.artifactId}</url>
     </site>
+  
   </distributionManagement>
+
 
   <properties>
     <profile.manifest.app.realm>default</profile.manifest.app.realm>
@@ -520,15 +562,10 @@
     <maven.buildNumber.doUpdate>false</maven.buildNumber.doUpdate>
     <maven.compile.source>1.6</maven.compile.source>
     <maven.compile.target>1.6</maven.compile.target>
-    <!--
-    <maven.compile.runtime>1.6.0_03</maven.compile.runtime>
-    -->
     <maven.jar.manifest.mainClass>org.jquantlib.examples.EquityOptions</maven.jar.manifest.mainClass>
     <maven.jar.index>false</maven.jar.index>
-    <maven.deploy.repository.url>http://www.jquantlib.org/maven2/repos</maven.deploy.repository.url>
-    <maven.deploy.site.url>http://www.jquantlib.org/maven2/sites</maven.deploy.site.url>
+    <maven.deploy.repository.url>http://artifactory.jquantlib.org:8080/artifactory</maven.deploy.repository.url>
+    <maven.deploy.site.url>file:///srv/jquantlib.org/sites</maven.deploy.site.url>
   </properties>
   
 </project>
-
-
