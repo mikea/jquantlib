@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+
+  <publishDate position="left"/>
+  <version position="right"/>
+  
+  <body>
+    <menu name="About">
+      <item name="What is ${project.name}?" href="about.html" />
+      <item name="Overview"                 href="http://www.jquantlib.org/index.php/Features" />
+      <item name="Building from source"     href="http://www.jquantlib.org/index.php/ReadMe" />
+      <item name="Downloads"                href="http://www.jquantlib.org/index.php/Download" />
+      <!-- item name="Release Notes"            href="http://www.jquantlib.org/index.php/ReleaseNotes" / -->
+    </menu>
+    <menu name="Javadocs">
+      <item name="current"            href="apidocs/current/index.html"/>
+      <item name="${project.version}" href="apidocs/${project.version}/index.html"/>
+      <item name="0.1.2"              href="apidocs/0.1.2/index.html"/>
+    </menu>
+    <menu ref="parent"/>
+    <menu ref="modules"/>
+    <menu ref="reports"/>
+  </body>
+</project>

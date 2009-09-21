@@ -346,15 +346,15 @@ public class CashFlows {
      * Cash-flow duration.
      * <p>
      * The simple duration of a string of cash flows is defined as
-     * {@latex[ D_ \mathrm simple}} = \frac{\sum t_i c_i B(t_i)}{\sumc_i B(t_i)} } where {@latex$ c_i } is the amount of
+     * {@latex[ D_ \mathrm{simple} = \frac{\sum t_i c_i B(t_i)}{\sum c_i B(t_i)} } where {@latex$ c_i } is the amount of
      * the {@latex$ i }-th cash flow, {@latex$ t_i } is its payment time, and {@latex$ B(t_i) } is the corresponding
      * discount according to the passed yield.
      * <p>
-     * The modified duration is defined as {@latex[ D_ \mathrm modified}} = -\frac{1}{P} \frac{\partial P}{\partial y} } where
+     * The modified duration is defined as {@latex[ D_ \mathrm{modified} = -\frac{1}{P} \frac{\partial P}{\partial y} } where
      * {@latex$ P }is the present value of the cash flows according to the given IRR {@latex$ y }.
      * <p>
      * The Macaulay duration is defined for a compounded IRR as
-     * {@latex[ D_ \mathrm Macaulay}} = \left( 1 + \frac{y}{N} \right) D_{\mathrm{modified}} } where
+     * {@latex[ D_ \mathrm{Macaulay} = \left( 1 + \frac{y}{N} \right) D_{\mathrm{modified}} } where
      * {@latex$ y } is the IRR and {@latex$ N } is the number of cash flows per year.
      */
     public double duration(final Leg leg, final InterestRate y, final Duration duration, final Date settlementDate) {
@@ -383,7 +383,7 @@ public class CashFlows {
     /**
      * Cash-flow convexity
      * <p>
-     * The convexity of a string of cash flows is defined as {@latex[ C = \frac 1}{P} \frac{\partial^2 P}{\partial y^2} } where
+     * The convexity of a string of cash flows is defined as {@latex[ C = \frac{1}{P} \frac{\partial^2 P}{\partial y^2} } where
      * {@latex$ P } is the present value of the cash flows according to the given IRR {@latex$ y }.
      */
     public double convexity(final Leg cashFlows, final InterestRate rate, final Date settlementDate) {

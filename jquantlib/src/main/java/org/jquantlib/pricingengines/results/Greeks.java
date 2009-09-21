@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines.results;
 
@@ -65,79 +65,90 @@ import org.jquantlib.pricingengines.arguments.Arguments;
  */
 public class Greeks extends Results {
 
-	//
+    //
     // public fields
     //
-    
+
     /**
-     * The <i>delta</i> measures the sensitivity to changes in the price of the underlying asset. The <p>{@latex[\Delta}
-     * of an instrument is the mathematical derivative of the option value <p>{@latex[V} with respect to the underlyer's
-     * price, <p>{@latex[\Delta = \frac{\partial V}{\partial S}}
+     * The <i>delta</i> measures the sensitivity to changes in the price of the underlying asset.
+     * <p>
+     * The {@latex$\Delta} of an instrument is the mathematical derivative of the option value {@latex$V} with respect to
+     * the underlyer's price, {@latex[\Delta = \frac{\partial V}{\partial S}}
      * 
      * @see <a href="http://www.theponytail.net/DOL/DOLnode71.htm">Delta</a>
      */
     public /*@Real*/ double delta;
 
     /**
-     * The <i>gamma</i> measures the rate of change in the delta. The <p>{@latex[\Gamma} is the second
-     * derivative of the value function with respect to the underlying price, <p>{@latex[\Gamma = \frac{\partial^2 V}{\partial S^2}}.
+     * The <i>gamma</i> measures the rate of change in the delta.
+     * <p>
+     * The {@latex$\Gamma} is the second derivative of the value function with respect to the underlying price,
+     * {@latex[\Gamma = \frac{\partial^2 V}{\partial S^2}}.
+     * <p>
      * Gamma is important because it indicates how a portfolio will react to relatively large shifts in price.
      * 
      * @see <a href="http://www.theponytail.net/DOL/DOLnode73.htm">Gamma</a>
      */
     public /*@Real*/ double gamma;
-	
+
     /**
-     * The <i>theta</i> measures sensitivity to the passage of time. <p>{@latex[\Theta} is the negative of the derivative of the option 
-     * value with respect to the amount of time to expiry of the option, <p>{@latex[\Theta = -\frac{\partial V}{\partial T}}.
+     * The <i>theta</i> measures sensitivity to the passage of time.
+     * <p>
+     * The {@latex[\Theta} is the negative of the derivative of the option value with respect to the amount of
+     * time to expiry of the option, {@latex[\Theta = -\frac{\partial V}{\partial T}}.
      * 
      * @see <a href="http://www.theponytail.net/DOL/DOLnode72.htm">Theta</a>
-     * @see <a href="http://en.wikipedia.org/wiki/Option_time_value">Option time value</a> 
+     * @see <a href="http://en.wikipedia.org/wiki/Option_time_value">Option time value</a>
      */
     public /*@Real*/ double theta;
-	
+
     /**
-     * The <i>vega</i>, which is not a Greek letter (<p>{@latex[\nu}, ''nu'' is used instead), measures sensitivity to
-     * volatility. The vega is the derivative of the option value with respect to the volatility of the underlying, 
-     * <p>{@latex[\nu=\frac{\partial V}{\partial \sigma}}. The term <i>kappa</i>, {@latex[\kappa}, is sometimes used instead of
-     * <i>vega</i>, as is <i>tau</i>, <p>{@latex[\tau}, though this is rare.
+     * The <i>vega</i>, which is not a Greek letter ({@latex$\nu}, ''nu'' is used instead), measures sensitivity to volatility.
+     * <p>
+     * The {@latex$\nu} is the derivative of the option value with respect to the volatility of the underlying,
+     * {@latex[\nu = \frac{\partial V}{\partial \sigma}}.
+     * <p>
+     * The term <i>kappa</i>, {@latex[\kappa}, is sometimes used instead of <i>vega</i>, as is <i>tau</i>,
+     * {@latex$\tau}, though this is rare.
      * 
      * @see <a href="http://www.theponytail.net/DOL/DOLnode74.htm">Vega</a>
      * @see <a href="http://en.wikipedia.org/wiki/Volatility_(finance)">Volatility</a>
      */
     public /*@Real*/ double vega;
-	
-	/**
-     * The <i>rho</i> measures sensitivity to the applicable interest rate. The <p>{@latex[\rho} is the
-     * derivative of the option value with respect to the risk free rate, <p>{@latex[\rho = \frac{\partial V}{\partial r}}.
+
+    /**
+     * The <i>rho</i> measures sensitivity to the applicable interest rate.
+     * <p>
+     * The {@latex$\rho} is the derivative of the option value with respect to the risk free rate,
+     * {@latex[\rho = \frac{\partial V}{\partial r}}.
      * 
      * @see <a href="http://www.theponytail.net/DOL/DOLnode75.htm">Rho</a>
      */
     public /*@Real*/ double rho;
-	
+
     /**
      * @see <a href="http://www.theponytail.net/DOL/DOLnode76.htm">Dividends and FX Options</a>
      */
-    //PENDING: understand the meaning of this field
+    //TODO: understand the meaning of this field
     public /*@Real*/ double dividendRho;
 
-    
+
     //
     // public constructors
     //
-    
-	public Greeks() {
-		super();
-	}
 
-	//
-	// public methods
-	//
-	
-	@Override
-	public void reset() {
-		super.reset();
-		delta = gamma = theta = vega = rho = dividendRho = Double.NaN;
-	}
+    public Greeks() {
+        super();
+    }
+
+    //
+    // public methods
+    //
+
+    @Override
+    public void reset() {
+        super.reset();
+        delta = gamma = theta = vega = rho = dividendRho = Double.NaN;
+    }
 
 }

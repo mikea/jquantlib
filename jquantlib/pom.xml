@@ -29,60 +29,30 @@
 **
 -->
 
-
-<!--
-	Due to bugs in wagon providers, release managers and continuous integration servers
-    need to use a special profile in order to make sure the correct version of Maven is
-	being used and correct versions of Wagon providers are being activated. This is how
-	it can be used from command line:
-
-		mvn -Drole=manager   -Dprotocol=ssh clean deploy
-		mvn -Drole=continuum -Dprotocol=ssh clean deploy
-
-	Observe that role=manager or role=continuum requires Maven-2.1.0 and versions of wagon
-	providers which depend on Maven-2.1.0:
-	
-	    [echo] maven.required.version=2.1.0-M1
-        [echo] extension.wagon-ftp.version=1.0-beta-5-SNAPSHOT
-        [echo] extension.wagon-ssh.version=1.0-beta-4
-	
-	M2Eclipse plugin for Eclipse always use an Embedded maven runtime which does not
-	conform to maven-2.1.0 requirement. For this reason, role=manager or role=continuum
-	should never be used inside Eclipse environment.
--->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" 
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.jquantlib</groupId>
 	<artifactId>jquantlib</artifactId>
+<!-- ************************************************ -->
 	<name>JQuantLib</name>
 	<version>0.1.3-SNAPSHOT</version>
-	<url>http://www.jquantlib.org/</url>
+	<url>http://www.jquantlib.org/sites/jquantlib/</url>
 	<description>
 		JQuantLib is a free, open-source and comprehensive framework for quantitative finance, offering
 		several mathematical and statistical tools needed for financial instrument valuation, calculation
 		of VaR, portfolio valuation, etc.
-		
-		JQuantLib is written in Java and is based on QuantLib, which is written in C++. QuantLib is a de-facto
-		reference implementation for C++ world. Following the steps of its predecessor, JQuantLib aims to
-		become a reference implementation for Java world.
-		
-		JQuantLib does its best efforts to mimic as close as possible the API exposed by QuantLib,
-		offering a smooth transition path for developers and organizations aiming to adopt Java for
-		high performance, low latency applications.
-		
-		For more information, please visit http://www.jquantlib.org
 	</description>
 
 	<prerequisites>
-		<maven>${maven.required.version}</maven>
+		<maven>2.2.1</maven>
 	</prerequisites>
-
+	
+<!-- ************************************************ -->
 	<ciManagement>
-		<system>Continuum</system>
-		<url>http://www.jquantlib.org:8080/continuum/</url>
+		<system>Hudson</system>
+		<url>http://www.jquantlib.org:8080/hudson/</url>
 		<notifiers>
 			<notifier>
 				<configuration>
@@ -209,39 +179,12 @@
 
 	<build>
 	
-		<extensions>
-
-			<!-- Requires maven2.0.9 -->
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-http</artifactId>
-				<version>1.0-beta-2</version>
-			</extension>
-
-			<!-- Requires maven2.1.0 -->
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ftp</artifactId>
-				<version>${extension.wagon-ftp.version}</version>
-			</extension>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-ssh</artifactId>
-				<version>${extension.wagon-ssh.version}</version>
-			</extension>
-			<extension>
-				<groupId>org.apache.maven.wagon</groupId>
-				<artifactId>wagon-file</artifactId>
-				<version>${extension.wagon-file.version}</version>
-			</extension>
-		</extensions>
-		
 		<plugins>
 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>buildnumber-maven-plugin</artifactId>
-				<version>1.0-beta-1</version>
+                <!-- version>1.0-beta-3</version -->
 				<executions>
 					<execution>
 						<phase>validate</phase>
@@ -258,7 +201,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-scm-plugin</artifactId>
-				<version>1.0-beta-3</version>
+       			<!-- version>1.2</version -->
 				<configuration>
 					<goals>install</goals>
 					<startDate>YYYY-MM-DD</startDate>
@@ -269,6 +212,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
+				<!-- version>1.1</version -->
 				<dependencies>
 					<dependency>
 						<groupId>ant</groupId>
@@ -281,8 +225,6 @@
 						<version>2.7.4</version>
 					</dependency>
 				</dependencies>
-				<version>1.1</version>
-
 				<executions>
 					<execution>
 						<id>info</id>
@@ -302,10 +244,6 @@
 								<echo>java.library.path=${java.library.path}</echo>
 								<echo>java.runtime.version=${java.runtime.version}</echo>
 								<echo>java.specification.version=${java.specification.version}</echo>
-								<echo>maven.required.version=${maven.required.version}</echo>
-								<echo>extension.wagon-ftp.version=${extension.wagon-ftp.version}</echo>
-								<echo>extension.wagon-ssh.version=${extension.wagon-ssh.version}</echo>
-								<echo>extension.wagon-file.version=${extension.wagon-file.version}</echo>
 								<echo>profile.manifest.app.realm=${profile.manifest.app.realm}</echo>
 								<echo>profile.manifest.app.mode=${profile.manifest.app.mode}</echo>
 								<echo>extension.protocol.urlbase=${extension.protocol.urlbase}</echo>
@@ -319,7 +257,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.0.2</version>
 				<configuration>
 					<source>${maven.compile.jdk.source}</source>
 					<target>${maven.compile.jdk.target}</target>
@@ -333,7 +270,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.2</version>
 				<configuration>
 					<archive>
 						<index>${maven.jar.index}</index>
@@ -345,7 +281,7 @@
 						<manifestEntries>
 							<Specification-Title>QuantLib</Specification-Title>           <!-- hardcoded :: never changes -->
 							<Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes -->
-							<Specification-Version>0.8.1</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
+							<Specification-Version>0.9.7</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
 							<Implementation-Title>${project.name}</Implementation-Title>
 							<Implementation-Vendor>JQuantLib</Implementation-Vendor>      <!-- hardcoded :: never changes -->
 							<Implementation-Version>${project.version}</Implementation-Version>
@@ -359,11 +295,10 @@
 				</configuration>
 			</plugin>
 
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>failsafe-maven-plugin</artifactId>
-				<version>2.4.3-alpha-1</version>
+				<!--  version>2.4.3-alpha-1</version -->
                 <!--
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>failsafe-maven-plugin</artifactId>
@@ -388,6 +323,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<!-- version>2.2-beta-2</version -->
 				<configuration>
 					<descriptorSourceDirectory>src/main/assembly</descriptorSourceDirectory>
 					<archive>
@@ -399,7 +335,7 @@
 
 							<Specification-Title>QuantLib</Specification-Title>           <!-- hardcoded :: never changes -->
 							<Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes -->
-							<Specification-Version>0.8.1</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
+							<Specification-Version>0.9.7</Specification-Version>          <!-- hardcoded :: *** changes rarely *** -->
 							<Implementation-Title>${project.name}</Implementation-Title>
 							<Implementation-Vendor>JQuantLib</Implementation-Vendor>      <!-- hardcoded :: never changes -->
 							<Implementation-Version>${project.version}</Implementation-Version>
@@ -411,7 +347,6 @@
 						</manifestEntries>
 					</archive>
 				</configuration>
-				<version>2.2-beta-2</version>
 				<executions>
 					<execution>
 						<id>ubber</id>
@@ -426,17 +361,13 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
-				<version>1.1.1</version>
+				<!-- version>1.1.1</version -->
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>cobertura-maven-plugin</artifactId>
-				<version>2.2</version>
-			</plugin>
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>jdepend-maven-plugin</artifactId>
-				<version>2.0-beta-1</version>
+				<!-- version>2.0-beta-1</version -->
 			</plugin>
 
 			<!-- 
@@ -490,86 +421,6 @@
 			</activation>
 		</profile>
 
-
-		<profile>
-			<id>[role=manager]</id>
-			<activation>
-				<property>
-					<name>role</name>
-					<value>manager</value>
-				</property>
-			</activation>
-			<properties>
-				<maven.required.version>2.1.0-M1</maven.required.version>
-				<extension.wagon-ftp.version>1.0-beta-5-SNAPSHOT</extension.wagon-ftp.version>
-				<extension.wagon-ssh.version>1.0-beta-5</extension.wagon-ssh.version>
-				<extension.wagon-file.version>1.0-beta-4</extension.wagon-file.version>
-				<extension.wagon-ftp.urlbase>ftp://ftp.jquantlib.org</extension.wagon-ftp.urlbase>
-				<extension.wagon-ssh.urlbase>sftp://ftp.jquantlib.org/srv/users/www-data/maven2/jquantlib.org</extension.wagon-ssh.urlbase>
-				<extension.wagon-file.urlbase>file://target</extension.wagon-file.urlbase>
-			</properties>
-		</profile>
-
-		<profile>
-			<id>[role=continuum]</id>
-			<activation>
-				<property>
-					<name>role</name>
-					<value>continuum</value>
-				</property>
-			</activation>
-			<properties>
-				<maven.required.version>2.1.0-M1</maven.required.version>
-				<extension.wagon-ftp.version>1.0-beta-5-SNAPSHOT</extension.wagon-ftp.version>
-				<extension.wagon-ssh.version>1.0-beta-4</extension.wagon-ssh.version>
-				<extension.wagon-file.version>1.0-beta-4</extension.wagon-file.version>
-				<extension.wagon-ftp.urlbase>ftp://localhost</extension.wagon-ftp.urlbase>
-				<extension.wagon-ssh.urlbase>sftp://localhost/srv/users/continuum</extension.wagon-ssh.urlbase>
-				<extension.wagon-file.urlbase>file:///srv/users/continuum</extension.wagon-file.urlbase>
-			</properties>
-		</profile>
-
-
-		<profile>
-			<id>[protocol=ftp]</id>
-			<activation>
-				<property>
-					<name>protocol</name>
-					<value>ftp</value>
-				</property>
-			</activation>
-			<properties>
-				<extension.protocol.urlbase>${extension.wagon-ftp.urlbase}</extension.protocol.urlbase>
-			</properties>
-		</profile>
-
-		<profile>
-			<id>[protocol=ssh]</id>
-			<activation>
-				<property>
-					<name>protocol</name>
-					<value>ssh</value>
-				</property>
-			</activation>
-			<properties>
-				<extension.protocol.urlbase>${extension.wagon-ssh.urlbase}</extension.protocol.urlbase>
-			</properties>
-		</profile>
-
-		<profile>
-			<id>[protocol=file]</id>
-			<activation>
-				<property>
-					<name>protocol</name>
-					<value>file</value>
-				</property>
-			</activation>
-			<properties>
-				<extension.protocol.urlbase>${extension.wagon-file.urlbase}</extension.protocol.urlbase>
-			</properties>
-		</profile>
-
-
 		<profile>
 			<id>[revision=unchecked]</id>
 			<activation>
@@ -584,13 +435,46 @@
 
 	<repositories>
 
-		<repository>
+	    <repository>
+	      <id>artifactory-releases</id>
+	      <name>artifactory-releases</name>
+	      <url>${maven.deploy.repository.url}/inhouse-releases</url>
+	      <releases> <enabled>true</enabled> </releases>
+	      <snapshots><enabled>false</enabled></snapshots>
+	    </repository>
+	
+	    <repository>
+	      <id>artifactory-snapshots</id>
+	      <name>artifactory-snapshots</name>
+	      <url>${maven.deploy.repository.url}/inhouse-snapshots</url>
+	      <releases> <enabled>false</enabled> </releases>
+	      <snapshots><enabled>true</enabled>  </snapshots>
+	    </repository>
+
+	    <repository>
+	      <id>artifactory-releases</id>
+	      <name>artifactory-releases</name>
+	      <url>${maven.deploy.repository.url}/external-free</url>
+	      <releases> <enabled>true</enabled> </releases>
+	      <snapshots><enabled>false</enabled></snapshots>
+	    </repository>
+
+	    <repository>
+	      <id>artifactory-snapshots</id>
+	      <name>artifactory-snapshots</name>
+	      <url>${maven.deploy.repository.url}/external-free</url>
+	      <releases> <enabled>false</enabled> </releases>
+	      <snapshots><enabled>true</enabled>  </snapshots>
+	    </repository>
+
+
+		<!-- repository>
 			<id>jquantlib-external_free</id>
 			<name>JQuantLib External Free Repository</name>
 			<url>http://www.jquantlib.org/maven2/repos/external_free</url>
 			<releases>  <enabled>true</enabled> </releases>
 			<snapshots> <enabled>true</enabled> </snapshots>
-		</repository>
+		</repository -->
 
 		<repository>
 			<id>central</id>
@@ -616,7 +500,7 @@
 		    <snapshots> <enabled>true</enabled>  </snapshots>
 		</repository>
 		
-		<!--
+		<!--  TODO: configure mirror -->
 		<repository>
 		    <id>joda</id>
 		    <name>Joda</name>
@@ -624,7 +508,6 @@
 		    <releases>  <enabled>true</enabled> </releases>
 		    <snapshots> <enabled>true</enabled>  </snapshots>
 		</repository>
-		-->
 		
 		<!--
 		<repository>
@@ -698,14 +581,6 @@
 
 	<dependencies>
 
-		<!-- 'provided' scope dependencies -->
-		<dependency>
-			<groupId>net.sf.latextaglet</groupId>
-			<artifactId>latextaglet</artifactId>
-			<version>0.1.0</version>
-			<scope>provided</scope>
-		</dependency>
-
 		<!-- 'compile' scope dependencies -->
 		<dependency>
 		    <groupId>org.joda</groupId>
@@ -752,27 +627,56 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.5</version>
+				<!-- version>2.5</version -->
+				<reportSets>
+		          <reportSet>
+		            <id>html</id>
+		            <configuration>
+		              <destDir>apidocs/${project.version}</destDir>
+		              <outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
+		              <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}</reportOutputDirectory>
+		              <doctitle>${project.name} v${project.version} API Javadocs</doctitle>
+					  <windowtitle>${project.name} v${project.version} API Javadocs</windowtitle>
+		            </configuration>
+		            <reports>
+		              <report>javadoc</report>
+		            </reports>
+		          </reportSet>
+		          <reportSet>
+		            <id>test-html</id>
+		            <configuration>
+		              <destDir>apidocs/${project.version}</destDir>
+		              <outputDirectory>${project.build.directory}/apidocs/${project.version}-test</outputDirectory>
+		              <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}-test</reportOutputDirectory>
+		              <testDoctitle>${project.name} v${project.version} Test API Javadocs</testDoctitle>
+					  <testWindowtitle>${project.name} v${project.version} Test API Javadocs</testWindowtitle>
+		            </configuration>
+		            <reports>
+		              <report>test-javadoc</report>
+		            </reports>
+		          </reportSet>
+		        </reportSets>
+		        
 				<configuration>
-
-		            <destDir>api-${project.version}</destDir>
-
+				    <!-- 
+		            <destDir>apidocs/${project.version}</destDir>
+		            <outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
+		            <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}</reportOutputDirectory>
+		            -->
+		            <!-- doctitle>${project.name} v${project.version} API Javadocs</doctitle -->
+					<!-- windowtitle>JQuantLib v${project.version} API Javadocs</windowtitle -->
 					<show>private</show>
 					<use>true</use>
 					<splitindex>true</splitindex>
-					<stylesheet>maven</stylesheet>
+					<!-- stylesheet>maven</stylesheet -->
 					<linksource>true</linksource>
 					<encoding>UTF-8</encoding>
 					<docencoding>UTF-8</docencoding>
 					<charset>UTF-8</charset>
 					<verbose>true</verbose>
-
-					<windowtitle>JQuantLib v${project.version} API Javadocs</windowtitle>
-
 					<header>
                           &lt;b>JQuantLib &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font>
                     </header>
-                    
                     <bottom><![CDATA[
 						<font size="-1">
 						<a href="http://bugs.jquantlib.org/">Submit a bug or feature</a><br/><br/>
@@ -783,11 +687,9 @@
 						<a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
 						</font>
           			]]></bottom>
-
 	                <links>
-	                  <link>http://java.sun.com/j2se/${java.src.version}/docs/api/index.html</link>
+	                  <link>http://java.sun.com/j2se/6/docs/api/index.html</link>
 	                  <link>http://joda-primitives.sourceforge.net/apidocs/index.html</link>
-	                  <!-- link>http://acs.lbl.gov/~hoschek/colt/api/cern/colt/package-summary.html</link -->
 	                  <link>http://www.slf4j.org/apidocs/</link>
 	                  <link>http://junit.sourceforge.net/javadoc/</link>
 	                </links>
@@ -808,28 +710,51 @@
                     </docletArtifact>
                     -->
 
-                    <additionalparam>
-                        -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify
-                        -postfixpackage -nodefontsize 9
-                        -nodefontpackagesize 7
-                        -tagletpath ${HOME}/.m2/repository/net/sf/latextaglet/latextaglet/0.1.0/latextaglet-0.1.0.jar
-                        -taglet net.sf.latextaglet.LaTeXBlockEquationTaglet
-                        -taglet net.sf.latextaglet.LaTeXEquationTaglet
-                        -taglet net.sf.latextaglet.LaTeXInlineTaglet
-                    </additionalparam>
+			          <taglets>
+			            <taglet>
+			              <tagletClass>net.sf.latextaglet.LaTeXBlockEquationTaglet</tagletClass>
+			              <tagletArtifact>
+						    <groupId>net.sf.latextaglet</groupId>
+						    <artifactId>latextaglet</artifactId>
+						    <version>0.1.1</version>
+			              </tagletArtifact>
+			            </taglet>
+			            <taglet>
+			              <tagletClass>net.sf.latextaglet.LaTeXEquationTaglet</tagletClass>
+			              <tagletArtifact>
+						    <groupId>net.sf.latextaglet</groupId>
+						    <artifactId>latextaglet</artifactId>
+						    <version>0.1.1</version>
+			              </tagletArtifact>
+			            </taglet>
+			            <taglet>
+			              <tagletClass>net.sf.latextaglet.LaTeXInlineTaglet</tagletClass>
+			              <tagletArtifact>
+						    <groupId>net.sf.latextaglet</groupId>
+						    <artifactId>latextaglet</artifactId>
+						    <version>0.1.1</version>
+			              </tagletArtifact>
+			            </taglet>
+			          </taglets>
+			          <additionalparam>
+			              -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify
+			              -postfixpackage -nodefontsize 9
+			              -nodefontpackagesize 7
+			          </additionalparam>
+			          <useStandardDocletOptions>true</useStandardDocletOptions>
                 </configuration>
             </plugin>   
 
         <plugin>
         	<groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jxr-plugin</artifactId>
-          <version>2.1</version>
+          <!-- version>2.1</version -->
         </plugin>
         
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-changelog-plugin</artifactId>
-          <version>2.1</version>
+          <!-- version>2.1</version -->
           <reportSets>
             <reportSet>
               <id>dual-report</id>
@@ -848,13 +773,13 @@
 		<plugin>
 		  <groupId>org.codehaus.mojo</groupId>
 		  <artifactId>clirr-maven-plugin</artifactId>
-		  <version>2.2.1</version>
+		  <!-- version>2.2.1</version -->
 		</plugin>
 
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>taglist-maven-plugin</artifactId>
-          <version>2.3</version>
+          <!-- version>2.3</version -->
           <configuration>
             <tags>
               <tag>TODO</tag>
@@ -876,7 +801,7 @@
         <plugin>
         	<groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-pmd-plugin</artifactId>
-          <version>2.4</version>
+          <!-- version>2.4</version -->
           <configuration>
             <linkXref>true</linkXref>
             <sourceEncoding>utf-8</sourceEncoding>
@@ -910,13 +835,13 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>jdepend-maven-plugin</artifactId>
-          <version>2.0-beta-1</version>
+          <!-- version>2.0-beta-1</version -->
         </plugin>
 
         <plugin> 
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>findbugs-maven-plugin</artifactId>
-            <version>1.2</version>
+            <!-- version>1.2</version -->
             <configuration>
                 <report>maven-findbugs-plugin</report>
             </configuration> 
@@ -925,8 +850,8 @@
         <plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-surefire-report-plugin</artifactId>
-			<version>2.4.3</version>
-			<reportSets>
+			<!-- version>2.4.3</version -->
+			<!-- reportSets>
 				<reportSet>
 					<id>integration-tests</id>
 					<reports>
@@ -939,13 +864,19 @@
 						</reportsDirectories>
 					</configuration>
 				</reportSet>
-			</reportSets>
+			</reportSets -->
 		</plugin>
         
+		<plugin>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>cobertura-maven-plugin</artifactId>
+			<!-- version>2.2</version -->
+		</plugin>
+
         <plugin>
 	        <groupId>org.codehaus.mojo</groupId>
 	        <artifactId>cobertura-maven-plugin</artifactId>
-	        <version>2.2</version>
+	        <!-- version 2.2 version -->
 	        <configuration>
 	            <report>maven-cobertura-plugin</report>
 	        </configuration>
@@ -955,23 +886,23 @@
   </reporting>
 
   <distributionManagement>
-
-    <!-- Developer access (privileged) to artifact repository -->
     <repository>
-      <id>jquantlib-external_free</id>
-      <name>JQuantLib External Free Repository</name>
-      <url>${extension.protocol.urlbase}/maven2/repos/external_free</url>
-      <layout>default</layout>
-      <uniqueVersion>false</uniqueVersion>
+        <id>artifactory-releases</id>
+        <name>artifactory-releases</name>
+        <url>${maven.deploy.repository.url}/inhouse-releases</url>
     </repository>
+  
+    <snapshotRepository>
+        <id>artifactory-snapshots</id>
+        <name>artifactory-snapshots</name>
+        <url>${maven.deploy.repository.url}/inhouse-snapshots</url>
+    </snapshotRepository>
     
-    <!-- Developer access (privileged) to generated site -->
     <site>
-      <id>jquantlib-site</id>
-      <name>JQuantLib Generated Site</name>
-      <url>${extension.protocol.urlbase}/maven2/sites/${project.artifactId}</url>
+      <id>site</id>
+      <name>${project.name} site by Maven</name>
+      <url>${maven.deploy.site.url}/${project.artifactId}</url>
     </site>
-
   </distributionManagement>
 
   
@@ -979,21 +910,6 @@
     <!-- profile defaults -->
     <profile.manifest.app.realm>default</profile.manifest.app.realm>
     <profile.manifest.app.mode>debug</profile.manifest.app.mode>
-
-    <!-- These settings are only needed by Continuum and release managers      -->
-    <!-- Defaults used here are intended to avoid problems with maven2.0.9 but -->
-    <!-- are not values Continuum and release managers need.                   -->
-    <!--  role>default</role>
-    <protocol>ssh</protocol -->
-    <maven.required.version>2.0.9</maven.required.version>
-    <extension.wagon-ssh.version>1.0-beta-1</extension.wagon-ssh.version>
-    <extension.wagon-ftp.version>1.0-beta-1</extension.wagon-ftp.version>
-    <extension.wagon-file.version>1.0-beta-1</extension.wagon-file.version>
-    <extension.wagon-ftp.urlbase>ftp://ftp.jquantlib.org</extension.wagon-ftp.urlbase>
-    <extension.wagon-ssh.urlbase>sftp://ftp.jquantlib.org/srv/users/www-data/maven2/jquantlib.org</extension.wagon-ssh.urlbase>
-    <extension.wagon-file.urlbase>file://target</extension.wagon-file.urlbase>
-    <extension.protocol.urlbase>${extension.wagon-file.urlbase}</extension.protocol.urlbase>
-
 
     <!-- SCM parameters -->
     <maven.scm.project>jquant</maven.scm.project>
@@ -1016,6 +932,9 @@
     <maven.scm.connection>scm:svn:http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.connection>
     <maven.scm.developerConnection>scm:svn:https://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.developerConnection>
     <maven.scm.url>http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.url>
+    
+    <maven.deploy.repository.url>http://artifactory.jquantlib.org:8080/artifactory</maven.deploy.repository.url>
+    <maven.deploy.site.url>scp://hudson@apache/srv/jquantlib.org/sites</maven.deploy.site.url>
     
   </properties>
  
