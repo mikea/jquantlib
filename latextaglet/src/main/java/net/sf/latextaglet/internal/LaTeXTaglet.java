@@ -136,15 +136,15 @@ public abstract class LaTeXTaglet implements Taglet {
         return file;
     }
 
-    private File getCanonicalFile(final String paths, final File file) {
+    private File getCanonicalFile(final String paths, final File file) throws IOException {
         final StringTokenizer st = new StringTokenizer(paths, File.pathSeparator);
         for (; st.hasMoreTokens(); ) {
             File path;
-            try {
-                path = getCanonicalFile(st.nextToken());
-            } catch (final IOException e) {
-                continue;
-            }
+            //XXX Richard :: try {
+            path = getCanonicalFile(st.nextToken());
+            //XXX Richard :: } catch (final IOException e) {
+            //XXX Richard ::     continue;
+            //XXX Richard :: }
             if (file.toString().indexOf(path.toString())==0) {
                 return path;
             }
@@ -169,7 +169,7 @@ public abstract class LaTeXTaglet implements Taglet {
 
         try {
             final File destDir = getCanonicalFile(conf.destDirName);
-            // XXX System.out.println("destDir="+destDir);
+            //XXX System.out.println("destDir="+destDir);
 
             final File javaFile = new File(LaTeXCode.position().file().toString());
             name = javaFile.getName();
@@ -189,10 +189,18 @@ public abstract class LaTeXTaglet implements Taglet {
             path = destDir+paket;
             name = javaFile.getName()+"-"+msec+"."+sequence;
             sequence++;
-            // XXX System.out.println("path:"+path);
-            // XXX System.out.println("name:"+name);
-            System.out.println("tex:"+path+name+".tex");
+            //XXX System.out.println("path:"+path);
+            //XXX System.out.println("name:"+name);
 
+            // guarantees that directory exists
+            final File pathDir = new File(path);
+            if (!pathDir.exists()) {
+                if (!pathDir.mkdirs()) {
+                    throw new IOException("cannot create directory "+pathDir);
+                }
+            }
+
+            System.out.println("tex:"+path+name+".tex");
             final Writer fw= new FileWriter(path+name+".tex"); //$NON-NLS-1$
             fw.write("\\documentclass{article}\n"); //$NON-NLS-1$
             fw.write("\\usepackage{amsfonts,latexsym,amsmath,amsthm,amscd,amssymb,eucal,exscale,dsfont,icomma,bm}\n"); //$NON-NLS-1$
@@ -216,6 +224,7 @@ public abstract class LaTeXTaglet implements Taglet {
             fw.close();
         } catch(final IOException ex) {
             ex.printStackTrace();
+            throw new IllegalStateException(ex);
         }
 
         // System.out.println("***"+LaTeXCode.text()+"***");

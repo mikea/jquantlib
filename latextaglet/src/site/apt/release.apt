@@ -1,0 +1,23 @@
+Release Notes
+
+* Known issues
+
+  ** {{{http://www.umlgraph.org/}UmlGraph}} versions 5.0, 5.1 and 5.2 are known to fail with the configuration
+  we present {{{http://www.jquantlib.org/index.php/Integrate_LatexTaglet_into_a_Maven_build}here}}.\
+  UmlGraph version 4.9.0 works fine.
+  
+  ** LatexTaglet was tested on Linux and Solaris, only.
+
+
+* v0.1.1 - Bugfixes
+
+  Fixed bug related to creation of a .tex file in a directory too deep in the directory structure.\
+  To be more precise, when a package is empty but has non empty subpackages, LatexTaglet tries to create .tex files in the
+  innermost directory (which are non empty) but fails because the directory structure was not created yet.
+
+
+* v0.1.0 - Initial release
+
+  This project was originally developed by Stephan Dlugosz and hosted at SourceForge.\
+  The original source code is dependent of Windows conventions for directories and files names.\
+  The modified version of LaTeXtaglet described here runs fine on Unix platforms but was never tested on Windows.

@@ -1,0 +1,25 @@
+What is LatexTaglet?
+
+  LaTeXtaglet allows inclusion of mathematical equations in Javadocs. Let's explain by example:
+  
+  In order to add an inline greek symbol <delta> in a Javadoc, use \{@latex$ ... \}, like this:
+
++-------------------------------+
+  /**
+   * Calculates {latex$ \Delta } (delta)
+   */
++-------------------------------+
+
+  In order to add a complex equation which fits better as a separate block, use \{@latex\[ ... \}, like this:
+
++-------------------------------+
+  /**
+   * Cash-flow duration
+   * <p>
+   * The simple cash-flow duration of a string of cash flows is defined as
+   * {@latex[ D_ \mathrm{simple} = \frac{\sum t_i c_i B(t_i)}{\sum c_i B(t_i)} }
+   */
++-------------------------------+
+
+  If you still don't know what these weird things are about, probably you need to visit
+  {{{http://en.wikipedia.org/wiki/TeX}TeX in Wikipedia}}.

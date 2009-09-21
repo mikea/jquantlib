@@ -7,12 +7,22 @@
   <version position="right"/>
   
   <body>
+    <menu name="About">
+      <item name="What is ${project.name}?" href="http://www.jquantlib.org/sites/${project.artifactId}/about.html" />
+      <item name="Overview"                 href="http://www.jquantlib.org/sites/${project.artifactId}/overview.html" />
+      <item name="Installation"             href="http://www.jquantlib.org/index.php/Install_and_configure_LatexTaglet" />
+      <item name="Integration with Maven"   href="http://www.jquantlib.org/index.php/Integrate_LatexTaglet_into_a_Maven_build" />
+      <item name="Building from source"     href="http://www.jquantlib.org/sites/${project.artifactId}/building.html" />
+      <item name="Downloads"                href="http://www.jquantlib.org/sites/${project.artifactId}/downloads.html" />
+      <item name="Release Notes"            href="http://www.jquantlib.org/sites/${project.artifactId}/release.html" />
+    </menu>
+    <menu name="Javadocs">
+      <item name="current" href="http://www.jquantlib.org/sites/${project.artifactId}/apidocs/current/index.html"/>
+      <item name="0.1.1"   href="http://www.jquantlib.org/sites/${project.artifactId}/apidocs/0.1.1/index.html"/>
+      <item name="0.1.0"   href="http://www.jquantlib.org/sites/${project.artifactId}/apidocs/0.1.0/index.html"/>
+    </menu>
     <menu ref="parent"/>
     <menu ref="modules"/>
     <menu ref="reports"/>
-    <menu name="Javadocs">
-      <item name="0.1.1" href="apidocs/0.1.1/index.html"/>
-      <item name="0.1.0" href="apidocs/0.1.0/index.html"/>
-    </menu>
   </body>
 </project>
