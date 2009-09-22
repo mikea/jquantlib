@@ -29,34 +29,35 @@
 	**
 	**     * quick (default)
 	**         Intended to run everytime a new commit happens and/or relatively short periods of time.
-	**         - no javadoc generation
-	**         - no unit tests
-	**         - no integration tests: no surefire reports; no cobertura reports
+    **         - no unit tests
+    **         - no integration tests
+	**         - no reports generation
 	**         - no site generation/deployment
     **         $ mvn clean package
 	**
 	**     * nightly
 	**         Intended to run once a day, producing documentation but skipping test coverage reports.
     **         - generates javadocs
-    **         - no integration tests: no surefire reports; no cobertura reports
+    **         - no integration tests
+    **         - no reports generation
 	**         - generates and deploys site
-    **         $ mvn clean site-deploy
+    **         $ mvn clean site-deploy -Dmode=nightly
 	**
 	**     * weekly
 	**         Intended to generate full documentation.
     **         - generates javadocs
-    **         - runs integration tests: surefire reports and cobertura reports are generated
+    **         - run integration tests
+    **         - generates reports
     **         - generates and deploys site
-    **         $ mvn clean site-deploy
+    **         $ mvn clean deploy site-deploy -Dmode=weekly
 	**
-	**     * release-profile (based on Super POM at http://maven.apache.org/pom.html#The_Super_POM )
+	**     * release
 	**         Intended to generate full documentation and tag a new release.
-	**         - activated via command line option
     **         - generates javadocs
-    **         - runs integration tests: surefire reports and cobertura reports are generated
-	**         - deploys artifacts
-	**         - deploys documentation
-    **         $ mvn clean deploy site-deploy -DperformRelease=true
+    **         - run integration tests
+    **         - generates reports
+    **         - generates and deploys site
+    **         $ mvn clean deploy site-deploy -Dmode=release
 	**
 	** @author Richard Gomes
 	**
@@ -80,6 +81,15 @@
 		several mathematical and statistical tools needed for financial instrument valuation, calculation
 		of VaR, portfolio valuation, etc.
 	</description>
+
+    <properties>
+        <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
+        <maven.compile.jdk.source>1.6</maven.compile.jdk.source>
+        <maven.compile.jdk.target>1.6</maven.compile.jdk.target>
+        <maven.compile.meminitial>128m</maven.compile.meminitial>
+        <maven.compile.maxmem>512m</maven.compile.maxmem>
+        <maven.compile.fork>false</maven.compile.fork> <!-- Be cautious: may fork a different JVM -->
+    </properties>
 
     <prerequisites>
         <maven>2.2.1</maven>
@@ -180,17 +190,7 @@
         </developer>
     </developers>
 
-<!-- 
-     [echo] maven.scm.connection=scm:svn:http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib
-     [echo] maven.scm.developerConnection=scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib
-     [echo] maven.scm.url=http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib
- -->
-
-
     <scm>
-        <!-- connection>${maven.scm.connection}</connection>
-        <developerConnection>${maven.scm.developerConnection}</developerConnection>
-        <url>${maven.scm.url}</url-->
         <connection>scm:svn:http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</connection>
         <developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</developerConnection>
         <url>http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</url>
@@ -237,7 +237,7 @@
         <repository>
             <id>artifactory-releases</id>
             <name>artifactory-releases</name>
-            <url>${maven.deploy.repository.url}/inhouse-releases</url>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-releases</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -249,7 +249,7 @@
         <repository>
             <id>artifactory-snapshots</id>
             <name>artifactory-snapshots</name>
-            <url>${maven.deploy.repository.url}/inhouse-snapshots</url>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-snapshots</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
@@ -261,7 +261,7 @@
         <repository>
             <id>artifactory-releases</id>
             <name>artifactory-releases</name>
-            <url>${maven.deploy.repository.url}/external-free</url>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/external-free</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -273,7 +273,7 @@
         <repository>
             <id>artifactory-snapshots</id>
             <name>artifactory-snapshots</name>
-            <url>${maven.deploy.repository.url}/external-free</url>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/external-free</url>
             <releases>
                 <enabled>false</enabled>
             </releases>
@@ -373,10 +373,6 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>${maven.compile.jdk.source}</source>
-                        <target>${maven.compile.jdk.source}</target>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -402,11 +398,11 @@
                     <artifactId>maven-changelog-plugin</artifactId>
                     <!-- version>2.1</version --> <!-- TODO: version -->
                 </plugin>
-                <plugin>
+                <!-- plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>clirr-maven-plugin</artifactId>
-                    <!-- version>2.2.1</version --> <!-- TODO: version -->
-                </plugin>
+                    < ! - - version>2.2.1</version - - > < ! - - TODO: version - - >
+                </plugin-->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jxr-plugin</artifactId>
@@ -421,22 +417,19 @@
         </pluginManagement>
 
         <plugins>
-            <!-- TODO: study if it is correct here -->
-            <!-- plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-scm-plugin</artifactId>
-                <version1.2version>
                 <configuration>
                     <goals>install</goals>
                     <startDate>YYYY-MM-DD</startDate>
                     <endDate>YYYY-MM-DD</endDate>
                 </configuration>
-            </plugin-->
+            </plugin>
 
-            <!-- plugin>
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
-                <version1.0-beta-3version>
                 <executions>
                     <execution>
                         <phase>validate</phase>
@@ -448,12 +441,11 @@
                 <configuration>
                     <doCheck>${maven.buildNumber.doCheck}</doCheck>
                 </configuration>
-            </plugin -->
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <!-- version>1.1</version -->
                 <dependencies>
                     <dependency>
                         <groupId>ant</groupId>
@@ -488,14 +480,6 @@
                                 <echo>java.library.path=${java.library.path}</echo>
                                 <echo>java.runtime.version=${java.runtime.version}</echo>
                                 <echo>java.specification.version=${java.specification.version}</echo>
-                                
-        <echo>maven.scm.connection=${maven.scm.connection}</echo>
-        <echo>maven.scm.developerConnection=${maven.scm.developerConnection}</echo>
-        <echo>maven.scm.url=${maven.scm.url}</echo>
-                                
-                                
-                                
-                                
                             </tasks>
                         </configuration>
                     </execution>
@@ -509,7 +493,7 @@
                 <configuration>
                     <source>${maven.compile.jdk.source}</source>
                     <target>${maven.compile.jdk.target}</target>
-                    <encoding>${maven.compile.encoding}</encoding>
+                    <encoding>UTF8</encoding>
                     <meminitial>${maven.compile.meminitial}</meminitial>
                     <maxmem>${maven.compile.maxmem}</maxmem>
                     <fork>${maven.compile.fork}</fork>
@@ -521,7 +505,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
-                        <index>${maven.jar.index}</index>
+                        <index>true</index>
                         <manifest>
                             <mainClass>${maven.jar.manifest.dummy.class}</mainClass>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -543,7 +527,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>failsafe-maven-plugin</artifactId>
-                <!--  version>2.4.3-alpha-1</version -->
                 <executions>
                     <execution>
                         <id>integration-test</id>
@@ -574,34 +557,11 @@
     <reporting>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+               <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <!-- version>2.5</version -->
-                <!--
-                <reportSets>
-                    <reportSet>
-                        <id>html</id>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
-                            <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}</reportOutputDirectory>
-                        </configuration>
-                        <reports>
-                            <report>javadoc</report>
-                        </reports>
-                    </reportSet>
-                    <reportSet>
-                        <id>test-html</id>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/apidocs/${project.version}-test</outputDirectory>
-                            <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}-test</reportOutputDirectory>
-                        </configuration>
-                        <reports>
-                            <report>test-javadoc</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-                -->
                 <configuration>
+                    <aggregate>false</aggregate>
                     
                     <!-- By default, no javadocs are generated -->
                     <skip>true</skip>
@@ -621,7 +581,7 @@
                     <docencoding>UTF-8</docencoding>
                     <charset>UTF-8</charset>
                     <verbose>true</verbose>
-                    <header> &lt;b>JQuantLib &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font> </header>
+                    <header>&lt;b>JQuantLib &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font></header>
                     <bottom><![CDATA[
                         <font size="-1">
                         <a href="http://bugs.jquantlib.org/">Submit a bug or feature</a><br/><br/>
@@ -638,16 +598,25 @@
                         <link>http://www.slf4j.org/apidocs/</link>
                         <link>http://junit.sourceforge.net/javadoc/</link>
                     </links>
+                    
+                    <!-- UMLGraph-4.9.0 works fine -->
                     <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
                     <docletArtifact>
                         <groupId>gr.spinellis</groupId>
                         <artifactId>UmlGraph</artifactId>
                         <version>4.9.0</version>
                     </docletArtifact>
-                    <!--
-                        UMLGraph-5.0 not working at the moment <doclet>org.umlgraph.doclet.UmlGraph</doclet> <docletArtifact>
-                        <groupId>gr.spinellis</groupId> <artifactId>UmlGraph</artifactId> <version>5.0</version> </docletArtifact>
+                    
+                    <!-- UMLGraph-5.0, 5.1 and 5.2 do not work :( -->
+                    <!-- 
+                    <doclet>org.umlgraph.doclet.UmlGraph</doclet>
+                    <docletArtifact>
+                        <groupId>gr.spinellis</groupId>
+                        <artifactId>UmlGraph</artifactId>
+                        <version>5.0</version>
+                    </docletArtifact>
                     -->
+                    
                     <taglets>
                         <taglet>
                             <tagletClass>net.sf.latextaglet.LaTeXBlockEquationTaglet</tagletClass>
@@ -705,11 +674,11 @@
                 </reportSets>
             </plugin>
 
-            <plugin>
+            <!-- plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>clirr-maven-plugin</artifactId>
-                <!-- version>2.2.1</version -->
-            </plugin>
+                < ! - - version>2.2.1</version - - >
+            </plugin-->
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -790,29 +759,29 @@
         <repository>
             <id>artifactory-releases</id>
             <name>artifactory-releases</name>
-            <url>${maven.deploy.repository.url}/inhouse-releases</url>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-releases</url>
         </repository>
         <snapshotRepository>
             <id>artifactory-snapshots</id>
             <name>artifactory-snapshots</name>
-            <url>${maven.deploy.repository.url}/inhouse-snapshots</url>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-snapshots</url>
         </snapshotRepository>
         <site>
             <id>site</id>
             <name>${project.name} site by Maven</name>
-            <url>${maven.deploy.site.url}/${project.artifactId}</url>
+            <url>scp://hudson@apache/srv/jquantlib.org/sites/${project.artifactId}</url>
         </site>
     </distributionManagement>
 
     <profiles>
-        <!--
+        <!-- 
         **     * quick (default)
         **         Intended to run everytime a new commit happens and/or relatively short periods of time.
-        **         - no javadoc generation
         **         - no unit tests
-        **         - no integration tests: no surefire reports; no cobertura reports
+        **         - no integration tests
+        **         - no reports generation
         **         - no site generation/deployment
-        **         $ mvn clean package
+        **         $ mvn clean package -Dmode=quick
         -->
         <profile>
             <id>quick</id>
@@ -822,15 +791,27 @@
                     <value>quick</value>
                 </property>
             </activation>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </reporting>
         </profile>
 
-        <!-- 
+        <!--
         **     * nightly
         **         Intended to run once a day, producing documentation but skipping test coverage reports.
         **         - generates javadocs
-        **         - no integration tests: no surefire reports; no cobertura reports
+        **         - no integration tests
+        **         - no reports generation
         **         - generates and deploys site
-        **         $ mvn clean site-deploy
+        **         $ mvn clean site-deploy -Dmode=nigthly
         -->
         <profile>
             <id>nightly</id>
@@ -845,6 +826,30 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
+                        <reportSets>
+                            <reportSet>
+                                <id>html</id>
+                                <configuration>
+                                    <destDir>apidocs/${project.version}</destDir>
+                                    <outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
+                                    <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}</reportOutputDirectory>
+                                </configuration>
+                                <reports>
+                                    <report>javadoc</report>
+                                </reports>
+                            </reportSet>
+                            <reportSet>
+                                <id>test-html</id>
+                                <configuration>
+                                    <destDir>testapidocs/${project.version}</destDir>
+                                    <outputDirectory>${project.build.directory}/testapidocs/${project.version}</outputDirectory>
+                                    <reportOutputDirectory>${project.reporting.outputDirectory}/testapidocs/${project.version}</reportOutputDirectory>
+                                </configuration>
+                                <reports>
+                                    <report>test-javadoc</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
                         <configuration>
                             <skip>false</skip>
                         </configuration>
@@ -857,9 +862,10 @@
         **     * weekly
         **         Intended to generate full documentation.
         **         - generates javadocs
-        **         - runs integration tests: surefire reports and cobertura reports are generated
+        **         - run integration tests
+        **         - generates reports
         **         - generates and deploys site
-        **         $ mvn clean site-deploy
+        **         $ mvn clean deploy site-deploy -Dmode=weekly
         -->
         <profile>
             <id>weekly</id>
@@ -870,22 +876,18 @@
                 </property>
             </activation>
             <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>cobertura-maven-plugin</artifactId>
-                            <!-- version>2.2</version --> <!-- TODO: version -->
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skip>false</skip>
-                        </configuration>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                        <!-- version>2.2</version --> <!-- TODO: version -->
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -894,53 +896,34 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
+                        <reportSets>
+                            <reportSet>
+                                <id>html</id>
+                                <configuration>
+                                    <destDir>apidocs/${project.version}</destDir>
+                                    <outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
+                                    <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}</reportOutputDirectory>
+                                </configuration>
+                                <reports>
+                                    <report>javadoc</report>
+                                </reports>
+                            </reportSet>
+                            <reportSet>
+                                <id>test-html</id>
+                                <configuration>
+                                    <destDir>testapidocs/${project.version}</destDir>
+                                    <outputDirectory>${project.build.directory}/testapidocs/${project.version}</outputDirectory>
+                                    <reportOutputDirectory>${project.reporting.outputDirectory}/testapidocs/${project.version}</reportOutputDirectory>
+                                </configuration>
+                                <reports>
+                                    <report>test-javadoc</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
                         <configuration>
                             <skip>false</skip>
                         </configuration>
                     </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-report-plugin</artifactId>
-                        <!-- version>2.4.3</version -->
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                        <!-- version>2.2</version -->
-                    </plugin>
-                </plugins>
-            </reporting>
-        </profile>
-
-        <!--
-        **     * release-profile (based on Super POM at http://maven.apache.org/pom.html#The_Super_POM )
-        **         Intended to generate full documentation and tag a new release.
-        **         - activated via command line option
-        **         - generates javadocs
-        **         - runs integration tests: surefire reports and cobertura reports are generated
-        **         - deploys artifacts
-        **         - deploys site and documentation
-        **         $ mvn clean deploy site-deploy -DperformRelease=true
-        -->
-        <profile>
-            <id>release-profile</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>cobertura-maven-plugin</artifactId>
-                            <!-- version>2.2</version --> <!-- TODO: version -->
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-                <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
@@ -948,9 +931,46 @@
                             <skip>false</skip>
                         </configuration>
                     </plugin>
-                    
                     <plugin>
-                        <inherited>true</inherited>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+
+        <!--
+        **     * release
+        **         Intended to generate full documentation and tag a new release.
+        **         - generates javadocs
+        **         - run integration tests
+        **         - generates reports
+        **         - generates and deploys site
+        **         $ mvn clean deploy site-deploy -DperformRelease=true
+        -->
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>mode</name>
+                    <value>release</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                        <!-- version>2.2</version --> <!-- TODO: version -->
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
                         <executions>
@@ -963,9 +983,11 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <inherited>true</inherited>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -975,14 +997,6 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin>
-                        <inherited>true</inherited>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <configuration>
-                            <updateReleaseInfo>true</updateReleaseInfo>
-                        </configuration>
-                    </plugin>
                 </plugins>
             </build>
             <reporting>
@@ -990,49 +1004,55 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
+                        <reportSets>
+                            <reportSet>
+                                <id>html</id>
+                                <configuration>
+                                    <destdir>apidocs/${project.version}</destdir>
+                                    <outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
+                                    <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}</reportOutputDirectory>
+                                </configuration>
+                                <reports>
+                                    <report>javadoc</report>
+                                </reports>
+                            </reportSet>
+                            <reportSet>
+                                <id>test-html</id>
+                                <configuration>
+                                    <destdir>testapidocs/${project.version}</destdir>
+                                    <outputDirectory>${project.build.directory}/testapidocs/${project.version}</outputDirectory>
+                                    <reportOutputDirectory>${project.reporting.outputDirectory}/testapidocs/${project.version}</reportOutputDirectory>
+                                </configuration>
+                                <reports>
+                                    <report>test-javadoc</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
                         <configuration>
                             <skip>false</skip>
                         </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-report-plugin</artifactId>
-                        <!-- version>2.4.3</version -->
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>cobertura-maven-plugin</artifactId>
-                        <!-- version>2.2</version -->
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <configuration>
+                            <updateReleaseInfo>true</updateReleaseInfo>
+                        </configuration>
                     </plugin>
                 </plugins>
             </reporting>
         </profile>
     </profiles>
-
-    <properties>
-        <!-- SCM parameters -->
-        <maven.scm.project>jquant</maven.scm.project>
-        <maven.scm.branch>trunk</maven.scm.branch>
-        <maven.scm.root>jquant.svn.sourceforge.net/svnroot</maven.scm.root>
-        <maven.scm.connection>scm:svn:http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.connection>
-        <maven.scm.developerConnection>scm:svn:https://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.developerConnection>
-        <maven.scm.url>http://${maven.scm.root}/${maven.scm.project}/${maven.scm.branch}/${project.artifactId}</maven.scm.url>
-        <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
-
-        <!-- compile defaults -->
-        <maven.compile.jdk.source>1.6</maven.compile.jdk.source>
-        <maven.compile.jdk.target>1.6</maven.compile.jdk.target>
-        <maven.compile.encoding>UTF8</maven.compile.encoding>
-        <maven.compile.meminitial>128m</maven.compile.meminitial>
-        <maven.compile.maxmem>512m</maven.compile.maxmem>
-        <maven.compile.fork>false</maven.compile.fork> <!-- Be cautious: may fork a different JVM -->
-        
-        <!--  package default -->
-        <maven.jar.index>true</maven.jar.index>
-
-        <!--  deployment management -->
-        <maven.deploy.repository.url>http://artifactory.jquantlib.org:8080/artifactory</maven.deploy.repository.url>
-        <maven.deploy.site.url>scp://hudson@apache/srv/jquantlib.org/sites</maven.deploy.site.url>
-    </properties>
 
 </project>
