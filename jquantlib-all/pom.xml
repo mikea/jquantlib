@@ -72,8 +72,8 @@
     <version>0.1.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>JQuantLib</name>
-    <url>http://www.jquantlib.org/sites/jquantlib/</url>
+    <name>${project.artifactId}</name>
+    <url>http://www.jquantlib.org/sites/${project.artifactId}/</url>
 
     <description>
 		JQuantLib is a free, open-source and comprehensive framework for quantitative finance, offering
@@ -95,6 +95,8 @@
         <name>JQuantLib</name>
         <url>http://www.jquantlib.org/</url>
     </organization>
+    
+    <inceptionYear>2007</inceptionYear>
 
     <licenses>
         <license>
@@ -178,10 +180,20 @@
         </developer>
     </developers>
 
+<!-- 
+     [echo] maven.scm.connection=scm:svn:http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib
+     [echo] maven.scm.developerConnection=scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib
+     [echo] maven.scm.url=http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/jquantlib
+ -->
+
+
     <scm>
-        <connection>${maven.scm.connection}</connection>
+        <!-- connection>${maven.scm.connection}</connection>
         <developerConnection>${maven.scm.developerConnection}</developerConnection>
-        <url>${maven.scm.url}</url>
+        <url>${maven.scm.url}</url-->
+        <connection>scm:svn:http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</connection>
+        <developerConnection>scm:svn:https://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</developerConnection>
+        <url>http://jquant.svn.sourceforge.net/svnroot/jquant/trunk/${project.artifactId}</url>
     </scm>
 
     <issueManagement>
@@ -409,10 +421,22 @@
         </pluginManagement>
 
         <plugins>
-            <plugin>
+            <!-- TODO: study if it is correct here -->
+            <!-- plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version1.2version>
+                <configuration>
+                    <goals>install</goals>
+                    <startDate>YYYY-MM-DD</startDate>
+                    <endDate>YYYY-MM-DD</endDate>
+                </configuration>
+            </plugin-->
+
+            <!-- plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
-                <!-- version>1.0-beta-3</version -->
+                <version1.0-beta-3version>
                 <executions>
                     <execution>
                         <phase>validate</phase>
@@ -424,19 +448,7 @@
                 <configuration>
                     <doCheck>${maven.buildNumber.doCheck}</doCheck>
                 </configuration>
-            </plugin>
-
-            <!-- TODO: study if it is correct here -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-plugin</artifactId>
-                <!-- version>1.2</version -->
-                <configuration>
-                    <goals>install</goals>
-                    <startDate>YYYY-MM-DD</startDate>
-                    <endDate>YYYY-MM-DD</endDate>
-                </configuration>
-            </plugin>
+            </plugin -->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -463,6 +475,9 @@
                         </goals>
                         <configuration>
                             <tasks>
+                                <echo>project.groupId=${project.groupId}</echo>
+                                <echo>project.artifactId=${project.artifactId}</echo>
+                                <echo>project.version=${project.version}</echo>
                                 <echo>user.home=${user.home}</echo>
                                 <echo>basedir=${basedir}</echo>
                                 <echo>java.version=${java.version}</echo>
@@ -473,9 +488,14 @@
                                 <echo>java.library.path=${java.library.path}</echo>
                                 <echo>java.runtime.version=${java.runtime.version}</echo>
                                 <echo>java.specification.version=${java.specification.version}</echo>
-                                <echo>profile.manifest.app.realm=${profile.manifest.app.realm}</echo>
-                                <echo>profile.manifest.app.mode=${profile.manifest.app.mode}</echo>
-                                <echo>extension.protocol.urlbase=${extension.protocol.urlbase}</echo>
+                                
+        <echo>maven.scm.connection=${maven.scm.connection}</echo>
+        <echo>maven.scm.developerConnection=${maven.scm.developerConnection}</echo>
+        <echo>maven.scm.url=${maven.scm.url}</echo>
+                                
+                                
+                                
+                                
                             </tasks>
                         </configuration>
                     </execution>
@@ -535,40 +555,6 @@
                         <id>verify</id>
                         <goals>
                             <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <!-- version>2.2-beta-2</version -->
-                <configuration>
-                    <descriptorSourceDirectory>src/main/assembly</descriptorSourceDirectory>
-                    <archive>
-                        <index>${maven.jar.index}</index>
-                        <manifest>
-                            <mainClass>${maven.jar.manifest.samples.class}</mainClass>
-                        </manifest>
-                        <manifestEntries>
-
-                            <Specification-Title>QuantLib</Specification-Title>           <!-- hardcoded :: never changes  -->
-                            <Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes  -->
-                            <Specification-Version>0.9.7</Specification-Version>          <!-- hardcoded :: changes rarely -->
-                            <Implementation-Title>${project.name}</Implementation-Title>
-                            <Implementation-Vendor>JQuantLib</Implementation-Vendor>      <!-- hardcoded :: never changes  -->
-                            <Implementation-Version>${project.version}</Implementation-Version>
-                            <Implementation-Build>${buildNumber}</Implementation-Build>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>ubber</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attached</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -769,7 +755,7 @@
                         <ruleset>/rulesets/migrating.xml</ruleset>
                         <ruleset>/rulesets/controversial.xml</ruleset>
                         <!--  TODO: only project 'jquantlib' needs it -->
-                        <ruleset>${basedir}/src/main/pmd/architectural.xml</ruleset> 
+                        <!-- ruleset>${basedir}/src/main/pmd/architectural.xml</ruleset--> 
                     </rulesets>
                 </configuration>
                 <reportSets>
