@@ -64,8 +64,8 @@
 
     <modules>
         <module>../jquantlib</module>
-        <!-- module>../jquantlib-samples</module>
-        <module>../jquantlib-osgi</module-->
+        <module>../jquantlib-samples</module>
+        <!-- module>../jquantlib-osgi</module-->
     </modules>
 
     <properties>
