@@ -28,7 +28,7 @@ import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 

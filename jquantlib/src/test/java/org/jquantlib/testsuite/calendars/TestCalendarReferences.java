@@ -27,11 +27,11 @@ import static org.junit.Assert.assertSame;
 
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
 import org.junit.Test;
 
 /**

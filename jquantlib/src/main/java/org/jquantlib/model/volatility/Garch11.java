@@ -39,8 +39,8 @@
 
 package org.jquantlib.model.volatility;
 
-import org.jquantlib.util.Date;
-import org.jquantlib.util.TimeSeries;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.TimeSeries;
 
 /**
  * GARCH Volatility Model

@@ -32,7 +32,7 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * Libor-forward-model process

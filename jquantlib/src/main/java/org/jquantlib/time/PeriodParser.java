@@ -20,11 +20,9 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.util;
+package org.jquantlib.time;
 
 import org.jquantlib.QL;
-import org.jquantlib.time.Period;
-import org.jquantlib.time.TimeUnit;
 
 /**
  * To convert short and long format string representations

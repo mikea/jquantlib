@@ -27,7 +27,7 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.TermStructure;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 import org.jquantlib.util.Observable;
 
 /**

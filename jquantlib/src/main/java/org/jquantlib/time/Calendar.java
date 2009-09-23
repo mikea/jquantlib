@@ -43,7 +43,6 @@ package org.jquantlib.time;
 
 import java.util.List;
 
-import org.jquantlib.util.Date;
 
 /**
  * This class provides methods for determining whether a date is a business day

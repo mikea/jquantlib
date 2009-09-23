@@ -56,8 +56,8 @@ import org.jquantlib.pricingengines.BlackCalculator;
 import org.jquantlib.pricingengines.Greeks;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.termstructures.Compounding;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
-import org.jquantlib.util.Date;
 
 
 /**

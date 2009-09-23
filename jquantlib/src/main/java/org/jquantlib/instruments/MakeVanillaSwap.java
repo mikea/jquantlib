@@ -9,10 +9,10 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.DateGenerationRule;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
-import org.jquantlib.util.Date;
 
 // TODO: code review :: Please complete this class and perform another code review.
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override

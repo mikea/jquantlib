@@ -21,20 +21,20 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.util.Month.APRIL;
-import static org.jquantlib.util.Month.AUGUST;
-import static org.jquantlib.util.Month.DECEMBER;
-import static org.jquantlib.util.Month.FEBRUARY;
-import static org.jquantlib.util.Month.JANUARY;
-import static org.jquantlib.util.Month.MARCH;
-import static org.jquantlib.util.Month.MAY;
+import static org.jquantlib.time.Month.APRIL;
+import static org.jquantlib.time.Month.AUGUST;
+import static org.jquantlib.time.Month.DECEMBER;
+import static org.jquantlib.time.Month.FEBRUARY;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.MARCH;
+import static org.jquantlib.time.Month.MAY;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.calendars.UnitedKingdom;
-import org.jquantlib.util.Date;
 import org.junit.Test;
 
 /**

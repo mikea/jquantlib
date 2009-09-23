@@ -46,7 +46,7 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * Merton-76 jump diffusion process

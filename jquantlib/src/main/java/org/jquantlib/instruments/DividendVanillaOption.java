@@ -48,7 +48,7 @@ import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.DividendVanillaOptionArguments;
 import org.jquantlib.processes.StochasticProcess;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 public class DividendVanillaOption extends VanillaOption {
 

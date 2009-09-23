@@ -20,7 +20,7 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.util;
+package org.jquantlib.time;
 
 import java.util.ArrayList;
 import java.util.Collection;

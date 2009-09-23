@@ -38,10 +38,10 @@ import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackVarianceCurve;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.calendars.UnitedStates;
 import org.jquantlib.time.calendars.UnitedStates.Market;
-import org.jquantlib.util.Date;
 import org.jquantlib.util.StopClock;
 
 /**

@@ -54,11 +54,11 @@ import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.termstructures.yieldcurves.ImpliedTermStructure;
 import org.jquantlib.testsuite.util.Flag;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.time.calendars.Target;
-import org.jquantlib.util.Date;
 import org.junit.Test;
 
 

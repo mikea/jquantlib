@@ -44,7 +44,7 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.TermStructure;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 

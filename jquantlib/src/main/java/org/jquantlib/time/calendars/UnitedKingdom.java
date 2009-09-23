@@ -25,10 +25,10 @@ package org.jquantlib.time.calendars;
 
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
 
 /**
  * Public holidays (data from http://www.dti.gov.uk/er/bankhol.htm):

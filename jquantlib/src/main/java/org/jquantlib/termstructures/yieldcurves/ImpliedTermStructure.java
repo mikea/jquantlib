@@ -43,7 +43,7 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Calendar;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * Implied term structure at a given date in the future.

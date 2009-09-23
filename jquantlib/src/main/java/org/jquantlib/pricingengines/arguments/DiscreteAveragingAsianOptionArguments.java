@@ -47,7 +47,7 @@ import org.jquantlib.QL;
 import org.jquantlib.instruments.AverageType;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * Description of the terms and conditions of a discrete average out fixed strike option.

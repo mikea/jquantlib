@@ -42,8 +42,8 @@ package org.jquantlib.model.volatility;
 import java.util.Collection;
 
 import org.jquantlib.math.IntervalPrice;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.TimeSeries;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.TimeSeries;
 
 /**
  * Garman-Klass volatility model

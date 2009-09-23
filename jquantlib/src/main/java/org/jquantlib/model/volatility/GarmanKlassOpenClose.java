@@ -45,8 +45,8 @@ import java.util.Iterator;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.IntervalPrice;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.TimeSeries;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.TimeSeries;
 
 /**
  * This template factors out common functionality found in classes which rely on the difference between the previous day's close

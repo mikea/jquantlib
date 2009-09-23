@@ -26,8 +26,8 @@ package org.jquantlib.time.calendars;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.util.Date;
 
 /**
  * Depending on the chosen rule, this calendar has a set of business days given

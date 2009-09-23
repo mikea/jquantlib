@@ -39,9 +39,9 @@ import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
-import org.jquantlib.util.Date;
 
 /**
  * Rate helper for bootstrapping over swap rates

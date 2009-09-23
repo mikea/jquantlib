@@ -20,10 +20,9 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.util;
+package org.jquantlib.time;
 
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.time.IMM;
 
 /**
  * Month names

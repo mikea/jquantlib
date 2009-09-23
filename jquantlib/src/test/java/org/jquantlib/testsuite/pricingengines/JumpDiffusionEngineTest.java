@@ -29,7 +29,7 @@ import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.testsuite.util.Utilities;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 import org.junit.Assert;
 import org.junit.Test;
 

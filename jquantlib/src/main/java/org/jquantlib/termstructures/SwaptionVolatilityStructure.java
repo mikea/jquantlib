@@ -5,8 +5,8 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.termstructures.volatilities.SmileSection;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
-import org.jquantlib.util.Date;
 import org.jquantlib.util.Pair;
 
 public abstract class SwaptionVolatilityStructure extends AbstractTermStructure {

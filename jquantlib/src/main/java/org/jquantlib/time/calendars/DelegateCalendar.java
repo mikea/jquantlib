@@ -24,8 +24,8 @@ package org.jquantlib.time.calendars;
 
 import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.util.Date;
 
 /**
  *

@@ -42,8 +42,8 @@ package org.jquantlib.termstructures.yieldcurves;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
-import org.jquantlib.util.Date;
 
 /**
  * Zero-curve traits

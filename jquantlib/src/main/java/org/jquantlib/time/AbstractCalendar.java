@@ -28,7 +28,6 @@ import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.util.Date;
 import org.slf4j.helpers.MessageFormatter;
 
 

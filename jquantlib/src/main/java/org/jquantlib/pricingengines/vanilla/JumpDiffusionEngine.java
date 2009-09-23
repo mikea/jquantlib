@@ -73,7 +73,7 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * Jump-diffusion engine for vanilla options

@@ -22,7 +22,7 @@
 package org.jquantlib.instruments;
 
 import org.jquantlib.cashflow.Callability;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * %callability leaving to the holder the possibility to convert

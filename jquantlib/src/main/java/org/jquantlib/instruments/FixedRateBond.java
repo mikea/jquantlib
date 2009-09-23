@@ -5,11 +5,11 @@ import org.jquantlib.cashflow.FixedRateLeg;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.DateGenerationRule;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
-import org.jquantlib.util.Date;
 
 public class FixedRateBond extends Bond {
 

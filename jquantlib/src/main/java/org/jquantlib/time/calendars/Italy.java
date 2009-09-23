@@ -22,20 +22,20 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.util.Month.APRIL;
-import static org.jquantlib.util.Month.AUGUST;
-import static org.jquantlib.util.Month.DECEMBER;
-import static org.jquantlib.util.Month.JANUARY;
-import static org.jquantlib.util.Month.JUNE;
-import static org.jquantlib.util.Month.MAY;
-import static org.jquantlib.util.Month.NOVEMBER;
+import static org.jquantlib.time.Month.APRIL;
+import static org.jquantlib.time.Month.AUGUST;
+import static org.jquantlib.time.Month.DECEMBER;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.JUNE;
+import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.NOVEMBER;
 
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
 
 
 /**

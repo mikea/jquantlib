@@ -22,19 +22,19 @@
 
 package org.jquantlib.time.calendars;
 
+import static org.jquantlib.time.Month.FEBRUARY;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.NOVEMBER;
+import static org.jquantlib.time.Month.SEPTEMBER;
 import static org.jquantlib.time.Weekday.FRIDAY;
 import static org.jquantlib.time.Weekday.THURSDAY;
-import static org.jquantlib.util.Month.FEBRUARY;
-import static org.jquantlib.util.Month.JANUARY;
-import static org.jquantlib.util.Month.NOVEMBER;
-import static org.jquantlib.util.Month.SEPTEMBER;
 
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
 
 /**
  * Saudi Arabia calendar

@@ -45,8 +45,8 @@ import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.LocalVolTermStructure;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.calendars.NullCalendar;
-import org.jquantlib.util.Date;
 
 // Local constant volatility, no time dependence, no asset dependence
 

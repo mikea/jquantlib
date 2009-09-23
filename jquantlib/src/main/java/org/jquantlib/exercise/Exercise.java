@@ -44,7 +44,7 @@ package org.jquantlib.exercise;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 
 /**

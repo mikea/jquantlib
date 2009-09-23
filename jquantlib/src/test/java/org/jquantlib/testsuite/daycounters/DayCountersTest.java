@@ -49,11 +49,11 @@ import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.Business252;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.SimpleDayCounter;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Brazil;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
 import org.junit.Test;
 
 /**

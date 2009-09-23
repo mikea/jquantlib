@@ -34,10 +34,10 @@ package org.jquantlib.time.calendars;
 
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
 
 /**! Holidays for the Ukrainian stock exchange
  * (data from <http://www.ukrse.kiev.ua/eng/>):

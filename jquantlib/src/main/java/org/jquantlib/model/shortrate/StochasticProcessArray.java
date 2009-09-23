@@ -32,7 +32,7 @@ import org.jquantlib.math.matrixutilities.PseudoSqrt;
 import org.jquantlib.math.matrixutilities.PseudoSqrt.SalvagingAlgorithm;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.processes.StochasticProcess1D;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  *

@@ -40,9 +40,9 @@
 package org.jquantlib.termstructures;
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
-import org.jquantlib.util.Date;
 
 public abstract interface YieldTermStructure extends TermStructure {
 
@@ -209,7 +209,7 @@ public abstract interface YieldTermStructure extends TermStructure {
      * 
      * @category discount factors
      * 
-     * @see org.jquantlib.termstructures.YieldTermStructureImpl#discount(org.jquantlib.util.Date, boolean)
+     * @see org.jquantlib.termstructures.YieldTermStructureImpl#discount(org.jquantlib.time.Date, boolean)
      */
     public abstract/*@DiscountFactor*/double discount(final Date d, boolean extrapolate);
 

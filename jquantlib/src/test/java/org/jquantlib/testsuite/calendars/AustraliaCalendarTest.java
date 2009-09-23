@@ -22,21 +22,21 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.util.Month.APRIL;
-import static org.jquantlib.util.Month.AUGUST;
-import static org.jquantlib.util.Month.DECEMBER;
-import static org.jquantlib.util.Month.JANUARY;
-import static org.jquantlib.util.Month.JUNE;
-import static org.jquantlib.util.Month.MARCH;
-import static org.jquantlib.util.Month.OCTOBER;
+import static org.jquantlib.time.Month.APRIL;
+import static org.jquantlib.time.Month.AUGUST;
+import static org.jquantlib.time.Month.DECEMBER;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.JUNE;
+import static org.jquantlib.time.Month.MARCH;
+import static org.jquantlib.time.Month.OCTOBER;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.calendars.Australia;
-import org.jquantlib.util.Date;
 import org.junit.Test;
 
 /**

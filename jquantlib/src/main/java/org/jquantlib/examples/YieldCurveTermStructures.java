@@ -10,10 +10,10 @@ import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.termstructures.yieldcurves.ForwardRateStructure;
 import org.jquantlib.termstructures.yieldcurves.ForwardSpreadedTermStructure;
 import org.jquantlib.termstructures.yieldcurves.ImpliedTermStructure;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.calendars.UnitedStates;
 import org.jquantlib.time.calendars.UnitedStates.Market;
-import org.jquantlib.util.Date;
 import org.jquantlib.util.StopClock;
 
 /**

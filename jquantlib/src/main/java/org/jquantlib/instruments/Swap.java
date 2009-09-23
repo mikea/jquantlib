@@ -35,7 +35,7 @@ import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.SwapArguments;
 import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.pricingengines.results.SwapResults;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * Interest rate swap

@@ -67,8 +67,8 @@ import org.jquantlib.currencies.Europe.RONCurrency;
 import org.jquantlib.currencies.Europe.TRLCurrency;
 import org.jquantlib.currencies.Europe.TRYCurrency;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 
 /**
  * Exchange rate Repository.

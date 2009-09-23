@@ -25,8 +25,8 @@ package org.jquantlib.termstructures;
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
-import org.jquantlib.util.Date;
 
 /**
  * This class encapsulate the interest rate compounding algebra. It manages day-counting conventions, compounding conventions,

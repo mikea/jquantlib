@@ -43,7 +43,7 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.LocalVolTermStructure;
 import org.jquantlib.termstructures.TermStructure;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 

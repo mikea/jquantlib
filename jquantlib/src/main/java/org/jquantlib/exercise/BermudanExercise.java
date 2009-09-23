@@ -44,7 +44,7 @@ package org.jquantlib.exercise;
 import java.util.List;
 
 import org.jquantlib.QL;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * A Bermudan option can only be exercised at a set of fixed dates.

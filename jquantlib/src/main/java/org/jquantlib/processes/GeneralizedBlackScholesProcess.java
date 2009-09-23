@@ -54,8 +54,8 @@ import org.jquantlib.termstructures.volatilities.BlackVarianceCurve;
 import org.jquantlib.termstructures.volatilities.LocalConstantVol;
 import org.jquantlib.termstructures.volatilities.LocalVolCurve;
 import org.jquantlib.termstructures.volatilities.LocalVolSurface;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
-import org.jquantlib.util.Date;
 import org.jquantlib.util.Observable;
 
 /**

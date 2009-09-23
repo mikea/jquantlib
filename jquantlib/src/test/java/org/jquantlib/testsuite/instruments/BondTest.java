@@ -60,12 +60,12 @@ import org.jquantlib.instruments.FixedRateBond;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.DateGenerationRule;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
-import org.jquantlib.util.Date;
 import org.junit.Ignore;
 import org.junit.Test;
 

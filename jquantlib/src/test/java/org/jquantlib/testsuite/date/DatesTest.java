@@ -25,13 +25,13 @@ package org.jquantlib.testsuite.date;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.QL;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.DateParser;
 import org.jquantlib.time.IMM;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.DateParser;
-import org.jquantlib.util.Month;
 import org.jquantlib.util.StopClock;
 import org.junit.Test;
 

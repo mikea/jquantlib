@@ -42,8 +42,8 @@ package org.jquantlib.math;
 import java.util.Iterator;
 
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.TimeSeries;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.TimeSeries;
 
 /**
  * Interval Price

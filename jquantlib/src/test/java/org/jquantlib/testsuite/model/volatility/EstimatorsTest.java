@@ -45,9 +45,9 @@ import org.jquantlib.QL;
 import org.jquantlib.model.volatility.ConstantEstimator;
 import org.jquantlib.model.volatility.SimpleLocalEstimator;
 import org.jquantlib.model.volatility.VolatilityCompositor;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
-import org.jquantlib.util.TimeSeries;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
+import org.jquantlib.time.TimeSeries;
 import org.junit.Test;
 
 public class EstimatorsTest {

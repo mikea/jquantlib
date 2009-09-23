@@ -31,13 +31,13 @@ import java.util.List;
 import org.jquantlib.QL;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.DateGenerationRule;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
 import org.junit.Ignore;
 import org.junit.Test;
 

@@ -24,10 +24,10 @@ package org.jquantlib.daycounters;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
 
 /**
  * Implementation of ActualActual day counters.

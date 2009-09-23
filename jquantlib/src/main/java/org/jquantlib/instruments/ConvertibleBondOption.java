@@ -36,8 +36,8 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Schedule;
-import org.jquantlib.util.Date;
 
 /**
  * 

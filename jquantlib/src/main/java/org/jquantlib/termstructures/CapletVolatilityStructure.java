@@ -26,8 +26,8 @@ import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
-import org.jquantlib.util.Date;
 
 public abstract class CapletVolatilityStructure extends AbstractTermStructure {
 

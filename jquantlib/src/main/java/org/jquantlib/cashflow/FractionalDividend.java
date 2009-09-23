@@ -23,7 +23,7 @@
 package org.jquantlib.cashflow;
 
 import org.jquantlib.QL;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * @author Daniel Kong

@@ -42,7 +42,7 @@ package org.jquantlib.termstructures;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolations.Extrapolator;
 import org.jquantlib.time.Calendar;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 

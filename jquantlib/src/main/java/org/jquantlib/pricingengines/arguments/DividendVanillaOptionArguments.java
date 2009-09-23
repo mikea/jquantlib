@@ -42,7 +42,7 @@ import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.cashflow.Dividend;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 public class DividendVanillaOptionArguments extends OneAssetOptionArguments{
 

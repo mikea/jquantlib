@@ -46,8 +46,8 @@ import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
-import org.jquantlib.util.Date;
 
 /**
  * Term structure with added spread on the instantaneous forward rate

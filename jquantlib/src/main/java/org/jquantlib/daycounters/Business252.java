@@ -23,7 +23,7 @@
 package org.jquantlib.daycounters;
 
 import org.jquantlib.time.Calendar;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * Business/252 day count convention

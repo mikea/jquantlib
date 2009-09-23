@@ -66,7 +66,7 @@ import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 public class OneAssetOption extends Option {
 

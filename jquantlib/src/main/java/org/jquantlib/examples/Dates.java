@@ -22,11 +22,11 @@
 
 package org.jquantlib.examples;
 
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
 import org.jquantlib.util.StopClock;
 
 /**

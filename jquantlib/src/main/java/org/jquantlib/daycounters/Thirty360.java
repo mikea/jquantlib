@@ -23,7 +23,7 @@
 package org.jquantlib.daycounters;
 
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * 30/360 day count convention

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.QL;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 

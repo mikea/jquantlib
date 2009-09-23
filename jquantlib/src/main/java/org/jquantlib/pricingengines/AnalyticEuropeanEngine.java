@@ -46,7 +46,7 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * Pricing engine for European vanilla options using analytical formulae

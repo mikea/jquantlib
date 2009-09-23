@@ -35,7 +35,7 @@ import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
 import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * Finite-differences pricing engine for BSM one asset options

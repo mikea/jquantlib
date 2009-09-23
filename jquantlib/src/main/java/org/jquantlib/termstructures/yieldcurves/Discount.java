@@ -3,7 +3,7 @@ package org.jquantlib.termstructures.yieldcurves;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /*
 Copyright (C) 2008 Richard Gomes

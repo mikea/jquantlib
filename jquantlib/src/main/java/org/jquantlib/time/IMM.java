@@ -44,8 +44,6 @@ package org.jquantlib.time;
 
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
 
 /**
  * Main cycle of the International %Money Market (a.k.a. %IMM) months

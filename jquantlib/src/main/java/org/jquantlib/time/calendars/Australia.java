@@ -22,21 +22,21 @@
 
 package org.jquantlib.time.calendars;
 
+import static org.jquantlib.time.Month.APRIL;
+import static org.jquantlib.time.Month.AUGUST;
+import static org.jquantlib.time.Month.DECEMBER;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.JUNE;
+import static org.jquantlib.time.Month.OCTOBER;
 import static org.jquantlib.time.Weekday.MONDAY;
 import static org.jquantlib.time.Weekday.TUESDAY;
-import static org.jquantlib.util.Month.APRIL;
-import static org.jquantlib.util.Month.AUGUST;
-import static org.jquantlib.util.Month.DECEMBER;
-import static org.jquantlib.util.Month.JANUARY;
-import static org.jquantlib.util.Month.JUNE;
-import static org.jquantlib.util.Month.OCTOBER;
 
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
 
 /**
  * Australian calendar

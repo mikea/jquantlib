@@ -22,14 +22,14 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.util.Month.DECEMBER;
-import static org.jquantlib.util.Month.JANUARY;
-import static org.jquantlib.util.Month.MAY;
+import static org.jquantlib.time.Month.DECEMBER;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.MAY;
 
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.time.WesternCalendar;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
 
 /**
  * TARGET calendar relative to the European Central Bank

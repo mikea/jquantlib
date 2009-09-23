@@ -22,14 +22,14 @@
 
 package org.jquantlib.examples;
 
-import static org.jquantlib.util.Month.FEBRUARY;
+import static org.jquantlib.time.Month.FEBRUARY;
 
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.util.Date;
 import org.jquantlib.util.StopClock;
 
 /**

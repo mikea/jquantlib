@@ -25,7 +25,7 @@ package org.jquantlib;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * Settings for the application.

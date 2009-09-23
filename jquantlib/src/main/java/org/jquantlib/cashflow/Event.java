@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.jquantlib.Settings;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;

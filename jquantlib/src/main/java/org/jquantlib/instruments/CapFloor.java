@@ -13,7 +13,7 @@ import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 
 //\test

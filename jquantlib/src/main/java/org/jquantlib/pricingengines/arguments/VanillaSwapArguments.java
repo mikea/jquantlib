@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.instruments.VanillaSwap.Type;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * Arguments for simple swap calculation

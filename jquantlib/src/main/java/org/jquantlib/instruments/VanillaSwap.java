@@ -18,8 +18,8 @@ import org.jquantlib.pricingengines.arguments.VanillaSwapArguments;
 import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.pricingengines.results.VanillaSwapResults;
 import org.jquantlib.time.BusinessDayConvention;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Schedule;
-import org.jquantlib.util.Date;
 
 /**
  * Plain-vanilla swap

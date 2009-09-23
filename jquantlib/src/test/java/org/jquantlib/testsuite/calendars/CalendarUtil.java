@@ -26,8 +26,8 @@ import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 import org.junit.Assert;
 
 /**

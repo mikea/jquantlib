@@ -20,17 +20,18 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.util;
+package org.jquantlib.time;
 
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.time.Period;
-import org.jquantlib.time.TimeUnit;
-import org.jquantlib.time.Weekday;
+import org.jquantlib.util.DefaultObservable;
+import org.jquantlib.util.Observable;
+import org.jquantlib.util.Observer;
 
 /**
  * Date class to represent time in days.
@@ -253,7 +254,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     //
 
     /**
-     *  increments date by the given number of days
+     *  increments <code>this</code> date by the given number of days
      * 
      *  @return this
      */
@@ -266,7 +267,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     }
 
     /**
-     *  increments date by the given period
+     *  increments <code>this</code> date by the given period
      * 
      *  @return this
      */
@@ -279,7 +280,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     }
 
     /**
-     *  decrement date by the given number of days
+     *  decrement <code>this</code> date by the given number of days
      * 
      *  @return this
      */
@@ -292,7 +293,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     }
 
     /**
-     *  decrements date by the given period
+     *  decrements <code>this</code> date by the given period
      * 
      *  @return this
      */
@@ -641,13 +642,13 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
 
     /**
-     * Assigns the today's date to this instance
+     * Assigns the today's date to <code>this</code> instance
      * 
      * @note Does not trigger notifications
      * 
      * @return this instance
      * 
-     * @see DateProxy
+     * @see
      */
     //TODO: consider @PackagePrivate
     protected final int todaysSerialNumber() {
@@ -660,13 +661,13 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
 
     /**
-     * Assigns a new serialNumber to this instance.
+     * Assigns a new serialNumber to <code>this</code> instance.
      * 
      * @note Does not trigger notifications
      * 
      * @return this instance
      * 
-     * @see DateProxy
+     * @see inner class DateProxy in {@link Settings}
      */
     //TODO: consider @PackagePrivate
     protected final Date assign(final int serialNumber) {

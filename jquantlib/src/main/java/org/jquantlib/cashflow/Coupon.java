@@ -24,7 +24,7 @@
 package org.jquantlib.cashflow;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 

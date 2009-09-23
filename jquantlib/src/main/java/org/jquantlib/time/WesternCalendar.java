@@ -22,7 +22,6 @@
 
 package org.jquantlib.time;
 
-import org.jquantlib.util.Date;
 
 /**
  * This class provides the means of determining the Easter

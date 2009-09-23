@@ -45,8 +45,8 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.calendars.Target;
-import org.jquantlib.util.Date;
 
 /**
  * Zero-yield term structure

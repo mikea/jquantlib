@@ -24,7 +24,7 @@ package org.jquantlib.termstructures.volatilities;
 
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 public abstract class FlatSmileSection extends SmileSection {
 

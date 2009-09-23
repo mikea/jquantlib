@@ -84,8 +84,8 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.testsuite.util.Flag;
 import org.jquantlib.testsuite.util.Utilities;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
-import org.jquantlib.util.Date;
 import org.jquantlib.util.StopClock;
 import org.junit.Test;
 

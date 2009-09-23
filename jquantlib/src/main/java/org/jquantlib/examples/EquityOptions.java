@@ -75,8 +75,8 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.Month;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Month;
 import org.jquantlib.util.StopClock;
 
 /**

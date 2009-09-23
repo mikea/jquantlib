@@ -2,7 +2,7 @@ package org.jquantlib.cashflow;
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 public class CappedFlooredIborCoupon extends CappedFlooredCoupon {
 

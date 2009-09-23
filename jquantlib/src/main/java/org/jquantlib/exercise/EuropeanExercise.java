@@ -43,7 +43,7 @@
 package org.jquantlib.exercise;
 
 import org.jquantlib.QL;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * A European option can only be exercised at one (expiry) date.

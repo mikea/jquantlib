@@ -42,7 +42,7 @@
 package org.jquantlib.exercise;
 
 import org.jquantlib.QL;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 /**
  * An American option can be exercised at any time between two

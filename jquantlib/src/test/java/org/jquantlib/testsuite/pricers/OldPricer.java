@@ -32,7 +32,7 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Option.Type;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 import org.jquantlib.util.StopClock;
 
 //TODO:  Import all the testcase when MC is available

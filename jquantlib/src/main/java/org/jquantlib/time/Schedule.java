@@ -31,7 +31,6 @@ import java.util.List;
 import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.calendars.NullCalendar;
-import org.jquantlib.util.Date;
 
 /**
  * The payment schedule of financial instruments defines

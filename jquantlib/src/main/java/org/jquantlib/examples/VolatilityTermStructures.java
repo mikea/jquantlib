@@ -39,9 +39,9 @@ import org.jquantlib.termstructures.volatilities.ImpliedVolTermStructure;
 import org.jquantlib.termstructures.volatilities.LocalConstantVol;
 import org.jquantlib.termstructures.volatilities.LocalVolCurve;
 import org.jquantlib.termstructures.volatilities.BlackVarianceSurface.Extrapolation;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.calendars.UnitedStates;
 import org.jquantlib.time.calendars.UnitedStates.Market;
-import org.jquantlib.util.Date;
 import org.jquantlib.util.StopClock;
 
 /**

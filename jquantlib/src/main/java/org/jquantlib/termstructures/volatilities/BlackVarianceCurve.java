@@ -48,7 +48,7 @@ import org.jquantlib.math.interpolations.LinearInterpolation;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.termstructures.TermStructure;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 

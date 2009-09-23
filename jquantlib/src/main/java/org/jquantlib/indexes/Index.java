@@ -28,11 +28,11 @@ import org.jquantlib.QL;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Constants;
 import org.jquantlib.time.Calendar;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.TimeSeries;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
-import org.jquantlib.util.TimeSeries;
 
 /**
  * Purely virtual base class for indexes

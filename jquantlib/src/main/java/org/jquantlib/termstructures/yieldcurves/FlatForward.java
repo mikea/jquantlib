@@ -48,9 +48,9 @@ import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.calendars.NullCalendar;
-import org.jquantlib.util.Date;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 

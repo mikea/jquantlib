@@ -3,7 +3,7 @@ package org.jquantlib.pricingengines.arguments;
 import org.jquantlib.QL;
 import org.jquantlib.cashflow.Leg;
 import org.jquantlib.time.Calendar;
-import org.jquantlib.util.Date;
+import org.jquantlib.time.Date;
 
 public class BondArguments extends Arguments {
     public Date settlementDate;

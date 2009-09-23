@@ -24,9 +24,9 @@ package org.jquantlib.indexes;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jquantlib.time.TimeSeries;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.ObservableValue;
-import org.jquantlib.util.TimeSeries;
 
 //FIXME: code review
 public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> {

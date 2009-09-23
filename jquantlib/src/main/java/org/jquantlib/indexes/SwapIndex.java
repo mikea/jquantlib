@@ -8,8 +8,8 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
+import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
-import org.jquantlib.util.Date;
 
 /**
  * Base class for swap-rate indexes
