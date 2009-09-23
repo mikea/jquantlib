@@ -1,0 +1,6 @@
+EquityOptions
+
+    This sample program demonstrates how European, American and Bermudan options
+    can be valuated using several analytical, binomial and simulation algorithms.
+
+    You can browse the source code {{{http://www.jquantlib.org/sites/jquantlib/xref/org/jquantlib/examples/EquityOptions.html}here}}

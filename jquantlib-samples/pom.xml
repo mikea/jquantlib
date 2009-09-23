@@ -71,7 +71,7 @@
         </dependency>
         
         <dependency>
-            <groupId>jfreechart</groupId>
+            <groupId>jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.0</version>
         </dependency>
@@ -94,7 +94,7 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <configuration>
                     <rulesets>
-                        <ruleset>${basedir}../jquantlib/src/main/pmd/architectural.xml</ruleset> 
+                        <ruleset>${basedir}/../jquantlib/src/main/pmd/architectural.xml</ruleset> 
                     </rulesets>
                 </configuration>
             </plugin>
