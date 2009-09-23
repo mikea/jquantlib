@@ -23,41 +23,21 @@
 
 <!--
 	**
-	** This Maven2 build file is the preferred way to build JQuantLib
-	**
-	** There are 4 main profiles:
-	**
-	**     * quick (default)
-	**         Intended to run everytime a new commit happens and/or relatively short periods of time.
-    **         - no unit tests
-    **         - no integration tests
-	**         - no reports generation
-	**         - no site generation/deployment
-    **         $ mvn clean package
-	**
-	**     * nightly
-	**         Intended to run once a day, producing documentation but skipping test coverage reports.
-    **         - generates javadocs
-    **         - no integration tests
-    **         - no reports generation
-	**         - generates and deploys site
-    **         $ mvn clean site-deploy -Dmode=nightly
-	**
-	**     * weekly
-	**         Intended to generate full documentation.
-    **         - generates javadocs
-    **         - run integration tests
-    **         - generates reports
-    **         - generates and deploys site
-    **         $ mvn clean deploy site-deploy -Dmode=weekly
-	**
-	**     * release
-	**         Intended to generate full documentation and tag a new release.
-    **         - generates javadocs
-    **         - run integration tests
-    **         - generates reports
-    **         - generates and deploys site
-    **         $ mvn clean deploy site-deploy -Dmode=release
+	** Profiles available:
+    **      * with-javadoc
+    **      * with-clirr
+    **      * with-cobertura
+    **      * without-surefire
+    **
+    **  There profiles can be combined, selecting the desired features.
+    **  In the following example we generate all reports except Surefire and Cobertura reports:
+    **
+    **      mvn clean site -P with-javadoc,with-clirr,without-surefire
+    **
+    **
+    **  When deploying to an staging website, please add 'staging' profile:
+    **
+    **      mvn clean site -P staging,with-javadoc,with-clirr,with-surefire
 	**
 	** @author Richard Gomes
 	**
@@ -82,24 +62,80 @@
 		of VaR, portfolio valuation, etc.
 	</description>
 
-    <properties>
-        <maven.buildNumber.doCheck>false</maven.buildNumber.doCheck>
-        <maven.compile.jdk.source>1.6</maven.compile.jdk.source>
-        <maven.compile.jdk.target>1.6</maven.compile.jdk.target>
-        <maven.compile.meminitial>128m</maven.compile.meminitial>
-        <maven.compile.maxmem>512m</maven.compile.maxmem>
-        <maven.compile.fork>false</maven.compile.fork> <!-- Be cautious: may fork a different JVM -->
-    </properties>
-
-    <prerequisites>
-        <maven>2.2.1</maven>
-    </prerequisites>
-
     <modules>
         <module>../jquantlib</module>
         <!-- module>../jquantlib-samples</module>
         <module>../jquantlib-osgi</module-->
     </modules>
+
+    <properties>
+        <props.buildNumber.doCheck>false</props.buildNumber.doCheck>
+        <props.compile.jdk.source>1.6</props.compile.jdk.source>
+        <props.compile.jdk.target>1.6</props.compile.jdk.target>
+        <props.compile.meminitial>128m</props.compile.meminitial>
+        <props.compile.maxmem>512m</props.compile.maxmem>
+        <props.compile.fork>false</props.compile.fork> <!-- Be cautious: may fork a different JVM -->
+        
+        <!-- maven-site-plugin deploys to host 'apache' via scp -->
+        <props.site.deploy.url>scp://apache/srv/jquantlib.org/sites</props.site.deploy.url>
+    </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>artifactory-releases</id>
+            <name>artifactory-releases</name>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>artifactory-snapshots</id>
+            <name>artifactory-snapshots</name>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-snapshots</url>
+        </snapshotRepository>
+
+        <!-- NOTES:
+          *  * maven-site-plugin gets confused by flat project model employed by Eclipse :(
+          *
+          *  * It's also confused to configure an staging URL because maven-site-plugin takes
+          *    the staging URL from <configuration> and not from <distributionManagement>.
+          *
+          *  * We circumvented these difficulties by tweaking siteURL depending on a profile.
+          *    So, in order to 'deploy' to a staging server, please define a profile called 
+          *    'staging' in your settings.xml file like shown below:
+          * 
+          *        <settings>
+          *           ...
+          *           <profiles>
+          *               <profile>
+          *                   <id>staging</id>
+          *                   <properties>
+          *                       <props.site.deploy.url>scp://localhost:/srv/jquantlib.org/sites</props.site.deploy.url>
+          *                   </properties>
+          *               </profile>
+          *           </profiles>
+          *           ...
+          *        </settings>
+          * 
+          *    You can deploy to a staging server like this:
+          * 
+          *         mvn clean site-deploy -P staging
+          * 
+          *    The big drawback is that we have only one <site> for 2 purposes, which is not very good :(
+          *    One way to circumvent this problem is deploying via file: protocol to your local web server.
+          *
+          *  * Every project MUST REDEFINE the <site> section as it is (no modification are needed!) in order
+          *    to override the way Maven promoves inheritance which supposes a hierarchical model.
+        -->
+        <site>
+            <id>site</id>
+            <name>${project.artifactId} site generated by Maven</name>
+            <url>${props.site.deploy.url}/${project.artifactId}</url>
+        </site>
+
+    </distributionManagement>
+
+    <prerequisites>
+        <maven>2.2.1</maven>
+    </prerequisites>
 
     <organization>
         <name>JQuantLib</name>
@@ -235,6 +271,18 @@
 
     <repositories>
         <repository>
+            <id>jquantlib</id>
+            <name>JQuantLib repository</name>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/repo</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+<!--
+        <repository>
             <id>artifactory-releases</id>
             <name>artifactory-releases</name>
             <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-releases</url>
@@ -281,8 +329,7 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-
-        <!--
+-->
         <repository>
             <id>central</id>
             <name>Central Maven2 repository</name>
@@ -317,9 +364,8 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-        -->
 
-        <!--  TODO: only project 'jquantlib' needs it! -->
+        <!--  TODO: evaluate it should remain here -->
         <!--  TODO: copy artifacts to JQL repository-->
         <repository>
             <id>joda</id>
@@ -335,7 +381,6 @@
     </repositories>
     
     <pluginRepositories>
-        <!--
         <pluginRepository>
             <id>central</id>
             <name>Maven Plugin Repository</name>
@@ -364,7 +409,6 @@
             <releases>  <enabled>true</enabled> </releases>
             <snapshots> <enabled>true</enabled>  </snapshots>
         </pluginRepository>
-        -->
     </pluginRepositories>
 
     <build>
@@ -381,37 +425,42 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>findbugs-maven-plugin</artifactId>
-                    <!-- version>1.2</version --> <!-- TODO: version -->
+                    <!-- version>1.2</version -->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <!-- version>2.4</version --> <!-- TODO: version -->
+                    <!-- version>2.4</version -->
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>taglist-maven-plugin</artifactId>
-                    <!-- version>2.3</version --> <!-- TODO: version -->
+                    <!-- version>2.3</version -->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-changelog-plugin</artifactId>
-                    <!-- version>2.1</version --> <!-- TODO: version -->
+                    <!-- version>2.1</version -->
                 </plugin>
-                <!-- plugin>
+                <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>clirr-maven-plugin</artifactId>
-                    < ! - - version>2.2.1</version - - > < ! - - TODO: version - - >
-                </plugin-->
+                    <!-- version>2.2.1</version -->
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jxr-plugin</artifactId>
-                    <!-- version>2.1</version --> <!-- TODO: version -->
+                    <!-- version>2.1</version -->
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>jdepend-maven-plugin</artifactId>
-                    <!-- version>2.0-beta-1</version --> <!-- TODO: version -->
+                    <!-- version>2.0-beta-1</version -->
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <!-- version>2.0</version -->
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -439,7 +488,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <doCheck>${maven.buildNumber.doCheck}</doCheck>
+                    <doCheck>${props.buildNumber.doCheck}</doCheck>
                 </configuration>
             </plugin>
 
@@ -483,7 +532,6 @@
                             </tasks>
                         </configuration>
                     </execution>
-
                 </executions>
             </plugin>
 
@@ -491,12 +539,12 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>${maven.compile.jdk.source}</source>
-                    <target>${maven.compile.jdk.target}</target>
+                    <source>${props.compile.jdk.source}</source>
+                    <target>${props.compile.jdk.target}</target>
                     <encoding>UTF8</encoding>
-                    <meminitial>${maven.compile.meminitial}</meminitial>
-                    <maxmem>${maven.compile.maxmem}</maxmem>
-                    <fork>${maven.compile.fork}</fork>
+                    <meminitial>${props.compile.meminitial}</meminitial>
+                    <maxmem>${props.compile.maxmem}</maxmem>
+                    <fork>${props.compile.fork}</fork>
                 </configuration>
             </plugin>
 
@@ -543,259 +591,252 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
         </plugins>
-        
     </build>
 
-    <reporting>
-        <plugins>
-            <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <!-- version>2.5</version -->
-                <configuration>
-                    <aggregate>false</aggregate>
-                    
-                    <!-- By default, no javadocs are generated -->
-                    <skip>true</skip>
-                    
-                    <!-- Used by javadoc:javadoc goal -->
-                    <doctitle>${project.name} v${project.version} API Javadocs</doctitle>
-                    <windowtitle>${project.name} v${project.version} API Javadocs</windowtitle>
-                    <!-- Used by javadoc:test-javadoc goal -->
-                    <testdoctitle>${project.name} v${project.version} Test API Javadocs</testdoctitle>
-                    <testwindowtitle>${project.name} v${project.version} Test API Javadocs</testwindowtitle>
-                    <show>private</show>
-                    <use>true</use>
-                    <splitindex>true</splitindex>
-                    <stylesheet>maven</stylesheet>
-                    <linksource>true</linksource>
-                    <encoding>UTF-8</encoding>
-                    <docencoding>UTF-8</docencoding>
-                    <charset>UTF-8</charset>
-                    <verbose>true</verbose>
-                    <header>&lt;b>JQuantLib &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font></header>
-                    <bottom><![CDATA[
-                        <font size="-1">
-                        <a href="http://bugs.jquantlib.org/">Submit a bug or feature</a><br/><br/>
-                        JQuantLib is free software: you can redistribute it and/or modify it
-                        under the terms of the JQuantLib license. You should have received a
-                        copy of the license along with this program; if not, please email
-                        mailto:jquant-devel@lists.sourceforge.net. The license is also available online at
-                        <a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
-                        </font>
-                    ]]></bottom>
-                    <links>
-                        <link>http://java.sun.com/j2se/6/docs/api/index.html</link>
-                        <link>http://joda-primitives.sourceforge.net/apidocs/index.html</link>
-                        <link>http://www.slf4j.org/apidocs/</link>
-                        <link>http://junit.sourceforge.net/javadoc/</link>
-                    </links>
-                    
-                    <!-- UMLGraph-4.9.0 works fine -->
-                    <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
-                    <docletArtifact>
-                        <groupId>gr.spinellis</groupId>
-                        <artifactId>UmlGraph</artifactId>
-                        <version>4.9.0</version>
-                    </docletArtifact>
-                    
-                    <!-- UMLGraph-5.0, 5.1 and 5.2 do not work :( -->
-                    <!-- 
-                    <doclet>org.umlgraph.doclet.UmlGraph</doclet>
-                    <docletArtifact>
-                        <groupId>gr.spinellis</groupId>
-                        <artifactId>UmlGraph</artifactId>
-                        <version>5.0</version>
-                    </docletArtifact>
-                    -->
-                    
-                    <taglets>
-                        <taglet>
-                            <tagletClass>net.sf.latextaglet.LaTeXBlockEquationTaglet</tagletClass>
-                            <tagletArtifact>
-                                <groupId>net.sf.latextaglet</groupId>
-                                <artifactId>latextaglet</artifactId>
-                                <version>0.1.1</version>
-                            </tagletArtifact>
-                        </taglet>
-                        <taglet>
-                            <tagletClass>net.sf.latextaglet.LaTeXEquationTaglet</tagletClass>
-                            <tagletArtifact>
-                                <groupId>net.sf.latextaglet</groupId>
-                                <artifactId>latextaglet</artifactId>
-                                <version>0.1.1</version>
-                            </tagletArtifact>
-                        </taglet>
-                        <taglet>
-                            <tagletClass>net.sf.latextaglet.LaTeXInlineTaglet</tagletClass>
-                            <tagletArtifact>
-                                <groupId>net.sf.latextaglet</groupId>
-                                <artifactId>latextaglet</artifactId>
-                                <version>0.1.1</version>
-                            </tagletArtifact>
-                        </taglet>
-                    </taglets>
-                    <additionalparam> -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify -postfixpackage
-                        -nodefontsize 9 -nodefontpackagesize 7 </additionalparam>
-                    <useStandardDocletOptions>true</useStandardDocletOptions>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <!-- version>2.1</version -->
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changelog-plugin</artifactId>
-                <!-- version>2.1</version -->
-                <reportSets>
-                    <reportSet>
-                        <id>dual-report</id>
-                        <configuration>
-                            <type>range</type>
-                            <range>30</range>
-                        </configuration>
-                        <reports>
-                            <report>changelog</report>
-                            <report>file-activity</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-
-            <!-- plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>clirr-maven-plugin</artifactId>
-                < ! - - version>2.2.1</version - - >
-            </plugin-->
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-                <!-- version>2.3</version -->
-                <configuration>
-                    <tags>
-                        <tag>TODO</tag>
-                        <tag>FIXME</tag>
-                        <tag>XXX</tag>
-                        <tag>TEST</tag>
-                        <tag>PENDING</tag>
-                        <tag>PERFORMANCE</tag>
-                        <tag>@Override</tag>
-                        <tag>@Deprecated</tag>
-                        <tag>@SupressWarnings</tag>
-                        <tag>@Ignore</tag>
-                        <tag>@Unused</tag>
-                        <tag>@note</tag>
-                    </tags>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <!-- version>2.4</version -->
-                <configuration>
-                    <linkXref>true</linkXref>
-                    <sourceEncoding>utf-8</sourceEncoding>
-                    <minimumTokens>100</minimumTokens>
-                    <targetJdk>${maven.compile.jdk.target}</targetJdk>
-                    <excludes>
-                        <exclude>**/*Bean.java</exclude>
-                        <exclude>**/generated/*.java</exclude>
-                    </excludes>
-                    <rulesets>
-                        <ruleset>/rulesets/basic.xml</ruleset>
-                        <ruleset>/rulesets/braces.xml</ruleset>
-                        <ruleset>/rulesets/naming.xml</ruleset>
-                        <ruleset>/rulesets/finalizers.xml</ruleset>
-                        <ruleset>/rulesets/logging-java.xml</ruleset>
-                        <ruleset>/rulesets/migrating.xml</ruleset>
-                        <ruleset>/rulesets/controversial.xml</ruleset>
-                        <!--  TODO: only project 'jquantlib' needs it -->
-                        <!-- ruleset>${basedir}/src/main/pmd/architectural.xml</ruleset--> 
-                    </rulesets>
-                </configuration>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>pmd</report>
-                            <report>cpd</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jdepend-maven-plugin</artifactId>
-                <!-- version>2.0-beta-1</version -->
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <!-- version>1.2</version -->
-                <configuration>
-                    <report>maven-findbugs-plugin</report>
-                </configuration>
-            </plugin>
-
-        </plugins>
-    </reporting>
-
-    <distributionManagement>
-        <repository>
-            <id>artifactory-releases</id>
-            <name>artifactory-releases</name>
-            <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>artifactory-snapshots</id>
-            <name>artifactory-snapshots</name>
-            <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-snapshots</url>
-        </snapshotRepository>
-        <site>
-            <id>site</id>
-            <name>${project.name} site by Maven</name>
-            <url>scp://hudson@apache/srv/jquantlib.org/sites/${project.artifactId}</url>
-        </site>
-    </distributionManagement>
-
     <profiles>
-        <!-- 
-        **     * quick (default)
-        **         Intended to run everytime a new commit happens and/or relatively short periods of time.
-        **         - no unit tests
-        **         - no integration tests
-        **         - no reports generation
-        **         - no site generation/deployment
-        **         $ mvn clean package -Dmode=quick
-        -->
+
         <profile>
-            <id>quick</id>
-            <activation>
-                <property>
-                    <name>mode</name>
-                    <value>quick</value>
-                </property>
-            </activation>
+            <id>with-javadoc</id>
+            <reporting>
+                <plugins>
+                    <plugin>
+                       <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <reportSets>
+                            <reportSet>
+                                <id>html</id>
+                                <configuration>
+                                    <destDir>apidocs/${project.version}</destDir>
+                                    <outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
+                                    <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}</reportOutputDirectory>
+                                </configuration>
+                                <reports>
+                                    <report>javadoc</report>
+                                </reports>
+                            </reportSet>
+                            <reportSet>
+                                <id>test-html</id>
+                                <configuration>
+                                    <destDir>testapidocs/${project.version}</destDir>
+                                    <outputDirectory>${project.build.directory}/testapidocs/${project.version}</outputDirectory>
+                                    <reportOutputDirectory>${project.reporting.outputDirectory}/testapidocs/${project.version}</reportOutputDirectory>
+                                </configuration>
+                                <reports>
+                                    <report>test-javadoc</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                        <configuration>
+                            <aggregate>false</aggregate>
+
+                            <!-- Used by javadoc:javadoc goal -->
+                            <doctitle>${project.name} v${project.version} API Javadocs</doctitle>
+                            <windowtitle>${project.name} v${project.version} API Javadocs</windowtitle>
+                            <!-- Used by javadoc:test-javadoc goal -->
+                            <testdoctitle>${project.name} v${project.version} Test API Javadocs</testdoctitle>
+                            <testwindowtitle>${project.name} v${project.version} Test API Javadocs</testwindowtitle>
+                            <show>private</show>
+                            <use>true</use>
+                            <splitindex>true</splitindex>
+                            <stylesheet>maven</stylesheet>
+                            <linksource>true</linksource>
+                            <encoding>UTF-8</encoding>
+                            <docencoding>UTF-8</docencoding>
+                            <charset>UTF-8</charset>
+                            <verbose>true</verbose>
+                            <header>&lt;b>JQuantLib &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font></header>
+                            <bottom><![CDATA[
+                                <font size="-1">
+                                <a href="http://bugs.jquantlib.org/">Submit a bug or feature</a><br/><br/>
+                                JQuantLib is free software: you can redistribute it and/or modify it
+                                under the terms of the JQuantLib license. You should have received a
+                                copy of the license along with this program; if not, please email
+                                mailto:jquant-devel@lists.sourceforge.net. The license is also available online at
+                                <a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
+                                </font>
+                            ]]></bottom>
+                            <links>
+                                <link>http://java.sun.com/j2se/6/docs/api/index.html</link>
+                                <link>http://joda-primitives.sourceforge.net/apidocs/index.html</link>
+                                <link>http://www.slf4j.org/apidocs/</link>
+                                <link>http://junit.sourceforge.net/javadoc/</link>
+                            </links>
+
+                            <!-- UMLGraph-4.9.0 works fine -->
+                            <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
+                            <docletArtifact>
+                                <groupId>gr.spinellis</groupId>
+                                <artifactId>UmlGraph</artifactId>
+                                <version>4.9.0</version>
+                            </docletArtifact>
+
+                            <!-- UMLGraph-5.0, 5.1 and 5.2 do not work :( -->
+                            <!-- 
+                            <doclet>org.umlgraph.doclet.UmlGraph</doclet>
+                            <docletArtifact>
+                                <groupId>gr.spinellis</groupId>
+                                <artifactId>UmlGraph</artifactId>
+                                <version>5.0</version>
+                            </docletArtifact>
+                            -->
+
+                            <taglets>
+                                <taglet>
+                                    <tagletClass>net.sf.latextaglet.LaTeXBlockEquationTaglet</tagletClass>
+                                    <tagletArtifact>
+                                        <groupId>net.sf.latextaglet</groupId>
+                                        <artifactId>latextaglet</artifactId>
+                                        <version>0.1.1</version>
+                                    </tagletArtifact>
+                                </taglet>
+                                <taglet>
+                                    <tagletClass>net.sf.latextaglet.LaTeXEquationTaglet</tagletClass>
+                                    <tagletArtifact>
+                                        <groupId>net.sf.latextaglet</groupId>
+                                        <artifactId>latextaglet</artifactId>
+                                        <version>0.1.1</version>
+                                    </tagletArtifact>
+                                </taglet>
+                                <taglet>
+                                    <tagletClass>net.sf.latextaglet.LaTeXInlineTaglet</tagletClass>
+                                    <tagletArtifact>
+                                        <groupId>net.sf.latextaglet</groupId>
+                                        <artifactId>latextaglet</artifactId>
+                                        <version>0.1.1</version>
+                                    </tagletArtifact>
+                                </taglet>
+                            </taglets>
+                            <additionalparam> -inferrel -inferdep -quiet -hide java.* -collpackages java.util.* -qualify -postfixpackage
+                                -nodefontsize 9 -nodefontpackagesize 7 </additionalparam>
+                            <useStandardDocletOptions>true</useStandardDocletOptions>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jxr-plugin</artifactId>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-changelog-plugin</artifactId>
+                        <reportSets>
+                            <reportSet>
+                                <id>dual-report</id>
+                                <configuration>
+                                    <type>range</type>
+                                    <range>30</range>
+                                </configuration>
+                                <reports>
+                                    <report>changelog</report>
+                                    <report>file-activity</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>taglist-maven-plugin</artifactId>
+                        <configuration>
+                            <tags>
+                                <tag>TODO</tag>
+                                <tag>FIXME</tag>
+                                <tag>XXX</tag>
+                                <tag>TEST</tag>
+                                <tag>PENDING</tag>
+                                <tag>PERFORMANCE</tag>
+                                <tag>@Override</tag>
+                                <tag>@Deprecated</tag>
+                                <tag>@SupressWarnings</tag>
+                                <tag>@Ignore</tag>
+                                <tag>@Unused</tag>
+                                <tag>@note</tag>
+                            </tags>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-pmd-plugin</artifactId>
+                        <configuration>
+                            <linkXref>true</linkXref>
+                            <sourceEncoding>utf-8</sourceEncoding>
+                            <minimumTokens>100</minimumTokens>
+                            <targetJdk>${props.compile.jdk.target}</targetJdk>
+                            <excludes>
+                                <exclude>**/*Bean.java</exclude>
+                                <exclude>**/generated/*.java</exclude>
+                            </excludes>
+                            <rulesets>
+                                <ruleset>/rulesets/basic.xml</ruleset>
+                                <ruleset>/rulesets/braces.xml</ruleset>
+                                <ruleset>/rulesets/naming.xml</ruleset>
+                                <ruleset>/rulesets/finalizers.xml</ruleset>
+                                <ruleset>/rulesets/logging-java.xml</ruleset>
+                                <ruleset>/rulesets/migrating.xml</ruleset>
+                                <ruleset>/rulesets/controversial.xml</ruleset>
+                            </rulesets>
+                        </configuration>
+                        <reportSets>
+                            <reportSet>
+                                <reports>
+                                    <report>pmd</report>
+                                    <report>cpd</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <configuration>
+                            <report>maven-findbugs-plugin</report>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>jdepend-maven-plugin</artifactId>
+                    </plugin>
+
+                </plugins>
+            </reporting>
+        </profile>
+
+        <profile>
+            <id>with-clirr</id>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>clirr-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+
+        <profile>
+            <id>with-cobertura</id>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+
+        <profile>
+            <id>without-surefire</id>
             <reporting>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <skip>true</skip>
                         </configuration>
@@ -804,255 +845,6 @@
             </reporting>
         </profile>
 
-        <!--
-        **     * nightly
-        **         Intended to run once a day, producing documentation but skipping test coverage reports.
-        **         - generates javadocs
-        **         - no integration tests
-        **         - no reports generation
-        **         - generates and deploys site
-        **         $ mvn clean site-deploy -Dmode=nigthly
-        -->
-        <profile>
-            <id>nightly</id>
-            <activation>
-                <property>
-                    <name>mode</name>
-                    <value>nightly</value>
-                </property>
-            </activation>
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <reportSets>
-                            <reportSet>
-                                <id>html</id>
-                                <configuration>
-                                    <destDir>apidocs/${project.version}</destDir>
-                                    <outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
-                                    <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}</reportOutputDirectory>
-                                </configuration>
-                                <reports>
-                                    <report>javadoc</report>
-                                </reports>
-                            </reportSet>
-                            <reportSet>
-                                <id>test-html</id>
-                                <configuration>
-                                    <destDir>testapidocs/${project.version}</destDir>
-                                    <outputDirectory>${project.build.directory}/testapidocs/${project.version}</outputDirectory>
-                                    <reportOutputDirectory>${project.reporting.outputDirectory}/testapidocs/${project.version}</reportOutputDirectory>
-                                </configuration>
-                                <reports>
-                                    <report>test-javadoc</report>
-                                </reports>
-                            </reportSet>
-                        </reportSets>
-                        <configuration>
-                            <skip>false</skip>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </reporting>
-        </profile>
-        
-        <!--
-        **     * weekly
-        **         Intended to generate full documentation.
-        **         - generates javadocs
-        **         - run integration tests
-        **         - generates reports
-        **         - generates and deploys site
-        **         $ mvn clean deploy site-deploy -Dmode=weekly
-        -->
-        <profile>
-            <id>weekly</id>
-            <activation>
-                <property>
-                    <name>mode</name>
-                    <value>weekly</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                        <!-- version>2.2</version --> <!-- TODO: version -->
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>clean</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <reportSets>
-                            <reportSet>
-                                <id>html</id>
-                                <configuration>
-                                    <destDir>apidocs/${project.version}</destDir>
-                                    <outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
-                                    <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}</reportOutputDirectory>
-                                </configuration>
-                                <reports>
-                                    <report>javadoc</report>
-                                </reports>
-                            </reportSet>
-                            <reportSet>
-                                <id>test-html</id>
-                                <configuration>
-                                    <destDir>testapidocs/${project.version}</destDir>
-                                    <outputDirectory>${project.build.directory}/testapidocs/${project.version}</outputDirectory>
-                                    <reportOutputDirectory>${project.reporting.outputDirectory}/testapidocs/${project.version}</reportOutputDirectory>
-                                </configuration>
-                                <reports>
-                                    <report>test-javadoc</report>
-                                </reports>
-                            </reportSet>
-                        </reportSets>
-                        <configuration>
-                            <skip>false</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skip>false</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </reporting>
-        </profile>
-
-        <!--
-        **     * release
-        **         Intended to generate full documentation and tag a new release.
-        **         - generates javadocs
-        **         - run integration tests
-        **         - generates reports
-        **         - generates and deploys site
-        **         $ mvn clean deploy site-deploy -DperformRelease=true
-        -->
-        <profile>
-            <id>release</id>
-            <activation>
-                <property>
-                    <name>mode</name>
-                    <value>release</value>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                        <!-- version>2.2</version --> <!-- TODO: version -->
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>clean</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <skip>false</skip>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <reportSets>
-                            <reportSet>
-                                <id>html</id>
-                                <configuration>
-                                    <destdir>apidocs/${project.version}</destdir>
-                                    <outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
-                                    <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}</reportOutputDirectory>
-                                </configuration>
-                                <reports>
-                                    <report>javadoc</report>
-                                </reports>
-                            </reportSet>
-                            <reportSet>
-                                <id>test-html</id>
-                                <configuration>
-                                    <destdir>testapidocs/${project.version}</destdir>
-                                    <outputDirectory>${project.build.directory}/testapidocs/${project.version}</outputDirectory>
-                                    <reportOutputDirectory>${project.reporting.outputDirectory}/testapidocs/${project.version}</reportOutputDirectory>
-                                </configuration>
-                                <reports>
-                                    <report>test-javadoc</report>
-                                </reports>
-                            </reportSet>
-                        </reportSets>
-                        <configuration>
-                            <skip>false</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skip>false</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <configuration>
-                            <updateReleaseInfo>true</updateReleaseInfo>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </reporting>
-        </profile>
     </profiles>
 
 </project>
