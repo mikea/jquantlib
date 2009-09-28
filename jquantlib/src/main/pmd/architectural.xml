@@ -206,5 +206,25 @@ it.unimi.dsi.fastutil.doubles.DoubleArrayList list2 = it.unimi.dsi.fastutil.doub
 		</properties>
 	</rule>
 
+    <rule name="EnumOrdinalInUse" 
+		  message="Verify use of Enum#ordinal, probably Enum#value is required" 
+		  class="net.sourceforge.pmd.rules.XPathRule">
+		<description>
+	     Most programmers will have no use for this method. It is designed for use by sophisticated enum-based data structures, such  as {@link java.util.EnumSet} and {@link java.util.EnumMap}.
+    	 Pls. check use of ordinal() method, probably value() is required.
+    	</description>
+		<properties>
+			<property name="xpath">
+				<value>
+<![CDATA[
+//Name[
+  contains(@Image, 'ordinal')
+  ]
+]]>
+				</value>
+			</property>
+		</properties>
+	</rule>
+
 
 </ruleset>
