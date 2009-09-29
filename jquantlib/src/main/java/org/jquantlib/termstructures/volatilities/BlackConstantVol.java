@@ -119,7 +119,7 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
 
     @Override
     public final Date maxDate() {
-        return new Date().statics().maxDate();
+        return Date.maxDate();
     }
 
 

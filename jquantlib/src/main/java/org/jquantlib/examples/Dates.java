@@ -47,7 +47,7 @@ public class Dates {
         clock.startClock();
 
         //Let's take todays date to explore the date interface
-        final Date today = new Date().statics().todaysDate();
+        final Date today = Date.todaysDate();
         System.out.println("Today's date is = "+today);
 
         //Get the Month enum and the month's integer equivalent of this date
@@ -68,20 +68,20 @@ public class Dates {
         System.out.println("The day of the date as day in it's year(1-366) is = "+today.dayOfYear());
 
         //Check if the date belongs to a leap year
-        if (today.isLeap()) {
+        if (Date.isLeap(today.year())) {
             System.out.println("Today's date belong to leap year");
         }
 
         //Get the next nextWeekdayDate of this date's month having weekday as TUESDAY
-        final Date nextWeekdayDate = today.nextWeekday(Weekday.TUESDAY);
+        final Date nextWeekdayDate = Date.nextWeekday(today,Weekday.TUESDAY);
         System.out.println("The date of the next weekday is = "+nextWeekdayDate);
 
         //Get the 4th weekdayDate of this date's month having weekday as TUESDAY
-        final Date fourthWeekdayDate = today.nthWeekday(4, Weekday.TUESDAY);
+        final Date fourthWeekdayDate = Date.nthWeekday(4, Weekday.TUESDAY, today.month(), today.year());
         System.out.println("The fourthWeekdayDate which is TUESDAY is = "+fourthWeekdayDate);
 
         //Let's try getting the first date of the month to which today's date belong to
-        final Date dateEndOfMonth = today.endOfMonth();
+        final Date dateEndOfMonth = Date.endOfMonth(today);
         final int dayOfEndOfMonth = dateEndOfMonth.dayOfMonth();
         final Date dateStartOfMonth = dateEndOfMonth.add(-dayOfEndOfMonth+1);
         System.out.println("The first date of the month to which todays date belong to is = "+dateStartOfMonth);

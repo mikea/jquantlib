@@ -211,7 +211,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     }
 
     public int dayOfMonth() /* @ReadOnly */ {
-        return dayOfYear() - monthOffset(month().value(), statics.isLeap(year()));
+        return dayOfYear() - monthOffset(month().value(), isLeap(year()));
     }
 
     /**
@@ -226,7 +226,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     public Month month() /* @ReadOnly */ {
         final int d = dayOfYear(); // dayOfYear is 1 based
         int m = d / 30 + 1;
-        final boolean leap = statics.isLeap(year());
+        final boolean leap = isLeap(year());
         while (d <= monthOffset(m, leap)) {
             --m;
         }
@@ -454,60 +454,8 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
 
     //
-    // public methods :: convenience methods (also declared in inner class Statics
-    //
-
-    /**
-     * Convenience method to {@link Statics#isLeap(int)}
-     */
-    public final boolean isLeap() {
-        return statics.isLeap(year());
-    }
-
-    /**
-     * Convenience method to {@link Statics#endOfMonth(Date)}
-     */
-    public final Date endOfMonth() {
-        return statics.endOfMonth(this);
-    }
-
-    /**
-     * Convenience method to {@link Statics#isEndOfMonth(Date)}
-     */
-    public final boolean isEndOfMonth() {
-        return statics.isEndOfMonth(this);
-    }
-
-    /**
-     * Convenience method to {@link Statics#nextWeekday(Date, Weekday)}
-     */
-    public final Date nextWeekday(final Weekday w) {
-        return statics.nextWeekday(this, w);
-    }
-
-    /**
-     * Convenience method to {@link Statics#nthWeekday(int, Weekday, Month, int)}
-     */
-    public final Date nthWeekday(final int n, final Weekday w) {
-        final int m = this.month().value();
-        final int y = year();
-        return statics.nthWeekday(n, w, m, y);
-    }
-
-
-
-    //
     // public methods :: provide access to inner classes
     //
-
-    /**
-     * Returns a {@link Statics} class which mimicks access to static methods
-     * 
-     * @see Statics
-     */
-    public final Statics statics() {
-        return statics;
-    }
 
     /**
      * Provides access to a long date formatter.
@@ -707,7 +655,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             }
 
             QL.ensure(y >= 1900 && y <= 2099 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
-            final int length = monthLength(m, statics.isLeap(y));
+            final int length = monthLength(m, isLeap(y));
             if (d > length) {
                 d = length;
             }
@@ -721,7 +669,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             final int y = date.year() + n;
 
             QL.ensure(y >= 1900 && y <= 2099 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
-            if (d == 29 && m == Month.FEBRUARY.value() && !statics.isLeap(y)) {
+            if (d == 29 && m == Month.FEBRUARY.value() && !isLeap(y)) {
                 d = 28;
             }
 
@@ -731,6 +679,165 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
         }
         default:
             throw new LibraryException("undefined time units"); // QA:[RG]::verified // TODO: message
+        }
+    }
+
+
+    //
+    // public static methods
+    //
+
+    /**
+     * Today's date.
+     *
+     * @return a new instance
+     */
+    public static final Date todaysDate() {
+        final java.util.Calendar cal = java.util.Calendar.getInstance();
+        final int d = cal.get(java.util.Calendar.DAY_OF_MONTH);
+        final int m = cal.get(java.util.Calendar.MONTH);
+        final int y = cal.get(java.util.Calendar.YEAR);
+        return new Date(d, m + 1, y);
+    }
+
+    /**
+     * Earliest allowed date
+     * 
+     * @return a new instance
+     */
+    public static final Date minDate() {
+        return new Date(MinimumSerialNumber);
+    }
+
+    /**
+     * Latest allowed date
+     * 
+     * @return a new instance
+     */
+    public static final Date maxDate() {
+        return new Date(MaximumSerialNumber);
+    }
+
+    /**
+     * Whether the given year is a leap one
+     * 
+     * @param y
+     * @return
+     */
+    public static final boolean isLeap(final int y) {
+        return yearIsLeap[y - 1900];
+    }
+
+    /**
+     * Last day of the month to which the given date belongs
+     * 
+     * @return a new instance
+     */
+    public static final Date endOfMonth(final Date d) {
+        final int m = d.month().value();
+        final int y = d.year();
+        return new Date(monthLength(m, isLeap(y)), m, y);
+    }
+
+    /**
+     * Whether a date is the last day of its month
+     * 
+     * @return
+     */
+    public static final boolean isEndOfMonth(final Date d) {
+        return (d.dayOfMonth() == monthLength(d.month().value(), isLeap(d.year())));
+    }
+
+    /**
+     * Next given weekday following or equal to the given date
+     * <p>
+     * E.g., the Friday following Tuesday, January 15th, 2002 was January 18th, 2002.
+     * 
+     * @see http://www.cpearson.com/excel/DateTimeWS.htm
+     * 
+     * @return a new instance
+     */
+    public static final Date nextWeekday(final Date d, final Weekday w) {
+        final int wd = d.weekday().value();
+        final int dow = w.value();
+        return new Date(d.serialNumber + (wd > dow ? 7 : 0) - wd + dow);
+    }
+
+    /**
+     * n-th given weekday in the given month and year
+     * <p>
+     * E.g., the 4th Thursday of March, 1998 was March 26th, 1998.
+     * 
+     * @see http://www.cpearson.com/excel/DateTimeWS.htm
+     * 
+     * @param n
+     * @param w
+     * @param m
+     * @param y
+     * 
+     * @return a new instance
+     */
+    public static final Date nthWeekday(final int n, final Weekday w, final Month m, final int y) {
+        return nthWeekday(n, w, m.value(), y);
+    }
+
+    /**
+     * Returns a new Date which is the n-th week day of a certain month/year
+     * 
+     * @param nth is the desired week
+     * @param dayOfWeek is the desired week day
+     * @param month is the desired month
+     * @param year is the desired year
+     * 
+     * @return a new instance
+     */
+    public static final Date nthWeekday(final int nth, final Weekday dayOfWeek, final int month, final int year) {
+        QL.require(nth > 0, "zeroth day of week in a given (month, year) is undefined"); // QA:[RG]::verified //TODO: message
+        QL.require(nth < 6, "no more than 5 weekday in a given (month, year)"); // QA:[RG]::verified //TODO: message
+        final int m = month;
+        final int y = year;
+        final int dow = dayOfWeek.value();
+        // FIXME: code review
+        final int first = new Date(1, m, y).weekday().value();
+        final int skip = nth - (dow >= first ? 1 : 0);
+        return new Date(1 + dow - first + skip * 7, m, y);
+    }
+
+    /**
+     * Return the minimum Date in a range.
+     */
+    public static Date min(final Date... t) {
+        QL.require(t!=null , "argument cannot be null"); // QA:[RG]::verified // TODO: message
+        if (t.length == 0) {
+            return new Date();
+        } else {
+            Date min = t[0];
+            for (int i=1; i<t.length; i++) {
+                final Date curr = t[i];
+                if (curr.lt(min)) {
+                    min = curr;
+                }
+            }
+            return min;
+        }
+    }
+
+    /**
+     * Return the maximum Date in a range.
+     */
+    public static Date max(final Date... t) {
+        QL.require(t!=null , "argument cannot be null"); // QA:[RG]::verified // TODO: message
+        if (t.length == 0) {
+            return new Date();
+        } else {
+            Date max = t[0];
+            for (int i=1; i<t.length; i++) {
+                final Date curr = t[i];
+                if (curr.gt(max)) {
+                    max = curr;
+                }
+            }
+            return max;
         }
     }
 
@@ -750,7 +857,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     private static final int fromDMY(final int d, final int m, final int y) {
         QL.require(y > 1900 && y < 2100 , "year out of bound. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
         QL.require(m > 0 && m < 13 , "month outside January-December range [1,12]"); // QA:[RG]::verified // TODO: message
-        final boolean leap = statics.isLeap(y);
+        final boolean leap = isLeap(y);
         final int len = monthLength(m, leap);
         final int offset = monthOffset(m, leap);
         QL.ensure(d > 0 && d <= len , "day outside month day-range"); // QA:[RG]::verified // TODO: message
@@ -796,174 +903,6 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     //
     // public inner classes
     //
-
-    private static final Statics statics = new Statics();
-
-    /**
-     * This class provides non-static methods which originally were
-     * declared static in QuantLib/C++
-     */
-    public static final class Statics {
-
-        private Statics() {
-            // outside world cannot instantiate
-        }
-
-        /**
-         * Today's date.
-         *
-         * @return a new instance
-         */
-        public final Date todaysDate() {
-            final java.util.Calendar cal = java.util.Calendar.getInstance();
-            final int d = cal.get(java.util.Calendar.DAY_OF_MONTH);
-            final int m = cal.get(java.util.Calendar.MONTH);
-            final int y = cal.get(java.util.Calendar.YEAR);
-            return new Date(d, m + 1, y);
-        }
-
-        /**
-         * Earliest allowed date
-         * 
-         * @return a new instance
-         */
-        public final Date minDate() {
-            return new Date(MinimumSerialNumber);
-        }
-
-        /**
-         * Latest allowed date
-         * 
-         * @return a new instance
-         */
-        public final Date maxDate() {
-            return new Date(MaximumSerialNumber);
-        }
-
-        /**
-         * Whether the given year is a leap one
-         * 
-         * @param y
-         * @return
-         */
-        public final boolean isLeap(final int y) {
-            return yearIsLeap[y - 1900];
-        }
-
-        /**
-         * Last day of the month to which the given date belongs
-         * 
-         * @return a new instance
-         */
-        public final Date endOfMonth(final Date d) {
-            final int m = d.month().value();
-            final int y = d.year();
-            return new Date(monthLength(m, isLeap(y)), m, y);
-        }
-
-        /**
-         * Whether a date is the last day of its month
-         * 
-         * @return
-         */
-        public final boolean isEndOfMonth(final Date d) {
-            return (d.dayOfMonth() == monthLength(d.month().value(), isLeap(d.year())));
-        }
-
-        /**
-         * Next given weekday following or equal to the given date
-         * <p>
-         * E.g., the Friday following Tuesday, January 15th, 2002 was January 18th, 2002.
-         * 
-         * @see http://www.cpearson.com/excel/DateTimeWS.htm
-         * 
-         * @return a new instance
-         */
-        public final Date nextWeekday(final Date d, final Weekday w) {
-            final int wd = d.weekday().value();
-            final int dow = w.value();
-            return new Date(d.serialNumber + (wd > dow ? 7 : 0) - wd + dow);
-        }
-
-        /**
-         * n-th given weekday in the given month and year
-         * <p>
-         * E.g., the 4th Thursday of March, 1998 was March 26th, 1998.
-         * 
-         * @see http://www.cpearson.com/excel/DateTimeWS.htm
-         * 
-         * @param n
-         * @param w
-         * @param m
-         * @param y
-         * 
-         * @return a new instance
-         */
-        public final Date nthWeekday(final int n, final Weekday w, final Month m, final int y) {
-            return nthWeekday(n, w, m.value(), y);
-        }
-
-        /**
-         * Returns a new Date which is the n-th week day of a certain month/year
-         * 
-         * @param nth is the desired week
-         * @param dayOfWeek is the desired week day
-         * @param month is the desired month
-         * @param year is the desired year
-         * 
-         * @return a new instance
-         */
-        public final Date nthWeekday(final int nth, final Weekday dayOfWeek, final int month, final int year) {
-            QL.require(nth > 0, "zeroth day of week in a given (month, year) is undefined"); // QA:[RG]::verified //TODO: message
-            QL.require(nth < 6, "no more than 5 weekday in a given (month, year)"); // QA:[RG]::verified //TODO: message
-            final int m = month;
-            final int y = year;
-            final int dow = dayOfWeek.value();
-            // FIXME: code review
-            final int first = new Date(1, m, y).weekday().value();
-            final int skip = nth - (dow >= first ? 1 : 0);
-            return new Date(1 + dow - first + skip * 7, m, y);
-        }
-
-        /**
-         * Return the minimum Date in a range.
-         */
-        public Date min(final Date... t) {
-            QL.require(t!=null , "argument cannot be null"); // QA:[RG]::verified // TODO: message
-            if (t.length == 0) {
-                return new Date();
-            } else {
-                Date min = t[0];
-                for (int i=1; i<t.length; i++) {
-                    final Date curr = t[i];
-                    if (curr.lt(min)) {
-                        min = curr;
-                    }
-                }
-                return min;
-            }
-        }
-
-        /**
-         * Return the maximum Date in a range.
-         */
-        public Date max(final Date... t) {
-            QL.require(t!=null , "argument cannot be null"); // QA:[RG]::verified // TODO: message
-            if (t.length == 0) {
-                return new Date();
-            } else {
-                Date max = t[0];
-                for (int i=1; i<t.length; i++) {
-                    final Date curr = t[i];
-                    if (curr.gt(max)) {
-                        max = curr;
-                    }
-                }
-                return max;
-            }
-        }
-    }
-
 
     /**
      * This class provides a long output formatter, e.g: September 18, 2009

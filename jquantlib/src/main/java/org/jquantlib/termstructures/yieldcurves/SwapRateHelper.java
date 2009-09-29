@@ -210,7 +210,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         final FloatingRateCoupon lastFloating = (FloatingRateCoupon) swap.floatingLeg().last();
         final Date fixingValueDate = iborIndex.valueDate(lastFloating.fixingDate());
         final Date endValueDate = iborIndex.maturityDate(fixingValueDate);
-        latestDate = latestDate.statics().max(latestDate, endValueDate);
+        latestDate = Date.max(latestDate, endValueDate);
         // #endif
     }
 

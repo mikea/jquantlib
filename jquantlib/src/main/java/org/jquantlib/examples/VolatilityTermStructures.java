@@ -67,7 +67,7 @@ public class VolatilityTermStructures {
         final StopClock clock = new StopClock();
         clock.startClock();
 
-        final Date today  = new Date().statics().todaysDate();
+        final Date today  = Date.todaysDate();
         final Date date10 = today.clone().addAssign(10);
         final Date date12 = today.clone().addAssign(12);
         final Date date15 = today.clone().addAssign(15);

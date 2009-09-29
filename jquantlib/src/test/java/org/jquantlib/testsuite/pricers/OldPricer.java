@@ -138,7 +138,7 @@ public class OldPricer {
                 timeIncrements[i] = i*dt + element.first;
             }
 
-            final Date today = new Date().statics().todaysDate();
+            final Date today = Date.todaysDate();
             final YieldTermStructure yeildStructureRiskFree =  org.jquantlib.testsuite.util.Utilities.flatRate(today,element.riskFreeRate, dc);
             final YieldTermStructure yeildStructureDividentYield =  org.jquantlib.testsuite.util.Utilities.flatRate(today,element.dividendYield, dc);
             final YieldTermStructure yeildStructureVolatility =  org.jquantlib.testsuite.util.Utilities.flatRate(today,element.volatility, dc);

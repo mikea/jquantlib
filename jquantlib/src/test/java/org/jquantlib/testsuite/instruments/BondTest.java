@@ -90,7 +90,7 @@ public class BondTest {
         // setup
         public CommonVars() {
             calendar = org.jquantlib.time.calendars.Target.getCalendar();
-            today = calendar.adjust(new Date().statics().todaysDate());
+            today = calendar.adjust(Date.todaysDate());
             new Settings().setEvaluationDate(today);
             faceAmount = 1000000.0;
         }

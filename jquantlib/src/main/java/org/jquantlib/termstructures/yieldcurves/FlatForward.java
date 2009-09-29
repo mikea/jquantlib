@@ -228,7 +228,7 @@ public class FlatForward extends AbstractYieldTermStructure {
 
     @Override
     public final Date maxDate() {
-        return new Date().statics().maxDate();
+        return Date.maxDate();
     }
 
 

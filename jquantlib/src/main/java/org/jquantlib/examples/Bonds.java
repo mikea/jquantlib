@@ -155,8 +155,8 @@ public class Bonds {
                     BusinessDayConvention.UNADJUSTED,
                     BusinessDayConvention.UNADJUSTED,
                     DateGenerationRule.BACKWARD, false,
-                    new Date().statics().todaysDate(),
-                    new Date().statics().todaysDate());
+                    Date.todaysDate(),
+                    Date.todaysDate());
             final FixedRateBondHelper bondHelper = (
                     new FixedRateBondHelper(quoteHandle.get(i), settlementDays,
                             100.0, schedule,

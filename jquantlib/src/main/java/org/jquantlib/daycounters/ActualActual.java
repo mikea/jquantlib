@@ -280,8 +280,8 @@ public class ActualActual extends AbstractDayCounter {
 
             final int y1 = dateStart.year();
             final int y2 = dateEnd.year();
-            final double dib1 = dateStart.isLeap() ? 366.0 : 365.0;
-            final double dib2 = dateEnd.isLeap()   ? 366.0 : 365.0;
+            final double dib1 = Date.isLeap(dateStart.year()) ? 366.0 : 365.0;
+            final double dib2 = Date.isLeap(dateEnd.year())   ? 366.0 : 365.0;
 
             double sum = y2 - y1 - 1;
 
@@ -321,7 +321,7 @@ public class ActualActual extends AbstractDayCounter {
             double sum = 0.0;
             while (temp.gt(dateStart)) {
                 temp = newD2.add(Period.ONE_YEAR_BACKWARD);
-                if (temp.dayOfMonth() == 28 && temp.month().value() == 2 && temp.isLeap()) {
+                if (temp.dayOfMonth() == 28 && temp.month().value() == 2 && Date.isLeap(temp.year())) {
                     temp.inc();
                 }
                 if (temp.ge(dateStart)) {
@@ -332,12 +332,12 @@ public class ActualActual extends AbstractDayCounter {
 
             double den = 365.0;
 
-            if (newD2.isLeap()) {
+            if (Date.isLeap(newD2.year())) {
                 if (newD2.gt(new Date(29, Month.FEBRUARY, newD2.year())) &&
                         dateStart.le(new Date(29, Month.FEBRUARY, newD2.year()))) {
                     den += 1.0;
                 }
-            } else if (dateStart.isLeap()) {
+            } else if (Date.isLeap(dateStart.year())) {
                 if (newD2.gt(new Date(29, Month.FEBRUARY, dateStart.year())) &&
                         dateStart.le(new Date(29, Month.FEBRUARY, dateStart.year()))) {
                     den += 1.0;

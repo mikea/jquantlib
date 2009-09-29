@@ -182,7 +182,7 @@ public class OperatorTest {
 
         final DayCounter dc = Actual360.getDayCounter();
 
-        final Date today = new Date().statics().todaysDate();
+        final Date today = Date.todaysDate();
 
         Date exercise = today.clone();
         exercise = exercise.add(new Period(2,TimeUnit.YEARS));

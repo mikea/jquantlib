@@ -59,8 +59,8 @@ public class DatesTest {
     public void immDates() {
         QL.info("Testing imm dates. It may take several minutes when Cobertura reports are generated!!!");
 
-        final Date minDate = new Date().statics().minDate();
-        final Date maxDate = new Date().statics().maxDate();
+        final Date minDate = Date.minDate();
+        final Date maxDate = Date.maxDate();
 
         final Date counter = minDate.clone();
 
@@ -124,8 +124,8 @@ public class DatesTest {
 
         QL.info("Testing dates...");
 
-        final Date minD = new Date().statics().minDate();
-        final Date maxD = new Date().statics().maxDate();
+        final Date minD = Date.minDate();
+        final Date maxD = Date.maxDate();
 
         int dyold = minD.dayOfYear();
         int dold  = minD.dayOfMonth();
@@ -147,8 +147,8 @@ public class DatesTest {
 
             // check if skipping any date
             if (!((dy == dyold + 1)
-                    || (dy == 1 && dyold == 365 && !t.statics().isLeap(yold))
-                    || (dy == 1 && dyold == 366 && t.statics().isLeap(yold)))) {
+                    || (dy == 1 && dyold == 365 && !Date.isLeap(yold))
+                    || (dy == 1 && dyold == 366 && Date.isLeap(yold)))) {
                 fail("wrong day of year increment: \n"
                         + "    date: " + t + "\n"
                         + "    day of year: " + dy + "\n"
@@ -179,7 +179,7 @@ public class DatesTest {
             }
 
             if (!((m == 1 && d <= 31)
-                    || (m == 2 && d <= 28) || (m == 2 && d == 29 && t.statics().isLeap(y))
+                    || (m == 2 && d <= 28) || (m == 2 && d == 29 && Date.isLeap(y))
                     || (m == 3 && d <= 31) || (m == 4 && d <= 30) || (m == 5 && d <= 31) || (m == 6 && d <= 30)
                     || (m == 7 && d <= 31) || (m == 8 && d <= 31) || (m == 9 && d <= 30) || (m == 10 && d <= 31)
                     || (m == 11 && d <= 30) || (m == 12 && d <= 31))) {

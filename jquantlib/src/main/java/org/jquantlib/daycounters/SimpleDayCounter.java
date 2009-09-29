@@ -68,9 +68,9 @@ public class SimpleDayCounter extends AbstractDayCounter {
 
         if (dm1 == dm2 ||
                 // e.g., Aug 30 -> Feb 28 ?
-                (dm1 > dm2 && dateEnd.isEndOfMonth()) ||
+                (dm1 > dm2 && Date.isEndOfMonth(dateEnd)) ||
                 // e.g., Feb 28 -> Aug 30 ?
-                (dm1 < dm2 && dateStart.isEndOfMonth())) {
+                (dm1 < dm2 && Date.isEndOfMonth(dateStart))) {
             return (yy2 - yy1) + (mm2 - mm1) / 12.0;
         } else {
             return fallback.yearFraction(dateStart, dateEnd);

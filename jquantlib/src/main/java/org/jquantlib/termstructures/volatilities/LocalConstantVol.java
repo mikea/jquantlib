@@ -113,7 +113,7 @@ public class LocalConstantVol extends LocalVolTermStructure {
     }
 
     public final Date maxDate() {
-        return new Date().statics().maxDate();
+        return Date.maxDate();
     }
 
     @Override

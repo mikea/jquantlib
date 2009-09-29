@@ -154,7 +154,7 @@ public class CapFloor extends NewInstrument {
 
     @Override
     public boolean isExpired(){
-        Date lastPaymentDate = new Date().statics().minDate();
+        Date lastPaymentDate = Date.minDate();
         for (int i=0; i<floatingLeg_.size(); i++) {
             //FIXME: kind of ugly... intention: get the last date of all dates in the floatingdate c++ max syntax.
             lastPaymentDate = lastPaymentDate.le(floatingLeg_.get(i).date())?floatingLeg_.get(i).date():lastPaymentDate;

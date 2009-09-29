@@ -103,7 +103,7 @@ public class ConvertibleBonds {
 
         final Calendar calendar = Target.getCalendar();
         //adjust today to the next business day...
-        final Date today = calendar.adjust(new Date().statics().todaysDate());
+        final Date today = calendar.adjust(Date.todaysDate());
         QL.info("Today's date is adjusted by the default business day convention is: " + today.shortDate());
         // set the evaluation date to the adjusted today's date
         new Settings().setEvaluationDate(today);

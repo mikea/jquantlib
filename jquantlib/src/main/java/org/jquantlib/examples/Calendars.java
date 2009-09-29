@@ -54,7 +54,7 @@ public class Calendars {
         final Calendar unitedStatesCalendar = UnitedStates.getCalendar(Market.NYSE);
         System.out.println("The name of this calendar is = "+ unitedStatesCalendar.getName());
         // Let's get the list of holidays from todays date till the date obtained by advancing today's date by 90 days
-        final Date dateToday = new Date().statics().todaysDate();
+        final Date dateToday = Date.todaysDate();
         final Date dateAdvanced = dateToday.add(90);
         final List<Date> holidayList = unitedStatesCalendar.getHolidayList(dateToday, dateAdvanced, true);
         System. out.println("The holidays between dateToday = " + dateToday+ " till the date dateAdvanced = " + dateAdvanced+ " are as shown below");

@@ -141,7 +141,7 @@ public abstract class AbstractCalendar implements Calendar {
     }
 
     public final Date getEndOfMonth(final Date date) {
-        return adjust(date.statics().endOfMonth(date), BusinessDayConvention.PRECEDING);
+        return adjust(Date.endOfMonth(date), BusinessDayConvention.PRECEDING);
     }
 
     public final boolean isHoliday(final Date date) {

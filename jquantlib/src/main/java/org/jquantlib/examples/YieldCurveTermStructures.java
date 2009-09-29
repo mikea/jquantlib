@@ -46,7 +46,7 @@ public class YieldCurveTermStructures {
         final RelinkableHandle<Quote>  handleToInterestRateQuote = new RelinkableHandle<Quote>(interestRateQuote);
         final YieldTermStructure flatforward = new FlatForward(2,UnitedStates.getCalendar(Market.NYSE),handleToInterestRateQuote,Actual365Fixed.getDayCounter(),Compounding.CONTINUOUS,Frequency.DAILY);
 
-        final Date today  = new Date().statics().todaysDate();
+        final Date today  = Date.todaysDate();
         final Date date10 = today.clone().addAssign(10);
         final Date date20 = today.clone().addAssign(20);
         final Date date30 = today.clone().addAssign(30);

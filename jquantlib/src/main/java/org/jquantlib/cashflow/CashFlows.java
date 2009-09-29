@@ -107,25 +107,25 @@ public class CashFlows {
     //
 
     public Date startDate(final Leg cashflows) {
-        Date d = new Date().statics().maxDate();
+        Date d = Date.maxDate();
         for (int i = 0; i < cashflows.size(); ++i) {
             final Coupon c = (Coupon) cashflows.get(i);
             if (c != null) {
-                d = d.statics().min(c.accrualStartDate(), d);
+                d = Date.min(c.accrualStartDate(), d);
             }
         }
         // TODO: code review :: please verify against QL/C++ code
-        QL.ensure(d.le(new Date().statics().maxDate()) , not_enough_information_available); // QA:[RG]::verified
+        QL.ensure(d.le(Date.maxDate()) , not_enough_information_available); // QA:[RG]::verified
         return d;
     }
 
     public Date maturityDate(final Leg cashflows) {
-        Date d = new Date().statics().minDate();
+        Date d = Date.minDate();
         for (int i = 0; i < cashflows.size(); i++) {
-            d = d.statics().max(d, cashflows.get(i).date());
+            d = Date.max(d, cashflows.get(i).date());
         }
         // TODO: code review :: please verify against QL/C++ code
-        QL.require(d.le(new Date().statics().minDate()) , no_cashflows);
+        QL.require(d.le(Date.minDate()) , no_cashflows);
         return d;
     }
 

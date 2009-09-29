@@ -176,8 +176,7 @@ public class ExchangeRateManager {
      * @param rate
      */
     public void add(final ExchangeRate rate) {
-        final Date.Statics statics = new Date().statics();
-        add(rate, statics.minDate(), statics.maxDate());
+        add(rate, Date.minDate(), Date.maxDate());
     }
 
     /**
@@ -188,7 +187,7 @@ public class ExchangeRateManager {
      * @return
      */
     public ExchangeRate lookup(final Currency source, final Currency target) {
-        return lookup(source, target, new Date().statics().todaysDate(), ExchangeRate.Type.Derived);
+        return lookup(source, target, Date.todaysDate(), ExchangeRate.Type.Derived);
     }
 
     public ExchangeRate lookup(final Currency source, final Currency target, final Date date) {
@@ -272,8 +271,7 @@ public class ExchangeRateManager {
      * Adds obsoleted currencies to the repository.
      */
     private void addKnownRates() {
-        final Date.Statics statics = new Date().statics();
-        final Date maxDate = statics.maxDate();
+        final Date maxDate = Date.maxDate();
         // currencies obsoleted by Euro
         add(new ExchangeRate(
                 new EURCurrency(),

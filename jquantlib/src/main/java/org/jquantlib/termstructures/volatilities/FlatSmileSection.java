@@ -38,7 +38,7 @@ public abstract class FlatSmileSection extends SmileSection {
 
     public FlatSmileSection(final Date d, final double vol, final DayCounter dc) {
 
-        super(d, dc, d.statics().todaysDate());
+        super(d, dc, Date.todaysDate());
         this.vol_ = vol;
     }
 

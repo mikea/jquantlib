@@ -238,7 +238,7 @@ public class IMM {
             }
         }
 
-        Date result = date.statics().nthWeekday(3, Weekday.WEDNESDAY, Month.valueOf(m), y);
+        Date result = Date.nthWeekday(3, Weekday.WEDNESDAY, Month.valueOf(m), y);
         if (result.le(refDate)) {
             result = nextDate(new Date(22, Month.valueOf(m), y), mainCycle);
         }

@@ -216,7 +216,7 @@ public class TermStructuresTest {
     public void testImpliedObs() {
         QL.info("Testing observability of implied term structure...");
 
-        final Date today = calendar.advance(new Date().statics().todaysDate());
+        final Date today = calendar.advance(Date.todaysDate());
         final Date newToday = today.add(Period.ONE_YEAR_FORWARD.times(3));
         final Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
 

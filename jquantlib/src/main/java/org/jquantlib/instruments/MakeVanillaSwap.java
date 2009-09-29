@@ -59,7 +59,7 @@ public class MakeVanillaSwap {
             final IborIndex index,
             final /* @Rate */ double fixedRate,
             final Period forwardStart) {
-        final Date today = new Date().statics().todaysDate();
+        final Date today = Date.todaysDate();
         this.swapTenor_ = (swapTenor);
         iborIndex_ = (index);
         fixedRate_ = (fixedRate);

@@ -239,7 +239,7 @@ public class BarrierOptionTest {
         final double q = 0.02;
 
         final DayCounter dc = Actual360.getDayCounter();
-        final Date today = new Date().statics().todaysDate();
+        final Date today = Date.todaysDate();
         final Handle<Quote> underlying = new Handle<Quote>(new SimpleQuote(underlyingPrice));
 
         final Handle<Quote> qH_SME = new Handle<Quote>(new SimpleQuote(q));
@@ -302,7 +302,7 @@ public class BarrierOptionTest {
         final double q = 0.00;
 
         final DayCounter dc = Actual360.getDayCounter();
-        final Date today = new Date().statics().todaysDate();
+        final Date today = Date.todaysDate();
         final Handle<Quote> underlying = new Handle<Quote>(new SimpleQuote(underlyingPrice));
 
         final Handle<Quote> qH_SME = new Handle<Quote>(new SimpleQuote(q));

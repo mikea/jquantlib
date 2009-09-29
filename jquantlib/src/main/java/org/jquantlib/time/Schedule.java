@@ -395,7 +395,9 @@ public class Schedule {
         // adjustments
         if (rule == DateGenerationRule.THIRD_WEDNESDAY) {
             for (int i = 1; i < dates.size() - 1; ++i) {
-                final Date d = dates.get(i).nthWeekday(3, Weekday.WEDNESDAY);
+                final Month m = dates.get(i).month();
+                final int y = dates.get(i).year();
+                final Date d = Date.nthWeekday(3, Weekday.WEDNESDAY, m, y);
                 dates.set(i, d);
             }
         }
