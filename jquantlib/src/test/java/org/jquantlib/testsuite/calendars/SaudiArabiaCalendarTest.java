@@ -49,7 +49,7 @@ public class SaudiArabiaCalendarTest {
 
     public SaudiArabiaCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-        this.exchange = SaudiArabia.getCalendar(SaudiArabia.Market.TADAWUL);
+        this.exchange = new SaudiArabia(SaudiArabia.Market.Tadawul);
 	}
 
 	//2004

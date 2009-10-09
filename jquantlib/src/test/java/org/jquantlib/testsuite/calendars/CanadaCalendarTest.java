@@ -56,8 +56,8 @@ public class CanadaCalendarTest {
 
 	public CanadaCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-        settlement = Canada.getCalendar(Canada.Market.SETTLEMENT);
-        exchange = Canada.getCalendar(Canada.Market.TSX);
+        settlement = new Canada(Canada.Market.SETTLEMENT);
+        exchange = new Canada(Canada.Market.TSX);
 	}
 
     @Test
@@ -69,6 +69,7 @@ public class CanadaCalendarTest {
 
         expectedHol.add(new Date(1,JANUARY,year));
         expectedHol.add(new Date(9,APRIL,year));
+        expectedHol.add(new Date(12,APRIL,year));//Zahid
         expectedHol.add(new Date(24,MAY,year));
         expectedHol.add(new Date(1,JULY,year));
         expectedHol.add(new Date(2,AUGUST,year));
@@ -91,6 +92,7 @@ public class CanadaCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
         expectedHol.add(new Date(25,MARCH,year));
+        expectedHol.add(new Date(28,MARCH,year));//Zahid
         expectedHol.add(new Date(23,MAY,year));
         expectedHol.add(new Date(1,JULY,year));
         expectedHol.add(new Date(1,AUGUST,year));
@@ -114,6 +116,7 @@ public class CanadaCalendarTest {
 
         expectedHol.add(new Date(2,JANUARY,year));
         expectedHol.add(new Date(14,APRIL,year));
+        expectedHol.add(new Date(17,APRIL,year));
         expectedHol.add(new Date(22,MAY,year));
         expectedHol.add(new Date(3,JULY,year));
         expectedHol.add(new Date(7,AUGUST,year));
@@ -137,6 +140,7 @@ public class CanadaCalendarTest {
 
         expectedHol.add(new Date(1,JANUARY,year));
         expectedHol.add(new Date(6,APRIL,year));
+        expectedHol.add(new Date(9,APRIL,year));
         expectedHol.add(new Date(21,MAY,year));
         expectedHol.add(new Date(2,JULY,year));
         expectedHol.add(new Date(6,AUGUST,year));
@@ -161,6 +165,7 @@ public class CanadaCalendarTest {
         expectedHol.add(new Date(1,JANUARY,year));
         expectedHol.add(new Date(18,FEBRUARY,year));
         expectedHol.add(new Date(21,MARCH,year));
+        expectedHol.add(new Date(24,MARCH,year));//Zahid
         expectedHol.add(new Date(19,MAY,year));
         expectedHol.add(new Date(1,JULY,year));
         expectedHol.add(new Date(4,AUGUST,year));
@@ -185,6 +190,7 @@ public class CanadaCalendarTest {
         expectedHol.add(new Date(1,JANUARY,year));
         expectedHol.add(new Date(16,FEBRUARY,year));
         expectedHol.add(new Date(10,APRIL,year));
+        expectedHol.add(new Date(13,APRIL,year));//Zahid
         expectedHol.add(new Date(18,MAY,year));
         expectedHol.add(new Date(1,JULY,year));
         expectedHol.add(new Date(3,AUGUST,year));
@@ -209,6 +215,7 @@ public class CanadaCalendarTest {
         expectedHol.add(new Date(1,JANUARY,year));
         expectedHol.add(new Date(15,FEBRUARY,year));
         expectedHol.add(new Date(2,APRIL,year));
+        expectedHol.add(new Date(5,APRIL,year));//Zahid
         expectedHol.add(new Date(24,MAY,year));
         expectedHol.add(new Date(1,JULY,year));
         expectedHol.add(new Date(2,AUGUST,year));
@@ -232,6 +239,7 @@ public class CanadaCalendarTest {
 
         expectedHol.add(new Date(21,FEBRUARY,year));
         expectedHol.add(new Date(22,APRIL,year));
+        expectedHol.add(new Date(25,APRIL,year));//Zahid
         expectedHol.add(new Date(23,MAY,year));
         expectedHol.add(new Date(1,JULY,year));
         expectedHol.add(new Date(1,AUGUST,year));
@@ -256,6 +264,7 @@ public class CanadaCalendarTest {
         expectedHol.add(new Date(2,JANUARY,year));
         expectedHol.add(new Date(20,FEBRUARY,year));
         expectedHol.add(new Date(6,APRIL,year));
+        expectedHol.add(new Date(9,APRIL,year));//Zahid
         expectedHol.add(new Date(21,MAY,year));
         expectedHol.add(new Date(2,JULY,year));
         expectedHol.add(new Date(6,AUGUST,year));
@@ -279,6 +288,7 @@ public class CanadaCalendarTest {
 
         expectedHol.add(new Date(1,JANUARY,year));
         expectedHol.add(new Date(9,APRIL,year));
+        expectedHol.add(new Date(12,APRIL,year));//Zahid
         expectedHol.add(new Date(24,MAY,year));
         expectedHol.add(new Date(1,JULY,year));
         expectedHol.add(new Date(2,AUGUST,year));
@@ -301,6 +311,7 @@ public class CanadaCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
         expectedHol.add(new Date(25,MARCH,year));
+        expectedHol.add(new Date(28,MARCH,year));//Zahid
         expectedHol.add(new Date(23,MAY,year));
         expectedHol.add(new Date(1,JULY,year));
         expectedHol.add(new Date(1,AUGUST,year));
@@ -324,6 +335,7 @@ public class CanadaCalendarTest {
 
         expectedHol.add(new Date(2,JANUARY,year));
         expectedHol.add(new Date(14,APRIL,year));
+        expectedHol.add(new Date(17,APRIL,year)); //Zahid
         expectedHol.add(new Date(22,MAY,year));
         expectedHol.add(new Date(3,JULY,year));
         expectedHol.add(new Date(7,AUGUST,year));
@@ -347,6 +359,7 @@ public class CanadaCalendarTest {
 
         expectedHol.add(new Date(1,JANUARY,year));
         expectedHol.add(new Date(6,APRIL,year));
+        expectedHol.add(new Date(9,APRIL,year)); //Zahid
         expectedHol.add(new Date(21,MAY,year));
         expectedHol.add(new Date(2,JULY,year));
         expectedHol.add(new Date(6,AUGUST,year));
@@ -371,6 +384,7 @@ public class CanadaCalendarTest {
         expectedHol.add(new Date(1,JANUARY,year));
         expectedHol.add(new Date(18,FEBRUARY,year));
         expectedHol.add(new Date(21,MARCH,year));
+        expectedHol.add(new Date(24,MARCH,year));//Zahid
         expectedHol.add(new Date(19,MAY,year));
         expectedHol.add(new Date(1,JULY,year));
         expectedHol.add(new Date(4,AUGUST,year));
@@ -395,6 +409,7 @@ public class CanadaCalendarTest {
         expectedHol.add(new Date(1,JANUARY,year));
         expectedHol.add(new Date(16,FEBRUARY,year));
         expectedHol.add(new Date(10,APRIL,year));
+        expectedHol.add(new Date(13,APRIL,year)); //Zahid
         expectedHol.add(new Date(18,MAY,year));
         expectedHol.add(new Date(1,JULY,year));
         expectedHol.add(new Date(3,AUGUST,year));
@@ -419,6 +434,7 @@ public class CanadaCalendarTest {
         expectedHol.add(new Date(1,JANUARY,year));
         expectedHol.add(new Date(15,FEBRUARY,year));
         expectedHol.add(new Date(2,APRIL,year));
+        expectedHol.add(new Date(5,APRIL,year)); //Zahid
         expectedHol.add(new Date(24,MAY,year));
         expectedHol.add(new Date(1,JULY,year));
         expectedHol.add(new Date(2,AUGUST,year));
@@ -442,6 +458,7 @@ public class CanadaCalendarTest {
 
         expectedHol.add(new Date(21,FEBRUARY,year));
         expectedHol.add(new Date(22,APRIL,year));
+        expectedHol.add(new Date(25,APRIL,year)); //Zahid
         expectedHol.add(new Date(23,MAY,year));
         expectedHol.add(new Date(1,JULY,year));
         expectedHol.add(new Date(1,AUGUST,year));
@@ -466,6 +483,7 @@ public class CanadaCalendarTest {
         expectedHol.add(new Date(2,JANUARY,year));
         expectedHol.add(new Date(20,FEBRUARY,year));
         expectedHol.add(new Date(6,APRIL,year));
+        expectedHol.add(new Date(9,APRIL,year)); //Zahid
         expectedHol.add(new Date(21,MAY,year));
         expectedHol.add(new Date(2,JULY,year));
         expectedHol.add(new Date(6,AUGUST,year));

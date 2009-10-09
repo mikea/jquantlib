@@ -48,12 +48,12 @@ import org.junit.Test;
 public class PolandCalendarTest {
 
     private final Calendar settlement;
-    private final Calendar exchange;
+//    private final Calendar exchange;
 
 	public PolandCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	    this.settlement = Poland.getCalendar(Poland.Market.Settlement);
-	    this.exchange   = Poland.getCalendar(Poland.Market.WSE);
+	    this.settlement = new Poland();
+//	    this.exchange   = new Poland();
 	}
 
 
@@ -76,7 +76,7 @@ public class PolandCalendarTest {
     public void testPolandSettlementHolidaysYear2004()
     {
        	final int year = 2004;
-    	QL.info("Testing " + Poland.Market.Settlement + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + settlement.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -119,7 +119,7 @@ public class PolandCalendarTest {
     public void testPolandSettlementHolidaysYear2005()
     {
        	final int year = 2005;
-    	QL.info("Testing " + Poland.Market.Settlement + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + settlement.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -162,7 +162,7 @@ public class PolandCalendarTest {
     public void testPolandSettlementHolidaysYear2006()
     {
        	final int year = 2006;
-    	QL.info("Testing " + Poland.Market.Settlement + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + settlement.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -204,7 +204,7 @@ public class PolandCalendarTest {
     public void testPolandSettlementHolidaysYear2007()
     {
        	final int year = 2007;
-    	QL.info("Testing " + Poland.Market.Settlement + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + settlement.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -246,7 +246,7 @@ public class PolandCalendarTest {
     public void testPolandSettlementHolidaysYear2008()
     {
        	final int year = 2008;
-    	QL.info("Testing " + Poland.Market.Settlement + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + settlement.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -286,7 +286,7 @@ public class PolandCalendarTest {
     public void testPolandSettlementHolidaysYear2009()
     {
        	final int year = 2009;
-    	QL.info("Testing " + Poland.Market.Settlement + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + settlement.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -329,7 +329,7 @@ public class PolandCalendarTest {
     public void testPolandSettlementHolidaysYear2010()
     {
        	final int year = 2010;
-    	QL.info("Testing " + Poland.Market.Settlement + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + settlement.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -372,7 +372,7 @@ public class PolandCalendarTest {
     public void testPolandSettlementHolidaysYear2011()
     {
        	final int year = 2011;
-    	QL.info("Testing " + Poland.Market.Settlement + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + settlement.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -415,7 +415,7 @@ public class PolandCalendarTest {
     public void testPolandSettlementHolidaysYear2012()
     {
        	final int year = 2012;
-    	QL.info("Testing " + Poland.Market.Settlement + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + settlement.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -460,406 +460,406 @@ public class PolandCalendarTest {
 	//	Dec 25	Christmas Day
 	//	Dec 26	Boxing Day
 
-	@Test
-    public void testPolandWSEHolidaysYear2004()
-    {
-       	final int year = 2004;
-    	QL.info("Testing " + Poland.Market.WSE + " holidays list for the year " + year + "...");
-        
-    	final List<Date> expectedHol = new ArrayList<Date>();
-
-    	expectedHol.add(new Date( 1,JANUARY,year));
-    	expectedHol.add(new Date( 2,JANUARY,year));
-    	expectedHol.add(new Date( 9,APRIL,year));
-    	// expectedHol.add(new Date(11,APRIL,year));
-    	expectedHol.add(new Date(12,APRIL,year));
-    	// expectedHol.add(new Date( 1,MAY,year));
-    	expectedHol.add(new Date( 3,MAY,year));
-    	// expectedHol.add(new Date(30,MAY,year));
-    	expectedHol.add(new Date(10,JUNE,year));
-    	// expectedHol.add(new Date(15,AUGUST,year));
-    	expectedHol.add(new Date( 1,NOVEMBER,year));
-    	expectedHol.add(new Date(11,NOVEMBER,year));
-    	expectedHol.add(new Date(24,DECEMBER,year));
-    	// expectedHol.add(new Date(25,DECEMBER,year));
-    	// expectedHol.add(new Date(26,DECEMBER,year));
-
-    	// Call the Holiday Check
-    	final CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, exchange, year);
-
-    }
-
-
-	// 2005 - WSE trading holidays
-	//
-	//	Jan  1	New Year's Day
-	//	Mar 25	Good Friday
-	//	Mar 27	Easter Day
-	//	Mar 28	Easter Monday
-	//	May  1	State Holiday
-	//	May  3	Constitution Day
-	//	May 15	Whit Sunday
-	//	May 26	Corpus Christi
-	//	Aug 15	Assumption of Mary
-	//	Nov  1	All Saints
-	//	Nov 11	Independence Day
-	//	Dec 24	Christmas Eve
-	//	Dec 25	Christmas Day
-	//	Dec 26	Boxing Day
-
-	@Test
-    public void testPolandWSEHolidaysYear2005()
-    {
-       	final int year = 2005;
-    	QL.info("Testing " + Poland.Market.WSE + " holidays list for the year " + year + "...");
-        
-    	final List<Date> expectedHol = new ArrayList<Date>();
-
-    	// expectedHol.add(new Date( 1,JANUARY,year));
-    	expectedHol.add(new Date(25,MARCH,year));
-    	// expectedHol.add(new Date(27,MARCH,year));
-    	expectedHol.add(new Date(28,MARCH,year));
-    	// expectedHol.add(new Date( 1,MAY,year));
-    	expectedHol.add(new Date( 3,MAY,year));
-    	// expectedHol.add(new Date(15,MAY,year));
-    	expectedHol.add(new Date(26,MAY,year));
-    	expectedHol.add(new Date(15,AUGUST,year));
-    	expectedHol.add(new Date( 1,NOVEMBER,year));
-    	expectedHol.add(new Date(11,NOVEMBER,year));
-    	// expectedHol.add(new Date(25,DECEMBER,year));
-    	expectedHol.add(new Date(26,DECEMBER,year));
-
-    	// Call the Holiday Check
-    	final CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, exchange, year);
-
-    }
-
-
-	// 2006 - WSE trading holidays
-	//
-	//	Jan  1	New Year's Day
-	//	Apr 14	Good Friday
-	//	Apr 16	Easter Day
-	//	Apr 17	Easter Monday
-	//	May  1	State Holiday
-	//	May  3	Constitution Day
-	//	Jun  4	Whit Sunday
-	//	Jun 15	Corpus Christi
-	//	Aug 15	Assumption of Mary
-	//	Nov  1	All Saints
-	//	Nov 11	Independence Day
-	//	Dec 24	Christmas Eve
-	//	Dec 25	Christmas Day
-	//	Dec 26	Boxing Day
-
-	@Test
-    public void testPolandWSEHolidaysYear2006()
-    {
-       	final int year = 2006;
-    	QL.info("Testing " + Poland.Market.WSE + " holidays list for the year " + year + "...");
-        
-    	final List<Date> expectedHol = new ArrayList<Date>();
-
-    	// expectedHol.add(new Date( 1,JANUARY,year));
-    	expectedHol.add(new Date(14,APRIL,year));
-    	// expectedHol.add(new Date(16,APRIL,year));
-    	expectedHol.add(new Date(17,APRIL,year));
-    	expectedHol.add(new Date( 1,MAY,year));
-    	expectedHol.add(new Date( 3,MAY,year));
-    	// expectedHol.add(new Date( 4,JUNE,year));
-    	expectedHol.add(new Date(15,JUNE,year));
-    	expectedHol.add(new Date(15,AUGUST,year));
-    	expectedHol.add(new Date( 1,NOVEMBER,year));
-    	// expectedHol.add(new Date(24,DECEMBER,year));
-    	expectedHol.add(new Date(25,DECEMBER,year));
-    	expectedHol.add(new Date(26,DECEMBER,year));
-
-    	// Call the Holiday Check
-    	final CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, exchange, year);
-
-    }
-
-
-	// 2007 - WSE trading holidays
-	//
-	//	Jan  1	New Year's Day
-	//	Apr  6	Good Friday
-	//	Apr  8	Easter Day
-	//	Apr  9	Easter Monday
-	//	May  1	State Holiday
-	//	May  3	Constitution Day
-	//	May 27	Whit Sunday
-	//	Jun  7	Corpus Christi
-	//	Aug 15	Assumption of Mary
-	//	Nov  1	All Saints
-	//	Nov 11	Independence Day
-	//	Dec 24	Christmas Eve
-	//	Dec 25	Christmas Day
-	//	Dec 26	Boxing Day
-
-	@Test
-    public void testPolandWSEHolidaysYear2007()
-    {
-       	final int year = 2007;
-    	QL.info("Testing " + Poland.Market.WSE + " holidays list for the year " + year + "...");
-        
-    	final List<Date> expectedHol = new ArrayList<Date>();
-
-    	expectedHol.add(new Date( 1,JANUARY,year));
-    	expectedHol.add(new Date( 6,APRIL,year));
-    	expectedHol.add(new Date( 9,APRIL,year));
-    	expectedHol.add(new Date( 1,MAY,year));
-    	expectedHol.add(new Date( 3,MAY,year));
-    	// expectedHol.add(new Date(27,MAY,year));
-    	expectedHol.add(new Date( 7,JUNE,year));
-    	expectedHol.add(new Date(15,AUGUST,year));
-    	expectedHol.add(new Date( 1,NOVEMBER,year));
-    	// expectedHol.add(new Date(11,NOVEMBER,year));
-    	expectedHol.add(new Date(24,DECEMBER,year));
-    	expectedHol.add(new Date(25,DECEMBER,year));
-    	expectedHol.add(new Date(26,DECEMBER,year));
-
-    	// Call the Holiday Check
-    	final CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, exchange, year);
-
-    }
-
-
-	// 2008 - WSE trading holidays
-	//
-	//	Jan  1	New Year's Day
-	//	Mar 21	Good Friday
-	//	Mar 23	Easter Day
-	//	Mar 24	Easter Monday
-	//	May  1	State Holiday
-	//	May  3	Constitution Day
-	//	May 11	Whit Sunday
-	//	May 22	Corpus Christi
-	//	Aug 15	Assumption of Mary
-	//	Nov  1	All Saints
-	//	Nov 11	Independence Day
-	//	Dec 24	Christmas Eve
-	//	Dec 25	Christmas Day
-	//	Dec 26	Boxing Day
-
-	@Test
-    public void testPolandWSEHolidaysYear2008()
-    {
-       	final int year = 2008;
-    	QL.info("Testing " + Poland.Market.WSE + " holidays list for the year " + year + "...");
-        
-    	final List<Date> expectedHol = new ArrayList<Date>();
-
-    	expectedHol.add(new Date(1,JANUARY,year));
-    	expectedHol.add(new Date(21,MARCH,year));
-    	expectedHol.add(new Date(24,MARCH,year));
-    	expectedHol.add(new Date(1,MAY,year));
-    	// expectedHol.add(new Date(11,MAY,year));
-    	expectedHol.add(new Date(22,MAY,year));
-    	expectedHol.add(new Date(15,AUGUST,year));
-    	expectedHol.add(new Date(11,NOVEMBER,year));
-    	expectedHol.add(new Date(24,DECEMBER,year));
-    	expectedHol.add(new Date(25,DECEMBER,year));
-    	expectedHol.add(new Date(26,DECEMBER,year));
-
-    	// Call the Holiday Check
-    	final CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, exchange, year);
-
-    }
-
-
-	// 2009 - WSE trading holidays
-	//
-	//	Jan  1	New Year's Day
-	//	Jan  2	New Year's Day // Friday gap
-	//	Apr 10	Good Friday
-	//	Apr 12	Easter Day
-	//	Apr 13	Easter Monday
-	//	May  1	State Holiday
-	//	May  3	Constitution Day
-	//	May 31	Whit Sunday
-	//	Jun 11	Corpus Christi
-	//	Aug 15	Assumption of Mary
-	//	Nov  1	All Saints
-	//	Nov 11	Independence Day
-	//	Dec 24	Christmas Eve
-	//	Dec 25	Christmas Day
-	//	Dec 26	Boxing Day
-
-	@Test
-    public void testPolandWSEHolidaysYear2009()
-    {
-       	final int year = 2009;
-    	QL.info("Testing " + Poland.Market.WSE + " holidays list for the year " + year + "...");
-        
-    	final List<Date> expectedHol = new ArrayList<Date>();
-
-    	expectedHol.add(new Date( 1,JANUARY,year));
-    	expectedHol.add(new Date( 2,JANUARY,year));
-    	expectedHol.add(new Date(10,APRIL,year));
-    	// expectedHol.add(new Date(12,APRIL,year));
-    	expectedHol.add(new Date(13,APRIL,year));
-    	expectedHol.add(new Date( 1,MAY,year));
-    	// expectedHol.add(new Date( 3,MAY,year));
-    	// expectedHol.add(new Date(31,MAY,year));
-    	expectedHol.add(new Date(11,JUNE,year));
-    	// expectedHol.add(new Date(15,AUGUST,year));
-    	// expectedHol.add(new Date( 1,NOVEMBER,year));
-    	expectedHol.add(new Date(11,NOVEMBER,year));
-    	expectedHol.add(new Date(24,DECEMBER,year));
-    	expectedHol.add(new Date(25,DECEMBER,year));
-    	// expectedHol.add(new Date(26,DECEMBER,year));
-
-    	// Call the Holiday Check
-    	final CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, exchange, year);
-
-    }
-
-
-	// 2010 - WSE trading holidays
-	//
-	//	Jan 1	New Year's Day
-	//	Apr 2	Good Friday
-	//	Apr 4	Easter Day
-	//	Apr 5	Easter Monday
-	//	May 1	State Holiday
-	//	May 3	Constitution Day
-	//	May 23	Whit Sunday
-	//	Jun 3	Corpus Christi
-	//	Aug 15	Assumption of Mary
-	//	Nov 1	All Saints
-	//	Nov 11	Independence Day
-	//	Dec 24	Christmas Eve
-	//	Dec 25	Christmas Day
-	//	Dec 26	Boxing Day
-
-	@Test
-    public void testPolandWSEHolidaysYear2010()
-    {
-       	final int year = 2010;
-    	QL.info("Testing " + Poland.Market.WSE + " holidays list for the year " + year + "...");
-        
-    	final List<Date> expectedHol = new ArrayList<Date>();
-
-    	expectedHol.add(new Date(1,JANUARY,year));
-    	expectedHol.add(new Date( 2,APRIL,year));
-    	// expectedHol.add(new Date( 4,APRIL,year));
-    	expectedHol.add(new Date( 5,APRIL,year));
-    	// expectedHol.add(new Date( 1,MAY,year));
-    	expectedHol.add(new Date( 3,MAY,year));
-    	// expectedHol.add(new Date(23,MAY,year));
-    	expectedHol.add(new Date( 3,JUNE,year));
-    	// expectedHol.add(new Date(15,AUGUST,year));
-    	expectedHol.add(new Date( 1,NOVEMBER,year));
-    	expectedHol.add(new Date(11,NOVEMBER,year));
-    	expectedHol.add(new Date(24,DECEMBER,year));
-    	// expectedHol.add(new Date(25,DECEMBER,year));
-    	// expectedHol.add(new Date(26,DECEMBER,year));
-
-    	// Call the Holiday Check
-    	final CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, exchange, year);
-
-    }
-
-
-	// 2011 - WSE trading holidays
-	//
-	//	Jan  1	New Year's Day
-	//	Apr 22	Good Friday
-	//	Apr 24	Easter Day
-	//	Apr 25	Easter Monday
-	//	May  1	State Holiday
-	//	May  3	Constitution Day
-	//	Jun 12	Whit Sunday
-	//	Jun 23	Corpus Christi
-	//	Aug 15	Assumption of Mary
-	//	Nov  1	All Saints
-	//	Nov 11	Independence Day
-	//	Dec 24	Christmas Eve
-	//	Dec 25	Christmas Day
-	//	Dec 26	Boxing Day
-
-	@Test
-    public void testPolandWSEHolidaysYear2011()
-    {
-       	final int year = 2011;
-    	QL.info("Testing " + Poland.Market.WSE + " holidays list for the year " + year + "...");
-        
-    	final List<Date> expectedHol = new ArrayList<Date>();
-
-    	// expectedHol.add(new Date( 1,JANUARY,year));
-    	expectedHol.add(new Date(22,APRIL,year));
-    	// expectedHol.add(new Date(24,APRIL,year));
-    	expectedHol.add(new Date(25,APRIL,year));
-    	// expectedHol.add(new Date( 1,MAY,year));
-    	expectedHol.add(new Date( 3,MAY,year));
-    	// expectedHol.add(new Date(12,JUNE,year));
-    	expectedHol.add(new Date(23,JUNE,year));
-    	expectedHol.add(new Date(15,AUGUST,year));
-    	expectedHol.add(new Date( 1,NOVEMBER,year));
-    	expectedHol.add(new Date(11,NOVEMBER,year));
-    	// expectedHol.add(new Date(24,DECEMBER,year));
-    	// expectedHol.add(new Date(25,DECEMBER,year));
-    	expectedHol.add(new Date(26,DECEMBER,year));
-
-    	// Call the Holiday Check
-    	final CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, exchange, year);
-
-    }
-
-
-	// 2012 - WSE trading holidays
-	//
-	//	Jan  1	New Year's Day
-	//	Apr  6	Good Friday
-	//	Apr  8	Easter Day
-	//	Apr  9	Easter Monday
-	//	May  1	State Holiday
-	//	May  3	Constitution Day
-	//	May 27	Whit Sunday
-	//	Jun  7	Corpus Christi
-	//	Aug 15	Assumption of Mary
-	//	Nov  1	All Saints
-	//	Nov 11	Independence Day
-	//	Dec 24	Christmas Eve
-	//	Dec 25	Christmas Day
-	//	Dec 26	Boxing Day
-
-	@Test
-    public void testPolandWSEHolidaysYear2012()
-    {
-       	final int year = 2012;
-    	QL.info("Testing " + Poland.Market.WSE + " holidays list for the year " + year + "...");
-        
-    	final List<Date> expectedHol = new ArrayList<Date>();
-
-    	// expectedHol.add(new Date( 1,JANUARY,year));
-    	expectedHol.add(new Date( 6,APRIL,year));
-    	// expectedHol.add(new Date( 8,APRIL,year));
-    	expectedHol.add(new Date( 9,APRIL,year));
-    	expectedHol.add(new Date( 1,MAY,year));
-    	expectedHol.add(new Date( 3,MAY,year));
-    	// expectedHol.add(new Date(27,MAY,year));
-    	expectedHol.add(new Date( 7,JUNE,year));
-    	expectedHol.add(new Date(15,AUGUST,year));
-    	expectedHol.add(new Date( 1,NOVEMBER,year));
-    	// expectedHol.add(new Date(11,NOVEMBER,year));
-    	expectedHol.add(new Date(24,DECEMBER,year));
-    	expectedHol.add(new Date(25,DECEMBER,year));
-    	expectedHol.add(new Date(26,DECEMBER,year));
-
-    	// Call the Holiday Check
-    	final CalendarUtil cbt = new CalendarUtil();
-    	cbt.checkHolidayList(expectedHol, exchange, year);
-    }
+//	@Test
+//    public void testPolandWSEHolidaysYear2004()
+//    {
+//       	final int year = 2004;
+//    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
+//        
+//    	final List<Date> expectedHol = new ArrayList<Date>();
+//
+//    	expectedHol.add(new Date( 1,JANUARY,year));
+////    	expectedHol.add(new Date( 2,JANUARY,year));
+//    	expectedHol.add(new Date( 9,APRIL,year));
+//    	// expectedHol.add(new Date(11,APRIL,year));
+//    	expectedHol.add(new Date(12,APRIL,year));
+//    	// expectedHol.add(new Date( 1,MAY,year));
+//    	expectedHol.add(new Date( 3,MAY,year));
+//    	// expectedHol.add(new Date(30,MAY,year));
+//    	expectedHol.add(new Date(10,JUNE,year));
+//    	// expectedHol.add(new Date(15,AUGUST,year));
+//    	expectedHol.add(new Date( 1,NOVEMBER,year));
+//    	expectedHol.add(new Date(11,NOVEMBER,year));
+//    	expectedHol.add(new Date(24,DECEMBER,year));
+//    	// expectedHol.add(new Date(25,DECEMBER,year));
+//    	// expectedHol.add(new Date(26,DECEMBER,year));
+//
+//    	// Call the Holiday Check
+//    	final CalendarUtil cbt = new CalendarUtil();
+//    	cbt.checkHolidayList(expectedHol, exchange, year);
+//
+//    }
+//
+//
+//	// 2005 - WSE trading holidays
+//	//
+//	//	Jan  1	New Year's Day
+//	//	Mar 25	Good Friday
+//	//	Mar 27	Easter Day
+//	//	Mar 28	Easter Monday
+//	//	May  1	State Holiday
+//	//	May  3	Constitution Day
+//	//	May 15	Whit Sunday
+//	//	May 26	Corpus Christi
+//	//	Aug 15	Assumption of Mary
+//	//	Nov  1	All Saints
+//	//	Nov 11	Independence Day
+//	//	Dec 24	Christmas Eve
+//	//	Dec 25	Christmas Day
+//	//	Dec 26	Boxing Day
+//
+//	@Test
+//    public void testPolandWSEHolidaysYear2005()
+//    {
+//       	final int year = 2005;
+//    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
+//        
+//    	final List<Date> expectedHol = new ArrayList<Date>();
+//
+//    	// expectedHol.add(new Date( 1,JANUARY,year));
+//    	expectedHol.add(new Date(25,MARCH,year));
+//    	// expectedHol.add(new Date(27,MARCH,year));
+//    	expectedHol.add(new Date(28,MARCH,year));
+//    	// expectedHol.add(new Date( 1,MAY,year));
+//    	expectedHol.add(new Date( 3,MAY,year));
+//    	// expectedHol.add(new Date(15,MAY,year));
+//    	expectedHol.add(new Date(26,MAY,year));
+//    	expectedHol.add(new Date(15,AUGUST,year));
+//    	expectedHol.add(new Date( 1,NOVEMBER,year));
+//    	expectedHol.add(new Date(11,NOVEMBER,year));
+//    	// expectedHol.add(new Date(25,DECEMBER,year));
+//    	expectedHol.add(new Date(26,DECEMBER,year));
+//
+//    	// Call the Holiday Check
+//    	final CalendarUtil cbt = new CalendarUtil();
+//    	cbt.checkHolidayList(expectedHol, exchange, year);
+//
+//    }
+//
+//
+//	// 2006 - WSE trading holidays
+//	//
+//	//	Jan  1	New Year's Day
+//	//	Apr 14	Good Friday
+//	//	Apr 16	Easter Day
+//	//	Apr 17	Easter Monday
+//	//	May  1	State Holiday
+//	//	May  3	Constitution Day
+//	//	Jun  4	Whit Sunday
+//	//	Jun 15	Corpus Christi
+//	//	Aug 15	Assumption of Mary
+//	//	Nov  1	All Saints
+//	//	Nov 11	Independence Day
+//	//	Dec 24	Christmas Eve
+//	//	Dec 25	Christmas Day
+//	//	Dec 26	Boxing Day
+//
+//	@Test
+//    public void testPolandWSEHolidaysYear2006()
+//    {
+//       	final int year = 2006;
+//    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
+//        
+//    	final List<Date> expectedHol = new ArrayList<Date>();
+//
+//    	// expectedHol.add(new Date( 1,JANUARY,year));
+//    	expectedHol.add(new Date(14,APRIL,year));
+//    	// expectedHol.add(new Date(16,APRIL,year));
+//    	expectedHol.add(new Date(17,APRIL,year));
+//    	expectedHol.add(new Date( 1,MAY,year));
+//    	expectedHol.add(new Date( 3,MAY,year));
+//    	// expectedHol.add(new Date( 4,JUNE,year));
+//    	expectedHol.add(new Date(15,JUNE,year));
+//    	expectedHol.add(new Date(15,AUGUST,year));
+//    	expectedHol.add(new Date( 1,NOVEMBER,year));
+//    	// expectedHol.add(new Date(24,DECEMBER,year));
+//    	expectedHol.add(new Date(25,DECEMBER,year));
+//    	expectedHol.add(new Date(26,DECEMBER,year));
+//
+//    	// Call the Holiday Check
+//    	final CalendarUtil cbt = new CalendarUtil();
+//    	cbt.checkHolidayList(expectedHol, exchange, year);
+//
+//    }
+//
+//
+//	// 2007 - WSE trading holidays
+//	//
+//	//	Jan  1	New Year's Day
+//	//	Apr  6	Good Friday
+//	//	Apr  8	Easter Day
+//	//	Apr  9	Easter Monday
+//	//	May  1	State Holiday
+//	//	May  3	Constitution Day
+//	//	May 27	Whit Sunday
+//	//	Jun  7	Corpus Christi
+//	//	Aug 15	Assumption of Mary
+//	//	Nov  1	All Saints
+//	//	Nov 11	Independence Day
+//	//	Dec 24	Christmas Eve
+//	//	Dec 25	Christmas Day
+//	//	Dec 26	Boxing Day
+//
+//	@Test
+//    public void testPolandWSEHolidaysYear2007()
+//    {
+//       	final int year = 2007;
+//    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
+//        
+//    	final List<Date> expectedHol = new ArrayList<Date>();
+//
+//    	expectedHol.add(new Date( 1,JANUARY,year));
+//    	expectedHol.add(new Date( 6,APRIL,year));
+//    	expectedHol.add(new Date( 9,APRIL,year));
+//    	expectedHol.add(new Date( 1,MAY,year));
+//    	expectedHol.add(new Date( 3,MAY,year));
+//    	// expectedHol.add(new Date(27,MAY,year));
+//    	expectedHol.add(new Date( 7,JUNE,year));
+//    	expectedHol.add(new Date(15,AUGUST,year));
+//    	expectedHol.add(new Date( 1,NOVEMBER,year));
+//    	// expectedHol.add(new Date(11,NOVEMBER,year));
+//    	expectedHol.add(new Date(24,DECEMBER,year));
+//    	expectedHol.add(new Date(25,DECEMBER,year));
+//    	expectedHol.add(new Date(26,DECEMBER,year));
+//
+//    	// Call the Holiday Check
+//    	final CalendarUtil cbt = new CalendarUtil();
+//    	cbt.checkHolidayList(expectedHol, exchange, year);
+//
+//    }
+//
+//
+//	// 2008 - WSE trading holidays
+//	//
+//	//	Jan  1	New Year's Day
+//	//	Mar 21	Good Friday
+//	//	Mar 23	Easter Day
+//	//	Mar 24	Easter Monday
+//	//	May  1	State Holiday
+//	//	May  3	Constitution Day
+//	//	May 11	Whit Sunday
+//	//	May 22	Corpus Christi
+//	//	Aug 15	Assumption of Mary
+//	//	Nov  1	All Saints
+//	//	Nov 11	Independence Day
+//	//	Dec 24	Christmas Eve
+//	//	Dec 25	Christmas Day
+//	//	Dec 26	Boxing Day
+//
+//	@Test
+//    public void testPolandWSEHolidaysYear2008()
+//    {
+//       	final int year = 2008;
+//    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
+//        
+//    	final List<Date> expectedHol = new ArrayList<Date>();
+//
+//    	expectedHol.add(new Date(1,JANUARY,year));
+//    	expectedHol.add(new Date(21,MARCH,year));
+//    	expectedHol.add(new Date(24,MARCH,year));
+//    	expectedHol.add(new Date(1,MAY,year));
+//    	// expectedHol.add(new Date(11,MAY,year));
+//    	expectedHol.add(new Date(22,MAY,year));
+//    	expectedHol.add(new Date(15,AUGUST,year));
+//    	expectedHol.add(new Date(11,NOVEMBER,year));
+//    	expectedHol.add(new Date(24,DECEMBER,year));
+//    	expectedHol.add(new Date(25,DECEMBER,year));
+//    	expectedHol.add(new Date(26,DECEMBER,year));
+//
+//    	// Call the Holiday Check
+//    	final CalendarUtil cbt = new CalendarUtil();
+//    	cbt.checkHolidayList(expectedHol, exchange, year);
+//
+//    }
+//
+//
+//	// 2009 - WSE trading holidays
+//	//
+//	//	Jan  1	New Year's Day
+//	//	Jan  2	New Year's Day // Friday gap
+//	//	Apr 10	Good Friday
+//	//	Apr 12	Easter Day
+//	//	Apr 13	Easter Monday
+//	//	May  1	State Holiday
+//	//	May  3	Constitution Day
+//	//	May 31	Whit Sunday
+//	//	Jun 11	Corpus Christi
+//	//	Aug 15	Assumption of Mary
+//	//	Nov  1	All Saints
+//	//	Nov 11	Independence Day
+//	//	Dec 24	Christmas Eve
+//	//	Dec 25	Christmas Day
+//	//	Dec 26	Boxing Day
+//
+//	@Test
+//    public void testPolandWSEHolidaysYear2009()
+//    {
+//       	final int year = 2009;
+//    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
+//        
+//    	final List<Date> expectedHol = new ArrayList<Date>();
+//
+//    	expectedHol.add(new Date( 1,JANUARY,year));
+//    	expectedHol.add(new Date( 2,JANUARY,year));
+//    	expectedHol.add(new Date(10,APRIL,year));
+//    	// expectedHol.add(new Date(12,APRIL,year));
+//    	expectedHol.add(new Date(13,APRIL,year));
+//    	expectedHol.add(new Date( 1,MAY,year));
+//    	// expectedHol.add(new Date( 3,MAY,year));
+//    	// expectedHol.add(new Date(31,MAY,year));
+//    	expectedHol.add(new Date(11,JUNE,year));
+//    	// expectedHol.add(new Date(15,AUGUST,year));
+//    	// expectedHol.add(new Date( 1,NOVEMBER,year));
+//    	expectedHol.add(new Date(11,NOVEMBER,year));
+//    	expectedHol.add(new Date(24,DECEMBER,year));
+//    	expectedHol.add(new Date(25,DECEMBER,year));
+//    	// expectedHol.add(new Date(26,DECEMBER,year));
+//
+//    	// Call the Holiday Check
+//    	final CalendarUtil cbt = new CalendarUtil();
+//    	cbt.checkHolidayList(expectedHol, exchange, year);
+//
+//    }
+//
+//
+//	// 2010 - WSE trading holidays
+//	//
+//	//	Jan 1	New Year's Day
+//	//	Apr 2	Good Friday
+//	//	Apr 4	Easter Day
+//	//	Apr 5	Easter Monday
+//	//	May 1	State Holiday
+//	//	May 3	Constitution Day
+//	//	May 23	Whit Sunday
+//	//	Jun 3	Corpus Christi
+//	//	Aug 15	Assumption of Mary
+//	//	Nov 1	All Saints
+//	//	Nov 11	Independence Day
+//	//	Dec 24	Christmas Eve
+//	//	Dec 25	Christmas Day
+//	//	Dec 26	Boxing Day
+//
+//	@Test
+//    public void testPolandWSEHolidaysYear2010()
+//    {
+//       	final int year = 2010;
+//    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
+//        
+//    	final List<Date> expectedHol = new ArrayList<Date>();
+//
+//    	expectedHol.add(new Date(1,JANUARY,year));
+//    	expectedHol.add(new Date( 2,APRIL,year));
+//    	// expectedHol.add(new Date( 4,APRIL,year));
+//    	expectedHol.add(new Date( 5,APRIL,year));
+//    	// expectedHol.add(new Date( 1,MAY,year));
+//    	expectedHol.add(new Date( 3,MAY,year));
+//    	// expectedHol.add(new Date(23,MAY,year));
+//    	expectedHol.add(new Date( 3,JUNE,year));
+//    	// expectedHol.add(new Date(15,AUGUST,year));
+//    	expectedHol.add(new Date( 1,NOVEMBER,year));
+//    	expectedHol.add(new Date(11,NOVEMBER,year));
+//    	expectedHol.add(new Date(24,DECEMBER,year));
+//    	// expectedHol.add(new Date(25,DECEMBER,year));
+//    	// expectedHol.add(new Date(26,DECEMBER,year));
+//
+//    	// Call the Holiday Check
+//    	final CalendarUtil cbt = new CalendarUtil();
+//    	cbt.checkHolidayList(expectedHol, exchange, year);
+//
+//    }
+//
+//
+//	// 2011 - WSE trading holidays
+//	//
+//	//	Jan  1	New Year's Day
+//	//	Apr 22	Good Friday
+//	//	Apr 24	Easter Day
+//	//	Apr 25	Easter Monday
+//	//	May  1	State Holiday
+//	//	May  3	Constitution Day
+//	//	Jun 12	Whit Sunday
+//	//	Jun 23	Corpus Christi
+//	//	Aug 15	Assumption of Mary
+//	//	Nov  1	All Saints
+//	//	Nov 11	Independence Day
+//	//	Dec 24	Christmas Eve
+//	//	Dec 25	Christmas Day
+//	//	Dec 26	Boxing Day
+//
+//	@Test
+//    public void testPolandWSEHolidaysYear2011()
+//    {
+//       	final int year = 2011;
+//    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
+//        
+//    	final List<Date> expectedHol = new ArrayList<Date>();
+//
+//    	// expectedHol.add(new Date( 1,JANUARY,year));
+//    	expectedHol.add(new Date(22,APRIL,year));
+//    	// expectedHol.add(new Date(24,APRIL,year));
+//    	expectedHol.add(new Date(25,APRIL,year));
+//    	// expectedHol.add(new Date( 1,MAY,year));
+//    	expectedHol.add(new Date( 3,MAY,year));
+//    	// expectedHol.add(new Date(12,JUNE,year));
+//    	expectedHol.add(new Date(23,JUNE,year));
+//    	expectedHol.add(new Date(15,AUGUST,year));
+//    	expectedHol.add(new Date( 1,NOVEMBER,year));
+//    	expectedHol.add(new Date(11,NOVEMBER,year));
+//    	// expectedHol.add(new Date(24,DECEMBER,year));
+//    	// expectedHol.add(new Date(25,DECEMBER,year));
+//    	expectedHol.add(new Date(26,DECEMBER,year));
+//
+//    	// Call the Holiday Check
+//    	final CalendarUtil cbt = new CalendarUtil();
+//    	cbt.checkHolidayList(expectedHol, exchange, year);
+//
+//    }
+//
+//
+//	// 2012 - WSE trading holidays
+//	//
+//	//	Jan  1	New Year's Day
+//	//	Apr  6	Good Friday
+//	//	Apr  8	Easter Day
+//	//	Apr  9	Easter Monday
+//	//	May  1	State Holiday
+//	//	May  3	Constitution Day
+//	//	May 27	Whit Sunday
+//	//	Jun  7	Corpus Christi
+//	//	Aug 15	Assumption of Mary
+//	//	Nov  1	All Saints
+//	//	Nov 11	Independence Day
+//	//	Dec 24	Christmas Eve
+//	//	Dec 25	Christmas Day
+//	//	Dec 26	Boxing Day
+//
+//	@Test
+//    public void testPolandWSEHolidaysYear2012()
+//    {
+//       	final int year = 2012;
+//    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
+//        
+//    	final List<Date> expectedHol = new ArrayList<Date>();
+//
+//    	// expectedHol.add(new Date( 1,JANUARY,year));
+//    	expectedHol.add(new Date( 6,APRIL,year));
+//    	// expectedHol.add(new Date( 8,APRIL,year));
+//    	expectedHol.add(new Date( 9,APRIL,year));
+//    	expectedHol.add(new Date( 1,MAY,year));
+//    	expectedHol.add(new Date( 3,MAY,year));
+//    	// expectedHol.add(new Date(27,MAY,year));
+//    	expectedHol.add(new Date( 7,JUNE,year));
+//    	expectedHol.add(new Date(15,AUGUST,year));
+//    	expectedHol.add(new Date( 1,NOVEMBER,year));
+//    	// expectedHol.add(new Date(11,NOVEMBER,year));
+//    	expectedHol.add(new Date(24,DECEMBER,year));
+//    	expectedHol.add(new Date(25,DECEMBER,year));
+//    	expectedHol.add(new Date(26,DECEMBER,year));
+//
+//    	// Call the Holiday Check
+//    	final CalendarUtil cbt = new CalendarUtil();
+//    	cbt.checkHolidayList(expectedHol, exchange, year);
+//    }
 
 
 }

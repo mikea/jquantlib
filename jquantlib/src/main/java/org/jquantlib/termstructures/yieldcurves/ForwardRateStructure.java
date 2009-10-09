@@ -110,7 +110,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 * @param dc
 	 */
 	protected ForwardRateStructure(final Date refDate, final DayCounter dc) {
-		this(refDate, Target.getCalendar(), dc); // FIXME: code review : default calendar
+		this(refDate, new Target(), dc); // FIXME: code review : default calendar
 		if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
 	}
@@ -123,7 +123,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 * @param dc
 	 */
 	protected ForwardRateStructure(final Date refDate) {
-		this(refDate, Target.getCalendar(), Actual365Fixed.getDayCounter()); // FIXME: code review : default calendar
+		this(refDate, new Target(), Actual365Fixed.getDayCounter()); // FIXME: code review : default calendar
 		if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
 	}

@@ -60,7 +60,7 @@ public class SouthKoreaCalendarTest {
 
     @Before
     public void setup() {
-        c = SouthKorea.getCalendar(SouthKorea.Market.KRX);
+        c = new SouthKorea(SouthKorea.Market.KRX);
         expectedHol = new Vector<Date>();
     }
 
@@ -74,7 +74,7 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(new Date(21, JANUARY, year));
         expectedHol.add(new Date(22, JANUARY, year));
         expectedHol.add(new Date(23, JANUARY, year));
-        expectedHol.add(new Date(26, JANUARY, year));
+//        expectedHol.add(new Date(26, JANUARY, year));
         expectedHol.add(new Date(1, MARCH, year));
         expectedHol.add(new Date(5, APRIL, year));
         expectedHol.add(new Date(15, APRIL, year));
@@ -83,6 +83,7 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(new Date(27, SEPTEMBER, year));
         expectedHol.add(new Date(28, SEPTEMBER, year));
         expectedHol.add(new Date(29, SEPTEMBER, year));
+        expectedHol.add(new Date(31, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -106,6 +107,7 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(new Date(15, AUGUST, year));
         expectedHol.add(new Date(19, SEPTEMBER, year));
         expectedHol.add(new Date(3, OCTOBER, year));
+        expectedHol.add(new Date(30, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -120,11 +122,12 @@ public class SouthKoreaCalendarTest {
         QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(new Date(30, JANUARY, year));
-        expectedHol.add(new Date(31, JANUARY, year));
+//        expectedHol.add(new Date(31, JANUARY, year));
         expectedHol.add(new Date(1, MARCH, year));
-        expectedHol.add(new Date(5, APRIL, year));
+//        expectedHol.add(new Date(5, APRIL, year));
         expectedHol.add(new Date(1, MAY, year));
         expectedHol.add(new Date(5, MAY, year));
+        expectedHol.add(new Date(31, MAY, year));
         expectedHol.add(new Date(6, JUNE, year));
         expectedHol.add(new Date(17, JULY, year));
         expectedHol.add(new Date(15, AUGUST, year));
@@ -132,6 +135,7 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(new Date(5, OCTOBER, year));
         expectedHol.add(new Date(6, OCTOBER, year));
         expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(29, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -148,7 +152,7 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(new Date(1, JANUARY, year));
         expectedHol.add(new Date(19, FEBRUARY, year));
         expectedHol.add(new Date(1, MARCH, year));
-        expectedHol.add(new Date(5, APRIL, year));
+//        expectedHol.add(new Date(5, APRIL, year));
         expectedHol.add(new Date(1, MAY, year));
         expectedHol.add(new Date(24, MAY, year));
         expectedHol.add(new Date(6, JUNE, year));
@@ -158,7 +162,9 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(new Date(25, SEPTEMBER, year));
         expectedHol.add(new Date(26, SEPTEMBER, year));
         expectedHol.add(new Date(3, OCTOBER, year));
+        expectedHol.add(new Date(19, DECEMBER, year));
         expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(31, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -181,7 +187,7 @@ public class SouthKoreaCalendarTest {
         expectedHol.add(new Date(5, MAY, year));
         expectedHol.add(new Date(12, MAY, year));
         expectedHol.add(new Date(6, JUNE, year));
-        expectedHol.add(new Date(17, JULY, year));
+//        expectedHol.add(new Date(17, JULY, year));
         expectedHol.add(new Date(15, AUGUST, year));
         expectedHol.add(new Date(15, SEPTEMBER, year));
         expectedHol.add(new Date(3, OCTOBER, year));
@@ -200,9 +206,12 @@ public class SouthKoreaCalendarTest {
         QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(26, JANUARY, year));
+        expectedHol.add(new Date(27, JANUARY, year));
         expectedHol.add(new Date(1, MAY, year));
         expectedHol.add(new Date(5, MAY, year));
-        expectedHol.add(new Date(17, JULY, year));
+//        expectedHol.add(new Date(17, JULY, year));
+        expectedHol.add(new Date(2, OCTOBER, year));
         expectedHol.add(new Date(25, DECEMBER, year));
 
         // Call the Holiday Check
@@ -218,9 +227,14 @@ public class SouthKoreaCalendarTest {
         QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(15, FEBRUARY, year));
         expectedHol.add(new Date(1, MARCH, year));
-        expectedHol.add(new Date(5, APRIL, year));
+//        expectedHol.add(new Date(5, APRIL, year));
         expectedHol.add(new Date(5, MAY, year));
+        expectedHol.add(new Date(21, MAY, year));
+        expectedHol.add(new Date(21, SEPTEMBER, year));
+        expectedHol.add(new Date(22, SEPTEMBER, year));
+        expectedHol.add(new Date(23, SEPTEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -235,7 +249,7 @@ public class SouthKoreaCalendarTest {
         QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(new Date(1, MARCH, year));
-        expectedHol.add(new Date(5, APRIL, year));
+//        expectedHol.add(new Date(5, APRIL, year));
         expectedHol.add(new Date(5, MAY, year));
         expectedHol.add(new Date(6, JUNE, year));
         expectedHol.add(new Date(15, AUGUST, year));
@@ -254,10 +268,10 @@ public class SouthKoreaCalendarTest {
         QL.info("Testing " + SouthKorea.Market.KRX + " holidays list for the year " + year + "...");
 
         expectedHol.add(new Date(1, MARCH, year));
-        expectedHol.add(new Date(5, APRIL, year));
+//        expectedHol.add(new Date(5, APRIL, year));
         expectedHol.add(new Date(1, MAY, year));
         expectedHol.add(new Date(6, JUNE, year));
-        expectedHol.add(new Date(17, JULY, year));
+//        expectedHol.add(new Date(17, JULY, year));
         expectedHol.add(new Date(15, AUGUST, year));
         expectedHol.add(new Date(3, OCTOBER, year));
         expectedHol.add(new Date(25, DECEMBER, year));

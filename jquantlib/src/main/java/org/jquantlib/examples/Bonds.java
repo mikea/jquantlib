@@ -52,7 +52,7 @@ public class Bonds {
          *** MARKET DATA ***
          *********************/
 
-        final Calendar calendar = Target.getCalendar();
+        final Calendar calendar = new Target();
 
         // FIXME: outdated...
         Date settlementDate = new Date(18, Month.SEPTEMBER, 2008);
@@ -151,7 +151,7 @@ public class Bonds {
             final Schedule schedule = new Schedule(
                     issueDates[i], maturities[i],
                     new Period(Frequency.SEMI_ANNUAL),
-                    UnitedStates.getCalendar(UnitedStates.Market.GOVERNMENTBOND),
+                    new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
                     BusinessDayConvention.UNADJUSTED,
                     BusinessDayConvention.UNADJUSTED,
                     DateGenerationRule.BACKWARD, false,

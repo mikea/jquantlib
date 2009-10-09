@@ -567,7 +567,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         }
 
         public InterpolatedDiscountCurve(final Date referenceDate, final DayCounter dayCounter, final I interpolator) {
-            super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review :: default calendar
+            super(referenceDate, new Target(), dayCounter); // FIXME: code review :: default calendar
             this.isNegativeRates = new Settings().isNegativeRates();
             container.interpolator = (interpolator!=null) ? interpolator : (I) new LogLinear();
         }
@@ -693,7 +693,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         }
 
         public InterpolatedForwardCurve(final Date referenceDate, final DayCounter dayCounter, final I interpolator) {
-            super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review:: default calendar
+            super(referenceDate, new Target(), dayCounter); // FIXME: code review:: default calendar
             container.interpolator = (interpolator!=null) ? interpolator : (I) new BackwardFlat();
         }
 
@@ -705,7 +705,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         //TODO: who's calling this constructor???
         public InterpolatedForwardCurve(final Date[] dates, final /* @Rate */ Array forwards, final DayCounter dayCounter, final I interpolator) {
             // FIXME: code review: calendar
-            super(dates[0], Target.getCalendar(), dayCounter);
+            super(dates[0], new Target(), dayCounter);
             QL.require(dates.length > 1 , "too few dates"); // QA:[RG]::verified // TODO: message
             QL.require(dates.length == forwards.size() , "dates/yields count mismatch"); // QA:[RG]::verified // TODO: message
 
@@ -816,7 +816,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         }
 
         public InterpolatedZeroCurve(final Date referenceDate, final DayCounter dayCounter, final I interpolator) {
-            super(referenceDate, Target.getCalendar(), dayCounter); // FIXME: code review : default calendar?
+            super(referenceDate, new Target(), dayCounter); // FIXME: code review : default calendar?
             container.interpolator = (interpolator!=null) ? interpolator : (I) new BackwardFlat();
         }
 

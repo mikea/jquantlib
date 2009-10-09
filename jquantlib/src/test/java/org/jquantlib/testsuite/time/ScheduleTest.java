@@ -54,7 +54,7 @@ public class ScheduleTest {
     @Ignore
     @Test
     public void testSchedule() {
-        final Calendar calendar = Target.getCalendar();
+        final Calendar calendar = new Target();
         final Period maturity = new Period(30, TimeUnit.YEARS);
         final Date maturityDate = startDate.add(maturity);
         final Period accPeriodTenor = new Period(6, TimeUnit.MONTHS);

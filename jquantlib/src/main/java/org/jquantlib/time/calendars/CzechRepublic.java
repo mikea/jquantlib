@@ -29,21 +29,33 @@
  <http://quantlib.org/license.shtml>.
  */
 
-
 package org.jquantlib.time.calendars;
 
+import static org.jquantlib.time.Month.DECEMBER;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.JULY;
+import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.NOVEMBER;
+import static org.jquantlib.time.Month.OCTOBER;
+import static org.jquantlib.time.Month.SEPTEMBER;
+
+import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
-/** Holidays for the Prague stock exchange (see http://www.pse.cz/):
+/**
+ * Czech calendars Holidays for the Prague stock exchange (see
+ * http://www.pse.cz/):
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st</li>
+ * <li>New Year's Day, JANUARY 1st</li>
  * <li>Easter Monday</li>
  * <li>Labour Day, May 1st</li>
  * <li>Liberation Day, May 8th</li>
@@ -56,95 +68,93 @@ import org.jquantlib.time.WesternCalendar;
  * <li>Christmas, December 25th</li>
  * <li>St. Stephen, December 26th</li>
  * </ul>
- * ingroup calendars
+ *  \in group calendars
+ *
+ * @author Zahid Hussain
  */
-public class CzechRepublic extends DelegateCalendar {
-    private final static CzechRepublic PSE_CALENDAR = new CzechRepublic(Market.PSE);
 
-    private CzechRepublic(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case PSE:
-            delegate = new CzechRepublicPSECalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
 
-    public static CzechRepublic getCalendar(final Market market) {
-        switch (market) {
-        case PSE:
-            return PSE_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
+public class CzechRepublic extends Calendar {
+
+	public static enum Market {
+	    /**
+	     * Prague stock exchange
+	     */
+		PSE
+	}
 
 
-    //
-    // public enums
-    //
+	//
+	// public constructors
+	//
 
-    //FIXME: Settlement calendar is missing
-    public static enum Market {
-        /**
-         * Prague stock exchange of CzechRepublic
-         */
-        PSE
-    }
+	public CzechRepublic() {
+		this(Market.PSE);
+	}
+
+	public CzechRepublic(final Market m) {
+		switch (m) {
+		case PSE:
+			impl = new PseImpl();
+			break;
+		default:
+			QL.error(UNKNOWN_MARKET);
+			throw new LibraryException(UNKNOWN_MARKET);
+		}
+	}
 
 
     //
-    // private inner classes
+    // private final inner classes
     //
 
-    private static final class CzechRepublicPSECalendar extends WesternCalendar {
+	private final class PseImpl extends WesternImpl {
 
-        public String getName() {
-            return "Prague stock exchange of CzechRepublic";
-        }
+		@Override
+		public String name() {
+			return "Prague stock exchange of CzechRepublic";
+		}
 
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final int m = date.month().value();
-            final int y = date.year();
-            final int em = easterMonday(y);
-
-            if (isWeekend(w)
-                    // New Year's Day
-                    || (d == 1 && m == Month.JANUARY.value())
-                    // Easter Monday
-                    || (dd == em)
-                    // Labour Day
-                    || (d == 1 && m == Month.MAY.value())
-                    // Liberation Day
-                    || (d == 8 && m == Month.MAY.value())
-                    // SS. Cyril and Methodius
-                    || (d == 5 && m == Month.JULY.value())
-                    // Jan Hus Day
-                    || (d == 6 && m == Month.JULY.value())
-                    // Czech Statehood Day
-                    || (d == 28 && m == Month.SEPTEMBER.value())
-                    // Independence Day
-                    || (d == 28 && m == Month.OCTOBER.value())
-                    // Struggle for Freedom and Democracy Day
-                    || (d == 17 && m == Month.NOVEMBER.value())
-                    // Christmas Eve
-                    || (d == 24 && m == Month.DECEMBER.value())
-                    // Christmas
-                    || (d == 25 && m == Month.DECEMBER.value())
-                    // St. Stephen
-                    || (d == 26 && m == Month.DECEMBER.value())
-                    // unidentified closing days for stock exchange
-                    || (d == 2 && m == Month.JANUARY.value() && y == 2004)
-                    || (d == 31 && m == Month.DECEMBER.value() && y == 2004))
+		@Override
+		public boolean isBusinessDay(final Date date) {
+			final Weekday w = date.weekday();
+			final int d = date.dayOfMonth();
+			final int dd = date.dayOfYear();
+			final Month m = date.month();
+			final int y = date.year();
+			final int em = easterMonday(y);
+			if (isWeekend(w)
+					// New Year's Day
+					|| (d == 1 && m == JANUARY)
+					// Easter Monday
+					|| (dd == em)
+					// Labour Day
+					|| (d == 1 && m == MAY)
+					// Liberation Day
+					|| (d == 8 && m == MAY)
+					// SS. Cyril and Methodius
+					|| (d == 5 && m == JULY)
+					// Jan Hus Day
+					|| (d == 6 && m == JULY)
+					// Czech Statehood Day
+					|| (d == 28 && m == SEPTEMBER)
+					// Independence Day
+					|| (d == 28 && m == OCTOBER)
+					// Struggle for Freedom and Democracy Day
+					|| (d == 17 && m == NOVEMBER)
+					// Christmas Eve
+					|| (d == 24 && m == DECEMBER)
+					// Christmas
+					|| (d == 25 && m == DECEMBER)
+					// St. Stephen
+					|| (d == 26 && m == DECEMBER)
+					// unidentified closing days for stock exchange
+					|| (d == 2 && m == JANUARY && y == 2004)
+					|| (d == 31 && m == DECEMBER && y == 2004)) {
                 return false;
-            return true;
-        }
-    }
-
+            }
+			return true;
+		}
+	}
 }

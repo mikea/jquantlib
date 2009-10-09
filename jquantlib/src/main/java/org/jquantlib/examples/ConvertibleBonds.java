@@ -101,7 +101,7 @@ public class ConvertibleBonds {
         final double redemption = 100.0;
         final double conversionRatio = redemption/underlying;
 
-        final Calendar calendar = Target.getCalendar();
+        final Calendar calendar = new Target();
         //adjust today to the next business day...
         final Date today = calendar.adjust(Date.todaysDate());
         QL.info("Today's date is adjusted by the default business day convention is: " + today.shortDate());

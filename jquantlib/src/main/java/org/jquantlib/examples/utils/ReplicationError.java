@@ -96,7 +96,7 @@ public class ReplicationError {
             throw new UnsupportedOperationException("Work in progress");
         }
 
-        final Calendar calendar = Target.getCalendar();
+        final Calendar calendar = new Target();
         final Date today = Date.todaysDate();
         final DayCounter dayCount = Actual365Fixed.getDayCounter();
         final Handle<Quote> stateVariable = new Handle(new SimpleQuote(s0_.doubleValue()));

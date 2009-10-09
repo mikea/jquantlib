@@ -93,7 +93,7 @@ public class VolatilityTermStructures {
         //such a volatility termstructure.
         final SimpleQuote volatilityQuote = new SimpleQuote(0.3);
         final RelinkableHandle<Quote>  handleToVolatilityQuote = new RelinkableHandle<Quote>(volatilityQuote);
-        BlackVolatilityTermStructure constantVolatility = new BlackConstantVol(2,UnitedStates.getCalendar(Market.NYSE),handleToVolatilityQuote,Actual365Fixed.getDayCounter());
+        BlackVolatilityTermStructure constantVolatility = new BlackConstantVol(2,new UnitedStates(Market.NYSE),handleToVolatilityQuote,Actual365Fixed.getDayCounter());
 
         //Calculating blackVolatility using maturity as 10 days after today and strike as 20
         Double volatility1 = constantVolatility.blackVol(date10.clone(), 20);
@@ -140,7 +140,7 @@ public class VolatilityTermStructures {
         //As BlackConstantVol termstructure has been initialized using relinkable handle so lets change the observable SimpleQuote of this handle
         //and see the change getting reflected to all the calculations done above.
         volatilityQuote.setValue(0.04) ;
-        constantVolatility = new BlackConstantVol(2,UnitedStates.getCalendar(Market.NYSE),handleToVolatilityQuote,Actual365Fixed.getDayCounter());
+        constantVolatility = new BlackConstantVol(2,new UnitedStates(Market.NYSE),handleToVolatilityQuote,Actual365Fixed.getDayCounter());
 
         //Calculating blackVolatility using maturity as 10 days after today and strike as 20
         volatility1 = constantVolatility.blackVol(date10.clone(), 20);
@@ -372,7 +372,7 @@ public class VolatilityTermStructures {
 
         //Let's set the quoteValue = 0.05 and use the constantVolatility a BlackConstantVol
         volatilityQuote.setValue(0.05);
-        final LocalVolTermStructure localConstantVolatility = new LocalConstantVol(2,UnitedStates.getCalendar(Market.NYSE),handleToVolatilityQuote,Actual365Fixed.getDayCounter());
+        final LocalVolTermStructure localConstantVolatility = new LocalConstantVol(2,new UnitedStates(Market.NYSE),handleToVolatilityQuote,Actual365Fixed.getDayCounter());
 
         //Calculating blackVolatility using maturity as 10 days after today and strike as 20
         if(constantVolatility.blackVol(date10.clone(), 20) == localConstantVolatility.localVol(date10.clone(), 20,true)){

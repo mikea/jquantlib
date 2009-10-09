@@ -27,95 +27,155 @@ import static org.jquantlib.time.Month.JANUARY;
 import static org.jquantlib.time.Month.MAY;
 import static org.jquantlib.time.Month.OCTOBER;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
-/**
+/** German calendars
+ * Public holidays:
+ *   <ul>
+ *   <li>Saturdays</li>
+ *   <li>Sundays</li>
+ *   <li>New Year's Day, JANUARY 1st</li>
+ *   <li>Good Friday</li>
+ *   <li>Easter Monday</li>
+ *   <li>Ascension Thursday</li>
+ *   <li>Whit Monday</li>
+ *   <li>Corpus Christi</li>
+ *   <li>Labour Day, May 1st</li>
+ *   <li>National Day, October 3rd</li>
+ *   <li>Christmas Eve, December 24th</li>
+ *   <li>Christmas, December 25th</li>
+ *   <li>Boxing Day, December 26th</li>
+ *   <li>New Year's Eve, December 31st</li>
+ *   </ul>
+ *
+ *   Holidays for the Frankfurt Stock exchange
+ *   (data from http://deutsche-boerse.com/):
+ *   <ul>
+ *   <li>Saturdays</li>
+ *   <li>Sundays</li>
+ *   <li>New Year's Day, JANUARY 1st</li>
+ *   <li>Good Friday</li>
+ *   <li>Easter Monday</li>
+ *   <li>Labour Day, May 1st</li>
+ *   <li>Christmas' Eve, December 24th</li>
+ *   <li>Christmas, December 25th</li>
+ *   <li>Christmas Holiday, December 26th</li>
+ *   <li>New Year's Eve, December 31st</li>
+ *   </ul>
+ *
+ *   Holidays for the Xetra exchange
+ *   (data from http://deutsche-boerse.com/):
+ *   <ul>
+ *   <li>Saturdays</li>
+ *   <li>Sundays</li>
+ *   <li>New Year's Day, JANUARY 1st</li>
+ *   <li>Good Friday</li>
+ *   <li>Easter Monday</li>
+ *   <li>Labour Day, May 1st</li>
+ *   <li>Christmas' Eve, December 24th</li>
+ *   <li>Christmas, December 25th</li>
+ *   <li>Christmas Holiday, December 26th</li>
+ *   <li>New Year's Eve, December 31st</li>
+ *   </ul>
+ *
+ *   Holidays for the Eurex exchange
+ *   (data from http://www.eurexchange.com/index.html):
+ *   <ul>
+ *   <li>Saturdays</li>
+ *   <li>Sundays</li>
+ *   <li>New Year's Day, JANUARY 1st</li>
+ *   <li>Good Friday</li>
+ *   <li>Easter Monday</li>
+ *   <li>Labour Day, May 1st</li>
+ *   <li>Christmas' Eve, December 24th</li>
+ *   <li>Christmas, December 25th</li>
+ *   <li>Christmas Holiday, December 26th</li>
+ *   <li>New Year's Eve, December 31st</li>
+ *   </ul>
+ *
+ *   in group calendars
+ *   <li>test the correctness of the returned results is tested
+ *         against a list of known holidays.
+ *
  * @author Srinivas Hasti
+ * @author Zahid Hussain
  *
  */
-public class Germany extends DelegateCalendar {
-    private final static Germany SETTLEMENT_CALENDAR = new Germany(Market.SETTLEMENT);
-    private final static Germany FWB_CALENDAR        = new Germany(Market.FWB);
-    private final static Germany XETRA_CALENDAR      = new Germany(Market.XETRA);
-    private final static Germany EUREX_CALENDAR      = new Germany(Market.EUREX);
 
-    private Germany(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case SETTLEMENT:
-            delegate = new GermanySettlementCalendar();
-            break;
-        case FWB:
-            delegate = new FWBCalendar();
-            break;
-        case XETRA:
-            delegate = new XetraCalendar();
-            break;
-        case EUREX:
-            delegate = new EurexCalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
 
-    public static Germany getCalendar(final Market market) {
-        switch (market) {
-        case SETTLEMENT:
-            return SETTLEMENT_CALENDAR;
-        case FWB:
-            return FWB_CALENDAR;
-        case XETRA:
-            return XETRA_CALENDAR;
-        case EUREX:
-            return EUREX_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
+public class Germany extends Calendar {
 
-
-    //
-    // public enums
-    //
-
+    /**
+     * German calendars
+     *
+     */
     public static enum Market {
         /**
-         * generic settlement calendar
+         * eneric settlement calendar
          */
-        SETTLEMENT,
+        Settlement,
 
         /**
-         * Frankfurt Stock Exchange (FWB in German)
+         * Frankfurt stock-exchange
          */
-        FWB,
+        FrankfurtStockExchange,
 
         /**
-         * XETRA
+         * Xetra
          */
-        XETRA,
+        Xetra,
 
         /**
-         * EUREX
+         * Eurex
          */
-        EUREX
+        Eurex
     }
+
 
     //
-    // private inner classes
+    // public constructors
     //
 
-    private static final class GermanySettlementCalendar extends WesternCalendar {
+    public Germany() {
+    	this(Market.FrankfurtStockExchange);
+    }
+    public Germany(final Market market) {
+            switch (market) {
+              case Settlement:
+                impl = new SettlementImpl();
+                break;
+              case FrankfurtStockExchange:
+            	  impl = new FrankfurtStockExchangeImpl();
+                break;
+              case Xetra:
+            	  impl = new XetraImpl();
+                break;
+              case Eurex:
+            	  impl = new EurexImpl();
+                break;
+              default:
+                  QL.error(UNKNOWN_MARKET);
+                  throw new LibraryException(UNKNOWN_MARKET);
+            }
+    }
 
-        public String getName() {
-            return "German settlement";
-        }
+
+    //
+    // private final inner classes
+    //
+
+    private final class SettlementImpl extends WesternImpl {
+        @Override
+        public String name() { return "German settlement"; }
 
         @Override
         public boolean isBusinessDay(final Date date) {
@@ -125,40 +185,111 @@ public class Germany extends DelegateCalendar {
             final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
-                    // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // Good Friday
-                    || (dd == em - 3)
-                    // Easter Monday
-                    || (dd == em)
-                    // Ascension Thursday
-                    || (dd == em + 38)
-                    // Whit Monday
-                    || (dd == em + 49)
-                    // Corpus Christi
-                    || (dd == em + 59)
-                    // Labour Day
-                    || (d == 1 && m == MAY)
-                    // National Day
-                    || (d == 3 && m == OCTOBER)
-                    // Christmas Eve
-                    || (d == 24 && m == DECEMBER)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // Boxing Day
-                    || (d == 26 && m == DECEMBER)
-                    // New Year's Eve
-                    || (d == 31 && m == DECEMBER))
+                // New Year's Day
+                || (d == 1 && m == JANUARY)
+                // Good Friday
+                || (dd == em-3)
+                // Easter Monday
+                || (dd == em)
+                // Ascension Thursday
+                || (dd == em+38)
+                // Whit Monday
+                || (dd == em+49)
+                // Corpus Christi
+                || (dd == em+59)
+                // Labour Day
+                || (d == 1 && m == MAY)
+                // National Day
+                || (d == 3 && m == OCTOBER)
+                // Christmas Eve
+                || (d == 24 && m == DECEMBER)
+                // Christmas
+                || (d == 25 && m == DECEMBER)
+                // Boxing Day
+                || (d == 26 && m == DECEMBER)
+                // New Year's Eve
+                || (d == 31 && m == DECEMBER)) {
                 return false;
+            }
             return true;
         }
     }
 
-    private static final class FWBCalendar extends WesternCalendar {
+    private final class FrankfurtStockExchangeImpl extends WesternImpl {
+        @Override
+        public String name() { return "Frankfurt stock exchange"; }
 
-        public String getName() {
-            return "Frankfurt stock exchange";
+        @Override
+        public boolean isBusinessDay(final Date date) {
+			final Weekday w = date.weekday();
+			final int d = date.dayOfMonth(), dd = date.dayOfYear();
+			final Month m = date.month();
+			final int y = date.year();
+			final int em = easterMonday(y);
+			if (isWeekend(w)
+			// New Year's Day
+					|| (d == 1 && m == JANUARY)
+					// Good Friday
+					|| (dd == em - 3)
+					// Easter Monday
+					|| (dd == em)
+					// Labour Day
+					|| (d == 1 && m == MAY)
+					// Christmas' Eve
+					|| (d == 24 && m == DECEMBER)
+					// Christmas
+					|| (d == 25 && m == DECEMBER)
+					// Christmas Day
+					|| (d == 26 && m == DECEMBER)
+					// New Year's Eve
+					|| (d == 31 && m == DECEMBER)) {
+                return false;
+            }
+			return true;
+		}
+
+    }
+
+    private final class XetraImpl extends WesternImpl {
+
+    	@Override
+        public String name() { return "Xetra"; }
+
+    	@Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final Month m = date.month();
+            final int y = date.year();
+            final int em = easterMonday(y);
+            if (isWeekend(w)
+                // New Year's Day
+                || (d == 1 && m == JANUARY)
+                // Good Friday
+                || (dd == em-3)
+                // Easter Monday
+                || (dd == em)
+                // Labour Day
+                || (d == 1 && m == MAY)
+                // Christmas' Eve
+                || (d == 24 && m == DECEMBER)
+                // Christmas
+                || (d == 25 && m == DECEMBER)
+                // Christmas Day
+                || (d == 26 && m == DECEMBER)
+                // New Year's Eve
+                || (d == 31 && m == DECEMBER)) {
+                return false;
+            }
+            return true;
         }
+
+    }
+
+    private final class EurexImpl extends WesternImpl {
+
+    	@Override
+        public String name() { return "Eurex"; }
 
         @Override
         public boolean isBusinessDay(final Date date) {
@@ -168,95 +299,25 @@ public class Germany extends DelegateCalendar {
             final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
-                    // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // Good Friday
-                    || (dd == em - 3)
-                    // Easter Monday
-                    || (dd == em)
-                    // Labour Day
-                    || (d == 1 && m == MAY)
-                    // Christmas' Eve
-                    || (d == 24 && m == DECEMBER)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // Christmas Day
-                    || (d == 26 && m == DECEMBER)
-                    // New Year's Eve
-                    || (d == 31 && m == DECEMBER))
+                // New Year's Day
+                || (d == 1 && m == JANUARY)
+                // Good Friday
+                || (dd == em-3)
+                // Easter Monday
+                || (dd == em)
+                // Labour Day
+                || (d == 1 && m == MAY)
+                // Christmas' Eve
+                || (d == 24 && m == DECEMBER)
+                // Christmas
+                || (d == 25 && m == DECEMBER)
+                // Christmas Day
+                || (d == 26 && m == DECEMBER)
+                // New Year's Eve
+                || (d == 31 && m == DECEMBER)) {
                 return false;
+            }
             return true;
         }
     }
-
-    private static final class XetraCalendar extends WesternCalendar {
-
-        public String getName() {
-            return "Xetra";
-        }
-
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final Month m = date.month();
-            final int y = date.year();
-            final int em = easterMonday(y);
-            if (isWeekend(w)
-                    // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // Good Friday
-                    || (dd == em - 3)
-                    // Easter Monday
-                    || (dd == em)
-                    // Labour Day
-                    || (d == 1 && m == MAY)
-                    // Christmas' Eve
-                    || (d == 24 && m == DECEMBER)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // Christmas Day
-                    || (d == 26 && m == DECEMBER)
-                    // New Year's Eve
-                    || (d == 31 && m == DECEMBER))
-                return false;
-            return true;
-        }
-    }
-
-    private static final class EurexCalendar extends WesternCalendar {
-
-        public String getName() {
-            return "Eurex";
-        }
-
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final Month m = date.month();
-            final int y = date.year();
-            final int em = easterMonday(y);
-            if (isWeekend(w)
-                    // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // Good Friday
-                    || (dd == em - 3)
-                    // Easter Monday
-                    || (dd == em)
-                    // Labour Day
-                    || (d == 1 && m == MAY)
-                    // Christmas' Eve
-                    || (d == 24 && m == DECEMBER)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // Christmas Day
-                    || (d == 26 && m == DECEMBER)
-                    // New Year's Eve
-                    || (d == 31 && m == DECEMBER))
-                return false;
-            return true;
-        }
-    }
-
 }

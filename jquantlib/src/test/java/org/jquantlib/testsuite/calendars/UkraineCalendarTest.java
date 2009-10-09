@@ -50,7 +50,7 @@ public class UkraineCalendarTest {
 
 	public UkraineCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-        this.exchange = Ukraine.getCalendar(Ukraine.Market.USE);
+        this.exchange = new Ukraine(Ukraine.Market.USE);
 	}
 
     // 2004 - year in the past and leap year
@@ -87,15 +87,14 @@ public class UkraineCalendarTest {
         
         final List<Date> expectedHol = new ArrayList<Date>();
 
-    	expectedHol.add(new Date(3,JANUARY,year));
-    	expectedHol.add(new Date(7,JANUARY,year));
-    	expectedHol.add(new Date(8,MARCH,year));
-    	expectedHol.add(new Date(28,MARCH,year));
-    	expectedHol.add(new Date(2,MAY,year));
-    	expectedHol.add(new Date(9,MAY,year));
-    	expectedHol.add(new Date(16,MAY,year));
-    	expectedHol.add(new Date(28,JUNE,year));
-    	expectedHol.add(new Date(24,AUGUST,year));
+    	expectedHol.add(new Date(3,JANUARY,year));// New Year's Day 
+    	expectedHol.add(new Date(7,JANUARY,year));//Orthodox Christmas 
+    	expectedHol.add(new Date(8,MARCH,year)); //Internation Women's day
+    	expectedHol.add(new Date(2,MAY,year));  // Labor days 
+    	expectedHol.add(new Date(9,MAY,year));  // Victory Day
+    	expectedHol.add(new Date(20,JUNE,year));//Zahid: Changed from 28 to 20
+    	expectedHol.add(new Date(28,JUNE,year)); //Zahid: Constitution day
+    	expectedHol.add(new Date(24,AUGUST,year)); //Independence day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt= new CalendarUtil();
@@ -115,11 +114,11 @@ public class UkraineCalendarTest {
     	expectedHol.add(new Date(2,JANUARY,year));
     	expectedHol.add(new Date(9,JANUARY,year));
     	expectedHol.add(new Date(8,MARCH,year));
-    	expectedHol.add(new Date(17,APRIL,year));
+    	expectedHol.add(new Date(24,APRIL,year));
     	expectedHol.add(new Date(1,MAY,year));
     	expectedHol.add(new Date(2,MAY,year));
     	expectedHol.add(new Date(9,MAY,year));
-    	expectedHol.add(new Date(5,JUNE,year));
+    	expectedHol.add(new Date(12,JUNE,year));
     	expectedHol.add(new Date(28,JUNE,year));
     	expectedHol.add(new Date(24,AUGUST,year));
 
@@ -168,11 +167,12 @@ public class UkraineCalendarTest {
     	expectedHol.add(new Date(1,JANUARY,year));
     	expectedHol.add(new Date(7,JANUARY,year));
     	expectedHol.add(new Date(10,MARCH,year));
-    	expectedHol.add(new Date(24,MARCH,year));
+//    	expectedHol.add(new Date(8,MARCH,year));
+    	expectedHol.add(new Date(28,APRIL,year));
     	expectedHol.add(new Date(1,MAY,year));
     	expectedHol.add(new Date(2,MAY,year));
     	expectedHol.add(new Date(9,MAY,year));
-    	expectedHol.add(new Date(12,MAY,year));
+    	expectedHol.add(new Date(16,JUNE,year));
 
     	// Call the Holiday Check
     	final CalendarUtil cbt= new CalendarUtil();
@@ -192,10 +192,10 @@ public class UkraineCalendarTest {
     	expectedHol.add(new Date(1,JANUARY,year));
     	expectedHol.add(new Date(7,JANUARY,year));
     	expectedHol.add(new Date(9,MARCH,year));
-    	expectedHol.add(new Date(13,APRIL,year));
+    	expectedHol.add(new Date(20,APRIL,year));
     	expectedHol.add(new Date(1,MAY,year));
     	expectedHol.add(new Date(11,MAY,year));
-    	expectedHol.add(new Date(1,JUNE,year));
+    	expectedHol.add(new Date(8,JUNE,year));
     	expectedHol.add(new Date(24,AUGUST,year));
 
     	// Call the Holiday Check
@@ -266,11 +266,11 @@ public class UkraineCalendarTest {
     	expectedHol.add(new Date(2,JANUARY,year));
     	expectedHol.add(new Date(9,JANUARY,year));
     	expectedHol.add(new Date(8,MARCH,year));
-    	expectedHol.add(new Date(9,APRIL,year));
+    	expectedHol.add(new Date(16,APRIL,year));
     	expectedHol.add(new Date(1,MAY,year));
     	expectedHol.add(new Date(2,MAY,year));
     	expectedHol.add(new Date(9,MAY,year));
-    	expectedHol.add(new Date(28,MAY,year));
+    	expectedHol.add(new Date(4,JUNE,year));
     	expectedHol.add(new Date(28,JUNE,year));
     	expectedHol.add(new Date(24,AUGUST,year));
 

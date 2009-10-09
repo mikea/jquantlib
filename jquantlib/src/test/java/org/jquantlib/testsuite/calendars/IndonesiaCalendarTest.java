@@ -60,7 +60,7 @@ public class IndonesiaCalendarTest {
 
     @Before
     public void setUp() {
-        c = Indonesia.getCalendar(Indonesia.Market.BEJ);
+        c = new Indonesia(Indonesia.Market.BEJ);
     }
 
     // Holiday figures taken from http://www.idx.co.id/MainMenu/Trading/TradingHoliday/tabid/85/language/en-US/Default.aspx
@@ -149,7 +149,7 @@ public class IndonesiaCalendarTest {
         cbt.checkHolidayList(expectedHol, c, year);
     }
 
-    // 2007
+ // 2007
     @Test
     public void testIndonesiaYear2007() {
         final int year = 2007;
@@ -187,6 +187,29 @@ public class IndonesiaCalendarTest {
 
         // Christmas
         expectedHol.add(new Date(25, DECEMBER, year));
+
+        //New holidays as per QL0.9.7
+        //Islamic New year
+        expectedHol.add(new Date(10, JANUARY, year));
+        expectedHol.add(new Date(11, JANUARY, year));
+        //Chinese  New year
+        expectedHol.add(new Date(7, FEBRUARY, year));
+        expectedHol.add(new Date(8, FEBRUARY, year));
+
+        // Saka's New Year
+        expectedHol.add(new Date(7, MARCH, year));
+        // Birthday of the prophet Muhammad SAW
+        expectedHol.add(new Date(20, MARCH, year));
+        // Isra' Mi'raj of the prophet Muhammad SAW, Sunday
+        expectedHol.add(new Date(30, JULY, year));
+
+        // National leaves
+        expectedHol.add(new Date(1, OCTOBER, year));
+        expectedHol.add(new Date(2,  OCTOBER, year));
+        expectedHol.add(new Date(3,  OCTOBER, year));
+
+        // New Year's Eve
+        expectedHol.add(new Date(31, DECEMBER, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();

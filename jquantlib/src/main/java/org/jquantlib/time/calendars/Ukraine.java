@@ -29,23 +29,30 @@
  <http://quantlib.org/license.shtml>.
  */
 
-
 package org.jquantlib.time.calendars;
 
-import org.jquantlib.lang.exceptions.LibraryException;
+import static org.jquantlib.time.Month.AUGUST;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.JUNE;
+import static org.jquantlib.time.Month.MARCH;
+import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Weekday.MONDAY;
+
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
-/**! Holidays for the Ukrainian stock exchange
- * (data from <http://www.ukrse.kiev.ua/eng/>):
+/**
+ * ! Holidays for the Ukrainian stock exchange (data from <http://www.ukrse.kiev.ua/eng/>):
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st</li>
- * <li>Orthodox Christmas, January 7th</li>
+ * <li>New Year's Day, JANUARY 1st</li>
+ * <li>Orthodox Christmas, JANUARY 7th</li>
  * <li>International Women's Day, March 8th</li>
  * <li>Easter Monday</li>
  * <li>Holy Trinity Day, 50 days after Easter</li>
@@ -55,86 +62,71 @@ import org.jquantlib.time.WesternCalendar;
  * <li>Independence Day, August 24th</li>
  * </ul>
  * Holidays falling on a Saturday or Sunday are moved to the following Monday.
+ *
  * @author Renjith Nair
  */
 
-public class Ukraine extends DelegateCalendar {
-    private final static Ukraine USE_CALENDAR = new Ukraine(Market.USE);
-
-    private Ukraine(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case USE:
-            delegate = new UkraineUSECalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
-
-    public static Ukraine getCalendar(final Market market) {
-        switch (market) {
-        case USE:
-            return USE_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
-
-    //
-    // public enums
-    //
-
-    //FIXME: Settlement calendar is missing
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
+public class Ukraine extends Calendar {
     public static enum Market {
         /**
-         * Ukraine stock-exchange
+         * Ukrainian Stock Exchange
          */
         USE
     }
 
+    //
+    // public constructors
+    //
 
-    private static final class UkraineUSECalendar extends WesternCalendar {
+    public Ukraine() {
+        this(Market.USE);
+    }
 
-        public String getName() {
-            return "Ukraine stock-exchange";
+    public Ukraine(final Market m) {
+        impl = new UseImpl();
+    }
+
+    //
+    // private final inner classes
+    //
+
+    private final class UseImpl extends OrthodoxImpl {
+
+        @Override
+        public String name() {
+            return "Ukrainian stock exchange";
         }
 
         @Override
         public boolean isBusinessDay(final Date date) {
             final Weekday w = date.weekday();
             final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final int m = date.month().value();
+            final Month m = date.month();
             final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
-                    // New Year's Day (possibly moved to Monday)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY))
-                            && m == Month.JANUARY.value())
-                            // Orthodox Christmas
-                            || ((d == 7 || ((d == 8 || d == 9) && w == Weekday.MONDAY))
-                                    && m == Month.JANUARY.value())
-                                    // Women's Day
-                                    || ((d == 8 || ((d == 9 || d == 10) && w == Weekday.MONDAY))
-                                            && m == Month.MARCH.value())
-                                            // Orthodox Easter Monday
-                                            || (dd == em)
-                                            // Holy Trinity Day
-                                            || (dd == em+49)
-                                            // Workers Solidarity Days
-                                            || ((d == 1 || d == 2 || (d == 3 && w ==  Weekday.MONDAY)) && m == Month.MAY.value())
-                                            // Victory Day
-                                            || ((d == 9 || ((d == 10 || d == 11) && w ==  Weekday.MONDAY)) && m == Month.MAY.value())
-                                            // Constitution Day
-                                            || (d == 28 && m == Month.JUNE.value())
-                                            // Independence Day
-                                            || (d == 24 && m == Month.AUGUST.value()))
+            // New Year's Day (possibly moved to Monday)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == JANUARY)
+                    // Orthodox Christmas
+                    || ((d == 7 || ((d == 8 || d == 9) && w == MONDAY)) && m == JANUARY)
+                    // Women's Day
+                    || ((d == 8 || ((d == 9 || d == 10) && w == MONDAY)) && m == MARCH)
+                    // Orthodox Easter MONDAY
+                    || (dd == em)
+                    // Holy Trinity Day
+                    || (dd == em + 49)
+                    // Workers' Solidarity Days
+                    || ((d == 1 || d == 2 || (d == 3 && w == MONDAY)) && m == MAY)
+                    // Victory Day
+                    || ((d == 9 || ((d == 10 || d == 11) && w == MONDAY)) && m == MAY)
+                    // Constitution Day
+                    || (d == 28 && m == JUNE)
+                    // Independence Day
+                    || (d == 24 && m == AUGUST)) {
                 return false;
+            }
             return true;
         }
-
     }
-
 }

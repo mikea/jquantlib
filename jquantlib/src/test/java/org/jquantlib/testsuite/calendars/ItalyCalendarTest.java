@@ -31,8 +31,8 @@ public class ItalyCalendarTest {
 
 	public ItalyCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-		cExchange		= Italy.getCalendar(Italy.Market.EXCHANGE);
-		cSettlement	= Italy.getCalendar(Italy.Market.SETTLEMENT);
+		cExchange		= new Italy(Italy.Market.Exchange);
+		cSettlement	= new Italy(Italy.Market.Settlement);
 	}
 
 

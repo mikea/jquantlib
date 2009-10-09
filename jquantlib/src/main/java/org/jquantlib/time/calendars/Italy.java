@@ -30,21 +30,24 @@ import static org.jquantlib.time.Month.JUNE;
 import static org.jquantlib.time.Month.MAY;
 import static org.jquantlib.time.Month.NOVEMBER;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
-
 
 /**
- * Public holidays:
+ *
+ * Italian calendars Public holidays:
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st</li>
- * <li>Epiphany, January 6th</li>
+ * <li>New Year's Day, JANUARY 1st</li>
+ * <li>Epiphany, JANUARY 6th</li>
  * <li>Easter Monday</li>
  * <li>Liberation Day, April 25th</li>
  * <li>Labour Day, May 1st</li>
@@ -55,12 +58,12 @@ import org.jquantlib.time.WesternCalendar;
  * <li>Christmas Day, December 25th</li>
  * <li>St. Stephen's Day, December 26th</li>
  * </ul>
- * <p>
- * Holidays for the stock exchange
+ *
+ * Holidays for the stock exchange (data from http://www.borsaitalia.it):
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st</li>
+ * <li>New Year's Day, JANUARY 1st</li>
  * <li>Good Friday</li>
  * <li>Easter Monday</li>
  * <li>Labour Day, May 1st</li>
@@ -71,68 +74,61 @@ import org.jquantlib.time.WesternCalendar;
  * <li>New Year's Eve, December 31st</li>
  * </ul>
  *
- * @category calendars
+ * @test the correctness of the returned results is tested against a list of known holidays.
  *
+ * @category calendars
  * @see <a href="http://www.borsaitalia.it">Borsa Italiana</a>
  *
  * @author Srinivas Hasti
+ * @author Zahid Hussain
  */
-public class Italy extends DelegateCalendar {
 
-    private final static Italy SETTLEMENT_CALENDAR = new Italy(Market.SETTLEMENT);
-    private final static Italy EXCHANGE_CALENDAR   = new Italy(Market.EXCHANGE);
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
+public class Italy extends Calendar {
 
-    private Italy(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case SETTLEMENT:
-            delegate = new ItalySettlementCalendar();
-            break;
-        case EXCHANGE:
-            delegate = new ItalyExchangeCalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
-
-    public static Italy getCalendar(final Market market) {
-        switch (market) {
-        case SETTLEMENT:
-            return SETTLEMENT_CALENDAR;
-        case EXCHANGE:
-            return EXCHANGE_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
-
-    //
-    // public enums
-    //
-
-    public enum Market {
+    public static enum Market {
         /**
          * Generic settlement calendar
          */
-        SETTLEMENT,
+        Settlement,
 
         /**
          * Milan stock-exchange calendar
          */
-        EXCHANGE
+        Exchange
     }
 
 
     //
-    // private inner classes
+    // public constructors
     //
 
-    private static final class ItalySettlementCalendar extends WesternCalendar {
+    public Italy() {
+        this(Market.Settlement);
+    }
 
-        public String getName() {
+    public Italy(final Market market) {
+        switch (market) {
+        case Settlement:
+            impl = new SettlementImpl();
+            break;
+        case Exchange:
+            impl = new ExchangeImpl();
+            break;
+        default:
+            QL.error(UNKNOWN_MARKET);
+            throw new LibraryException(UNKNOWN_MARKET);
+        }
+    }
+
+
+    //
+    // private final inner classes
+    //
+
+    private final class SettlementImpl extends WesternImpl {
+        @Override
+        public String name() {
             return "Italian settlement";
         }
 
@@ -143,9 +139,8 @@ public class Italy extends DelegateCalendar {
             final Month m = date.month();
             final int y = date.year();
             final int em = easterMonday(y);
-
             if (isWeekend(w)
-                    // New Year's Day
+            // New Year's Day
                     || (d == 1 && m == JANUARY)
                     // Epiphany
                     || (d == 6 && m == JANUARY)
@@ -167,17 +162,17 @@ public class Italy extends DelegateCalendar {
                     || (d == 25 && m == DECEMBER)
                     // St. Stephen
                     || (d == 26 && m == DECEMBER)
-                    // December 31st, 1999 only
-                    || (d == 31 && m == DECEMBER && y == 1999))
+                    // DECEMBER 31st, 1999 only
+                    || (d == 31 && m == DECEMBER && y == 1999)) {
                 return false;
+            }
             return true;
         }
     }
 
-
-    private static final class ItalyExchangeCalendar extends WesternCalendar {
-
-        public String getName() {
+    private final class ExchangeImpl extends WesternImpl {
+        @Override
+        public String name() {
             return "Milan stock exchange";
         }
 
@@ -188,9 +183,8 @@ public class Italy extends DelegateCalendar {
             final Month m = date.month();
             final int y = date.year();
             final int em = easterMonday(y);
-
             if (isWeekend(w)
-                    // New Year's Day
+            // New Year's Day
                     || (d == 1 && m == JANUARY)
                     // Good Friday
                     || (dd == em - 3)
@@ -207,12 +201,10 @@ public class Italy extends DelegateCalendar {
                     // St. Stephen
                     || (d == 26 && m == DECEMBER)
                     // New Year's Eve
-                    || (d == 31 && m == DECEMBER))
+                    || (d == 31 && m == DECEMBER)) {
                 return false;
-
+            }
             return true;
         }
     }
-
 }
-

@@ -751,7 +751,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     /**
      * Next given weekday following or equal to the given date
      * <p>
-     * E.g., the Friday following Tuesday, January 15th, 2002 was January 18th, 2002.
+     * E.g., the Friday following Tuesday, JANUARY 15th, 2002 was JANUARY 18th, 2002.
      * 
      * @see http://www.cpearson.com/excel/DateTimeWS.htm
      * 
@@ -856,7 +856,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      */
     private static final int fromDMY(final int d, final int m, final int y) {
         QL.require(y > 1900 && y < 2100 , "year out of bound. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
-        QL.require(m > 0 && m < 13 , "month outside January-December range [1,12]"); // QA:[RG]::verified // TODO: message
+        QL.require(m > 0 && m < 13 , "month outside JANUARY-December range [1,12]"); // QA:[RG]::verified // TODO: message
         final boolean leap = isLeap(y);
         final int len = monthLength(m, leap);
         final int offset = monthOffset(m, leap);

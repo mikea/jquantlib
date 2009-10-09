@@ -53,7 +53,7 @@ public class ChinaCalendarTest {
 
 	public ChinaCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-        exchange = China.getCalendar(China.Market.SSE);
+        exchange = new China(China.Market.SSE);
 	}
 
     @Test

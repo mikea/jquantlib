@@ -38,7 +38,6 @@ import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.calendars.Switzerland;
-import org.jquantlib.time.calendars.Switzerland.Market;
 import org.junit.Test;
 
 /**
@@ -62,58 +61,54 @@ public class SwitzerlandCalendarTest {
 
 		QL.info("\n\n=== Switzerland SWX Calendar ===");
 
-		final Market market = Switzerland.Market.SWX;
+		final Calendar c = new Switzerland();
 
-		final Calendar c = Switzerland.getCalendar(market);
-
-		testSwitzerlandCalendar(market, c);
+		testSwitzerlandCalendar(c);
 	}
 
-	@Test
-	public void testSwitzerlandSettlementCalendar() {
+//	@Test
+//	public void testSwitzerlandSettlementCalendar() {
+//
+//		QL.info("\n\n=== Switzerland Settlement Calendar ===");
+//
+//		final Calendar c = new Switzerland();
+//
+//		testSwitzerlandCalendar( c);
+//	}
 
-		QL.info("\n\n=== Switzerland Settlement Calendar ===");
-
-		final Market market = Switzerland.Market.Settlement;
-
-		final Calendar c = Switzerland.getCalendar(market);
-
-		testSwitzerlandCalendar(market, c);
-	}
-
-	private void testSwitzerlandCalendar(final Market market, final Calendar c) {
+	private void testSwitzerlandCalendar( final Calendar c) {
 		// 2004 - leap-year in the past
-		testSwitzerland2004(c,market);
+		testSwitzerland2004(c);
 
 		// 2005 - year in the past
-		testSwitzerland2005(c,market);
+		testSwitzerland2005(c);
 
 		// 2006 - year in the past
-		testSwitzerland2006(c,market);
+		testSwitzerland2006(c);
 
 		// 2007 - regular year in the past
-		testSwitzerland2007(c,market);
+		testSwitzerland2007(c);
 
 		// 2008 - current year
-		testSwitzerland2008(c,market);
+		testSwitzerland2008(c);
 
 		// 2009 - regular year in the future
-		testSwitzerland2009(c,market);
+		testSwitzerland2009(c);
 
 		// 2010 -  year in the future
-		testSwitzerland2010(c,market);
+		testSwitzerland2010(c);
 
 		// 2011 -  year in the future
-		testSwitzerland2011(c,market);
+		testSwitzerland2011(c);
 
 		// 2012 - leap-year in the future
-		testSwitzerland2012(c,market);
+		testSwitzerland2012(c);
 	}
 
-	public void testSwitzerland2004(final Calendar c, final Market market){
+	public void testSwitzerland2004(final Calendar c){
 
 		final int year = 2004;
-		QL.info("Testing " + market + " holiday list for the year " + year + "...");
+		QL.info("Testing " + c.name() + " holiday list for the year " + year + "...");
 
 		final List<Date> expectedHol = new Vector<Date>();
 
@@ -125,11 +120,11 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(new Date(20,MAY,year));
     	expectedHol.add(new Date(31,MAY,year));
 
-    	if(market == Switzerland.Market.Settlement)
-    	{
-	    	expectedHol.add(new Date(24,DECEMBER,year));
-	    	expectedHol.add(new Date(31,DECEMBER,year));
-    	}
+//    	if(market == Switzerland.Market.Settlement)
+//    	{
+//	    	expectedHol.add(new Date(24,DECEMBER,year));
+//	    	expectedHol.add(new Date(31,DECEMBER,year));
+//    	}
     	// expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,year)); --> Sunday
 
     	// Call the Holiday Check
@@ -137,10 +132,10 @@ public class SwitzerlandCalendarTest {
 		cbt.checkHolidayList(expectedHol, c, year);
 	}
 
-	public void testSwitzerland2005(final Calendar c, final Market market){
+	public void testSwitzerland2005(final Calendar c){
 
 		final int year = 2005;
-		QL.info("Testing " + market + " holiday list for the year " + year + "...");
+		QL.info("Testing " + c.name() + " holiday list for the year " + year + "...");
 
 		final List<Date> expectedHol = new Vector<Date>();
 
@@ -156,10 +151,10 @@ public class SwitzerlandCalendarTest {
 		cbt.checkHolidayList(expectedHol, c, year);
 	}
 
-	public void testSwitzerland2006(final Calendar c, final Market market){
+	public void testSwitzerland2006(final Calendar c ){
 
 		final int year = 2006;
-		QL.info("Testing " + market + " holiday list for the year " + year + "...");
+		QL.info("Testing " + c.name() + " holiday list for the year " + year + "...");
 
 		final List<Date> expectedHol = new Vector<Date>();
 
@@ -178,10 +173,10 @@ public class SwitzerlandCalendarTest {
 		cbt.checkHolidayList(expectedHol, c, year);
 	}
 
-	public void testSwitzerland2007(final Calendar c, final Market market) {
+	public void testSwitzerland2007(final Calendar c) {
 
 		final int year = 2007;
-		QL.info("Testing " + market + " holiday list for the year " + year + "...");
+		QL.info("Testing " + c.name() + " holiday list for the year " + year + "...");
 
 		final List<Date> expectedHol = new Vector<Date>();
 
@@ -196,21 +191,21 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(new Date(25,DECEMBER,year));
     	expectedHol.add(new Date(26,DECEMBER,year));
 
-    	if(market == Switzerland.Market.Settlement)
-    	{
-	    	expectedHol.add(new Date(24,DECEMBER,year));
-	    	expectedHol.add(new Date(31,DECEMBER,year));
-    	}
+//    	if(market == Switzerland.Market.Settlement)
+//    	{
+//	    	expectedHol.add(new Date(24,DECEMBER,year));
+//	    	expectedHol.add(new Date(31,DECEMBER,year));
+//    	}
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, c, year);
 	}
 
-	public void testSwitzerland2008(final Calendar c, final Market market){
+	public void testSwitzerland2008(final Calendar c){
 
 		final int year = 2008;
-		QL.info("Testing " + market + " holiday list for the year " + year + "...");
+		QL.info("Testing " + c.name() + " holiday list for the year " + year + "...");
 
 		final List<Date> expectedHol = new Vector<Date>();
 
@@ -224,21 +219,21 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(new Date(25,DECEMBER,year));
     	expectedHol.add(new Date(26,DECEMBER,year));
 
-    	if(market == Switzerland.Market.Settlement)
-    	{
-	    	expectedHol.add(new Date(24,DECEMBER,year));
-	    	expectedHol.add(new Date(31,DECEMBER,year));
-    	}
+//    	if(market == Switzerland.Market.Settlement)
+//    	{
+//	    	expectedHol.add(new Date(24,DECEMBER,year));
+//	    	expectedHol.add(new Date(31,DECEMBER,year));
+//    	}
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, c, year);
 	}
 
-	public void testSwitzerland2009(final Calendar c, final Market market) {
+	public void testSwitzerland2009(final Calendar c) {
 
 		final int year = 2009;
-		QL.info("Testing " + market + " holiday list for the year " + year + "...");
+		QL.info("Testing " + c.name() + " holiday list for the year " + year + "...");
 
 		final List<Date> expectedHol = new Vector<Date>();
 
@@ -253,21 +248,21 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(new Date(25,DECEMBER,year));
     	// expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,year)); --> Saturday
 
-    	if(market == Switzerland.Market.Settlement)
-    	{
-	    	expectedHol.add(new Date(24,DECEMBER,year));
-	    	expectedHol.add(new Date(31,DECEMBER,year));
-    	}
+//    	if(market == Switzerland.Market.Settlement)
+//    	{
+//	    	expectedHol.add(new Date(24,DECEMBER,year));
+//	    	expectedHol.add(new Date(31,DECEMBER,year));
+//    	}
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, c, year);
 	}
 
-	public void testSwitzerland2010(final Calendar c, final Market market){
+	public void testSwitzerland2010(final Calendar c){
 
 		final int year = 2010;
-		QL.info("Testing " + market + " holiday list for the year " + year + "...");
+		QL.info("Testing " + c.name() + " holiday list for the year " + year + "...");
 
 		final List<Date> expectedHol = new Vector<Date>();
 
@@ -277,21 +272,21 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(new Date(13,MAY,year));
     	expectedHol.add(new Date(24,MAY,year));
 
-    	if(market == Switzerland.Market.Settlement)
-    	{
-	    	expectedHol.add(new Date(24,DECEMBER,year));
-	    	expectedHol.add(new Date(31,DECEMBER,year));
-    	}
+//    	if(market == Switzerland.Market.Settlement)
+//    	{
+//	    	expectedHol.add(new Date(24,DECEMBER,year));
+//	    	expectedHol.add(new Date(31,DECEMBER,year));
+//    	}
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, c, year);
 	}
 
-	public void testSwitzerland2011(final Calendar c, final Market market){
+	public void testSwitzerland2011(final Calendar c){
 
 		final int year = 2011;
-		QL.info("Testing " + market + " holiday list for the year " + year + "...");
+		QL.info("Testing " + c.name() + " holiday list for the year " + year + "...");
 
 		final List<Date> expectedHol = new Vector<Date>();
 
@@ -307,9 +302,9 @@ public class SwitzerlandCalendarTest {
 		cbt.checkHolidayList(expectedHol, c, year);
 	}
 
-	public void testSwitzerland2012(final Calendar c, final Market market) {
+	public void testSwitzerland2012(final Calendar c) {
 		final int year = 2012;
-		QL.info("Testing " + market + " holiday list for the year " + year + "...");
+		QL.info("Testing " + c.name() + " holiday list for the year " + year + "...");
 
 		final List<Date> expectedHol = new Vector<Date>();
 
@@ -324,11 +319,11 @@ public class SwitzerlandCalendarTest {
     	expectedHol.add(new Date(25,DECEMBER,year));
     	expectedHol.add(new Date(26,DECEMBER,year));
 
-    	if(market == Switzerland.Market.Settlement)
-    	{
-	    	expectedHol.add(new Date(24,DECEMBER,year));
-	    	expectedHol.add(new Date(31,DECEMBER,year));
-    	}
+//    	if(market == Switzerland.Market.Settlement)
+//    	{
+//	    	expectedHol.add(new Date(24,DECEMBER,year));
+//	    	expectedHol.add(new Date(31,DECEMBER,year));
+//    	}
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();

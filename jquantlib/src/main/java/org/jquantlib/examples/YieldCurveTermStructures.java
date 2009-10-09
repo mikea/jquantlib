@@ -44,7 +44,7 @@ public class YieldCurveTermStructures {
         System.out.println("//==========================================FlatForward termstructure===================");
         final SimpleQuote interestRateQuote = new SimpleQuote(0.3);
         final RelinkableHandle<Quote>  handleToInterestRateQuote = new RelinkableHandle<Quote>(interestRateQuote);
-        final YieldTermStructure flatforward = new FlatForward(2,UnitedStates.getCalendar(Market.NYSE),handleToInterestRateQuote,Actual365Fixed.getDayCounter(),Compounding.CONTINUOUS,Frequency.DAILY);
+        final YieldTermStructure flatforward = new FlatForward(2,new UnitedStates(Market.NYSE),handleToInterestRateQuote,Actual365Fixed.getDayCounter(),Compounding.CONTINUOUS,Frequency.DAILY);
 
         final Date today  = Date.todaysDate();
         final Date date10 = today.clone().addAssign(10);

@@ -63,7 +63,7 @@ public class SingaporeCalendarTest {
       	QL.info("Testing Singapore's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Singapore.getCalendar(Singapore.Market.SGX);
+      	final Calendar c = new Singapore(Singapore.Market.SGX);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	//New year's day
@@ -111,7 +111,7 @@ public class SingaporeCalendarTest {
       	QL.info("Testing Singapore's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Singapore.getCalendar(Singapore.Market.SGX);
+      	final Calendar c = new Singapore(Singapore.Market.SGX);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	//New year's day -- weekend in yr 2005
@@ -156,7 +156,7 @@ public class SingaporeCalendarTest {
       	QL.info("Testing Singapore's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Singapore.getCalendar(Singapore.Market.SGX);
+      	final Calendar c = new Singapore(Singapore.Market.SGX);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	//New year's day -- weekend in 2006
@@ -217,7 +217,7 @@ public class SingaporeCalendarTest {
       	QL.info("Testing Singapore's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Singapore.getCalendar(Singapore.Market.SGX);
+      	final Calendar c = new Singapore(Singapore.Market.SGX);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	//New year's day
@@ -281,7 +281,7 @@ public class SingaporeCalendarTest {
       	QL.info("Testing Singapore's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Singapore.getCalendar(Singapore.Market.SGX);
+      	final Calendar c = new Singapore(Singapore.Market.SGX);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	//New year's day
@@ -299,7 +299,7 @@ public class SingaporeCalendarTest {
     	expectedHol.add(new Date(1,MAY,year));
 
     	//Vesak day
-    	expectedHol.add(new Date(19,MAY,year));
+//    	expectedHol.add(new Date(18,MAY,year)); //Zahid 18 from 19, Sunday
 
     	// National Day -- weekend in yr 2008
     	// expectedHol.add(new Date(9,AUGUST,year));
@@ -308,7 +308,7 @@ public class SingaporeCalendarTest {
 		expectedHol.add(new Date(1,OCTOBER,year));
 
 		// Deepavali
-		expectedHol.add(new Date(27,OCTOBER,year));
+		expectedHol.add(new Date(28,OCTOBER,year));//Zahid 28 from 27
 
 		// Hari Raya Haji
 		expectedHol.add(new Date(8,DECEMBER,year));
@@ -343,7 +343,7 @@ public class SingaporeCalendarTest {
       	QL.info("Testing Singapore's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Singapore.getCalendar(Singapore.Market.SGX);
+      	final Calendar c = new Singapore(Singapore.Market.SGX);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	//New year's day

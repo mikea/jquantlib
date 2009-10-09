@@ -24,8 +24,6 @@
 
 package org.jquantlib.time.calendars;
 
-
-
 import static org.jquantlib.time.Month.AUGUST;
 import static org.jquantlib.time.Month.DECEMBER;
 import static org.jquantlib.time.Month.JANUARY;
@@ -34,12 +32,13 @@ import static org.jquantlib.time.Month.MAY;
 import static org.jquantlib.time.Month.NOVEMBER;
 import static org.jquantlib.time.Month.SEPTEMBER;
 
-import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
 /**
  * Slovak calendars
@@ -48,8 +47,8 @@ import org.jquantlib.time.WesternCalendar;
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st</li>
- * <li>Epiphany, January 6th</li>
+ * <li>New Year's Day, JANUARY 1st</li>
+ * <li>Epiphany, JANUARY 6th</li>
  * <li>Good Friday</li>
  * <li>Easter Monday</li>
  * <li>May Day, May 1st</li>
@@ -64,104 +63,84 @@ import org.jquantlib.time.WesternCalendar;
  * <li>Christmas, December 25th</li>
  * <li>St. Stephen, December 26th</li>
  * </ul>
- *
+ * @category calendars
  * @author Richard Gomes
  */
-public class Slovakia extends DelegateCalendar {
 
-    private final static Slovakia BSSE_CALENDAR = new Slovakia(Market.BSSE);
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
 
-    private Slovakia(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case BSSE:
-            delegate = new SlovakiaBSSECalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
-
-    public static Slovakia getCalendar(final Market market) {
-        switch (market) {
-        case BSSE:
-            return BSSE_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
-
-    //
-    // public enums
-    //
-
-    //FIXME: Settlement calendar is missing
+public class Slovakia extends Calendar {
     public enum Market {
         /**
-         * Bratislava stock exchange of Slovakia
+         * Bratislava stock exchange
          */
         BSSE
-    };
+    }
+
+    //
+    // public constructors
+    //
+
+    public Slovakia() {
+    	this(Market.BSSE);
+    }
+    public Slovakia(final Market m) {
+    	impl = new BsseImpl();
+    }
 
 
     //
-    // private inner classes
+    // private final inner classes
     //
 
-    private static final class SlovakiaBSSECalendar extends WesternCalendar {
+    private final class BsseImpl extends WesternImpl  {
+    	@Override
+    	public String name() { return "Bratislava stock exchange"; }
 
-        public String getName() {
-            return "Bratislava stock exchange";
-        }
-
-        @Override
+    	@Override
         public boolean isBusinessDay(final Date date) {
             final Weekday w = date.weekday();
             final int d = date.dayOfMonth(), dd = date.dayOfYear();
             final Month m = date.month();
             final int y = date.year();
             final int em = easterMonday(y);
-
             if (isWeekend(w)
-                    // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // Epiphany
-                    || (d == 6 && m == JANUARY)
-                    // Good Friday
-                    || (dd == em-3)
-                    // Easter Monday
-                    || (dd == em)
-                    // May Day
-                    || (d == 1 && m == MAY)
-                    // Liberation of the Republic
-                    || (d == 8 && m == MAY)
-                    // SS. Cyril and Methodius
-                    || (d == 5 && m == JULY)
-                    // Slovak National Uprising
-                    || (d == 29 && m == AUGUST)
-                    // Constitution of the Slovak Republic
-                    || (d == 1 && m == SEPTEMBER)
-                    // Our Lady of the Seven Sorrows
-                    || (d == 15 && m == SEPTEMBER)
-                    // All Saints Day
-                    || (d == 1 && m == NOVEMBER)
-                    // Freedom and Democracy of the Slovak Republic
-                    || (d == 17 && m == NOVEMBER)
-                    // Christmas Eve
-                    || (d == 24 && m == DECEMBER)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // St. Stephen
-                    || (d == 26 && m == DECEMBER)
-
-                    // unidentified closing days for stock exchange
-                    || (y >= 2004 && ((d >= 24 && d <= 31 && m == DECEMBER) || (d >= 1 && d <= 6 && m == JANUARY)))
-            )
+                // New Year's Day
+                || (d == 1 && m == JANUARY)
+                // Epiphany
+                || (d == 6 && m == JANUARY)
+                // Good Friday
+                || (dd == em-3)
+                // Easter Monday
+                || (dd == em)
+                // May Day
+                || (d == 1 && m == MAY)
+                // Liberation of the Republic
+                || (d == 8 && m == MAY)
+                // SS. Cyril and Methodius
+                || (d == 5 && m == JULY)
+                // Slovak National Uprising
+                || (d == 29 && m == AUGUST)
+                // Constitution of the Slovak Republic
+                || (d == 1 && m == SEPTEMBER)
+                // Our Lady of the Seven Sorrows
+                || (d == 15 && m == SEPTEMBER)
+                // All Saints Day
+                || (d == 1 && m == NOVEMBER)
+                // Freedom and Democracy of the Slovak Republic
+                || (d == 17 && m == NOVEMBER)
+                // Christmas Eve
+                || (d == 24 && m == DECEMBER)
+                // Christmas
+                || (d == 25 && m == DECEMBER)
+                // St. Stephen
+                || (d == 26 && m == DECEMBER)
+                // unidentified closing days for stock exchange
+                || (d >= 24 && d <= 31 && m == DECEMBER && y == 2004)
+                || (d >= 24 && d <= 31 && m == DECEMBER && y == 2005)) {
                 return false;
+            }
             return true;
         }
     }
-
 }

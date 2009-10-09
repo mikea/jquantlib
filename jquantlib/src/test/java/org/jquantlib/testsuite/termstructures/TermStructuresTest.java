@@ -75,7 +75,7 @@ public class TermStructuresTest {
 
         QL.error("***** INITIALIZATION INCOMPLETE :: waiting for implementation of Swaps and PiecewiseYieldTermStructure *****");
 
-        this.calendar = Target.getCalendar();
+        this.calendar = new Target();
         this.settlementDays = 2;
         this.termStructure = null;
         this.dummyTermStructure = null;
@@ -216,9 +216,10 @@ public class TermStructuresTest {
     public void testImpliedObs() {
         QL.info("Testing observability of implied term structure...");
 
-        final Date today = calendar.advance(Date.todaysDate());
+//        final Date today = calendar.advance(Date.todaysDate());
+        Date today = new Settings().getEvaluationDate();
         final Date newToday = today.add(Period.ONE_YEAR_FORWARD.times(3));
-        final Date newSettlement = Target.getCalendar().advance(newToday, settlementDays, TimeUnit.DAYS);
+        final Date newSettlement = new Target().advance(newToday, settlementDays, TimeUnit.DAYS);
 
         // final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>() {};
         final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(YieldTermStructure.class);

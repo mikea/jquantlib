@@ -28,119 +28,94 @@ import static org.jquantlib.time.Month.JUNE;
 import static org.jquantlib.time.Month.MAY;
 import static org.jquantlib.time.Weekday.FRIDAY;
 
-import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
 /**
  * Finnish calendar
- * <p>
- * <ul>
- * <li>Saturdays</li>
- * <li>Sundays</li>
- * <li>New Year's Day, January 1st</li>
- * <li>Epiphany, January 6th</li>
- * <li>Good Friday</li>
- * <li>Easter Monday</li>
- * <li>Ascension Thursday</li>
- * <li>Labour Day, May 1st</li>
- * <li>Midsummer Eve (Friday between June 18-24)</li>
- * <li>Independence Day, December 6th</li>
- * <li>Christmas Eve, December 24th</li>
- * <li>Christmas, December 25th</li>
- * <li>Boxing Day, December 26th</li>
- * </ul>
+ * Holidays:
+ *      <ul>
+ *       <li>Saturdays</li>
+ *       <li>Sundays</li>
+ *       <li>New Year's Day, JANUARY 1st</li>
+ *       <li>Epiphany, JANUARY 6th</li>
+ *       <li>Good Friday</li>
+ *       <li>Easter Monday</li>
+ *       <li>Ascension Thursday</li>
+ *       <li>Labour Day, May 1st</li>
+ *       <li>Midsummer Eve (Friday between June 18-24)</li>
+ *       <li>Independence Day, December 6th</li>
+ *       <li>Christmas Eve, December 24th</li>
+ *       <li>Christmas, December 25th</li>
+ *       <li>Boxing Day, December 26th</li>
+ *       </ul>
+ *       in group calendars
  *
  * @author Heng Joon Tiang
+ * @author Zahid Hussain
  */
-public class Finland extends DelegateCalendar {
 
-    private final static Finland HSE_CALENDAR = new Finland(Market.HSE);
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
 
-    private Finland(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case HSE:
-            delegate = new FinlandHSECalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
+public class Finland extends Calendar {
 
-    public static Finland getCalendar(final Market market) {
-        switch (market) {
-        case HSE:
-            return HSE_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
+    //
+    // public constructors
+    //
+
+	public Finland() {
+		impl = new Impl();
+	}
 
 
     //
-    // public enums
+    // private final inner classes
     //
 
-    // FIXME: Settlement calendar is missing
+	private final class Impl extends WesternImpl {
 
-    public enum Market {
-        /**
-         * Helsinki Stock Exchange
-         */
-        HSE
-    }
+		@Override
+		public String name() { return "Finland";  }
 
-
-    //
-    // private inner classes
-    //
-
-    private static final class FinlandHSECalendar extends WesternCalendar {
-
-        public String getName() {
-            return "HSE";
-        }
-
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final Month m = date.month();
-            final int y = date.year();
-            final int em = easterMonday(y);
-            if (isWeekend(w)
-                    // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // Epiphany
-                    || (d == 6 && m == JANUARY)
-                    // Good Friday
-                    || (dd == em-3)
-                    // Easter Monday
-                    || (dd == em)
-                    // Ascension Thursday
-                    || (dd == em+38)
-                    // Labour Day
-                    || (d == 1 && m == MAY)
-                    // Midsummer Eve (Friday between June 18-24)
-                    || (w == FRIDAY && (d >= 18 && d <= 24) && m == JUNE)
-                    // Independence Day
-                    || (d == 6 && m == DECEMBER)
-                    // Christmas Eve
-                    || (d == 24 && m == DECEMBER)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // Boxing Day
-                    || (d == 26 && m == DECEMBER)
-                    // New year's eve
-                    || (d == 31 && m == DECEMBER))
+		@Override
+		public boolean isBusinessDay(final Date date) {
+	        final Weekday w = date.weekday();
+	        final int d = date.dayOfMonth();
+	        final int dd = date.dayOfYear();
+	        final Month m = date.month();
+	        final int y = date.year();
+	        final int em = easterMonday(y);
+	        if (isWeekend(w)
+	            // New Year's Day
+	            || (d == 1 && m == JANUARY)
+	            // Epiphany
+	            || (d == 6 && m == JANUARY)
+	            // Good Friday
+	            || (dd == em-3)
+	            // Easter Monday
+	            || (dd == em)
+	            // Ascension Thursday
+	            || (dd == em+38)
+	            // Labour Day
+	            || (d == 1 && m == MAY)
+	            // Midsummer Eve (Friday between June 18-24)
+	            || (w == FRIDAY && (d >= 18 && d <= 24) && m == JUNE)
+	            // Independence Day
+	            || (d == 6 && m == DECEMBER)
+	            // Christmas Eve
+	            || (d == 24 && m == DECEMBER)
+	            // Christmas
+	            || (d == 25 && m == DECEMBER)
+	            // Boxing Day
+	            || (d == 26 && m == DECEMBER)) {
                 return false;
-            return true;
-        }
+            }
+	        return true;
+		}
     }
-
 }

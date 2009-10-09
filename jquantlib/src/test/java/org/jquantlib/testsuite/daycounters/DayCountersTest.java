@@ -326,7 +326,7 @@ public class DayCountersTest {
                 0.2023809523810
         };
 
-        final DayCounter dayCounter = new Business252(Brazil.getCalendar(Brazil.Market.SETTLEMENT));
+        final DayCounter dayCounter = new Business252(new Brazil(Brazil.Market.SETTLEMENT));
 
         for (int i=1; i<testDates.length-1; i++) {
             final Date start = testDates[i-1];

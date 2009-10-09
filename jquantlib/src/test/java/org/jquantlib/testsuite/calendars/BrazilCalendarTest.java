@@ -58,8 +58,8 @@ public class BrazilCalendarTest {
 
 	public BrazilCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	    exchange = Brazil.getCalendar(Brazil.Market.BOVESPA);
-	    settlement = Brazil.getCalendar(Brazil.Market.SETTLEMENT);
+	    exchange = new Brazil(Brazil.Market.BOVESPA);
+	    settlement = new Brazil(Brazil.Market.SETTLEMENT);
 	}
 
     // 2004 - leap-year in the past

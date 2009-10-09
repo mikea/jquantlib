@@ -23,125 +23,132 @@
 
 package org.jquantlib.time.calendars;
 
+import static org.jquantlib.time.Month.AUGUST;
+import static org.jquantlib.time.Month.DECEMBER;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.JUNE;
+import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Weekday.MONDAY;
+import static org.jquantlib.time.Weekday.TUESDAY;
+
+import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
 /**
- * Public holidays (data from http://www.dti.gov.uk/er/bankhol.htm):
+ *
+ * United Kingdom calendars Public holidays (data from http://www.dti.gov.uk/er/bankhol.htm):
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st (possibly moved to Monday)</li>
+ * <li>New Year's Day, JANUARY 1st (possibly moved to Monday)</li>
  * <li>Good Friday</li>
  * <li>Easter Monday</li>
  * <li>Early May Bank Holiday, first Monday of May</li>
  * <li>Spring Bank Holiday, last Monday of May</li>
  * <li>Summer Bank Holiday, last Monday of August</li>
- * <li>Christmas Day, December 25th (possibly moved to Monday or Tuesday)</li>
- * <li>Boxing Day, December 26th (possibly moved to Monday or Tuesday)</li>
+ * <li>Christmas Day, DECEMBER 25th (possibly moved to Monday or Tuesday)</li>
+ * <li>Boxing Day, DECEMBER 26th (possibly moved to Monday or Tuesday)</li>
  * </ul>
  *
  * Holidays for the stock exchange:
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st (possibly moved to Monday)</li>
+ * <li>New Year's Day, JANUARY 1st (possibly moved to Monday)</li>
  * <li>Good Friday</li>
  * <li>Easter Monday</li>
  * <li>Early May Bank Holiday, first Monday of May</li>
  * <li>Spring Bank Holiday, last Monday of May</li>
  * <li>Summer Bank Holiday, last Monday of August</li>
- * <li>Christmas Day, December 25th (possibly moved to Monday or Tuesday)</li>
- * <li>Boxing Day, December 26th (possibly moved to Monday or Tuesday)</li>
+ * <li>Christmas Day, DECEMBER 25th (possibly moved to Monday or Tuesday)</li>
+ * <li>Boxing Day, DECEMBER 26th (possibly moved to Monday or Tuesday)</li>
  * </ul>
  *
  * Holidays for the metals exchange:
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st (possibly moved to Monday)</li>
+ * <li>New Year's Day, JANUARY 1st (possibly moved to Monday)</li>
  * <li>Good Friday</li>
  * <li>Easter Monday</li>
  * <li>Early May Bank Holiday, first Monday of May</li>
  * <li>Spring Bank Holiday, last Monday of May</li>
  * <li>Summer Bank Holiday, last Monday of August</li>
- * <li>Christmas Day, December 25th (possibly moved to Monday or Tuesday)</li>
- * <li>Boxing Day, December 26th (possibly moved to Monday or Tuesday)</li>
+ * <li>Christmas Day, DECEMBER 25th (possibly moved to Monday or Tuesday)</li>
+ * <li>Boxing Day, DECEMBER 26th (possibly moved to Monday or Tuesday)</li>
  * </ul>
  *
+ * @category calendars
+ * @TODO add LIFFE
+ * @test the correctness of the returned results is tested against a list of known holidays.
+ *
  * @author Srinivas Hasti TODO add LIFFE
+ * @author Zahid Hussain
  */
 
-public class UnitedKingdom extends DelegateCalendar {
-    private final static UnitedKingdom SETTLEMENT_CALENDAR = new UnitedKingdom(Market.SETTLEMENT);
-    private final static UnitedKingdom EXCHANGE_CALENDAR   = new UnitedKingdom(Market.LSE);
-    private final static UnitedKingdom METALS_CALENDAR     = new UnitedKingdom(Market.METALS);
-
-    private UnitedKingdom(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case SETTLEMENT:
-            delegate = new UKSettlementCalendar();
-            break;
-        case LSE:
-            delegate = new UKExchangeCalendar();
-            break;
-        case METALS:
-            delegate = new UKMetalsCalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
-
-    public static UnitedKingdom getCalendar(final Market market) {
-        switch (market) {
-        case SETTLEMENT:
-            return SETTLEMENT_CALENDAR;
-        case LSE:
-            return EXCHANGE_CALENDAR;
-        case METALS:
-            return METALS_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
-
-    //
-    // public enums
-    //
-
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
+public class UnitedKingdom extends Calendar {
+    /**
+     * UK calendars
+     *
+     */
     public static enum Market {
         /**
-         * generic settlement calendar
+         * Generic settlement calendar
          */
-        SETTLEMENT,
+        Settlement,
 
         /**
-         * London stock-exchange calendar
+         * London Stock Exchange calendar
          */
-        LSE,
+        Exchange,
 
         /**
-         * London metals-exchange calendar
+         * London Metals Exchange calendar
          */
-        METALS
+        Metals
+    };
+
+    //
+    // public constructors
+    //
+
+    public UnitedKingdom() {
+        this(Market.Settlement);
     }
 
+    public UnitedKingdom(final Market market) {
+        switch (market) {
+        case Settlement:
+            impl = new SettlementImpl();
+            break;
+        case Exchange:
+            impl = new ExchangeImpl();
+            break;
+        case Metals:
+            impl = new MetalsImpl();
+            break;
+        default:
+            QL.error(UNKNOWN_MARKET);
+            throw new LibraryException(UNKNOWN_MARKET);
+        }
+    }
 
     //
-    // private inner classes
+    // private final inner classes
     //
 
-    private static final class UKSettlementCalendar extends WesternCalendar {
+    private final class SettlementImpl extends WesternImpl {
 
-        public String getName() {
+        @Override
+        public String name() {
             return "UK settlement";
         }
 
@@ -149,44 +156,40 @@ public class UnitedKingdom extends DelegateCalendar {
         public boolean isBusinessDay(final Date date) {
             final Weekday w = date.weekday();
             final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final int m = date.month().value();
+            final Month m = date.month();
             final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
-                    // New Year's Day (possibly moved to Monday)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .value())
-                            // Good Friday
-                            || (dd == em - 3)
-                            // Easter Monday
-                            || (dd == em)
-                            // first Monday of May (Early May Bank Holiday)
-                            || (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.value())
-                            // last Monday of May (Spring Bank Holiday)
-                            || (d >= 25 && w == Weekday.MONDAY
-                                    && m == Month.MAY.value() && y != 2002)
-                                    // last Monday of August (Summer Bank Holiday)
-                                    || (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST
-                                            .value())
-                                            // Christmas (possibly moved to Monday or Tuesday)
-                                            || ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-                                                    .value())
-                                                    // Boxing Day (possibly moved to Monday or Tuesday)
-                                                    || ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-                                                            .value())
-                                                            // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
-                                                            // June 4rd, 2002 only (special Spring Bank Holiday)
-                                                            || ((d == 3 || d == 4) && m == Month.JUNE.value() && y == 2002)
-                                                            // December 31st, 1999 only
-                                                            || (d == 31 && m == Month.DECEMBER.value() && y == 1999))
+            // New Year's Day (possibly moved to Monday)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == JANUARY)
+                    // Good Friday
+                    || (dd == em - 3)
+                    // Easter MONDAY
+                    || (dd == em)
+                    // first MONDAY of May (Early May Bank Holiday)
+                    || (d <= 7 && w == MONDAY && m == MAY)
+                    // last MONDAY of MAY (Spring Bank Holiday)
+                    || (d >= 25 && w == MONDAY && m == MAY && y != 2002)
+                    // last MONDAY of August (Summer Bank Holiday)
+                    || (d >= 25 && w == MONDAY && m == AUGUST)
+                    // Christmas (possibly moved to MONDAY or Tuesday)
+                    || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
+                    // Boxing Day (possibly moved to MONDAY or TUESDAY)
+                    || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
+                    // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
+                    // June 4rd, 2002 only (special Spring Bank Holiday)
+                    || ((d == 3 || d == 4) && m == JUNE && y == 2002)
+                    // DECEMBER 31st, 1999 only
+                    || (d == 31 && m == DECEMBER && y == 1999)) {
                 return false;
+            }
             return true;
         }
     }
 
-    private static final class UKExchangeCalendar extends WesternCalendar {
-
-        public String getName() {
+    private final class ExchangeImpl extends WesternImpl {
+        @Override
+        public String name() {
             return "London stock exchange";
         }
 
@@ -194,44 +197,40 @@ public class UnitedKingdom extends DelegateCalendar {
         public boolean isBusinessDay(final Date date) {
             final Weekday w = date.weekday();
             final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final int m = date.month().value();
+            final Month m = date.month();
             final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
-                    // New Year's Day (possibly moved to Monday)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .value())
-                            // Good Friday
-                            || (dd == em - 3)
-                            // Easter Monday
-                            || (dd == em)
-                            // first Monday of May (Early May Bank Holiday)
-                            || (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.value())
-                            // last Monday of May (Spring Bank Holiday)
-                            || (d >= 25 && w == Weekday.MONDAY
-                                    && m == Month.MAY.value() && y != 2002)
-                                    // last Monday of August (Summer Bank Holiday)
-                                    || (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST
-                                            .value())
-                                            // Christmas (possibly moved to Monday or Tuesday)
-                                            || ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-                                                    .value())
-                                                    // Boxing Day (possibly moved to Monday or Tuesday)
-                                                    || ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-                                                            .value())
-                                                            // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
-                                                            // June 4rd, 2002 only (special Spring Bank Holiday)
-                                                            || ((d == 3 || d == 4) && m == Month.JUNE.value() && y == 2002)
-                                                            // December 31st, 1999 only
-                                                            || (d == 31 && m == Month.DECEMBER.value() && y == 1999))
+            // New Year's Day (possibly moved to MONDAY)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == JANUARY)
+                    // Good Friday
+                    || (dd == em - 3)
+                    // Easter MONDAY
+                    || (dd == em)
+                    // first MONDAY of MAY (Early MAY Bank Holiday)
+                    || (d <= 7 && w == MONDAY && m == MAY)
+                    // last MONDAY of MAY (Spring Bank Holiday)
+                    || (d >= 25 && w == MONDAY && m == MAY && y != 2002)
+                    // last MONDAY of AUGUST (Summer Bank Holiday)
+                    || (d >= 25 && w == MONDAY && m == AUGUST)
+                    // Christmas (possibly moved to MONDAY or TUESDAY)
+                    || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
+                    // Boxing Day (possibly moved to MONDAY or TUESDAY)
+                    || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
+                    // JUNE 3rd, 2002 only (Golden Jubilee Bank Holiday)
+                    // JUNE 4rd, 2002 only (special Spring Bank Holiday)
+                    || ((d == 3 || d == 4) && m == JUNE && y == 2002)
+                    // DECEMBER 31st, 1999 only
+                    || (d == 31 && m == DECEMBER && y == 1999)) {
                 return false;
+            }
             return true;
         }
     }
 
-    private static final class UKMetalsCalendar extends WesternCalendar {
-
-        public String getName() {
+    private final class MetalsImpl extends WesternImpl {
+        @Override
+        public String name() {
             return "London metals exchange";
         }
 
@@ -239,39 +238,34 @@ public class UnitedKingdom extends DelegateCalendar {
         public boolean isBusinessDay(final Date date) {
             final Weekday w = date.weekday();
             final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final int m = date.month().value();
+            final Month m = date.month();
             final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
-                    // New Year's Day (possibly moved to Monday)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .value())
-                            // Good Friday
-                            || (dd == em - 3)
-                            // Easter Monday
-                            || (dd == em)
-                            // first Monday of May (Early May Bank Holiday)
-                            || (d <= 7 && w == Weekday.MONDAY && m == Month.MAY.value())
-                            // last Monday of May (Spring Bank Holiday)
-                            || (d >= 25 && w == Weekday.MONDAY
-                                    && m == Month.MAY.value() && y != 2002)
-                                    // last Monday of August (Summer Bank Holiday)
-                                    || (d >= 25 && w == Weekday.MONDAY && m == Month.AUGUST
-                                            .value())
-                                            // Christmas (possibly moved to Monday or Tuesday)
-                                            || ((d == 25 || (d == 27 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-                                                    .value())
-                                                    // Boxing Day (possibly moved to Monday or Tuesday)
-                                                    || ((d == 26 || (d == 28 && (w == Weekday.MONDAY || w == Weekday.TUESDAY))) && m == Month.DECEMBER
-                                                            .value())
-                                                            // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
-                                                            // June 4rd, 2002 only (special Spring Bank Holiday)
-                                                            || ((d == 3 || d == 4) && m == Month.JUNE.value() && y == 2002)
-                                                            // December 31st, 1999 only
-                                                            || (d == 31 && m == Month.DECEMBER.value() && y == 1999))
+            // New Year's Day (possibly moved to MONDAY)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == JANUARY)
+                    // Good Friday
+                    || (dd == em - 3)
+                    // Easter MONDAY
+                    || (dd == em)
+                    // first MONDAY of MAY (Early MAY Bank Holiday)
+                    || (d <= 7 && w == MONDAY && m == MAY)
+                    // last MONDAY of MAY (Spring Bank Holiday)
+                    || (d >= 25 && w == MONDAY && m == MAY && y != 2002)
+                    // last MONDAY of AUGUST (Summer Bank Holiday)
+                    || (d >= 25 && w == MONDAY && m == AUGUST)
+                    // Christmas (possibly moved to MONDAY or TUESDAY)
+                    || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
+                    // Boxing Day (possibly moved to MONDAY or TUESDAY)
+                    || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
+                    // JUNE 3rd, 2002 only (Golden Jubilee Bank Holiday)
+                    // JUNE 4rd, 2002 only (special Spring Bank Holiday)
+                    || ((d == 3 || d == 4) && m == JUNE && y == 2002)
+                    // DECEMBER 31st, 1999 only
+                    || (d == 31 && m == DECEMBER && y == 1999)) {
                 return false;
+            }
             return true;
         }
     }
-
 }

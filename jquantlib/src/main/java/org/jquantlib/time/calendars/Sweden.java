@@ -32,19 +32,26 @@
 
 package org.jquantlib.time.calendars;
 
-import org.jquantlib.lang.exceptions.LibraryException;
+import static org.jquantlib.time.Month.DECEMBER;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.JUNE;
+import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Weekday.FRIDAY;
+
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
 /** Holidays for Sweden
  *  <ul>
  *  <li>Saturdays</li>
  *  <li>Sundays</li>
- *  <li>New Year's Day, January 1st</li>
- *  <li>Epiphany, January 6th</li>
+ *  <li>New Year's Day, JANUARY 1st</li>
+ *  <li>Epiphany, JANUARY 6th</li>
  *  <li>Good Friday</li>
  *  <li>Easter Monday</li>
  *  <li>Ascension</li>
@@ -60,91 +67,66 @@ import org.jquantlib.time.WesternCalendar;
  *  @author Renjith Nair
  */
 
-public class Sweden extends DelegateCalendar {
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
 
-    private final static Sweden SSE_CALENDAR = new Sweden(Market.SSE);
-
-    private Sweden(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case SSE:
-            delegate = new SwedenSECalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
-
-    public static Sweden getCalendar(final Market market) {
-        switch (market) {
-        case SSE:
-            return SSE_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
+public class Sweden extends Calendar {
 
     //
-    // public enums
+    // public constructors
     //
 
-    public enum Market {
-        SSE, // Sweden Stock Exchange
+    public Sweden() {
+        impl = new Impl();
     }
 
-
     //
-    // private inner classes
+    // private final inner classes
     //
 
-    private static final class SwedenSECalendar extends WesternCalendar {
+	private final class Impl extends WesternImpl {
+	       @Override
+	        public String name() { return "Sweden"; }
 
-        public String getName() {
-            return "Sweden Stock Exchange";
-        }
-
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth(),dd = date.dayOfYear();;
-            final int m = date.month().value();
-            final int y = date.year();
-            final int em = easterMonday(y);
-            if (isWeekend(w)
-                    // Good Friday
-                    || (dd == em-3)
-                    // Easter Monday
-                    || (dd == em)
-                    // Ascension Thursday
-                    || (dd == em+38)
-                    // Whit Monday
-                    || (dd == em+49)
-                    // New Year's Day
-                    || (d == 1  && m == Month.JANUARY.value())
-                    // Epiphany
-                    || (d == 6  && m == Month.JANUARY.value())
-                    // May Day
-                    || (d == 1  && m == Month.MAY.value())
-                    // June 6 id National Day but is not a holiday.
-                    // It has been debated wheter or not this day should be
-                    // declared as a holiday.
-                    // As of 2002 the Stockholmborsen is open that day
-                    // || (d == 6  && m == June)
-                    // Midsummer Eve (Friday between June 18-24)
-                    || (w == Weekday.FRIDAY && (d >= 18 && d <= 24) && m == Month.JUNE.value())
-                    // Christmas Eve
-                    || (d == 24 && m == Month.DECEMBER.value())
-                    // Christmas Day
-                    || (d == 25 && m == Month.DECEMBER.value())
-                    // Boxing Day
-                    || (d == 26 && m == Month.DECEMBER.value())
-                    // New Year's Eve
-                    || (d == 31 && m == Month.DECEMBER.value()))
-                return false;
-            return true;
-        }
-    }
-
+	        @Override
+	        public boolean isBusinessDay(final Date date) {
+	            final Weekday w = date.weekday();
+	            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+	            final Month m = date.month();
+	            final int y = date.year();
+	            final int em = easterMonday(y);
+	            if (isWeekend(w)
+	                // Good Friday
+	                || (dd == em-3)
+	                // Easter Monday
+	                || (dd == em)
+	                // Ascension Thursday
+	                || (dd == em+38)
+	                // Whit Monday
+	                || (dd == em+49)
+	                // New Year's Day
+	                || (d == 1  && m == JANUARY)
+	                // Epiphany
+	                || (d == 6  && m == JANUARY)
+	                // May Day
+	                || (d == 1  && m == MAY)
+	                // June 6 id National Day but is not a holiday.
+	                // It has been debated wheter or not this day should be
+	                // declared as a holiday.
+	                // As of 2002 the Stockholmborsen is open that day
+	                // || (d == 6  && m == June)
+	                // Midsummer Eve (Friday between June 18-24)
+	                || (w == FRIDAY && (d >= 18 && d <= 24) && m == JUNE)
+	                // Christmas Eve
+	                || (d == 24 && m == DECEMBER)
+	                // Christmas Day
+	                || (d == 25 && m == DECEMBER)
+	                // Boxing Day
+	                || (d == 26 && m == DECEMBER)
+	                // New Year's Eve
+	                || (d == 31 && m == DECEMBER)) {
+                    return false;
+                }
+	            return true;
+	        }
+	}
 }

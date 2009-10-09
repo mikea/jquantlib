@@ -26,7 +26,6 @@ import static org.jquantlib.time.Month.FEBRUARY;
 
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
-import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Weekday;
@@ -60,7 +59,7 @@ public class BermudanSwaption {
         final Date todaysDate = new Date(15, FEBRUARY, 2002);
 
         // TODO: code review :: please verify against QL/C++ code
-        final Calendar calendar = new AbstractCalendar() {
+        final Calendar calendar = new Calendar() {
             public String getName() {
                 return "";
             }

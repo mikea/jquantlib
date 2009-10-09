@@ -29,8 +29,11 @@ import static org.jquantlib.time.Month.SEPTEMBER;
 import static org.jquantlib.time.Weekday.FRIDAY;
 import static org.jquantlib.time.Weekday.THURSDAY;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
@@ -51,103 +54,71 @@ import org.jquantlib.time.Weekday;
  *
  * @author Richard Gomes
  */
-public class SaudiArabia extends DelegateCalendar{
 
-    public enum Market {
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
+
+public class SaudiArabia extends Calendar{
+
+    public static enum Market {
         /**
          * Tadawul financial market
          */
-        TADAWUL
-    };
+        Tadawul
+    }
 
-    private final static SaudiArabia TADAWUL_CALENDAR = new SaudiArabia(Market.TADAWUL);
 
-    private SaudiArabia(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case TADAWUL:
-            delegate = new SaudiArabiaSettlementCalendar();
+    //
+    // public constructors
+    //
+
+    public SaudiArabia() {
+	   this(Market.Tadawul);
+    }
+
+    public SaudiArabia(final Market m) {
+        switch (m) {
+          case Tadawul:
+            impl = new TadawulImpl();
             break;
-
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        // FIXME
-        setDelegate(delegate);
-    }
-
-    public static SaudiArabia getCalendar(final Market market) {
-        switch (market) {
-        case TADAWUL:
-            return TADAWUL_CALENDAR;
-
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
+          default:
+              QL.error(UNKNOWN_MARKET);
+              throw new LibraryException(UNKNOWN_MARKET);
         }
     }
 
 
     //
-    // private inner classes
-    //    //
-    // overrides AbstractCalendar
+    // private final inner classes
     //
 
-    @Override
-    public final void addHoliday(final Date d) {
-        throw new UnsupportedOperationException();
-    }
+    private final class TadawulImpl extends Impl {
+		@Override
+		public String name() { return "Tadawul"; }
 
-    @Override
-    public void removeHoliday(final Date d) {
-        throw new UnsupportedOperationException();
-    }
+		@Override
+		public boolean isWeekend(final Weekday w) {
+		   return w == THURSDAY || w == FRIDAY;
+		}
 
-
-    private final class SaudiArabiaSettlementCalendar extends AbstractCalendar {
-        public boolean isWeekend(final Weekday w){
-            return w == THURSDAY || w == FRIDAY;
-        }
-
-        //
-        // overrides AbstractCalendar
-        //
-
-        @Override
-        public final void addHoliday(final Date d) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void removeHoliday(final Date d) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final Month m = date.month();
-            final int y = date.year();
-
-            if (isWeekend(w)
-                    // National Day
-                    || (d == 23 && m == SEPTEMBER)
-                    // Eid Al-Adha
-                    || (d >= 1 && d <= 6 && m == FEBRUARY && y==2004)
-                    || (d >= 21 && d <= 25 && m == JANUARY && y==2005)
-                    // Eid Al-Fitr
-                    || (d >= 25 && d <= 29 && m == NOVEMBER && y==2004)
-                    || (d >= 14 && d <= 18 && m == NOVEMBER && y==2005)
-            )
+		@Override
+		public boolean isBusinessDay(final Date date)  {
+			final Weekday w = date.weekday();
+			final int d = date.dayOfMonth();
+			final Month m = date.month();
+			final int y = date.year();
+			if (isWeekend(w)
+					// National Day
+					|| (d == 23 && m == SEPTEMBER)
+					// Eid Al-Adha
+					|| (d >= 1 && d <= 6 && m == FEBRUARY && y == 2004)
+					|| (d >= 21 && d <= 25 && m == JANUARY && y == 2005)
+					// Eid Al-Fitr
+					|| (d >= 25 && d <= 29 && m == NOVEMBER && y == 2004)
+					|| (d >= 14 && d <= 18 && m == NOVEMBER && y == 2005)) {
                 return false;
-
-            return true;
-        }
-        public String getName() {
-            return "Tadawul";
-        }
+            }
+			return true;
+		}
     }
-
-}
+ }
 

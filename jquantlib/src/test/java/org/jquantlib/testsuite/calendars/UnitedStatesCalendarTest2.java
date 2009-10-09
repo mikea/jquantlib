@@ -55,10 +55,10 @@ public class UnitedStatesCalendarTest2 {
 
     public UnitedStatesCalendarTest2() {
         System.out.println("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
-        nyse = UnitedStates.getCalendar(UnitedStates.Market.NYSE);
-        settlement = UnitedStates.getCalendar(UnitedStates.Market.SETTLEMENT);
-        govtBond = UnitedStates.getCalendar(UnitedStates.Market.GOVERNMENTBOND);
-        nerc = UnitedStates.getCalendar(UnitedStates.Market.NERC);
+        nyse = new UnitedStates(UnitedStates.Market.NYSE);
+        settlement = new UnitedStates(UnitedStates.Market.SETTLEMENT);
+        govtBond = new UnitedStates(UnitedStates.Market.GOVERNMENTBOND);
+        nerc = new UnitedStates(UnitedStates.Market.NERC);
     }
 
     
@@ -70,9 +70,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Thursday
+        // JANUARY 1 was a Thursday
         expectedHol.add(new Date(1, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(19, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(16, FEBRUARY, year));
@@ -110,9 +110,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Saturday
+        // JANUARY 1 was a Saturday
         
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(17, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(21, FEBRUARY, year));
@@ -144,9 +144,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Sunday
+        // JANUARY 1 was a Sunday
         expectedHol.add(new Date(2, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(16, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(20, FEBRUARY, year));
@@ -178,11 +178,11 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Monday
+        // JANUARY 1 was a Monday
         expectedHol.add(new Date(1, JANUARY, year));
         // President Ford's death
         expectedHol.add(new Date(2, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(15, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(19, FEBRUARY, year));
@@ -213,9 +213,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Tuesday
+        // JANUARY 1 was a Tuesday
         expectedHol.add(new Date(1, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(21, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(18, FEBRUARY, year));
@@ -248,9 +248,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 will be a Wednesday
+        // JANUARY 1 will be a Wednesday
         expectedHol.add(new Date(1, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(19, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(16, FEBRUARY, year));
@@ -282,9 +282,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 will be a Friday
+        // JANUARY 1 will be a Friday
         expectedHol.add(new Date(1, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(18, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(15, FEBRUARY, year));
@@ -316,9 +316,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Thursday
+        // JANUARY 1 was a Thursday
         expectedHol.add(new Date(1, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(19, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(16, FEBRUARY, year));
@@ -353,7 +353,7 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(17, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(21, FEBRUARY, year));
@@ -388,7 +388,7 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Sunday
+        // JANUARY 1 was a Sunday
         expectedHol.add(new Date(2, JANUARY, year));
         expectedHol.add(new Date(16, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
@@ -425,7 +425,7 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Monday
+        // JANUARY 1 was a Monday
         expectedHol.add(new Date(1, JANUARY, year));
         expectedHol.add(new Date(15, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
@@ -460,9 +460,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Tuesday
+        // JANUARY 1 was a Tuesday
         expectedHol.add(new Date(1, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(21, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(18, FEBRUARY, year));
@@ -499,9 +499,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 will be a Wednesday
+        // JANUARY 1 will be a Wednesday
         expectedHol.add(new Date(1, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(19, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(16, FEBRUARY, year));
@@ -536,9 +536,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 will be a Friday
+        // JANUARY 1 will be a Friday
         expectedHol.add(new Date(1, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(18, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(15, FEBRUARY, year));
@@ -574,7 +574,7 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Thursday
+        // JANUARY 1 was a Thursday
         expectedHol.add(new Date(1, JANUARY, year));
         // Memorial Day, last Monday in May
         expectedHol.add(new Date(31, MAY, year));
@@ -624,7 +624,7 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Sunday
+        // JANUARY 1 was a Sunday
         expectedHol.add(new Date(2, JANUARY, year));
         // Memorial Day, last Monday in May
         expectedHol.add(new Date(29, MAY, year));
@@ -650,7 +650,7 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Monday
+        // JANUARY 1 was a Monday
         expectedHol.add(new Date(1, JANUARY, year));
         // Memorial Day, last Monday in May
         expectedHol.add(new Date(28, MAY, year));
@@ -676,7 +676,7 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Tuesday
+        // JANUARY 1 was a Tuesday
         expectedHol.add(new Date(1, JANUARY, year));
         // Memorial Day, last Monday in May
         expectedHol.add(new Date(26, MAY, year));
@@ -702,7 +702,7 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 will be a Wednesday
+        // JANUARY 1 will be a Wednesday
         expectedHol.add(new Date(1, JANUARY, year));
         // Memorial Day, last Monday in May
         expectedHol.add(new Date(25, MAY, year));
@@ -728,7 +728,7 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 will be a Friday
+        // JANUARY 1 will be a Friday
         expectedHol.add(new Date(1, JANUARY, year));
         // Memorial Day, last Monday in May
         expectedHol.add(new Date(31, MAY, year));
@@ -753,12 +753,12 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Thursday
+        // JANUARY 1 was a Thursday
         expectedHol.add(new Date(1, JANUARY, year));
         // Let's check the first weekend
         expectedHol.add(new Date(2, JANUARY, year));
         expectedHol.add(new Date(3, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(19, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(16, FEBRUARY, year));
@@ -794,7 +794,7 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(17, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(21, FEBRUARY, year));
@@ -828,9 +828,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Sunday
+        // JANUARY 1 was a Sunday
         expectedHol.add(new Date(2, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(16, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(20, FEBRUARY, year));
@@ -865,9 +865,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Monday
+        // JANUARY 1 was a Monday
         expectedHol.add(new Date(1, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(15, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(19, FEBRUARY, year));
@@ -903,9 +903,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 was a Tuesday
+        // JANUARY 1 was a Tuesday
         expectedHol.add(new Date(1, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(21, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(18, FEBRUARY, year));
@@ -943,9 +943,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 will be a Wednesday
+        // JANUARY 1 will be a Wednesday
         expectedHol.add(new Date(1, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(19, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(16, FEBRUARY, year));
@@ -981,9 +981,9 @@ public class UnitedStatesCalendarTest2 {
         
         final List<Date> expectedHol = new ArrayList<Date>();
     
-        // January 1 will be a Friday
+        // JANUARY 1 will be a Friday
         expectedHol.add(new Date(1, JANUARY, year));
-        // Martin Luther King's birthday, third Monday in January (since 1998)
+        // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
         expectedHol.add(new Date(18, JANUARY, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
         expectedHol.add(new Date(15, FEBRUARY, year));

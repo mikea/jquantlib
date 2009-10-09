@@ -29,132 +29,133 @@
  <http://quantlib.org/license.shtml>.
  */
 
-
 package org.jquantlib.time.calendars;
 
-import org.jquantlib.lang.exceptions.LibraryException;
+import static org.jquantlib.time.Month.APRIL;
+import static org.jquantlib.time.Month.AUGUST;
+import static org.jquantlib.time.Month.DECEMBER;
+import static org.jquantlib.time.Month.FEBRUARY;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.NOVEMBER;
+import static org.jquantlib.time.Month.OCTOBER;
+import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Weekday.SATURDAY;
+import static org.jquantlib.time.Weekday.SUNDAY;
+
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
-/** Holidays for the National Stock Exchange
- * 	<ul>
- *  <li>Saturdays</li>
- *  <li>Sundays</li>
- *  <li>New Year's Day, January 1st</li>
- *  <li>National Holidays (April 23rd, May 19th, August 30th, October 29th</li>
- *  <li>Local Holidays (Kurban, Ramadan; 2004 to 2009 only) </li>
- *  </ul>
- *  @author Renjith Nair
+/**
+ * Holidays for the National Stock Exchange
+ * <ul>
+ * <li>Saturdays</li>
+ * <li>Sundays</li>
+ * <li>New Year's Day, JANUARY 1st</li>
+ * <li>National Holidays (April 23rd, May 19th, August 30th, October 29th</li>
+ * <li>Local Holidays (Kurban, Ramadan; 2004 to 2009 only)</li>
+ * </ul>
+ *
+ * @category Calendars
+ * @author Renjith Nair
+ * @author Zahid Hussain
  */
 
-public class Turkey extends DelegateCalendar {
-    private final static Turkey ISE_CALENDAR = new Turkey(Market.ISE);
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
+public class Turkey extends Calendar {
 
-    private Turkey(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case ISE:
-            delegate = new TurkeyISECalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
+    //
+    // public constructors
+    //
+
+    public Turkey() {
+        impl = new TurkeyImpl();
+    }
+
+    //
+    // private final inner classes
+    //
+
+    private final class TurkeyImpl extends Impl {
+
+        @Override
+        public String name() {
+            return "Turkey";
         }
-        setDelegate(delegate);
-    }
 
-    public static Turkey getCalendar(final Market market) {
-        switch (market) {
-        case ISE:
-            return ISE_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
-
-    //
-    // public enums
-    //
-
-    //FIXME: Settlement calendar is missing
-    public static enum Market {
-        /**
-         * Istanbul Stock Exchange Turkey
-         */
-        ISE
-    }
-
-
-    //
-    // private final classes
-    //
-
-    private static final class TurkeyISECalendar extends WesternCalendar {
-
-        public String getName() {
-            return "Istanbul Stock Exchange Turkey";
+        @Override
+        public boolean isWeekend(final Weekday w) {
+            return w == SATURDAY || w == SUNDAY;
         }
 
         @Override
         public boolean isBusinessDay(final Date date) {
             final Weekday w = date.weekday();
             final int d = date.dayOfMonth();
-            final int m = date.month().value();
+            final Month m = date.month();
             final int y = date.year();
+
             if (isWeekend(w)
-                    // New Year's Day
-                    || (d == 1 && m == Month.JANUARY.value())
+            // New Year's Day
+                    || (d == 1 && m == JANUARY)
                     // 23 nisan / National Holiday
-                    || (d == 23 && m == Month.APRIL.value())
+                    || (d == 23 && m == APRIL)
                     // 19 may/ National Holiday
-                    || (d == 19 && m == Month.MAY.value())
+                    || (d == 19 && m == MAY)
                     // 30 aug/ National Holiday
-                    || (d == 30 && m == Month.AUGUST.value())
-                    ///29 ekim  National Holiday
-                    || (d == 29 && m == Month.OCTOBER.value()))
+                    || (d == 30 && m == AUGUST)
+                    // /29 ekim National Holiday
+                    || (d == 29 && m == OCTOBER)) {
                 return false;
+            }
 
             // Local Holidays
             if (y == 2004) {
                 // kurban
-                if ((m == Month.FEBRUARY.value() && d <= 4)
-                        // ramazan
-                        || (m == Month.NOVEMBER.value() && d >= 14 && d <= 16))
+                if ((m == FEBRUARY && d <= 4)
+                // ramazan
+                        || (m == NOVEMBER && d >= 14 && d <= 16)) {
                     return false;
+                }
             } else if (y == 2005) {
                 // kurban
-                if ((m == Month.JANUARY.value() && d >= 19 && d <= 21)
-                        // ramazan
-                        || (m ==  Month.NOVEMBER.value() && d >= 2 && d <= 5))
+                if ((m == JANUARY && d >= 19 && d <= 21)
+                // ramazan
+                        || (m == NOVEMBER && d >= 2 && d <= 5)) {
                     return false;
+                }
             } else if (y == 2006) {
                 // kurban
-                if ((m == Month.JANUARY.value() && d >= 9 && d <= 13)
-                        // ramazan
-                        || (m == Month.OCTOBER.value() && d >= 23 && d <= 25)
+                if ((m == JANUARY && d >= 9 && d <= 13)
+                // ramazan
+                        || (m == OCTOBER && d >= 23 && d <= 25)
                         // kurban
-                        || (m == Month.DECEMBER.value() && d >= 30))
+                        || (m == DECEMBER && d >= 30)) {
                     return false;
+                }
             } else if (y == 2007) {
                 // kurban
-                if ((m == Month.JANUARY.value() && d <= 4)
-                        // ramazan
-                        || (m == Month.OCTOBER.value() && d >= 11 && d <= 14)
-                        // kurban
-                        || (m == Month.DECEMBER.value() && d >= 19 && d <= 23))
-                    return false;
-            } else if (y == 2008)
+                if ((m == JANUARY && d <= 4)
                 // ramazan
-                if ((m == Month.SEPTEMBER.value() && d >= 29)
-                        || (m == Month.OCTOBER.value() && d <= 2)
+                        || (m == OCTOBER && d >= 11 && d <= 14)
                         // kurban
-                        || (m == Month.DECEMBER.value() && d >= 7 && d <= 11))
+                        || (m == DECEMBER && d >= 19 && d <= 23)) {
                     return false;
+                }
+            } else if (y == 2008) {
+                // ramazan
+                if ((m == SEPTEMBER && d >= 29) || (m == OCTOBER && d <= 2)
+                // kurban
+                        || (m == DECEMBER && d >= 7 && d <= 11)) {
+                    return false;
+                }
+            }
             return true;
         }
     }
-
 }

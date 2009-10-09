@@ -27,118 +27,99 @@ import static org.jquantlib.time.Month.JANUARY;
 import static org.jquantlib.time.Month.JUNE;
 import static org.jquantlib.time.Month.MAY;
 
-import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
 /**
  * Danish calendar
- * <p>
  * Holidays:
- * <ul>
- * <li>Saturdays</li>
- * <li>Sundays</li>
- * <li>Maunday Thursday</li>
- * <li>Good Friday</li>
- * <li>Easter Monday</li>
- * <li>General Prayer Day, 25 days after Easter Monday</li>
- * <li>Ascension</li>
- * <li>Whit (Pentecost) Monday</li>
- * <li>New Year's Day, January 1st</li>
- * <li>Constitution Day, June 5th</li>
- * <li>Christmas, December 25th</li>
- * <li>Boxing Day, December 26th</li>
- * </ul>
+ *       <ul>
+ *       <li>Saturdays</li>
+ *       <li>Sundays</li>
+ *      <li>Maunday Thursday</li>
+ *       <li>Good Friday</li>
+ *       <li>Easter Monday</li>
+ *       <li>General Prayer Day, 25 days after Easter Monday</li>
+ *       <li>Ascension</li>
+ *       <li>Whit (Pentecost) Monday </li>
+ *       <li>New Year's Day, JANUARY 1st</li>
+ *       <li>Constitution Day, June 5th</li>
+ *       <li>Christmas, December 25th</li>
+ *       <li>Boxing Day, December 26th</li>
+ *       </ul>
+ *
+ *       in group calendars
  *
  * @author Jia Jia
+ * @author Zahid Hussain
  */
 
-public class Denmark extends DelegateCalendar {
-    private static Denmark CSECalendar = new Denmark(Market.CSE);
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
 
-    private Denmark(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case CSE:
-            delegate = new CSECalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
+public class Denmark extends Calendar {
 
     //
-    // public enums
+    // public constructors
     //
 
-    // FIXME: Settlement calendar is missing
-    public enum Market {
-        /**
-         * Copenhagen Stock Exchange
-         */
-        CSE
-    }
+	public Denmark() {
+		impl = new Impl();
+	}
 
-    public static Denmark getCalendar(final Market market) {
-        switch (market) {
-        case CSE:
-            return CSECalendar;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
 
-    private static final class CSECalendar extends WesternCalendar {
+    //
+    // private final inner classes
+    //
 
-        @Override
-        public String getName() {
-            return "CSE";
-        }
+    private final class Impl extends WesternImpl {
 
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final Month m = date.month();
-            final int y = date.year();
-            final int em = easterMonday(y);
-            // exact matching of days except for Easter Monday
-            if (isWeekend(w)
-                    // Maunday Thursday
-                    || (dd == em - 4)
-                    // Good Friday
-                    || (dd == em - 3)
-                    // Easter Monday
-                    || (dd == em)
-                    // General Prayer Day
-                    || (dd == em + 25)
-                    // Ascension
-                    || (dd == em + 38)
-                    // Whit Monday
-                    || (dd == em + 49)
-                    // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // Constitution Day, June 5th
-                    || (d == 5 && m == JUNE)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // Boxing Day
-                    || (d == 26 && m == DECEMBER)
-                    // below added according to http://nordic.nasdaqomxtrader.com/trading/tradinghours/
-                    // Christmas eve
-                    || (d == 24 && m == DECEMBER && (y == 2008 || y == 2009 || y == 2007))
-                    // new year eve
-                    || (d == 31 && m ==DECEMBER && (y == 2008 || y == 2009 || y == 2007))
+    	@Override
+	    public String name() { return "Denmark"; }
 
-                    || (d == 22 && m == MAY && y == 2009))
+    	@Override
+	    public boolean isBusinessDay(final Date date)  {
+	        final Weekday w = date.weekday();
+	        final int d = date.dayOfMonth(), dd = date.dayOfYear();
+	        final Month m = date.month();
+	        final int y = date.year();
+	        final int em = easterMonday(y);
+	        if (isWeekend(w)
+	            // Maunday Thursday
+	            || (dd == em-4)
+	            // Good Friday
+	            || (dd == em-3)
+	            // Easter Monday
+	            || (dd == em)
+	            // General Prayer Day
+	            || (dd == em+25)
+	            // Ascension
+	            || (dd == em+38)
+	            // Whit Monday
+	            || (dd == em+49)
+	            // New Year's Day
+	            || (d == 1  && m == JANUARY)
+	            // Constitution Day, June 5th
+	            || (d == 5  && m == JUNE)
+	            // Christmas
+					|| (d == 25 && m == DECEMBER)
+	            // Boxing Day
+	            || (d == 26 && m == DECEMBER)
+
+	            // below added according to http://nordic.nasdaqomxtrader.com/trading/tradinghours/
+                // Christmas eve
+                || (d == 24 && m == DECEMBER && (y == 2008 || y == 2009 || y == 2007))
+                // new year eve
+                || (d == 31 && m ==DECEMBER && (y == 2008 || y == 2009 || y == 2007))
+
+                || (d == 22 && m == MAY && y == 2009)) {
                 return false;
-
-            return true;
-
-        }
+            }
+	        return true;
+	    }
     }
 }

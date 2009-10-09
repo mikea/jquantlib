@@ -52,7 +52,7 @@ public class AustraliaCalendarTest {
 
 	public AustraliaCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	    exchange = Australia.getCalendar(Australia.Market.SETTLEMENT);
+	    exchange = new Australia();//.getCalendar(Australia.Market.SETTLEMENT);
 	}
 
     // 2008 - current year

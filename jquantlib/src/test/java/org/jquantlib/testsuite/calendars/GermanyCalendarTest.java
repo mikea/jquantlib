@@ -29,10 +29,10 @@ public class GermanyCalendarTest {
 
 	public GermanyCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-		cSettlement	= Germany.getCalendar(Germany.Market.SETTLEMENT);
-		cFrankfurt 	= Germany.getCalendar(Germany.Market.FWB);
-		cXetra 		= Germany.getCalendar(Germany.Market.XETRA);
-		cEurex 		= Germany.getCalendar(Germany.Market.EUREX);
+		cSettlement	= new Germany(Germany.Market.Settlement);
+		cFrankfurt 	= new Germany(Germany.Market.FrankfurtStockExchange);
+		cXetra 		= new Germany(Germany.Market.Xetra);
+		cEurex 		= new Germany(Germany.Market.Eurex);
 	}
 
 

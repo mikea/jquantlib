@@ -21,103 +21,130 @@
  */
 
 package org.jquantlib.time.calendars;
+import static org.jquantlib.time.Month.APRIL;
+import static org.jquantlib.time.Month.AUGUST;
+import static org.jquantlib.time.Month.DECEMBER;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.JUNE;
+import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Weekday.MONDAY;
+import static org.jquantlib.time.Weekday.THURSDAY;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
 /**
+ * Icelandic calendars
+ * Holidays for the Iceland stock exchange
+ *       (data from <http://www.icex.is/is/calendar?languageID=1>):
+ *        <ul>
+ *        <li>Saturdays</li>
+ *       <li>Sundays</li>
+ *       <li>New Year's Day, JANUARY 1st (possibly moved to Monday)</li>
+ *       <li>Holy Thursday</li>
+ *       <li>Good Friday</li>
+ *       <li>Easter Monday</li>
+ *       <li>First day of Summer (third or fourth Thursday in April)</li>
+ *       <li>Labour Day, May 1st</li>
+ *       <li>Ascension Thursday</li>
+ *       <li>Pentecost Monday</li>
+ *       <li>Independence Day, June 17th</li>
+ *       <li>Commerce Day, first Monday in August</li>
+ *       <li>Christmas, December 25th</li>
+ *       <li>Boxing Day, December 26th</li>
+ *       </ul>
+ *
+ *       \ingroup calendars
+
  * @author Siju Odeyemi
+ * @author Zahid Hussain
  */
-public class Iceland extends DelegateCalendar {
-
-    private final static Iceland ICEX_CALENDAR = new Iceland(Market.ICEX);
-
-    private Iceland(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case ICEX:
-            delegate = new IcelandICEXCalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
-
-    public static Iceland getCalendar(final Market market) {
-        switch (market) {
-        case ICEX:
-            return ICEX_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
 
 
-    //
-    // public enums
-    //
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
 
-    public enum Market {
+public class Iceland extends Calendar {
+
+    public static enum Market {
         /**
-         * Iceland Stock Exchange
+         * Iceland stock exchange
          */
         ICEX
     }
 
 
     //
-    // private inner classes
+    // public constructors
     //
 
-    private static final class IcelandICEXCalendar extends WesternCalendar {
-
-        public String getName() {
-            return "ICEX";
-        }
-
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-
-            final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final int m = date.month().value();
-            final int y = date.year();
-            final int em = easterMonday(y);
-            if(isWeekend(w)
-                    // New Year's Day (possibly moved to Monday)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == Weekday.MONDAY)) && m == Month.JANUARY.value())
-                    // Holy Thursday
-                    || (dd == em-4)
-                    // Good Friday
-                    || (dd == em-3)
-                    // Easter Monday
-                    || (dd == em)
-                    // First day of Summer
-                    || (d >= 19 && d <= 25 && w == Weekday.THURSDAY && m == Month.APRIL.value())
-                    // Ascension Thursday
-                    || (dd == em+38)
-                    // Pentecost Monday
-                    || (dd == em+49)
-                    // Labour Day
-                    || (d == 1 && m == Month.MAY.value())
-                    // Independence Day
-                    || (d == 17 && m == Month.JUNE.value())
-                    // Commerce Day
-                    || (d <= 7 && w == Weekday.MONDAY && m == Month.AUGUST.value())
-                    // Christmas
-                    || (d == 25 && m == Month.DECEMBER.value())
-                    // Boxing Day
-                    || (d == 26 && m == Month.DECEMBER.value()))
-
-                return false;
-
-            return true;
-        }
+   public Iceland() {
+     this(Market.ICEX);
     }
 
+    public Iceland(final Market m) {
+    	switch (m) {
+    	case ICEX:
+    		impl = new IcexImpl();
+    		break;
+    	 default:
+             QL.error(UNKNOWN_MARKET);
+             throw new LibraryException(UNKNOWN_MARKET);
+    	}
+    }
+
+
+    //
+    // private final inner classes
+    //
+
+	private final class IcexImpl extends WesternImpl {
+
+		@Override
+		public String name () { return "Iceland stock exchange"; }
+
+		@Override
+		public boolean isBusinessDay(final Date date) {
+              final Weekday w = date.weekday();
+              final int d = date.dayOfMonth(), dd = date.dayOfYear();
+              final Month m = date.month();
+              final int y = date.year();
+              final int em = easterMonday(y);
+              if (isWeekend(w)
+                  // New Year's Day (possibly moved to Monday)
+                  || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY))
+                      && m == JANUARY)
+                  // Holy Thursday
+                  || (dd == em-4)
+                  // Good Friday
+                  || (dd == em-3)
+                  // Easter MONDAY
+                  || (dd == em)
+                  // First day of Summer
+                  || (d >= 19 && d <= 25 && w == THURSDAY && m == APRIL)
+                  // Ascension THURSDAY
+                  || (dd == em+38)
+                  // Pentecost MONDAY
+                  || (dd == em+49)
+                  // Labour Day
+                  || (d == 1 && m == MAY)
+                  // Independence Day
+                  || (d == 17 && m == JUNE)
+                  // Commerce Day
+                  || (d <= 7 && w == MONDAY && m == AUGUST)
+                  // Christmas
+                  || (d == 25 && m == DECEMBER)
+                  // Boxing Day
+                  || (d == 26 && m == DECEMBER)) {
+                return false;
+            }
+              return true;
+          }
+	}
 }

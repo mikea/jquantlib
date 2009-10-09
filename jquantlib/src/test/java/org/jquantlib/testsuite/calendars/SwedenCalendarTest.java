@@ -50,7 +50,7 @@ public class SwedenCalendarTest {
 	public SwedenCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
 	    //TODO: this.settlement = Sweden.getCalendar(Sweden.Market.Settlement);
-	    this.exchange   = Sweden.getCalendar(Sweden.Market.SSE);
+	    this.exchange   = new Sweden();
 	}
 
 
@@ -59,7 +59,7 @@ public class SwedenCalendarTest {
     public void testSwedenSEHolidaysYear2004()
     {
        	final int year = 2004;
-    	QL.info("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -83,7 +83,7 @@ public class SwedenCalendarTest {
     public void testSwedenSEHolidaysYear2005()
     {
        	final int year = 2005;
-    	QL.info("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -105,7 +105,7 @@ public class SwedenCalendarTest {
     public void testSwedenSEHolidaysYear2006()
     {
        	final int year = 2006;
-    	QL.info("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -129,7 +129,7 @@ public class SwedenCalendarTest {
     public void testSwedenSEHolidaysYear2007()
     {
        	final int year = 2007;
-    	QL.info("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -155,7 +155,7 @@ public class SwedenCalendarTest {
     public void testSwedenSEHolidaysYear2008()
     {
        	final int year = 2008;
-    	QL.info("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -180,7 +180,7 @@ public class SwedenCalendarTest {
     public void testSwedenSEHolidaysYear2009()
     {
        	final int year = 2009;
-    	QL.info("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -206,7 +206,7 @@ public class SwedenCalendarTest {
     public void testSwedenSEHolidaysYear2010()
     {
        	final int year = 2010;
-    	QL.info("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -230,7 +230,7 @@ public class SwedenCalendarTest {
     public void testSwedenSEHolidaysYear2011()
     {
        	final int year = 2011;
-    	QL.info("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -252,7 +252,7 @@ public class SwedenCalendarTest {
     public void testSwedenSEHolidaysYear2012()
     {
        	final int year = 2012;
-    	QL.info("Testing " + Sweden.Market.SSE + " holidays list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holidays list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 

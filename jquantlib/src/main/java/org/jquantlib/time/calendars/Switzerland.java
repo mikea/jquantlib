@@ -28,74 +28,57 @@ import static org.jquantlib.time.Month.DECEMBER;
 import static org.jquantlib.time.Month.JANUARY;
 import static org.jquantlib.time.Month.MAY;
 
-import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
 /**
+ * Swiss calendar Holidays:
+ * <ul>
+ * <li>Saturdays</li>
+ * <li>Sundays</li>
+ * <li>New Year's Day, JANUARY 1st</li>
+ * <li>Berchtoldstag, JANUARY 2nd</li>
+ * <li>Good Friday</li>
+ * <li>Easter Monday</li>
+ * <li>Ascension Day</li>
+ * <li>Whit Monday</li>
+ * <li>Labour Day, May 1st</li>
+ * <li>National Day, August 1st</li>
+ * <li>Christmas, December 25th</li>
+ * <li>St. Stephen's Day, December 26th</li>
+ * </ul>
+ *
+ * @category calendars
+ *
  * @author Srinivas Hasti
  * @author Dominik Holenstein
- *
+ * @author Zahid Hussain
  */
-public class Switzerland extends DelegateCalendar {
-    private final static Switzerland SETTLEMENT_CALENDAR = new Switzerland(Market.Settlement);
-    private final static Switzerland SWX_CALENDAR = new Switzerland(Market.SWX);
 
-    private Switzerland(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case Settlement:
-            delegate = new SwisSettlementCalendar();
-            break;
-        case SWX:
-            delegate = new SWXStockExchangeCalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
+public class Switzerland extends Calendar {
+
+    //
+    // public constructors
+    //
+
+    public Switzerland() {
+        impl = new Impl();
     }
 
-    public static Switzerland getCalendar(final Market market) {
-        switch (market) {
-        case Settlement:
-            return SETTLEMENT_CALENDAR;
-        case SWX:
-            return SWX_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
-
     //
-    // public enums
+    // private final inner classes
     //
 
-    public static enum Market {
-        /**
-         * generic settlement calendar
-         */
-        Settlement,
-
-        /**
-         * SWX stock-exchange
-         */
-        SWX,
-    }
-
-
-    //
-    // private inner classes
-    //
-
-    private static final class SwisSettlementCalendar extends WesternCalendar {
-
-        public String getName() {
-            return "Swiss settlement";
+    private class Impl extends WesternImpl {
+        @Override
+        public String name() {
+            return "Switzerland";
         }
 
         @Override
@@ -108,70 +91,28 @@ public class Switzerland extends DelegateCalendar {
             if (isWeekend(w)
                     // New Year's Day
                     || (d == 1 && m == JANUARY)
-                    // Berchtolds Day
+                    // Berchtoldstag
                     || (d == 2 && m == JANUARY)
                     // Good Friday
                     || (dd == em - 3)
                     // Easter Monday
                     || (dd == em)
-                    // Ascension Thursday
+                    // Ascension Day
                     || (dd == em + 38)
-                    // White Monday
+                    // Whit Monday
                     || (dd == em + 49)
                     // Labour Day
                     || (d == 1 && m == MAY)
-                    // National Day Switzerland
-                    || (d == 1 && m == AUGUST)
-                    // Christmas Eve
-                    || (d == 24 && m == DECEMBER)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // Boxing Day
-                    || (d == 26 && m == DECEMBER)
-                    // New Year's Eve
-                    || (d == 31 && m == DECEMBER))
-                return false;
-            return true;
-        }
-    }
-
-    private static final class SWXStockExchangeCalendar extends WesternCalendar {
-
-        public String getName() {
-            return "SWX stock exchange";
-        }
-
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final Month m = date.month();
-            final int y = date.year();
-            final int em = easterMonday(y);
-            if (isWeekend(w)
-                    // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // Berchtolds Day
-                    || (d == 2 && m == JANUARY)
-                    // Good Friday
-                    || (dd == em - 3)
-                    // Easter Monday
-                    || (dd == em)
-                    // Labour Day
-                    || (d == 1 && m == MAY)
-                    // Ascension Thursday
-                    || (dd == em + 38)
-                    // White Monday
-                    || (dd == em + 49)
-                    // National Day Switzerland
+                    // National Day
                     || (d == 1 && m == AUGUST)
                     // Christmas
                     || (d == 25 && m == DECEMBER)
-                    // Christmas Day
-                    || (d == 26 && m == DECEMBER))
+                    // St. Stephen's Day
+                    || (d == 26 && m == DECEMBER)) {
                 return false;
+            }
             return true;
         }
-    }
 
+    }
 }

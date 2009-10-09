@@ -90,12 +90,12 @@ public class Processes {
         //Dividend termstructure
         final SimpleQuote dividendQuote = new SimpleQuote(0.3);
         final RelinkableHandle<Quote>  handleToInterestRateQuote = new RelinkableHandle<Quote>(dividendQuote);
-        final YieldTermStructure dividendTermStructure = new FlatForward(2,UnitedStates.getCalendar(Market.NYSE),handleToInterestRateQuote,Actual365Fixed.getDayCounter(),Compounding.CONTINUOUS,Frequency.DAILY);
+        final YieldTermStructure dividendTermStructure = new FlatForward(2,new UnitedStates(Market.NYSE),handleToInterestRateQuote,Actual365Fixed.getDayCounter(),Compounding.CONTINUOUS,Frequency.DAILY);
 
         //Risk free term structure
         final SimpleQuote riskFreeRateQuote = new SimpleQuote(0.3);
         final RelinkableHandle<Quote>  handleToRiskFreeRateQuote = new RelinkableHandle<Quote>(riskFreeRateQuote);
-        final YieldTermStructure riskFreeTermStructure = new FlatForward(2,UnitedStates.getCalendar(Market.NYSE),handleToRiskFreeRateQuote,Actual365Fixed.getDayCounter(),Compounding.CONTINUOUS,Frequency.DAILY);
+        final YieldTermStructure riskFreeTermStructure = new FlatForward(2,new UnitedStates(Market.NYSE),handleToRiskFreeRateQuote,Actual365Fixed.getDayCounter(),Compounding.CONTINUOUS,Frequency.DAILY);
 
         //Creating the process
         final StochasticProcess1D process = new GeneralizedBlackScholesProcess(handleToStockQuote,new RelinkableHandle<YieldTermStructure>(dividendTermStructure),new RelinkableHandle<YieldTermStructure>(riskFreeTermStructure),new RelinkableHandle<BlackVolTermStructure>(varianceCurve),new EulerDiscretization());

@@ -40,7 +40,7 @@ public class CalendarUtil {
 
     protected void checkHolidayList(final List<Date> expected, final Calendar c, final int year) {
 
-        final List<Date> calculated = c.getHolidayList(
+        final List<Date> calculated = Calendar.holidayList(c,
                 new Date(1, Month.JANUARY, year),
                 new Date(31, Month.DECEMBER, year),
                 false);

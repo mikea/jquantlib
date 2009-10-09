@@ -70,7 +70,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  * been calculated as optimal values based on the "resolution"
  * criterion. See "RandQMC user's guide - A package for
  * randomized quasi-Monte Carlo methods in C," by C. Lemieux,
- * M. Cieslak, and K. Luttmer, version January 13 2004, and
+ * M. Cieslak, and K. Luttmer, version JANUARY 13 2004, and
  * references cited there
  * (http://www.math.ucalgary.ca/~lemieux/randqmc.html).
  * The values up to d<=360 has been provided to the QuantLib team by

@@ -48,7 +48,7 @@ public class JapanCalendarTest {
 
     public JapanCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-	    this.settlement = Japan.getCalendar(Japan.Market.SETTLEMENT);
+	    this.settlement = new Japan();
 	}
 
     // 2012 -- simply taken from rules
@@ -249,7 +249,7 @@ public class JapanCalendarTest {
 		// expectedHol.add(new Date( 3,MAY,year));       // Constitution Memorial Day
 		expectedHol.add(new Date( 4,MAY,year));       // Greenery Day
         expectedHol.add(new Date( 5,MAY,year));       // Children's Day
-        expectedHol.add(new Date( 6,MAY,year));       // alternative Constitution Memorial Day
+//        expectedHol.add(new Date( 6,MAY,year));       // alternative Constitution Memorial Day
 		expectedHol.add(new Date(20,JULY,year));      // Sea Day
         expectedHol.add(new Date(21,SEPTEMBER,year)); // Respect for the Aged Day
         expectedHol.add(new Date(22,SEPTEMBER,year)); // Bank Holiday
@@ -303,7 +303,7 @@ public class JapanCalendarTest {
 		// expectedHol.add(new Date( 3,MAY,year));       // Constitution Memorial Day
 		// expectedHol.add(new Date( 4,MAY,year));       // Between Day
         expectedHol.add(new Date( 5,MAY,year));       // Children's Day
-        expectedHol.add(new Date( 6,MAY,year));       // alternative Greenery Day
+//        expectedHol.add(new Date( 6,MAY,year));       // alternative Greenery Day
 		expectedHol.add(new Date(21,JULY,year));      // Sea Day
         expectedHol.add(new Date(15,SEPTEMBER,year)); // Respect for the Aged Day
     	expectedHol.add(new Date(23,SEPTEMBER,year)); // Autumn Equinox

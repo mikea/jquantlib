@@ -23,12 +23,16 @@
 
 package org.jquantlib.time.calendars;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
+
 
 /**
  * United States calendars <br>
@@ -36,9 +40,9 @@ import org.jquantlib.time.WesternCalendar;
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st (possibly moved to Monday if actually on
+ * <li>New Year's Day, JANUARY 1st (possibly moved to Monday if actually on
  * Sunday, or to Friday if on Saturday)</li>
- * <li>Martin Luther King's birthday, third Monday in January</li>
+ * <li>Martin Luther King's birthday, third Monday in JANUARY</li>
  * <li>Presidents' Day (a.k.a. Washington's birthday), third Monday in February</li>
  * <li>Memorial Day, last Monday in May</li>
  * <li>Independence Day, July 4th (moved to Monday if Sunday or Friday if
@@ -56,9 +60,9 @@ import org.jquantlib.time.WesternCalendar;
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st (possibly moved to Monday if actually on
+ * <li>New Year's Day, JANUARY 1st (possibly moved to Monday if actually on
  * Sunday)</li>
- * <li>Martin Luther King's birthday, third Monday in January (since 1998)</li>
+ * <li>Martin Luther King's birthday, third Monday in JANUARY (since 1998)</li>
  * <li>Presidents' Day (a.k.a. Washington's birthday), third Monday in February</li>
  * <li>Good Friday</li>
  * <li>Memorial Day, last Monday in May</li>
@@ -78,9 +82,9 @@ import org.jquantlib.time.WesternCalendar;
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st (possibly moved to Monday if actually on
+ * <li>New Year's Day, JANUARY 1st (possibly moved to Monday if actually on
  * Sunday)</li>
- * <li>Martin Luther King's birthday, third Monday in January</li>
+ * <li>Martin Luther King's birthday, third Monday in JANUARY</li>
  * <li>Presidents' Day (a.k.a. Washington's birthday), third Monday in February</li>
  * <li>Good Friday</li>
  * <li>Memorial Day, last Monday in May</li>
@@ -100,7 +104,7 @@ import org.jquantlib.time.WesternCalendar;
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st (possibly moved to Monday if actually on
+ * <li>New Year's Day, JANUARY 1st (possibly moved to Monday if actually on
  * Sunday)</li>
  * <li>Memorial Day, last Monday in May</li>
  * <li>Independence Day, July 4th (moved to Monday if Sunday)</li>
@@ -109,301 +113,255 @@ import org.jquantlib.time.WesternCalendar;
  * <li>Christmas, December 25th (moved to Monday if Sunday)</li>
  * </ul>
  *
+ * @category calendars
+ *
  * @author Srinivas Hasti
+ * @author Zahid Hussain
  */
 
-public class UnitedStates extends DelegateCalendar {
-    private final static UnitedStates SETTLEMENT_CALENDAR = new UnitedStates(Market.SETTLEMENT);
-    private final static UnitedStates NYSE_CALENDAR = new UnitedStates(Market.NYSE);
-    private final static UnitedStates GOVBOND_CALENDAR = new UnitedStates(Market.GOVERNMENTBOND);
-    private final static UnitedStates NERC_CALENDAR = new UnitedStates(Market.NERC);
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
 
-    private UnitedStates(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case SETTLEMENT:
-            delegate = new USSettlementCalendar();
-            break;
-        case NYSE:
-            delegate = new NyseCalendar();
-            break;
-        case GOVERNMENTBOND:
-            delegate = new USGovernmentBondCalendar();
-            break;
-        case NERC:
-            delegate = new USNercCalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
+public class UnitedStates extends Calendar {
 
-    public static UnitedStates getCalendar(final Market market) {
-        switch (market) {
-        case SETTLEMENT:
-            return SETTLEMENT_CALENDAR;
-        case NYSE:
-            return NYSE_CALENDAR;
-        case GOVERNMENTBOND:
-            return GOVBOND_CALENDAR;
-        case NERC:
-            return NERC_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
-
-    //
-    // public enums
-    //
-
+    /**
+     * US calendars
+     */
     public static enum Market {
-        /**
-         * generic settlement calendar
-         */
-        SETTLEMENT,
-
-        /**
-         * New York stock exchange calendar
-         */
-        NYSE,
-
-        /**
-         * government-bond calendar
-         */
-        GOVERNMENTBOND,
-
-        /**
-         * off-peak days for NERC
-         */
-        NERC
+        SETTLEMENT,     // generic settlement calendar
+        NYSE,           // New York stock exchange calendar
+        GOVERNMENTBOND, // government-bond calendar
+        NERC            // off-peak days for NERC
     }
 
 
     //
-    // private inner classes
+    // public constructors
     //
 
-    private static final class USSettlementCalendar extends WesternCalendar {
+    public UnitedStates() {
+        this(Market.SETTLEMENT);
+    }
 
-        public String getName() {
-            return "US settlement";
+    public UnitedStates(final Market market) {
+        switch (market) {
+        case SETTLEMENT:
+            impl = new SettlementImpl();
+            break;
+        case NYSE:
+            impl = new NyseImpl();
+            break;
+        case GOVERNMENTBOND:
+            impl = new GovernmentBondImpl();
+            break;
+        case NERC:
+            impl = new NercImpl();
+            break;
+        default:
+            QL.error(UNKNOWN_MARKET);
+            throw new LibraryException(UNKNOWN_MARKET);
         }
+    }
+
+
+    //
+    // private final inner classes
+    //
+
+    private final class SettlementImpl extends WesternImpl {
 
         @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth();
-            final int dd = date.dayOfYear();
-            final int m = date.month().value();
-            final int y = date.year();
-            final int em = easterMonday(y);
-
-            if (isWeekend(w)
-                    // New Year's Day (possibly moved to Monday if on Sunday)
-                    || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .value())
-                            // (or to Friday if on Saturday)
-                            || (d == 31 && w == Weekday.FRIDAY && m == Month.DECEMBER
-                                    .value())
-                                    // Martin Luther King's birthday (third Monday in January)
-                                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY.value())
-                                    // Washington's birthday (third Monday in February)
-                                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY.value())
-                                    // Good Friday
-                                    || ((dd == em - 3) && (y >= 2008))
-                                    // Memorial Day (last Monday in May)
-                                    || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
-                                            .value())
-                                            // Independence Day (Monday if Sunday or Friday if Saturday)
-                                            || ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
-                                                    .value())
-                                                    // Labor Day (first Monday in September)
-                                                    || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
-                                                            .value())
-                                                            // Columbus Day (second Monday in October)
-                                                            || ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.OCTOBER
-                                                                    .value())
-                                                                    // Veteran's Day (Monday if Sunday or Friday if Saturday)
-                                                                    || ((d == 11 || (d == 12 && w == Weekday.MONDAY) || (d == 10 && w == Weekday.FRIDAY)) && m == Month.NOVEMBER
-                                                                            .value())
-                                                                            // Thanksgiving Day (fourth Thursday in November)
-                                                                            || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
-                                                                                    .value())
-                                                                                    // Christmas (Monday if Sunday or Friday if Saturday)
-                                                                                    || ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
-                                                                                            .value()))
-                return false;
-            return true;
-        }
-    }
-
-    private static final class NyseCalendar extends WesternCalendar {
-
-        public String getName() {
-            return "New York stock exchange";
-        }
+        public String name() { return "US settlement"; }
 
         @Override
         public boolean isBusinessDay(final Date date) {
             final Weekday w = date.weekday();
             final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final int m = date.month().value();
+            final Month m = date.month();
             final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
-                    // New Year's Day (possibly moved to Monday if on Sunday)
-                    || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .value())
-                            // Washington's birthday (third Monday in February)
-                            || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY
-                                    .value())
-                                    // Good Friday
-                                    || (dd == em - 3)
-                                    // Memorial Day (last Monday in May)
-                                    || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
-                                            .value())
-                                            // Independence Day (Monday if Sunday or Friday if Saturday)
-                                            || ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
-                                                    .value())
-                                                    // Labor Day (first Monday in September)
-                                                    || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
-                                                            .value())
-                                                            // Thanksgiving Day (fourth Thursday in November)
-                                                            || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
-                                                                    .value())
-                                                                    // Christmas (Monday if Sunday or Friday if Saturday)
-                                                                    || ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
-                                                                            .value()))
+                // New Year's Day (possibly moved to Monday if on Sunday)
+                || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY)
+                // Martin Luther King's birthday (third Monday in JANUARY)
+                || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY)
+                // Washington's birthday (third Monday in Month.FEBRUARY)
+                || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY)
+                // Good Weekday.FRIDAY
+                || (dd == em-3)
+                // Memorial Day (last Monday in Month.MAY)
+                || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY)
+                // Independence Day (Monday if Sunday or Weekday.FRIDAY if Saturday)
+                || ((d == 4 || (d == 5 && w == Weekday.MONDAY) ||
+                     (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY)
+                // Labor Day (first Monday in Month.SEPTEMBER)
+                || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER)
+                // Columbus Day (second Monday in October)
+                || ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.OCTOBER)
+                // Veteran's Day (Monday if Sunday or Weekday.FRIDAY if Saturday)
+                || ((d == 11 || (d == 12 && w == Weekday.MONDAY) ||
+                     (d == 10 && w == Weekday.FRIDAY)) && m == Month.NOVEMBER)
+                // Thanksgiving Day (fourth Weekday.THURSDAY in Month.NOVEMBER)
+                || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER)
+                // Christmas (Monday if Sunday or Weekday.FRIDAY if Saturday)
+                || ((d == 25 || (d == 26 && w == Weekday.MONDAY) ||
+                     (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER)) {
                 return false;
+            }
+            return true;
+        }
+    }
+
+    private final class NyseImpl extends WesternImpl {
+
+        @Override
+        public String name() { return "New York stock exchange"; }
+
+        @Override
+        public boolean isBusinessDay(final Date date) {
+            final Weekday w = date.weekday();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final Month m = date.month();
+            final int y = date.year();
+            final int em = easterMonday(y);
+            if (isWeekend(w)
+                // New Year's Day (possibly moved to Monday if on Sunday)
+                || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY)
+                // Washington's birthday (third Monday in Month.FEBRUARY)
+                || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY)
+                // Good Weekday.FRIDAY
+                || (dd == em-3)
+                // Memorial Day (last Weekday.MONDAY in Month.MAY)
+                || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY)
+                // Independence Day (Weekday.MONDAY if Sunday or Weekday.FRIDAY if Saturday)
+                || ((d == 4 || (d == 5 && w == Weekday.MONDAY) ||
+                     (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY)
+                // Labor Day (first Weekday.MONDAY in Month.SEPTEMBER)
+                || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER)
+                // Thanksgiving Day (fourth Weekday.THURSDAY in Month.NOVEMBER)
+                || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER)
+                // Christmas (Weekday.MONDAY if Sunday or Weekday.FRIDAY if Saturday)
+                || ((d == 25 || (d == 26 && w == Weekday.MONDAY) ||
+                     (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER)
+                ) {
+                return false;
+            }
 
             if (y >= 1998) {
-                if (// Martin Luther King's birthday (third Monday in January)
-                        ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY
-                                .value())
-                                // President Reagan's funeral
-                                || (y == 2004 && m == Month.JUNE.value() && d == 11)
-                                // September 11, 2001
-                                || (y == 2001 && m == Month.SEPTEMBER.value() && (11 <= d && d <= 14))
-                                // President Ford's funeral
-                                || (y == 2007 && m == Month.JANUARY.value() && d == 2))
+                if (// Martin Luther King's birthday (third Weekday.MONDAY in JANUARY)
+                    ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY)
+                    // President Reagan's funeral
+                    || (y == 2004 && m == Month.JUNE && d == 11)
+                    // Month.SEPTEMBER 11, 2001
+                    || (y == 2001 && m == Month.SEPTEMBER && (11 <= d && d <= 14))
+                    // President Ford's funeral
+                    || (y == 2007 && m == Month.JANUARY && d == 2)
+                    ) {
                     return false;
+                }
             } else if (y <= 1980) {
                 if (// Presidential election days
-                        ((y % 4 == 0) && m == Month.NOVEMBER.value() && d <= 7 && w == Weekday.TUESDAY)
-                        // 1977 Blackout
-                        || (y == 1977 && m == Month.JULY.value() && d == 14)
-                        // Funeral of former President Lyndon B. Johnson.
-                        || (y == 1973 && m == Month.JANUARY.value() && d == 25)
-                        // Funeral of former President Harry S. Truman
-                        || (y == 1972 && m == Month.DECEMBER.value() && d == 28)
-                        // National Day of Participation for the lunar
-                        // exploration.
-                        || (y == 1969 && m == Month.JULY.value() && d == 21)
-                        // Funeral of former President Eisenhower.
-                        || (y == 1969 && m == Month.MARCH.value() && d == 31)
-                        // Closed all day - heavy snow.
-                        || (y == 1969 && m == Month.FEBRUARY.value() && d == 10)
-                        // Day after Independence Day.
-                        || (y == 1968 && m == Month.JULY.value() && d == 5)
-                        // June 12-Dec. 31, 1968
-                        // Four day week (closed on Wednesdays) - Paperwork
-                        // Crisis
-                        || (y == 1968 && dd >= 163 && w == Weekday.WEDNESDAY))
+                    ((y % 4 == 0) && m == Month.NOVEMBER && d <= 7 && w == Weekday.TUESDAY)
+                    // 1977 Blackout
+                    || (y == 1977 && m == Month.JULY && d == 14)
+                    // Funeral of former President Lyndon B. Johnson.
+                    || (y == 1973 && m == Month.JANUARY && d == 25)
+                    // Funeral of former President Harry S. Truman
+                    || (y == 1972 && m == Month.DECEMBER && d == 28)
+                    // National Day of Participation for the lunar exploration.
+                    || (y == 1969 && m == Month.JULY && d == 21)
+                    // Funeral of former President Eisenhower.
+                    || (y == 1969 && m == Month.MARCH && d == 31)
+                    // Closed all day - heavy snow.
+                    || (y == 1969 && m == Month.FEBRUARY && d == 10)
+                    // Day after Independence Day.
+                    || (y == 1968 && m == Month.JULY && d == 5)
+                    // Month.JUNE 12-Dec. 31, 1968
+                    // Four day week (closed on Wednesdays) - Paperwork Crisis
+                    || (y == 1968 && dd >= 163 && w == Weekday.WEDNESDAY)
+                    ) {
                     return false;
-            } else if (// Nixon's funeral
-                    (y == 1994 && m == Month.APRIL.value() && d == 27))
-                return false;
+                }
+            } else {
+                if (// Nixon's funeral
+                    (y == 1994 && m == Month.APRIL && d == 27)
+                    ) {
+                    return false;
+                }
+            }
             return true;
         }
     }
 
-    private static final class USGovernmentBondCalendar extends WesternCalendar {
+    private final class GovernmentBondImpl extends WesternImpl {
 
-        public String getName() {
-            return "US government bond market";
-        }
+        @Override
+        public String name() { return "US government bond market"; }
 
         @Override
         public boolean isBusinessDay(final Date date) {
             final Weekday w = date.weekday();
             final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final int m = date.month().value();
+            final Month m = date.month();
             final int y = date.year();
             final int em = easterMonday(y);
             if (isWeekend(w)
-                    // New Year's Day (possibly moved to Monday if on Sunday)
-                    || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .value())
-                            // Martin Luther King's birthday (third Monday in January)
-                            || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY
-                                    .value())
-                                    // Washington's birthday (third Monday in February)
-                                    || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY
-                                            .value())
-                                            // Good Friday
-                                            || (dd == em - 3)
-                                            // Memorial Day (last Monday in May)
-                                            || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
-                                                    .value())
-                                                    // Independence Day (Monday if Sunday or Friday if Saturday)
-                                                    || ((d == 4 || (d == 5 && w == Weekday.MONDAY) || (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY
-                                                            .value())
-                                                            // Labor Day (first Monday in September)
-                                                            || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
-                                                                    .value())
-                                                                    // Columbus Day (second Monday in October)
-                                                                    || ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.OCTOBER
-                                                                            .value())
-                                                                            // Veteran's Day (Monday if Sunday or Friday if Saturday)
-                                                                            || ((d == 11 || (d == 12 && w == Weekday.MONDAY) || (d == 10 && w == Weekday.FRIDAY)) && m == Month.NOVEMBER
-                                                                                    .value())
-                                                                                    // Thanksgiving Day (fourth Thursday in November)
-                                                                                    || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
-                                                                                            .value())
-                                                                                            // Christmas (Monday if Sunday or Friday if Saturday)
-                                                                                            || ((d == 25 || (d == 26 && w == Weekday.MONDAY) || (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER
-                                                                                                    .value()))
+                // New Year's Day (possibly moved to Weekday.MONDAY if on Sunday)
+                || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY)
+                // Martin Luther King's birthday (third Weekday.MONDAY in Month.JANUARY)
+                || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.JANUARY)
+                // Washington's birthday (third Weekday.MONDAY in Month.FEBRUARY)
+                || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.FEBRUARY)
+                // Good Weekday.FRIDAY
+                || (dd == em-3)
+                // Memorial Day (last Monday in Month.MAY)
+                || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY)
+                // Independence Day (Monday if Sunday or Weekday.FRIDAY if Saturday)
+                || ((d == 4 || (d == 5 && w == Weekday.MONDAY) ||
+                     (d == 3 && w == Weekday.FRIDAY)) && m == Month.JULY)
+                // Labor Day (first Monday in Month.SEPTEMBER)
+                || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER)
+                // Columbus Day (second Monday in October)
+                || ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.OCTOBER)
+                // Veteran's Day (Monday if Sunday or Weekday.FRIDAY if Saturday)
+                || ((d == 11 || (d == 12 && w == Weekday.MONDAY) ||
+                     (d == 10 && w == Weekday.FRIDAY)) && m == Month.NOVEMBER)
+                // Thanksgiving Day (fourth Weekday.THURSDAY in Month.NOVEMBER)
+                || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER)
+                // Christmas (Monday if Sunday or Weekday.FRIDAY if Saturday)
+                || ((d == 25 || (d == 26 && w == Weekday.MONDAY) ||
+                     (d == 24 && w == Weekday.FRIDAY)) && m == Month.DECEMBER)) {
                 return false;
+            }
             return true;
         }
     }
 
-    private static final class USNercCalendar extends WesternCalendar {
+    private final class NercImpl extends WesternImpl {
 
-        public String getName() {
-            return "North American Energy Reliability Council";
-        }
+        @Override
+        public String name(){ return "North American Energy Reliability Council";  }
 
         @Override
         public boolean isBusinessDay(final Date date) {
             final Weekday w = date.weekday();
             final int d = date.dayOfMonth();
-            final int m = date.month().value();
+            final Month m = date.month();
             if (isWeekend(w)
-                    // New Year's Day (possibly moved to Monday if on Sunday)
-                    || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY
-                            .value())
-                            // Memorial Day (last Monday in May)
-                            || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY
-                                    .value())
-                                    // Independence Day (Monday if Sunday)
-                                    || ((d == 4 || (d == 5 && w == Weekday.MONDAY)) && m == Month.JULY
-                                            .value())
-                                            // Labor Day (first Monday in September)
-                                            || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER
-                                                    .value())
-                                                    // Thanksgiving Day (fourth Thursday in November)
-                                                    || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER
-                                                            .value())
-                                                            // Christmas (Monday if Sunday)
-                                                            || ((d == 25 || (d == 26 && w == Weekday.MONDAY)) && m == Month.DECEMBER
-                                                                    .value()))
+                // New Year's Day (possibly moved to Monday if on Sunday)
+                || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.JANUARY)
+                // Memorial Day (last Monday in Month.MAY)
+                || (d >= 25 && w == Weekday.MONDAY && m == Month.MAY)
+                // Independence Day (Monday if Sunday)
+                || ((d == 4 || (d == 5 && w == Weekday.MONDAY)) && m == Month.JULY)
+                // Labor Day (first Monday in Month.SEPTEMBER)
+                || (d <= 7 && w == Weekday.MONDAY && m == Month.SEPTEMBER)
+                // Thanksgiving Day (fourth Weekday.THURSDAY in Month.NOVEMBER)
+                || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.NOVEMBER)
+                // Christmas (Monday if Sunday)
+                || ((d == 25 || (d == 26 && w == Weekday.MONDAY)) && m == Month.DECEMBER)) {
                 return false;
+            }
             return true;
         }
-    }
-
+     }
 }

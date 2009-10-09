@@ -22,26 +22,29 @@
 
 package org.jquantlib.time.calendars;
 
+import static org.jquantlib.time.Month.DECEMBER;
+import static org.jquantlib.time.Month.FEBRUARY;
+import static org.jquantlib.time.Month.JANUARY;
+import static org.jquantlib.time.Month.MARCH;
+import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.SEPTEMBER;
+
+import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
 /**
- * Mexican calendar
- * <p>
- * Banking holidays:
- * <ul>
- * <li>TODO: List the banking holidays must be filled in here
- * </ul>
- * <p>
- * Mexican calendars Holidays for the Mexican stock exchange:
+ * Mexican calendars Holidays for the Mexican stock exchange (data from <http://www.bmv.com.mx/>):
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st</li>
+ * <li>New Year's Day, JANUARY 1st</li>
  * <li>Constitution Day, February 5th</li>
  * <li>Birthday of Benito Juarez, March 21st</li>
  * <li>Holy Thursday</li>
@@ -53,153 +56,81 @@ import org.jquantlib.time.WesternCalendar;
  * </ul>
  *
  * @category calendars
- *
  * @see <a href="http://www.bmv.com.mx/">Bolsa Mexicana de Valores</a>
  *
  * @author Q Boiler
+ * @author Zahid Hussain
  */
-public class Mexico extends DelegateCalendar {
 
-    private final static Mexico SETTLEMENT_CALENDAR = new Mexico(Market.SETTLEMENT);
-    private final static Mexico BMV_CALENDAR        = new Mexico(Market.BMV);
-
-    private Mexico(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case SETTLEMENT:
-            delegate = new MexicoSettlementCalendar();
-            break;
-        case BMV:
-            delegate = new BMVExchangeCalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
-
-    public static Mexico getCalendar(final Market market) {
-        switch (market) {
-        case SETTLEMENT:
-            return SETTLEMENT_CALENDAR;
-        case BMV:
-            return BMV_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
-
-    //
-    // public enums
-    //
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
+public class Mexico extends Calendar {
 
     public enum Market {
-
         /**
-         * Generic settlement calendar
-         */
-        SETTLEMENT,
-
-        /**
-         * Bolsa Mexicana de Valores
+         * Mexican stock exchange
          */
         BMV
+    };
+
+    //
+    // public constructors
+    //
+
+    public Mexico() {
+        this(Market.BMV);
     }
 
+    public Mexico(final Market m) {
+        switch (m) {
+        case BMV:
+            impl = new BmvImpl();
+            break;
+        default:
+            QL.error(UNKNOWN_MARKET);
+            throw new LibraryException(UNKNOWN_MARKET);
+        }
+    }
 
     //
-    // private inner classes
+    // private final inner classes
     //
 
-    private static final class MexicoSettlementCalendar extends WesternCalendar {
+    private final class BmvImpl extends WesternImpl {
 
-        public String getName() {
-            return "Mexico stock Market";
+        @Override
+        public String name() {
+            return "Mexican stock exchange";
         }
 
         @Override
         public boolean isBusinessDay(final Date date) {
             final Weekday w = date.weekday();
-            final int d = date.dayOfMonth();
+            final int d = date.dayOfMonth(), dd = date.dayOfYear();
             final Month m = date.month();
             final int y = date.year();
-            final int dd = date.dayOfYear();
             final int em = easterMonday(y);
-
             if (isWeekend(w)
                     // New Year's Day
-                    || (d == 1 && m == Month.JANUARY)
+                    || (d == 1 && m == JANUARY)
                     // Constitution Day
-                    || (d <= 7 && w.equals(Weekday.MONDAY) && m == Month.FEBRUARY)
+                    || (d == 5 && m == FEBRUARY)
                     // Birthday of Benito Juarez
-                    || (d == 21 && m == Month.MARCH)
+                    || (d == 21 && m == MARCH)
                     // Holy Thursday
                     || (dd == em - 4)
                     // Good Friday
                     || (dd == em - 3)
                     // Labour Day
-                    || (d == 1 && m == Month.MAY)
+                    || (d == 1 && m == MAY)
                     // National Day
-                    || (d == 16 && m == Month.SEPTEMBER)
-                    // All Soul's Day
-                    || (d == 2 && m == Month.NOVEMBER)
-                    // Mexican Revolution - 3rd Monday of November
-                    || (d >= 14 && d < 21 && w.equals(Weekday.MONDAY) && m == Month.NOVEMBER)
+                    || (d == 16 && m == SEPTEMBER)
                     // Our Lady of Guadalupe
-                    || (d == 12 && m == Month.DECEMBER)
+                    || (d == 12 && m == DECEMBER)
                     // Christmas
-                    || (d == 25 && m == Month.DECEMBER))
+                    || (d == 25 && m == DECEMBER)) {
                 return false;
-
-            return true;
-        }
-
-    }
-
-
-    final static private class BMVExchangeCalendar extends WesternCalendar {
-
-        public String getName() {
-            return "Mexican Stock Exchange";
-        }
-
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth();
-            final Month m = date.month();
-            final int y = date.year();
-            final int dd = date.dayOfYear();
-            final int em = easterMonday(y);
-
-            if (isWeekend(w)
-                    // New Year's Day
-                    || (d == 1 && m == Month.JANUARY)
-                    // Constitution Day - 1st Monday of November
-                    || (d <= 7 && w.equals(Weekday.MONDAY) && m == Month.FEBRUARY)
-                    // Birthday of Benito Juarez
-                    || (d == 21 && m == Month.MARCH)
-                    // Holy Thursday
-                    || (dd == em - 4)
-                    // Good Friday
-                    || (dd == em - 3)
-                    // Labour Day
-                    || (d == 1 && m == Month.MAY)
-                    // National Day
-                    || (d == 16 && m == Month.SEPTEMBER)
-                    // All Soul's Day
-                    || (d == 2 && m == Month.NOVEMBER)
-                    // Mexican Revolution - 3rd Monday of November
-                    || (d >= 14 && d < 21 && w.equals(Weekday.MONDAY) && m == Month.NOVEMBER)
-                    // Our Lady of Guadalupe
-                    || (d == 12 && m == Month.DECEMBER)
-                    // Christmas
-                    || (d == 25 && m == Month.DECEMBER))
-                return false;
-
+            }
             return true;
         }
     }
-
 }

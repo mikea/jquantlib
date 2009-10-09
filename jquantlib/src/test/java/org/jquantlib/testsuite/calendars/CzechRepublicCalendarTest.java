@@ -53,7 +53,7 @@ public class CzechRepublicCalendarTest {
 
     public CzechRepublicCalendarTest() {
         QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
-        c = CzechRepublic.getCalendar(CzechRepublic.Market.PSE);
+        c = new CzechRepublic(CzechRepublic.Market.PSE);
     }
 
     // 2004 - Leap Year & Extra Holidays

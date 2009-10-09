@@ -29,118 +29,91 @@ import static org.jquantlib.time.Month.MAY;
 import static org.jquantlib.time.Month.NOVEMBER;
 import static org.jquantlib.time.Month.OCTOBER;
 
-import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
+
 
 /**
- * Hungarian calendar Holidays:
- * <ul>
- * <li>Saturdays</li>
- * <li>Sundays</li>
- * <li>Easter Monday</li>
- * <li>Whit(Pentecost) Monday</li>
- * <li>New Year's Day, January 1st</li>
- * <li>National Day, March 15th</li>
- * <li>Labour Day, May 1st</li>
- * <li>Constitution Day, August 20th</li>
- * <li>Republic Day, October 23rd</li>
- * <li>All Saints Day, November 1st</li>
- * <li>Christmas, December 25th</li>
- * <li>2nd Day of Christmas, December 26th</li>
- * </ul>
+ *  Hungarian calendar
+ *  Holidays:
+ *       <ul>
+ *       <li>Saturdays</li>
+ *       <li>Sundays</li>
+ *       <li>Easter Monday</li>
+ *       <li>Whit(Pentecost) Monday </li>
+ *       <li>New Year's Day, JANUARY 1st</li>
+ *       <li>National Day, March 15th</li>
+ *       <li>Labour Day, May 1st</li>
+ *       <li>Constitution Day, August 20th</li>
+ *       <li>Republic Day, October 23rd</li>
+ *       <li>All Saints Day, November 1st</li>
+ *       <li>Christmas, December 25th</li>
+ *       <li>2nd Day of Christmas, December 26th</li>
+ *       </ul>
+ *       in group calendars
  *
  * @author Jia Jia
+ * @author Zahid Hussain
  *
  */
-public class Hungary extends DelegateCalendar {
 
-    private final static Hungary SETTLEMENT_CALENDAR = new Hungary(Market.SETTLEMENT);
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
 
-    private Hungary(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case SETTLEMENT:
-            delegate = new SettlementCalendar();
-            break;
-
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
-
-    public static Hungary getCalendar(final Market market) {
-        switch (market) {
-        case SETTLEMENT:
-            return SETTLEMENT_CALENDAR;
-
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
+public class Hungary extends Calendar {
 
     //
-    // public enums
+    // public constructors
     //
 
-    // FIXME: exchange calendar is missing
-    public enum Market {
-        /**
-         * Hungary settlement calendar
-         */
-        SETTLEMENT
-    }
-
+	public Hungary() {
+		impl = new Impl();
+	}
 
     //
-    // private inner classes
+    // private final inner classes
     //
 
+    private final class Impl extends WesternImpl {
 
-    private static final class SettlementCalendar extends WesternCalendar {
+    	@Override
+    	public String name() { return "Hungary"; }
 
-        @Override
+    	@Override
         public boolean isBusinessDay(final Date date) {
             final Weekday w = date.weekday();
             final int d = date.dayOfMonth(), dd = date.dayOfYear();
             final Month m = date.month();
             final int y = date.year();
             final int em = easterMonday(y);
-
             if (isWeekend(w)
-                    // Easter Monday
-                    || (dd == em)
-                    // Whit Monday
-                    || (dd == em+49)
-                    // New Year's Day
-                    || (d == 1  && m == JANUARY)
-                    // National Day
-                    || (d == 15  && m == MARCH)
-                    // Labour Day
-                    || (d == 1  && m == MAY)
-                    // Constitution Day
-                    || (d == 20  && m == AUGUST)
-                    // Republic Day
-                    || (d == 23  && m == OCTOBER)
-                    // All Saints Day
-                    || (d == 1  && m == NOVEMBER)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // 2nd Day of Christmas
-                    || (d == 26 && m == DECEMBER))
+                // Easter Monday
+                || (dd == em)
+                // Whit Monday
+                || (dd == em+49)
+                // New Year's Day
+                || (d == 1  && m == JANUARY)
+                // National Day
+                || (d == 15  && m == MARCH)
+                // Labour Day
+                || (d == 1  && m == MAY)
+                // Constitution Day
+                || (d == 20  && m == AUGUST)
+                // Republic Day
+                || (d == 23  && m == OCTOBER)
+                // All Saints Day
+                || (d == 1  && m == NOVEMBER)
+                // Christmas
+                || (d == 25 && m == DECEMBER)
+                // 2nd Day of Christmas
+                || (d == 26 && m == DECEMBER)) {
                 return false;
+            }
             return true;
         }
-
-        public String getName() {
-            return "Hungary";
-        }
-
     }
-
 }

@@ -28,12 +28,13 @@ import static org.jquantlib.time.Month.JANUARY;
 import static org.jquantlib.time.Month.MAY;
 import static org.jquantlib.time.Month.NOVEMBER;
 
-import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
 /**
  * Polish calendar
@@ -44,7 +45,7 @@ import org.jquantlib.time.WesternCalendar;
  * <li>Sundays</li>
  * <li>Easter Monday</li>
  * <li>Corpus Christi</li>
- * <li>New Year's Day, January 1st</li>
+ * <li>New Year's Day, JANUARY 1st</li>
  * <li>May Day, May 1st</li>
  * <li>Constitution Day, May 3rd</li>
  * <li>Assumption of the Blessed Virgin Mary, August 15th</li>
@@ -62,152 +63,59 @@ import org.jquantlib.time.WesternCalendar;
  * @author Renjith Nair
  * @author Richard Gomes
  */
-public class Poland extends DelegateCalendar {
 
-    private final static Poland SETTLEMENT_CALENDAR = new Poland(Market.Settlement);
-    private final static Poland WSE_CALENDAR        = new Poland(Market.WSE);
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
 
-    private Poland(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case Settlement:
-            delegate = new PolandSettlementCalendar();
-            break;
-        case WSE:
-            delegate = new PolandWSECalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
+public class Poland extends Calendar {
 
-    public static Poland getCalendar(final Market market) {
-        switch (market) {
-        case Settlement:
-            return SETTLEMENT_CALENDAR;
-        case WSE:
-            return WSE_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
+    //
+    // public constructors
+    //
+
+	public Poland() {
+		impl = new Impl();
+	}
 
 
     //
-    // public enums
+    // private final inner classes
     //
 
-    public enum Market {
-
-        /**
-         * Poland settlement
-         */
-        Settlement,
-
-        /**
-         * Warsaw Stock Exchange
-         */
-        WSE
-    }
-
-
-    //
-    // private inner classes
-    //
-
-    //FIXME: Reliable years: 2007, 2008, 2009
-    private static final class PolandSettlementCalendar extends WesternCalendar {
-
-        public String getName() {
-            return "Poland settlement";
-        }
+	private final class Impl extends WesternImpl {
+        @Override
+		public String name() { return "Poland"; }
 
         @Override
-        public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final Month m = date.month();
-            final int y = date.year();
-            final int em = easterMonday(y);
-
-            if (isWeekend(w)
-                    // Easter Monday
-                    || (dd == em)
-                    // Corpus Christi
-                    || (dd == em + 59)
-                    // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // May Day
-                    || (d == 1 && m == MAY)
-                    // Constitution Day
-                    || (d == 3 && m == MAY)
-                    // Assumption of the Blessed Virgin Mary
-                    || (d == 15 && m == AUGUST)
-                    // All Saints Day
-                    || (d == 1 && m == NOVEMBER)
-                    // Independence Day
-                    || (d == 11 && m == NOVEMBER)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // Boxing Day
-                    || (d == 26 && m == DECEMBER)
-            )
+        public boolean isBusinessDay(final Date date) {
+	        final Weekday w = date.weekday();
+	        final int d = date.dayOfMonth(), dd = date.dayOfYear();
+	        final Month m = date.month();
+	        final int y = date.year();
+	        final int em = easterMonday(y);
+	        if (isWeekend(w)
+	            // Easter Monday
+	            || (dd == em)
+	            // Corpus Christi
+	            || (dd == em+59)
+	            // New Year's Day
+	            || (d == 1  && m == JANUARY)
+	            // May Day
+	            || (d == 1  && m == MAY)
+	            // Constitution Day
+	            || (d == 3  && m == MAY)
+	            // Assumption of the Blessed Virgin Mary
+	            || (d == 15  && m == AUGUST)
+	            // All Saints Day
+	            || (d == 1  && m == NOVEMBER)
+	            // Independence Day
+	            || (d ==11  && m == NOVEMBER)
+	            // Christmas
+	            || (d == 25 && m == DECEMBER)
+	            // 2nd Day of Christmas
+	            || (d == 26 && m == DECEMBER)) {
                 return false;
-            return true;
+            }
+	        return true;
         }
-
-    }
-
-
-    //FIXME: Reliable years: 2007, 2008, 2009
-    final static private class PolandWSECalendar extends WesternCalendar {
-
-        public String getName() {
-            return "Warsaw Stock Exchange";
-        }
-
-        @Override
-        public boolean isBusinessDay(final Date date /* @ReadOnly */) /* @ReadOnly */{
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final Month m = date.month();
-            final int y = date.year();
-            final int em = easterMonday(y);
-
-            if (isWeekend(w)
-                    // Easter Monday
-                    || (dd == em)
-                    // Corpus Christi
-                    || (dd == em + 59)
-                    // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // May Day
-                    || (d == 1 && m == MAY)
-                    // Constitution Day
-                    || (d == 3 && m == MAY)
-                    // Assumption of the Blessed Virgin Mary
-                    || (d == 15 && m == AUGUST)
-                    // All Saints Day
-                    || (d == 1 && m == NOVEMBER)
-                    // Independence Day
-                    || (d == 11 && m == NOVEMBER)
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // 2nd Day of Christmas
-                    || (d == 26 && m == DECEMBER)
-
-                    // Good Friday
-                    || (dd == (em-3))
-                    // Christmas Eve
-                    || (d == 24 && m == DECEMBER)
-                    // gap days
-                    || (d == 2 && m == JANUARY && w.equals(Weekday.FRIDAY))
-            )
-                return false;
-            return true;
-        }
-
-    }
-
+	}
 }

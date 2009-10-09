@@ -35,115 +35,110 @@ import static org.jquantlib.time.Month.NOVEMBER;
 import static org.jquantlib.time.Month.OCTOBER;
 import static org.jquantlib.time.Month.SEPTEMBER;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
-
 
 /**
- * Indonesian calendars
- * <p>
- * Holidays for the Jakarta stock exchange
+ * Indonesian calendars Holidays for the Jakarta stock exchange (data from <http://www.jsx.co.id/>):
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
+ * <li>New Year's Day, JANUARY 1st</li>
  * <li>Good Friday</li>
- * <li>New Year's Day, January 1st</li>
  * <li>Ascension of Jesus Christ</li>
  * <li>Independence Day, August 17th</li>
  * <li>Christmas, December 25th</li>
  * </ul>
- * <p>
- * Other holidays for which no rule is given (data available for 2005-2007 only:)
+ *
+ * Other holidays for which no rule is given (data available for 2005-2008 only:)
  * <ul>
  * <li>Idul Adha</li>
  * <li>Ied Adha</li>
  * <li>Imlek</li>
  * <li>Moslem's New Year Day</li>
+ * <li>Chinese New Year</li>
  * <li>Nyepi (Saka's New Year)</li>
  * <li>Birthday of Prophet Muhammad SAW</li>
  * <li>Waisak</li>
  * <li>Ascension of Prophet Muhammad SAW</li>
  * <li>Idul Fitri</li>
- * <li>Ied Fitri</li> <li>Other national leaves</li>
+ * <li>Ied Fitri</li>
+ * <li>Other national leaves</li>
  * </ul>
  *
  * @category calendars
- *
  * @see <a href="http://www.idx.co.id/">Indonesia Stock Exchange</a>
  *
  * @author Joon Tiang
  * @author Jia Jia
+ * @author Zahid Hussain
  */
-public class Indonesia extends DelegateCalendar {
 
-    private final static Indonesia BEJ_CALENDAR = new Indonesia(Market.BEJ);
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
+public class Indonesia extends Calendar {
 
-    private Indonesia(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case BEJ:
-        case JSX:
-            delegate = new IndonesiaBEJCalendar();
-            break;
-
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
-
-    public static Indonesia getCalendar(final Market market) {
-        switch (market) {
-        case BEJ:
-        case JSX:
-            return BEJ_CALENDAR;
-
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
-
-    //
-    // public enums
-    //
-
-    public enum Market {
+    public static enum Market {
         /**
          * Jakarta stock exchange
          */
         BEJ,
+
         /**
          * Jakarta stock exchange
          */
         JSX
     }
 
+    //
+    // public constructors
+    //
+
+    public Indonesia() {
+        this(Market.BEJ);
+    }
+
+    public Indonesia(final Market market) {
+        switch (market) {
+        case BEJ:
+        case JSX:
+            impl = new BejImpl();
+            break;
+        default:
+            QL.error(UNKNOWN_MARKET);
+            throw new LibraryException(UNKNOWN_MARKET);
+        }
+    }
+
 
     //
-    // private inner classes
+    // private final inner classes
     //
 
-    private static final class IndonesiaBEJCalendar extends WesternCalendar {
+    private final class BejImpl extends WesternImpl {
 
-        public String getName() {
+        @Override
+        public String name() {
             return "Jakarta stock exchange";
         }
 
         @Override
         public boolean isBusinessDay(final Date date) {
             final Weekday w = date.weekday();
-            final int d = date.dayOfMonth(), dd = date.dayOfYear();
+            final int d = date.dayOfMonth();
             final Month m = date.month();
             final int y = date.year();
+            final int dd = date.dayOfYear();
             final int em = easterMonday(y);
 
             if (isWeekend(w)
-                    // New Year's Day
+            // New Year's Day
                     || (d == 1 && m == JANUARY)
                     // Good Friday
                     || (dd == em - 3)
@@ -152,14 +147,13 @@ public class Indonesia extends DelegateCalendar {
                     // Independence Day
                     || (d == 17 && m == AUGUST)
                     // Christmas
-                    || (d == 25 && m == DECEMBER))
+                    || (d == 25 && m == DECEMBER)) {
                 return false;
-
-            if (y == 2005)
-                if (
-                        // Idul Adha
-                        (d == 21 && m == JANUARY)
-                        // Imlek
+            }
+            if (y == 2005) {
+                if (// Idul Adha
+                (d == 21 && m == JANUARY)
+                // Imlek
                         || (d == 9 && m == FEBRUARY)
                         // Moslem's New Year Day
                         || (d == 10 && m == FEBRUARY)
@@ -174,14 +168,14 @@ public class Indonesia extends DelegateCalendar {
                         // Idul Fitri
                         || ((d == 3 || d == 4) && m == NOVEMBER)
                         // National leaves
-                        || ((d == 2 || d == 7 || d == 8) && m == NOVEMBER) || (d == 26 && m == DECEMBER))
+                        || ((d == 2 || d == 7 || d == 8) && m == NOVEMBER) || (d == 26 && m == DECEMBER)) {
                     return false;
-
-            if (y == 2006)
-                if (
-                        // Idul Adha
-                        (d == 10 && m == JANUARY)
-                        // Moslem's New Year Day
+                }
+            }
+            if (y == 2006) {
+                if (// Idul Adha
+                (d == 10 && m == JANUARY)
+                // Moslem's New Year Day
                         || (d == 31 && m == JANUARY)
                         // Nyepi
                         || (d == 30 && m == MARCH)
@@ -192,27 +186,57 @@ public class Indonesia extends DelegateCalendar {
                         // Idul Fitri
                         || ((d == 24 || d == 25) && m == OCTOBER)
                         // National leaves
-                        || ((d == 23 || d == 26 || d == 27) && m == OCTOBER))
+                        || ((d == 23 || d == 26 || d == 27) && m == OCTOBER)) {
                     return false;
-
-            if (y == 2007)
-                if (
-                        // Nyepi
-                        (d == 19 && m == MARCH)
+                }
+            }
+            if (y == 2007) {
+                if (// Nyepi
+                (d == 19 && m == MARCH)
                         // Waisak
                         || (d == 1 && m == JUNE)
                         // Ied Adha
                         || (d == 20 && m == DECEMBER)
                         // National leaves
                         || (d == 18 && m == MAY) || ((d == 12 || d == 15 || d == 16) && m == OCTOBER)
-                        || ((d == 21 || d == 24) && m == OCTOBER))
+                        || ((d == 21 || d == 24) && m == OCTOBER)) {
                     return false;
+                }
+            }
+            if (y == 2007) {
+                if (// Islamic New Year
+                ((d == 10 || d == 11) && m == JANUARY)
+                // Chinese New Year
+                        || ((d == 7 || d == 8) && m == FEBRUARY)
+                        // Saka's New Year
+                        || (d == 7 && m == MARCH)
+                        // Birthday of the prophet Muhammad SAW
+                        || (d == 20 && m == MARCH)
+                        // Vesak Day
+                        || (d == 20 && m == MAY)
+                        // Isra' Mi'raj of the prophet Muhammad SAW
+                        || (d == 30 && m == JULY)
+                        // Ied Fitr
+                        || (d == 30 && m == SEPTEMBER) || ((d == 1 || d == 2 || d == 3) && m == OCTOBER)
+                        // Ied Adha
+                        || (d == 8 && m == DECEMBER) // Zahid: it is Saturday, should not be here
+                        // Islamic New Year
+                        || (d == 29 && m == DECEMBER) // Zahid: it is Saturday, should not be here
+                        // New Year's Eve
+                        || (d == 31 && m == DECEMBER)
+                        // National leave
+                        || (d == 18 && m == AUGUST)) {
+                    return false;
+                }
+            }
 
-            if (y == 2008)
+            // New holidays: QL97 has only upto year 2007 ////
+
+            if (y == 2008) {
                 if (
-                        // Islamic New Year 1429 H
-                        (d == 10 && m == JANUARY)
-                        // National Leave
+                // Islamic New Year 1429 H
+                (d == 10 && m == JANUARY)
+                // National Leave
                         || (d == 11 && m == JANUARY)
                         // Chinese New Year
                         || (d == 7 && m == FEBRUARY)
@@ -237,14 +261,15 @@ public class Indonesia extends DelegateCalendar {
                         // Islamic New Year
                         || (d == 29 && m == DECEMBER)
                         // New Year's Eve
-                        || (d == 31 && m == DECEMBER))
+                        || (d == 31 && m == DECEMBER)) {
                     return false;
-
-            if (y == 2009)
+                }
+            }
+            if (y == 2009) {
                 if (
-                        // Public Holiday
-                        (d == 2 && m == JANUARY)
-                        // Chinese New Year
+                // Public Holiday
+                (d == 2 && m == JANUARY)
+                // Chinese New Year
                         || (d == 26 && m == JANUARY)
                         // Saka's New Year
                         || (d == 26 && m == MARCH)
@@ -263,11 +288,11 @@ public class Indonesia extends DelegateCalendar {
                         // Public Holiday
                         || (d == 24 && m == DECEMBER)
                         // Trading Holiday
-                        || (d == 31 && m == DECEMBER))
+                        || (d == 31 && m == DECEMBER)) {
                     return false;
-
+                }
+            }
             return true;
         }
     }
-
 }

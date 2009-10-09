@@ -42,7 +42,7 @@ public class Business252 extends AbstractDayCounter {
 
     @Override
     public final String name() {
-        return "Business/252(" + calendar.getName() + ")";
+        return "Business/252(" + calendar.name() + ")";
     }
 
     @Override

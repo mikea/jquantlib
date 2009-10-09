@@ -26,12 +26,13 @@ import static org.jquantlib.time.Month.DECEMBER;
 import static org.jquantlib.time.Month.JANUARY;
 import static org.jquantlib.time.Month.MAY;
 
-import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
 /**
  * Norwegian calendar
@@ -45,7 +46,7 @@ import org.jquantlib.time.WesternCalendar;
  * <li>Easter Monday</li>
  * <li>Ascension</li>
  * <li>Whit(Pentecost) Monday</li>
- * <li>New Year's Day, January 1st</li>
+ * <li>New Year's Day, JANUARY 1st</li>
  * <li>May Day, May 1st</li>
  * <li>National Independence Day, May 17st</li>
  * <li>Christmas, December 25th</li>
@@ -55,98 +56,62 @@ import org.jquantlib.time.WesternCalendar;
  * @category calendars
  *
  * @author Anand Mani
+ * @author Zahid Hussain
  */
-public class Norway extends DelegateCalendar {
 
-    private static final Norway OSLOBORS_CALENDAR = new Norway(Market.OsloBors);
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
 
+public class Norway extends Calendar {
 
-    private Norway(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case OsloBors:
-            delegate = new OsloBorsCalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
+    //
+    // public constructors
+    //
 
-    public static Norway getCalendar(final Market market) {
-        switch (market) {
-        case OsloBors:
-            return OSLOBORS_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
+    public Norway() {
+        impl = new Impl();
     }
 
 
     //
-    // public enums
+    // private final inner classes
     //
 
-    // FIXME: Settlement calendar is missing
-    public enum Market {
-        /**
-         * OsloBors
-         */
-        OsloBors
-    }
+    private final class Impl extends WesternImpl {
 
+		@Override
+		public String name() { return "Norway"; }
 
-    //
-    // private inner classes
-    //
-
-    private static final class OsloBorsCalendar extends WesternCalendar {
-
-        public String getName() {
-            return "OsloBors";
-        }
-
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth(), dd = date.dayOfYear();
-            final Month m = date.month();
-            final int y = date.year();
-            final int em = easterMonday(y);
-            if (isWeekend(w)
-                    // Holy Thursday
-                    || (dd == em - 4)
-                    // Good Friday
-                    || (dd == em - 3)
-                    // Easter Monday
-                    || (dd == em)
-                    // Ascension Thursday
-                    || (dd == em + 38)
-                    // Whit Monday
-                    || (dd == em + 49)
-                    // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    // May Day
-                    || (d == 1 && m == MAY)
-                    // National Independence Day
-                    || (d == 17 && m == MAY)
-
-                    // Christmas Eve is only observed by Oslo Bors :: see http://bugs.jquantlib.org/view.php?id=73
-                    //					|| (d == 24 && m == DECEMBER)
-
-                    // Christmas
-                    || (d == 25 && m == DECEMBER)
-                    // Boxing Day
-                    || (d == 26 && m == DECEMBER)
-
-                    // 31-DEC only observed by Oslo Bors :: see http://bugs.jquantlib.org/view.php?id=73
-                    //				|| (d == 31 && m == DECEMBER)
-
-            )
-
+		@Override
+		public boolean isBusinessDay(final Date date) {
+	        final Weekday w = date.weekday();
+	        final int d = date.dayOfMonth(), dd = date.dayOfYear();
+	        final Month m = date.month();
+	        final int y = date.year();
+	        final int em = easterMonday(y);
+	        if (isWeekend(w)
+	            // Holy Thursday
+	            || (dd == em-4)
+	            // Good Friday
+	            || (dd == em-3)
+	            // Easter Monday
+	            || (dd == em)
+	            // Ascension Thursday
+	            || (dd == em+38)
+	            // Whit Monday
+	            || (dd == em+49)
+	            // New Year's Day
+	            || (d == 1  && m == JANUARY)
+	            // May Day
+	            || (d == 1  && m == MAY)
+	            // National Independence Day
+	            || (d == 17  && m == MAY)
+	            // Christmas
+	            || (d == 25 && m == DECEMBER)
+	            // Boxing Day
+				|| (d == 26 && m == DECEMBER)) {
                 return false;
-            return true;
-        }
+            }
+	        return true;
+	    }
     }
-
 }

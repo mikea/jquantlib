@@ -50,13 +50,13 @@ public class DenmarkCalendarTest {
 
 	public DenmarkCalendarTest() {
 		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-		exchange = Denmark.getCalendar(Denmark.Market.CSE);
+		exchange = new Denmark();
 	}
 
 	@Test
 	public void testCSEYear2004() {
 		final int year = 2004;
-    	QL.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holiday list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -83,7 +83,7 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2005() {
 		final int year = 2005;
-    	QL.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holiday list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -110,7 +110,7 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2006() {
 		final int year = 2006;
-    	QL.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holiday list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -139,7 +139,7 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2007() {
 		final int year = 2007;
-    	QL.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holiday list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -177,7 +177,7 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2008() {
 		final int year = 2008;
-    	QL.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holiday list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -214,7 +214,7 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2009() {
 		final int year = 2009;
-    	QL.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holiday list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -250,7 +250,7 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2010() {
 		final int year = 2010;
-    	QL.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holiday list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -277,7 +277,7 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2012() {
 		final int year = 2012;
-    	QL.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holiday list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
@@ -308,7 +308,7 @@ public class DenmarkCalendarTest {
 	@Test
 	public void testCSEYear2011() {
 		final int year = 2011;
-    	QL.info("Testing " + Denmark.Market.CSE + " holiday list for the year " + year + "...");
+    	QL.info("Testing " + exchange.name() + " holiday list for the year " + year + "...");
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 

@@ -23,8 +23,11 @@
 
 package org.jquantlib.time.calendars;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.time.AbstractCalendar;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Weekday;
@@ -34,103 +37,150 @@ import org.jquantlib.time.Weekday;
  * by either the union or the intersection of the sets of business days of the
  * given calendars.
  *
- * JOIN_HOLIDAYS - A date is a holiday for the joint calendar if it is a
- * holiday for any of the given calendars
- *
- * JOIN_BUSINESSDAYS - A date is a business day for the joint calendar if it is
- * a business day for any of the given calendars
+ * @category calendars
  *
  * @author Srinivas Hasti
+ * @author Richard Gomes
  *
  */
-public class JointCalendar extends AbstractCalendar {
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Richard Gomes" })
+public class JointCalendar extends Calendar {
 
-    // ! rules for joining calendars
+    /**
+     * Rules for joining calendars
+     */
     public static enum JointCalendarRule {
-        JOIN_HOLIDAYS, /*
-         * !< A date is a holiday for the joint calendar if it
+        /**
+         * A date is a holiday for the joint calendar if it
          * is a holiday for any of the given calendars
          */
-        JOIN_BUSINESSDAYS
-        /*
-         * !< A date is a business day for the joint calendar if it is a
+        JoinHolidays,
+
+        /**
+         * A date is a business day for the joint calendar if it is a
          * business day for any of the given calendars
          */
+        JoinBusinessDays
     };
+
+
+    //
+    // private fields
+    //
 
     private final JointCalendarRule joinRule;
     private final Calendar[]        calendars;
 
-    public JointCalendar(final JointCalendarRule rule, final Calendar... calendar) {
-        this.calendars = calendar;
+
+    //
+    // public constructors
+    //
+
+    public JointCalendar(final Calendar c1, final Calendar c2, final JointCalendarRule rule) {
+        this(rule, c1, c2);
+    }
+
+    public JointCalendar(final Calendar c1, final Calendar c2, final Calendar c3, final JointCalendarRule rule) {
+        this(rule, c1, c2, c3);
+    }
+
+    public JointCalendar(final Calendar c1, final Calendar c2, final Calendar c3, final Calendar c4, final JointCalendarRule rule) {
+        this(rule, c1, c2, c3, c4);
+    }
+
+
+    //
+    // private constructors
+    //
+
+    private JointCalendar(final JointCalendarRule rule, final Calendar ...calendars) {
+        this.calendars = new Calendar[calendars.length];
+        for (int i=0; i<calendars.length; i++) {
+            this.calendars[i] = calendars[i];
+        }
         this.joinRule = rule;
+        this.impl = new Impl();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.jquantlib.time.Calendar#getName()
-     */
-    public String getName() {
-        final StringBuilder builder = new StringBuilder();
-        switch (joinRule) {
-        case JOIN_HOLIDAYS:
-            builder.append("JoinHolidays(");
-            break;
-        case JOIN_BUSINESSDAYS:
-            builder.append("JoinBusinessDays()");
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
+
+    //
+    // private final inner classes
+    //
+
+    private final class Impl extends Calendar.Impl {
+        @Override
+        public String name() /* @ReadOnly */{
+            final StringBuilder sb = new StringBuilder();
+
+            switch (joinRule) {
+            case JoinHolidays:
+                sb.append("JoinHolidays(");
+                break;
+            case JoinBusinessDays:
+                sb.append("JoinBusinessDays(");
+                break;
+            default:
+                QL.error(UNKNOWN_MARKET);
+                throw new LibraryException(UNKNOWN_MARKET);
+            }
+
+            int count = 0;
+            for (final Calendar calendar : calendars) {
+                if (count > 0) {
+                    sb.append(", ");
+                }
+                sb.append(calendar.name());
+                count++;
+            }
+            sb.append(')');
+            return sb.toString();
         }
-        for (final Calendar cal : calendars)
-            builder.append(cal.getName() + ",");
-        builder.insert(builder.length() - 1, ")");
-        return builder.toString();
+
+        @Override
+        public boolean isWeekend(final Weekday weekday) /* @ReadOnly */{
+            switch (joinRule) {
+            case JoinHolidays:
+                for (final Calendar calendar : calendars) {
+                    if (calendar.isWeekend(weekday)) {
+                        return true;
+                    }
+                }
+                return false;
+            case JoinBusinessDays:
+                for (final Calendar calendar : calendars) {
+                    if (! calendar.isWeekend(weekday)) {
+                        return false;
+                    }
+                }
+                return true;
+            default:
+                QL.error(UNKNOWN_MARKET);
+                throw new LibraryException(UNKNOWN_MARKET);
+            }
+        }
+
+        @Override
+        public boolean isBusinessDay(final Date date) /* @ReadOnly */{
+            switch (joinRule) {
+            case JoinHolidays:
+                for (final Calendar calendar : calendars) {
+                    if (calendar.isBusinessDay(date)) {
+                        return true;
+                    }
+                }
+                return false;
+            case JoinBusinessDays:
+                for (final Calendar calendar : calendars) {
+                    if (! calendar.isBusinessDay(date)) {
+                        return false;
+                    }
+                }
+                return true;
+            default:
+                QL.error(UNKNOWN_MARKET);
+                throw new LibraryException(UNKNOWN_MARKET);
+            }
+        }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.jquantlib.time.Calendar#isBusinessDay(org.jquantlib.util.Date)
-     */
-    @Override
-    public boolean isBusinessDay(final Date d) {
-        switch (joinRule) {
-        case JOIN_HOLIDAYS:
-            for (final Calendar cal : calendars)
-                if (cal.isHoliday(d))
-                    return false;
-            return true;
-        case JOIN_BUSINESSDAYS:
-            for (final Calendar cal : calendars)
-                if (!cal.isHoliday(d))
-                    return true;
-            return false;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.jquantlib.time.Calendar#isWeekend(org.jquantlib.time.Weekday)
-     */
-    public boolean isWeekend(final Weekday w) {
-        switch (joinRule) {
-        case JOIN_HOLIDAYS:
-            for (final Calendar cal : calendars)
-                if (cal.isWeekend(w))
-                    return true;
-            return false;
-        case JOIN_BUSINESSDAYS:
-            for (final Calendar cal : calendars)
-                if (!cal.isWeekend(w))
-                    return false;
-            return true;
-        default:
-            throw new LibraryException("unknown joint calendar rule"); // QA:[RG]::verified // TODO: message
-        }
-    }
 }

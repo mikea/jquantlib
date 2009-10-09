@@ -31,12 +31,15 @@ import static org.jquantlib.time.Month.MAY;
 import static org.jquantlib.time.Month.NOVEMBER;
 import static org.jquantlib.time.Weekday.FRIDAY;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
 //  Brazilian calendar
 /**
@@ -44,7 +47,7 @@ import org.jquantlib.time.WesternCalendar;
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st</li>
+ * <li>New Year's Day, JANUARY 1st</li>
  * <li>Tiradentes's Day, April 21th</li>
  * <li>Labour Day, May 1st</li>
  * <li>Independence Day, September 21th</li>
@@ -62,8 +65,8 @@ import org.jquantlib.time.WesternCalendar;
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st</li>
- * <li>Sao Paulo City Day, January 25th</li>
+ * <li>New Year's Day, JANUARY 1st</li>
+ * <li>Sao Paulo City Day, JANUARY 25th</li>
  * <li>Tiradentes's Day, April 21th</li>
  * <li>Labour Day, May 1st</li>
  * <li>Revolution Day, July 9th</li>
@@ -82,62 +85,56 @@ import org.jquantlib.time.WesternCalendar;
  * @author Srinivas Hasti
  * @author Dominik Holenstein
  */
-public class Brazil extends DelegateCalendar {
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Richard Gomes" })
+public class Brazil extends Calendar {
 
-    private final static Brazil SETTLEMENT_CALENDAR = new Brazil(Market.SETTLEMENT);
-    private final static Brazil EXCHANGE_CALENDAR   = new Brazil(Market.BOVESPA);
-
-    private Brazil(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case SETTLEMENT:
-            delegate = new BrazilSettlementCalendar();
-            break;
-        case BOVESPA:
-            delegate = new BrazilExchangeCalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
-
-    public static Brazil getCalendar(final Market market) {
-        switch (market) {
-        case SETTLEMENT:
-            return SETTLEMENT_CALENDAR;
-        case BOVESPA:
-            return EXCHANGE_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-    }
-
-
-    //
-    // public enums
-    //
-
+    /**
+     * Brazil calendars
+     */
     public static enum Market {
         /**
-         * Brazilian settlement calendar
+         * Generic settlement calendar
          */
         SETTLEMENT,
 
         /**
-         * BOVESPA
+         * Bolsa de Valores de Sao Paulo
          */
         BOVESPA
     }
 
 
     //
-    // private inner classes
+    // public constructors
     //
 
-    private static final class BrazilSettlementCalendar extends WesternCalendar {
+    public Brazil() {
+        this(Market.SETTLEMENT);
+    }
 
-        public String getName() {
+    public Brazil(final Market market) {
+        switch (market) {
+        case SETTLEMENT:
+            impl = new SettlementImpl();
+            break;
+        case BOVESPA:
+            impl = new ExchangeImpl();
+            break;
+        default:
+            QL.error(UNKNOWN_MARKET);
+            throw new LibraryException(UNKNOWN_MARKET);
+        }
+    }
+
+
+    //
+    // private final inner classes
+    //
+
+    private final class SettlementImpl extends Calendar.WesternImpl {
+
+        @Override
+        public String name() {
             return "Brazil";
         }
 
@@ -172,16 +169,18 @@ public class Brazil extends DelegateCalendar {
                     // Carnival
                     || (dd == em - 49 || dd == em - 48)
                     // Corpus Christi
-                    || (dd == em + 59))
+                    || (dd == em + 59)) {
                 return false;
+            }
             return true;
         }
 
     }
 
-    private static final class BrazilExchangeCalendar extends WesternCalendar {
+    private final class ExchangeImpl extends Calendar.WesternImpl {
 
-        public String getName() {
+        @Override
+        public String name() {
             return "BOVESPA";
         }
 
@@ -226,8 +225,9 @@ public class Brazil extends DelegateCalendar {
                     // Corpus Christi
                     || (dd == em + 59)
                     // last business day of the year
-                    || (m == DECEMBER && (d == 31 || (d >= 29 && w == FRIDAY))))
+                    || (m == DECEMBER && (d == 31 || (d >= 29 && w == FRIDAY)))) {
                 return false;
+            }
             return true;
         }
     }

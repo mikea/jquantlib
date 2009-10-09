@@ -41,7 +41,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  * href="http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/ARTICLES/mt.pdf">Mersenne
  * Twister: A 623-Dimensionally Equidistributed Uniform Pseudo-Random
  * Number Generator</a>, ACM Transactions on Modeling and Computer
- * Simulation, Vol. 8, No. 1, January 1998, pp 3--30</p>
+ * Simulation, Vol. 8, No. 1, JANUARY 1998, pp 3--30</p>
  *
  * <p>The class is implemented as a specialization of the standard
  * <code>java.util.Random</code> class. This allows to use it in

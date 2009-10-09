@@ -31,12 +31,13 @@ import static org.jquantlib.time.Month.OCTOBER;
 import static org.jquantlib.time.Weekday.MONDAY;
 import static org.jquantlib.time.Weekday.TUESDAY;
 
-import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.time.WesternCalendar;
 
 /**
  * Australian calendar
@@ -45,8 +46,8 @@ import org.jquantlib.time.WesternCalendar;
  * <ul>
  * <li>Saturdays</li>
  * <li>Sundays</li>
- * <li>New Year's Day, January 1st</li>
- * <li>Australia Day, January 26th (possibly moved to MONDAY)</li>
+ * <li>New Year's Day, JANUARY 1st</li>
+ * <li>Australia Day, JANUARY 26th (possibly moved to MONDAY)</li>
  * <li>Good Friday</li>
  * <li>Easter MONDAY</li>
  * <li>ANZAC Day. April 25th (possibly moved to MONDAY)</li>
@@ -58,141 +59,64 @@ import org.jquantlib.time.WesternCalendar;
  * </ul>
  * @author Tim Swetonic
  * @author Richard Gomes
+ *
  */
-public class Australia extends DelegateCalendar {
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain" })
 
-    private final static Australia SETTLEMENT_CALENDAR = new Australia(Market.SETTLEMENT);
-    private final static Australia EXCHANGE_CALENDAR   = new Australia(Market.ASX);
+public class Australia extends Calendar {
 
-    private Australia(final Market market) {
-        Calendar delegate;
-        switch (market) {
-        case SETTLEMENT:
-            delegate = new AustraliaSettlementCalendar();
-            break;
-        case ASX:
-            delegate = new AustraliaExchangeCalendar();
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
-        setDelegate(delegate);
-    }
+    //
+    // public constructors
+    //
 
-    public static Australia getCalendar(final Market market) {
-        switch (market) {
-        case SETTLEMENT:
-            return SETTLEMENT_CALENDAR;
-        case ASX:
-            return EXCHANGE_CALENDAR;
-        default:
-            throw new LibraryException(UNKNOWN_MARKET); // QA:[RG]::verified
-        }
+	public Australia() {
+        impl =  new AustraliaImpl();
     }
 
 
     //
-    // public enums
+    // private final inner classes
     //
 
-    public static enum Market {
-        /**
-         * Australian settlement calendar
-         */
-        SETTLEMENT,
+	private final class AustraliaImpl extends WesternImpl {
 
-        /**
-         * Australian Stock Exchange
-         */
-        ASX
+	  @Override
+	  public String name() { return "Australia"; }
+
+	  @Override
+	  public boolean isBusinessDay(final Date date)  {
+        final Weekday w = date.weekday();
+        final int d = date.dayOfMonth(), dd = date.dayOfYear();
+        final Month m = date.month();
+        final int y = date.year();
+        final int em = easterMonday(y);
+        if (isWeekend(w)
+            // New Year's Day (possibly moved to Monday)
+            || (d == 1  && m == JANUARY)
+            // Australia Day, JANUARY 26th (possibly moved to Monday)
+            || ((d == 26 || ((d == 27 || d == 28) && w == MONDAY)) &&
+                m == JANUARY)
+            // Good Friday
+            || (dd == em-3)
+            // Easter Monday
+            || (dd == em)
+            // ANZAC Day, April 25th (possibly moved to Monday)
+            || ((d == 25 || (d == 26 && w == MONDAY)) && m == APRIL)
+            // Queen's Birthday, second Monday in June
+            || ((d > 7 && d <= 14) && w == MONDAY && m == JUNE)
+            // Bank Holiday, first Monday in August
+            || (d <= 7 && w == MONDAY && m == AUGUST)
+            // Labour Day, first Monday in October
+            || (d <= 7 && w == MONDAY && m == OCTOBER)
+            // Christmas, December 25th (possibly Monday or Tuesday)
+            || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY)))
+                && m == DECEMBER)
+            // Boxing Day, DECEMBER 26th (possibly MONDAY or TUESDAY)
+            || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY)))
+                && m == DECEMBER)) {
+            return false;
+        }
+        return true;
     }
-
-
-    //
-    // private inner classes
-    //
-
-    private static final class AustraliaSettlementCalendar extends WesternCalendar {
-
-        public String getName() {
-            return "Australia";
-        }
-
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth();
-            final Month m = date.month();
-            final int y = date.year();
-            final int dd = date.dayOfYear();
-            final int em = easterMonday(y);
-
-            if (isWeekend(w)
-                    // New Year's Day (possibly moved to MONDAY)
-                    || (d == 1  && m == JANUARY)
-                    // Australia Day, JANUARY 26th (possibly moved to MONDAY)
-                    || ((d == 26 || ((d == 27 || d == 28) && w == MONDAY)) && m == JANUARY)
-                    // Good Friday
-                    || (dd == em-3)
-                    // Easter MONDAY
-                    || (dd == em)
-                    // ANZAC Day, April 25th (possibly moved to MONDAY)
-                    || ((d == 25 || (d == 26 && w == MONDAY)) && m == APRIL)
-                    // Queen's Birthday, second MONDAY in June
-                    || ((d > 7 && d <= 14) && w == MONDAY && m == JUNE)
-                    // Bank Holiday, first MONDAY in August
-                    || (d <= 7 && w == MONDAY && m == AUGUST)
-                    // Labour Day, first MONDAY in October
-                    || (d <= 7 && w == MONDAY && m == OCTOBER)
-                    // Christmas, December 25th (possibly MONDAY or TUESDAY)
-                    || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
-                    // Boxing Day, December 26th (possibly MONDAY or TUESDAY)
-                    || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER))
-                return false;
-            return true;
-        }
-
-    }
-
-    private static final class AustraliaExchangeCalendar extends WesternCalendar {
-
-        public String getName() {
-            return "ASX";
-        }
-
-        @Override
-        public boolean isBusinessDay(final Date date) {
-            final Weekday w = date.weekday();
-            final int d = date.dayOfMonth();
-            final Month m = date.month();
-            final int y = date.year();
-            final int dd = date.dayOfYear();
-            final int em = easterMonday(y);
-
-            if (isWeekend(w)
-                    // New Year's Day (possibly moved to MONDAY)
-                    || (d == 1  && m == JANUARY)
-                    // Australia Day, JANUARY 26th (possibly moved to MONDAY)
-                    || ((d == 26 || ((d == 27 || d == 28) && w == MONDAY)) && m == JANUARY)
-                    // Good Friday
-                    || (dd == em-3)
-                    // Easter MONDAY
-                    || (dd == em)
-                    // ANZAC Day, April 25th (possibly moved to MONDAY)
-                    || ((d == 25 || (d == 26 && w == MONDAY)) && m == APRIL)
-                    // Queen's Birthday, second MONDAY in June
-                    || ((d > 7 && d <= 14) && w == MONDAY && m == JUNE)
-                    // Bank Holiday, first MONDAY in August
-                    || (d <= 7 && w == MONDAY && m == AUGUST)
-                    // Labour Day, first MONDAY in October
-                    || (d <= 7 && w == MONDAY && m == OCTOBER)
-                    // Christmas, December 25th (possibly MONDAY or TUESDAY)
-                    || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER)
-                    // Boxing Day, December 26th (possibly MONDAY or TUESDAY)
-                    || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == DECEMBER))
-                return false;
-            return true;
-        }
-    }
-
+  }
 }

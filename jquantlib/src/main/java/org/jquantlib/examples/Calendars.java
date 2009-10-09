@@ -51,12 +51,12 @@ public class Calendars {
 
         // <=========================Basic Calendar functions==============================>
         //Let's take UnitedStates New-York-Stock-Exchange calendar
-        final Calendar unitedStatesCalendar = UnitedStates.getCalendar(Market.NYSE);
-        System.out.println("The name of this calendar is = "+ unitedStatesCalendar.getName());
+        final Calendar unitedStatesCalendar = new UnitedStates(Market.NYSE);
+        System.out.println("The name of this calendar is = "+ unitedStatesCalendar.name());
         // Let's get the list of holidays from todays date till the date obtained by advancing today's date by 90 days
         final Date dateToday = Date.todaysDate();
         final Date dateAdvanced = dateToday.add(90);
-        final List<Date> holidayList = unitedStatesCalendar.getHolidayList(dateToday, dateAdvanced, true);
+        final List<Date> holidayList = UnitedStates.holidayList(unitedStatesCalendar,dateToday, dateAdvanced, true);
         System. out.println("The holidays between dateToday = " + dateToday+ " till the date dateAdvanced = " + dateAdvanced+ " are as shown below");
         final StringBuffer bufferToHoldHolidays = new StringBuffer();
         for (final Date date : holidayList) {
@@ -110,7 +110,7 @@ public class Calendars {
         }
 
         // Advance the first holiday date using calendars's advance(date) API and get the nexBusinessDay
-        final Date nextBusinessDay = unitedStatesCalendar.advance(firstHolidayDate);
+        final Date nextBusinessDay = unitedStatesCalendar.advance(firstHolidayDate, new Period(1, TimeUnit.DAYS));
         if (unitedStatesCalendar.isBusinessDay(nextBusinessDay)) {
             System.out.println("NextBusinessDayFromFirstHolidayFromToday = "+ nextBusinessDay + " is a business date");
         }
@@ -180,15 +180,15 @@ public class Calendars {
         System.out.println("Next business date when today's date is advanced 1 year = "+ advancedDate);
 
         //<==================Joining Calendars===============================>
-        final Calendar unitedStatesCalendarGvtBondCalendar = UnitedStates.getCalendar(Market.GOVERNMENTBOND);
-        final Calendar jointCalendar = new JointCalendar(JointCalendarRule.JOIN_BUSINESSDAYS,unitedStatesCalendar,unitedStatesCalendarGvtBondCalendar);
+        final Calendar unitedStatesCalendarGvtBondCalendar = new UnitedStates(Market.GOVERNMENTBOND);
+        final Calendar jointCalendar = new JointCalendar(unitedStatesCalendar,unitedStatesCalendarGvtBondCalendar,JointCalendarRule.JoinBusinessDays);
 
         //The above joint calendar has been obtained by joining businessdays of newyork stock exchange and government bond calendar
         //which means a day will be a business day for the joint calendar if it is a business day for both of the calendars used
         //(NYSE,GovtBond) and will be a holiday if the day is a holiday in atleast one of the calendars.
 
         //Let's get the list of holidays for the joint calendar from the date today to date advanced(obtained by advancing date today by 90 days)
-        final List<Date> listOfHoliDays = jointCalendar.getHolidayList(dateToday, dateAdvanced, true);
+        final List<Date> listOfHoliDays = jointCalendar.holidayList(jointCalendar, dateToday, dateAdvanced, true);
 
         //Now let's get the same holiday list between dateToday and dateAdvanced using isBusinessDay API
         final List<Date> holidayListObtainedUsingCalAPI = new ArrayList<Date>();

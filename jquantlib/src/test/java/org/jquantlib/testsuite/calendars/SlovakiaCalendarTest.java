@@ -61,14 +61,14 @@ public class SlovakiaCalendarTest {
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
+      	final Calendar c = new Slovakia(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		expectedHol.add(new Date(1,JANUARY,year));
-		expectedHol.add(new Date(2,JANUARY,year));
+//		expectedHol.add(new Date(2,JANUARY,year));
 		//expectedHol.add(new Date(3,JANUARY,year));
 		//expectedHol.add(new Date(4,JANUARY,year));
-		expectedHol.add(new Date(5,JANUARY,year));
+//		expectedHol.add(new Date(5,JANUARY,year));
 		expectedHol.add(new Date(6,JANUARY,year));
 		expectedHol.add(new Date(9,APRIL,year));
 		expectedHol.add(new Date(12,APRIL,year));
@@ -127,14 +127,14 @@ public class SlovakiaCalendarTest {
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
+      	final Calendar c = new Slovakia(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		//expectedHol.add(new Date(1,JANUARY,year));
 		//expectedHol.add(new Date(2,JANUARY,year));
-		expectedHol.add(new Date(3,JANUARY,year));
-		expectedHol.add(new Date(4,JANUARY,year));
-		expectedHol.add(new Date(5,JANUARY,year));
+//		expectedHol.add(new Date(3,JANUARY,year));
+//		expectedHol.add(new Date(4,JANUARY,year));
+//		expectedHol.add(new Date(5,JANUARY,year));
 		expectedHol.add(new Date(6,JANUARY,year));
 		expectedHol.add(new Date(25,MARCH,year));
 		expectedHol.add(new Date(28,MARCH,year));
@@ -168,14 +168,14 @@ public class SlovakiaCalendarTest {
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
+      	final Calendar c = new Slovakia(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		//expectedHol.add(new Date(1,JANUARY,year));
-		expectedHol.add(new Date(2,JANUARY,year));
-		expectedHol.add(new Date(3,JANUARY,year));
-		expectedHol.add(new Date(4,JANUARY,year));
-		expectedHol.add(new Date(5,JANUARY,year));
+//		expectedHol.add(new Date(2,JANUARY,year));
+//		expectedHol.add(new Date(3,JANUARY,year));
+//		expectedHol.add(new Date(4,JANUARY,year));
+//		expectedHol.add(new Date(5,JANUARY,year));
 		expectedHol.add(new Date(6,JANUARY,year));
 		expectedHol.add(new Date(14,APRIL,year));
 		expectedHol.add(new Date(17,APRIL,year));
@@ -190,9 +190,9 @@ public class SlovakiaCalendarTest {
 		//expectedHol.add(new Date(24,DECEMBER,year));
 		expectedHol.add(new Date(25,DECEMBER,year));
 		expectedHol.add(new Date(26,DECEMBER,year));
-		expectedHol.add(new Date(27,DECEMBER,year));
-		expectedHol.add(new Date(28,DECEMBER,year));
-		expectedHol.add(new Date(29,DECEMBER,year));
+//		expectedHol.add(new Date(27,DECEMBER,year));
+//		expectedHol.add(new Date(28,DECEMBER,year));
+//		expectedHol.add(new Date(29,DECEMBER,year));
 		//expectedHol.add(new Date(30,DECEMBER,year));
 		//expectedHol.add(new Date(31,DECEMBER,year));
 
@@ -235,14 +235,14 @@ public class SlovakiaCalendarTest {
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
+      	final Calendar c = new Slovakia(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	expectedHol.add(new Date(1,JANUARY,year));
-    	expectedHol.add(new Date(2,JANUARY,year));
-    	expectedHol.add(new Date(3,JANUARY,year));
-    	expectedHol.add(new Date(4,JANUARY,year));
-    	expectedHol.add(new Date(5,JANUARY,year));
+//    	expectedHol.add(new Date(2,JANUARY,year));
+//    	expectedHol.add(new Date(3,JANUARY,year));
+//    	expectedHol.add(new Date(4,JANUARY,year));
+//    	expectedHol.add(new Date(5,JANUARY,year));
     	// expectedHol.add(new Date(6,JANUARY,year));
 		expectedHol.add(new Date(6,APRIL,year));
 		expectedHol.add(new Date(9,APRIL,year));
@@ -257,11 +257,11 @@ public class SlovakiaCalendarTest {
 		expectedHol.add(new Date(24,DECEMBER,year));
 		expectedHol.add(new Date(25,DECEMBER,year));
 		expectedHol.add(new Date(26,DECEMBER,year));
-		expectedHol.add(new Date(27,DECEMBER,year));
-		expectedHol.add(new Date(28,DECEMBER,year));
+//		expectedHol.add(new Date(27,DECEMBER,year));
+//		expectedHol.add(new Date(28,DECEMBER,year));
 		// expectedHol.add(new Date(29,DECEMBER,year));
 		// expectedHol.add(new Date(30,DECEMBER,year));
-		expectedHol.add(new Date(31,DECEMBER,year));
+//		expectedHol.add(new Date(31,DECEMBER,year));
 
 		// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -301,13 +301,13 @@ public class SlovakiaCalendarTest {
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
+      	final Calendar c = new Slovakia(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	expectedHol.add(new Date(1,JANUARY,year));
-    	expectedHol.add(new Date(2,JANUARY,year));
-    	expectedHol.add(new Date(3,JANUARY,year));
-    	expectedHol.add(new Date(4,JANUARY,year));
+//    	expectedHol.add(new Date(2,JANUARY,year));
+//    	expectedHol.add(new Date(3,JANUARY,year));
+//    	expectedHol.add(new Date(4,JANUARY,year));
     	// expectedHol.add(new Date(5,JANUARY,year));
     	// expectedHol.add(new Date(6,JANUARY,year));
 		expectedHol.add(new Date(21,MARCH,year));
@@ -324,9 +324,9 @@ public class SlovakiaCalendarTest {
 		expectedHol.add(new Date(26,DECEMBER,year));
 		// expectedHol.add(new Date(27,DECEMBER,year));
 		// expectedHol.add(new Date(28,DECEMBER,year));
-		expectedHol.add(new Date(29,DECEMBER,year));
-		expectedHol.add(new Date(30,DECEMBER,year));
-		expectedHol.add(new Date(31,DECEMBER,year));
+//		expectedHol.add(new Date(29,DECEMBER,year));
+//		expectedHol.add(new Date(30,DECEMBER,year));
+//		expectedHol.add(new Date(31,DECEMBER,year));
 
 		// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -341,14 +341,14 @@ public class SlovakiaCalendarTest {
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
+      	final Calendar c = new Slovakia(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	expectedHol.add(new Date(1,JANUARY,year));
-    	expectedHol.add(new Date(2,JANUARY,year));
+//    	expectedHol.add(new Date(2,JANUARY,year));
     	//expectedHol.add(new Date(3,JANUARY,year));
     	//expectedHol.add(new Date(4,JANUARY,year));
-    	expectedHol.add(new Date(5,JANUARY,year));
+//    	expectedHol.add(new Date(5,JANUARY,year));
 		expectedHol.add(new Date(6,JANUARY,year));
 		expectedHol.add(new Date(10,APRIL,year));
 		expectedHol.add(new Date(13,APRIL,year));
@@ -361,10 +361,10 @@ public class SlovakiaCalendarTest {
 		expectedHol.add(new Date(25,DECEMBER,year));
 		//expectedHol.add(new Date(26,DECEMBER,year));
 		//expectedHol.add(new Date(27,DECEMBER,year));
-		expectedHol.add(new Date(28,DECEMBER,year));
-		expectedHol.add(new Date(29,DECEMBER,year));
-		expectedHol.add(new Date(30,DECEMBER,year));
-		expectedHol.add(new Date(31,DECEMBER,year));
+//		expectedHol.add(new Date(28,DECEMBER,year));
+//		expectedHol.add(new Date(29,DECEMBER,year));
+//		expectedHol.add(new Date(30,DECEMBER,year));
+//		expectedHol.add(new Date(31,DECEMBER,year));
 
 		// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -379,14 +379,14 @@ public class SlovakiaCalendarTest {
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
+      	final Calendar c = new Slovakia(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	expectedHol.add(new Date(1,JANUARY,year));
     	//expectedHol.add(new Date(2,JANUARY,year));
     	//expectedHol.add(new Date(3,JANUARY,year));
-    	expectedHol.add(new Date(4,JANUARY,year));
-    	expectedHol.add(new Date(5,JANUARY,year));
+//    	expectedHol.add(new Date(4,JANUARY,year));
+//    	expectedHol.add(new Date(5,JANUARY,year));
 		expectedHol.add(new Date(6,JANUARY,year));
 		expectedHol.add(new Date(2,APRIL,year));
 		expectedHol.add(new Date(5,APRIL,year));
@@ -398,11 +398,11 @@ public class SlovakiaCalendarTest {
 		expectedHol.add(new Date(24,DECEMBER,year));
 		//expectedHol.add(new Date(25,DECEMBER,year));
 		//expectedHol.add(new Date(26,DECEMBER,year));
-		expectedHol.add(new Date(27,DECEMBER,year));
-		expectedHol.add(new Date(28,DECEMBER,year));
-		expectedHol.add(new Date(29,DECEMBER,year));
-		expectedHol.add(new Date(30,DECEMBER,year));
-		expectedHol.add(new Date(31,DECEMBER,year));
+//		expectedHol.add(new Date(27,DECEMBER,year));
+//		expectedHol.add(new Date(28,DECEMBER,year));
+//		expectedHol.add(new Date(29,DECEMBER,year));
+//		expectedHol.add(new Date(30,DECEMBER,year));
+//		expectedHol.add(new Date(31,DECEMBER,year));
 
 		// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -417,14 +417,14 @@ public class SlovakiaCalendarTest {
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
+      	final Calendar c = new Slovakia(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		//expectedHol.add(new Date(1,JANUARY,year));
 		//expectedHol.add(new Date(2,JANUARY,year));
-		expectedHol.add(new Date(3,JANUARY,year));
-		expectedHol.add(new Date(4,JANUARY,year));
-		expectedHol.add(new Date(5,JANUARY,year));
+//		expectedHol.add(new Date(3,JANUARY,year));
+//		expectedHol.add(new Date(4,JANUARY,year));
+//		expectedHol.add(new Date(5,JANUARY,year));
 		expectedHol.add(new Date(6,JANUARY,year));
 		expectedHol.add(new Date(22,APRIL,year));
 		expectedHol.add(new Date(25,APRIL,year));
@@ -437,10 +437,10 @@ public class SlovakiaCalendarTest {
 		//expectedHol.add(new Date(24,DECEMBER,year));
 		//expectedHol.add(new Date(25,DECEMBER,year));
 		expectedHol.add(new Date(26,DECEMBER,year));
-		expectedHol.add(new Date(27,DECEMBER,year));
-		expectedHol.add(new Date(28,DECEMBER,year));
-		expectedHol.add(new Date(29,DECEMBER,year));
-		expectedHol.add(new Date(30,DECEMBER,year));
+//		expectedHol.add(new Date(27,DECEMBER,year));
+//		expectedHol.add(new Date(28,DECEMBER,year));
+//		expectedHol.add(new Date(29,DECEMBER,year));
+//		expectedHol.add(new Date(30,DECEMBER,year));
 		//expectedHol.add(new Date(31,DECEMBER,year));
 
 		// Call the Holiday Check
@@ -456,14 +456,14 @@ public class SlovakiaCalendarTest {
       	QL.info("Testing Solvakia's holiday list for the year " + year + "...");
 
         
-      	final Calendar c = Slovakia.getCalendar(Slovakia.Market.BSSE);
+      	final Calendar c = new Slovakia(Slovakia.Market.BSSE);
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		//expectedHol.add(new Date(1,JANUARY,year));
-		expectedHol.add(new Date(2,JANUARY,year));
-		expectedHol.add(new Date(3,JANUARY,year));
-		expectedHol.add(new Date(4,JANUARY,year));
-		expectedHol.add(new Date(5,JANUARY,year));
+//		expectedHol.add(new Date(2,JANUARY,year));
+//		expectedHol.add(new Date(3,JANUARY,year));
+//		expectedHol.add(new Date(4,JANUARY,year));
+//		expectedHol.add(new Date(5,JANUARY,year));
 		expectedHol.add(new Date(6,JANUARY,year));
 		expectedHol.add(new Date(6,APRIL,year));
 		expectedHol.add(new Date(9,APRIL,year));
@@ -475,11 +475,11 @@ public class SlovakiaCalendarTest {
 		expectedHol.add(new Date(24,DECEMBER,year));
 		expectedHol.add(new Date(25,DECEMBER,year));
 		expectedHol.add(new Date(26,DECEMBER,year));
-		expectedHol.add(new Date(27,DECEMBER,year));
-		expectedHol.add(new Date(28,DECEMBER,year));
+//		expectedHol.add(new Date(27,DECEMBER,year));
+//		expectedHol.add(new Date(28,DECEMBER,year));
 		//expectedHol.add(new Date(29,DECEMBER,year));
 		//expectedHol.add(new Date(30,DECEMBER,year));
-		expectedHol.add(new Date(31,DECEMBER,year));
+//		expectedHol.add(new Date(31,DECEMBER,year));
 
 		// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
