@@ -61,7 +61,7 @@ import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
-import org.jquantlib.time.DateGenerationRule;
+import org.jquantlib.time.DateGeneration;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
@@ -135,7 +135,7 @@ public class BondTest {
                                     vars.calendar,
                                     accrualConvention,
                                     accrualConvention,
-                                    DateGenerationRule.BACKWARD,
+                                    DateGeneration.Rule.Backward,
                                     false, new Date(), new Date());
 
 

@@ -52,7 +52,7 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
         QL.require(!isZero || !isInArrears , "features in-arrears and zero are not compatible"); // QA:[RG]::verified // TODO: message
 
         // the following is not always correct (orignial c++ comment)
-        final Calendar calendar = schedule.getCalendar();
+        final Calendar calendar = schedule.calendar();
 
         // FIXME: constructor for uninitialized date available ?
         Date refStart, start, refEnd, end;

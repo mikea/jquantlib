@@ -6,7 +6,7 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
-import org.jquantlib.time.DateGenerationRule;
+import org.jquantlib.time.DateGeneration;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
@@ -35,7 +35,7 @@ public class FixedRateBond extends Bond {
             final BusinessDayConvention paymentConvention,
             /*Real*/final double redemption,
             final Date  issueDate){
-        super(settlementDays, schedule.getCalendar(), issueDate);
+        super(settlementDays, schedule.calendar(), issueDate);
         frequency_ = schedule.tenor().frequency();
         dayCounter_ = accrualDayCounter;
         //maturityDate_ = schedule.endDate();
@@ -81,7 +81,7 @@ public class FixedRateBond extends Bond {
             /*@Real*/ final double redemption,
             final Date  issueDate ,
             final Date  stubDate ,
-            final DateGenerationRule  rule  ,
+            final DateGeneration.Rule  rule  ,
             final boolean endOfMonth){
         super(settlementDays, calendar, issueDate);
         frequency_=(tenor.frequency());
@@ -91,24 +91,24 @@ public class FixedRateBond extends Bond {
         Date firstDate = new Date();
         Date nextToLastDate = new Date();
         switch (rule) {
-        case BACKWARD:
+        case Backward://BACKWARD:
             firstDate = new Date();
             nextToLastDate = stubDate.clone();
             break;
-        case FORWARD:
+        case Forward://FORWARD:
             firstDate = stubDate.clone();
             nextToLastDate = new Date();
             break;
-        case ZERO:
+        case Zero://ZERO:
             reportFalseDateGenerationRule(stubDate, rule);
             break;
-        case THIRD_WEDNESDAY:
+        case ThirdWednesday://THIRD_WEDNESDAY:
             reportFalseDateGenerationRule(stubDate, rule);
             break;
-        case  TWENTIEHT:
+        case  Twentieth://TWENTIEHT:
             reportFalseDateGenerationRule(stubDate, rule);
             break;
-        case  TWENTIEHTIMM:
+        case  TwentiethIMM://TWENTIEHTIMM:
             reportFalseDateGenerationRule(stubDate, rule);
             break;
         default:
@@ -139,7 +139,7 @@ public class FixedRateBond extends Bond {
         return dayCounter_;
     }
 
-    private void reportFalseDateGenerationRule(final Date stubDate, final DateGenerationRule rule){
+    private void reportFalseDateGenerationRule(final Date stubDate, final DateGeneration.Rule rule){
         QL.error("stub date ("+ stubDate + ") not allowed with " +
                 rule + " DateGeneration::Rule");
     }

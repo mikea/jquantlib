@@ -26,7 +26,7 @@ import org.jquantlib.termstructures.yieldcurves.FixedRateBondHelper;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
-import org.jquantlib.time.DateGenerationRule;
+import org.jquantlib.time.DateGeneration;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
@@ -154,7 +154,8 @@ public class Bonds {
                     new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
                     BusinessDayConvention.UNADJUSTED,
                     BusinessDayConvention.UNADJUSTED,
-                    DateGenerationRule.BACKWARD, false,
+                    DateGeneration.Rule.Backward,
+                    false,
                     Date.todaysDate(),
                     Date.todaysDate());
             final FixedRateBondHelper bondHelper = (

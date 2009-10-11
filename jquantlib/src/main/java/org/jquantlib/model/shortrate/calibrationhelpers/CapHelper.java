@@ -12,7 +12,7 @@ import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Date;
-import org.jquantlib.time.DateGenerationRule;
+import org.jquantlib.time.DateGeneration;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
@@ -77,7 +77,7 @@ public class CapHelper extends CalibrationHelper {
                 startDate, maturity,
                 new Period(fixedLegFrequency), index.fixingCalendar(),
                 BusinessDayConvention.UNADJUSTED, BusinessDayConvention.UNADJUSTED,
-                DateGenerationRule.FORWARD, false);
+                DateGeneration.Rule.Forward, false);
 
         //TODO: Code review :: incomplete code
         if (true) {

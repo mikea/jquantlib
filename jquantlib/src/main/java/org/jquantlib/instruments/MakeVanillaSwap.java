@@ -10,7 +10,7 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
-import org.jquantlib.time.DateGenerationRule;
+import org.jquantlib.time.DateGeneration;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 
@@ -33,7 +33,7 @@ public class MakeVanillaSwap {
     private Period fixedTenor_, floatTenor_;
     private BusinessDayConvention fixedConvention_, fixedTerminationDateConvention_;
     private BusinessDayConvention floatConvention_, floatTerminationDateConvention_;
-    private DateGenerationRule fixedRule_, floatRule_;
+    private DateGeneration.Rule fixedRule_, floatRule_;
     private boolean fixedEndOfMonth_, floatEndOfMonth_;
     private Date fixedFirstDate_, fixedNextToLastDate_;
     private Date floatFirstDate_, floatNextToLastDate_;
@@ -75,8 +75,8 @@ public class MakeVanillaSwap {
         fixedTerminationDateConvention_ = (BusinessDayConvention.MODIFIED_FOLLOWING);
         floatConvention_ = (index.getConvention());
         floatTerminationDateConvention_ = (index.getConvention());
-        fixedRule_ = (DateGenerationRule.BACKWARD);
-        floatRule_ = (DateGenerationRule.BACKWARD);
+        fixedRule_ = (DateGeneration.Rule.Backward);
+        floatRule_ = (DateGeneration.Rule.Backward);
         fixedEndOfMonth_ = (false);
         floatEndOfMonth_ = (false);
         fixedFirstDate_ = today.clone();
@@ -189,7 +189,7 @@ public class MakeVanillaSwap {
         return this;
     }
 
-    public MakeVanillaSwap withRule(final DateGenerationRule r) {
+    public MakeVanillaSwap withRule(final DateGeneration.Rule r) {
         fixedRule_ = r;
         floatRule_ = r;
         return this;
@@ -220,7 +220,7 @@ public class MakeVanillaSwap {
         return this;
     }
 
-    public MakeVanillaSwap withFixedLegRule(final DateGenerationRule r) {
+    public MakeVanillaSwap withFixedLegRule(final DateGeneration.Rule r) {
         fixedRule_ = r;
         return this;
     }
@@ -265,7 +265,7 @@ public class MakeVanillaSwap {
         return this;
     }
 
-    public MakeVanillaSwap withFloatingLegRule(final DateGenerationRule r) {
+    public MakeVanillaSwap withFloatingLegRule(final DateGeneration.Rule r) {
         floatRule_ = r;
         return this;
     }

@@ -62,7 +62,7 @@ public class IMM {
      * @param date
      * @return
      */
-    public boolean isIMMdate(final Date date) {
+    public static boolean isIMMdate(final Date date) {
         return isIMMdate(date, true);
     }
 
@@ -74,7 +74,7 @@ public class IMM {
      * @param mainCycle
      * @return
      */
-    public boolean isIMMdate(final Date date, final boolean mainCycle) {
+    public static boolean isIMMdate(final Date date, final boolean mainCycle) {
         if (date.weekday()!=Weekday.WEDNESDAY) {
             return false;
         }

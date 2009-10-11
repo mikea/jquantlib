@@ -32,7 +32,7 @@ import org.jquantlib.QL;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
-import org.jquantlib.time.DateGenerationRule;
+import org.jquantlib.time.DateGeneration;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
@@ -59,7 +59,7 @@ public class ScheduleTest {
         final Date maturityDate = startDate.add(maturity);
         final Period accPeriodTenor = new Period(6, TimeUnit.MONTHS);
         final BusinessDayConvention modFollow = BusinessDayConvention.MODIFIED_FOLLOWING;
-        final DateGenerationRule dateRule = DateGenerationRule.BACKWARD;
+        final DateGeneration.Rule dateRule = DateGeneration.Rule.Backward;
 
         // TODO: make sure all sources are synchronized properly and Schedule API is consistent
 

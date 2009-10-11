@@ -54,7 +54,7 @@ import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
-import org.jquantlib.time.DateGenerationRule;
+import org.jquantlib.time.DateGeneration;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
@@ -126,7 +126,7 @@ public class ConvertibleBonds {
                 issueDate, exerciseDate,
                 new Period(frequency), calendar,
                 convention, convention,
-                DateGenerationRule.BACKWARD, false);
+                DateGeneration.Rule.Backward, false);
 
         final List<Dividend> dividends = new ArrayList<Dividend>();
         final List<Callability> callability = new ArrayList<Callability>();

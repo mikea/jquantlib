@@ -85,7 +85,7 @@ public class FixedRateLeg extends Leg {
         final Leg leg = new Leg();
 
         // the following is not always correct
-        final Calendar calendar = schedule_.getCalendar();
+        final Calendar calendar = schedule_.calendar();
 
         // first period might be short or long
         Date start = schedule_.date(0), end = schedule_.date(1);
