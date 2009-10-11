@@ -156,8 +156,8 @@ public class Merton76Process extends StochasticProcess1D {
     //
 
     @Override
-    public double /* @Time */getTime(final Date d) {
-        return blackProcess.getTime(d);
+    public double /* @Time */time(final Date d) {
+        return blackProcess.time(d);
     }
 
 }

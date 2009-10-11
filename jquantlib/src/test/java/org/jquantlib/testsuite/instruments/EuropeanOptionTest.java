@@ -321,7 +321,7 @@ public class EuropeanOptionTest {
                 new EuropeanOptionData( Option.Type.CALL,  40.00,  42.00, 0.08, 0.04, 0.75, 0.35,  5.0975, 1.0e-4)
         };
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
 
@@ -416,7 +416,7 @@ public class EuropeanOptionTest {
                 new EuropeanOptionData(Option.Type.PUT,  490.00, 500.00, 0.05, 0.08, 0.250000, 0.15, 42.2254, 0)
         };
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
         final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
@@ -657,7 +657,7 @@ public class EuropeanOptionTest {
         final double vols[] = { 0.11, 0.50, 1.20 };
 
         final DayCounter dc = Actual360.getDayCounter();
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         //TODO: investigate a less error prone way to deal with evaluate date
         //
@@ -825,7 +825,7 @@ public class EuropeanOptionTest {
         final double rRates[] = { 0.01, 0.05, 0.10 };
         final double vols[] = { 0.01, 0.20, 0.30, 0.70, 0.90 };
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
         final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
@@ -913,7 +913,7 @@ public class EuropeanOptionTest {
         final int maxEvaluations = 100;
         final double tolerance = 1.0e-6;
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
 
@@ -1002,7 +1002,7 @@ public class EuropeanOptionTest {
         final double /* @Rate */rRates[] = { 0.01, 0.05, 0.15 };
         final double /* @Volatility */vols[] = { 0.11, 0.50, 1.20 };
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
 

@@ -58,7 +58,7 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
         super();
 
         // TODO: code review :: please verify against QL/C++ code
-        this.evaluationDate = new Settings().getEvaluationDate();
+        this.evaluationDate = new Settings().evaluationDate();
         this.evaluationDate.addObserver(this);
         // XXX:registerWith
         //registerWith(this.evaluationDate);
@@ -71,7 +71,7 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
 
     public RelativeDateRateHelper(/*@Price*/ final double d) {
         super(d);
-        this.evaluationDate = new Settings().getEvaluationDate();
+        this.evaluationDate = new Settings().evaluationDate();
         this.evaluationDate.addObserver(this);
         // XXX:registerWith
         //registerWith(this.evaluationDate);
@@ -79,7 +79,7 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
 
     public RelativeDateRateHelper(final Handle<Quote> quote) {
         super(quote);
-        this.evaluationDate = new Settings().getEvaluationDate();
+        this.evaluationDate = new Settings().evaluationDate();
         this.evaluationDate.addObserver(this);
         // XXX:registerWith
         //registerWith(this.evaluationDate);
@@ -88,7 +88,7 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
 
     public RelativeDateRateHelper(final Handle<Quote> quote, final T termStructure, final Date earliestDate, final Date latestDate) {
         super(quote, termStructure, earliestDate, latestDate);
-        this.evaluationDate = new Settings().getEvaluationDate();
+        this.evaluationDate = new Settings().evaluationDate();
         this.evaluationDate.addObserver(this);
         // XXX:registerWith
         //registerWith(this.evaluationDate);
@@ -108,7 +108,7 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
 
     @Override
     public void update(final Observable o, final Object arg) {
-        final Date newEvaluationDate = new Settings().getEvaluationDate();
+        final Date newEvaluationDate = new Settings().evaluationDate();
         if (!evaluationDate.equals(newEvaluationDate)) {
             evaluationDate = newEvaluationDate;
             initializeDates();

@@ -68,13 +68,11 @@ public class DatesTest {
         final Period period = new Period(-10, TimeUnit.YEARS);
         final Date last = maxDate.clone().addAssign(period);
 
-        final IMM iMM = new IMM();
-
         final StopClock clock = new StopClock();
         clock.startClock();
         while (counter.le(last)) {
 
-            final Date immDate = iMM.nextDate(counter, false);
+            final Date immDate = IMM.nextDate(counter, false);
 
             // check that imm is greater than counter
             if (immDate.le(counter)) {
@@ -82,13 +80,13 @@ public class DatesTest {
             }
 
             // check that imm is an IMM date
-            if (!iMM.isIMMdate(immDate, false)) {
+            if (!IMM.isIMMdate(immDate, false)) {
                 fail("\n  " + immDate.weekday() + " " + immDate + " is not an IMM date (calculated from " + counter.weekday() + " " + counter + ")");
             }
 
             // check that imm is <= to the next IMM date in the main cycle
-            if (immDate.gt(iMM.nextDate(counter, true))) {
-                fail("\n  " + immDate.weekday() + " " + immDate + " is not less than or equal to the next future in the main cycle " + iMM.nextDate(counter, true));
+            if (immDate.gt(IMM.nextDate(counter, true))) {
+                fail("\n  " + immDate.weekday() + " " + immDate + " is not less than or equal to the next future in the main cycle " + IMM.nextDate(counter, true));
             }
 
             //
@@ -102,14 +100,14 @@ public class DatesTest {
             // + IMM.getDefaultIMM().weekday() + " " + imm);
 
             // check that for every date IMMdate is the inverse of IMMcode
-            if (!iMM.date(iMM.code(immDate), counter).equals(immDate)) {
-                fail("\n  " + iMM.code(immDate) + " at calendar day " + counter + " is not the IMM code matching " + immDate);
+            if (!IMM.date(IMM.code(immDate), counter).equals(immDate)) {
+                fail("\n  " + IMM.code(immDate) + " at calendar day " + counter + " is not the IMM code matching " + immDate);
             }
 
             // check that for every date the 120 IMM codes refer to future dates
             for (int i = 0; i < 40; ++i) {
-                if (iMM.date(IMMcodes[i], counter).lt(counter)) {
-                    fail("\n  " + iMM.date(IMMcodes[i], counter) + " is wrong for " + IMMcodes[i] + " at reference date " + counter);
+                if (IMM.date(IMMcodes[i], counter).lt(counter)) {
+                    fail("\n  " + IMM.date(IMMcodes[i], counter) + " is wrong for " + IMMcodes[i] + " at reference date " + counter);
                 }
             }
 

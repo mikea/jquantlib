@@ -147,7 +147,7 @@ public abstract class Bond extends NewInstrument {
             addRedemptionsToCashflows();
         }
 
-        final Date evaluationDate = new Settings().getEvaluationDate();
+        final Date evaluationDate = new Settings().evaluationDate();
 
         // TODO: code review :: please verify against QL/C++ code
         // seems like we should have this.evaluationDate
@@ -233,7 +233,7 @@ public abstract class Bond extends NewInstrument {
 
         }
 
-        final Date evaluationDate = new Settings().getEvaluationDate();
+        final Date evaluationDate = new Settings().evaluationDate();
 
         // TODO: code review :: please verify against QL/C++ code
         // seems like we should have this.evaluationDate
@@ -298,7 +298,7 @@ public abstract class Bond extends NewInstrument {
         this.discountCurve = discountCurve;
         this.frequency = Frequency.NO_FREQUENCY;
 
-        final Date evaluationDate = new Settings().getEvaluationDate();
+        final Date evaluationDate = new Settings().evaluationDate();
 
         // TODO: code review :: please verify against QL/C++ code
         // seems like we should have this.evaluationDate
@@ -466,7 +466,7 @@ public abstract class Bond extends NewInstrument {
 
     //FIXME: intended to return a copy!!!!!!!!!!!!!!!!!!! review!
     public Date settlementDate(final Date date) {
-        final Date d = (date.isNull()) ? new Settings().getEvaluationDate() : date;
+        final Date d = (date.isNull()) ? new Settings().evaluationDate() : date;
 
         // usually, the settlement is at T+n...
         final Date settlement = calendar_.advance(d, settlementDays_, TimeUnit.DAYS);

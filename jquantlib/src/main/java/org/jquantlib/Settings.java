@@ -158,10 +158,8 @@ public class Settings {
 
     /**
      * @return the value of field evaluationDate
-     *
-     * @see #evaluationDate
      */
-    public Date getEvaluationDate() {
+    public Date evaluationDate() {
         return ((DateProxy) attrs.get().get(EVALUATION_DATE)).value();
     }
 
@@ -171,8 +169,6 @@ public class Settings {
      * <p>
      * Notice that a successful change of evaluationDate notifies all its
      * listeners.
-     *
-     * @see #evaluationDate
      */
     public Date setEvaluationDate(final Date evaluationDate) {
         final DateProxy proxy = (DateProxy) attrs.get().get(EVALUATION_DATE);

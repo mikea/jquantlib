@@ -69,7 +69,7 @@ public abstract class SmileSection implements Observable {
         exerciseDate_ = d;
         dc_ = dc;
         // FIXME: should be compared to new Date()...
-        final Date refDate = (!referenceDate.isToday()) ? referenceDate : new Settings().getEvaluationDate();
+        final Date refDate = (!referenceDate.isToday()) ? referenceDate : new Settings().evaluationDate();
         QL.ensure(d.gt(refDate) , "expiry date must be greater than reference date"); // QA:[RG]::verified // TODO: message
         exerciseTime_ = dc_.yearFraction(refDate, d);
     }

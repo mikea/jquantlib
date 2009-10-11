@@ -157,7 +157,7 @@ public class TermStructuresTest {
         final int days[] = { 10, 30, 60, 120, 360, 720 };
         /*@DiscountFactor*/ final double[] expected = new /*@DiscountFactor*/ double[days.length];
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         for (int i=0; i<days.length; i++) {
             final Date anotherDay = today.add(days[i]);
@@ -217,7 +217,7 @@ public class TermStructuresTest {
         QL.info("Testing observability of implied term structure...");
 
 //        final Date today = calendar.advance(Date.todaysDate());
-        Date today = new Settings().getEvaluationDate();
+        Date today = new Settings().evaluationDate();
         final Date newToday = today.add(Period.ONE_YEAR_FORWARD.times(3));
         final Date newSettlement = new Target().advance(newToday, settlementDays, TimeUnit.DAYS);
 

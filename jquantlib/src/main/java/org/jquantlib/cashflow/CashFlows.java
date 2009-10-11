@@ -185,7 +185,7 @@ public class CashFlows {
 
         Date date = settlementDate;
         if (date.isNull()) {
-            date = new Settings().getEvaluationDate();
+            date = new Settings().evaluationDate();
         }
 
         final YieldTermStructure flatRate = new FlatForward(date, irr.rate(), irr.dayCounter(), irr.compounding(), irr.frequency());
@@ -248,7 +248,7 @@ public class CashFlows {
     public double bps(final Leg cashflows, final InterestRate irr, final Date settlementDate) {
         Date date = settlementDate;
         if (date.isNull()) {
-            date = new Settings().getEvaluationDate();
+            date = new Settings().evaluationDate();
         }
 
         final YieldTermStructure flatRate = new FlatForward(date, irr.rate(), irr.dayCounter(), irr.compounding(), irr.frequency());
@@ -293,7 +293,7 @@ public class CashFlows {
 
         Date date = settlementDate;
         if (date.isNull()) {
-            date = new Settings().getEvaluationDate();
+            date = new Settings().evaluationDate();
         }
 
         // depending on the sign of the market price, check that cash
@@ -361,7 +361,7 @@ public class CashFlows {
 
         Date date = settlementDate;
         if (date.isNull()) {
-            date = new Settings().getEvaluationDate();
+            date = new Settings().evaluationDate();
         }
 
         switch (duration) {
@@ -390,7 +390,7 @@ public class CashFlows {
 
         Date date = settlementDate;
         if (date.isNull()) {
-            date = new Settings().getEvaluationDate();
+            date = new Settings().evaluationDate();
         }
 
         final DayCounter dayCounter = rate.dayCounter();
@@ -528,7 +528,7 @@ public class CashFlows {
 
     final public int previousCashFlow(final Leg leg, Date refDate) {
         if (refDate.isNull()) {
-            refDate = new Settings().getEvaluationDate();
+            refDate = new Settings().evaluationDate();
         }
 
         if (!(leg.get(0).hasOccurred(refDate))) {
@@ -567,7 +567,7 @@ public class CashFlows {
      */
     final public CashFlow nextCashFlow(final Leg cashFlows, Date settlement) {
         if (settlement.isNull()) {
-            settlement = new Settings().getEvaluationDate();
+            settlement = new Settings().evaluationDate();
         }
         for (int i = 0; i < cashFlows.size(); ++i) {
             // the first coupon paying after d is the one we're after
@@ -588,7 +588,7 @@ public class CashFlows {
      */
     final public int nextCashFlowIndex(final Leg cashFlows, Date settlement) {
         if (settlement.isNull()) {
-            settlement = new Settings().getEvaluationDate();
+            settlement = new Settings().evaluationDate();
         }
         for (int i = 0; i < cashFlows.size(); ++i) {
             // the first coupon paying after d is the one we're after

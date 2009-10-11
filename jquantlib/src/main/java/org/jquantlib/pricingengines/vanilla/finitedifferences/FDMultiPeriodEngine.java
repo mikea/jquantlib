@@ -60,7 +60,7 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
         stoppingTimes.clear();
         final int n = schedule.size();
         for(int i = 0; i<n; i++)
-            stoppingTimes.add(process.getTime(events.get(i).date()));
+            stoppingTimes.add(process.time(events.get(i).date()));
     }
 
 
@@ -99,7 +99,7 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
         events.clear();
         final int n = args.exercise.size();
         for (int i=0; i<n; ++i)
-            stoppingTimes.add(process.getTime(args.exercise.date(i)));
+            stoppingTimes.add(process.time(args.exercise.date(i)));
     }
 
     @Override

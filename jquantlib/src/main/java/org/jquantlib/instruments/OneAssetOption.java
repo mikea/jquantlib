@@ -228,7 +228,7 @@ public class OneAssetOption extends Option {
 
     @Override
     public boolean isExpired() /* @ReadOnly */ {
-        final Date evaluationDate = new Settings().getEvaluationDate();
+        final Date evaluationDate = new Settings().evaluationDate();
         return exercise.lastDate().le( evaluationDate );
     }
 
@@ -255,7 +255,7 @@ public class OneAssetOption extends Option {
         final int n = exercise.size();
         final List<Double> list = new ArrayDoubleList(n);
         for (int i=0; i<n; ++i) {
-            list.add(/*@Time*/ stochasticProcess.getTime(exercise.date(i)));
+            list.add(/*@Time*/ stochasticProcess.time(exercise.date(i)));
         }
         optionArguments.stoppingTimes = list;
     }

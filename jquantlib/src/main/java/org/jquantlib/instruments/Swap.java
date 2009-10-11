@@ -156,7 +156,7 @@ public class Swap extends NewInstrument {
 
     @Override
     public boolean isExpired() /* @ReadOnly */{
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
         for (int i = 0; i < legs.size(); i++) {
             for (final CashFlow item : legs.get(i)) {
                 if (!item.hasOccurred(today)) {

@@ -208,7 +208,7 @@ public class JumpDiffusionEngineTest {
                 new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.75,  2.23, 1e-2)  // Haug 2.17
         };
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
         final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
@@ -339,7 +339,7 @@ public class JumpDiffusionEngineTest {
         // A tolerance of 1.0e-08 is usually sufficient to get reasonable results
         final PricingEngine engine = new JumpDiffusionEngine(baseEngine, 1e-08);
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         for (final Type type : types) {
             for (final double strike : strikes) {

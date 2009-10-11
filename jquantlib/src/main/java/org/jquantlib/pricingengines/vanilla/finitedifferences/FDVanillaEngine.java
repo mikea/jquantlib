@@ -156,7 +156,7 @@ public class FDVanillaEngine {
     }
 
     protected/* Time */double getResidualTime() {
-        return process.getTime(exerciseDate);
+        return process.time(exerciseDate);
     }
 
     // safety check to be sure we have enough grid points.

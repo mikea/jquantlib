@@ -126,7 +126,7 @@ public class FloatingRateCoupon extends Coupon implements Observer {
             this.dayCounter = index_.dayCounter();
         }
 
-        final Date evaluationDate = new Settings().getEvaluationDate();
+        final Date evaluationDate = new Settings().evaluationDate();
 
         // TODO: code review :: please verify against QL/C++ code
         // seems like we should have this.evaluationDate

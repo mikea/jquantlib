@@ -95,7 +95,7 @@ public class AsianOptionTest {
         // data from "Implementing Derivatives Model",
         // Clewlow, Strickland, p.118-123
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
 
@@ -191,7 +191,7 @@ public class AsianOptionTest {
         final StochasticProcess process = new BlackScholesMertonProcess(new Handle<Quote>(spot), new Handle<YieldTermStructure>(qTS),
                 new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         for (final Type type : types) {
             for (final double strike : strikes) {
@@ -331,7 +331,7 @@ public class AsianOptionTest {
         final DayCounter dc = Actual360.getDayCounter();
         // data from "Option Pricing Formulas", Haug, pag.96-97
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         QL.info("Today: " + today);
 
@@ -428,7 +428,7 @@ public class AsianOptionTest {
                 new Handle<Quote>(spot), new Handle<YieldTermStructure>(qTS),
                 new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         for (final Type type : types) {
             for (final double strike : strikes) {

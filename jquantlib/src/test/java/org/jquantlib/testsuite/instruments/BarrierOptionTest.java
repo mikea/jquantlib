@@ -156,7 +156,7 @@ public class BarrierOptionTest {
                 //---- new NewBarrierOptionData( BarrierType.DownOut,    45.0,    0.0,  Option.Type.PUT,     50,  50.0,-0.05, 0.10, 1.00, 0.50,   5.477, 1.0e-3 )
         };
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);

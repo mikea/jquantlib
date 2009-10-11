@@ -44,7 +44,7 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
         final int size = args.exercise.size();
         this.stoppingTimes = new ArrayDoubleList();
         for (int i = 0; i < size; ++i) {
-            stoppingTimes.add(i, process.getTime(args.exercise.date(i)));
+            stoppingTimes.add(i, process.time(args.exercise.date(i)));
             if (!grid.empty())
                 // adjust to the given grid
                 stoppingTimes.add(i, grid.closestTime(stoppingTimes.get(i)));

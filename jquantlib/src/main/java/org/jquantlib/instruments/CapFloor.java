@@ -80,7 +80,7 @@ public class CapFloor extends NewInstrument {
             }
         }
 
-        final Date evaluationDate = new Settings().getEvaluationDate();
+        final Date evaluationDate = new Settings().evaluationDate();
         for (final CashFlow cashFlow : floatingLeg_) {
             cashFlow.addObserver(this);
             //XXX:registerWith
@@ -131,7 +131,7 @@ public class CapFloor extends NewInstrument {
             throw new LibraryException("only Cap/Floor types allowed in this constructor"); // QA:[RG]::verified // TODO: message
         }
 
-        final Date evaluationDate = new Settings().getEvaluationDate();
+        final Date evaluationDate = new Settings().evaluationDate();
         for (final CashFlow cashFlow : floatingLeg_) {
             cashFlow.addObserver(this);
             //XXX:registerWith

@@ -99,7 +99,7 @@ public class IMM {
      * @param in
      * @return
      */
-    public boolean isIMMcode(final String in) {
+    public static boolean isIMMcode(final String in) {
         return isIMMcode(in, true);
     }
 
@@ -110,7 +110,7 @@ public class IMM {
      * @param mainCycle
      * @return
      */
-    public boolean isIMMcode(final String in, final boolean mainCycle) {
+    public static boolean isIMMcode(final String in, final boolean mainCycle) {
         if (in.length() != 2) {
             return false;
         }
@@ -139,7 +139,7 @@ public class IMM {
      * @param immCode
      * @return
      */
-    public Date date(final String immCode) {
+    public static Date date(final String immCode) {
         return date(immCode, new Date());
     }
 
@@ -153,12 +153,12 @@ public class IMM {
      * @return
      */
     // FIXME: this method is potentially harmful in heavily multi-threaded environments
-    public Date date(final String immCode, final Date refDate) {
+    public static Date date(final String immCode, final Date refDate) {
         QL.require(isIMMcode(immCode, false) , "not a valid IMM code"); // QA:[RG]::verified // TODO: message
 
         Date referenceDate;
         if (refDate.isNull()) {
-            referenceDate = new Settings().getEvaluationDate();
+            referenceDate = new Settings().evaluationDate();
         } else {
             referenceDate = refDate;
         }
@@ -188,7 +188,7 @@ public class IMM {
      *
      * @return
      */
-    public Date nextDate() {
+    public static Date nextDate() {
         return nextDate(new Date(), true);
     }
 
@@ -199,14 +199,14 @@ public class IMM {
      * @param date
      * @return
      */
-    public Date nextDate(final Date date) {
+    public static Date nextDate(final Date date) {
         return nextDate(date, true);
     }
 
     /**
      * next IMM date following the given date.
      * <p>
-     * 
+     *
      * When <code>Date.NULL_DATE</code> is passed, <code>Settings.getEvaluationDate</code> is used as a reference date.
      *
      * @param date
@@ -215,10 +215,10 @@ public class IMM {
      *   International Money Market section of the Chicago Mercantile
      *   Exchange.
      */
-    public Date nextDate(final Date date, final boolean mainCycle) {
+    public static Date nextDate(final Date date, final boolean mainCycle) {
         Date refDate;
         if (date.isNull()) {
-            refDate = new Settings().getEvaluationDate();
+            refDate = new Settings().evaluationDate();
         } else {
             refDate = date;
         }
@@ -253,7 +253,7 @@ public class IMM {
      * @param immCode
      * @return
      */
-    public Date nextDate(final String immCode) {
+    public static Date nextDate(final String immCode) {
         return nextDate(immCode, true, new Date());
     }
 
@@ -265,7 +265,7 @@ public class IMM {
      * @param mainCycle
      * @return
      */
-    public Date nextDate(final String immCode, final boolean mainCycle) {
+    public static Date nextDate(final String immCode, final boolean mainCycle) {
         return nextDate(immCode, mainCycle, new Date());
     }
 
@@ -280,7 +280,7 @@ public class IMM {
      *  International Money Market section of the Chicago Mercantile
      *  Exchange.
      */
-    public Date nextDate(final String IMMcode, final boolean mainCycle, final Date referenceDate)  {
+    public static Date nextDate(final String IMMcode, final boolean mainCycle, final Date referenceDate)  {
         final Date immDate = date(IMMcode, referenceDate);
         return nextDate(immDate.inc(), mainCycle);
     }
@@ -291,7 +291,7 @@ public class IMM {
      *
      * @return
      */
-    public String nextCode() {
+    public static String nextCode() {
         return nextCode(new Date());
     }
 
@@ -300,7 +300,7 @@ public class IMM {
      * @param d
      * @return
      */
-    public String nextCode(final Date d) {
+    public static String nextCode(final Date d) {
         return nextCode(d, true);
     }
 
@@ -314,7 +314,7 @@ public class IMM {
      * International Money Market section of the Chicago Mercantile
      * Exchange.
      */
-    public String nextCode(final Date d,
+    public static String nextCode(final Date d,
             final boolean mainCycle) {
         final Date date = nextDate(d, mainCycle);
         return code(date);
@@ -327,7 +327,7 @@ public class IMM {
      * @param immCode
      * @return
      */
-    public String nextCode(final String immCode) {
+    public static String nextCode(final String immCode) {
         return nextCode(immCode, true);
     }
 
@@ -338,7 +338,7 @@ public class IMM {
      * @param mainCycle
      * @return
      */
-    public String nextCode(final String immCode, final boolean mainCycle) {
+    public static String nextCode(final String immCode, final boolean mainCycle) {
         return nextCode(immCode, mainCycle, new Date());
     }
 
@@ -353,7 +353,7 @@ public class IMM {
      * International Money Market section of the Chicago Mercantile
      * Exchange.
      */
-    public String nextCode(final String immCode, final boolean mainCycle, final Date referenceDate) {
+    public static String nextCode(final String immCode, final boolean mainCycle, final Date referenceDate) {
         final Date date = nextDate(immCode, mainCycle, referenceDate);
         return code(date);
     }
@@ -366,7 +366,7 @@ public class IMM {
      * @return
      */
     // FIXME: this method is potentially harmful in heavily multi-threaded environments
-    public  String code(final Date date) {
+    public static String code(final Date date) {
         QL.require(isIMMdate(date, false) , "not an IMM date"); // QA:[RG]::verified // TODO: message
 
         final int y = date.year() % 10;
@@ -376,7 +376,7 @@ public class IMM {
 
         final String imm = sb.toString();
 
-        QL.ensure(isIMMcode(imm, false) , "the result is an invalid IMM code"); // QA:[RG]::verified
+        QL.ensure(isIMMcode(imm, false) , "the result is an invalid IMM code"); // QA:[RG]::verified // TODO: message
         return imm;
     }
 

@@ -275,7 +275,7 @@ public abstract class AbstractTermStructure implements TermStructure {
         // When Case 2
         this.moving = true;
         this.updated = false;
-        this.today = new Settings().getEvaluationDate();
+        this.today = new Settings().evaluationDate();
         this.today.addObserver(this);
         //XXX:registerWith
         //registerWith(today);

@@ -13,11 +13,20 @@ import org.jquantlib.time.Schedule;
 
 public class FixedRateBond extends Bond {
 
+    //
+    // protected fields
+    //
+
     protected Frequency frequency_;
     protected DayCounter dayCounter_;
 
+
+    //
+    // public constructors
+    //
+
     /**
-     * 
+     *
      * @param settlementDays
      * @param faceAmount
      * @param schedule
@@ -51,7 +60,7 @@ public class FixedRateBond extends Bond {
     }
 
     /**
-     * 
+     *
      * @param settlementDays
      * @param calendar
      * @param faceAmount
@@ -91,24 +100,24 @@ public class FixedRateBond extends Bond {
         Date firstDate = new Date();
         Date nextToLastDate = new Date();
         switch (rule) {
-        case Backward://BACKWARD:
+        case Backward:
             firstDate = new Date();
             nextToLastDate = stubDate.clone();
             break;
-        case Forward://FORWARD:
+        case Forward:
             firstDate = stubDate.clone();
             nextToLastDate = new Date();
             break;
-        case Zero://ZERO:
+        case Zero:
             reportFalseDateGenerationRule(stubDate, rule);
             break;
-        case ThirdWednesday://THIRD_WEDNESDAY:
+        case ThirdWednesday:
             reportFalseDateGenerationRule(stubDate, rule);
             break;
-        case  Twentieth://TWENTIEHT:
+        case  Twentieth:
             reportFalseDateGenerationRule(stubDate, rule);
             break;
-        case  TwentiethIMM://TWENTIEHTIMM:
+        case  TwentiethIMM:
             reportFalseDateGenerationRule(stubDate, rule);
             break;
         default:
@@ -131,6 +140,11 @@ public class FixedRateBond extends Bond {
         QL.ensure(redemptions_.size() == 1, "multiple redemptions created");
     }
 
+
+    //
+    // public fields
+    //
+
     public Frequency frequency(){
         return frequency_;
     }
@@ -139,8 +153,12 @@ public class FixedRateBond extends Bond {
         return dayCounter_;
     }
 
+
+    //
+    // private methods
+    //
+
     private void reportFalseDateGenerationRule(final Date stubDate, final DateGeneration.Rule rule){
-        QL.error("stub date ("+ stubDate + ") not allowed with " +
-                rule + " DateGeneration::Rule");
+        QL.error("stub date ("+ stubDate + ") not allowed with " + rule + " DateGeneration::Rule");
     }
 }

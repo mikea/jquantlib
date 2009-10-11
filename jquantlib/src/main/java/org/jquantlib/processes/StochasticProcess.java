@@ -193,7 +193,7 @@ public abstract class StochasticProcess implements Observable, Observer {
      * functionality, a default implementation is given
      * which raises an exception.
      */
-    public /*@Time*/ double getTime(final Date date) /*@ReadOnly*/ {
+    public /*@Time*/ double time(final Date date) /*@ReadOnly*/ {
         throw new UnsupportedOperationException("date/time conversion not supported");
     }
 

@@ -150,10 +150,6 @@ public class HestonProcess extends StochasticProcess {
         return riskFreeRate_;
     }
 
-    public final/* @Time */double time(final Date d) {
-        return riskFreeRate_.getLink().dayCounter().yearFraction(riskFreeRate_.getLink().referenceDate(), d);
-    }
-
 
     //
     // Overrides StochasticProcess
@@ -167,6 +163,11 @@ public class HestonProcess extends StochasticProcess {
     @Override
     public int size() {
         return 2;
+    }
+
+    @Override
+    public final/* @Time */double time(final Date d) {
+        return riskFreeRate_.getLink().dayCounter().yearFraction(riskFreeRate_.getLink().referenceDate(), d);
     }
 
     @Override

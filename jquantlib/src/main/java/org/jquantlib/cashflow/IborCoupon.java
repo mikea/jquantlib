@@ -95,7 +95,7 @@ public class IborCoupon extends FloatingRateCoupon {
         } else {
             final Handle<YieldTermStructure> termStructure = index_.termStructure();
             QL.require(termStructure != null , null_term_structure);  // QA:[RG]::verified // TODO: message
-            final Date today = new Settings().getEvaluationDate();
+            final Date today = new Settings().evaluationDate();
             final Date fixing_date = fixingDate();
             if (fixing_date.lt(today)) {
                 // must have been fixed

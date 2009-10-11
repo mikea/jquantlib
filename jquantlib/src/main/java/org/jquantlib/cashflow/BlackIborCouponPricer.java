@@ -60,7 +60,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
         final InterestRateIndex index = coupon_.index();
         final Handle<YieldTermStructure> rateCurve = index.termStructure();
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         if(paymentDate.gt(today)) {
             discount_ = rateCurve.getLink().discount(paymentDate);
@@ -107,7 +107,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
 
     public double optionletPrice(final Option.Type optionType, final double effStrike)  {
         final Date fixingDate = coupon_.fixingDate();
-        if (fixingDate.le(new Settings().getEvaluationDate())) {
+        if (fixingDate.le(new Settings().evaluationDate())) {
             // the amount is determined
             double a, b;
             if (optionType==Option.Type.CALL) {

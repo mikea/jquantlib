@@ -151,7 +151,7 @@ public class StochasticProcessArray extends StochasticProcess {
     }
 
     public /*@Time*/ double time(final Date d) {
-        return processes_.get(0).getTime(d);
+        return processes_.get(0).time(d);
     }
 
     public StochasticProcess1D process(final int i) {

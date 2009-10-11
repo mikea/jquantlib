@@ -78,7 +78,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
         // TODO: code review :: please verify against QL/C++ code
         tenor.normalize();
 
-        final Date evaluationDate = new Settings().getEvaluationDate();
+        final Date evaluationDate = new Settings().evaluationDate();
 
         // TODO: code review :: please verify against QL/C++ code
         // 1. seems like we should have this.evaluationDate
@@ -128,7 +128,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
     public double fixing(final Date fixingDate, final boolean forecastTodaysFixing) {
         // TODO: code review :: please verify against QL/C++ code
         QL.require(isValidFixingDate(fixingDate) , "Fixing date is not valid"); // QA:[RG]::verified // TODO: message
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
         final boolean enforceTodaysHistoricFixings = new Settings().isEnforcesTodaysHistoricFixings();
         if (fixingDate.le(today) || (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing)) {
             // must have been fixed

@@ -213,7 +213,7 @@ public class ExchangeRateManager {
         }
 
         if (date.isToday()) {
-            date = new Settings().getEvaluationDate();
+            date = new Settings().evaluationDate();
         }
 
         if (type == ExchangeRate.Type.Direct) {

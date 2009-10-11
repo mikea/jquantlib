@@ -107,12 +107,12 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
                 delta_theta -= arguments.cashFlow.get(i).amount() *
                 process.riskFreeRate().getLink().zeroRate(d,rfdc,Compounding.CONTINUOUS,Frequency.ANNUAL).rate()*
                 process.riskFreeRate().getLink().discount(d);
-                final double /*@Time*/ tt = process.getTime(d);
+                final double /*@Time*/ tt = process.time(d);
                 delta_rho += arguments.cashFlow.get(i).amount() * tt *
                 process.riskFreeRate().getLink().discount(tt);
             }
         }
-        t = process.getTime(arguments.exercise.lastDate());
+        t = process.time(arguments.exercise.lastDate());
 
         results.theta = black.theta(spot, t) +
         delta_theta * black.delta(spot);

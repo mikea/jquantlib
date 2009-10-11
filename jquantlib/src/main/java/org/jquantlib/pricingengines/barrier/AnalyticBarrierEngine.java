@@ -183,7 +183,7 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
     }
 
     private double /*@Time*/  residualTime()  {
-        return this.process.getTime(arguments.exercise.lastDate());
+        return this.process.time(arguments.exercise.lastDate());
     }
 
     private double /*@Volatility*/  volatility()  {

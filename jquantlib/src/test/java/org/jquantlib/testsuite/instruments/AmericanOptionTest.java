@@ -107,7 +107,7 @@ public class AmericanOptionTest {
                 // From "Option pricing formulas", Haug, McGraw-Hill 1998, VBA
                 new AmericanOptionData(Option.Type.PUT, 40.00, 36.00, 0.00, 0.06, 1.00, 0.20, 4.4531) };
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
@@ -199,7 +199,7 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35, 9.5104),
                 new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 5.8823) };
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
@@ -317,7 +317,7 @@ public class AmericanOptionTest {
 
         QL.info("Testing Ju approximation for American options...");
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         final DayCounter dc = Actual360.getDayCounter();
         final SimpleQuote spot = new SimpleQuote(0.0);
@@ -435,7 +435,7 @@ public class AmericanOptionTest {
                 new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
                 new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
 
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
         final double tolerance = 8.0e-2;
 
         for (final AmericanOptionData juValue : juValues) {
@@ -509,7 +509,7 @@ public class AmericanOptionTest {
         final double vols[] = { 0.11, 0.50, 1.20 };
 
         final DayCounter dc = Actual360.getDayCounter();
-        final Date today = new Settings().getEvaluationDate();
+        final Date today = new Settings().evaluationDate();
 
         final SimpleQuote spot = new SimpleQuote(0.0);
         final SimpleQuote qRate = new SimpleQuote(0.0);
