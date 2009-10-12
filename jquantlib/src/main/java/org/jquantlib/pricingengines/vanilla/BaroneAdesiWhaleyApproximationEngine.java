@@ -98,7 +98,7 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
         final double /*@Real*/ variance = process.blackVolatility().currentLink().blackVariance(ex.lastDate(), payoff.strike());
         final double /*@DiscountFactor*/ dividendDiscount = process.dividendYield().currentLink().discount(ex.lastDate());
         final double /*@DiscountFactor*/ riskFreeDiscount = process.riskFreeRate().currentLink().discount(ex.lastDate());
-        final double /*@Real*/ spot = process.stateVariable().currentLink().op();
+        final double /*@Real*/ spot = process.stateVariable().currentLink().value();
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         final double /*@Real*/ forwardPrice = spot * dividendDiscount / riskFreeDiscount;
         final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
@@ -141,19 +141,21 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
             case CALL:
                 Q = (-(n-1.0) + Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
                 a =  (Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.op(d1));
-                if (spot<Sk)
+                if (spot<Sk) {
                     results.value = black.value() + a * Math.pow((spot/Sk), Q);
-                else
+                } else {
                     results.value = spot - payoff.strike();
+                }
                 break;
             case PUT:
                 Q = (-(n-1.0) - Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
                 a = -(Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.op(-d1));
-                if (spot>Sk)
+                if (spot>Sk) {
                     results.value = black.value() +
                     a * Math.pow((spot/Sk), Q);
-                else
+                } else {
                     results.value = payoff.strike() - spot;
+                }
                 break;
             default:
                 throw new LibraryException(UNKNOWN_OPTION_TYPE); // QA:[RG]::verified

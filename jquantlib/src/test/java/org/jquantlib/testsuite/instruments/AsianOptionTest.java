@@ -103,11 +103,11 @@ public class AsianOptionTest {
 
         final SimpleQuote spot = new SimpleQuote(100.0);
         final SimpleQuote qRate = new SimpleQuote(0.03);
-        final YieldTermStructure qTS = Utilities.flatRate(today, qRate.op(), dc);
+        final YieldTermStructure qTS = Utilities.flatRate(today, qRate.value(), dc);
         final SimpleQuote rRate = new SimpleQuote(0.06);
-        final YieldTermStructure rTS = Utilities.flatRate(today, rRate.op(), dc);
+        final YieldTermStructure rTS = Utilities.flatRate(today, rRate.value(), dc);
         final SimpleQuote vol = new SimpleQuote(0.20);
-        final BlackVolTermStructure volTS = Utilities.flatVol(today, vol.op(), dc);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, vol.value(), dc);
 
         final StochasticProcess stochProcess = new org.jquantlib.processes.BlackScholesMertonProcess(new Handle<Quote>(spot),
                 new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
@@ -150,8 +150,8 @@ public class AsianOptionTest {
 
         /* @Real */final double tolerance = 1e-10;
         if (Math.abs(calculated - expected) > tolerance) {
-            reportFailure("value", averageType, runningAccumulator, pastFixings, fixingDates, payoff, exercise, spot.op(),
-                    qRate.op(), rRate.op(), today, vol.op(), expected, calculated, tolerance);
+            reportFailure("value", averageType, runningAccumulator, pastFixings, fixingDates, payoff, exercise, spot.value(),
+                    qRate.value(), rRate.value(), today, vol.value(), expected, calculated, tolerance);
         }
     }
 
@@ -239,7 +239,7 @@ public class AsianOptionTest {
                                     calculated.put("vega", option.vega());
 
                                     final Map<String, Double> expected = new HashMap<String, Double>();
-                                    if (value > spot.op() * 1.0e-5) {
+                                    if (value > spot.value() * 1.0e-5) {
                                         // perturb spot and get delta and gamma
                                         final double du = u * 1.0e-4;
                                         spot.setValue(u + du);
@@ -368,8 +368,8 @@ public class AsianOptionTest {
         /* @Real */double tolerance = 1.0e-4;
 
         if (Math.abs(calculated - expected) > tolerance) {
-            reportFailure("value", averageType, runningAccumulator, pastFixings, new ArrayList<Date>(), payoff, exercise, spot
-                    .op(), qRate.op(), rRate.op(), today, vol.op(), expected, calculated, tolerance);
+            reportFailure("value", averageType, runningAccumulator, pastFixings, new ArrayList<Date>(), payoff, exercise,
+                    spot.value(), qRate.value(), rRate.value(), today, vol.value(), expected, calculated, tolerance);
 
         }
         // trying to approximate the continuous version with the discrete version
@@ -388,8 +388,8 @@ public class AsianOptionTest {
         calculated = option2.getNPV();
         tolerance = 3.0e-3;
         if (Math.abs(calculated - expected) > tolerance) {
-            reportFailure("value", averageType, runningAccumulator, pastFixings, fixingDates, payoff, exercise, spot.op(),
-                    qRate.op(), rRate.op(), today, vol.op(), expected, calculated, tolerance);
+            reportFailure("value", averageType, runningAccumulator, pastFixings, fixingDates, payoff, exercise, spot.value(),
+                    qRate.value(), rRate.value(), today, vol.value(), expected, calculated, tolerance);
         }
     }
 
@@ -466,7 +466,7 @@ public class AsianOptionTest {
                                     calculated.put("vega", option.vega());
 
                                     final Map<String, Double> expected = new HashMap<String, Double>();
-                                    if (value > spot.op() * 1.0e-5) {
+                                    if (value > spot.value() * 1.0e-5) {
                                         // perturb spot and get delta and gamma
                                         /* @Real */final double du = u * 1.0e-4;
                                         spot.setValue(u + du);

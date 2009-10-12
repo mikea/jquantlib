@@ -61,14 +61,15 @@ public class HestonModel extends CalibratedModel {
         this.theta_ = process.theta();
         this.sigma_ = process.sigma();
         this.rho_ = process.rho();
-        arguments_.set(0, new ConstantParameter(process.theta().currentLink().op(), new PositiveConstraint()));
-        arguments_.set(1, new ConstantParameter(process.kappa().currentLink().op(), new PositiveConstraint()));
-        arguments_.set(2, new ConstantParameter(process.sigma().currentLink().op(), new PositiveConstraint()));
-        arguments_.set(3, new ConstantParameter(process.rho().currentLink().op(), new PositiveConstraint()));
-        arguments_.set(4, new ConstantParameter(process.v0().currentLink().op(), new PositiveConstraint()));
+        arguments_.set(0, new ConstantParameter(process.theta().currentLink().value(), new PositiveConstraint()));
+        arguments_.set(1, new ConstantParameter(process.kappa().currentLink().value(), new PositiveConstraint()));
+        arguments_.set(2, new ConstantParameter(process.sigma().currentLink().value(), new PositiveConstraint()));
+        arguments_.set(3, new ConstantParameter(process.rho().currentLink().value(), new PositiveConstraint()));
+        arguments_.set(4, new ConstantParameter(process.v0().currentLink().value(), new PositiveConstraint()));
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
     }
 
     @Override
@@ -114,8 +115,9 @@ public class HestonModel extends CalibratedModel {
     private class VolatilityConstraint extends Constraint {
 
         public VolatilityConstraint(){
-            if(true)
+            if(true) {
                 throw new UnsupportedOperationException("Work in progress. Todo: check class hierarchy");
+            }
         }
 
         @Override

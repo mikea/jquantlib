@@ -103,7 +103,7 @@ public class AnalyticEuropeanEngine extends VanillaOptionEngine {
 
         /* @DiscountFactor */final double dividendDiscount = process.dividendYield().currentLink().discount(arguments.exercise.lastDate());
         /* @DiscountFactor */final double riskFreeDiscount = process.riskFreeRate().currentLink().discount(arguments.exercise.lastDate());
-        /* @Price */final double spot = process.stateVariable().currentLink().op();
+        /* @Price */final double spot = process.stateVariable().currentLink().value();
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         /* @Price */final double forwardPrice = spot * dividendDiscount / riskFreeDiscount;
         final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);

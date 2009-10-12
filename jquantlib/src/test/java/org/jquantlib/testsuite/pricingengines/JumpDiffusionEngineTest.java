@@ -383,7 +383,7 @@ public class JumpDiffusionEngineTest {
                                                     calculated.put("divRho", option.dividendRho());
                                                     calculated.put("vega", option.vega());
 
-                                                    if (value > spot.currentLink().op() * 1.0e-5) {
+                                                    if (value > spot.currentLink().value() * 1.0e-5) {
                                                         // perturb spot and get delta and gamma
                                                         final double du = u * 1.0e-5;
                                                         spot.currentLink().setValue(u + du);

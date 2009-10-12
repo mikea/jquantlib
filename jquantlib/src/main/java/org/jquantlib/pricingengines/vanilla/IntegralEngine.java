@@ -82,7 +82,7 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
         final double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().currentLink().discount(arguments.exercise.lastDate());
         final double /* @Rate */drift = Math.log(dividendDiscount / riskFreeDiscount) - 0.5 * variance;
 
-        final Integrand f = new Integrand(arguments.payoff, process.stateVariable().currentLink().op(), drift, variance);
+        final Integrand f = new Integrand(arguments.payoff, process.stateVariable().currentLink().value(), drift, variance);
         final SegmentIntegral integrator = new SegmentIntegral(5000);
 
         final double infinity = 10.0*Math.sqrt(variance);

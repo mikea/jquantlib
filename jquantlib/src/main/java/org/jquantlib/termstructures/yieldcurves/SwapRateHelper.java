@@ -242,7 +242,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
 
         // weak implementation... to be improved
         /*@Price*/ final double floatingLegNPV = swap.floatingLegNPV();
-        /*@Spread*/ final double spread = this.spread.empty() ? 0.0 : this.spread.currentLink().op();
+        /*@Spread*/ final double spread = this.spread.empty() ? 0.0 : this.spread.currentLink().value();
         /*@Price*/ final double spreadNPV = swap.floatingLegBPS()/basisPoint*spread;
         /*@Price*/ final double totNPV = - (floatingLegNPV+spreadNPV);
         /*@Price*/ final double result = totNPV/(swap.fixedLegBPS()/basisPoint);
@@ -250,7 +250,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     }
 
     public /*@Spread*/ double spread() /* @ReadOnly */ {
-        return spread.empty() ? 0.0 : spread.currentLink().op();
+        return spread.empty() ? 0.0 : spread.currentLink().value();
     }
 
     public VanillaSwap swap() /* @ReadOnly */ {

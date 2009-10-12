@@ -98,7 +98,7 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
         final double /* @Real */variance = process.blackVolatility().currentLink().blackVariance(ex.lastDate(), payoff.strike());
         final double /* @DiscountFactor */dividendDiscount = process.dividendYield().currentLink().discount(ex.lastDate());
         final double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().currentLink().discount(ex.lastDate());
-        final double /* @Real */spot = process.stateVariable().currentLink().op();
+        final double /* @Real */spot = process.stateVariable().currentLink().value();
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         final double /* @Real */forwardPrice = spot * dividendDiscount / riskFreeDiscount;
         final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
@@ -176,10 +176,11 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
             final double /* @Real */temp_spot_ratio = Math.log(spot / Sk);
             final double /* @Real */chi = temp_spot_ratio * (b * temp_spot_ratio + c);
 
-            if (phi * (Sk - spot) > 0)
+            if (phi * (Sk - spot) > 0) {
                 results.value = black.value() + hA * Math.pow((spot / Sk), lambda) / (1 - chi);
-            else
+            } else {
                 results.value = phi * (spot - payoff.strike());
+            }
 
             if (Double.isNaN(results.value)){
                 final double hh = 0.0;

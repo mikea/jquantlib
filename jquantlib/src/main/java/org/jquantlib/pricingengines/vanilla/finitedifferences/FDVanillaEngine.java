@@ -88,7 +88,7 @@ public class FDVanillaEngine {
     //
 
     protected void setGridLimits() {
-        setGridLimits(process.stateVariable().currentLink().op(), getResidualTime());
+        setGridLimits(process.stateVariable().currentLink().value(), getResidualTime());
         ensureStrikeInGrid();
     }
 
@@ -104,8 +104,9 @@ public class FDVanillaEngine {
         QL.require(center > 0.0 , "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         this.center = center;
         /* Size */final int newGridPoints = safeGridPoints(gridPoints, t);
-        if (newGridPoints > intrinsicValues.size())
+        if (newGridPoints > intrinsicValues.size()) {
             intrinsicValues = new SampledCurve(newGridPoints);
+        }
 
         /* Real */final double volSqrtTime = Math.sqrt(process.blackVolatility().currentLink().blackVariance(t, center));
 
@@ -119,8 +120,9 @@ public class FDVanillaEngine {
     protected void ensureStrikeInGrid() {
         // ensure strike is included in the grid
         final StrikedTypePayoff striked_payoff = (StrikedTypePayoff) (payoff);
-        if (striked_payoff == null)
+        if (striked_payoff == null) {
             return;
+        }
         /* Real */final double requiredGridValue = striked_payoff.strike();
 
         if (sMin > requiredGridValue / safetyZoneFactor) {

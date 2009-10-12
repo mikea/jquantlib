@@ -46,7 +46,7 @@ import org.jquantlib.util.StopClock;
 
 /**
  * This class explores StochasticProcess1D(GeneralizedBlackScholesProcess)/LinearDiscretization(EulerDiscretization)
- * 
+ *
  * @author Apratim Rajendra
  *
  */
@@ -102,23 +102,23 @@ public class Processes {
 
         //Calculating the drift of the stochastic process after time = 18th day from today with value of the stock as specified from the quote
         //The drift = (riskFreeForwardRate - dividendForwardRate) - (Variance/2)
-        System.out.println("The drift of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.drift(process.time(date18.clone()), handleToStockQuote.currentLink().op()));
+        System.out.println("The drift of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.drift(process.time(date18.clone()), handleToStockQuote.currentLink().value()));
 
         //Calculating the diffusion of the process after time = 18th day from today with value of the stock as specified from the quote
         //The diffusion = volatiltiy of the stochastic process
-        System.out.println("The diffusion of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.diffusion(process.time(date18.clone()), handleToStockQuote.currentLink().op()));
+        System.out.println("The diffusion of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.diffusion(process.time(date18.clone()), handleToStockQuote.currentLink().value()));
 
         //Calulating the standard deviation of the process after time = 18th day from today with value of the stock as specified from the quote
         //The standard deviation = volatility*sqrt(dt)
-        System.out.println("The stdDeviation of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.stdDeviation(process.time(date18.clone()), handleToStockQuote.currentLink().op(), 0.01));
+        System.out.println("The stdDeviation of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.stdDeviation(process.time(date18.clone()), handleToStockQuote.currentLink().value(), 0.01));
 
         //Calulating the variance of the process after time = 18th day from today with value of the stock as specified from the quote
         //The variance = volatility*volatility*dt
-        System.out.println("The variance of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.variance(process.time(date18.clone()), handleToStockQuote.currentLink().op(), 0.01));
+        System.out.println("The variance of the process after time = 18th day from today with value of the stock as specified from the quote = "+process.variance(process.time(date18.clone()), handleToStockQuote.currentLink().value(), 0.01));
 
         //Calulating the expected value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
         //The expectedValue = intialValue*exp(drift*dt)-----can be obtained by integrating----->dx/x= drift*dt
-        System.out.println("Expected value = "+process.expectation(process.time(date18.clone()), handleToStockQuote.currentLink().op(), 0.01));
+        System.out.println("Expected value = "+process.expectation(process.time(date18.clone()), handleToStockQuote.currentLink().value(), 0.01));
 
         //Calulating the exact value of the stock quote after time = 18th day from today with the current value of the stock as specified from the quote
         //The exact value = intialValue*exp(drift*dt)*exp(volatility*sqrt(dt))-----can be obtained by integrating----->dx/x= drift*dt+volatility*sqrt(dt)

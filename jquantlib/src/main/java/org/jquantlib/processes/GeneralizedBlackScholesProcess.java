@@ -120,7 +120,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
     @Override
     public/* @Price */double x0() {
-        return x0.currentLink().op();
+        return x0.currentLink().value();
     }
 
     @Override
@@ -194,7 +194,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
                 final BlackConstantVol constVol = (BlackConstantVol) blackVolatility.currentLink();
                 localVolatility.linkTo(new LocalConstantVol(
                         constVol.referenceDate(),
-                        constVol.blackVol(/*@Time*/0.0, /*@Price*/x0.currentLink().op()), constVol.dayCounter()));
+                        constVol.blackVol(/*@Time*/0.0, /*@Price*/x0.currentLink().value()), constVol.dayCounter()));
                 updated = true;
                 return localVolatility;
             }

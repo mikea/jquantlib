@@ -124,9 +124,9 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine {
 
         QL.require(i>=x , BJERKSUND_NOT_APPLICABLE); // QA:[RG]::verified
 
-        if (s >= i)
+        if (s >= i) {
             return s - x;
-        else {
+        } else {
             // investigate what happen to alpha for dD->0.0
             final double /*@Real*/ alpha = (i - x) * Math.pow(i, (-beta));
             return alpha * Math.pow(s, beta)
@@ -157,7 +157,7 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine {
         final double /* @Real */variance = process.blackVolatility().currentLink().blackVariance(ex.lastDate(), payoff.strike());
         double /* @DiscountFactor */dividendDiscount = process.dividendYield().currentLink().discount(ex.lastDate());
         double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().currentLink().discount(ex.lastDate());
-        double /* @Real */spot = process.stateVariable().currentLink().op();
+        double /* @Real */spot = process.stateVariable().currentLink().value();
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         double /* @Real */strike = payoff.strike();
 
@@ -199,13 +199,14 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine {
 
             results.strikeSensitivity  = black.strikeSensitivity();
             results.itmCashProbability = black.itmCashProbability();
-        } else
+        } else {
             // early exercise can be optimal - use approximation
             results.value = americanCallApproximation(spot,
                     strike,
                     riskFreeDiscount,
                     dividendDiscount,
                     variance);
+        }
 
     }
 

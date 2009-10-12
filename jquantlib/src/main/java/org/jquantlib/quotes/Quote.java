@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -41,32 +41,38 @@ package org.jquantlib.quotes;
 
 import java.util.List;
 
-import org.jquantlib.math.Ops;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
 /**
  * Purely virtual base class for market observables
- * 
+ *
  * @author Richard Gomes
  */
-public abstract class Quote implements Ops.DoubleGenerator, Observable {
+public abstract class Quote implements Observable {
+
+    //
+    // public abstract methods
+    //
+
+    public abstract double value();
+
 
 	//
 	// implements Observable
 	//
-	
+
 	/**
 	 * Implements multiple inheritance via delegate pattern to an inner class
-	 * 
+	 *
 	 * @see Observable
 	 * @see DefaultObservable
 	 */
-    private Observable delegatedObservable = new DefaultObservable(this);
+    private final Observable delegatedObservable = new DefaultObservable(this);
 
     @Override
-	public void addObserver(Observer observer) {
+	public void addObserver(final Observer observer) {
 		delegatedObservable.addObserver(observer);
 	}
 
@@ -76,7 +82,7 @@ public abstract class Quote implements Ops.DoubleGenerator, Observable {
 	}
 
     @Override
-	public void deleteObserver(Observer observer) {
+	public void deleteObserver(final Observer observer) {
 		delegatedObservable.deleteObserver(observer);
 	}
 
@@ -86,7 +92,7 @@ public abstract class Quote implements Ops.DoubleGenerator, Observable {
 	}
 
     @Override
-	public void notifyObservers(Object arg) {
+	public void notifyObservers(final Object arg) {
 		delegatedObservable.notifyObservers(arg);
 	}
 

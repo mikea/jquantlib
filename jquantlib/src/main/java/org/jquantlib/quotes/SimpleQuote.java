@@ -71,11 +71,11 @@ public class SimpleQuote extends Quote {
 
 
     //
-    // implements Ops.Op
+    // implements Quote
     //
 
     @Override
-    public final double op() {
+    public final double value() {
         QL.require(!Double.isNaN(value) , "invalid simple quote: no value available"); // QA:[RG]::verified // TODO: message
         return value;
     }

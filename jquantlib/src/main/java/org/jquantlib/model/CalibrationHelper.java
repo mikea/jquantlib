@@ -73,7 +73,7 @@ public abstract class CalibrationHelper implements Observer, Observable {
     // abstract double blackPrice (double /*@Volatility*/ volatility);
 
     public void update() {
-        marketValue = blackPrice(volatility_.currentLink().op());
+        marketValue = blackPrice(volatility_.currentLink().value());
         notifyObservers();
     }
 
@@ -104,7 +104,7 @@ public abstract class CalibrationHelper implements Observer, Observable {
                     implied = impliedVolatility(modelPrice, 1e-12, 5000, 0.001, 10);
                 }
             }
-            return implied - volatility_.currentLink().op();
+            return implied - volatility_.currentLink().value();
         }
         else{
             return Math.abs(marketValue() - modelValue())/marketValue();
@@ -118,7 +118,7 @@ public abstract class CalibrationHelper implements Observer, Observable {
         final ImpliedVolatilityHelper f = new ImpliedVolatilityHelper(this, targetValue);
         final Brent solver = new Brent();
         solver.setMaxEvaluations(maxEvaluations);
-        return solver.solve(f, accuracy, volatility_.currentLink().op(), minVol, maxVol);
+        return solver.solve(f, accuracy, volatility_.currentLink().value(), minVol, maxVol);
     }
 
     public void setPricingEngine(final PricingEngine engine) {

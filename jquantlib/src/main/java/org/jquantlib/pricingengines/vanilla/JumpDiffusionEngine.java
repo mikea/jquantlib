@@ -114,12 +114,12 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
 
         final Merton76Process jdProcess = (Merton76Process) arguments.stochasticProcess;
         final double /* @Real */jumpSquareVol =
-            jdProcess.logJumpVolatility().currentLink().op() * jdProcess.logJumpVolatility().currentLink().op();
-        final double /* @Real */muPlusHalfSquareVol = jdProcess.logMeanJump().currentLink().op() + 0.5 * jumpSquareVol;
+            jdProcess.logJumpVolatility().currentLink().value() * jdProcess.logJumpVolatility().currentLink().value();
+        final double /* @Real */muPlusHalfSquareVol = jdProcess.logMeanJump().currentLink().value() + 0.5 * jumpSquareVol;
 
         // mean jump size
         final double /* @Real */k = Math.exp(muPlusHalfSquareVol) - 1.0;
-        final double /* @Real */lambda = (k + 1.0) * jdProcess.jumpIntensity().currentLink().op();
+        final double /* @Real */lambda = (k + 1.0) * jdProcess.jumpIntensity().currentLink().value();
 
         // dummy strike
         final double /* @Real */variance = jdProcess.blackVolatility().currentLink().blackVariance(arguments.exercise.lastDate(), 1.0);
@@ -171,7 +171,7 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
 
             // constant vol/rate assumption. It should be relaxed
             v = Math.sqrt((variance + i * jumpSquareVol) / t);
-            r = riskFreeRate - jdProcess.jumpIntensity().currentLink().op() * k + i * muPlusHalfSquareVol / t;
+            r = riskFreeRate - jdProcess.jumpIntensity().currentLink().value() * k + i * muPlusHalfSquareVol / t;
             riskFreeTS.linkTo(new FlatForward(rateRefDate, r, voldc));
             volTS.linkTo(new BlackConstantVol(rateRefDate, v, voldc));
 
@@ -187,8 +187,9 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
             theta_correction = baseResults.vega * ((i * jumpSquareVol) / (2.0 * v * t * t)) + baseResults.rho * i
             * muPlusHalfSquareVol / (t * t);
             results.theta += weight * (baseResults.theta + theta_correction + lambda * baseResults.value);
-            if (i != 0)
+            if (i != 0) {
                 results.theta -= (p.op(i-1) * lambda * baseResults.value);
+            }
             // end theta calculation
             results.rho += weight * baseResults.rho;
             results.dividendRho += weight * baseResults.dividendRho;

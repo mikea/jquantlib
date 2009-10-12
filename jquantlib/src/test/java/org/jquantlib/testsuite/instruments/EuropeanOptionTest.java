@@ -727,7 +727,7 @@ public class EuropeanOptionTest {
                                         calculated.put("divRho", drho);
                                         calculated.put("vega",   vega);
 
-                                        if (value > spot.currentLink().op()*1.0e-5) {
+                                        if (value > spot.currentLink().value()*1.0e-5) {
                                             // perturb spot and get delta and gamma
                                             final double du = u*1.0e-4;
                                             spot.currentLink().setValue(u+du);
@@ -962,7 +962,7 @@ public class EuropeanOptionTest {
                     + "current value:  " + option2.getNPV());
         }
 
-        vol.currentLink().setValue(vol.currentLink().op()*1.5);
+        vol.currentLink().setValue(vol.currentLink().value()*1.5);
 
         if (!f.isUp()) {
             fail("volatility change not notified");
@@ -1046,7 +1046,7 @@ public class EuropeanOptionTest {
                                     expected.put("value", refNPV);
                                     calculated.put("value", optNPV);
 
-                                    if (testGreeks && option.getNPV() > spot.currentLink().op() * 1.0e-5) {
+                                    if (testGreeks && option.getNPV() > spot.currentLink().value() * 1.0e-5) {
                                         expected.put("delta", refOption.delta());
                                         expected.put("gamma", refOption.gamma());
                                         expected.put("theta", refOption.theta());

@@ -108,10 +108,11 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         double runningLog;
         int pastFixings;
         if (arguments.averageType == AverageType.Geometric) {
-            if (!(arguments.runningAccumulator>0.0))
+            if (!(arguments.runningAccumulator>0.0)) {
                 throw new IllegalArgumentException(
                         "positive running product required: "
                         + arguments.runningAccumulator + " not allowed");
+            }
             runningLog = Math.log(arguments.runningAccumulator);
             pastFixings = arguments.pastFixings;
         } else {  // it is being used as control variate
@@ -127,12 +128,13 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         // TODO: consider double[] instead
         final List<Double> fixingTimes = new ArrayDoubleList();
         /*@Size*/ int i;
-        for (i=0; i<arguments.fixingDates.size(); i++)
+        for (i=0; i<arguments.fixingDates.size(); i++) {
             if (arguments.fixingDates.get(i).ge(referenceDate)) {
                 /*@Time*/ final double t = voldc.yearFraction(referenceDate,
                         arguments.fixingDates.get(i));
                 fixingTimes.add(Double.valueOf(t));
             }
+        }
 
         /*@Size*/ final int remainingFixings = fixingTimes.size();
         /*@Size*/ final int numberOfFixings = pastFixings + remainingFixings;
@@ -142,14 +144,16 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         /*@Real*/ final double futureWeight = 1.0-pastWeight;
 
         double timeSum = 0.0;
-        for (int k=0; k<fixingTimes.size(); k++)
+        for (int k=0; k<fixingTimes.size(); k++) {
             timeSum += fixingTimes.get(k);
+        }
 
         /*@Volatility*/ final double vola = process.blackVolatility().currentLink().blackVol(arguments.exercise.lastDate(), payoff.strike());
 
         /*@Real*/ double temp = 0.0;
-        for (i=pastFixings+1; i<numberOfFixings; i++)
+        for (i=pastFixings+1; i<numberOfFixings; i++) {
             temp += fixingTimes.get(i-pastFixings-1)*(N-i);
+        }
 
         /*@Real*/ final double variance = vola*vola /N/N * (timeSum+ 2.0*temp);
         /*@Real*/ final double dsigG_dsig = Math.sqrt((timeSum + 2.0*temp))/N;
@@ -163,7 +167,7 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         zeroRate(exDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
         /*@Rate*/ final double nu = riskFreeRate - dividendRate - 0.5*vola*vola;
 
-        /*@Real*/ final double  s = process.stateVariable().currentLink().op();
+        /*@Real*/ final double  s = process.stateVariable().currentLink().value();
 
         /*@Real*/ final double muG = pastWeight * runningLog +
         futureWeight * Math.log(s) + nu*timeSum/N;
@@ -193,8 +197,9 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         }
         results.vega = forwardPrice * riskFreeDiscount * ( (dmuG_dsig + sigG * dsigG_dsig)*Nx_1 + nx_1*dsigG_dsig );
 
-        if (payoff.optionType() == Option.Type.PUT)
+        if (payoff.optionType() == Option.Type.PUT) {
             results.vega -= riskFreeDiscount * forwardPrice * (dmuG_dsig + sigG * dsigG_dsig);
+        }
 
         /*@Time*/ final double tRho = rfdc.yearFraction(process.riskFreeRate().currentLink().referenceDate(), arguments.exercise.lastDate());
         results.rho = black.rho(tRho)*timeSum/(N*tRho) - (tRho-timeSum/N)*results.value;

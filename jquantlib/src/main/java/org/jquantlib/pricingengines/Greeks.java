@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -54,16 +54,16 @@ public class Greeks {
             final GeneralizedBlackScholesProcess p,
             final /*@Real*/ double value, final /*@Real*/ double delta, final /*@Real*/ double gamma) {
 
-    	/*@Real*/ double u = p.stateVariable().currentLink().op();
+    	/*@Real*/ final double u = p.stateVariable().currentLink().value();
     	//TODO update zeroRate so that we do not need to set frequency and extrapolate
-    	/*@Rate*/ double r = p.riskFreeRate().currentLink().zeroRate(0.0, Compounding.CONTINUOUS, Frequency.ANNUAL, false).rate();
-    	/*@Rate*/ double q = p.dividendYield().currentLink().zeroRate(0.0, Compounding.CONTINUOUS, Frequency.ANNUAL, false).rate();
-    	/*@Volatility*/ double v = p.localVolatility().currentLink().localVol(0.0, u);
+    	/*@Rate*/ final double r = p.riskFreeRate().currentLink().zeroRate(0.0, Compounding.CONTINUOUS, Frequency.ANNUAL, false).rate();
+    	/*@Rate*/ final double q = p.dividendYield().currentLink().zeroRate(0.0, Compounding.CONTINUOUS, Frequency.ANNUAL, false).rate();
+    	/*@Volatility*/ final double v = p.localVolatility().currentLink().localVol(0.0, u);
 
     	return r*value -(r-q)*u*delta - 0.5*v*v*u*u*gamma;
     }
 
-    static public /*@Real*/ double defaultThetaPerDay(/*@Real*/ double theta) {
+    static public /*@Real*/ double defaultThetaPerDay(/*@Real*/ final double theta) {
     	return theta/365.0;
     }
 
