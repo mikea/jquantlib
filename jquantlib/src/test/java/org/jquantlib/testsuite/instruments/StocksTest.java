@@ -38,7 +38,7 @@ public class StocksTest {
         }
 
         // set a new price
-        h.setLink(new SimpleQuote(newPrice));
+        h.linkTo(new SimpleQuote(newPrice));
 
         // Observer must detect price change
         if (!priceChange.isUp()) {

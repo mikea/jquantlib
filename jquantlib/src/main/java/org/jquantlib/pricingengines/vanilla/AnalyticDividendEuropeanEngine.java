@@ -70,22 +70,22 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
         QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , "Black-Scholes process required"); // QA:[RG]::verified // TODO: message
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
-        final Date settlementDate = process.riskFreeRate().getLink().referenceDate();
+        final Date settlementDate = process.riskFreeRate().currentLink().referenceDate();
         double /*@Real*/ riskless = 0.0;
 
         for (int i=0; i<arguments.cashFlow.size(); i++)
             if (arguments.cashFlow.get(i).date().ge(settlementDate))
                 riskless += arguments.cashFlow.get(i).amount() *
-                process.riskFreeRate().getLink().discount(arguments.cashFlow.get(i).date());
-        final double /*@Real*/ spot = process.stateVariable().getLink().op() - riskless;
+                process.riskFreeRate().currentLink().discount(arguments.cashFlow.get(i).date());
+        final double /*@Real*/ spot = process.stateVariable().currentLink().op() - riskless;
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
 
-        final double /*@DiscountFactor*/ dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());
-        final double /*@DiscountFactor*/ riskFreeDiscount = process.riskFreeRate().getLink().discount(arguments.exercise.lastDate());
+        final double /*@DiscountFactor*/ dividendDiscount = process.dividendYield().currentLink().discount(arguments.exercise.lastDate());
+        final double /*@DiscountFactor*/ riskFreeDiscount = process.riskFreeRate().currentLink().discount(arguments.exercise.lastDate());
         final double /*@Real*/ forwardPrice = spot * dividendDiscount / riskFreeDiscount;
 
         final double /*@Real*/ variance =
-            process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
+            process.blackVolatility().currentLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
 
         final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
@@ -93,10 +93,10 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
         results.delta = black.delta(spot);
         results.gamma = black.gamma(spot);
 
-        final DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
-        final DayCounter voldc = process.blackVolatility().getLink().dayCounter();
+        final DayCounter rfdc  = process.riskFreeRate().currentLink().dayCounter();
+        final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
         double /*@Time*/ t = voldc.yearFraction(
-                process.blackVolatility().getLink().referenceDate(),
+                process.blackVolatility().currentLink().referenceDate(),
                 arguments.exercise.lastDate());
         results.vega = black.vega(t);
 
@@ -105,11 +105,11 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
             final Date d = arguments.cashFlow.get(i).date();
             if (d.ge(settlementDate)) {
                 delta_theta -= arguments.cashFlow.get(i).amount() *
-                process.riskFreeRate().getLink().zeroRate(d,rfdc,Compounding.CONTINUOUS,Frequency.ANNUAL).rate()*
-                process.riskFreeRate().getLink().discount(d);
+                process.riskFreeRate().currentLink().zeroRate(d,rfdc,Compounding.CONTINUOUS,Frequency.ANNUAL).rate()*
+                process.riskFreeRate().currentLink().discount(d);
                 final double /*@Time*/ tt = process.time(d);
                 delta_rho += arguments.cashFlow.get(i).amount() * tt *
-                process.riskFreeRate().getLink().discount(tt);
+                process.riskFreeRate().currentLink().discount(tt);
             }
         }
         t = process.time(arguments.exercise.lastDate());

@@ -119,10 +119,10 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
             pastFixings = 0;
         }
 
-        final Date referenceDate = process.riskFreeRate().getLink().referenceDate();
-        final DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
-        final DayCounter divdc = process.dividendYield().getLink().dayCounter();
-        final DayCounter voldc = process.blackVolatility().getLink().dayCounter();
+        final Date referenceDate = process.riskFreeRate().currentLink().referenceDate();
+        final DayCounter rfdc  = process.riskFreeRate().currentLink().dayCounter();
+        final DayCounter divdc = process.dividendYield().currentLink().dayCounter();
+        final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
 
         // TODO: consider double[] instead
         final List<Double> fixingTimes = new ArrayDoubleList();
@@ -145,7 +145,7 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         for (int k=0; k<fixingTimes.size(); k++)
             timeSum += fixingTimes.get(k);
 
-        /*@Volatility*/ final double vola = process.blackVolatility().getLink().blackVol(arguments.exercise.lastDate(), payoff.strike());
+        /*@Volatility*/ final double vola = process.blackVolatility().currentLink().blackVol(arguments.exercise.lastDate(), payoff.strike());
 
         /*@Real*/ double temp = 0.0;
         for (i=pastFixings+1; i<numberOfFixings; i++)
@@ -157,19 +157,19 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         /*@Real*/ final double dmuG_dsig = -(vola * timeSum)/N;
 
         final Date exDate = arguments.exercise.lastDate();
-        /*@Rate*/ final double dividendRate = process.dividendYield().getLink().
+        /*@Rate*/ final double dividendRate = process.dividendYield().currentLink().
         zeroRate(exDate, divdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
-        /*@Rate*/ final double riskFreeRate = process.riskFreeRate().getLink().
+        /*@Rate*/ final double riskFreeRate = process.riskFreeRate().currentLink().
         zeroRate(exDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
         /*@Rate*/ final double nu = riskFreeRate - dividendRate - 0.5*vola*vola;
 
-        /*@Real*/ final double  s = process.stateVariable().getLink().op();
+        /*@Real*/ final double  s = process.stateVariable().currentLink().op();
 
         /*@Real*/ final double muG = pastWeight * runningLog +
         futureWeight * Math.log(s) + nu*timeSum/N;
         /*@Real*/ final double forwardPrice = Math.exp(muG + variance / 2.0);
 
-        /*@DiscountFactor*/ final double riskFreeDiscount = process.riskFreeRate().getLink().
+        /*@DiscountFactor*/ final double riskFreeDiscount = process.riskFreeRate().currentLink().
         discount(arguments.exercise.lastDate());
 
         final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
@@ -196,11 +196,11 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         if (payoff.optionType() == Option.Type.PUT)
             results.vega -= riskFreeDiscount * forwardPrice * (dmuG_dsig + sigG * dsigG_dsig);
 
-        /*@Time*/ final double tRho = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(), arguments.exercise.lastDate());
+        /*@Time*/ final double tRho = rfdc.yearFraction(process.riskFreeRate().currentLink().referenceDate(), arguments.exercise.lastDate());
         results.rho = black.rho(tRho)*timeSum/(N*tRho) - (tRho-timeSum/N)*results.value;
 
         /*@Time*/ final double tDiv = divdc.yearFraction(
-                process.dividendYield().getLink().referenceDate(),
+                process.dividendYield().currentLink().referenceDate(),
                 arguments.exercise.lastDate());
 
         results.dividendRho = black.dividendRho(tDiv)*timeSum/(N*tDiv);

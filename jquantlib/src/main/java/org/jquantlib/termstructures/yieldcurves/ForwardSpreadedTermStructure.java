@@ -91,27 +91,27 @@ public class ForwardSpreadedTermStructure extends ForwardRateStructure {
 
     @Override
     public DayCounter dayCounter() {
-        return originalCurve.getLink().dayCounter();
+        return originalCurve.currentLink().dayCounter();
     }
 
     @Override
     public Calendar calendar() {
-        return originalCurve.getLink().calendar();
+        return originalCurve.currentLink().calendar();
     }
 
     @Override
     public Date referenceDate() {
-        return originalCurve.getLink().referenceDate();
+        return originalCurve.currentLink().referenceDate();
     }
 
     @Override
     public Date maxDate() {
-        return originalCurve.getLink().maxDate();
+        return originalCurve.currentLink().maxDate();
     }
 
     @Override
     public double maxTime() {
-        return originalCurve.getLink().maxTime();
+        return originalCurve.currentLink().maxTime();
     }
 
 
@@ -121,14 +121,14 @@ public class ForwardSpreadedTermStructure extends ForwardRateStructure {
 
     @Override
     protected double forwardImpl(final double t) {
-        return originalCurve.getLink().forwardRate(
-                t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate() + spread.getLink().op();
+        return originalCurve.currentLink().forwardRate(
+                t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate() + spread.currentLink().op();
     }
 
     @Override
     public double zeroYieldImpl(final double t) {
-        return originalCurve.getLink().zeroRate(
-                t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate() + spread.getLink().op();
+        return originalCurve.currentLink().zeroRate(
+                t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, true).rate() + spread.currentLink().op();
     }
 
 }

@@ -86,16 +86,16 @@ public class Handle<T extends Observable> implements Observable {
         return link.isEmpty();
     }
 
-    public final T getLink() {
-        return link.getLink();
+    public final T currentLink() {
+        return link.currentLink();
     }
 
-    public void setLink(final T observable) {
-        this.setLink(observable, true);
+    public void linkTo(final T observable) {
+        this.linkTo(observable, true);
     }
 
-    public void setLink(final T observable, final boolean registerAsObserver) {
-        link.setLink(observable, registerAsObserver);
+    public void linkTo(final T observable, final boolean registerAsObserver) {
+        link.linkTo(observable, registerAsObserver);
     }
 
     //
@@ -180,7 +180,7 @@ public class Handle<T extends Observable> implements Observable {
         //		}
 
         public Link(final T observable, final boolean registerAsObserver) {
-            setLink(observable, registerAsObserver);
+            linkTo(observable, registerAsObserver);
         }
 
 
@@ -193,7 +193,7 @@ public class Handle<T extends Observable> implements Observable {
             return (this.observable==null);
         }
 
-        public final T getLink() /* @ReadOnly */ {
+        public final T currentLink() /* @ReadOnly */ {
             return this.observable;
         }
 
@@ -202,7 +202,7 @@ public class Handle<T extends Observable> implements Observable {
         //			setLink(observable, true);
         //		}
 
-        public final void setLink(final T observable, final boolean registerAsObserver) {
+        public final void linkTo(final T observable, final boolean registerAsObserver) {
             // remove this from observable
             if ((this.observable!=observable) || (this.isObserver!=registerAsObserver)) {
                 if (this.observable!=null && this.isObserver) {

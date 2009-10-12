@@ -139,7 +139,7 @@ public class Bonds {
         }
 
         for (/* @Size */int i = 0; i < numberOfBonds; i++) {
-            quoteHandle.get(i).setLink(quote.get(i));
+            quoteHandle.get(i).linkTo(quote.get(i));
         }
 
         // Definition of the rate helpers

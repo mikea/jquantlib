@@ -237,7 +237,7 @@ public class TermStructuresTest {
         final Quote quote = new SimpleQuote(100.0);
         final Flag anotherFlag = new Flag();
         quote.addObserver(anotherFlag);
-        h.setLink(new FlatForward(today, new Handle<Quote>(quote), Actual360.getDayCounter()));
+        h.linkTo(new FlatForward(today, new Handle<Quote>(quote), Actual360.getDayCounter()));
         if (!anotherFlag.isUp()) {
             fail("Observer was not notified of term structure change");
         }

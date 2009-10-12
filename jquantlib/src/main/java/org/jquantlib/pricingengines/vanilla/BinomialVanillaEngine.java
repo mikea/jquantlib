@@ -118,18 +118,18 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) this.arguments.stochasticProcess;
         QL.require(process!=null , "Black-Scholes process required"); // QA:[RG]::verified // TODO: message
 
-        final DayCounter rfdc = process.riskFreeRate().getLink().dayCounter();
-        final DayCounter divdc = process.dividendYield().getLink().dayCounter();
-        final DayCounter voldc = process.blackVolatility().getLink().dayCounter();
-        final Calendar volcal = process.blackVolatility().getLink().calendar();
+        final DayCounter rfdc = process.riskFreeRate().currentLink().dayCounter();
+        final DayCounter divdc = process.dividendYield().currentLink().dayCounter();
+        final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
+        final Calendar volcal = process.blackVolatility().currentLink().calendar();
 
-        final double s0 = process.stateVariable().getLink().op();
+        final double s0 = process.stateVariable().currentLink().op();
         QL.require(s0 > 0.0 , "negative or null underlying given"); // QA:[RG]::verified // TODO: message
-        final double v = process.blackVolatility().getLink().blackVol(arguments.exercise.lastDate(), s0);
+        final double v = process.blackVolatility().currentLink().blackVol(arguments.exercise.lastDate(), s0);
         final Date maturityDate = arguments.exercise.lastDate();
-        final double r = process.riskFreeRate().getLink().zeroRate(maturityDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
-        final double q = process.dividendYield().getLink().zeroRate(maturityDate, divdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
-        final Date referenceDate = process.riskFreeRate().getLink().referenceDate();
+        final double r = process.riskFreeRate().currentLink().zeroRate(maturityDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+        final double q = process.dividendYield().currentLink().zeroRate(maturityDate, divdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+        final Date referenceDate = process.riskFreeRate().currentLink().referenceDate();
 
         // binomial trees with constant coefficient
         final Handle<YieldTermStructure> flatRiskFree = new Handle<YieldTermStructure>(new FlatForward(referenceDate, r, rfdc));

@@ -51,12 +51,12 @@ public class CapHelper extends CalibrationHelper {
         final double fixedRate = 0.04; //dummy value
         Date startDate, maturity;
         if(includeFirstSwaplet){
-            startDate = termStructure.getLink().referenceDate();
-            maturity = termStructure.getLink().referenceDate().add(length);
+            startDate = termStructure.currentLink().referenceDate();
+            maturity = termStructure.currentLink().referenceDate().add(length);
         }
         else{
-            startDate = termStructure.getLink().referenceDate().add(indexTenor);
-            maturity = termStructure.getLink().referenceDate().add(length);
+            startDate = termStructure.currentLink().referenceDate().add(indexTenor);
+            maturity = termStructure.currentLink().referenceDate().add(length);
         }
 
         final IborIndex dummyIndex = new IborIndex("dummy",
@@ -66,7 +66,7 @@ public class CapHelper extends CalibrationHelper {
                 index.fixingCalendar(),
                 index.getConvention(),
                 index.isEndOfMonth(),
-                termStructure.getLink().dayCounter(),
+                termStructure.currentLink().dayCounter(),
                 termStructure);
 
         final double [] nominals = {1,1.0};

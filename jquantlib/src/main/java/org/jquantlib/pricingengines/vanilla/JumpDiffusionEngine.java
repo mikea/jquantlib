@@ -114,23 +114,23 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
 
         final Merton76Process jdProcess = (Merton76Process) arguments.stochasticProcess;
         final double /* @Real */jumpSquareVol =
-            jdProcess.logJumpVolatility().getLink().op() * jdProcess.logJumpVolatility().getLink().op();
-        final double /* @Real */muPlusHalfSquareVol = jdProcess.logMeanJump().getLink().op() + 0.5 * jumpSquareVol;
+            jdProcess.logJumpVolatility().currentLink().op() * jdProcess.logJumpVolatility().currentLink().op();
+        final double /* @Real */muPlusHalfSquareVol = jdProcess.logMeanJump().currentLink().op() + 0.5 * jumpSquareVol;
 
         // mean jump size
         final double /* @Real */k = Math.exp(muPlusHalfSquareVol) - 1.0;
-        final double /* @Real */lambda = (k + 1.0) * jdProcess.jumpIntensity().getLink().op();
+        final double /* @Real */lambda = (k + 1.0) * jdProcess.jumpIntensity().currentLink().op();
 
         // dummy strike
-        final double /* @Real */variance = jdProcess.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), 1.0);
+        final double /* @Real */variance = jdProcess.blackVolatility().currentLink().blackVariance(arguments.exercise.lastDate(), 1.0);
 
-        final DayCounter voldc = jdProcess.blackVolatility().getLink().dayCounter();
-        final Date volRefDate = jdProcess.blackVolatility().getLink().referenceDate();
+        final DayCounter voldc = jdProcess.blackVolatility().currentLink().dayCounter();
+        final Date volRefDate = jdProcess.blackVolatility().currentLink().referenceDate();
         final double /* @Time */t = voldc.yearFraction(volRefDate, arguments.exercise.lastDate());
 
-        final double /* @Rate */riskFreeRate = -Math.log(jdProcess.riskFreeRate().getLink().discount(arguments.exercise.lastDate())) / t;
+        final double /* @Rate */riskFreeRate = -Math.log(jdProcess.riskFreeRate().currentLink().discount(arguments.exercise.lastDate())) / t;
 
-        final Date rateRefDate = jdProcess.riskFreeRate().getLink().referenceDate();
+        final Date rateRefDate = jdProcess.riskFreeRate().currentLink().referenceDate();
 
         final PoissonDistribution p = new PoissonDistribution(lambda * t);
 
@@ -143,9 +143,9 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
         final Handle<? extends Quote> stateVariable = jdProcess.stateVariable();
         final Handle<YieldTermStructure> dividendTS = jdProcess.dividendYield();
         final RelinkableHandle<YieldTermStructure> riskFreeTS =
-            new RelinkableHandle<YieldTermStructure>(jdProcess.riskFreeRate().getLink());
+            new RelinkableHandle<YieldTermStructure>(jdProcess.riskFreeRate().currentLink());
         final RelinkableHandle<BlackVolTermStructure> volTS =
-            new RelinkableHandle<BlackVolTermStructure>(jdProcess.blackVolatility().getLink());
+            new RelinkableHandle<BlackVolTermStructure>(jdProcess.blackVolatility().currentLink());
         baseArguments.stochasticProcess = new GeneralizedBlackScholesProcess(stateVariable, dividendTS, riskFreeTS, volTS);
         baseArguments.validate();
 
@@ -171,9 +171,9 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
 
             // constant vol/rate assumption. It should be relaxed
             v = Math.sqrt((variance + i * jumpSquareVol) / t);
-            r = riskFreeRate - jdProcess.jumpIntensity().getLink().op() * k + i * muPlusHalfSquareVol / t;
-            riskFreeTS.setLink(new FlatForward(rateRefDate, r, voldc));
-            volTS.setLink(new BlackConstantVol(rateRefDate, v, voldc));
+            r = riskFreeRate - jdProcess.jumpIntensity().currentLink().op() * k + i * muPlusHalfSquareVol / t;
+            riskFreeTS.linkTo(new FlatForward(rateRefDate, r, voldc));
+            volTS.linkTo(new BlackConstantVol(rateRefDate, v, voldc));
 
             baseArguments.validate();
             baseEngine_.calculate();

@@ -54,11 +54,11 @@ public class Greeks {
             final GeneralizedBlackScholesProcess p,
             final /*@Real*/ double value, final /*@Real*/ double delta, final /*@Real*/ double gamma) {
 
-    	/*@Real*/ double u = p.stateVariable().getLink().op();
+    	/*@Real*/ double u = p.stateVariable().currentLink().op();
     	//TODO update zeroRate so that we do not need to set frequency and extrapolate
-    	/*@Rate*/ double r = p.riskFreeRate().getLink().zeroRate(0.0, Compounding.CONTINUOUS, Frequency.ANNUAL, false).rate();
-    	/*@Rate*/ double q = p.dividendYield().getLink().zeroRate(0.0, Compounding.CONTINUOUS, Frequency.ANNUAL, false).rate();
-    	/*@Volatility*/ double v = p.localVolatility().getLink().localVol(0.0, u);
+    	/*@Rate*/ double r = p.riskFreeRate().currentLink().zeroRate(0.0, Compounding.CONTINUOUS, Frequency.ANNUAL, false).rate();
+    	/*@Rate*/ double q = p.dividendYield().currentLink().zeroRate(0.0, Compounding.CONTINUOUS, Frequency.ANNUAL, false).rate();
+    	/*@Volatility*/ double v = p.localVolatility().currentLink().localVol(0.0, u);
 
     	return r*value -(r-q)*u*delta - 0.5*v*v*u*u*gamma;
     }

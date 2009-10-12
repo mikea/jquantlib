@@ -235,23 +235,23 @@ public class JumpDiffusionEngineTest {
             final Date exDate = today.add((int) (value.t * 360 + 0.5));
             final Exercise exercise = new EuropeanExercise(exDate);
 
-            spot.getLink().setValue(value.s);
-            qRate.getLink().setValue(value.q);
-            rRate.getLink().setValue(value.r);
+            spot.currentLink().setValue(value.s);
+            qRate.currentLink().setValue(value.q);
+            rRate.currentLink().setValue(value.r);
 
-            jumpIntensity.getLink().setValue(value.jumpIntensity);
+            jumpIntensity.currentLink().setValue(value.jumpIntensity);
 
             // delta in Haug's notation
             final double /* @Real */jVol = value.v * Math.sqrt(value.gamma / value.jumpIntensity);
-            jumpVol.getLink().setValue(jVol);
+            jumpVol.currentLink().setValue(jVol);
 
             // z in Haug's notation
             final double /* @Real */diffusionVol = value.v * Math.sqrt(1.0 - value.gamma);
-            vol.getLink().setValue(diffusionVol);
+            vol.currentLink().setValue(diffusionVol);
 
             // Haug is assuming zero meanJump
             final double /* @Real */meanJump = 0.0;
-            meanLogJump.getLink().setValue(Math.log(1.0 + meanJump) - 0.5 * jVol * jVol);
+            meanLogJump.currentLink().setValue(Math.log(1.0 + meanJump) - 0.5 * jVol * jVol);
 
             final double totalVol = Math.sqrt(value.jumpIntensity * jVol * jVol + diffusionVol * diffusionVol);
             final double volError = Math.abs(totalVol - value.v);
@@ -344,11 +344,11 @@ public class JumpDiffusionEngineTest {
         for (final Type type : types) {
             for (final double strike : strikes) {
                 for (final double element : jInt) {
-                    jumpIntensity.getLink().setValue(element);
+                    jumpIntensity.currentLink().setValue(element);
                     for (final double element2 : mLJ) {
-                        meanLogJump.getLink().setValue(element2);
+                        meanLogJump.currentLink().setValue(element2);
                         for (final double element3 : jV) {
-                            jumpVol.getLink().setValue(element3);
+                            jumpVol.currentLink().setValue(element3);
                             for (final double residualTime : residualTimes) {
                                 final Date exDate = today.add((int) (residualTime * 360 + 0.5));
                                 final Exercise exercise = new EuropeanExercise(exDate);
@@ -370,10 +370,10 @@ public class JumpDiffusionEngineTest {
                                         for (final double q : qRates) {
                                             for (final double r : rRates) {
                                                 for (final double v : vols) {
-                                                    spot.getLink().setValue(u);
-                                                    qRate.getLink().setValue(q);
-                                                    rRate.getLink().setValue(r);
-                                                    vol.getLink().setValue(v);
+                                                    spot.currentLink().setValue(u);
+                                                    qRate.currentLink().setValue(q);
+                                                    rRate.currentLink().setValue(r);
+                                                    vol.currentLink().setValue(v);
 
                                                     final double value = option.getNPV();
                                                     calculated.put("delta", option.delta());
@@ -383,43 +383,43 @@ public class JumpDiffusionEngineTest {
                                                     calculated.put("divRho", option.dividendRho());
                                                     calculated.put("vega", option.vega());
 
-                                                    if (value > spot.getLink().op() * 1.0e-5) {
+                                                    if (value > spot.currentLink().op() * 1.0e-5) {
                                                         // perturb spot and get delta and gamma
                                                         final double du = u * 1.0e-5;
-                                                        spot.getLink().setValue(u + du);
+                                                        spot.currentLink().setValue(u + du);
                                                         double value_p = option.getNPV();
                                                         final double delta_p = option.delta();
-                                                        spot.getLink().setValue(u - du);
+                                                        spot.currentLink().setValue(u - du);
                                                         double value_m = option.getNPV();
                                                         final double delta_m = option.delta();
-                                                        spot.getLink().setValue(u);
+                                                        spot.currentLink().setValue(u);
                                                         expected.put("delta", (value_p - value_m) / (2 * du));
                                                         expected.put("gamma", (delta_p - delta_m) / (2 * du));
 
                                                         // perturb rates and get rho and dividend rho
                                                         final double dr = 1.0e-5;
-                                                        rRate.getLink().setValue(r + dr);
+                                                        rRate.currentLink().setValue(r + dr);
                                                         value_p = option.getNPV();
-                                                        rRate.getLink().setValue(r - dr);
+                                                        rRate.currentLink().setValue(r - dr);
                                                         value_m = option.getNPV();
-                                                        rRate.getLink().setValue(r);
+                                                        rRate.currentLink().setValue(r);
                                                         expected.put("rho", (value_p - value_m) / (2 * dr));
 
                                                         final double dq = 1.0e-5;
-                                                        qRate.getLink().setValue(q + dq);
+                                                        qRate.currentLink().setValue(q + dq);
                                                         value_p = option.getNPV();
-                                                        qRate.getLink().setValue(q - dq);
+                                                        qRate.currentLink().setValue(q - dq);
                                                         value_m = option.getNPV();
-                                                        qRate.getLink().setValue(q);
+                                                        qRate.currentLink().setValue(q);
                                                         expected.put("divRho", (value_p - value_m) / (2 * dq));
 
                                                         // perturb volatility and get vega
                                                         final double dv = v * 1.0e-4;
-                                                        vol.getLink().setValue(v + dv);
+                                                        vol.currentLink().setValue(v + dv);
                                                         value_p = option.getNPV();
-                                                        vol.getLink().setValue(v - dv);
+                                                        vol.currentLink().setValue(v - dv);
                                                         value_m = option.getNPV();
-                                                        vol.getLink().setValue(v);
+                                                        vol.currentLink().setValue(v);
                                                         expected.put("vega", (value_p - value_m) / (2 * dv));
 
                                                         final Date yesterday = today.sub(1);

@@ -49,9 +49,9 @@ public class ZeroSpreadedTermStructure extends ZeroYieldStructure  {
     //
 
     public double forwardImpl(final double t){
-        return originalCurve.getLink().
+        return originalCurve.currentLink().
         forwardRate(t, t, comp, freq, true).rate()
-        + spread.getLink().op();
+        + spread.currentLink().op();
     }
 
 
@@ -62,10 +62,10 @@ public class ZeroSpreadedTermStructure extends ZeroYieldStructure  {
     @Override
     protected double zeroYieldImpl(final double t) {
         //org.comment: to be fixed: user-defined daycounter should be used
-        final InterestRate zeroRate = originalCurve.getLink().
+        final InterestRate zeroRate = originalCurve.currentLink().
         zeroRate(t, comp, freq, true);
         final InterestRate spreadedRate =
-            new InterestRate(zeroRate.rate() + spread.getLink().op(),
+            new InterestRate(zeroRate.rate() + spread.currentLink().op(),
                     zeroRate.dayCounter(),
                     zeroRate.compounding(),
                     zeroRate.frequency());
@@ -79,22 +79,22 @@ public class ZeroSpreadedTermStructure extends ZeroYieldStructure  {
 
     @Override
     public Calendar calendar() {
-        return originalCurve.getLink().calendar();
+        return originalCurve.currentLink().calendar();
     }
 
     @Override
     public Date referenceDate() {
-        return originalCurve.getLink().referenceDate();
+        return originalCurve.currentLink().referenceDate();
     }
 
     @Override
     public Date maxDate() {
-        return originalCurve.getLink().maxDate();
+        return originalCurve.currentLink().maxDate();
     }
 
     @Override
     public/* @Time */double maxTime() {
-        return originalCurve.getLink().maxTime();
+        return originalCurve.currentLink().maxTime();
     }
 
 }

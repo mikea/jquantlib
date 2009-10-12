@@ -61,11 +61,11 @@ public class HestonModel extends CalibratedModel {
         this.theta_ = process.theta();
         this.sigma_ = process.sigma();
         this.rho_ = process.rho();
-        arguments_.set(0, new ConstantParameter(process.theta().getLink().op(), new PositiveConstraint()));
-        arguments_.set(1, new ConstantParameter(process.kappa().getLink().op(), new PositiveConstraint()));
-        arguments_.set(2, new ConstantParameter(process.sigma().getLink().op(), new PositiveConstraint()));
-        arguments_.set(3, new ConstantParameter(process.rho().getLink().op(), new PositiveConstraint()));
-        arguments_.set(4, new ConstantParameter(process.v0().getLink().op(), new PositiveConstraint()));
+        arguments_.set(0, new ConstantParameter(process.theta().currentLink().op(), new PositiveConstraint()));
+        arguments_.set(1, new ConstantParameter(process.kappa().currentLink().op(), new PositiveConstraint()));
+        arguments_.set(2, new ConstantParameter(process.sigma().currentLink().op(), new PositiveConstraint()));
+        arguments_.set(3, new ConstantParameter(process.rho().currentLink().op(), new PositiveConstraint()));
+        arguments_.set(4, new ConstantParameter(process.v0().currentLink().op(), new PositiveConstraint()));
 
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
@@ -73,11 +73,11 @@ public class HestonModel extends CalibratedModel {
 
     @Override
     public void generateArguments() {
-        v0_.setLink(new SimpleQuote((SimpleQuote) v0_.getLink()));
-        kappa_.setLink(new SimpleQuote((SimpleQuote) kappa_.getLink()));
-        theta_.setLink(new SimpleQuote((SimpleQuote) theta_.getLink()));
-        sigma_.setLink(new SimpleQuote((SimpleQuote) sigma_.getLink()));
-        rho_.setLink(new SimpleQuote((SimpleQuote) rho_.getLink()));
+        v0_.linkTo(new SimpleQuote((SimpleQuote) v0_.currentLink()));
+        kappa_.linkTo(new SimpleQuote((SimpleQuote) kappa_.currentLink()));
+        theta_.linkTo(new SimpleQuote((SimpleQuote) theta_.currentLink()));
+        sigma_.linkTo(new SimpleQuote((SimpleQuote) sigma_.currentLink()));
+        rho_.linkTo(new SimpleQuote((SimpleQuote) rho_.currentLink()));
     }
 
     // variance mean version level

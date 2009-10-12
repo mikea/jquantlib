@@ -63,7 +63,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
         final Date today = new Settings().evaluationDate();
 
         if(paymentDate.gt(today)) {
-            discount_ = rateCurve.getLink().discount(paymentDate);
+            discount_ = rateCurve.currentLink().discount(paymentDate);
         } else {
             discount_ = 1.0;
         }
@@ -126,7 +126,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
                         optionType,
                         effStrike,
                         adjustedFixing(),
-                        Math.sqrt(capletVolatility().getLink().blackVariance(fixingDate,
+                        Math.sqrt(capletVolatility().currentLink().blackVariance(fixingDate,
                                 effStrike)));
             return fixing * coupon_.accrualPeriod()*discount_;
         }
@@ -144,13 +144,13 @@ public class BlackIborCouponPricer extends IborCouponPricer {
             // see Hull, 4th ed., page 550
             QL.require(capletVolatility() != null , missing_caplet_volatility); // QA:[RG]::verified // TODO: message
             final Date d1 = coupon_.fixingDate();
-            final Date referenceDate = capletVolatility().getLink().referenceDate();
+            final Date referenceDate = capletVolatility().currentLink().referenceDate();
             if (d1.le(referenceDate)) {
                 adjustement = 0.0;
             } else {
                 final Date d2 = coupon_.index().maturityDate(d1);
                 final double tau = coupon_.index().dayCounter().yearFraction(d1, d2);
-                final double variance = capletVolatility().getLink().blackVariance(d1, fixing);
+                final double variance = capletVolatility().currentLink().blackVariance(d1, fixing);
                 adjustement = fixing*fixing*variance*tau/(1.0+fixing*tau);
             }
         }

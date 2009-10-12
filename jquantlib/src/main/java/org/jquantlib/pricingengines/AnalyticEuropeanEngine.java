@@ -99,11 +99,11 @@ public class AnalyticEuropeanEngine extends VanillaOptionEngine {
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) arguments.stochasticProcess;
         QL.require(process != null , BLACK_SCHOLES_PROCESS_REQUIRED); // QA:[RG]::verified // TODO: message
 
-        /* @Variance */final double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
+        /* @Variance */final double variance = process.blackVolatility().currentLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
 
-        /* @DiscountFactor */final double dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());
-        /* @DiscountFactor */final double riskFreeDiscount = process.riskFreeRate().getLink().discount(arguments.exercise.lastDate());
-        /* @Price */final double spot = process.stateVariable().getLink().op();
+        /* @DiscountFactor */final double dividendDiscount = process.dividendYield().currentLink().discount(arguments.exercise.lastDate());
+        /* @DiscountFactor */final double riskFreeDiscount = process.riskFreeRate().currentLink().discount(arguments.exercise.lastDate());
+        /* @Price */final double spot = process.stateVariable().currentLink().op();
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         /* @Price */final double forwardPrice = spot * dividendDiscount / riskFreeDiscount;
         final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
@@ -114,17 +114,17 @@ public class AnalyticEuropeanEngine extends VanillaOptionEngine {
         results.elasticity = black.elasticity(spot);
         results.gamma = black.gamma(spot);
 
-        final DayCounter rfdc = process.riskFreeRate().getLink().dayCounter();
-        final DayCounter divdc = process.dividendYield().getLink().dayCounter();
-        final DayCounter voldc = process.blackVolatility().getLink().dayCounter();
-        final Date refDate = process.riskFreeRate().getLink().referenceDate();
+        final DayCounter rfdc = process.riskFreeRate().currentLink().dayCounter();
+        final DayCounter divdc = process.dividendYield().currentLink().dayCounter();
+        final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
+        final Date refDate = process.riskFreeRate().currentLink().referenceDate();
         /* @Time */double t = rfdc.yearFraction(refDate, arguments.exercise.lastDate());
         results.rho = black.rho(t);
 
-        t = divdc.yearFraction(process.dividendYield().getLink().referenceDate(), arguments.exercise.lastDate());
+        t = divdc.yearFraction(process.dividendYield().currentLink().referenceDate(), arguments.exercise.lastDate());
         results.dividendRho = black.dividendRho(t);
 
-        t = voldc.yearFraction(process.blackVolatility().getLink().referenceDate(), arguments.exercise.lastDate());
+        t = voldc.yearFraction(process.blackVolatility().currentLink().referenceDate(), arguments.exercise.lastDate());
         results.vega = black.vega(t);
         try {
             results.theta = black.theta(spot, t);

@@ -100,8 +100,8 @@ public class Replication {
 
             //bootstrap the yield/vol curves
             final DayCounter dayCounter = Actual365Fixed.getDayCounter();
-            final Handle<Quote> h1 = new Handle<Quote>(riskFreeRate.getLink());
-            final Handle<Quote> h2 = new Handle<Quote>(volatility.getLink());
+            final Handle<Quote> h1 = new Handle<Quote>(riskFreeRate.currentLink());
+            final Handle<Quote> h2 = new Handle<Quote>(volatility.currentLink());
             final Handle<YieldTermStructure> flatRate = new Handle<YieldTermStructure>(new FlatForward(0, new NullCalendar(), h1, dayCounter));
             final Handle<BlackConstantVol> flatVol = new Handle<BlackConstantVol>(new BlackConstantVol(0, new NullCalendar(), h2, dayCounter));
 

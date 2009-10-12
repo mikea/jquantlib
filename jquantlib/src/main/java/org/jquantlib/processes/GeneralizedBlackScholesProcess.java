@@ -120,7 +120,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
     @Override
     public/* @Price */double x0() {
-        return x0.getLink().op();
+        return x0.currentLink().op();
     }
 
     @Override
@@ -129,11 +129,11 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         // we could be more anticipatory if we know the right dt
         // for which the drift will be used
         /* @Time */final double t1 = t + 0.0001;
-        final YieldTermStructure yts = riskFreeRate.getLink();
+        final YieldTermStructure yts = riskFreeRate.currentLink();
         /* @Rate */final double r = yts.forwardRate(t, t1, Compounding.CONTINUOUS,
                 Frequency.NO_FREQUENCY, true).rate();
 
-        final YieldTermStructure divTs = dividendYield.getLink();
+        final YieldTermStructure divTs = dividendYield.currentLink();
         final double d = divTs.forwardRate(t, t1, Compounding.CONTINUOUS,
                 Frequency.NO_FREQUENCY, true).rate();
         return r - d - 0.5 * sigma * sigma;
@@ -142,7 +142,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     @Override
     public/* @Diffusion */double diffusion(final/* @Time */double t,
             final/* @Price */double x) {
-        /* @Volatility */final double vol = localVolatility().getLink().localVol(t,
+        /* @Volatility */final double vol = localVolatility().currentLink().localVol(t,
                 x, true);
         return vol;
     }
@@ -157,7 +157,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
     @Override
     public final/* @Time */double time(final Date d) {
-        final YieldTermStructure yts = riskFreeRate.getLink();
+        final YieldTermStructure yts = riskFreeRate.currentLink();
         return yts.dayCounter().yearFraction(yts.referenceDate(), d);
     }
 
@@ -186,15 +186,15 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
     public final Handle<LocalVolTermStructure> localVolatility() {
         if (!updated) {
-            final Class<? extends BlackVolTermStructure> klass = blackVolatility.getLink().getClass();
+            final Class<? extends BlackVolTermStructure> klass = blackVolatility.currentLink().getClass();
 
             // constant Black vol?
             if (BlackConstantVol.class.isAssignableFrom(klass)) {
                 // ok, the local volatility is constant too.
-                final BlackConstantVol constVol = (BlackConstantVol) blackVolatility.getLink();
-                localVolatility.setLink(new LocalConstantVol(
+                final BlackConstantVol constVol = (BlackConstantVol) blackVolatility.currentLink();
+                localVolatility.linkTo(new LocalConstantVol(
                         constVol.referenceDate(),
-                        constVol.blackVol(/*@Time*/0.0, /*@Price*/x0.getLink().op()), constVol.dayCounter()));
+                        constVol.blackVol(/*@Time*/0.0, /*@Price*/x0.currentLink().op()), constVol.dayCounter()));
                 updated = true;
                 return localVolatility;
             }
@@ -202,15 +202,15 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
             // ok, so it's not constant. Maybe it's strike-independent?
             if (BlackVarianceCurve.class.isAssignableFrom(klass)) {
                 final Handle<BlackVarianceCurve> volCurve = new Handle<BlackVarianceCurve>(
-                        (BlackVarianceCurve) blackVolatility().getLink());
-                localVolatility.setLink(new LocalVolCurve(volCurve));
+                        (BlackVarianceCurve) blackVolatility().currentLink());
+                localVolatility.linkTo(new LocalVolCurve(volCurve));
                 updated = true;
                 return localVolatility;
             }
 
             // ok, so it's strike-dependent. Never mind.
             if (LocalVolSurface.class.isAssignableFrom(klass)) {
-                localVolatility.setLink(new LocalVolSurface(blackVolatility, riskFreeRate, dividendYield, x0));
+                localVolatility.linkTo(new LocalVolSurface(blackVolatility, riskFreeRate, dividendYield, x0));
                 updated = true;
                 return localVolatility;
             }

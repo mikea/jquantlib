@@ -85,7 +85,7 @@ public class Stock extends Instrument {
     @Override
     protected void performCalculations() /* @ReadOnly */ {
         QL.require(!quote.empty() , NULL_QUOTE); // QA:[RG]::verified
-        NPV = quote.getLink().op();
+        NPV = quote.currentLink().op();
     }
 
 }

@@ -74,7 +74,7 @@ public class LocalVolSurface extends LocalVolTermStructure {
             final Handle<YieldTermStructure> riskFreeTS,
             final Handle<YieldTermStructure> dividendTS,
             final Handle<? extends Quote> underlying) {
-        super(blackTS.getLink().dayCounter());
+        super(blackTS.currentLink().dayCounter());
         this.blackTS_ = blackTS;
         this.riskFreeTS_ = riskFreeTS;
         this.dividendTS_ = dividendTS;
@@ -97,7 +97,7 @@ public class LocalVolSurface extends LocalVolTermStructure {
             final Handle<YieldTermStructure> riskFreeTS,
             final Handle<YieldTermStructure> dividendTS,
             final /*@Price*/ double underlying) {
-        super(blackTS.getLink().dayCounter());
+        super(blackTS.currentLink().dayCounter());
         this.blackTS_ = blackTS;
         this.riskFreeTS_ = riskFreeTS;
         this.dividendTS_ = dividendTS;
@@ -119,37 +119,37 @@ public class LocalVolSurface extends LocalVolTermStructure {
 
     @Override
     public final Date referenceDate() {
-        return this.blackTS_.getLink().referenceDate();
+        return this.blackTS_.currentLink().referenceDate();
     }
 
     @Override
     public final DayCounter dayCounter() {
-        return this.blackTS_.getLink().dayCounter();
+        return this.blackTS_.currentLink().dayCounter();
     }
 
     @Override
     public final Date maxDate() {
-        return blackTS_.getLink().maxDate();
+        return blackTS_.currentLink().maxDate();
     }
 
     @Override
     public final /*@Price*/ double minStrike() {
-        return blackTS_.getLink().minStrike();
+        return blackTS_.currentLink().minStrike();
     }
 
     @Override
     public final /*@Price*/ double maxStrike() {
-        return blackTS_.getLink().maxStrike();
+        return blackTS_.currentLink().maxStrike();
     }
 
     @Override
     protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double time, final /*@Price*/ double underlyingLevel) {
 
         // obtain local copies of objects
-        final Quote u = underlying_.getLink();
-        final YieldTermStructure dTS = dividendTS_.getLink();
-        final YieldTermStructure rTS = riskFreeTS_.getLink();
-        final BlackVolTermStructure bTS = blackTS_.getLink();
+        final Quote u = underlying_.currentLink();
+        final YieldTermStructure dTS = dividendTS_.currentLink();
+        final YieldTermStructure rTS = riskFreeTS_.currentLink();
+        final BlackVolTermStructure bTS = blackTS_.currentLink();
 
         final double forwardValue = u.op() * ( dTS.discount(time, true) / rTS.discount(time, true) );
 

@@ -83,7 +83,7 @@ public class QuotesTest {
 	    f.lower();
 	    final SimpleQuote me2 = new SimpleQuote(0.0);
 
-	    h.setLink(me2);
+	    h.linkTo(me2);
 	    if (!f.isUp())
 	    	fail("Observer was not notified of quote change");
 	}

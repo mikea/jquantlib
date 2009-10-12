@@ -165,7 +165,7 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     }
 
     public double price(final Handle<YieldTermStructure> discountingCurve){
-        return amount()*discountingCurve.getLink().discount(date());
+        return amount()*discountingCurve.currentLink().discount(date());
     }
 
     public InterestRateIndex index()  {

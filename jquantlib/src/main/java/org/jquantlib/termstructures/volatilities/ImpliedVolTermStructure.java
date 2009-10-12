@@ -79,13 +79,13 @@ public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
 
     @Override
     public Date maxDate() {
-        return originalTS.getLink().maxDate();
+        return originalTS.currentLink().maxDate();
     }
 
 
     @Override
     public DayCounter dayCounter() /* @ReadOnly */ {
-        return originalTS.getLink().dayCounter();
+        return originalTS.currentLink().dayCounter();
     }
 
 
@@ -97,21 +97,21 @@ public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
     protected double blackVarianceImpl(/* @Time */final double t, /* @Price */final double strike) /* @ReadOnly */{
         // timeShift (and/or variance) variance at evaluation date cannot be cached since the original curve could change between
         // invocations of this method
-        /* @Time */ final double timeShift = dayCounter().yearFraction(originalTS.getLink().referenceDate(), referenceDate());
+        /* @Time */ final double timeShift = dayCounter().yearFraction(originalTS.currentLink().referenceDate(), referenceDate());
 
         // t is relative to the current reference date and needs to be converted to the time relative to the reference date of the
         // original curve
-        return originalTS.getLink().blackForwardVariance(timeShift, timeShift + t, strike, true);
+        return originalTS.currentLink().blackForwardVariance(timeShift, timeShift + t, strike, true);
     }
 
     @Override
     public /*@Price*/ double maxStrike() /* @ReadOnly */ {
-        return originalTS.getLink().maxStrike();
+        return originalTS.currentLink().maxStrike();
     }
 
     @Override
     public /*@Price*/ double minStrike() /* @ReadOnly */ {
-        return originalTS.getLink().minStrike();
+        return originalTS.currentLink().minStrike();
     }
 
 

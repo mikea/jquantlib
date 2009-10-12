@@ -17,7 +17,7 @@ public class DiscountingSwapEngine extends SwapEngine implements Observer {
 
     public DiscountingSwapEngine(final Handle<YieldTermStructure> discountCurve) /* @ReadOnly */ {
         this.discountCurve = discountCurve;
-        this.discountCurve.getLink().addObserver(this);
+        this.discountCurve.currentLink().addObserver(this);
         //XXX:registerWith
         //registerWith(this.discountCurve.getLink());
     }

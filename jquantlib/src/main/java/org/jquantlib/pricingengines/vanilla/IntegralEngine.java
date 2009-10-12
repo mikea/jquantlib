@@ -77,17 +77,17 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
         QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , BLACK_SCHOLES_PROCESS_REQUIRED); // QA:[RG]::verified // TODO: message
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
-        final double variance = process.blackVolatility().getLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
-        final double /* @DiscountFactor */dividendDiscount = process.dividendYield().getLink().discount(arguments.exercise.lastDate());
-        final double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().getLink().discount(arguments.exercise.lastDate());
+        final double variance = process.blackVolatility().currentLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
+        final double /* @DiscountFactor */dividendDiscount = process.dividendYield().currentLink().discount(arguments.exercise.lastDate());
+        final double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().currentLink().discount(arguments.exercise.lastDate());
         final double /* @Rate */drift = Math.log(dividendDiscount / riskFreeDiscount) - 0.5 * variance;
 
-        final Integrand f = new Integrand(arguments.payoff, process.stateVariable().getLink().op(), drift, variance);
+        final Integrand f = new Integrand(arguments.payoff, process.stateVariable().currentLink().op(), drift, variance);
         final SegmentIntegral integrator = new SegmentIntegral(5000);
 
         final double infinity = 10.0*Math.sqrt(variance);
         results.value =
-            process.riskFreeRate().getLink().discount(arguments.exercise.lastDate()) /
+            process.riskFreeRate().currentLink().discount(arguments.exercise.lastDate()) /
             Math.sqrt(2.0*Math.PI*variance) * integrator.evaluate(f, drift-infinity, drift+infinity);
     }
 

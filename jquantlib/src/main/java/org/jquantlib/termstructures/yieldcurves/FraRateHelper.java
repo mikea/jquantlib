@@ -125,7 +125,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 
     public void setTermStructure(final YieldTermStructure t) {
         // no need to register---the index is not lazy
-        termStructureHandle.setLink(t);
+        termStructureHandle.linkTo(t);
         super.setTermStructure(t);
     }
 

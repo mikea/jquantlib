@@ -93,7 +93,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
 
         QL.require(this.size_ == flows.size() , wrong_number_of_cashflows); // QA:[RG]::verified // TODO: message
 
-        final Date settlement = index_.termStructure().getLink().referenceDate();
+        final Date settlement = index_.termStructure().currentLink().referenceDate();
         final Date startDate = ((IborCoupon) flows.get(0)).fixingDate();
         for (int i = 0; i < size_; ++i) {
             final IborCoupon coupon = (IborCoupon) flows.get(i);

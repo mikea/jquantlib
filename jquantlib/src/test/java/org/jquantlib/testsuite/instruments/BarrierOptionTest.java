@@ -258,7 +258,7 @@ public class BarrierOptionTest {
         final Exercise exercise = new EuropeanExercise(exDate);
 
         for (final BarrierOptionData value : values) {
-            volatility.getLink().setValue(value.volatility);
+            volatility.currentLink().setValue(value.volatility);
             final StrikedTypePayoff callPayoff = new PlainVanillaPayoff(Option.Type.CALL, value.strike);
             final StochasticProcess stochProcess = new BlackScholesMertonProcess(
                     new Handle<Quote>(underlying),
@@ -321,7 +321,7 @@ public class BarrierOptionTest {
         final Exercise exercise = new EuropeanExercise(exDate);
 
         for (final BarrierOptionData value : values) {
-            volatility.getLink().setValue(value.volatility);
+            volatility.currentLink().setValue(value.volatility);
             final StrikedTypePayoff callPayoff = new PlainVanillaPayoff(Option.Type.CALL, value.strike);
             final StochasticProcess stochProcess = new BlackScholesMertonProcess(
                     new Handle<Quote>(underlying),

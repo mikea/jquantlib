@@ -76,28 +76,28 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
         QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , "Black-Scholes process required"); // QA:[RG]::verified // TODO: message
 
         final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
-        /*@Volatility*/ final double volatility = process.blackVolatility().getLink().blackVol(exercise, payoff.strike());
-        /*@Real*/ final double variance = process.blackVolatility().getLink().blackVariance(exercise, payoff.strike());
-        /*@DiscountFactor*/ final double  riskFreeDiscount = process.riskFreeRate().getLink().discount(exercise);
-        final DayCounter rfdc  = process.riskFreeRate().getLink().dayCounter();
-        final DayCounter divdc = process.dividendYield().getLink().dayCounter();
-        final DayCounter voldc = process.blackVolatility().getLink().dayCounter();
+        /*@Volatility*/ final double volatility = process.blackVolatility().currentLink().blackVol(exercise, payoff.strike());
+        /*@Real*/ final double variance = process.blackVolatility().currentLink().blackVariance(exercise, payoff.strike());
+        /*@DiscountFactor*/ final double  riskFreeDiscount = process.riskFreeRate().currentLink().discount(exercise);
+        final DayCounter rfdc  = process.riskFreeRate().currentLink().dayCounter();
+        final DayCounter divdc = process.dividendYield().currentLink().dayCounter();
+        final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
 
         /*@Spread*/ final double dividendYield = 0.5 * (
-                process.riskFreeRate().getLink().zeroRate(
+                process.riskFreeRate().currentLink().zeroRate(
                         exercise,
                         rfdc,
                         Compounding.CONTINUOUS,
-                        Frequency.NO_FREQUENCY).rate() + process.dividendYield().getLink().zeroRate(
+                        Frequency.NO_FREQUENCY).rate() + process.dividendYield().currentLink().zeroRate(
                                 exercise,
                                 divdc,
                                 Compounding.CONTINUOUS,
                                 Frequency.NO_FREQUENCY).rate() + volatility*volatility/6.0);
 
         /*@Time*/ final double t_q = divdc.yearFraction(
-                process.dividendYield().getLink().referenceDate(), exercise);
+                process.dividendYield().currentLink().referenceDate(), exercise);
         /*@DiscountFactor*/ final double dividendDiscount = Math.exp(-dividendYield*t_q);
-        /*@Real*/ final double spot = process.stateVariable().getLink().op();
+        /*@Real*/ final double spot = process.stateVariable().currentLink().op();
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         /*@Real*/ final double forward = spot * dividendDiscount / riskFreeDiscount;
 
@@ -107,12 +107,12 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
         results.gamma = black.gamma(spot);
         results.dividendRho = black.dividendRho(t_q)/2.0;
 
-        /*@Time*/ final double t_r = rfdc.yearFraction(process.riskFreeRate().getLink().referenceDate(),
+        /*@Time*/ final double t_r = rfdc.yearFraction(process.riskFreeRate().currentLink().referenceDate(),
                 arguments.exercise.lastDate());
         results.rho = black.rho(t_r) + 0.5 * black.dividendRho(t_q);
 
         /*@Time*/ final double t_v = voldc.yearFraction(
-                process.blackVolatility().getLink().referenceDate(),
+                process.blackVolatility().currentLink().referenceDate(),
                 arguments.exercise.lastDate());
         results.vega = black.vega(t_v)/Math.sqrt(3.0) +
         black.dividendRho(t_q)*volatility/6.0;

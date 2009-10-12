@@ -370,9 +370,9 @@ public class OneAssetOption extends Option {
             // calculate implied volatility
             final Handle<BlackVolTermStructure> volatility = new Handle<BlackVolTermStructure>(
                     new BlackConstantVol(
-                            blackVol.getLink().referenceDate(),
+                            blackVol.currentLink().referenceDate(),
                             vol,
-                            blackVol.getLink().dayCounter()));
+                            blackVol.currentLink().dayCounter()));
 
             // build a new stochastic process
             final StochasticProcess process = new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);
@@ -392,7 +392,7 @@ public class OneAssetOption extends Option {
 
         @Override
         public final double op(final /* @Volatility */ double x) /* @ReadOnly */ {
-            final SimpleQuote quote = (SimpleQuote)vol.getLink();
+            final SimpleQuote quote = (SimpleQuote)vol.currentLink();
             quote.setValue(x);
             this.impliedEngine.calculate();
             return impliedResults.value - targetValue;

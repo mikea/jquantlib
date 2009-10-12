@@ -147,7 +147,7 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
         final double /* @Real */vMin = -50.0;
         final double /* @Real */vMax = 50.0;
         for (int /* @Size */i = 0; i < (grid.size() - 1); i++) {
-            final double /* @Real */discountBond = termstructureConsistentModel.termStructure().getLink().discount(grid.at(i + 1));
+            final double /* @Real */discountBond = termstructureConsistentModel.termStructure().currentLink().discount(grid.at(i + 1));
             final double /* @Real */xMin = trinomial.underlying(i, 0);
             final double /* @Real */dx = trinomial.dx(i);
 

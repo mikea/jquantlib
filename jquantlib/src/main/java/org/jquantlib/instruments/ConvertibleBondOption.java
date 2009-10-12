@@ -96,7 +96,7 @@ public class ConvertibleBondOption extends OneAssetStrikedOption{
 		GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) stochasticProcess;
 
         Date settlement = bond.settlementDate();
-        DayCounter dayCounter = process.riskFreeRate().getLink().dayCounter();
+        DayCounter dayCounter = process.riskFreeRate().currentLink().dayCounter();
 
         moreArgs.stoppingTimes = new ArrayList<Double>();
         for (int i=0; i<exercise.size(); i++) {

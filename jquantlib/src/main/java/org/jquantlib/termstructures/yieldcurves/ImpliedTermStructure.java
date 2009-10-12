@@ -79,7 +79,7 @@ public class ImpliedTermStructure<T extends YieldTermStructure> extends Abstract
 
     @Override
     protected /*@DiscountFactor*/ double discountImpl(/*@Time*/final double t) /* @ReadOnly */{
-        final YieldTermStructure yts = originalCurve.getLink();
+        final YieldTermStructure yts = originalCurve.currentLink();
         /* t is relative to the current reference date
 		   and needs to be converted to the time relative
 		   to the reference date of the original curve */

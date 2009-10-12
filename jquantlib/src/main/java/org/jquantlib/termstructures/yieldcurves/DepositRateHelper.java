@@ -156,6 +156,6 @@ public class DepositRateHelper<T extends TermStructure> extends RelativeDateRate
      * @param termStructureHandle
      */
     public void setTermStructureHandle(final YieldTermStructure term) {
-        termStructureHandle.setLink(term);
+        termStructureHandle.linkTo(term);
     }
 }

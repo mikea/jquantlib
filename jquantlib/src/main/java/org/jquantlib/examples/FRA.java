@@ -83,8 +83,8 @@ public class FRA {
         final Date todaysDate = new Date(23, Month.MAY, 2006);
         new Settings().setEvaluationDate(todaysDate);
 
-        final Calendar calendar = euribor3m.getLink().fixingCalendar();
-        final int fixingDays = euribor3m.getLink().fixingDays();
+        final Calendar calendar = euribor3m.currentLink().fixingCalendar();
+        final int fixingDays = euribor3m.currentLink().fixingDays();
         final Date settlementDate = calendar.advance(todaysDate, fixingDays, TimeUnit.MONTHS );
 
         System.out.println("Today: "+ todaysDate.weekday() + "," + todaysDate);
@@ -113,11 +113,11 @@ public class FRA {
         final Handle<SimpleQuote> fra6x9Rate = new Handle<SimpleQuote>(new SimpleQuote(threeMonthFraQuote[6]));
         final Handle<SimpleQuote> fra9x12Rate = new Handle<SimpleQuote>(new SimpleQuote(threeMonthFraQuote[9]));
 
-        final RelinkableHandle<Quote> h1x4 = null ;       h1x4.setLink(fra1x4Rate.getLink());
-        final RelinkableHandle<Quote> h2x5 = null;        h2x5.setLink(fra2x5Rate.getLink());
-        final RelinkableHandle<Quote> h3x6 = null;        h3x6.setLink(fra3x6Rate.getLink());
-        final RelinkableHandle<Quote> h6x9 = null;        h6x9.setLink(fra6x9Rate.getLink());
-        final RelinkableHandle<Quote> h9x12 = null;       h9x12.setLink(fra9x12Rate.getLink());
+        final RelinkableHandle<Quote> h1x4 = null ;       h1x4.linkTo(fra1x4Rate.currentLink());
+        final RelinkableHandle<Quote> h2x5 = null;        h2x5.linkTo(fra2x5Rate.currentLink());
+        final RelinkableHandle<Quote> h3x6 = null;        h3x6.linkTo(fra3x6Rate.currentLink());
+        final RelinkableHandle<Quote> h6x9 = null;        h6x9.linkTo(fra6x9Rate.currentLink());
+        final RelinkableHandle<Quote> h9x12 = null;       h9x12.linkTo(fra9x12Rate.currentLink());
 
         /*********************
          ***  RATE HELPERS ***
@@ -128,9 +128,9 @@ public class FRA {
         // relinkable handles which could be relinked to some other
         // data source later.
 
-        final DayCounter fraDayCounter = euribor3m.getLink().dayCounter();
-        final BusinessDayConvention convention = euribor3m.getLink().getConvention();
-        final boolean endOfMonth = euribor3m.getLink().isEndOfMonth();
+        final DayCounter fraDayCounter = euribor3m.currentLink().dayCounter();
+        final BusinessDayConvention convention = euribor3m.currentLink().getConvention();
+        final boolean endOfMonth = euribor3m.currentLink().isEndOfMonth();
 
         /*RateHelper fra1x4 = new FraRateHelper(h1x4, 1, 4, fixingDays, calendar, convention,endOfMonth,);/*(h1x4, 1, 4,
                                   fixingDays, calendar, convention,

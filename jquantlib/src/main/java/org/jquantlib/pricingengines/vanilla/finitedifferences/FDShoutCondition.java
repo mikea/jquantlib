@@ -60,7 +60,7 @@ public class FDShoutCondition extends FDStepConditionEngine {
     @Override
     protected void initializeStepCondition() {
         final double residualTime = getResidualTime();
-        final InterestRate riskFreeRate = process.riskFreeRate().getLink().zeroRate(
+        final InterestRate riskFreeRate = process.riskFreeRate().currentLink().zeroRate(
                 residualTime, Compounding.CONTINUOUS, Frequency.ANNUAL, false);
 
         stepCondition = new ShoutCondition(intrinsicValues.values(), residualTime, riskFreeRate.rate());

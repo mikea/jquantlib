@@ -115,8 +115,8 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
             final double /* @Time */bondMaturity) {
 
         final double /* @Real */v = sigmaP(maturity, bondMaturity);
-        final double /* @Real */f = termStructureConsistentModelClass.termStructure().getLink().discount(bondMaturity);
-        final double /* @Real */k = termStructureConsistentModelClass.termStructure().getLink().discount(maturity) * strike;
+        final double /* @Real */f = termStructureConsistentModelClass.termStructure().currentLink().discount(bondMaturity);
+        final double /* @Real */k = termStructureConsistentModelClass.termStructure().currentLink().discount(maturity) * strike;
 
         return blackFormula(type, k, f, v);
     }
@@ -144,7 +144,7 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
 
     @Override
     public double discount(/* @Time */final double t) {
-        return termStructure().getLink().discount(t);
+        return termStructure().currentLink().discount(t);
     }
 
     @Override
@@ -153,8 +153,8 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
     }
 
     protected double /* @Real */A(final double /* @Time */t, final double /* @Time */T) {
-        return termStructureConsistentModelClass.termStructure().getLink().discount(T)
-        / termStructureConsistentModelClass.termStructure().getLink().discount(t)
+        return termStructureConsistentModelClass.termStructure().currentLink().discount(T)
+        / termStructureConsistentModelClass.termStructure().currentLink().discount(t)
         * Math.exp(0.5 * (V(T - t) - V(T) + V(t)));
     }
 
@@ -249,7 +249,7 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
 
             @Override
             public double /* @Real */value(final Array a, final double /* @Time */t) {
-                final double /* @Rate */forward = termStructure_.getLink().forwardRate(t, t, Compounding.CONTINUOUS,
+                final double /* @Rate */forward = termStructure_.currentLink().forwardRate(t, t, Compounding.CONTINUOUS,
                         Frequency.NO_FREQUENCY).rate();
 
                 final double /* @Real */temp1 = sigma_ * (1.0 - Math.exp(-a_ * t)) / a_;

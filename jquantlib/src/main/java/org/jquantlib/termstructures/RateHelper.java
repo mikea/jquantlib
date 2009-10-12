@@ -159,15 +159,15 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
     }
 
     public final /* @Price */ double quoteError() {
-        return quote.getLink().op() - impliedQuote();
+        return quote.currentLink().op() - impliedQuote();
     }
 
     public final /* @Price */ double quoteValue() {
-        return quote.getLink().op();
+        return quote.currentLink().op();
     }
 
     public /* @Price */ double referenceQuote() /* @ReadOnly */ {
-        return quote.getLink().op();
+        return quote.currentLink().op();
     }
 
 

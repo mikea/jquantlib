@@ -72,7 +72,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
             final double /* @Real */a /* = 0.1 */,
             final double /* @Real */sigma /* = 0.01 */) {
 
-        super(termStructure.getLink().forwardRate(0.0, 0.0, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate(),
+        super(termStructure.currentLink().forwardRate(0.0, 0.0, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate(),
                 a, 0.0, sigma, 0.0);
 
         if (System.getProperty("EXPERIMENTAL") == null) {
@@ -104,7 +104,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         final TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl) (phi.getImplementation());
         impl.reset();
         for (int /* @Size */i = 0; i < (grid.size() - 1); i++) {
-            final double /* @Real */discountBond = termStructureConsistentModelClass.termStructure().getLink().discount(grid.at(i + 1));
+            final double /* @Real */discountBond = termStructureConsistentModelClass.termStructure().currentLink().discount(grid.at(i + 1));
             final Array statePrices = numericTree.statePrices(i);
             final int /* @Size */size = numericTree.size(i);
             final double /* @Time */dt = numericTree.timeGrid().dt(i);
@@ -124,9 +124,9 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
 
     @Override
     public double /* @Real */A(final double /* @Time */t, final double /* @Time */T) {
-        final double /* @DiscountFactor */discount1 = termStructureConsistentModelClass.termStructure().getLink().discount(t);
-        final double /* @DiscountFactor */discount2 = termStructureConsistentModelClass.termStructure().getLink().discount(T);
-        final double /* @Rate */forward = termStructureConsistentModelClass.termStructure().getLink().forwardRate(t, t,
+        final double /* @DiscountFactor */discount1 = termStructureConsistentModelClass.termStructure().currentLink().discount(t);
+        final double /* @DiscountFactor */discount2 = termStructureConsistentModelClass.termStructure().currentLink().discount(T);
+        final double /* @Rate */forward = termStructureConsistentModelClass.termStructure().currentLink().forwardRate(t, t,
                 Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
         final double /* @Real */temp = sigma() * B(t, T);
         final double /* @Real */value = B(t, T) * forward - 0.25 * temp * temp * B(0.0, 2.0 * t);
@@ -149,8 +149,8 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         } else {
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(0.5 * (1.0 - Math.exp(-2.0 * _a * maturity)) / _a);
         }
-        final double /* @Real */f = termStructureConsistentModelClass.termStructure().getLink().discount(bondMaturity);
-        final double /* @Real */k = termStructureConsistentModelClass.termStructure().getLink().discount(maturity) * strike;
+        final double /* @Real */f = termStructureConsistentModelClass.termStructure().currentLink().discount(bondMaturity);
+        final double /* @Real */k = termStructureConsistentModelClass.termStructure().currentLink().discount(maturity) * strike;
 
         return blackFormula(type, k, f, v);
     }
@@ -215,7 +215,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
             @Override
             public double value(final Array params, final double t) {
                 final double forwardRate =
-                    termStructure_.getLink().forwardRate(t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+                    termStructure_.currentLink().forwardRate(t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
                 final double temp = sigma_*(1.0 - Math.exp(-a_*t))/a_;
                 return (forwardRate + 0.5*temp*temp);
             }

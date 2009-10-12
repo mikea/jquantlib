@@ -63,7 +63,7 @@ public class IborIndex extends InterestRateIndex {
         this.handle = handle;
         this.endOfMonth = endOfMonth;
         if (handle != null) {
-            handle.getLink().addObserver(this);
+            handle.currentLink().addObserver(this);
             //XXX:registerWith
             //registerWith(handle.getLink());
         }
@@ -151,8 +151,8 @@ public class IborIndex extends InterestRateIndex {
         QL.require(handle.empty() , "no forecasting term structure set to " + name());  // QA:[RG]::verified // TODO: message
         final Date fixingValueDate = valueDate(fixingDate);
         final Date endValueDate = maturityDate(fixingValueDate);
-        final double fixingDiscount = handle.getLink().discount(fixingValueDate);
-        final double endDiscount = handle.getLink().discount(endValueDate);
+        final double fixingDiscount = handle.currentLink().discount(fixingValueDate);
+        final double endDiscount = handle.currentLink().discount(endValueDate);
         final double fixingPeriod = dayCounter().yearFraction(fixingValueDate, endValueDate);
         return (fixingDiscount / endDiscount - 1.0) / fixingPeriod;
     }

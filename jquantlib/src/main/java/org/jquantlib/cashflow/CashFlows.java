@@ -151,20 +151,20 @@ public class CashFlows {
 
         Date date = settlementDate;
         if (date.isNull()) {
-            date = discountCurve.getLink().referenceDate();
+            date = discountCurve.currentLink().referenceDate();
         }
 
         double totalNPV = 0.0;
         for (int i = 0; i < cashflows.size(); ++i) {
             if (!cashflows.get(i).hasOccurred(date.add(exDividendDays))) {
-                totalNPV += cashflows.get(i).amount() * discountCurve.getLink().discount(cashflows.get(i).date());
+                totalNPV += cashflows.get(i).amount() * discountCurve.currentLink().discount(cashflows.get(i).date());
             }
         }
 
         if (npvDate.isNull()) {
             return totalNPV;
         } else {
-            return totalNPV / discountCurve.getLink().discount(npvDate);
+            return totalNPV / discountCurve.currentLink().discount(npvDate);
         }
     }
 
@@ -220,7 +220,7 @@ public class CashFlows {
 
         Date date = settlementDate;
         if (date.isNull()) {
-            date = discountCurve.getLink().referenceDate();
+            date = discountCurve.currentLink().referenceDate();
         }
 
         final BPSCalculator calc = new BPSCalculator(discountCurve, npvDate);
@@ -759,7 +759,7 @@ public class CashFlows {
             if (npvDate.isNull()) {
                 return result;
             } else {
-                return result / termStructure.getLink().discount(npvDate);
+                return result / termStructure.currentLink().discount(npvDate);
             }
         }
 
@@ -778,7 +778,7 @@ public class CashFlows {
             @Override
             public void visit(final Object o) {
                 final Coupon c = (Coupon) o;
-                result += c.accrualPeriod() * c.nominal() * termStructure.getLink().discount(c.date());
+                result += c.accrualPeriod() * c.nominal() * termStructure.currentLink().discount(c.date());
             }
         }
 

@@ -54,8 +54,8 @@ public class LocalVolCurve extends LocalVolTermStructure {
     private final BlackVarianceCurve blackVarianceCurve_;
 
     public LocalVolCurve(final Handle<BlackVarianceCurve> curve) {
-        super(curve.getLink().dayCounter());
-        blackVarianceCurve_ = curve.getLink();
+        super(curve.currentLink().dayCounter());
+        blackVarianceCurve_ = curve.currentLink();
 
         this.blackVarianceCurve_.addObserver(this);
         //XXX:registerWith

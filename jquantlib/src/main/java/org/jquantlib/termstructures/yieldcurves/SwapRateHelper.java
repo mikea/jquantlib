@@ -224,7 +224,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     public void setTermStructure(final YieldTermStructure t) {
         // TODO: code review :: please verify against QL/C++ code
         // ---- termStructureHandle.linkTo( shared_ptr<YieldTermStructure>(t, no_deletion), false);
-        termStructureHandle.setLink(t, false);
+        termStructureHandle.linkTo(t, false);
 
         super.setTermStructure(t);
     }
@@ -242,7 +242,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
 
         // weak implementation... to be improved
         /*@Price*/ final double floatingLegNPV = swap.floatingLegNPV();
-        /*@Spread*/ final double spread = this.spread.empty() ? 0.0 : this.spread.getLink().op();
+        /*@Spread*/ final double spread = this.spread.empty() ? 0.0 : this.spread.currentLink().op();
         /*@Price*/ final double spreadNPV = swap.floatingLegBPS()/basisPoint*spread;
         /*@Price*/ final double totNPV = - (floatingLegNPV+spreadNPV);
         /*@Price*/ final double result = totNPV/(swap.fixedLegBPS()/basisPoint);
@@ -250,7 +250,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     }
 
     public /*@Spread*/ double spread() /* @ReadOnly */ {
-        return spread.empty() ? 0.0 : spread.getLink().op();
+        return spread.empty() ? 0.0 : spread.currentLink().op();
     }
 
     public VanillaSwap swap() /* @ReadOnly */ {

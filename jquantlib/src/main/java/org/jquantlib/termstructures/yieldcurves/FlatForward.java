@@ -201,7 +201,7 @@ public class FlatForward extends AbstractYieldTermStructure {
     // --------------------------------------------
 
     private void updateRate() {
-        rate = new InterestRate(forward.getLink().op(), this.dayCounter(), this.compounding, this.frequency);
+        rate = new InterestRate(forward.currentLink().op(), this.dayCounter(), this.compounding, this.frequency);
     }
 
     public final Compounding compounding() {

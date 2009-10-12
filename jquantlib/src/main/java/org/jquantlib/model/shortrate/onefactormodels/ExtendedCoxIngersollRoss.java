@@ -82,8 +82,8 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
 
     @Override
     public double A(final double t, final double s)  {
-        final double pt = termstructureConsistentModel.termStructure().getLink().discount(t);
-        final double ps = termstructureConsistentModel.termStructure().getLink().discount(s);
+        final double pt = termstructureConsistentModel.termStructure().currentLink().discount(t);
+        final double ps = termstructureConsistentModel.termStructure().currentLink().discount(s);
         final double value = super.A(t,s)*Math.exp(B(t,s)*phi_.getOperatorEq(t))*
         (ps*super.A(0.0,t)*Math.exp(-B(0.0,t)*x0()))/
         (pt*super.A(0.0,s)*Math.exp(-B(0.0,s)*x0()));
@@ -97,8 +97,8 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
             final double t,
             final double s){
         QL.require(strike > 0.0 , strike_must_be_positive); // QA:[RG]::verified // TODO: message
-        final double discountT = termstructureConsistentModel.termStructure().getLink().discount(t);
-        final double discountS = termstructureConsistentModel.termStructure().getLink().discount(s);
+        final double discountT = termstructureConsistentModel.termStructure().currentLink().discount(t);
+        final double discountS = termstructureConsistentModel.termStructure().currentLink().discount(s);
         if(t<Constants.QL_EPSILON) {
             switch (type) {
             case CALL:
@@ -111,7 +111,7 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         }
         final double sigma2 = sigma() * sigma();
         final double h = Math.sqrt(k() * k() + 2 * sigma2);
-        final double r0 = termstructureConsistentModel.termStructure().getLink().forwardRate(0.0, 0.0, Compounding.CONTINUOUS,
+        final double r0 = termstructureConsistentModel.termStructure().currentLink().forwardRate(0.0, 0.0, Compounding.CONTINUOUS,
                 Frequency.NO_FREQUENCY).rate();
         final double b = B(t, s);
 
@@ -218,7 +218,7 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
 
             @Override
             public double value(final Array params, final double t) {
-                final double forwardRate = termStructure_.getLink().forwardRate(t, t, Compounding.CONTINUOUS,
+                final double forwardRate = termStructure_.currentLink().forwardRate(t, t, Compounding.CONTINUOUS,
                         Frequency.NO_FREQUENCY).rate();
                 final double h = Math.sqrt(k_*k_ + 2.0 * sigma_ * sigma_);
                 final double expth = Math.exp(t*h);

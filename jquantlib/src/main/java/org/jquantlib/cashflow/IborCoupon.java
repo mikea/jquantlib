@@ -125,10 +125,10 @@ public class IborCoupon extends FloatingRateCoupon {
                 }
             }
             final Date fixingValueDate = index_.fixingCalendar().advance(fixing_date, index_.fixingDays(), TimeUnit.DAYS);
-            final double startDiscount = termStructure.getLink().discount(fixingValueDate);
+            final double startDiscount = termStructure.currentLink().discount(fixingValueDate);
             // ???
             final Date temp = index_.fixingCalendar().advance(accrualEndDate, -(fixingDays()), TimeUnit.DAYS);
-            final double endDiscount = termStructure.getLink().discount(
+            final double endDiscount = termStructure.currentLink().discount(
                     index_.fixingCalendar().advance(temp, index_.fixingDays(), TimeUnit.DAYS));
             return (startDiscount / endDiscount - 1.0) / accrualPeriod();
         }
