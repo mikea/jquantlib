@@ -227,7 +227,7 @@ public class Calendar {
      */
     public Date adjust(final Date d, final BusinessDayConvention c) /* @ReadOnly */ {
         if (c == BusinessDayConvention.UNADJUSTED) {
-            return d;
+            return d.clone();
         }
         final Date d1 = d.clone();
         if (c == BusinessDayConvention.FOLLOWING || c == BusinessDayConvention.MODIFIED_FOLLOWING) {
@@ -339,10 +339,10 @@ public class Calendar {
             }
             return d1;
         } else if (unit == TimeUnit.WEEKS) {
-            final Date d1 = d.addAssign(new Period(n, unit)).clone();
+            final Date d1 = d.add(new Period(n, unit));
             return adjust(d1, c);
         } else {
-            final Date d1 = d.addAssign(new Period(n, unit)).clone();
+            final Date d1 = d.add(new Period(n, unit));
 
             // we are sure the unit is Months or Years
             if (endOfMonth && isEndOfMonth(d)) {
