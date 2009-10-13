@@ -257,8 +257,8 @@ public class Schedule {
                 convention = BusinessDayConvention.PRECEDING;
             }
 
-            if (calendar.adjust(dates_.get(0),convention)!=
-                calendar.adjust(effectiveDate, convention)) {
+            if (calendar.adjust(dates_.get(0),convention).ne(
+                calendar.adjust(effectiveDate, convention))) {
                 dates_.add(0, effectiveDate);
                 isRegular_.add(0, new Boolean(false));
             }
@@ -318,8 +318,8 @@ public class Schedule {
                 convention = BusinessDayConvention.PRECEDING;
             }
 
-            if (calendar.adjust(dates_.get(dates_.size()-1),terminationDateConvention)!=
-                calendar.adjust(terminationDate, terminationDateConvention)) {
+            if (calendar.adjust(dates_.get(dates_.size()-1),terminationDateConvention).ne(
+                calendar.adjust(terminationDate, terminationDateConvention))) {
                 if (rule_ == DateGeneration.Rule.Twentieth ||
                     rule_ == DateGeneration.Rule.TwentiethIMM) {
                     dates_.add(nextTwentieth(terminationDate, rule_));
