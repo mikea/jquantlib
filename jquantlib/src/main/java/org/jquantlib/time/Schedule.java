@@ -40,40 +40,50 @@ import org.jquantlib.time.calendars.NullCalendar;
  * @author Zahid Hussain
  *
  */
-@QualityAssurance(quality=Quality.Q3_DOCUMENTATION, version=Version.V097, reviewers="Richard Gomes")
+@QualityAssurance(quality=Quality.Q0_UNFINISHED, version=Version.V097, reviewers="Richard Gomes")
 public class Schedule {
+
+    //
+    // private final fields
+    //
+
+    private final boolean fullInterface_;
+    private final Calendar calendar_;
+    private final BusinessDayConvention convention_;
+    private final BusinessDayConvention terminationDateConvention_;
+    private final boolean endOfMonth_;
+    private final boolean finalIsRegular_;
+    private final List< Date > dates_;
+    private final List<Boolean> isRegular_;
+
 
     //
     // private fields
     //
 
-    private final boolean fullInterface_;
     private Period tenor_;
-    private final Calendar calendar_;
-    private final BusinessDayConvention convention_;
-    private final BusinessDayConvention terminationDateConvention_;
     private DateGeneration.Rule rule_;
-    private final boolean endOfMonth_;
     private Date firstDate_;
     private Date nextToLastDate_;
-    private final boolean finalIsRegular_;
-    private List< Date > dates_;
-    private List<Boolean> isRegular_;
 
 
 
     //
     // public methods
     //
+
     public Schedule(final List<Date> dates) {
     	this(dates, new NullCalendar(), BusinessDayConvention.UNADJUSTED);
     }
+
     public Schedule(final List<Date> dates, final Calendar calendar) {
     	this(dates, calendar, BusinessDayConvention.UNADJUSTED);
     }
 
     public Schedule(final List<Date> dates, final Calendar calendar, final BusinessDayConvention convention) {
     	this.dates_ = dates;
+        this.isRegular_ = new ArrayList<Boolean>(); // TODO: use a data structure backed by primitive types instead
+
     	this.calendar_ = calendar;
     	this.convention_ = convention;
 
@@ -105,10 +115,13 @@ public class Schedule {
 			final BusinessDayConvention terminationDateConvention,
 			final DateGeneration.Rule rule,
 			final boolean endOfMonth,
-			final Date  firstDate,
-			final Date  nextToLastDate) {
+			final Date firstDate,
+			final Date nextToLastDate) {
 
-    	this.fullInterface_ = true;
+        this.dates_ = new ArrayList<Date>(); // TODO: use a data structure backed by primitive types instead
+        this.isRegular_ = new ArrayList<Boolean>(); // TODO: use a data structure backed by primitive types instead
+
+        this.fullInterface_ = true;
         this.tenor_ = tenor;
         this.calendar_ = calendar;
         this.convention_ = convention;
@@ -120,18 +133,18 @@ public class Schedule {
         this.finalIsRegular_ = true;
 
         // sanity checks
-        QL.require(effectiveDate != null, "null effective date");
-        QL.require(terminationDate != null, "null termination date");
+        QL.require(effectiveDate != null, "null effective date"); // TODO: message
+        QL.require(terminationDate != null, "null termination date"); // TODO: message
         QL.require(effectiveDate .lt(terminationDate),
                    "effective date (" + effectiveDate
                    + ") later than or equal to termination date ("
-                   + terminationDate + ")");
+                   + terminationDate + ")"); // TODO: message
 
         if (tenor.length()==0) {
             rule_ = DateGeneration.Rule.Zero;
         } else {
             QL.require(tenor.length() > 0,
-                       "non positive tenor (" + tenor + ") not allowed");
+                       "non positive tenor (" + tenor + ") not allowed"); // TODO: message
         }
 
         if ( !firstDate.isNull() ) {
@@ -143,23 +156,23 @@ public class Schedule {
                            "first date (" + firstDate +
                            ") out of [effective (" + effectiveDate +
                            "), termination (" + terminationDate +
-                           ")] date range");
+                           ")] date range"); // TODO: message
             	  break;
               case ThirdWednesday:
             	  QL.require(IMM.isIMMdate(firstDate, false),
                              "first date (" + firstDate +
-                             ") is not an IMM date");
+                             ") is not an IMM date"); // TODO: message
             	  break;
               case Zero:
               case Twentieth:
               case TwentiethIMM:
             	 String errMsg = "first date incompatible with " + rule_ +
             	 			" date generation rule";
-                QL.error(errMsg);
+                QL.error(errMsg); // TODO: message
                 throw new LibraryException(errMsg);
               default:
             	errMsg = "unknown Rule (" + rule_ + ")";
-                QL.error(errMsg);
+                QL.error(errMsg); // TODO: message
                 throw new LibraryException(errMsg);
             }
         }
@@ -172,22 +185,22 @@ public class Schedule {
                            "next to last date (" + nextToLastDate +
                            ") out of [effective (" + effectiveDate +
                            "), termination (" + terminationDate +
-                           ")] date range");
+                           ")] date range"); // TODO: message
                 break;
               case ThirdWednesday:
                   QL.require(IMM.isIMMdate(nextToLastDate, false),
                              "first date (" + firstDate +
-                             ") is not an IMM date");
+                             ") is not an IMM date"); // TODO: message
               case Zero:
               case Twentieth:
               case TwentiethIMM:
                 String errMsg = "next to last date incompatible with " + rule_ +
                 		" date generation rule";
-                QL.error(errMsg);
+                QL.error(errMsg); // TODO: message
                 throw new LibraryException(errMsg);
               default:
             	errMsg = "unknown Rule (" + rule_ + ")";
-                QL.error(errMsg);
+                QL.error(errMsg); // TODO: message
                 throw new LibraryException(errMsg);
             }
         }
@@ -241,7 +254,7 @@ public class Schedule {
             }
 
             if (endOfMonth && calendar.isEndOfMonth(seed)) {
-                convention= BusinessDayConvention.PRECEDING;
+                convention = BusinessDayConvention.PRECEDING;
             }
 
             if (calendar.adjust(dates_.get(0),convention)!=
@@ -256,7 +269,7 @@ public class Schedule {
           case ThirdWednesday:
             QL.require(!endOfMonth,
                        "endOfMonth convention incompatible with " + rule_ +
-                       " date generation rule");
+                       " date generation rule"); // TODO: message
           // fall through
           case Forward:
 
@@ -355,7 +368,7 @@ public class Schedule {
     	return dates_.size();
     }
 
-    public final Date  at(final int i) /* @ReadOnly */ {
+    public final Date at(final int i) /* @ReadOnly */ {
     	return dates_.get(i);
 //        inline const Date& Schedule::operator[](Size i) const {
 //            #if defined(QL_EXTRA_SAFETY_CHECKS)
@@ -422,10 +435,10 @@ public class Schedule {
     }
 
     public boolean isRegular(final int i) /* @ReadOnly */ {
-       QL.require(fullInterface_, "full interface not available");
+       QL.require(fullInterface_, "full interface not available"); // TODO: message
        QL.require(i<=isRegular_.size() && i>0,
                        "index (" + i + ") must be in [1, " +
-                       isRegular_.size() +"]");
+                       isRegular_.size() +"]"); // TODO: message
        return isRegular_.get(i-1);
     }
 
@@ -448,7 +461,7 @@ public class Schedule {
     }
 
     public final Period  tenor() /* @ReadOnly */ {
-        QL.require(fullInterface_, "full interface not available");
+        QL.require(fullInterface_, "full interface not available"); // TODO: message
         return tenor_;
     }
     public BusinessDayConvention businessDayConvention() /* @ReadOnly */ {
@@ -456,17 +469,17 @@ public class Schedule {
     }
 
     public BusinessDayConvention terminationDateBusinessDayConvention() /* @ReadOnly */ {
-        QL.require(fullInterface_, "full interface not available");
+        QL.require(fullInterface_, "full interface not available"); // TODO: message
     	return terminationDateConvention_;
     }
 
     public DateGeneration.Rule rule() /* @ReadOnly */ {
-        QL.require(fullInterface_, "full interface not available");
+        QL.require(fullInterface_, "full interface not available"); // TODO: message
         return rule_;
     }
 
     public boolean endOfMonth() /* @ReadOnly */ {
-        QL.require(fullInterface_, "full interface not available");
+        QL.require(fullInterface_, "full interface not available"); // TODO: message
         return endOfMonth_;
     }
 
@@ -478,10 +491,14 @@ public class Schedule {
         //@}
 
 
+    @Deprecated
+    //FIXME: this method will probably disappear as begin() and end() does not make sense withou pointers
     public Iterator<Date> begin() /* @ReadOnly */ {
         throw new UnsupportedOperationException();
     }
 
+    @Deprecated
+    //FIXME: this method will probably disappear as begin() and end() does not make sense withou pointers
     public Iterator<Date> end() /* @ReadOnly */ {
         throw new UnsupportedOperationException();
     }
