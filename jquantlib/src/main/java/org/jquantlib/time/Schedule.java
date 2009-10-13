@@ -133,8 +133,8 @@ public class Schedule {
         this.finalIsRegular_ = true;
 
         // sanity checks
-        QL.require(effectiveDate != null, "null effective date"); // TODO: message
-        QL.require(terminationDate != null, "null termination date"); // TODO: message
+        QL.require(effectiveDate != null && !effectiveDate.isNull(), "null effective date"); // TODO: message
+        QL.require(terminationDate != null && !terminationDate.isNull(), "null termination date"); // TODO: message
         QL.require(effectiveDate .lt(terminationDate),
                    "effective date (" + effectiveDate
                    + ") later than or equal to termination date ("
@@ -147,7 +147,7 @@ public class Schedule {
                        "non positive tenor (" + tenor + ") not allowed"); // TODO: message
         }
 
-        if ( !firstDate.isNull() ) {
+        if ( firstDate != null && !firstDate.isNull() ) {
             switch (rule_) {
               case Backward:
               case Forward:
@@ -176,7 +176,7 @@ public class Schedule {
                 throw new LibraryException(errMsg);
             }
         }
-        if ( !nextToLastDate.isNull() ) {
+        if ( nextToLastDate != null && !nextToLastDate.isNull() ) {
             switch (rule_) {
               case Backward:
               case Forward:
@@ -216,29 +216,29 @@ public class Schedule {
             tenor_ = new Period(0, TimeUnit.DAYS);
             dates_.add(effectiveDate);
             dates_.add(terminationDate);
-            isRegular_.add(Boolean.TRUE);
+            isRegular_.add(new Boolean(true));
             break;
 
           case Backward:
 
             dates_.add(terminationDate);
 
-            seed = terminationDate;
-            if ( !nextToLastDate.isNull() ) {
+            seed = terminationDate.clone();
+            if ( nextToLastDate != null && !nextToLastDate.isNull() ) {
                 dates_.add(0, nextToLastDate);
                 final Date temp = nullCalendar.advance(seed,
                     tenor_.times(periods).minus(), convention, endOfMonth); //-periods*tenor_
-                if (temp!=nextToLastDate) {
+                if (temp.ne(nextToLastDate)) {
                     isRegular_.add(0, new Boolean(false));
                 } else {
                     isRegular_.add(0, new Boolean(true));
                 }
-                seed = nextToLastDate;
+                seed = nextToLastDate.clone();
             }
 
-            exitDate = effectiveDate;
-            if ( !firstDate.isNull() ) {
-                exitDate = firstDate;
+            exitDate = effectiveDate.clone();
+            if ( firstDate != null && !firstDate.isNull() ) {
+                exitDate = firstDate.clone();
             }
 
             while (true) {
@@ -275,9 +275,9 @@ public class Schedule {
 
             dates_.add(effectiveDate);
 
-            seed = effectiveDate;
+            seed = effectiveDate.clone();
 
-            if (!firstDate.isNull() ) {
+            if (firstDate != null && !firstDate.isNull() ) {
                 dates_.add(firstDate);
                 final Date temp = nullCalendar.advance(seed, tenor_.times(periods),
                                                  convention, endOfMonth);
@@ -286,20 +286,20 @@ public class Schedule {
                 } else {
                     isRegular_.add(new Boolean(true));
                 }
-                seed = firstDate;
+                seed = firstDate.clone();
             } else if (rule_ == DateGeneration.Rule.Twentieth ||
                        rule_ == DateGeneration.Rule.TwentiethIMM) {
                 final Date next20th = nextTwentieth(effectiveDate, rule_);
-                if (next20th != effectiveDate) {
+                if (next20th.ne(effectiveDate)) {
                     dates_.add(next20th);
                     isRegular_.add(new Boolean(false));
-                    seed = next20th;
+                    seed = next20th.clone();
                 }
             }
 
-            exitDate = terminationDate;
-            if ( !nextToLastDate.isNull() ) {
-                exitDate = nextToLastDate;
+            exitDate = terminationDate.clone();
+            if ( nextToLastDate != null && !nextToLastDate.isNull() ) {
+                exitDate = nextToLastDate.clone();
             }
 
             while (true) {
@@ -340,7 +340,7 @@ public class Schedule {
 
         // adjustments
         if (rule_== DateGeneration.Rule.ThirdWednesday) {
-            for (int i=1; i<dates_.size(); ++i) {
+            for (int i=1; i<dates_.size()-1; ++i) {
                 dates_.set(i, Date.nthWeekday(3, Weekday.WEDNESDAY,
                                              dates_.get(i).month(),
                                              dates_.get(i).year()));
@@ -543,8 +543,8 @@ public class Schedule {
     		 			final Calendar calendar,
     		 			final BusinessDayConvention convention) {
         	this.calendar_ = calendar;
-            this.effectiveDate_ = effectiveDate.clone();
-            this.terminationDate_ = terminationDate.clone();
+            this.effectiveDate_ = effectiveDate;
+            this.terminationDate_ = terminationDate;
             this.tenor_ = tenor;
             this.convention_ = convention;
             this.terminationDateConvention_ = convention;
@@ -591,12 +591,12 @@ public class Schedule {
         }
 
         public MakeSchedule withFirstDate(final Date d) {
-            firstDate_ = d.clone();
+            firstDate_ = d;
             return this.clone();
         }
 
         public MakeSchedule withNextToLastDate(final Date d) {
-            nextToLastDate_ = d.clone();
+            nextToLastDate_ = d;
             return this.clone();
         }
 
