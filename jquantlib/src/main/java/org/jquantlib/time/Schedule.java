@@ -176,7 +176,7 @@ public class Schedule {
                 throw new LibraryException(errMsg);
             }
         }
-        if ( nextToLastDate.isNull() ) {
+        if ( !nextToLastDate.isNull() ) {
             switch (rule_) {
               case Backward:
               case Forward:
