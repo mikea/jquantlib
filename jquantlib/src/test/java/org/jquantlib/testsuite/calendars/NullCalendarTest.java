@@ -23,37 +23,32 @@ package org.jquantlib.testsuite.calendars;
 
 import junit.framework.Assert;
 
+import org.jquantlib.QL;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.NullCalendar;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
+ *
  * @author Zahid Hussain
  *
  */
 public class NullCalendarTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
+    public NullCalendarTest() {
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+    }
 
 	@Test
 	public void testAdvance() {
-		NullCalendar nullCalendar = new NullCalendar();
-		Date d = new Date(11, Month.OCTOBER, 2009);
-		Date dCopy = d.clone();
+		final NullCalendar nullCalendar = new NullCalendar();
+		final Date d = new Date(11, Month.OCTOBER, 2009);
+		final Date dCopy = d.clone();
 		Assert.assertEquals(dCopy, d);
-		Date advancedDate = nullCalendar.advance(d, new Period(3, TimeUnit.MONTHS));
+		final Date advancedDate = nullCalendar.advance(d, new Period(3, TimeUnit.MONTHS));
 		Assert.assertEquals(dCopy, d);
 		Assert.assertFalse(advancedDate.equals(d));
 	}

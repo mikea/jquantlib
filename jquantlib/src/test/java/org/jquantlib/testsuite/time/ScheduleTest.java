@@ -38,7 +38,6 @@ import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ScheduleTest {
@@ -51,7 +50,6 @@ public class ScheduleTest {
     }
 
 
-    @Ignore
     @Test
     public void testSchedule() {
         final Calendar calendar = new Target();
@@ -61,16 +59,8 @@ public class ScheduleTest {
         final BusinessDayConvention modFollow = BusinessDayConvention.MODIFIED_FOLLOWING;
         final DateGeneration.Rule dateRule = DateGeneration.Rule.Backward;
 
-        // TODO: make sure all sources are synchronized properly and Schedule API is consistent
-
         final Schedule firstConstrSchedule = new Schedule(startDate, maturityDate, accPeriodTenor, calendar, modFollow, modFollow,
                 dateRule, false, null, null);
-
-        //        // introduced to get compatibility with v.0.8.1 - becomes redundant asa we can use the dategenerationrule style...
-        //        Schedule firstConstrSchedule = new Schedule(startDate, maturityDate, accPeriodTenor, calendar, modFollow, modFollow,
-        //                dateRule, false, true, null, null);
-
-
 
         final List<Date> dates = new ArrayList<Date>();
         dates.add(startDate);
