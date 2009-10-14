@@ -62,8 +62,14 @@ public class CalendarTest {
     @Test
     public void testEndOfMonth() {
         final Calendar unitedStatesCalendar = new UnitedStates(UnitedStates.Market.NYSE);
-        final Date date = new Date(30, 5, 2009);
-        Assert.assertFalse(unitedStatesCalendar.isEndOfMonth(date));
+        final boolean expected[] = new boolean[] { false, true, false, false, false };
+        for (int days=0; days<expected.length; days++) {
+            final Date date = new Date(28, 5, 2009);
+            date.addAssign(days);
+            final boolean result = unitedStatesCalendar.isEndOfMonth(date);
+            System.out.printf("%s is the last business day? %b\n", date.isoDate().toString(), result);
+            Assert.assertTrue(result==expected[days]);
+        }
     }
 
 }
