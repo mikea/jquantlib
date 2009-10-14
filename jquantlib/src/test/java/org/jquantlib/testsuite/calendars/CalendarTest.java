@@ -24,11 +24,13 @@ package org.jquantlib.testsuite.calendars;
 import junit.framework.Assert;
 
 import org.jquantlib.QL;
+import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.NullCalendar;
+import org.jquantlib.time.calendars.UnitedStates;
 import org.junit.Test;
 
 /**
@@ -36,20 +38,32 @@ import org.junit.Test;
  * @author Zahid Hussain
  *
  */
-public class NullCalendarTest {
+public class CalendarTest {
 
-    public NullCalendarTest() {
+    public CalendarTest() {
         QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
-	@Test
-	public void testAdvance() {
-		final NullCalendar nullCalendar = new NullCalendar();
-		final Date d = new Date(11, Month.OCTOBER, 2009);
-		final Date dCopy = d.clone();
-		Assert.assertEquals(dCopy, d);
-		final Date advancedDate = nullCalendar.advance(d, new Period(3, TimeUnit.MONTHS));
-		Assert.assertEquals(dCopy, d);
-		Assert.assertFalse(advancedDate.equals(d));
-	}
+    @Test
+    public void testAdvance() {
+        final NullCalendar nullCalendar = new NullCalendar();
+        final Date d = new Date(11, Month.OCTOBER, 2009);
+        final Date dCopy = d.clone();
+        Assert.assertEquals(dCopy, d);
+        final Date advancedDate = nullCalendar.advance(d, new Period(3, TimeUnit.MONTHS));
+        Assert.assertEquals(dCopy, d);
+        Assert.assertFalse(advancedDate.equals(d));
+    }
+
+
+    /**
+     * @see <a href="http://bugs.jquantlib.org/view.php?id=356">issue 356</a>
+     */
+    @Test
+    public void testEndOfMonth() {
+        final Calendar unitedStatesCalendar = new UnitedStates(UnitedStates.Market.NYSE);
+        final Date date = new Date(30, 5, 2009);
+        Assert.assertFalse(unitedStatesCalendar.isEndOfMonth(date));
+    }
+
 }
