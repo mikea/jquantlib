@@ -178,47 +178,47 @@ public class EuropeanOptionTest {
         final GeneralizedBlackScholesProcess stochProcess = new BlackScholesMertonProcess(u, q, r, vol);
 
         switch (engineType) {
-        case Analytic:
-            engine = new AnalyticEuropeanEngine();
-            break;
-        case JR:
-            engine = new BinomialVanillaEngine<JarrowRudd>(binomialSteps) {};
-            break;
-        case CRR:
-            engine = new BinomialVanillaEngine<CoxRossRubinstein>(binomialSteps) {};
-            break;
-        case EQP:
-            engine = new BinomialVanillaEngine<AdditiveEQPBinomialTree>(binomialSteps) {};
-            break;
-        case TGEO:
-            engine = new BinomialVanillaEngine<Trigeorgis>(binomialSteps) {};
-            break;
-        case TIAN:
-            engine = new BinomialVanillaEngine<Tian>(binomialSteps) {};
-            break;
-        case LR:
-            engine = new BinomialVanillaEngine<LeisenReimer>(binomialSteps) {};
-            break;
-        case JOSHI:
-            engine = new BinomialVanillaEngine<Joshi4>(binomialSteps) {};
-            break;
-        case FiniteDifferences:
-            engine = new FDEuropeanEngine(stochProcess, binomialSteps,samples);
-            break;
-        case Integral:
-            engine = new IntegralEngine();
-            break;
-            //        case PseudoMonteCarlo:
-            //          engine = MakeMCEuropeanEngine<PseudoRandom>().withSteps(1)
-            //                                                       .withSamples(samples)
-            //                                                       .withSeed(42);
-            //          break;
-            //        case QuasiMonteCarlo:
-            //          engine = MakeMCEuropeanEngine<LowDiscrepancy>().withSteps(1)
-            //                                                         .withSamples(samples);
-            //          break;
-        default:
-            throw new UnsupportedOperationException("unknown engine type: "+engineType);
+            case Analytic:
+                engine = new AnalyticEuropeanEngine();
+                break;
+            case JR:
+                engine = new BinomialVanillaEngine<JarrowRudd>(binomialSteps) {};
+                break;
+            case CRR:
+                engine = new BinomialVanillaEngine<CoxRossRubinstein>(binomialSteps) {};
+                break;
+            case EQP:
+                engine = new BinomialVanillaEngine<AdditiveEQPBinomialTree>(binomialSteps) {};
+                break;
+            case TGEO:
+                engine = new BinomialVanillaEngine<Trigeorgis>(binomialSteps) {};
+                break;
+            case TIAN:
+                engine = new BinomialVanillaEngine<Tian>(binomialSteps) {};
+                break;
+            case LR:
+                engine = new BinomialVanillaEngine<LeisenReimer>(binomialSteps) {};
+                break;
+            case JOSHI:
+                engine = new BinomialVanillaEngine<Joshi4>(binomialSteps) {};
+                break;
+            case FiniteDifferences:
+                engine = new FDEuropeanEngine(stochProcess, binomialSteps,samples);
+                break;
+            case Integral:
+                engine = new IntegralEngine();
+                break;
+                //        case PseudoMonteCarlo:
+                //          engine = MakeMCEuropeanEngine<PseudoRandom>().withSteps(1)
+                //                                                       .withSamples(samples)
+                //                                                       .withSeed(42);
+                //          break;
+                //        case QuasiMonteCarlo:
+                //          engine = MakeMCEuropeanEngine<LowDiscrepancy>().withSteps(1)
+                //                                                         .withSamples(samples);
+                //          break;
+            default:
+                throw new UnsupportedOperationException("unknown engine type: "+engineType);
         }
 
         return new EuropeanOption(stochProcess, payoff, exercise, engine);
@@ -346,10 +346,10 @@ public class EuropeanOptionTest {
             final Date exDate = today.add( timeToDays(values[i].t) );
             final Exercise exercise = new EuropeanExercise(exDate);
 
-            spot. currentLink().setValue(values[i].s);
+            spot.currentLink().setValue(values[i].s);
             qRate.currentLink().setValue(values[i].q);
             rRate.currentLink().setValue(values[i].r);
-            vol.  currentLink().setValue(values[i].v);
+            vol.currentLink().setValue(values[i].v);
 
             final StochasticProcess process = new BlackScholesMertonProcess(spot, qTS, rTS, volTS);
 
@@ -975,14 +975,16 @@ public class EuropeanOptionTest {
 
 
 
-    private void testEngineConsistency(final EngineType engine,
+    private void testEngineConsistency(
+            final EngineType engine,
             final int binomialSteps, final int samples,
             final Map<String, Double> tolerance) {
 
         testEngineConsistency(engine, binomialSteps, samples, tolerance, false);
     }
 
-    private void testEngineConsistency(final EngineType engine,
+    private void testEngineConsistency(
+            final EngineType engine,
             final int binomialSteps, final int samples,
             final Map<String, Double> tolerance, final boolean testGreeks) {
 

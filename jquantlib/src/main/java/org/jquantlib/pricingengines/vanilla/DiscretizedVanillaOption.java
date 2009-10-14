@@ -45,9 +45,10 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
         this.stoppingTimes = new ArrayDoubleList();
         for (int i = 0; i < size; ++i) {
             stoppingTimes.add(i, process.time(args.exercise.date(i)));
-            if (!grid.empty())
+            if (!grid.empty()) {
                 // adjust to the given grid
                 stoppingTimes.add(i, grid.closestTime(stoppingTimes.get(i)));
+            }
         }
     }
 
@@ -62,28 +63,33 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
 
         final double now = time();
         switch (arguments.exercise.type()) {
-        case AMERICAN:
-            if (now <= stoppingTimes.get(1) && now >= stoppingTimes.get(0))
-                applySpecificCondition();
-            break;
-        case EUROPEAN:
-            if (isOnTime(stoppingTimes.get(0)))
-                applySpecificCondition();
-            break;
-        case BERMUDAN:
-            for (int i=0; i<stoppingTimes.size(); i++)
-                if (isOnTime(stoppingTimes.get(i)))
+            case AMERICAN:
+                if (now <= stoppingTimes.get(1) && now >= stoppingTimes.get(0)) {
                     applySpecificCondition();
-            break;
-        default:
-            throw new LibraryException("invalid option type"); // QA:[RG]::verified
+                }
+                break;
+            case EUROPEAN:
+                if (isOnTime(stoppingTimes.get(0))) {
+                    applySpecificCondition();
+                }
+                break;
+            case BERMUDAN:
+                for (int i=0; i<stoppingTimes.size(); i++) {
+                    if (isOnTime(stoppingTimes.get(i))) {
+                        applySpecificCondition();
+                    }
+                }
+                break;
+            default:
+                throw new LibraryException("invalid option type"); // QA:[RG]::verified
         }
     }
 
-    void applySpecificCondition() {
+    private void applySpecificCondition() {
         final Array grid = method().grid(time());
-        for (int j=0; j<values.size(); j++)
+        for (int j=0; j<values.size(); j++) {
             values.set(j, Math.max(values.get(j), arguments.payoff.valueOf(grid.get(j))));
+        }
     }
 
 

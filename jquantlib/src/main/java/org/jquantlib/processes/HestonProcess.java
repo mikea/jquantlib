@@ -230,72 +230,72 @@ public class HestonProcess extends StochasticProcess {
         final double dw1 = dw.get(1);
 
         switch (discretization_) {
-        // For the definition of PartialTruncation, FullTruncation
-        // and Reflection see Lord, R., R. Koekkoek and D. van Dijk (2006),
-        // "A Comparison of biased simulation schemes for
-        // stochastic volatility models",
-        // Working Paper, Tinbergen Institute
-        case PartialTruncation:
-            vol = (x01 > 0.0) ? Math.sqrt(x01) : 0.0;
-            vol2 = sigmav_ * vol;
-            mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
-            - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
-            nu = kappav_ * (thetav_ - x01);
+            // For the definition of PartialTruncation, FullTruncation
+            // and Reflection see Lord, R., R. Koekkoek and D. van Dijk (2006),
+            // "A Comparison of biased simulation schemes for
+            // stochastic volatility models",
+            // Working Paper, Tinbergen Institute
+            case PartialTruncation:
+                vol = (x01 > 0.0) ? Math.sqrt(x01) : 0.0;
+                vol2 = sigmav_ * vol;
+                mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
+                - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+                nu = kappav_ * (thetav_ - x01);
 
-            retVal[0] = x00 * Math.exp(mu * dt + vol * dw0 * sdt);
-            retVal[1] = x01 + nu * dt + vol2 * sdt * (rhov_ * dw0 + sqrhov_ * dw1);
-            break;
-        case FullTruncation:
-            vol = (x01 > 0.0) ? Math.sqrt(x01) : 0.0;
-            vol2 = sigmav_ * vol;
-            mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
-            - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
-            nu = kappav_ * (thetav_ - vol * vol);
+                retVal[0] = x00 * Math.exp(mu * dt + vol * dw0 * sdt);
+                retVal[1] = x01 + nu * dt + vol2 * sdt * (rhov_ * dw0 + sqrhov_ * dw1);
+                break;
+            case FullTruncation:
+                vol = (x01 > 0.0) ? Math.sqrt(x01) : 0.0;
+                vol2 = sigmav_ * vol;
+                mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
+                - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+                nu = kappav_ * (thetav_ - vol * vol);
 
-            retVal[0] = x00 * Math.exp(mu * dt + vol * dw0 * sdt);
-            retVal[1] = x01 + nu * dt + vol2 * sdt * (rhov_ * dw0 + sqrhov_ * dw1);
-            break;
-        case Reflection:
-            vol = Math.sqrt(Math.abs(x01));
-            vol2 = sigmav_ * vol;
-            mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
-            - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
-            nu = kappav_ * (thetav_ - vol * vol);
+                retVal[0] = x00 * Math.exp(mu * dt + vol * dw0 * sdt);
+                retVal[1] = x01 + nu * dt + vol2 * sdt * (rhov_ * dw0 + sqrhov_ * dw1);
+                break;
+            case Reflection:
+                vol = Math.sqrt(Math.abs(x01));
+                vol2 = sigmav_ * vol;
+                mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
+                - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+                nu = kappav_ * (thetav_ - vol * vol);
 
-            retVal[0] = x00 * Math.exp(mu * dt + vol * dw0 * sdt);
-            retVal[1] = vol * vol + nu * dt + vol2 * sdt * (rhov_ * dw0 + sqrhov_ * dw1);
-            break;
-        case ExactVariance:
-            // use Alan Lewis trick to decorrelate the equity and the variance
-            // process by using y(t)=x(t)-\frac{rho}{sigma}\nu(t)
-            // and Ito's Lemma. Then use exact sampling for the variance
-            // process. For further details please read the wilmott thread
-            // "QuantLib code is very high quatlity"
-            vol = (x01 > 0.0) ? Math.sqrt(x01) : 0.0;
-            mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
-            - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+                retVal[0] = x00 * Math.exp(mu * dt + vol * dw0 * sdt);
+                retVal[1] = vol * vol + nu * dt + vol2 * sdt * (rhov_ * dw0 + sqrhov_ * dw1);
+                break;
+            case ExactVariance:
+                // use Alan Lewis trick to decorrelate the equity and the variance
+                // process by using y(t)=x(t)-\frac{rho}{sigma}\nu(t)
+                // and Ito's Lemma. Then use exact sampling for the variance
+                // process. For further details please read the wilmott thread
+                // "QuantLib code is very high quatlity"
+                vol = (x01 > 0.0) ? Math.sqrt(x01) : 0.0;
+                mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
+                - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
 
-            df = 4 * thetav_ * kappav_ / (sigmav_ * sigmav_);
-            ncp = 4 * kappav_ * Math.exp(-kappav_ * dt) / (sigmav_ * sigmav_ * (1 - Math.exp(-kappav_ * dt))) * x01;
+                df = 4 * thetav_ * kappav_ / (sigmav_ * sigmav_);
+                ncp = 4 * kappav_ * Math.exp(-kappav_ * dt) / (sigmav_ * sigmav_ * (1 - Math.exp(-kappav_ * dt))) * x01;
 
-            p = new CumulativeNormalDistribution().op(dw1);
-            if (p < 0.0) {
-                p = 0.0;
-            } else if (p >= 1.0) {
-                p = 1.0 - Constants.QL_EPSILON;
-            }
+                p = new CumulativeNormalDistribution().op(dw1);
+                if (p < 0.0) {
+                    p = 0.0;
+                } else if (p >= 1.0) {
+                    p = 1.0 - Constants.QL_EPSILON;
+                }
 
-            retVal[1] = sigmav_ * sigmav_ * (1 - Math.exp(-kappav_ * dt)) / (4 * kappav_);
-            if (true) {
-                throw new UnsupportedOperationException("Work in progress");
-            }
+                retVal[1] = sigmav_ * sigmav_ * (1 - Math.exp(-kappav_ * dt)) / (4 * kappav_);
+                if (true) {
+                    throw new UnsupportedOperationException("Work in progress");
+                }
 
-            dy = (mu - rhov_ / sigmav_ * kappav_ * (thetav_ - vol * vol)) * dt + vol * sqrhov_ * dw0 * sdt;
+                dy = (mu - rhov_ / sigmav_ * kappav_ * (thetav_ - vol * vol)) * dt + vol * sqrhov_ * dw0 * sdt;
 
-            retVal[0] = x00 * Math.exp(dy + rhov_ / sigmav_ * (retVal[1] - x01));
-            break;
-        default:
-            throw new LibraryException("unknown discretization schema"); // QA:[RG]::verified // TODO: message
+                retVal[0] = x00 * Math.exp(dy + rhov_ / sigmav_ * (retVal[1] - x01));
+                break;
+            default:
+                throw new LibraryException("unknown discretization schema"); // QA:[RG]::verified // TODO: message
         }
 
         return new Array( retVal );

@@ -368,8 +368,8 @@ public class AsianOptionTest {
         /* @Real */double tolerance = 1.0e-4;
 
         if (Math.abs(calculated - expected) > tolerance) {
-            reportFailure("value", averageType, runningAccumulator, pastFixings, new ArrayList<Date>(), payoff, exercise,
-                    spot.value(), qRate.value(), rRate.value(), today, vol.value(), expected, calculated, tolerance);
+            reportFailure("value", averageType, runningAccumulator, pastFixings, new ArrayList<Date>(), payoff, exercise, spot
+                    .value(), qRate.value(), rRate.value(), today, vol.value(), expected, calculated, tolerance);
 
         }
         // trying to approximate the continuous version with the discrete version

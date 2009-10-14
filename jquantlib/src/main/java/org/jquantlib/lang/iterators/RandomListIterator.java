@@ -2,6 +2,8 @@ package org.jquantlib.lang.iterators;
 
 import java.util.ListIterator;
 
+import org.jquantlib.math.matrixutilities.Cells.Style;
+
 
 /**
  * This interface is similar to {@link ListIterator} but it provides methods which avoid un/boxing and methods which provide
@@ -9,7 +11,7 @@ import java.util.ListIterator;
  *
  * @author Richard Gomes
  */
-public interface RandomListIterator<T> extends ListIterator<Double>, BulkStorage<T> {
+public interface RandomListIterator<T> extends ListIterator<T> {
 
     /**
      * Inserts the specified element into <code>this</code> {@link RandomListIterator} (optional operation).
@@ -58,6 +60,25 @@ public interface RandomListIterator<T> extends ListIterator<Double>, BulkStorage
     public abstract int size();
 
     /**
+     * Returns the number of remaining elements
+     */
+    public abstract int remaining();
+
+    /**
+     * Returns the current cursor position according to the {@link Style} representation
+     *
+     * @return a scalar
+     */
+    public abstract int cursor();
+
+    /**
+     * Moves the cursor to a determined position.
+     *
+     * @param pos is the desired position
+     */
+    public abstract void seek(int pos);
+
+    /**
      * Positions the cursor at the beginning.
      */
     public abstract void begin();
@@ -76,20 +97,6 @@ public interface RandomListIterator<T> extends ListIterator<Double>, BulkStorage
      * Backwards the cursor one element, if any, without returning any value.
      */
     public abstract void backward();
-
-    /**
-     * Return the current cursor position.
-     *
-     * @return a scalar
-     */
-    public abstract int cursor();
-
-    /**
-     * Moves the cursor to a determined position.
-     *
-     * @param pos is the desired position
-     */
-    public abstract void seek(int pos);
 
 
     // --

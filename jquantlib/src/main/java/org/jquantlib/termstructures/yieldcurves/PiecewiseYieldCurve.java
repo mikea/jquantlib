@@ -579,7 +579,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         }
 
         //TODO: who's calling this constructor???
-        public InterpolatedDiscountCurve(
+        private InterpolatedDiscountCurve(
                 final Date[] dates,
                 final /* @DiscountFactor */ Array discounts,
                 final DayCounter dayCounter,
@@ -703,7 +703,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         }
 
         //TODO: who's calling this constructor???
-        public InterpolatedForwardCurve(final Date[] dates, final /* @Rate */ Array forwards, final DayCounter dayCounter, final I interpolator) {
+        private InterpolatedForwardCurve(final Date[] dates, final /* @Rate */ Array forwards, final DayCounter dayCounter, final I interpolator) {
             // FIXME: code review: calendar
             super(dates[0], new Target(), dayCounter);
             QL.require(dates.length > 1 , "too few dates"); // QA:[RG]::verified // TODO: message

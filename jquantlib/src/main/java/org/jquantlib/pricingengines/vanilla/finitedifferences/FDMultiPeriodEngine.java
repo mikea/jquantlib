@@ -39,7 +39,7 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 //TODO: code review
 public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
 
-    private List<Event> events;
+    protected List<Event> events;
     private List<Double> stoppingTimes;
     private int timeStepPerPeriod;
     protected SampledCurve prices;
@@ -59,8 +59,9 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
         events = schedule;
         stoppingTimes.clear();
         final int n = schedule.size();
-        for(int i = 0; i<n; i++)
+        for(int i = 0; i<n; i++) {
             stoppingTimes.add(process.time(events.get(i).date()));
+        }
     }
 
 
@@ -72,19 +73,19 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
 
 
     //
-    // private methods
+    // protected methods
     //
 
-    private double getDividendTime(final int i){
+    protected double getDividendTime(final int i) {
         return stoppingTimes.get(i);
     }
 
-    private void initializeStepCondition() {
-        stepCondition = new NullCondition<Array>();
+    protected void initializeModel() {
+        model = new StandardFiniteDifferenceModel(finiteDifferenceOperator, bcS);
     }
 
-    private void initializeModel() {
-        model = new StandardFiniteDifferenceModel(finiteDifferenceOperator, bcS);
+    protected void initializeStepCondition() {
+        stepCondition = new NullCondition<Array>();
     }
 
 
@@ -93,13 +94,14 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
     //
 
     @Override
-    public void setupArguments(final Arguments a){
+    protected void setupArguments(final Arguments a){
         super.setupArguments(a);
         final OneAssetOptionArguments args = (OneAssetOptionArguments) a;
         events.clear();
         final int n = args.exercise.size();
-        for (int i=0; i<n; ++i)
+        for (int i=0; i<n; ++i) {
             stoppingTimes.add(process.time(args.exercise.date(i)));
+        }
     }
 
     @Override
@@ -121,27 +123,32 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
             if (getDividendTime(0) < getResidualTime() * dateTolerance) {
                 firstDateIsZero = true;
                 firstIndex = 0;
-                if (dateNumber >= 2)
+                if (dateNumber >= 2) {
                     firstNonZeroDate = getDividendTime(1);
+                }
             }
             if (Math.abs(getDividendTime(lastIndex) - getResidualTime()) < dateTolerance) {
                 lastDateIsResTime = true;
                 lastIndex = dateNumber - 2;
             }
 
-            if (!firstDateIsZero)
+            if (!firstDateIsZero) {
                 firstNonZeroDate = getDividendTime(0);
+            }
 
-            if (dateNumber >= 2)
-                for (int j = 1; j < dateNumber; j++)
+            if (dateNumber >= 2) {
+                for (int j = 1; j < dateNumber; j++) {
                     QL.require(getDividendTime(j - 1) < getDividendTime(j) , "dates must be in strictly increasing order"); // QA:[RG]::verified // TODO: message
+                }
+            }
         }
 
         double dt = getResidualTime()/(timeStepPerPeriod*(dateNumber+1));
 
         // Ensure that dt is always smaller than the first non-zero date
-        if (firstNonZeroDate <= dt)
+        if (firstNonZeroDate <= dt) {
             dt = firstNonZeroDate / 2.0;
+        }
 
         setGridLimits();
         initializeInitialCondition();
@@ -151,31 +158,36 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
         initializeStepCondition();
 
         prices = intrinsicValues;
-        if (lastDateIsResTime)
+        if (lastDateIsResTime) {
             executeIntermediateStep(dateNumber - 1);
+        }
 
         int j = lastIndex;
         do {
-            if (j == (dateNumber - 1))
+            if (j == (dateNumber - 1)) {
                 beginDate = getResidualTime();
-            else
+            } else {
                 beginDate = getDividendTime(j + 1);
+            }
 
-            if (j >= 0)
+            if (j >= 0) {
                 endDate = getDividendTime(j);
-            else
+            } else {
                 endDate = dt;
+            }
 
             prices.setValues(model.rollback(prices.values(), beginDate, endDate, timeStepPerPeriod, stepCondition));
 
-            if (j >= 0)
+            if (j >= 0) {
                 executeIntermediateStep(j);
+            }
         } while (--j >= firstIndex);
 
         prices.setValues(model.rollback(prices.values(),dt, 0, 1, stepCondition));
 
-        if (firstDateIsZero)
+        if (firstDateIsZero) {
             executeIntermediateStep(0);
+        }
 
         results.value = prices.valueAtCenter();
         results.delta = prices.firstDerivativeAtCenter();

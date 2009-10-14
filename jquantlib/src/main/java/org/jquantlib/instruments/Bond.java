@@ -97,7 +97,7 @@ import org.jquantlib.time.TimeUnit;
  */
 // TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-public abstract class Bond extends NewInstrument {
+public abstract class Bond extends Instrument {
 
     protected/* @Natural */int settlementDays_;
     protected Calendar calendar_;
@@ -789,10 +789,13 @@ public abstract class Bond extends NewInstrument {
      * @param settlementDate
      * @return
      */
-    public/* @Real */double dirtyPriceFromZSpread(/* @Spread */final double zSpread,
-            final DayCounter dc, final Compounding comp, final Frequency freq,
+    public/* @Real */double dirtyPriceFromZSpread(
+            /* @Spread */final double zSpread,
+            final DayCounter dc,
+            final Compounding comp,
+            final Frequency freq,
             Date settlement) {
-        if (settlement ==new Date()){
+        if (settlement == new Date()){
             settlement = settlementDate();
         }
         assert(engine!=null): ("null pricing engine");

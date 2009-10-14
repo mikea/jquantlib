@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,11 +35,10 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines.results;
 
-import org.jquantlib.instruments.NewInstrument;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 
@@ -66,31 +65,31 @@ import org.jquantlib.pricingengines.arguments.Arguments;
 public class MoreGreeks extends Greeks {
 
     //FIXME: comment fields
-    
+
     /**
      * Probability that an Option expires <i>in-the-money</i>
      * 
      * @see <a href="http://www.optiontradingpedia.com/in_the_money_options.htm">In The Money Options</a>
      */
     public /*@Real*/ double itmCashProbability;
-    
-	public /*@Real*/ double deltaForward;
-	
-	
-	public /*@Real*/ double elasticity;
-	
-	public /*@Real*/ double thetaPerDay;
-	
-	public /*@Real*/ double strikeSensitivity;
 
-	public MoreGreeks() {
-		super();
-	}
+    public /*@Real*/ double deltaForward;
 
-	@Override
-	public void reset() {
-		super.reset();
-		itmCashProbability = deltaForward = elasticity = thetaPerDay = strikeSensitivity = Double.NaN;
-	}
+
+    public /*@Real*/ double elasticity;
+
+    public /*@Real*/ double thetaPerDay;
+
+    public /*@Real*/ double strikeSensitivity;
+
+    public MoreGreeks() {
+        super();
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        itmCashProbability = deltaForward = elasticity = thetaPerDay = strikeSensitivity = Double.NaN;
+    }
 
 }

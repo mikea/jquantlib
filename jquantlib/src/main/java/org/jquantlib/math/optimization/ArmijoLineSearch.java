@@ -38,7 +38,7 @@
 package org.jquantlib.math.optimization;
 
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
+import org.jquantlib.math.optimization.EndCriteria.Type;
 
 
 public class ArmijoLineSearch extends LineSearch {
@@ -54,7 +54,7 @@ public class ArmijoLineSearch extends LineSearch {
     }
 
     @Override
-    public double evaluate(final Problem P, final CriteriaType ecType, final EndCriteria endCriteria, final double t_ini) {
+    public double evaluate(final Problem P, final Type ecType, final EndCriteria endCriteria, final double t_ini) {
         final Constraint constraint = P.constraint();
         succeed_ = true;
         boolean maxIter = false;

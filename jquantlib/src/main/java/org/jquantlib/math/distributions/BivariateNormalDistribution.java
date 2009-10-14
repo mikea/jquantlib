@@ -85,8 +85,8 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
     // private fields
     //
 
-    private final double correlation_;
-    private final static CumulativeNormalDistribution cumnorm_ = new CumulativeNormalDistribution();
+    private final double correlation;
+    private final static CumulativeNormalDistribution cumnorm = new CumulativeNormalDistribution();
 
 
     //
@@ -100,7 +100,7 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
      */
     public BivariateNormalDistribution(final double rho) {
         QL.require(rho >= -1.0 && rho <= 1.0 , "rho must be >= -1.0 and <= 1.0"); // QA:[RG]::verified // TODO: message
-        correlation_ = rho;
+        correlation = rho;
     }
 
 
@@ -122,9 +122,9 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
     public double op(final double x, final double y) {
         final TabulatedGaussLegendre gaussLegendreQuad = new TabulatedGaussLegendre(20);
 
-        if (Math.abs(correlation_) < 0.3) {
+        if (Math.abs(correlation) < 0.3) {
             gaussLegendreQuad.setOrder(6);
-        } else if (Math.abs(correlation_) < 0.75) {
+        } else if (Math.abs(correlation) < 0.75) {
             gaussLegendreQuad.setOrder(12);
         }
 
@@ -133,21 +133,21 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
         double hk = h * k;
         double bvn = 0.0;
 
-        if (Math.abs(correlation_) < 0.925) {
-            if (Math.abs(correlation_) > 0) {
-                final double asr = Math.asin(correlation_);
+        if (Math.abs(correlation) < 0.925) {
+            if (Math.abs(correlation) > 0) {
+                final double asr = Math.asin(correlation);
                 final Eqn3 f = new Eqn3(h, k, asr);
                 bvn = gaussLegendreQuad.evaluate(f);
                 bvn *= asr * (0.25 / Math.PI);
             }
-            bvn += cumnorm_.op(-h) * cumnorm_.op(-k);
+            bvn += cumnorm.op(-h) * cumnorm.op(-k);
         } else {
-            if (correlation_ < 0) {
+            if (correlation < 0) {
                 k *= -1;
                 hk *= -1;
             }
-            if (Math.abs(correlation_) < 1) {
-                final double Ass = (1 - correlation_) * (1 + correlation_);
+            if (Math.abs(correlation) < 1) {
+                final double Ass = (1 - correlation) * (1 + correlation);
                 double a = Math.sqrt(Ass);
                 final double bs = (h - k) * (h - k);
                 final double c = (4 - hk) / 8;
@@ -158,7 +158,7 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
                 }
                 if (-hk < 100) {
                     final double B = Math.sqrt(bs);
-                    bvn -= Math.exp(-hk / 2) * Constants.M_SQRT2PI * cumnorm_.op(-B / a) * B
+                    bvn -= Math.exp(-hk / 2) * Constants.M_SQRT2PI * cumnorm.op(-B / a) * B
                     * (1 - c * bs * (1 - d * bs / 5) / 3);
                 }
                 a /= 2;
@@ -167,12 +167,12 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
                 bvn /= (-2.0 * Math.PI);
             }
 
-            if (correlation_ > 0) {
-                bvn += cumnorm_.op(-Math.max(h, k));
+            if (correlation > 0) {
+                bvn += cumnorm.op(-Math.max(h, k));
             } else {
                 bvn *= -1;
                 if (k > h) {
-                    bvn += cumnorm_.op(k) - cumnorm_.op(h);
+                    bvn += cumnorm.op(k) - cumnorm.op(h);
                 }
             }
         }
@@ -188,7 +188,7 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
 
     private static class Eqn3 implements Ops.DoubleOp {
 
-        private final double hk_, asr_, hs_;
+        private final double hk, asr, hs;
 
         /**
          * Equation 3, see Genz 2004.
@@ -200,9 +200,9 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
          */
 
         public Eqn3(final double h, final double k, final double asr) {
-            hk_ = h * k;
-            hs_ = (h * h + k * k) / 2;
-            asr_ = asr;
+            this.hk = h * k;
+            this.hs = (h * h + k * k) / 2;
+            this.asr = asr;
         }
 
 
@@ -221,8 +221,8 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
          * @return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn))
          */
         public double op(final double x) {
-            final double sn = Math.sin(asr_ * (-x + 1) * 0.5);
-            return Math.exp((sn * hk_ - hs_) / (1.0 - sn * sn));
+            final double sn = Math.sin(this.asr * (-x + 1) * 0.5);
+            return Math.exp((sn * hk - hs) / (1.0 - sn * sn));
         }
     }
 
@@ -235,7 +235,7 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
      */
     private static class Eqn6 implements Ops.DoubleOp {
 
-        private final double a_, c_, d_, bs_, hk_;
+        private final double a, c, d, bs, hk;
 
         /**
          * Constructor to initialize a, b, c, d, bs and hk.
@@ -247,11 +247,11 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
          * @param hk
          */
         public Eqn6(final double a, final double c, final double d, final double bs, final double hk) {
-            a_ = a;
-            c_ = c;
-            d_ = d;
-            bs_ = bs;
-            hk_ = hk;
+            this.a = a;
+            this.c = c;
+            this.d = d;
+            this.bs = bs;
+            this.hk = hk;
         }
 
 
@@ -272,12 +272,13 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
          *
          */
         public double op(final double x) {
-            double xs = a_ * (-x + 1);
+            double xs = a * (-x + 1);
             xs = Math.abs(xs * xs);
             final double rs = Math.sqrt(1 - xs);
-            final double asr = -(bs_ / xs + hk_) / 2;
-            if (asr > -100.0)
-                return (a_ * Math.exp(asr) * (Math.exp(-hk_ * (1 - rs) / (2 * (1 + rs))) / rs - (1 + c_ * xs * (1 + d_ * xs))));
+            final double asr = -(bs / xs + hk) / 2;
+            if (asr > -100.0) {
+                return (a * Math.exp(asr) * (Math.exp(-hk * (1 - rs) / (2 * (1 + rs))) / rs - (1 + c * xs * (1 + d * xs))));
+            }
             return 0.0;
         }
     }

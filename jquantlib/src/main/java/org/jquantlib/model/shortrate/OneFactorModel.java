@@ -23,172 +23,255 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model.shortrate;
 
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.methods.lattices.Lattice;
+import org.jquantlib.methods.lattices.Tree;
 import org.jquantlib.methods.lattices.TreeLattice1D;
 import org.jquantlib.methods.lattices.TrinomialTree;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
 
 /**
- *
+ * Single-factor short-rate model abstract class
+ * 
+ * @category shortrate
+ * 
  * @author Praneet Tiwari
  */
+@QualityAssurance(quality=Quality.Q0_UNFINISHED, version=Version.V097, reviewers="Richard Gomes")
 public abstract class OneFactorModel extends ShortRateModel {
 
-    protected OneFactorModel(){
-        super();
-    }
+    //
+    // public constructors
+    //
 
-    public OneFactorModel(final int /* @Size */nArguments) {
+    public OneFactorModel(final int nArguments) {
         super(nArguments);
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
     }
 
-    // ! returns the short-rate dynamics
-    public abstract ShortRateDynamics dynamics();
 
-    // ! Return by default a trinomial recombining tree
+    //
+    // public methods
+    //
+
+    /**
+     * Return by default a trinomial recombining tree.
+     */
     @Override
-    public  Lattice tree(final TimeGrid grid){
-        final TrinomialTree trinominal = new TrinomialTree(dynamics().process(), grid);
-        return new ShortRateTree(trinominal, dynamics(), grid);
-
+    public  Lattice tree(final TimeGrid  grid) /* @ReadOnly */ {
+        final TrinomialTree trinomial = new TrinomialTree(dynamics().process(), grid);
+        //XXX return boost::shared_ptr<Lattice>( new ShortRateTree(trinomial, dynamics(), grid) );
+        return new ShortRateTree(trinomial, dynamics(), grid);
     }
 
-    public abstract class ShortRateDynamics{
+
+    //
+    // public abstract methods
+    //
+
+    /**
+     * Returns the short-rate dynamics
+     */
+    public abstract ShortRateDynamics dynamics() /* @ReadOnly */ ;
+
+
+    //
+    // private inner classes
+    //
+
+    /**
+     * <p>Base class describing the short-rate dynamics. </p>
+     */
+    protected abstract class ShortRateDynamics {
+
+        //
+        // private fields
+        //
+
         private final StochasticProcess1D process_;
 
-        public ShortRateDynamics(final StochasticProcess1D process) {
+
+        //
+        // public constructors
+        //
+
+        protected ShortRateDynamics(final StochasticProcess1D process) {
             this.process_ = process;
         }
 
-        // ! Compute state variable from short rate
-        public  double /* @Real */variable(final double /* @Time */t, final double /* @Rate */r){
-            throw new UnsupportedOperationException("work in progress");
-        };
 
-        // ! Compute short rate from state variable
-        public abstract double /* @Rate */shortRate(double /* @Time */t, double /* @Real */variable);
+        //
+        // public methods
+        //
 
-        // ! Returns the risk-neutral dynamics of the state variable
-        public StochasticProcess1D process() {
-            return process_;
+        /**
+         * Returns the risk-neutral dynamics of the state variable.
+         */
+        public final StochasticProcess1D process() {
+            return this.process_;
         }
+
+
+        //
+        // public abstract methods
+        //
+
+        /**
+         * Compute state variable from short rate.
+         */
+        public abstract double variable(/* @Time */ double t, /* @Rate */ double r) /* @ReadOnly */ ;
+
+        /**
+         * Compute short rate from state variable.
+         */
+        public abstract /* @Rate */ double shortRate(/* @Time */ double t, double variable) /* @ReadOnly */ ;
 
     }
 
-    //TODO: generic type?
-    //! Recombining trinomial tree discretizing the state variable
-    public class ShortRateTree extends TreeLattice1D{
-        private final TrinomialTree tree_;
-        private final ShortRateDynamics dynamics_;
 
-        // ! Plain tree build-up from short-rate dynamics
-        public ShortRateTree(final TrinomialTree tree, final ShortRateDynamics dynamics, final TimeGrid timeGrid) {
-            // why 1 here?
+    /**
+     * Recombining trinomial tree discretizing the state variable.
+     */
+    protected class ShortRateTree extends TreeLattice1D { //TODO: <OneFactorModel.ShortRateTree> {
+
+        //
+        // private fields
+        //
+
+        private final  TrinomialTree tree_;
+        private final  ShortRateDynamics dynamics_;
+
+
+        //
+        // public constructors
+        //
+
+        /**
+         * Plain tree build-up from short-rate dynamics.
+         */
+        public ShortRateTree(
+                final TrinomialTree tree,
+                final ShortRateDynamics dynamics,
+                final TimeGrid timeGrid) {
             super(timeGrid, tree.size(1));
             this.tree_ = tree;
             this.dynamics_ = dynamics;
-            if (System.getProperty("EXPERIMENTAL") == null) {
-                throw new UnsupportedOperationException("Work in progress");
-            }
         }
 
-        // ! Tree build-up + numerical fitting to term-structure
-        public ShortRateTree(final TrinomialTree tree,
+        /**
+         * {@link Tree} build-up + numerical fitting to term-structure.
+         */
+        public ShortRateTree(
+                final TrinomialTree tree,
                 final ShortRateDynamics dynamics,
                 final TermStructureFittingParameter.NumericalImpl theta,
-                final TimeGrid timeGrid) {
+                final TimeGrid  timeGrid) {
+
             super(timeGrid, tree.size(1));
-            if (System.getProperty("EXPERIMENTAL") == null) {
-                throw new UnsupportedOperationException("Work in progress");
-            }
             this.tree_ = tree;
             this.dynamics_ = dynamics;
             theta.reset();
-
-            double /* @Real */value = 1.0;
-            final double /* @Real */vMin = -100.0;
-            final double /* @Real */vMax = 100.0;
-
-            for (int /* @Size */i = 0; i < (timeGrid.size() - 1); i++) {
-                 final double /*@Real*/ discountBond = theta.termStructure().currentLink().discount(t.get(i+1));
-                 final Helper finder = new Helper(i, discountBond, theta, this);
-                 final Brent s1d = new Brent();
-                 s1d.setMaxEvaluations(1000);
-                 value = s1d.solve(finder, 1e-7, value, vMin, vMax);
-                 // vMin = value - 1.0;
-                 // vMax = value + 1.0;
-                 theta.change(value);
+            double value = 1.0;
+            final double vMin = -100.0;
+            final double vMax = 100.0;
+            for (int i=0; i<(timeGrid.size() - 1); i++) {
+                final double discountBond = theta.termStructure().currentLink().discount(t.get(i+1));
+                final Helper finder = new Helper(i, discountBond, theta, this);
+                final Brent s1d = new Brent();
+                s1d.setMaxEvaluations(1000);
+                value = s1d.solve(finder, 1e-7, value, vMin, vMax);
+                // vMin = value - 1.0;
+                // vMax = value + 1.0;
+                theta.change(value);
             }
         }
 
+
+        //
+        // public methods
+        //
+
         @Override
-        public int /* @Size */size(final int /* @Size */i) {
+        public int size(final int i) /* @ReadOnly */ {
             return tree_.size(i);
         }
 
         @Override
-        public double /* @DiscountFactor */discount(final int /* @Size */i, final int /* @Size */index) {
-            final double /* @Real */x = tree_.underlying(i, index);
-            final double /* @Real */r = dynamics_.shortRate(timeGrid().get(i), x);
-            return Math.exp(-r * timeGrid().dt(i));
+        public /* @DiscountFactor */ double discount(final int i, final int index) /* @ReadOnly */ {
+            final double x = tree_.underlying(i, index);
+            /*@Rate*/ final double r = dynamics_.shortRate(timeGrid().get(i), x);
+            return Math.exp(-r*timeGrid().dt(i));
         }
 
         @Override
-        public double /* @Real */underlying(final int /* @Size */i, final int /* @Size */index) {
+        public double underlying(final int i, final int index) /* @ReadOnly */ {
             return tree_.underlying(i, index);
         }
 
         @Override
-        public int /* @Size */descendant(final int /* @Size */i, final int /* @Size */index, final int /* @Size */branch) {
+        public int descendant(final int i, final int index, final int branch) /* @ReadOnly */ {
             return tree_.descendant(i, index, branch);
         }
 
         @Override
-        public double /* @Real */probability(final int /* @Size */i, final int /* @Size */index, final int /* @Size */branch) {
+        public double probability(final int i, final int index, final int branch) /* @ReadOnly */ {
             return tree_.probability(i, index, branch);
         }
 
-        private class Helper implements Ops.DoubleOp{
+
+        //
+        // private inner class
+        //
+
+        private class Helper implements Ops.DoubleOp {
+
+            //
+            // private fields
+            //
 
             private final int size_;
             private final int i_;
-            private final Array statePrices_;
+            private final Array  statePrices_;
             private final double discountBondPrice_;
-            private final TermStructureFittingParameter.NumericalImpl theta_;
+            protected final TermStructureFittingParameter.NumericalImpl theta_;
             private final ShortRateTree tree_;
 
-           public Helper(
-                   final int i,
-                   final double discountBondPrice,
-                   final TermStructureFittingParameter.NumericalImpl theta,
-                   final ShortRateTree tree) {
-               this.size_ = tree.size(i);
-               this.i_ = i;
-               this.statePrices_ = tree.statePrices(i);
-               this.discountBondPrice_ = discountBondPrice;
-               this.theta_ = theta;
-               this.tree_ = tree;
 
-               // TODO: code review :: please verify against QL/C++ code
-               //FIXME: either vice versa or bad design ?
-               theta_.set(new Double(tree.timeGrid().get(i)).intValue(), 0.0);
-           }
+            //
+            // public methods
+            //
 
-           public double op(final double theta){
-               double value = discountBondPrice_;
-               theta_.change(theta);
-               for(int j=0; j<size_; j++){
-                   value -= statePrices_.get(j)*tree_.discount(i_, j);
-               }
-               return value;
-           }
+            private Helper(
+                    final int i,
+                    final double discountBondPrice,
+                    final TermStructureFittingParameter.NumericalImpl theta,
+                    final ShortRateTree tree) {
+                this.i_ = i;
+                this.size_ = tree.size(i);
+                this.statePrices_ = tree.statePrices(i);
+                this.discountBondPrice_ = discountBondPrice;
+                this.theta_ = theta;
+                this.tree_ = tree;
+                this.theta_.set(tree.timeGrid().get(i), 0.0);
+            }
+
+            @Override
+            public double op(final double theta) /* @ReadOnly */ {
+                double value = discountBondPrice_;
+                this.theta_.change(theta);
+                for (int j=0; j<size_; j++) {
+                    value -= statePrices_.get(j)*tree_.discount(i_,j);
+                }
+                return value;
+            }
+
         }
+
     }
+
 }

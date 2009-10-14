@@ -39,7 +39,7 @@ import org.jquantlib.lang.exceptions.LibraryException;
 // FIXME: needs code review and better documentation
 public class EndCriteria {
 
-    public enum CriteriaType {
+    public enum Type {
         None,
         MaxIterations,
         StationaryPoint,
@@ -58,7 +58,7 @@ public class EndCriteria {
         protected final double rootEpsilon_, functionEpsilon_, gradientNormEpsilon_;
 
 
-        private CriteriaType ecType;
+        private Type ecType;
         private int statStateIterations;
 
 
@@ -86,11 +86,11 @@ public class EndCriteria {
          */
         public boolean checkMaxIterations(
                 final int iteration,
-                final CriteriaType ecType) {
+                final Type ecType) {
             if (iteration < maxIterations_)
                 return false;
             //this is wrong!!!!!!!!!!!!!!!
-            this.ecType = CriteriaType.MaxIterations;
+            this.ecType = Type.MaxIterations;
             return true;
         }
 
@@ -100,7 +100,7 @@ public class EndCriteria {
                 final double xOld,
                 final double xNew,
                 final int statStateIterations,
-                final CriteriaType ecType) {
+                final Type ecType) {
             if (Math.abs(xNew-xOld) >= rootEpsilon_) {
                 this.statStateIterations = 0;
                 return false;
@@ -108,7 +108,7 @@ public class EndCriteria {
             this.statStateIterations++;
             if (statStateIterations <= maxStationaryStateIterations_)
                 return false;
-            this.ecType = CriteriaType.StationaryPoint;
+            this.ecType = Type.StationaryPoint;
             return true;
         }
 
@@ -117,7 +117,7 @@ public class EndCriteria {
                 final double fxOld,
                 final double fxNew,
                 final int statStateIterations,
-                final CriteriaType ecType) {
+                final Type ecType) {
             if (Math.abs(fxNew-fxOld) >= functionEpsilon_) {
                 this.statStateIterations = 0;
 
@@ -126,7 +126,7 @@ public class EndCriteria {
             this.statStateIterations++;
             if (statStateIterations <= maxStationaryStateIterations_)
                 return false;
-            this.ecType = CriteriaType.StationaryFunctionValue;
+            this.ecType = Type.StationaryFunctionValue;
             return true;
         }
 
@@ -134,12 +134,12 @@ public class EndCriteria {
         public boolean checkStationaryFunctionAccuracy(
                 final double f,
                 final boolean positiveOptimization,
-                final CriteriaType ecType) {
+                final Type ecType) {
             if (!positiveOptimization)
                 return false;
             if (f >= functionEpsilon_)
                 return false;
-            this.ecType = CriteriaType.StationaryFunctionAccuracy;
+            this.ecType = Type.StationaryFunctionAccuracy;
             return true;
         }
 
@@ -147,10 +147,10 @@ public class EndCriteria {
         /*! Test if the gradient norm value is below gradientNormEpsilon */
         public boolean checkZeroGradientNorm(
                 final double gradientNorm,
-                final CriteriaType ecType) {
+                final Type ecType) {
             if (gradientNorm >= gradientNormEpsilon_)
                 return false;
-            this.ecType = CriteriaType.ZeroGradientNorm;
+            this.ecType = Type.ZeroGradientNorm;
             return true;
         }
 
@@ -166,7 +166,7 @@ public class EndCriteria {
                 final double normgold,
                 final double fnew,
                 final double normgnew,
-                final CriteriaType ecType) {
+                final Type ecType) {
             return
             checkMaxIterations(iteration, ecType) ||
             checkStationaryFunctionValue(fold, fnew, statStateIterations, ecType) ||
@@ -196,7 +196,7 @@ public class EndCriteria {
             return gradientNormEpsilon_;
         }
 
-        public final String toString(final CriteriaType ec) /*@ReadOnly*/ {
+        public final String toString(final Type ec) /*@ReadOnly*/ {
             switch (ec) {
             case None:
                 return "None";

@@ -43,5 +43,5 @@ package org.jquantlib.math.optimization;
 
 public abstract class OptimizationMethod {
     
-    public abstract EndCriteria.CriteriaType minimize(Problem P, EndCriteria endCriteria);
+    public abstract EndCriteria.Type minimize(Problem P, EndCriteria endCriteria);
 }

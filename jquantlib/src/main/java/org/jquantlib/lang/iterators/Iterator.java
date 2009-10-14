@@ -17,7 +17,7 @@ import org.jquantlib.math.matrixutilities.Matrix;
  *
  * @author Richard Gomes
  */
-public interface Iterator extends Algebra<Iterator>, RandomListIterator<Iterator> {
+public interface Iterator extends Algebra<Iterator>, RandomListIterator<Double> {
 
     /**
      * Builds a new Iterator, resetting its positioning.
@@ -63,5 +63,38 @@ public interface Iterator extends Algebra<Iterator>, RandomListIterator<Iterator
      * @param elem1 determines the last element, exclusive
      */
     public ConstIterator constIterator(int elem0, int elem1);
+
+
+
+    /**
+     * Fills all elements of <code>this</code> Iterator with a given scalar
+     *
+     * @return this
+     */
+    public Iterator fill(final double scalar);
+
+    /**
+     * Fills <code>this</code> Iterator with contests from <code>another</code> Iterator.
+     *
+     * @param another
+     * @return
+     */
+    public Iterator fill(Iterator another);
+
+    /**
+     * Fills <code>this</code> Iterator with <code>size</code> elements from <code>another</code> Iterator.
+     *
+     * @param another
+     * @return
+     */
+    public Iterator fill(Iterator another, final int size);
+
+    /**
+     * Swaps contents of <code>this</code> Iterator by contents of <code>another</code> Iterator.
+     *
+     * @param another
+     * @return this
+     */
+    public Iterator swap(final Iterator another);
 
 }

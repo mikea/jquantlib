@@ -59,7 +59,9 @@ public class ScheduleTest {
         final BusinessDayConvention modFollow = BusinessDayConvention.MODIFIED_FOLLOWING;
         final DateGeneration.Rule dateRule = DateGeneration.Rule.Backward;
 
-        final Schedule firstConstrSchedule = new Schedule(startDate, maturityDate, accPeriodTenor, calendar, modFollow, modFollow,
+        final Schedule firstConstrSchedule = new Schedule(
+                startDate, maturityDate, accPeriodTenor,
+                calendar, modFollow, modFollow,
                 dateRule, false, null, null);
 
         final List<Date> dates = new ArrayList<Date>();

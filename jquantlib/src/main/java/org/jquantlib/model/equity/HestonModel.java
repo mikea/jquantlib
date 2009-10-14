@@ -83,27 +83,27 @@ public class HestonModel extends CalibratedModel {
 
     // variance mean version level
     public double theta() {
-        return arguments_.get(0).getOperatorEq(0.0);
+        return arguments_.get(0).get(0.0);
     }
 
     // variance mean reversion speed
     public double kappa() {
-        return arguments_.get(1).getOperatorEq(0.0);
+        return arguments_.get(1).get(0.0);
     }
 
     // volatility of the volatility
     public double sigma() {
-        return arguments_.get(2).getOperatorEq(0.0);
+        return arguments_.get(2).get(0.0);
     }
 
     // correlation
     public double rho() {
-        return arguments_.get(3).getOperatorEq(0.0);
+        return arguments_.get(3).get(0.0);
     }
 
     // spot variance
     public double v0() {
-        return arguments_.get(4).getOperatorEq(0.0);
+        return arguments_.get(4).get(0.0);
     }
 
 

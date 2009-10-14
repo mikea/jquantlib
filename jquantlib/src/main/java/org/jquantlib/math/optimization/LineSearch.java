@@ -78,7 +78,7 @@ public class LineSearch {
 
     //FIXME: to be reviewed.
     // Perform line search
-    public double evaluate(final Problem P, final EndCriteria.CriteriaType ecType, final EndCriteria endCriteria, final double t_ini){
+    public double evaluate(final Problem P, final EndCriteria.Type ecType, final EndCriteria endCriteria, final double t_ini){
         throw new UnsupportedOperationException("Work in progress");
     }
 

@@ -159,6 +159,5 @@ public class FixedRateBond extends Bond {
     //
 
     private void reportFalseDateGenerationRule(final Date stubDate, final DateGeneration.Rule rule){
-        QL.error("stub date ("+ stubDate + ") not allowed with " + rule + " DateGeneration::Rule");
-    }
+        QL.error("stub date ("+ stubDate + ") not allowed with " + rule + " DateGeneration::Rule");    }
 }

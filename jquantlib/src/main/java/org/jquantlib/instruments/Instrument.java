@@ -41,7 +41,10 @@
 package org.jquantlib.instruments;
 
 import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.pricingengines.arguments.Arguments;
+import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.util.LazyObject;
 
 /**
@@ -62,18 +65,34 @@ import org.jquantlib.util.LazyObject;
 public abstract class Instrument extends LazyObject {
 
     //
+    // private static final fields
+    //
+
+    private static final String SHOULD_DEFINE_PRICING_ENGINE = "Should define pricing engine";
+    private static final String SETUP_ARGUMENTS_NOT_IMPLEMENTED = "Instrument#setupArguments() not implemented";
+
+
+    //
     // protected fields
     //
 
     /**
+     * The value of this attribute and any other that derived classes might declare must be set during calculation.
+     *
+     * @see PricingEngine
+     */
+    protected PricingEngine engine;
+
+    /**
      * Represents the net present value of the instrument.
      */
-    protected/*@Price*/double NPV;
+    protected /*@Price*/ double NPV;
 
     /**
      * Represents the error estimate on the NPV when available.
      */
-    protected/*@Price*/double errorEstimate;
+    protected /*@Price*/ double errorEstimate;
+
 
     //
     // public abstract methods
@@ -83,6 +102,22 @@ public abstract class Instrument extends LazyObject {
      * @return <code>true</code> if the instrument is still tradeable.
      */
     public abstract boolean isExpired();
+
+    /**
+     * Passes arguments to be used by a {@link PricingEngine}.
+     * When a derived argument structure is defined for an instrument, this method should be overridden to fill it.
+     *
+     * @param arguments keeps values to be used by the external {@link PricingEngine}
+     *
+     * @see Arguments
+     * @see PricingEngine
+     */
+    protected void setupArguments(final Arguments arguments) /* @ReadOnly */ {
+        QL.error(SETUP_ARGUMENTS_NOT_IMPLEMENTED);
+        throw new LibraryException(SETUP_ARGUMENTS_NOT_IMPLEMENTED);
+    }
+
+
 
     //
     // protected constructors
@@ -94,9 +129,28 @@ public abstract class Instrument extends LazyObject {
         this.errorEstimate = 0.0;
     }
 
+
     //
     // public final methods
     //
+
+    /**
+     * This method defines an external {@link PricingEngine} to be used for a <i>new-style</i> {@link Instrument}.
+     *
+     * @param engine is the external {@link PricingEngine} to be used
+     *
+     * @see PricingEngine
+     */
+    public final void setPricingEngine(final PricingEngine engine) {
+        if (this.engine != null) {
+            this.engine.deleteObserver(this);
+        }
+        this.engine = engine;
+        if (this.engine != null) {
+            this.engine.addObserver(this);
+        }
+        update(this, null);
+    }
 
     public final/*@Price*/double getNPV() /*@ReadOnly*/{
         calculate();
@@ -110,9 +164,25 @@ public abstract class Instrument extends LazyObject {
         return errorEstimate;
     }
 
+
     //
     // protected methods
     //
+
+    /**
+     * Obtains the {@link Results} populated by a {@link PricingEngine}.
+     * When a derived result structure is defined for an instrument, this method should be overridden to read from it.
+     *
+     * @param results contains the {@link Results} object populated by a {@link PricingEngine}
+     *
+     * @see Results
+     * @see PricingEngine
+     */
+    protected void fetchResults(final Results results) /* @ReadOnly */{
+        NPV = results.value;
+        errorEstimate = results.errorEstimate;
+    }
+
 
     /**
      * This method must leave the instrument in a consistent
@@ -125,17 +195,37 @@ public abstract class Instrument extends LazyObject {
         errorEstimate = 0.0;
     }
 
+
     //
-    // overridden protected methods from LazyObject
+    // overrides LazyObject
     //
+
+    /**
+     * This method performs the actual calculations and set any needed results.
+     * <p>
+     * When a NewInstrument is used, the default implementation is responsible for calling the pricing engine, passing arguments to
+     * it and retrieving results.
+     *
+     * @see LazyObject#performCalculations
+     */
+    @Override
+    protected void performCalculations() {
+        QL.require(engine != null, SHOULD_DEFINE_PRICING_ENGINE); // QA:[RG]::verified
+        engine.reset();
+        setupArguments(engine.getArguments());
+        engine.getArguments().validate();
+        engine.calculate();
+        fetchResults(engine.getResults());
+    }
 
     @Override
     protected void calculate() /*@ReadOnly*/{
         if (isExpired()) {
             setupExpired();
             calculated = true;
-        } else
+        } else {
             super.calculate();
+        }
     }
 
 }

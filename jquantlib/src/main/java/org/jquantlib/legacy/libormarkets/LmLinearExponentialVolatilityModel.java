@@ -52,8 +52,9 @@ public abstract class LmLinearExponentialVolatilityModel extends LmVolatilityMod
     public LmLinearExponentialVolatilityModel(final List<Double> fixingTimes, final double a, final double b, final double c, final double d) {
         super(fixingTimes.size(), 4);
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         this.fixingTimes_ = fixingTimes;
         arguments_.set(0, new ConstantParameter(a, new PositiveConstraint()));
@@ -63,10 +64,10 @@ public abstract class LmLinearExponentialVolatilityModel extends LmVolatilityMod
     }
 
     public List<Double> volatility(final double t, final List list) {
-        final double a = arguments_.get(0).getOperatorEq(0.0);
-        final double b = arguments_.get(1).getOperatorEq(0.0);
-        final double c = arguments_.get(2).getOperatorEq(0.0);
-        final double d = arguments_.get(3).getOperatorEq(0.0);
+        final double a = arguments_.get(0).get(0.0);
+        final double b = arguments_.get(1).get(0.0);
+        final double c = arguments_.get(2).get(0.0);
+        final double d = arguments_.get(3).get(0.0);
 
         final List<Double> tmp = new ArrayList<Double>(size_);
         Collections.fill(tmp, 0.0);
@@ -81,10 +82,10 @@ public abstract class LmLinearExponentialVolatilityModel extends LmVolatilityMod
     }
 
     public double volatility(final int i, final double t, final List list) {
-        final double a = arguments_.get(0).getOperatorEq(0.0);
-        final double b = arguments_.get(1).getOperatorEq(0.0);
-        final double c = arguments_.get(2).getOperatorEq(0.0);
-        final double d = arguments_.get(3).getOperatorEq(0.0);
+        final double a = arguments_.get(0).get(0.0);
+        final double b = arguments_.get(1).get(0.0);
+        final double c = arguments_.get(2).get(0.0);
+        final double d = arguments_.get(3).get(0.0);
 
         final double T = fixingTimes_.get(i);
 
@@ -92,10 +93,10 @@ public abstract class LmLinearExponentialVolatilityModel extends LmVolatilityMod
     }
 
     public double integratedVariance(final int i, final int j, final double u, final List list) {
-        final double a = arguments_.get(0).getOperatorEq(0.0);
-        final double b = arguments_.get(1).getOperatorEq(0.0);
-        final double c = arguments_.get(2).getOperatorEq(0.0);
-        final double d = arguments_.get(3).getOperatorEq(0.0);
+        final double a = arguments_.get(0).get(0.0);
+        final double b = arguments_.get(1).get(0.0);
+        final double c = arguments_.get(2).get(0.0);
+        final double d = arguments_.get(3).get(0.0);
 
         final double T = fixingTimes_.get(i);
         final double S = fixingTimes_.get(j);
@@ -111,7 +112,7 @@ public abstract class LmLinearExponentialVolatilityModel extends LmVolatilityMod
                 * b
                 * (d * (-1 - b * (S + T) + k1 * k1 * (1 + b * (S + T - 2 * u))) - 2 * c
                         * (k3 * (1 + b * S) + k2 * (1 + b * T) - k1 * k3 * (1 + b * (S - u)) - k1 * k2 * (1 + b * (T - u)))))
-                / (4 * b * b * b * k2 * k3);
+                        / (4 * b * b * b * k2 * k3);
     }
 
     @Override

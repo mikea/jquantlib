@@ -1,5 +1,5 @@
 /*
-Copyright (C) 
+Copyright (C)
 2009 Ueli Hofstetter
 
 This source code is release under the BSD License.
@@ -35,56 +35,57 @@ import org.jquantlib.processes.HestonProcess;
  */
 public class BatesDoubleExpModel extends HestonModel {
 
-    public BatesDoubleExpModel(HestonProcess process) {
+    public BatesDoubleExpModel(final HestonProcess process) {
         this(process, 0.1, 0.1, 0.1, 0.5);
     }
 
-    public BatesDoubleExpModel(HestonProcess process, double lambda, double nuUp, double nuDown, double p) {
+    public BatesDoubleExpModel(final HestonProcess process, final double lambda, final double nuUp, final double nuDown, final double p) {
         super(process);
         arguments_.set(5, new ConstantParameter(p, new BoundaryConstraint(0.0, 1.0)));
         arguments_.set(6, new ConstantParameter(nuDown, new PositiveConstraint()));
         arguments_.set(7, new ConstantParameter(nuUp, new PositiveConstraint()));
         arguments_.set(8, new ConstantParameter(lambda, new PositiveConstraint()));
-        
-        if (System.getProperty("EXPERIMENTAL") == null)
+
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
     }
 
     public double p() {
-        return arguments_.get(5).getOperatorEq(0.0);
+        return arguments_.get(5).get(0.0);
     }
 
     public double nuDown() {
-        return arguments_.get(6).getOperatorEq(0.0);
+        return arguments_.get(6).get(0.0);
     }
 
     public double nuUp() {
-        return arguments_.get(7).getOperatorEq(0.0);
+        return arguments_.get(7).get(0.0);
     }
 
     public double lambda() {
-        return arguments_.get(8).getOperatorEq(0.0);
+        return arguments_.get(8).get(0.0);
     }
 
     public static class BatesDoubleExpDetJumpModel extends BatesDoubleExpModel {
-        public BatesDoubleExpDetJumpModel(HestonProcess process, double lambda, double nuUp, double nuDown, double p,
-                double kappaLambda, double thetaLambda) {
+        public BatesDoubleExpDetJumpModel(final HestonProcess process, final double lambda, final double nuUp, final double nuDown, final double p,
+                final double kappaLambda, final double thetaLambda) {
             super(process);
             arguments_.set(9, new ConstantParameter(kappaLambda, new PositiveConstraint()));
             arguments_.set(10, new ConstantParameter(thetaLambda, new PositiveConstraint()));
 
         }
 
-        public BatesDoubleExpDetJumpModel(HestonProcess process) {
+        public BatesDoubleExpDetJumpModel(final HestonProcess process) {
             this(process, 0.1, 0.1, 0.1, 0.5, 1.0, 0.1);
         }
 
         public double kappaLambda() {
-            return arguments_.get(9).getOperatorEq(0.0);
+            return arguments_.get(9).get(0.0);
         }
 
         public double thetaLambda() {
-            return arguments_.get(10).getOperatorEq(0.0);
+            return arguments_.get(10).get(0.0);
         }
     };
 

@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,12 +35,11 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines.arguments;
 
 import org.jquantlib.instruments.Instrument;
-import org.jquantlib.instruments.NewInstrument;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.results.Results;
 
@@ -57,12 +56,12 @@ import org.jquantlib.pricingengines.results.Results;
  */
 // TODO: study the possibility of changing to an interface
 public abstract class Arguments {
-    
+
     /**
      * Validates arguments to be used by a PricingEngine
      * 
      * @see PricingEngine
      */
     public abstract void validate() /*@ReadOnly*/;
-    
+
 }

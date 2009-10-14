@@ -2,7 +2,7 @@
  Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,41 +15,50 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.processes;
 
-
-//! Geometric brownian-motion process
-/*! This class describes the stochastic process governed by
-    \f[
-        dS(t, S)= \mu S dt + \sigma S dW_t.
-    \f]
-
-    \ingroup processes
-*/
+/**
+ * Geometric brownian-motion process
+ * <p>
+ * This class describes the stochastic process governed by
+ * <p>
+ * <p>{@latex[ dS(t, S) = \mu S dt + \sigma S dW_t }
+ * 
+ * @category processes
+ * 
+ * @author Ueli Hofstetter
+ */
 public class GeometricBrownianMotionProcess extends StochasticProcess1D {
-    
+
     protected double initialValue_;
     protected double mue_;
     protected double sigma_;
-    
-    public GeometricBrownianMotionProcess(double initialValue, double mue, double sigma){
+
+    public GeometricBrownianMotionProcess(
+            final double initialValue,
+            final double mue,
+            final double sigma) {
         this.sigma_ = sigma;
         this.initialValue_ = initialValue;
         this.mue_ = mue;
     }
 
     @Override
-    public double diffusion(double t, double x) {
+    public double diffusion(
+            final double t,
+            final double x) {
         return sigma_ * x;
     }
 
     @Override
-    public double drift(double t, double x) {
+    public double drift(
+            final double t,
+            final double x) {
         return mue_ * x;
     }
 

@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.instruments;
 
@@ -44,32 +44,131 @@ import java.util.List;
 import org.jquantlib.QL;
 import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.arguments.DividendVanillaOptionArguments;
+import org.jquantlib.pricingengines.vanilla.AnalyticDividendEuropeanEngine;
+import org.jquantlib.pricingengines.vanilla.finitedifferences.FDDividendAmericanEngine;
+import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.processes.StochasticProcess;
+import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.time.Date;
 
+/**
+ * Single-asset vanilla option (no barriers) with discrete dividends
+ *
+ * @category instruments
+ * 
+ * @author Richard Gomes
+ */
 public class DividendVanillaOption extends VanillaOption {
 
     private static final String WRONG_ARGUMENT_TYPE = "wrong argument type";
 
-    private final List<? extends Dividend> cashFlow_;
+    private final List<? extends Dividend> cashFlow;
 
-    public DividendVanillaOption(final StochasticProcess process,
-                                final Payoff payoff, final Exercise exercise,
-                                final List<Date> dividendDates,
-                                final List<Double> dividends,
-                                final PricingEngine engine) {
+    public DividendVanillaOption(
+            final StochasticProcess process,
+            final Payoff payoff,
+            final Exercise exercise,
+            final List<Date> dividendDates,
+            final List<Double> dividends,
+            final PricingEngine engine) {
         super(process, payoff, exercise, engine);
-        cashFlow_ = Dividend.DividendVector(dividendDates, dividends);
+        cashFlow = Dividend.DividendVector(dividendDates, dividends);
     }
+
+    //
+    // public methods
+    //
+
+
+    public /*@Volatility*/ double impliedVolatility(
+            final double price,
+            final GeneralizedBlackScholesProcess process) /* @ReadOnly */ {
+        return impliedVolatility(price, process, 1.0e-4, 100, 1.0e-7, 4.0);
+    }
+
+    public /*@Volatility*/ double impliedVolatility(
+            final double price,
+            final GeneralizedBlackScholesProcess process,
+            final double accuracy) /* @ReadOnly */ {
+        return impliedVolatility(price, process, accuracy, 100, 1.0e-7, 4.0);
+    }
+
+    public /*@Volatility*/ double impliedVolatility(
+            final double price,
+            final GeneralizedBlackScholesProcess process,
+            final double accuracy,
+            final int maxEvaluations) /* @ReadOnly */ {
+        return impliedVolatility(price, process, accuracy, maxEvaluations, 1.0e-7, 4.0);
+    }
+
+    public /*@Volatility*/ double impliedVolatility(
+            final double price,
+            final GeneralizedBlackScholesProcess process,
+            final double accuracy,
+            final int maxEvaluations,
+            /*@Volatility*/ final double minVol) /* @ReadOnly */ {
+        return impliedVolatility(price, process, accuracy, maxEvaluations, minVol, 4.0);
+    }
+
+
+    /**
+     * see VanillaOption for notes on implied-volatility calculation.
+     */
+    public /*@Volatility*/ double impliedVolatility(
+            final double targetValue,
+            final GeneralizedBlackScholesProcess process,
+            final double accuracy,
+            final int maxEvaluations,
+            /*@Volatility*/ final double minVol,
+            /*@Volatility*/ final double maxVol) /* @ReadOnly */ {
+
+        QL.require(!isExpired(), "option expired");
+
+        final SimpleQuote volQuote = new SimpleQuote();
+
+        final GeneralizedBlackScholesProcess newProcess = ImpliedVolatilityHelper.clone(process, volQuote);
+
+        // engines are built-in for the time being
+        final PricingEngine engine;
+        switch (exercise.type()) {
+            case EUROPEAN:
+                engine = new AnalyticDividendEuropeanEngine(newProcess);
+                break;
+            case AMERICAN:
+                engine = new FDDividendAmericanEngine(newProcess);
+                break;
+            case BERMUDAN:
+                throw new LibraryException("engine not available for Bermudan option with dividends"); // TODO: message
+            default:
+                throw new LibraryException("unknown exercise type"); // // TODO: message
+        }
+
+        return ImpliedVolatilityHelper.calculate(
+                this,
+                engine,
+                volQuote,
+                targetValue,
+                accuracy,
+                maxEvaluations,
+                minVol, maxVol);
+    }
+
+
+
+
+    //
+    // Overrides OneAssetStrikedOption
+    //
 
     @Override
     public void setupArguments(final Arguments args) {
         QL.require(args instanceof DividendVanillaOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
         super.setupArguments(args);
         final DividendVanillaOptionArguments arguments = (DividendVanillaOptionArguments)args;
-        arguments.cashFlow = cashFlow_;
+        arguments.cashFlow = cashFlow;
     }
 }

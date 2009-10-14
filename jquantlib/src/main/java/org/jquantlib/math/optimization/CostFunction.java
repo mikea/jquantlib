@@ -38,38 +38,30 @@
 
 package org.jquantlib.math.optimization;
 
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.math.matrixutilities.Array;
 
+/**
+ * Cost function abstract class for optimization problem.
+ */
+@QualityAssurance(quality=Quality.Q3_DOCUMENTATION, version=Version.V097, reviewers="Richard Gomes")
 public abstract class CostFunction {
 
-    /**
-     * Method to overload to compute the cost function values in x
-     *
-     * @param x
-     * @return
-     */
-    public abstract/* Disposable<Array> */Array values(final Array x);
+    //
+    // public methods
+    //
 
     /**
-     * Method to overload to compute the cost function value in x
-     * @param x
-     * @return
+     * Method to overload to compute gradient(f), the first derivative of
+     * the cost function with respect to {@latex$ x }
      */
-    public abstract double /* @Real */value(final Array x);
-
-    /**
-     * Method to overload to compute grad_f, the first derivative of
-     * the cost function with respect to x
-     *
-     * @param grad
-     * @param x
-     */
-    public void gradient(final Array grad, final Array x) {
-        final double /* @Real */eps = finiteDifferenceEpsilon();
-        double /* @Real */ fp, fm;
-        // TODO: code review :: use of clone()
+    public void gradient(final Array  grad, final Array  x) /* @ReadOnly */ {
+        final double eps = finiteDifferenceEpsilon();
+        double fp, fm;
         final Array xx = x.clone();
-        for (int /* @Size */i=0; i<x.size(); i++) {
+        for (int i=0; i<x.size(); i++) {
             // xx[i] += eps;
             xx.set(i, eps + xx.get(i));
             fp = value(xx);
@@ -84,24 +76,34 @@ public abstract class CostFunction {
     }
 
     /**
-     * Method to overload to compute grad_f, the first derivative of
-     * the cost function with respect to x and also the cost function
-     *
-     * @param grad
-     * @param x
-     * @return
+     * Method to overload to compute gradient(f), the first derivative of
+     * the cost function with respect to {@latex$ x } and also the cost function
      */
-    public double /* @Real */valueAndGradient(final Array grad, final Array x) {
+    public double valueAndGradient(final Array  grad, final Array  x) /* @ReadOnly */ {
         gradient(grad, x);
         return value(x);
     }
 
     /**
-     *  Default epsilon for finite difference method :
-     * @return
+     * {@link Default} epsilon for finite difference method
      */
-    public double /* @Real */finiteDifferenceEpsilon() {
+    public double finiteDifferenceEpsilon() /* @ReadOnly */ {
         return 1e-8;
     }
-}
 
+
+    //
+    // public abstract methods
+    //
+
+    /**
+     * Method to overload to compute the cost function value in {@latex$ x }
+     */
+    public abstract double value(final Array  x) /* @ReadOnly */ ;
+
+    /**
+     * Method to overload to compute the cost function values in {@latex$ x }
+     */
+    public abstract Array values(final Array  x) /* @ReadOnly */ ;
+
+}

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 
+Copyright (C)
 2009 Ueli Hofstetter
 
 This source code is release under the BSD License.
@@ -35,52 +35,53 @@ import org.jquantlib.processes.HestonProcess;
  */
 public class BatesModel extends HestonModel {
 
-    public BatesModel(HestonProcess process, double lambda, double nu, double delta) {
+    public BatesModel(final HestonProcess process, final double lambda, final double nu, final double delta) {
         super(process);
         arguments_.set(5, new ConstantParameter(nu, new NoConstraint()));
         arguments_.set(6, new ConstantParameter(delta, new PositiveConstraint()));
         arguments_.set(7, new ConstantParameter(lambda, new PositiveConstraint()));
-        
-        if (System.getProperty("EXPERIMENTAL") == null)
+
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
     }
-    
-    public BatesModel(HestonProcess process) {
-        this(process, 0.1, 0.0, 0.1); 
+
+    public BatesModel(final HestonProcess process) {
+        this(process, 0.1, 0.0, 0.1);
     }
-    
-    
+
+
     public double nu() {
-        return arguments_.get(5).getOperatorEq(0.0);
+        return arguments_.get(5).get(0.0);
     }
 
     public double delta() {
-        return arguments_.get(6).getOperatorEq(0.0);
+        return arguments_.get(6).get(0.0);
     }
 
     public double lambda() {
-        return arguments_.get(7).getOperatorEq(0.0);
+        return arguments_.get(7).get(0.0);
     }
 
     private static class BatesDetJumpModel extends BatesModel {
 
-        public BatesDetJumpModel(HestonProcess process) {
+        public BatesDetJumpModel(final HestonProcess process) {
             this(process, 0.1, 0.0, 0.1, 1.0, 0.1);
         }
 
-        public BatesDetJumpModel(HestonProcess process, double lambda, double nu, double delta, double kappaLambda,
-                double thetaLambda) {
+        public BatesDetJumpModel(final HestonProcess process, final double lambda, final double nu, final double delta, final double kappaLambda,
+                final double thetaLambda) {
             super(process);
             arguments_.set(8, new ConstantParameter(kappaLambda, new PositiveConstraint()));
             arguments_.set(9, new ConstantParameter(thetaLambda, new PositiveConstraint()));
         }
 
         public double kappaLambda() {
-            return arguments_.get(8).getOperatorEq(0.0);
+            return arguments_.get(8).get(0.0);
         }
 
         public double thethaLambda() {
-            return arguments_.get(9).getOperatorEq(0.0);
+            return arguments_.get(9).get(0.0);
         }
 
     }

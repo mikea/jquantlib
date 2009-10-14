@@ -22,7 +22,7 @@
 package org.jquantlib.math.optimization;
 
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
+import org.jquantlib.math.optimization.EndCriteria.Type;
 
 //! Levenberg-Marquardt optimization method
 /*! This implementation is based on MINPACK
@@ -55,8 +55,8 @@ public class LevenbergMarquardt extends OptimizationMethod {
     }
 
     @Override
-    public CriteriaType minimize(final Problem P, final EndCriteria endCriteria) {
-        final EndCriteria.CriteriaType ecType = EndCriteria.CriteriaType.None;
+    public Type minimize(final Problem P, final EndCriteria endCriteria) {
+        final EndCriteria.Type ecType = EndCriteria.Type.None;
         P.reset();
         final Array x_ = P.currentValue();
         // TODO: this is probably incorrect, check the consequences

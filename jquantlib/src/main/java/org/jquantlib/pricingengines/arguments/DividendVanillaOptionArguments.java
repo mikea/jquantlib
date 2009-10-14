@@ -44,14 +44,13 @@ import org.jquantlib.QL;
 import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.time.Date;
 
-public class DividendVanillaOptionArguments extends OneAssetOptionArguments{
+public class DividendVanillaOptionArguments extends OneAssetOptionArguments {
 
     //
     // public fields
     //
 
     // FIXME: public fields here is a bad design technique :(
-
     public List<? extends Dividend> cashFlow;
 
 
@@ -64,8 +63,9 @@ public class DividendVanillaOptionArguments extends OneAssetOptionArguments{
         super.validate();
         final Date exerciseDate = exercise.lastDate();
 
-        for (int i = 0; i < cashFlow.size(); i++)
+        for (int i = 0; i < cashFlow.size(); i++) {
             QL.require(cashFlow.get(i).date().le(exerciseDate) , "dividend date later than the exercise date"); // QA:[RG]::verified // TODO: message
+        }
     }
 
 }

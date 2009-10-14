@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.instruments;
 
@@ -47,53 +47,54 @@ import org.jquantlib.pricingengines.PricingEngine;
  *
  * @author Richard Gomes
  */
-public abstract class Option extends NewInstrument {
+public abstract class Option extends Instrument {
 
     //
     // protected final fields
     //
 
     protected final Payoff payoff;
-	protected final Exercise exercise;
+    protected final Exercise exercise;
 
-	//
-	// public constructors
-	//
+    //
+    // public constructors
+    //
 
-	/**
-	 * This constructor
-	 */
-	public Option(final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
-		super(engine);
-		this.payoff = payoff;
-		this.exercise = exercise;
-	}
+    /**
+     * This constructor
+     */
+    public Option(final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
+        super();
+        super.setPricingEngine(engine);
+        this.payoff = payoff;
+        this.exercise = exercise;
+    }
 
 
-	//
-	// public static inner enums
-	//
+    //
+    // public static inner enums
+    //
 
-	/**
-	 * This enumeration represents options types: CALLs and PUTs.
-	 */
-	public static enum Type {
-		PUT(-1), CALL(1);
+    /**
+     * This enumeration represents options types: CALLs and PUTs.
+     */
+    public static enum Type {
+        PUT(-1), CALL(1);
 
-		private int value;
+        private int value;
 
-		private Type(final int type) {
-			this.value = type;
-		}
+        private Type(final int type) {
+            this.value = type;
+        }
 
-		/**
-		 * This method returns the <i>mathematical signal</i> associated to an option type.
-		 *
-		 * @return 1 for CALLs; -1 for PUTs
-		 */
-		public int toInteger() {
-			return value;
-		}
-	}
+        /**
+         * This method returns the <i>mathematical signal</i> associated to an option type.
+         *
+         * @return 1 for CALLs; -1 for PUTs
+         */
+        public int toInteger() {
+            return value;
+        }
+    }
 
 }

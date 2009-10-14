@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,7 +35,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.pricingengines;
 
@@ -56,91 +56,108 @@ import org.jquantlib.util.Observer;
  * 
  * @author Richard Gomes
  */
-public abstract class GenericEngine<A extends Arguments, R extends Results> implements PricingEngine {
+public abstract class GenericEngine<A extends Arguments, R extends Results> implements PricingEngine, Observer {
 
-	//
+    //
     // protected fields
     //
-    
+
     protected A arguments;
-	protected R results;
+    protected R results;
 
-	
-	//
-	// protected constructors
-	//
-	
-	protected GenericEngine(final A arguments, final R results) {
-		this.arguments = arguments;
-		this.results = results;
-	}
 
-	
-	//
-	// implements PricingEngine
-	//
-	
-    @Override
-	public final A getArguments() {
-		return arguments;
-	}
+    //
+    // protected constructors
+    //
+
+    protected GenericEngine(final A arguments, final R results) {
+        this.arguments = arguments;
+        this.results = results;
+    }
+
+
+    //
+    // implements PricingEngine
+    //
 
     @Override
-	public final R getResults() {
-		return results;
-	}
+    public final A getArguments() {
+        return arguments;
+    }
 
-	@Override
-	public void reset() {
-		results.reset();
-	}
+    @Override
+    public final R getResults() {
+        return results;
+    }
+
+    @Override
+    public void reset() {
+        results.reset();
+    }
 
 
-	//
-	// implements Observable
-	//
-	
-	/**
-	 * Implements multiple inheritance via delegate pattern to an inner class
-	 * 
-	 * @see Observable
-	 * @see DefaultObservable
-	 */
+    //
+    // implements Observer
+    //
+
+    @Override
+    public void update(final Observable o, final Object arg) {
+        notifyObservers();
+    }
+
+
+    //
+    // implements Observable
+    //
+
+    /**
+     * Implements multiple inheritance via delegate pattern to an inner class
+     * 
+     * @see Observable
+     * @see DefaultObservable
+     */
     private final Observable delegatedObservable = new DefaultObservable(this);
 
     @Override
     public final void addObserver(final Observer observer) {
-		delegatedObservable.addObserver(observer);
-	}
+        delegatedObservable.addObserver(observer);
+    }
 
     @Override
-	public final int countObservers() {
-		return delegatedObservable.countObservers();
-	}
+    public final int countObservers() {
+        return delegatedObservable.countObservers();
+    }
 
     @Override
-	public final void deleteObserver(final Observer observer) {
-		delegatedObservable.deleteObserver(observer);
-	}
+    public final void deleteObserver(final Observer observer) {
+        delegatedObservable.deleteObserver(observer);
+    }
 
     @Override
-	public final void notifyObservers() {
-		delegatedObservable.notifyObservers();
-	}
+    public final void notifyObservers() {
+        delegatedObservable.notifyObservers();
+    }
 
     @Override
-	public final void notifyObservers(final Object arg) {
-		delegatedObservable.notifyObservers(arg);
-	}
+    public final void notifyObservers(final Object arg) {
+        delegatedObservable.notifyObservers(arg);
+    }
 
     @Override
-	public final void deleteObservers() {
-		delegatedObservable.deleteObservers();
-	}
+    public final void deleteObservers() {
+        delegatedObservable.deleteObservers();
+    }
 
     @Override
-	public final List<Observer> getObservers() {
-		return delegatedObservable.getObservers();
-	}
+    public final List<Observer> getObservers() {
+        return delegatedObservable.getObservers();
+    }
+
+
+    @Override
+    public void calculate() {
+        // TODO Auto-generated method stub
+
+    }
 
 }

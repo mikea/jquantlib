@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
+import org.jquantlib.math.optimization.EndCriteria.Type;
 
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class Simplex extends OptimizationMethod {
@@ -65,8 +65,8 @@ public class Simplex extends OptimizationMethod {
     }
 
     @Override
-    public CriteriaType minimize(final Problem P, final EndCriteria endCriteria) {
-        final EndCriteria.CriteriaType ecType = EndCriteria.CriteriaType.None;
+    public Type minimize(final Problem P, final EndCriteria endCriteria) {
+        final EndCriteria.Type ecType = EndCriteria.Type.None;
         P.reset();
         Array x_ = P.currentValue();
         int iterationNumber_ = 0;

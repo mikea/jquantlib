@@ -91,7 +91,7 @@ import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.methods.lattices.CoxRossRubinstein;
 import org.jquantlib.pricingengines.vanilla.BinomialVanillaEngine;
-import org.jquantlib.processes.BlackScholesMertonProcess;
+import org.jquantlib.processes.HullWhiteProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
@@ -167,7 +167,7 @@ public class CoxRossWithHullWhite {
         final Handle<BlackVolTermStructure> flatVolTS = new Handle<BlackVolTermStructure>(new BlackConstantVol(settlementDate, volatility, dayCounter));
 
         final Payoff payoff = new PlainVanillaPayoff(type, strike);
-        final StochasticProcess stochasticProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
+        final StochasticProcess stochasticProcess = new HullWhiteProcess(flatDividendTS, 0, 0);
 
         // European Options
         final VanillaOption europeanOption = new EuropeanOption(stochasticProcess, payoff, europeanExercise);

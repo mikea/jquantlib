@@ -107,64 +107,72 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
         final BarrierType barrierType = arguments.barrierType;
 
         switch (payoff.optionType()) {
-        case CALL:
-            switch (barrierType) {
-            case DownIn:
-                if (strike >= barrier())
-                    results.value = C(1,1) + E(1);
-                else
-                    results.value = A(1) - B(1) + D(1,1) + E(1);
+            case CALL:
+                switch (barrierType) {
+                    case DownIn:
+                        if (strike >= barrier()) {
+                            results.value = C(1,1) + E(1);
+                        } else {
+                            results.value = A(1) - B(1) + D(1,1) + E(1);
+                        }
+                        break;
+                    case  UpIn:
+                        if (strike >= barrier()) {
+                            results.value = A(1) + E(-1);
+                        } else {
+                            results.value = B(1) - C(-1,1) + D(-1,1) + E(-1);
+                        }
+                        break;
+                    case  DownOut:
+                        if (strike >= barrier()) {
+                            results.value = A(1) - C(1,1) + F(1);
+                        } else {
+                            results.value = B(1) - D(1,1) + F(1);
+                        }
+                        break;
+                    case  UpOut:
+                        if (strike >= barrier()) {
+                            results.value = F(-1);
+                        } else {
+                            results.value = A(1) - B(1) + C(-1,1) - D(-1,1) + F(-1);
+                        }
+                        break;
+                }
                 break;
-            case  UpIn:
-                if (strike >= barrier())
-                    results.value = A(1) + E(-1);
-                else
-                    results.value = B(1) - C(-1,1) + D(-1,1) + E(-1);
+            case PUT:
+                switch (barrierType) {
+                    case  DownIn:
+                        if (strike >= barrier()) {
+                            results.value = B(-1) - C(1,-1) + D(1,-1) + E(1);
+                        } else {
+                            results.value = A(-1) + E(1);
+                        }
+                        break;
+                    case  UpIn:
+                        if (strike >= barrier()) {
+                            results.value = A(-1) - B(-1) + D(-1,-1) + E(-1);
+                        } else {
+                            results.value = C(-1,-1) + E(-1);
+                        }
+                        break;
+                    case  DownOut:
+                        if (strike >= barrier()) {
+                            results.value = A(-1) - B(-1) + C(1,-1) - D(1,-1) + F(1);
+                        } else {
+                            results.value = F(1);
+                        }
+                        break;
+                    case  UpOut:
+                        if (strike >= barrier()) {
+                            results.value = B(-1) - D(-1,-1) + F(-1);
+                        } else {
+                            results.value = A(-1) - C(-1,-1) + F(-1);
+                        }
+                        break;
+                }
                 break;
-            case  DownOut:
-                if (strike >= barrier())
-                    results.value = A(1) - C(1,1) + F(1);
-                else
-                    results.value = B(1) - D(1,1) + F(1);
-                break;
-            case  UpOut:
-                if (strike >= barrier())
-                    results.value = F(-1);
-                else
-                    results.value = A(1) - B(1) + C(-1,1) - D(-1,1) + F(-1);
-                break;
-            }
-            break;
-        case PUT:
-            switch (barrierType) {
-            case  DownIn:
-                if (strike >= barrier())
-                    results.value = B(-1) - C(1,-1) + D(1,-1) + E(1);
-                else
-                    results.value = A(-1) + E(1);
-                break;
-            case  UpIn:
-                if (strike >= barrier())
-                    results.value = A(-1) - B(-1) + D(-1,-1) + E(-1);
-                else
-                    results.value = C(-1,-1) + E(-1);
-                break;
-            case  DownOut:
-                if (strike >= barrier())
-                    results.value = A(-1) - B(-1) + C(1,-1) - D(1,-1) + F(1);
-                else
-                    results.value = F(1);
-                break;
-            case  UpOut:
-                if (strike >= barrier())
-                    results.value = B(-1) - D(-1,-1) + F(-1);
-                else
-                    results.value = A(-1) - C(-1,-1) + F(-1);
-                break;
-            }
-            break;
-        default:
-            throw new LibraryException(UNKNOWN_TYPE); // QA:[RG]::verified
+            default:
+                throw new LibraryException(UNKNOWN_TYPE); // QA:[RG]::verified
         }
 
     }
@@ -283,8 +291,9 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
             final double N1 = f.op(eta*(x2 - stdDeviation()));
             final double N2 = f.op(eta*(y2 - stdDeviation()));
             return rebate() * riskFreeDiscount() * (N1 - powHS0 * N2);
-        } else
+        } else {
             return 0.0;
+        }
     }
 
     //TODO: consider change method name to lowercase
@@ -304,8 +313,9 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
             final double N1 = f.op(eta * z);
             final double N2 = f.op(eta * (z - 2.0 * lambda * sigmaSqrtT));
             return rebate() * (powHSplus * N1 + powHSminus * N2);
-        } else
+        } else {
             return 0.0;
+        }
     }
 
 }

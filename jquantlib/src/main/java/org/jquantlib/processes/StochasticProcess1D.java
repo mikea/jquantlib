@@ -54,6 +54,8 @@ public abstract class StochasticProcess1D extends StochasticProcess {
 
     protected Discretization1D discretization1D;
 
+    protected StochasticProcess1D() { }
+
     /**
      * @param discretization is an Object that <b>must</b> implement {@link Discretization} <b>and</b> {@link Discretization1D}.
      */
@@ -61,8 +63,6 @@ public abstract class StochasticProcess1D extends StochasticProcess {
         super(discretization);
         this.discretization1D = discretization;
     }
-
-    public StochasticProcess1D() {}
 
     /**
      * Returns the initial value of the state variable
@@ -90,7 +90,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-    public final /*@Expectation*/ double expectation(final /*@Time*/ double t0, final /*@Price*/ double x0, final /*@Time*/ double dt) {
+    public /*@Expectation*/ double expectation(final /*@Time*/ double t0, final /*@Price*/ double x0, final /*@Time*/ double dt) {
         return apply(x0, discretization1D.driftDiscretization(this, t0, x0, dt)); // XXX
     }
 
@@ -102,7 +102,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-    public final /*@StdDev*/ double stdDeviation(final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt) {
+    public /*@StdDev*/ double stdDeviation(final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt) {
         return discretization1D.diffusionDiscretization(this, t0, x0, dt); // XXX
     }
 
@@ -114,7 +114,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-    public final /*@Variance*/ double variance(final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt) {
+    public /*@Variance*/ double variance(final /*@Time*/ double t0, final double x0, final /*@Time*/ double dt) {
         return discretization1D.varianceDiscretization(this, t0, x0, dt); // XXX
     }
 

@@ -35,75 +35,83 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 
 package org.jquantlib.quotes;
 
 import java.util.List;
 
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
 /**
  * Purely virtual base class for market observables
- *
+ * 
  * @author Richard Gomes
  */
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Richard Gomes" })
 public abstract class Quote implements Observable {
 
+    /**
+     * @return the current value
+     */
+    public abstract double value() /* @ReadOnly */;
+
+    /**
+     * @return true if the Quote holds a valid value
+     */
+    public abstract boolean isValid() /* @ReadOnly */;
+
+
     //
-    // public abstract methods
+    // implements Observable
     //
 
-    public abstract double value();
-
-
-	//
-	// implements Observable
-	//
-
-	/**
-	 * Implements multiple inheritance via delegate pattern to an inner class
-	 *
-	 * @see Observable
-	 * @see DefaultObservable
-	 */
+    /**
+     * Implements multiple inheritance via delegate pattern to an inner class
+     * 
+     * @see Observable
+     * @see DefaultObservable
+     */
     private final Observable delegatedObservable = new DefaultObservable(this);
 
     @Override
-	public void addObserver(final Observer observer) {
-		delegatedObservable.addObserver(observer);
-	}
+    public void addObserver(final Observer observer) {
+        delegatedObservable.addObserver(observer);
+    }
 
     @Override
-	public int countObservers() {
-		return delegatedObservable.countObservers();
-	}
+    public int countObservers() {
+        return delegatedObservable.countObservers();
+    }
 
     @Override
-	public void deleteObserver(final Observer observer) {
-		delegatedObservable.deleteObserver(observer);
-	}
+    public void deleteObserver(final Observer observer) {
+        delegatedObservable.deleteObserver(observer);
+    }
 
     @Override
-	public void notifyObservers() {
-		delegatedObservable.notifyObservers();
-	}
+    public void notifyObservers() {
+        delegatedObservable.notifyObservers();
+    }
 
     @Override
-	public void notifyObservers(final Object arg) {
-		delegatedObservable.notifyObservers(arg);
-	}
+    public void notifyObservers(final Object arg) {
+        delegatedObservable.notifyObservers(arg);
+    }
 
     @Override
-	public void deleteObservers() {
-		delegatedObservable.deleteObservers();
-	}
+    public void deleteObservers() {
+        delegatedObservable.deleteObservers();
+    }
 
     @Override
-	public List<Observer> getObservers() {
-		return delegatedObservable.getObservers();
-	}
+    public List<Observer> getObservers() {
+        return delegatedObservable.getObservers();
+    }
 
 }

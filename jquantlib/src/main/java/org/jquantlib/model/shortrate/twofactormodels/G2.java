@@ -175,23 +175,23 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
     }
 
     private double /* @Real */a() {
-        return a_.getOperatorEq(0.0);
+        return a_.get(0.0);
     }
 
     private double /* @Real */sigma() {
-        return sigma_.getOperatorEq(0.0);
+        return sigma_.get(0.0);
     }
 
     private double /* @Real */b() {
-        return b_.getOperatorEq(0.0);
+        return b_.get(0.0);
     }
 
     private double /* @Real */eta() {
-        return eta_.getOperatorEq(0.0);
+        return eta_.get(0.0);
     }
 
     private double /* @Real */rho() {
-        return rho_.getOperatorEq(0.0);
+        return rho_.get(0.0);
     }
 
     private double /* @Real */sigmaP(final double /* @Time */t, final double /* @Time */s) {
@@ -218,7 +218,7 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
 
         @Override
         public double /* @Rate */shortRate(final double /* @Time */t, final double /* @Real */x, final double /* @Real */y) {
-            return fitting_.getOperatorEq(t) + x + y;
+            return fitting_.get(t) + x + y;
         }
 
         private final Parameter fitting_;

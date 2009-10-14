@@ -46,7 +46,7 @@
 package org.jquantlib.math.optimization;
 
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
+import org.jquantlib.math.optimization.EndCriteria.Type;
 
 //! Multi-dimensional Conjugate Gradient class.
 /*! User has to provide line-search method and
@@ -77,8 +77,8 @@ public class ConjugateGradient extends LineSearchBasedMethod {
     adapted from Numerical Recipes in C, 2nd edition).
      */
     @Override
-    public CriteriaType minimize(final Problem P, final EndCriteria endCriteria) {
-        final EndCriteria.CriteriaType ecType = EndCriteria.CriteriaType.None;
+    public Type minimize(final Problem P, final EndCriteria endCriteria) {
+        final EndCriteria.Type ecType = EndCriteria.Type.None;
         P.reset();
         Array x_ = P.currentValue();
         int iterationNumber_ = 0;

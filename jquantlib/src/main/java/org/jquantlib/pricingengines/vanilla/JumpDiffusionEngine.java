@@ -187,9 +187,8 @@ public class JumpDiffusionEngine extends VanillaOptionEngine {
             theta_correction = baseResults.vega * ((i * jumpSquareVol) / (2.0 * v * t * t)) + baseResults.rho * i
             * muPlusHalfSquareVol / (t * t);
             results.theta += weight * (baseResults.theta + theta_correction + lambda * baseResults.value);
-            if (i != 0) {
+            if (i != 0)
                 results.theta -= (p.op(i-1) * lambda * baseResults.value);
-            }
             // end theta calculation
             results.rho += weight * baseResults.rho;
             results.dividendRho += weight * baseResults.dividendRho;

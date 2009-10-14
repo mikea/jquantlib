@@ -39,7 +39,6 @@
 
 package org.jquantlib.pricingengines.results;
 
-import org.jquantlib.instruments.NewInstrument;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 

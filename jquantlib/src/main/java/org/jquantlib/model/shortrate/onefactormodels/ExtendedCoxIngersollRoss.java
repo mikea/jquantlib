@@ -1,6 +1,5 @@
 /*
-Copyright (C)
-2009 Ueli Hofstetter
+Copyright (C) 2009 Praneet Tiwari
 
 This source code is release under the BSD License.
 
@@ -41,17 +40,17 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.TimeGrid;
 
-//! Extended Cox-Ingersoll-Ross model class.
-/*! This class implements the extended Cox-Ingersoll-Ross model
-    defined by
-    \f[
-        dr_t = (\theta(t) - \alpha r_t)dt + \sqrt{r_t}\sigma dW_t .
-    \f]
-
-    \bug this class was not tested enough to guarantee
-         its functionality.
-
-    \ingroup shortrate
+/**
+ * Extended Cox-Ingersoll-Ross model class.
+ * <p>
+ * This class implements the extended Cox-Ingersoll-Ross model defined by
+ * <p>{@latex[ dr_t = (\theta(t) - \alpha r_t)dt + \sqrt{r_t}\sigma dW_t }
+ * 
+ * @bug this class was not tested enough to guarantee its functionality.
+ * 
+ * @category shortrate
+ * 
+ * @author Praneet Tiwari
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
@@ -84,7 +83,7 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
     public double A(final double t, final double s)  {
         final double pt = termstructureConsistentModel.termStructure().currentLink().discount(t);
         final double ps = termstructureConsistentModel.termStructure().currentLink().discount(s);
-        final double value = super.A(t,s)*Math.exp(B(t,s)*phi_.getOperatorEq(t))*
+        final double value = super.A(t,s)*Math.exp(B(t,s)*phi_.get(t))*
         (ps*super.A(0.0,t)*Math.exp(-B(0.0,t)*x0()))/
         (pt*super.A(0.0,s)*Math.exp(-B(0.0,s)*x0()));
         return value;
@@ -101,12 +100,12 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         final double discountS = termstructureConsistentModel.termStructure().currentLink().discount(s);
         if(t<Constants.QL_EPSILON) {
             switch (type) {
-            case CALL:
-                return Math.max(discountS - strike, 0);
-            case PUT:
-                return Math.max(strike - discountS, 0);
-            default:
-                throw new LibraryException(unsupported_option_type);
+                case CALL:
+                    return Math.max(discountS - strike, 0);
+                case PUT:
+                    return Math.max(strike - discountS, 0);
+                default:
+                    throw new LibraryException(unsupported_option_type);
             }
         }
         final double sigma2 = sigma() * sigma();
@@ -119,8 +118,8 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         final double psi = (k() + h) / sigma2;
 
         final double df = 4.0 * k() * theta() / sigma2;
-        final double ncps = 2.0 * rho * rho * (r0 - phi_.getOperatorEq(0.0)) * Math.exp(h * t) / (rho + psi + b);
-        final double ncpt = 2.0 * rho * rho * (r0 - phi_.getOperatorEq(0.0)) * Math.exp(h * t) / (rho + psi);
+        final double ncps = 2.0 * rho * rho * (r0 - phi_.get(0.0)) * Math.exp(h * t) / (rho + psi + b);
+        final double ncpt = 2.0 * rho * rho * (r0 - phi_.get(0.0)) * Math.exp(h * t) / (rho + psi);
 
         final NonCentralChiSquaredDistribution chis = new NonCentralChiSquaredDistribution(df, ncps);
         final NonCentralChiSquaredDistribution chit = new NonCentralChiSquaredDistribution(df, ncpt);
@@ -141,20 +140,26 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         final TermStructureFittingParameter phi = new TermStructureFittingParameter(termstructureConsistentModel.termStructure());
         final Dynamics numericDynamics =  new Dynamics(phi, theta(), k(), sigma(), x0());
         final TrinomialTree trinominal = new TrinomialTree(numericDynamics.process(), grid, true);
-        final TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl)phi.getImplementation();
+        final TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl)phi.implementation();
         return new OneFactorModel.ShortRateTree(trinominal, numericDynamics, impl, grid);
     }
 
-    //! Short-rate dynamics in the extended Cox-Ingersoll-Ross model
-    /*! The short-rate is here
-        \f[
-            r_t = \varphi(t) + y_t^2
-        \f]
-        where \f$ \varphi(t) \f$ is the deterministic time-dependent
-        parameter used for term-structure fitting and \f$ y_t \f$ is the
-        state variable, the square-root of a standard CIR process.
-     */
 
+    //
+    // private inner classes
+    //
+
+    /**
+     * Short-rate dynamics in the extended Cox-Ingersoll-Ross model
+     * <p>
+     * The short-rate is here
+     * <p>{@latex[ r_t = \varphi(t) + y_t^2 }
+     * where \f$ \varphi(t) \f$ is the deterministic time-dependent
+     * parameter used for term-structure fitting and {@latex$ y_t } is the
+     * state variable, the square-root of a standard CIR process.
+     * 
+     * @author Praneet Tiwari
+     */
     private class Dynamics extends CoxIngersollRoss.Dynamics{
 
         private final Parameter phi_;
@@ -167,48 +172,59 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
             super(theta, k, sigma, x0);
             this.phi_ = phi;
         }
+
         @Override
         public double variable(final double t, final double r){
-            return Math.sqrt(r - phi_.getOperatorEq(t));
+            return Math.sqrt(r - phi_.get(t));
         }
+
         @Override
         public double shortRate(final double t, final double y){
-            return y*y + phi_.getOperatorEq(t);
+            return y*y + phi_.get(t);
         }
     }
 
-    //! Analytical term-structure fitting parameter \f$ \varphi(t) \f$.
-    /*! \f$ \varphi(t) \f$ is analytically defined by
-        \f[
-            \varphi(t) = f(t) -
-                         \frac{2k\theta(e^{th}-1)}{2h+(k+h)(e^{th}-1)} -
-                         \frac{4 x_0 h^2 e^{th}}{(2h+(k+h)(e^{th}-1))^1},
-        \f]
-        where \f$ f(t) \f$ is the instantaneous forward rate at \f$ t \f$
-        and \f$ h = \sqrt{k^2 + 2\sigma^2} \f$.
+    /**
+     * Analytical term-structure fitting parameter {@latex$ \varphi(t) }.
+     * <p>
+     * {@latex$ \varphi(t) } is analytically defined by
+     * <p>{@latex[ \varphi(t) = f(t) -
+     *                    \frac{2k\theta(e^{th}-1)}{2h+(k+h)(e^{th}-1)} -
+     *                    \frac{4 x_0 h^2 e^{th}}{(2h+(k+h)(e^{th}-1))^1} }
+     * where {@latex$ f(t) } is the instantaneous forward rate at {@latex$ t }
+     * and {@latex$ h = \sqrt{k^2 + 2\sigma^2} }.
+     * 
+     * @author Praneet Tiwari
      */
+    private static class FittingParameter extends TermStructureFittingParameter {
 
-    private class FittingParameter extends TermStructureFittingParameter{
-        // FIXME: Review object model
-        public FittingParameter(final Handle<YieldTermStructure> termStructure,
-                final double theta, final double k, final double sigma, final double x0){
-            super(termStructure);
-            throw new UnsupportedOperationException("Work in progress");
-            //super(this.new Impl(termStructure, theta, k, sigma, x0));
+        public FittingParameter(
+                final Handle<YieldTermStructure> termStructure,
+                final double theta,
+                final double k,
+                final double sigma,
+                final double x0) {
+            super(new Impl(termStructure, theta, k, sigma, x0));
         }
 
         public FittingParameter(final Handle<YieldTermStructure> term) {
             super(term);
         }
 
-        public class Impl extends Parameter.Impl{
+        //
+        // private inner classes
+        //
+
+        private static class Impl extends Parameter.Impl {
             private final Handle<YieldTermStructure> termStructure_;
             private final double theta_, k_, sigma_, x0_;
-            public Impl(final Handle<YieldTermStructure> termStructure,
+
+            public Impl(
+                    final Handle<YieldTermStructure> termStructure,
                     final double theta,
                     final double k,
                     final double sigma,
-                    final double x0){
+                    final double x0) {
                 this.termStructure_ = termStructure;
                 this.theta_ = theta;
                 this.k_ = k;
@@ -218,14 +234,12 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
 
             @Override
             public double value(final Array params, final double t) {
-                final double forwardRate = termStructure_.currentLink().forwardRate(t, t, Compounding.CONTINUOUS,
-                        Frequency.NO_FREQUENCY).rate();
+                final double forwardRate = termStructure_.currentLink().forwardRate(
+                        t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
                 final double h = Math.sqrt(k_*k_ + 2.0 * sigma_ * sigma_);
                 final double expth = Math.exp(t*h);
                 final double temp = 2.0*h + (k_+h)*(expth - 1.0);
-                final double phi = forwardRate -
-                2.0*k_*theta_*(expth - 1.0)/temp -
-                x0_*4.0*h*h*expth/(temp*temp);
+                final double phi = forwardRate - 2.0*k_*theta_*(expth - 1.0)/temp - x0_*4.0*h*h*expth/(temp*temp);
                 return phi;
             }
 

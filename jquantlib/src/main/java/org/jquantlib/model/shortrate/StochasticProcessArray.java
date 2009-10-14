@@ -150,6 +150,7 @@ public class StochasticProcessArray extends StochasticProcess {
         return new Array(tmp);
     }
 
+    @Override
     public /*@Time*/ double time(final Date d) {
         return processes_.get(0).time(d);
     }

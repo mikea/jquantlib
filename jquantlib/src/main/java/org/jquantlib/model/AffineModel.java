@@ -20,7 +20,7 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
-*/
+ */
 
 
 import org.jquantlib.instruments.Option;
@@ -38,20 +38,19 @@ import org.jquantlib.util.Observable;
  */
 public interface AffineModel extends Observable {
 
-   /**
-    * Implied discount curve
-    */
-   public abstract double /* @DiscountFactor */ discount(
-           final double /* @Time */ t);
+    /**
+     * Implied discount curve
+     */
+    public /* @DiscountFactor */ double discount(/* @Time */ double t) /* @ReadOnly */;
 
-   public abstract double /* @Price */ discountBond(
-           final double /* @Time */ now, 
-           final double /* @Time */ maturity, 
-           final Array factors);
+    public double discountBond(
+            /* @Time */ double now,
+            /* @Time */ double maturity,
+            Array factors) /* @ReadOnly */;
 
-   public abstract double /* @Real */ discountBondOption(
-           final Option.Type type, 
-           final double /* @Price */ strike, 
-           final double /* @Time */ maturity, 
-           final double /* @Time */ bondMaturity);
+    public double discountBondOption(
+            Option.Type type,
+            double strike,
+            /* @Time */ double maturity,
+            /* @Time */ double bondMaturity) /* @ReadOnly */;
 }

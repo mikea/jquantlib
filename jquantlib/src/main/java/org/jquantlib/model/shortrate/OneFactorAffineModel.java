@@ -25,35 +25,57 @@ import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.model.AffineModel;
 
 /**
+ * Single-factor affine base class
+ * <p>
+ * Single-factor models with an analytical formula for discount bonds should inherit from this class.
+ * They must then implement the functions \f$ A(t,T) \f$ and \f$ B(t,T) \f$ such that
+ * \f[ P(t, T, r_t) = A(t,T)e^{ -B(t,T) r_t}. \f]
+ * 
+ * @category shortrate
  * 
  * @author Praneet Tiwari
  */
 public abstract class OneFactorAffineModel extends OneFactorModel implements AffineModel {
 
-    public OneFactorAffineModel(int /* @Size */nArguments) {
+    //
+    // public methods
+    //
+
+    public OneFactorAffineModel(final int nArguments) {
         super(nArguments);
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
     }
 
-    protected abstract double /* @Real */ A(double /* @Time */t, double /* @Time */T);
 
-    protected abstract double /* @Real */ B(double /* @Time */t, double /* @Time */T);
-
-    public double /* @Real */discountBond(double /* @Time */now, double /* @Time */maturity, double /* @Rate */rate) {
+    public double discountBond(/* @Time */ final double now, /* @Time */ final double maturity, /* @Rate */ final double rate) /* @ReadOnly */ {
         return A(now, maturity) * Math.exp(-B(now, maturity) * rate);
     }
 
+
+    //
+    // protected abstract methods
+    //
+
+    protected abstract double A(/* @Time */ final double t, /* @Time */ final double T) /* @ReadOnly */;
+
+    protected abstract double B(/* @Time */ final double t, /* @Time */ final double T) /* @ReadOnly */;
+
+
+    //
+    // implements AffineModel
+    //
+
     @Override
-    public double /* @Real */discountBond(double /* @Time */now, double /* @Time */maturity, Array factors) {
+    public double discountBond(/* @Time */ final double now, /* @Time */ final double maturity, final Array factors) /* @ReadOnly */ {
         return discountBond(now, maturity, factors.first());
     }
 
     @Override
-    public double /* @DiscountFactor */discount(double /* @Time */t) {
-        double /* @Real */x0 = dynamics().process().x0();
-        double /* @Rate */r0 = dynamics().shortRate(0.0, x0);
+    public /* @DiscountFactor */ double discount(/* @Time */ final double t) /* @ReadOnly */ {
+        final double /* @Real */x0 = dynamics().process().x0();
+        final double /* @Rate */r0 = dynamics().shortRate(0.0, x0);
         return discountBond(0.0, t, r0);
     }
 

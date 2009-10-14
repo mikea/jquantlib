@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2008 Praneet Tiwari
+Copyright (C) 2009 Praneet Tiwari
 
 This source code is release under the BSD License.
 
@@ -23,134 +23,130 @@ package org.jquantlib.model.shortrate.onefactormodels;
 
 import static org.jquantlib.pricingengines.BlackFormula.blackFormula;
 
-import java.util.List;
-
 import org.jquantlib.instruments.Option;
+import org.jquantlib.math.Constants;
 import org.jquantlib.math.optimization.NoConstraint;
 import org.jquantlib.math.optimization.PositiveConstraint;
 import org.jquantlib.model.ConstantParameter;
 import org.jquantlib.model.Parameter;
 import org.jquantlib.model.shortrate.OneFactorAffineModel;
 import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
-import org.jquantlib.util.Observer;
 
 /**
- * 
- * @author Praneet Tiwari
- */
-// ! %Vasicek model class
-/*
- * ! This class implements the Vasicek model defined by \f[ dr_t = a(b - r_t)dt + \sigma dW_t , \f] where \f$ a \f$, \f$ b \f$ and
+ * Vasicek model class
+ * <p>
+ * This class implements the Vasicek model defined by \f[ dr_t = a(b - r_t)dt + \sigma dW_t , \f] where \f$ a \f$, \f$ b \f$ and
  * \f$ \sigma \f$ are constants; a risk premium \f$ \lambda \f$ can also be specified.
  * 
- * \ingroup shortrate
+ * @category shortrate
+ * 
+ * @author Praneet Tiwari
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class Vasicek extends OneFactorAffineModel {
 
-    // check this value, arbitrary for now
-    private static double QL_EPSILON = 1e-10;
-    double /* @Real */r0_;
-    Parameter a_;
-    Parameter b_;
-    Parameter sigma_;
-    Parameter lambda_;
+    //
+    // protected fields
+    //
 
-    double /* @Real */a() {
-        return a_.getOperatorEq(0.0);
-    }
+    protected double r0_;
+    protected Parameter  a_;
+    protected Parameter  b_;
+    protected Parameter  sigma_;
+    protected Parameter  lambda_;
 
-    double /* @Real */b() {
-        return b_.getOperatorEq(0.0);
-    }
 
-    double /* @Real */lambda() {
-        return lambda_.getOperatorEq(0.0);
-    }
+    //
+    // public methods
+    //
 
-    double /* @Real */sigma() {
-        return sigma_.getOperatorEq(0.0);
-    }
-
-    public Vasicek(final double /* @Rate */r0, final double /* @Real */a, final double /* @Real */b, final double /* @Real */sigma,
-            final double /* @Real */lambda) {
+    public Vasicek(/* @Rate */ final double r0, final double a, final double b, final double sigma, final double lambda) {
         super(4);
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
         this.r0_ = r0;
-        a_ = arguments_.get(0);
-        b_ = arguments_.get(1);
-        sigma_ = arguments_.get(2);
 
-        lambda_ = arguments_.get(3);
 
-        a_ = new ConstantParameter(a, new PositiveConstraint());
-        b_ = new ConstantParameter(b, new NoConstraint());
-        sigma_ = new ConstantParameter(sigma, new PositiveConstraint());
-        lambda_ = new ConstantParameter(lambda, new NoConstraint());
+        // TODO: code review :: please verify against QL/C++ code :: Seems to be non-sense!
+
+        this.a_ = arguments_.get(0);
+        this.b_ = arguments_.get(1);
+        this.sigma_ = arguments_.get(2);
+        this.lambda_ = arguments_.get(3);
+
+        // TODO: code review :: please verify against QL/C++ code :: Seems to be non-sense!
+
+        this.a_ = new ConstantParameter(a, new PositiveConstraint());
+        this.b_ = new ConstantParameter(b, new NoConstraint());
+        this.sigma_ = new ConstantParameter(sigma, new PositiveConstraint());
+        this.lambda_ = new ConstantParameter(lambda, new NoConstraint());
     }
 
-    public double /* @Real */discountBondOption(final Option.Type type, final double /* @Real */strike, final double /* @Time */maturity,
-            final double /* @Time */bondMaturity) {
-        double /* @Real */v;
-        final double /* @Real */_a = a();
 
-        /****** disable these checks for a while* v = 0.0; *************/
-        // if (std::fabs(maturity) < QL_EPSILON) {
-        if (Math.abs(maturity) < QL_EPSILON)
+    //
+    // protected methods
+    //
+
+    protected double a() /* @ReadOnly */ {
+        return a_.get(0.0);
+    }
+
+    protected double b() /* @ReadOnly */ {
+        return b_.get(0.0);
+    }
+
+    protected double lambda() /* @ReadOnly */ {
+        return lambda_.get(0.0);
+    }
+
+    protected double sigma() /* @ReadOnly */ {
+        return sigma_.get(0.0);
+    }
+
+
+    //
+    // implements AffineModel
+    //
+
+    @Override
+    public double discountBondOption(
+            final Option.Type type,
+            final double strike,
+            /* @Time */ final double maturity,
+            /* @Time */ final double bondMaturity) /* @ReadOnly */ {
+        double v;
+        final double _a = a();
+        if (Math.abs(maturity) < Constants.QL_EPSILON) {
             v = 0.0;
-        else if (_a < Math.sqrt(QL_EPSILON))
+        } else if (_a < Math.sqrt(Constants.QL_EPSILON)) {
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(maturity);
-        else
+        } else {
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(0.5 * (1.0 - Math.exp(-2.0 * _a * maturity)) / _a);
+        }
 
         final double /* @Real */f = discountBond(0.0, bondMaturity, r0_);
         final double /* @Real */k = discountBond(0.0, maturity, r0_) * strike;
 
         return blackFormula(type, k, f, v);
-
     }
 
+
+    //
+    // implements OneFactorAffineModel
+    //
+
     @Override
-    public ShortRateDynamics dynamics() {
+    public  ShortRateDynamics dynamics() /* @ReadOnly */ {
         return new Dynamics(a(), b(), sigma(), r0_);
-
     }
 
-    // ! Short-rate dynamics in the %Vasicek model
-    /*
-     * ! The short-rate follows an Ornstein-Uhlenbeck process with mean \f$ b \f$.
-     */
-    class Dynamics extends ShortRateDynamics {
-
-        public Dynamics(final double /* @Real */a, final double /* @Real */b, final double /* @Real */sigma, final double /* @Real */r0) {
-            super(new OrnsteinUhlenbeckProcess(a, sigma, r0 - b, 0.0));
-
-            a_ = (a);
-            b_ = (b);
-            r0_ = (r0);
-        }
-
-        @Override
-        public double /* @Real */variable(final double /* @Time */t, final double /* @Rate */r) {
-            return r - b_;
-        }
-
-        @Override
-        public double /* @Real */shortRate(final double /* @Time */t, final double /* @Real */x) {
-            return x + b_;
-        }
-
-        private final double /* @Real */a_, b_, r0_;
-    }
-
-    // the real heart of Vasicek, A & B
     @Override
-    public double /* @Real */A(final double /* @Time */t, final double /* @Time */T) {
+    protected double A(/* @Time */ final double t, /* @Time */ final double T) /* @ReadOnly */ {
         final double /* @Real */_a = a();
-        if (_a < Math.sqrt(QL_EPSILON))
+        if (_a < Math.sqrt(Constants.QL_EPSILON)) {
             return 0.0;
-        else {
+        } else {
             final double /* @Real */sigma2 = sigma() * sigma();
             final double /* @Real */bt = B(t, T);
             return Math.exp((b() + lambda() * sigma() / _a - 0.5 * sigma2 / (_a * _a)) * (bt - (T - t)) - 0.25 * sigma2 * bt * bt
@@ -159,48 +155,57 @@ public class Vasicek extends OneFactorAffineModel {
     }
 
     @Override
-    public double /* @Real */B(final double /* @Time */t, final double /* @Time */T) {
+    protected double B(/* @Time */ final double t, /* @Time */ final double T) /* @ReadOnly */ {
         final double /* @Real */_a = a();
-        if (_a < Math.sqrt(QL_EPSILON))
+        if (_a < Math.sqrt(Constants.QL_EPSILON)) {
             return (T - t);
-        else
+        } else {
             return (1.0 - Math.exp(-_a * (T - t))) / _a;
+        }
     }
 
 
+    //
+    // private inner classes
+    //
 
-    @Override
-    public void addObserver(final Observer observer) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    /**
+     * Short-rate dynamics in the %Vasicek model
+     * <p>
+     * The short-rate follows an Ornstein-Uhlenbeck process with mean \f$ b \f$.
+     */
+    private final class Dynamics extends ShortRateDynamics {
+
+        //
+        // private fields
+        //
+
+        private final double a_;
+        private final double b_;
+        private final double r0_;
+
+
+        //
+        // public methods
+        //
+
+        public Dynamics(final double a, final double b, final double sigma, final double r0) {
+            super(new OrnsteinUhlenbeckProcess(a, sigma, r0 - b, 0.0));
+            this.a_  = a;
+            this.b_  = b;
+            this.r0_ = r0;
+        }
+
+        @Override
+        public double variable(/* @Time */ final double t, /* @Rate */ final double r) /* @ReadOnly */ {
+            return r - b_;
+        }
+
+        @Override
+        public double shortRate(/* @Time */ final double t, final double x) /* @ReadOnly */ {
+            return x + b_;
+        }
+
     }
 
-    @Override
-    public int countObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<Observer> getObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void deleteObserver(final Observer observer) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void deleteObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void notifyObservers() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void notifyObservers(final Object arg) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

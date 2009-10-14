@@ -23,8 +23,18 @@
 package org.jquantlib.quotes;
 
 import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
+import org.jquantlib.math.Constants;
 
-// TODO: comments
+
+/**
+ * Market element returning a stored value
+ * 
+ * @author Richard Gomes
+ */
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Richard Gomes" })
 public class SimpleQuote extends Quote {
 
     //
@@ -37,6 +47,10 @@ public class SimpleQuote extends Quote {
     //
     // public constructors
     //
+
+    public SimpleQuote() {
+        this(Constants.NULL_REAL);
+    }
 
     public SimpleQuote(final SimpleQuote o) {
         this.value = o.value;
@@ -51,12 +65,24 @@ public class SimpleQuote extends Quote {
     // public methods
     //
 
-    public void setValue(final double value) {
+    public double setValue() {
+        return setValue(Constants.NULL_REAL);
+    }
+
+    /**
+     * @return the difference between the new value and the old value
+     */
+    public double setValue(final double value) {
         final double diff = this.value - value;
         if (diff != 0.0) {
             this.value = value;
             notifyObservers();
         }
+        return diff;
+    }
+
+    public void reset() {
+        setValue(Constants.NULL_REAL);
     }
 
 
@@ -75,9 +101,14 @@ public class SimpleQuote extends Quote {
     //
 
     @Override
-    public final double value() {
+    public final double value() /* @ReadOnly */ {
         QL.require(!Double.isNaN(value) , "invalid simple quote: no value available"); // QA:[RG]::verified // TODO: message
         return value;
+    }
+
+    @Override
+    public boolean isValid() /* @ReadOnly */ {
+        return !Double.isNaN(value);
     }
 
 }

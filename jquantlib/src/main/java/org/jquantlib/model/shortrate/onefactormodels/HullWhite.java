@@ -1,7 +1,7 @@
 /*
-Copyright (C)
-2008 Praneet Tiwari
-2009 Ueli Hofstetter
+Copyright (C) 2008 Praneet Tiwari
+Copyright (C) 2009 Ueli Hofstetter
+Copyright (C) 2009 Richard Gomes
 
 This source code is release under the BSD License.
 
@@ -21,6 +21,7 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
+
 package org.jquantlib.model.shortrate.onefactormodels;
 
 import static org.jquantlib.pricingengines.BlackFormula.blackFormula;
@@ -42,35 +43,39 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.time.TimeGrid;
 
 /**
+ * Single-factor Hull-White (extended %Vasicek) model class.
+ * <p>
+ * This class implements the standard single-factor Hull-White model defined by
+ * at <p>{@latex[ dr_t = (\theta(t) - \alpha r_t)dt + \sigma dW_t \f }
+ * where {@latex$ \alpha } and {@latex$ \sigma } are constants.
  *
+ * @note When the term structure is relinked, the r0 parameter of the underlying Vasicek model is not updated.
+ *
+ * @category shortrate
+ * 
  * @author Praneet Tiwari
- */
-// ! Single-factor Hull-White (extended %Vasicek) model class.
-/*
- * ! This class implements the standard single-factor Hull-White model defined by \f[ dr_t = (\theta(t) - \alpha r_t)dt + \sigma
- * dW_t \f] where \f$ \alpha \f$ and \f$ \sigma \f$ are constants.
- *
- * \test calibration results are tested against cached values
- *
- * \bug When the term structure is relinked, the r0 parameter of the underlying Vasicek model is not updated.
- *
- * \ingroup shortrate
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class HullWhite extends Vasicek implements TermStructureConsistentModel {
 
     // need permanent solution for this one
-    TermStructureConsistentModelClass termStructureConsistentModelClass;
-    Parameter phi_;
+    private final TermStructureConsistentModelClass termStructureConsistentModelClass;
+    private Parameter phi_;
 
-    public HullWhite(final Handle<YieldTermStructure> termStructure){
+    public HullWhite(final Handle<YieldTermStructure> termStructure) {
         this(termStructure, 0.1, 0.01);
     }
 
     public HullWhite(
-            final Handle<YieldTermStructure>/* YieldTermStructure */termStructure,
-            final double /* @Real */a /* = 0.1 */,
-            final double /* @Real */sigma /* = 0.01 */) {
+            final Handle<YieldTermStructure> termStructure,
+            final double a) {
+        this(termStructure, a, 0.01);
+    }
+
+    public HullWhite(
+            final Handle<YieldTermStructure> termStructure,
+            final double a,
+            final double sigma) {
 
         super(termStructure.currentLink().forwardRate(0.0, 0.0, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate(),
                 a, 0.0, sigma, 0.0);
@@ -101,7 +106,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         final ShortRateTree numericTree = null;// new ShortRateTree(trinomial, numericDynamics, grid);
 
         // typedef TermStructureFittingParameter::NumericalImpl NumericalImpl;
-        final TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl) (phi.getImplementation());
+        final TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl) phi.implementation();
         impl.reset();
         for (int /* @Size */i = 0; i < (grid.size() - 1); i++) {
             final double /* @Real */discountBond = termStructureConsistentModelClass.termStructure().currentLink().discount(grid.at(i + 1));
@@ -123,7 +128,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
     }
 
     @Override
-    public double /* @Real */A(final double /* @Time */t, final double /* @Time */T) {
+    protected double A(/* @Time */ final double t, /* @Time */ final double T) /* @ReadOnly */ {
         final double /* @DiscountFactor */discount1 = termStructureConsistentModelClass.termStructure().currentLink().discount(t);
         final double /* @DiscountFactor */discount2 = termStructureConsistentModelClass.termStructure().currentLink().discount(T);
         final double /* @Rate */forward = termStructureConsistentModelClass.termStructure().currentLink().forwardRate(t, t,
@@ -133,14 +138,22 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         return Math.exp(value) * discount2 / discount1;
     }
 
+
+    //
+    // protected methods
+    //
+
     @Override
-    public void generateArguments() {
+    protected void generateArguments() {
         phi_ = new FittingParameter(termStructureConsistentModelClass.termStructure(), a(), sigma());
     }
 
     @Override
-    public double /* @Real */discountBondOption(final Option.Type type, final double /* @Real */strike, final double /* @Time */maturity,
-            final double /* @Time */bondMaturity) {
+    public double discountBondOption(
+            final Option.Type type,
+            final double strike,
+            final double /* @Time */ maturity,
+            final double /* @Time */ bondMaturity) /* @ReadOnly */ {
 
         final double /* @Real */_a = a();
         double /* @Real */v;
@@ -155,22 +168,22 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         return blackFormula(type, k, f, v);
     }
 
-    /*! Futures convexity bias (i.e., the difference between
-    futures implied rate and forward rate) calculated as in
-    G. Kirikos, D. Novak, "Convexity Conundrums", Risk
-    Magazine, March 1997.
-
-    \note t and T should be expressed in yearfraction using
-          deposit day counter, F_quoted is futures' market price.
+    /**
+     *  Futures convexity bias (i.e., the difference between
+     *  futures implied rate and forward rate) calculated as in
+     *  <p>
+     *  G. Kirikos, D. Novak, "Convexity Conundrums", Risk Magazine, March 1997.
+     * 
+     *  @notr t and T should be expressed in yearfraction using deposit day counter, F_quoted is futures' market price.
      */
-    public static double /* @Rate */convexityBias(
-            final double /* @Real */futuresPrice,
-            final double /* @Time */t,
-            final double /* @Time */T,
-            final double /* @Real */sigma,
-            final double /* @Real */a) {
+    public static /* @Rate */ double convexityBias(
+            final double futurePrice,
+            /* @Time */ final double t,
+            /* @Time */ final double T,
+            final double sigma,
+            final double a) {
 
-        QL.require(futuresPrice >= 0.0 , "negative futures price not allowed"); // QA:[RG]::verified // TODO: message
+        QL.require(futurePrice >= 0.0 , "negative futures price not allowed"); // QA:[RG]::verified // TODO: message
         QL.require(t >= 0.0 , "negative t not allowed"); // QA:[RG]::verified // TODO: message
         QL.require(T >= t , "T must not be less than t"); // QA:[RG]::verified // TODO: message
         QL.require(a >= 0.0 , "negative a not allowed"); // QA:[RG]::verified // TODO: message
@@ -190,19 +203,23 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         // the adjustment
         final double /* @Real */z = lambda + phi;
 
-        final double /* @Rate */futureRate = (100.0 - futuresPrice) / 100.0;
+        final double /* @Rate */futureRate = (100.0 - futurePrice) / 100.0;
         return (1.0 - Math.exp(-z)) * (futureRate + 1.0 / (T - t));
     }
 
-    //! Analytical term-structure fitting parameter \f$ \varphi(t) \f$.
-    /*! \f$ \varphi(t) \f$ is analytically defined by
-        \f[
-            \varphi(t) = f(t) + \frac{1}{2}[\frac{\sigma(1-e^{-at})}{a}]^2,
-        \f]
-        where \f$ f(t) \f$ is the instantaneous forward rate at \f$ t \f$.
+    /**
+     * Analytical term-structure fitting parameter \f$ \varphi(t) \f$.
+     * 
+     * {@latex$ \varphi(t) } is analytically defined by
+     * <p>
+     * {@latex[ \varphi(t) = f(t) + \frac{1}{2}[\frac{\sigma(1-e^{-at})}{a}]^2 }
+     * <p>
+     * where {@latex$ f(t) } is the instantaneous forward rate at {@latex$ t }.
      */
-    public class FittingParameter extends TermStructureFittingParameter{
-        private class Impl extends Parameter.Impl{
+    public class FittingParameter extends TermStructureFittingParameter {
+
+        private class Impl extends Parameter.Impl {
+
             public Impl(final Handle<YieldTermStructure> termStructure, final double a, final double sigma) {
                 this.termStructure_ = termStructure;
                 this.a_ = a;
@@ -220,8 +237,12 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
                 return (forwardRate + 0.5*temp*temp);
             }
         }
+
         public FittingParameter(final Handle<YieldTermStructure> termStructure, final double a, final double sigma) {
             super(termStructure);
+
+
+
             throw new UnsupportedOperationException("work in progress");
             //FIXME: change class hierarchy -> use static inner classes ?
             //super(new Impl(termStructure, a, sigma));
@@ -230,30 +251,38 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
 
     }
 
-    // ! Short-rate dynamics in the Hull-White model
-    /*
-     * ! The short-rate is here \f[ r_t = \varphi(t) + x_t \f] where \f$ \varphi(t) \f$ is the deterministic time-dependent
-     * parameter used for term-structure fitting and \f$ x_t \f$ is the state variable following an Ornstein-Uhlenbeck process.
+
+    /**
+     * Short-rate dynamics in the Hull-White model
+     * <p>
+     * The short-rate is here
+     * <p>
+     * {@latex[ r_t = \varphi(t) + x_t }
+     * <p>
+     * where {@latex$ \varphi(t) } is the deterministic time-dependent parameter used for
+     * term-structure fitting and {@latex$ x_t } is the state variable following an Ornstein-Uhlenbeck process.
      */
     public class Dynamics extends ShortRateDynamics {
 
         private final Parameter fitting_;
 
-        public Dynamics(final Parameter fitting, final double /* @Real */a, final double /* @Real */sigma) {
+        public Dynamics(final Parameter  fitting, final double a, final double sigma) {
             super(new OrnsteinUhlenbeckProcess(a, sigma, /* default */0.0, /* default */0.0));
             fitting_ = (fitting);
         }
 
         @Override
-        public double /* @Real */variable(final double /* @Time */t, final double /* @Rate */r) {
-            return r - fitting_.getOperatorEq(t);
+        public double variable(/* @Time */ final double t, /* @Rate */ final double r) /* @ReadOnly */ {
+            return r - fitting_.get(t);
         }
 
         @Override
-        public double /* @Real */shortRate(final double /* @Time */t, final double /* @Real */x) {
-            return x + fitting_.getOperatorEq(t);
+        public double shortRate(/* @Time */ final double t, final double x) /* @ReadOnly */ {
+            return x + fitting_.get(t);
         }
+
     }
+
 
     @Override
     public ShortRateDynamics dynamics() {
@@ -265,4 +294,5 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         // TODO Auto-generated method stub
         return null;
     }
+
 }

@@ -36,20 +36,21 @@ import org.jquantlib.methods.lattices.TrinomialTree;
 import org.jquantlib.model.ConstantParameter;
 import org.jquantlib.model.Parameter;
 import org.jquantlib.model.shortrate.OneFactorAffineModel;
+import org.jquantlib.model.shortrate.OneFactorModel;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
 
 /**
- *
+ * Cox-Ingersoll-Ross model class.
+ * <p>
+ * This class implements the Cox-Ingersoll-Ross model defined by
+ * <p>{@latex[ dr_t = k(\theta - r_t)dt + \sqrt{r_t}\sigma dW_t}
+ * 
+ * @bug this class was not tested enough to guarantee its functionality.
+ * 
+ * @category shortrate
+ * 
  * @author Praneet Tiwari
- */
-// ! Cox-Ingersoll-Ross model class.
-/*
- * ! This class implements the Cox-Ingersoll-Ross model defined by \f[ dr_t = k(\theta - r_t)dt + \sqrt{r_t}\sigma dW_t . \f]
- *
- * \bug this class was not tested enough to guarantee its functionality.
- *
- * \ingroup shortrate
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class CoxIngersollRoss extends OneFactorAffineModel {
@@ -58,7 +59,6 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
 
     private static final String strike_must_be_positive = "strike must be positive";
     private static final String unsupported_option_type = "unsupported option type";
-
 
     private Parameter theta_;
     private Parameter k_;
@@ -82,19 +82,19 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
     }
 
     protected double /* @Real */theta() {
-        return theta_.getOperatorEq(0.0);
+        return theta_.get(0.0);
     }
 
     protected double /* @Real */k() {
-        return k_.getOperatorEq(0.0);
+        return k_.get(0.0);
     }
 
     protected double /* @Real */sigma() {
-        return sigma_.getOperatorEq(0.0);
+        return sigma_.get(0.0);
     }
 
     protected double /* @Real */x0() {
-        return r0_.getOperatorEq(0.0);
+        return r0_.get(0.0);
     }
 
 
@@ -117,15 +117,16 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         final double /* @DiscountFactor */discountT = discountBond(0.0, t, x0());
         final double /* @DiscountFactor */discountS = discountBond(0.0, s, x0());
 
-        if (t < Constants.QL_EPSILON)
+        if (t < Constants.QL_EPSILON) {
             switch(type) {
-            case CALL:
-                return Math.max(discountS - strike, 0.0);
-            case PUT:
-                return Math.max(strike - discountS, 0.0);
-            default:
-                throw new LibraryException(unsupported_option_type); // QA:[RG]::verified
+                case CALL:
+                    return Math.max(discountS - strike, 0.0);
+                case PUT:
+                    return Math.max(strike - discountS, 0.0);
+                default:
+                    throw new LibraryException(unsupported_option_type); // QA:[RG]::verified
             }
+        }
 
         final double /* @Real */sigma2 = sigma() * sigma();
         final double /* @Real */h = Math.sqrt(k() * k() + 2.0 * sigma2);
@@ -145,16 +146,17 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         final double /*@Real*/ call = discountS*chis.op(2.0*z*(rho+psi+b)) -
         strike*discountT*chit.op(2.0*z*(rho+psi));
 
-        if (type == Option.Type.CALL)
+        if (type == Option.Type.CALL) {
             return 0.0;
-        else
+        } else {
             return 1.0;
+        }
     }
 
     @Override
     public Lattice tree(final TimeGrid grid) {
         final TrinomialTree trinomial = new TrinomialTree(dynamics().process(), grid, true);
-        return new ShortRateTree(trinomial, dynamics(), grid);
+        return new OneFactorModel.ShortRateTree(trinomial, dynamics(), grid);
     }
 
     @Override
@@ -178,9 +180,37 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
     }
 
 
+    //
+    // protected inner classes
+    //
+
+    /**
+     * Dynamics of the short-rate under the Cox-Ingersoll-Ross model
+     * <p>
+     * The state variable {@latex$ y_t } will here be the square-root of the short-rate.
+     * It satisfies the following stochastic equation
+     * {@latex[dy_t = \left[ (\frac{k\theta }{2}+\frac{\sigma^2}{8})\frac{1}{y_t}-\frac{k}{2}y_t \right]d_t+\frac{\sigma}{2}dW_{t}}.
+     */
+    protected class Dynamics extends ShortRateDynamics {
+
+        public Dynamics(final double /* @Real */theta, final double /* @Real */k, final double /* @Real */sigma, final double /* @Real */x0) {
+            super(new HelperProcess(theta, k, sigma, Math.sqrt(x0)));
+        }
+
+        @Override
+        public double /* @Real */variable(final double /* @Time */t, final double /* @Real */r) {
+            return Math.sqrt(r);
+        }
+
+        @Override
+        public double /* @Real */shortRate(final double /* @Time */t, final double /* @Real */y) {
+            return y * y;
+        }
+    }
+
 
     //
-    // inner classes
+    // private inner classes
     //
 
     private class VolatilityConstraint extends Constraint {
@@ -195,10 +225,12 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         @Override
         public boolean test(final Array array) /*@ReadOnly*/ {
             final double sigma = array.first();
-            if (sigma <= 0.0)
+            if (sigma <= 0.0) {
                 return false;
-            if (sigma * sigma >= 2.0 * k * theta)
+            }
+            if (sigma * sigma >= 2.0 * k * theta) {
                 return false;
+            }
             return true;
         }
     }
@@ -228,30 +260,6 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         }
 
         private final double /* @Real */y0_, theta_, k_, sigma_;
-    }
-
-    // ! %Dynamics of the short-rate under the Cox-Ingersoll-Ross model
-    /*
-     * ! The state variable \f$ y_t \f$ will here be the square-root of the short-rate. It satisfies the following stochastic
-     * equation \f[ dy_t=\left[ (\frac{k\theta }{2}+\frac{\sigma ^2}{8})\frac{1}{y_t}- \frac{k}{2}y_t \right] d_t+ \frac{\sigma
-     * }{2}dW_{t} \f].
-     */
-
-    protected class Dynamics extends ShortRateDynamics {
-
-        public Dynamics(final double /* @Real */theta, final double /* @Real */k, final double /* @Real */sigma, final double /* @Real */x0) {
-            super(new HelperProcess(theta, k, sigma, Math.sqrt(x0)));
-        }
-
-        @Override
-        public double /* @Real */variable(final double /* @Time */t, final double /* @Real */r) {
-            return Math.sqrt(r);
-        }
-
-        @Override
-        public double /* @Real */shortRate(final double /* @Time */t, final double /* @Real */y) {
-            return y * y;
-        }
     }
 
 }

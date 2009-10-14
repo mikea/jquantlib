@@ -52,11 +52,13 @@ public class Stock extends Instrument {
 
     private static final String NULL_QUOTE = "null quote";
 
+
     //
     // private final fields
     //
 
     private final Handle<Quote> quote;
+
 
     //
     // public constructors
@@ -71,12 +73,16 @@ public class Stock extends Instrument {
         //registerWith(this.quote);
     }
 
+
     //
     // overrides Instrument
     //
 
     @Override
-    public boolean isExpired() /* @ReadOnly */ { return false; }
+    public boolean isExpired() /* @ReadOnly */ {
+        return false;
+    }
+
 
     //
     // overrides LazyObject

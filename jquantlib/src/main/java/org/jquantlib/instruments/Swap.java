@@ -48,7 +48,7 @@ import org.jquantlib.time.Date;
  */
 // FIXME: use arrays instead of lists
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-public class Swap extends NewInstrument {
+public class Swap extends Instrument {
 
     protected List<Leg> legs;
     protected double[] payer;

@@ -87,11 +87,11 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
     }
 
     public double /* @Real */a() {
-        return a_.getOperatorEq(0.0);
+        return a_.get(0.0);
     }
 
     public double /* @Real */sigma() {
-        return sigma_.getOperatorEq(0.0);
+        return sigma_.get(0.0);
     }
 
     private Parameter a_;
@@ -105,7 +105,11 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
         private final Array statePrices_;
         private final double /* @Real */discountBondPrice_;
 
-        public Helper(final int /* @Size */i, final double /* @Real */xMin, final double /* @Real */dx, final double /* @Real */discountBondPrice,
+        public Helper(
+                final int /* @Size */i,
+                final double /* @Real */xMin,
+                final double /* @Real */dx,
+                final double /* @Real */discountBondPrice,
                 final OneFactorModel.ShortRateTree tree) {
             size_ = (tree.size(i));
             dt_ = (tree.timeGrid().dt(i));
@@ -141,7 +145,7 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
         final TrinomialTree trinomial = new TrinomialTree(numericDynamics.process(), grid, true);
         final ShortRateTree numericTree = null;//new ShortRateTree(trinomial, numericDynamics, grid);
 
-        final TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl) (phi.getImplementation());
+        final TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl) (phi.implementation());
         impl.reset();
         double /* @Real */value = 1.0;
         final double /* @Real */vMin = -50.0;
@@ -178,12 +182,12 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
 
         @Override
         public double /* @Real */variable(final double /* @Time */t, final double /* @Rate */r) {
-            return Math.log(r) - fitting_.getOperatorEq(t);
+            return Math.log(r) - fitting_.get(t);
         }
 
         @Override
         public double /* @Real */shortRate(final double /* @Time */t, final double /* @Real */x) {
-            return Math.exp(x + fitting_.getOperatorEq(t));
+            return Math.exp(x + fitting_.get(t));
         }
 
         private final Parameter fitting_;

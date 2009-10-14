@@ -22,7 +22,7 @@
 package org.jquantlib.math.optimization;
 
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.math.optimization.EndCriteria.CriteriaType;
+import org.jquantlib.math.optimization.EndCriteria.Type;
 
 //TODO: code review: license, class comments, compare against C++ sources
 public class SteepestDescent extends LineSearchBasedMethod {
@@ -36,8 +36,8 @@ public class SteepestDescent extends LineSearchBasedMethod {
     }
 
     @Override
-    public CriteriaType minimize(final Problem P, final EndCriteria endCriteria) {
-        final EndCriteria.CriteriaType ecType = EndCriteria.CriteriaType.None;
+    public Type minimize(final Problem P, final EndCriteria endCriteria) {
+        final EndCriteria.Type ecType = EndCriteria.Type.None;
         P.reset();
         Array x_ = P.currentValue();
         int iterationNumber = 0;

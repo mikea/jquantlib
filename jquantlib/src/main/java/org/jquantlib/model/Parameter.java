@@ -1,6 +1,5 @@
 /*
-Copyright (C)
-2008 Praneet Tiwari
+Copyright (C) 2009 Praneet Tiwari
 
 This source code is release under the BSD License.
 
@@ -20,71 +19,83 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
+
 package org.jquantlib.model;
 
-//reviewed once: uh
-
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.NoConstraint;
 
 /**
- *
+ * Base class for model arguments
+ * 
  * @author Praneet Tiwari
  */
-// ! Base class for model arguments
-public abstract class Parameter {
+@QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.V097, reviewers = { "Richard Gomes" })
+public class Parameter {
+
+    //
+    // protected fields
+    //
 
     protected Constraint constraint;
     protected Array params;
     protected Impl impl;
 
-    protected static abstract class Impl {
-
-        public abstract double value(final Array params, /* Time */double t);
-    }
-
-    protected Parameter(final int size, final Impl impl, final Constraint c) {
-        this.constraint = c;
-        this.impl = impl;
-        params = new Array(size);
-
-        if (System.getProperty("EXPERIMENTAL") == null)
-            throw new UnsupportedOperationException("Work in progress");
-    }
 
     public Parameter() {
         constraint = new NoConstraint();
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
     }
 
-    public Array getParams() {
+    protected Parameter(final int size, final Impl impl, final Constraint  constraint) {
+        this.constraint = constraint;
+        this.impl = impl;
+        this.params = new Array(size);
+
+        if (System.getProperty("EXPERIMENTAL") == null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+    }
+
+    public final Array  params() /* @ReadOnly */ {
         return params;
     }
 
-    public void setParam(final int /* @Size */i, final double x) {
+    public void setParam(final int i, final double x) {
         params.set(i, x);
     }
 
-    public boolean testParams(final Array p) {
-        return constraint.test(p);
+    public boolean testParams(final Array  params) /* @ReadOnly */ {
+        return constraint.test(params);
     }
 
-    // there is no op overloading here. No equivalent of the method below.
-    /*
-     * Real operator()(Time t) const { return impl_->value(params_, t); }
-     */
-    public double /* @Real */getOperatorEq(final double /* @Time */t) {
+    // FIXME: evaluate the possibility to rename to Ops.Ops#op
+    public double get(/* @Time */ final double t) /* @ReadOnly */ {
         return impl.value(params, t);
     }
 
-    public int /* @Size */getSize() {
+    public int size() /* @ReadOnly */ {
         return params.size();
     }
 
-    public Impl getImplementation() {
+    public final Impl implementation() /* @ReadOnly */ {
         return impl;
     }
+
+
+    //
+    // protected abstract class
+    //
+
+    protected static abstract class Impl {
+        public abstract double value(final Array  params, /* @Time */ double t) /* @ReadOnly */;
+    }
+
 }

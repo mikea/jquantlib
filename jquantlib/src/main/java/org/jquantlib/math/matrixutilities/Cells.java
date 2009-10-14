@@ -1,3 +1,23 @@
+/*
+ Copyright (C) 2007 Richard Gomes
+
+ This file is part of JQuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://jquantlib.org/
+
+ JQuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <jquant-devel@lists.sourceforge.net>. The license is also available online at
+ <http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+
+ JQuantLib is based on QuantLib. http://quantlib.org/
+ When applicable, the original copyright notice follows this notice.
+ */
+
 package org.jquantlib.math.matrixutilities;
 
 import java.util.Arrays;
@@ -18,6 +38,26 @@ import org.jquantlib.math.functions.Minus;
 import org.jquantlib.math.functions.Sqr;
 import org.jquantlib.math.functions.Sqrt;
 
+/**
+ * This class provides efficient basement for matrix operations by mapping matrices on
+ * a linear array. Matrix elements need to be translated to the underlying linear
+ * storage when they are read or written.
+ * <p>
+ * In addition, this class support Java and Fortran programming languages, being more
+ * specific: the way how these languages perform loops. Whilst in C, C++ and Java we
+ * employ zero-based indexing, in FORTRAN we employ one-based indexing.
+ * <p>
+ * Certain algorithms make use of FORTRAN style indexing. In these you will tend to see
+ * <pre>
+ *     for (i = 1; i <= n; i++)
+ * </pre>
+ * rather than what you can see in Java, C, C++:
+ * <pre>
+ *     for (i = 0; i < n; i++)
+ * </pre>
+ * 
+ * @author Richard Gomes
+ */
 public class Cells {
 
     //
@@ -29,6 +69,7 @@ public class Cells {
     protected final static String MATRIX_IS_INCOMPATIBLE = "matrix is incompatible";
     protected final static String ARRAY_IS_INCOMPATIBLE = "array is incompatible";
     protected final static String ITERATOR_IS_INCOMPATIBLE = "iterator is incompatible";
+    protected final static String NOT_ENOUGH_STORAGE = "not enough storage area for operation";
     protected final static String MATRIX_MUST_BE_SQUARE = "matrix must be square";
     protected final static String MATRIX_MUST_BE_SYMMETRIC = "matrix must be symmetric";
     protected final static String MATRIX_IS_SINGULAR = "matrix is singular";
@@ -511,6 +552,11 @@ public class Cells {
         }
 
         @Override
+        public int remaining() {
+            return size-cursor;
+        }
+
+        @Override
         public int cursor() {
             return cursor-pos0+style.base;
         }
@@ -567,7 +613,7 @@ public class Cells {
 
 
         //
-        // implements BulkStorage
+        // implements Iterator
         //
 
         /**
@@ -589,18 +635,29 @@ public class Cells {
         /**
          * {@inheritDoc}
          *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * @Note This method changes cursors of <code>this</code> and <code>another</code> of {@link Iterator}(s)
          */
         @Override
         public Iterator fill(final Iterator another) {
-            QL.require(this.size() == another.size(), ITERATOR_IS_INCOMPATIBLE);
-            this.begin(); another.begin();
-            while (another.hasNext()) {
+            final int size = another.size();
+            return fill(another, size);
+        }
+
+        /**
+         * {@inheritDoc}
+         *
+         * @Note This method changes cursors of <code>this</code> and <code>another</code> of {@link Iterator}(s)
+         */
+        @Override
+        public Iterator fill(final Iterator another, final int size) {
+            QL.require(this.remaining() < size, NOT_ENOUGH_STORAGE);
+            int count = 0;
+            while (count < size && another.hasNext()) {
                 final double d = another.nextDouble();
                 this.setDouble(d);
                 this.forward();
+                count++;
             }
-            this.begin(); another.begin();
             return this;
         }
 
@@ -1025,7 +1082,9 @@ public class Cells {
             double result = Double.MAX_VALUE;
             while (hasNext()) {
                 final double d = nextDouble();
-                if (d < result) result = d;
+                if (d < result) {
+                    result = d;
+                }
             }
             begin();
             return result;
@@ -1052,7 +1111,9 @@ public class Cells {
             double result = Double.MIN_VALUE;
             while (hasNext()) {
                 final double d = nextDouble();
-                if (d > result) result = d;
+                if (d > result) {
+                    result = d;
+                }
             }
             begin();
             return result;
@@ -1217,8 +1278,9 @@ public class Cells {
                     from = middle;
                     from++;
                     len = len - half - 1;
-                } else
+                } else {
                     len = half;
+                }
             }
             return from;
         }
@@ -1250,9 +1312,9 @@ public class Cells {
                 middle = from;
                 middle = middle + half;
 
-                if (val < this.get(middle+pos0))
+                if (val < this.get(middle+pos0)) {
                     len = half;
-                else {
+                } else {
                     from = middle;
                     from++;
                     len = len - half - 1;
@@ -1353,18 +1415,6 @@ public class Cells {
         public void set(final int offset, final double value) {
             data[addr(dim, offset-pos0)] = value;
         }
-
-
-        // --
-
-
-        @Override
-        public Iterator sort() {
-            Arrays.sort(data, pos0-style.base, pos1-style.base);
-            return this;
-        }
-
-
 
 
         //
@@ -1748,14 +1798,13 @@ public class Cells {
 
 
         //
-        // implement RandomListIterator
+        // implement Iterator
         //
 
         @Override
-        public Iterator sort() {
-            throw new UnsupportedOperationException("Work in progress");
+        public Iterator swap(final Iterator another) {
+            throw new UnsupportedOperationException();
         }
-
 
         //
         // overrides AbstractRowIterator
@@ -1817,16 +1866,6 @@ public class Cells {
          */
         public ColumnIterator(final int col, final int row0, final int row1) {
             super(col, row0, row1);
-        }
-
-
-        //
-        // implements RandomListIterator
-        //
-
-        @Override
-        public Iterator sort() {
-            throw new UnsupportedOperationException("Work in progress");
         }
 
 
@@ -1904,12 +1943,12 @@ public class Cells {
 
 
         //
-        // implement RandomListIterator
+        // implement Iterator
         //
 
         @Override
-        public Iterator sort() {
-            throw new UnsupportedOperationException("Work in progress");
+        public Iterator swap(final Iterator another) {
+            throw new UnsupportedOperationException();
         }
 
 

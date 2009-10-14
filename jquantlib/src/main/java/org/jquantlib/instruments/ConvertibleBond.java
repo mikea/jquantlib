@@ -101,7 +101,7 @@ public class ConvertibleBond extends Bond {
     }
 
     @Override
-    protected void performCalculations(){
+    protected void performCalculations() {
         option.setPricingEngine(engine);
         NPV = option.getNPV();
         errorEstimate = 0.0;
