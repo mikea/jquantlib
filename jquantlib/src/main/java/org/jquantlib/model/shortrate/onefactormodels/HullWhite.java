@@ -46,13 +46,13 @@ import org.jquantlib.time.TimeGrid;
  * Single-factor Hull-White (extended %Vasicek) model class.
  * <p>
  * This class implements the standard single-factor Hull-White model defined by
- * at <p>{@latex[ dr_t = (\theta(t) - \alpha r_t)dt + \sigma dW_t \f }
+ * at <p>{@latex[ dr_t = (\theta(t) - \alpha r_t)dt + \sigma dW_t }
  * where {@latex$ \alpha } and {@latex$ \sigma } are constants.
  *
  * @note When the term structure is relinked, the r0 parameter of the underlying Vasicek model is not updated.
  *
  * @category shortrate
- * 
+ *
  * @author Praneet Tiwari
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
@@ -173,7 +173,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
      *  futures implied rate and forward rate) calculated as in
      *  <p>
      *  G. Kirikos, D. Novak, "Convexity Conundrums", Risk Magazine, March 1997.
-     * 
+     *
      *  @notr t and T should be expressed in yearfraction using deposit day counter, F_quoted is futures' market price.
      */
     public static /* @Rate */ double convexityBias(
@@ -209,7 +209,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
 
     /**
      * Analytical term-structure fitting parameter \f$ \varphi(t) \f$.
-     * 
+     *
      * {@latex$ \varphi(t) } is analytically defined by
      * <p>
      * {@latex[ \varphi(t) = f(t) + \frac{1}{2}[\frac{\sigma(1-e^{-at})}{a}]^2 }
