@@ -72,7 +72,7 @@ public class AmericanExercise extends EarlyExercise {
 	 * @param payoffAtExpiry is <code>true</code> if a payoff is expected to happen on exercise date
 	 */
 	public AmericanExercise(final Date earliestDate, final Date latestDate, final boolean payoffAtExpiry) {
-		super(Exercise.Type.AMERICAN, payoffAtExpiry);
+		super(Exercise.Type.American, payoffAtExpiry);
 		QL.require(earliestDate.le(latestDate) , "earliest > latest exercise date");  // QA:[RG]::verified // TODO: message
 		super.dates.add(earliestDate);
 		super.dates.add(latestDate);

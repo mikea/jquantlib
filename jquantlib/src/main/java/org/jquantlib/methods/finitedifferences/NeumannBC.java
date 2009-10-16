@@ -40,10 +40,10 @@ public class NeumannBC implements BoundaryCondition<TridiagonalOperator> {
 	@Override
 	public void applyAfterApplying(final Array u) {
 		switch (side) {
-		case LOWER:
+		case Lower:
 			u.set(0, u.get(1) - value);
 			break;
-		case UPPER:
+		case Upper:
 			u.set(u.size() - 1, u.get(u.size() - 2) + value);
 			break;
 		default:
@@ -55,10 +55,10 @@ public class NeumannBC implements BoundaryCondition<TridiagonalOperator> {
 	@Override
 	public void applyBeforeApplying(final TridiagonalOperator operator) {
 		switch (side) {
-		case LOWER:
+		case Lower:
 			operator.setFirstRow(-1.0, 1.0);
 			break;
-		case UPPER:
+		case Upper:
 			operator.setLastRow(-1.0, 1.0);
 			break;
 		default:
@@ -71,11 +71,11 @@ public class NeumannBC implements BoundaryCondition<TridiagonalOperator> {
 	public void applyBeforeSolving(final TridiagonalOperator operator,
 		 final Array rhs) {
 		switch (side) {
-		case LOWER:
+		case Lower:
 			operator.setFirstRow(-1.0, 1.0);
 			rhs.set(0, value);
 			break;
-		case UPPER:
+		case Upper:
 			operator.setLastRow(-1.0, 1.0);
 			rhs.set(rhs.size() - 1, value);
 			break;

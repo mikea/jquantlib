@@ -85,7 +85,7 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
 
     @Override
     public void calculate() {
-        QL.require(arguments.exercise.type()==Exercise.Type.AMERICAN , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified
+        QL.require(arguments.exercise.type()==Exercise.Type.American , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified
         QL.require(arguments.exercise instanceof AmericanExercise , NON_AMERICAN_EXERCISE_GIVEN); // QA:[RG]::verified
         final AmericanExercise ex = (AmericanExercise)arguments.exercise;
         QL.require(!ex.payoffAtExpiry() , PAYOFF_AT_EXPIRY_NOT_HANDLED); // QA:[RG]::verified

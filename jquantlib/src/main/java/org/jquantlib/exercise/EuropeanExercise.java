@@ -58,7 +58,7 @@ public class EuropeanExercise extends Exercise {
 	 * @param date is the exercise date
 	 */
     public EuropeanExercise(final Date date) {
-		super(Exercise.Type.EUROPEAN);
+		super(Exercise.Type.European);
 		QL.require(date!=null , "empty exercise date");  // QA:[RG]::verified // TODO: message
 		super.dates.add(date);
 	}

@@ -63,17 +63,17 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
 
         final double now = time();
         switch (arguments.exercise.type()) {
-            case AMERICAN:
+            case American:
                 if (now <= stoppingTimes.get(1) && now >= stoppingTimes.get(0)) {
                     applySpecificCondition();
                 }
                 break;
-            case EUROPEAN:
+            case European:
                 if (isOnTime(stoppingTimes.get(0))) {
                     applySpecificCondition();
                 }
                 break;
-            case BERMUDAN:
+            case Bermudan:
                 for (int i=0; i<stoppingTimes.size(); i++) {
                     if (isOnTime(stoppingTimes.get(i))) {
                         applySpecificCondition();

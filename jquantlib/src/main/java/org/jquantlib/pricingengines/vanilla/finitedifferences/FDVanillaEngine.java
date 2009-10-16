@@ -150,11 +150,11 @@ public class FDVanillaEngine {
     protected void initializeBoundaryConditions() {
 
         bcS.add(new NeumannBC(intrinsicValues.value(1)
-                - intrinsicValues.value(0), NeumannBC.Side.LOWER));
+                - intrinsicValues.value(0), NeumannBC.Side.Lower));
 
         bcS.add(new NeumannBC(intrinsicValues.value(intrinsicValues.size() - 1)
                 - intrinsicValues.value(intrinsicValues.size() - 2),
-                NeumannBC.Side.UPPER));
+                NeumannBC.Side.Upper));
     }
 
     protected/* Time */double getResidualTime() {

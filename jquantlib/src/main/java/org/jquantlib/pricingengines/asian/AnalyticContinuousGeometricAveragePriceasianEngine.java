@@ -69,7 +69,7 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
     @Override
     public void calculate() /*@ReadOnly*/ {
         QL.require(arguments.averageType==AverageType.Geometric , "not a geometric average option"); // QA:[RG]::verified // TODO: message
-        QL.require(arguments.exercise.type()==Exercise.Type.EUROPEAN , "not an European Option"); // QA:[RG]::verified // TODO: message
+        QL.require(arguments.exercise.type()==Exercise.Type.European , "not an European Option"); // QA:[RG]::verified // TODO: message
         final Date exercise = arguments.exercise.lastDate();
         QL.require(arguments.payoff instanceof PlainVanillaPayoff , "non-plain payoff given"); // QA:[RG]::verified // TODO: message
         final PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments.payoff;

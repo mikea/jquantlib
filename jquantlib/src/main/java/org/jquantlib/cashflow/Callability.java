@@ -31,7 +31,7 @@ import org.jquantlib.time.Date;
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class Callability extends Event {
 
-	public enum Type{CALL, PUT}
+	public enum Type { Call, Put }
 
 	private final Price price;
 	private final Type type;
@@ -42,8 +42,9 @@ public class Callability extends Event {
         this.type=type;
         this.date=date;
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class Callability extends Event {
 
 	public static class Price {
 
-		public enum Type{ DIRTY, CLEAN }
+		public enum Type{ Dirty, Clean }
 
 		private final double amount;
 		private Type type;

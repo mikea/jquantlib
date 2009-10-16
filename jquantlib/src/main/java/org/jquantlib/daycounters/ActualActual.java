@@ -48,7 +48,7 @@ public class ActualActual extends AbstractDayCounter {
      * Actual/Actual Calendar Conventions
      */
     public static enum Convention {
-        ISMA, BOND, ISDA, HISTORICAL, ACTUAL365, AFB, EURO
+        ISMA, Bond, ISDA, Historical, Actual365, AFB, Euro
     };
 
 
@@ -74,14 +74,14 @@ public class ActualActual extends AbstractDayCounter {
     public static final ActualActual getDayCounter(final Convention convention) {
         switch (convention) {
         case ISMA:
-        case BOND:
+        case Bond:
             return ISMA_DAYCOUNTER;
         case ISDA:
-        case HISTORICAL:
-        case ACTUAL365:
+        case Historical:
+        case Actual365:
             return ACTUAL365_DAYCOUNTER;
         case AFB:
-        case EURO:
+        case Euro:
             return AFB_DAYCOUNTER;
         default:
             throw new LibraryException("unknown act/act convention"); // QA:[RG]::verified// TODO: message
@@ -109,16 +109,16 @@ public class ActualActual extends AbstractDayCounter {
 
         switch (convention) {
         case ISMA:
-        case BOND:
+        case Bond:
             delegate = new ISMA();
             break;
         case ISDA:
-        case HISTORICAL:
-        case ACTUAL365:
+        case Historical:
+        case Actual365:
             delegate = new ISDA();
             break;
         case AFB:
-        case EURO:
+        case Euro:
             delegate = new AFB();
             break;
         default:

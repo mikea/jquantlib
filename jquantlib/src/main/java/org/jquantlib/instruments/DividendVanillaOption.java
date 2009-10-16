@@ -135,13 +135,13 @@ public class DividendVanillaOption extends VanillaOption {
         // engines are built-in for the time being
         final PricingEngine engine;
         switch (exercise.type()) {
-            case EUROPEAN:
+            case European:
                 engine = new AnalyticDividendEuropeanEngine(newProcess);
                 break;
-            case AMERICAN:
+            case American:
                 engine = new FDDividendAmericanEngine(newProcess);
                 break;
-            case BERMUDAN:
+            case Bermudan:
                 throw new LibraryException("engine not available for Bermudan option with dividends"); // TODO: message
             default:
                 throw new LibraryException("unknown exercise type"); // // TODO: message

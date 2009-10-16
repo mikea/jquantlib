@@ -60,7 +60,7 @@ public class Thirty360 extends AbstractDayCounter {
      * 30/360 Calendar Conventions
      */
     public enum Convention {
-        USA, BOND_BASIS, EUROPEAN, EURO_BOND_BASIS, ITALIAN;
+        USA, BondBasis, European, EurobondBasis, Italian;
     }
 
 
@@ -69,8 +69,8 @@ public class Thirty360 extends AbstractDayCounter {
     //
 
     private static final Thirty360 THIRTY360_US = new Thirty360(Thirty360.Convention.USA);
-    private static final Thirty360 THIRTY360_EU = new Thirty360(Thirty360.Convention.EUROPEAN);
-    private static final Thirty360 THIRTY360_IT = new Thirty360(Thirty360.Convention.ITALIAN);
+    private static final Thirty360 THIRTY360_EU = new Thirty360(Thirty360.Convention.European);
+    private static final Thirty360 THIRTY360_IT = new Thirty360(Thirty360.Convention.Italian);
 
 
     //
@@ -78,19 +78,19 @@ public class Thirty360 extends AbstractDayCounter {
     //
 
     public static final Thirty360 getDayCounter() {
-        return getDayCounter(Thirty360.Convention.BOND_BASIS);
+        return getDayCounter(Thirty360.Convention.BondBasis);
 
     }
 
     public static final Thirty360 getDayCounter(final Thirty360.Convention c) {
         switch (c) {
         case USA:
-        case BOND_BASIS:
+        case BondBasis:
             return THIRTY360_US;
-        case EUROPEAN:
-        case EURO_BOND_BASIS:
+        case European:
+        case EurobondBasis:
             return THIRTY360_EU;
-        case ITALIAN:
+        case Italian:
             return THIRTY360_IT;
         default:
             throw new LibraryException("no conversion specified"); // QA:[RG]::verified //TODO: message
@@ -114,14 +114,14 @@ public class Thirty360 extends AbstractDayCounter {
 
         switch (c) {
         case USA:
-        case BOND_BASIS:
+        case BondBasis:
             delegate = new US();
             break;
-        case EUROPEAN:
-        case EURO_BOND_BASIS:
+        case European:
+        case EurobondBasis:
             delegate = new EU();
             break;
-        case ITALIAN:
+        case Italian:
             delegate = new IT();
             break;
         default:

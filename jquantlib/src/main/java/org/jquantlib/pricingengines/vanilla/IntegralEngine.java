@@ -71,7 +71,7 @@ public class IntegralEngine extends OneAssetStrikedOptionEngine {
     // TODO: define tolerance for calculate()
     @Override
     public void calculate() {
-        QL.require(arguments.exercise.type()==Exercise.Type.EUROPEAN , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified // TODO: message
+        QL.require(arguments.exercise.type()==Exercise.Type.European , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified // TODO: message
         QL.require(arguments.payoff instanceof StrikedTypePayoff , NON_STRIKED_PAYOFF_GIVEN); // QA:[RG]::verified // TODO: message
         final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
         QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , BLACK_SCHOLES_PROCESS_REQUIRED); // QA:[RG]::verified // TODO: message

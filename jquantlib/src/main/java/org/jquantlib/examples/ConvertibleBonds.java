@@ -146,14 +146,14 @@ public class ConvertibleBonds {
         final double[] putPrices = { 105.0 };
 
         for(int i=0; i<callLength.length; i++){
-            callability.add(new SoftCallability(new Callability.Price(callPrices[i], Callability.Price.Type.CLEAN),
+            callability.add(new SoftCallability(new Callability.Price(callPrices[i], Callability.Price.Type.Clean),
                     schedule.date(callLength[i]),
                     1.20));
         }
 
         for (int j=0; j<putLength.length; j++) {
-            callability.add(new Callability(new Callability.Price(putPrices[j],Callability.Price.Type.CLEAN),
-                    Callability.Type.PUT,
+            callability.add(new Callability(new Callability.Price(putPrices[j],Callability.Price.Type.Clean),
+                    Callability.Type.Put,
                     schedule.date(putLength[j])));
         }
 

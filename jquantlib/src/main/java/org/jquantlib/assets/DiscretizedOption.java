@@ -89,13 +89,13 @@ public class DiscretizedOption extends DiscretizedAsset {
         underlying.preAdjustValues();
         int i;
         switch (exerciseType) {
-        case AMERICAN:
+        case American:
             if (time >= exerciseTimes.get(0) && time <= exerciseTimes.get(1)) {
                 applyExerciseCondition();
             }
             break;
-        case BERMUDAN:
-        case EUROPEAN:
+        case Bermudan:
+        case European:
             for (i = 0; i < exerciseTimes.size(); i++) {
                 /* Time */final double t = exerciseTimes.get(i);
                 if (t >= 0.0 && isOnTime(t)) {

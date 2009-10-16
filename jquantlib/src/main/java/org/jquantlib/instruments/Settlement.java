@@ -22,13 +22,12 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.instruments;
 
 /**
- * 
+ *
  * @author Praneet Tiwari
  */
 public class Settlement {
 
     public static enum Type {
-
-        PHYSICAL, CASH
+        Physical, Cash
     };
 }

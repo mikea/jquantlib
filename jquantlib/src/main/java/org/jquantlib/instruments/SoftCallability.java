@@ -35,7 +35,7 @@ public class SoftCallability extends Callability {
 	private double trigger;
 	
 	public SoftCallability(final Price price, final Date date, double trigger){
-		super(price, Callability.Type.CALL, date);
+		super(price, Callability.Type.Call, date);
 		this.trigger = trigger;
 	}
 	

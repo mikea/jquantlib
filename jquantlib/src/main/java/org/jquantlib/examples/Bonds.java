@@ -163,7 +163,7 @@ public class Bonds {
                             100.0, schedule,
                             // std::vector<Rate>(1,couponRates[i]),
                             Arrays.asList(new double[] { couponRates[i] }),
-                            ActualActual.getDayCounter(ActualActual.Convention.BOND),
+                            ActualActual.getDayCounter(ActualActual.Convention.Bond),
                             BusinessDayConvention.Unadjusted,
                             redemption,
                             issueDates[i]));
@@ -272,7 +272,7 @@ public class Bonds {
         // setup swaps
         final Frequency swFixedLegFrequency = Frequency.Annual;
         final BusinessDayConvention swFixedLegConvention = BusinessDayConvention.Unadjusted;
-        final DayCounter swFixedLegDayCounter = Thirty360.getDayCounter(Convention.EUROPEAN);
+        final DayCounter swFixedLegDayCounter = Thirty360.getDayCounter(Convention.European);
 
         // TODO and FIXME: not sure whether the class stuff works properly
         final IborIndex swFloatingLegIndex = Euribor.getEuribor6M(new Handle<YieldTermStructure>(YieldTermStructure.class));

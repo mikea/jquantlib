@@ -91,7 +91,7 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 
     @Override
     public void calculate() /*@ReadOnly*/{
-        QL.require(arguments.exercise.type()==Exercise.Type.EUROPEAN , NOT_AN_EUROPEAN_OPTION); // QA:[RG]::verified // TODO: message
+        QL.require(arguments.exercise.type()==Exercise.Type.European , NOT_AN_EUROPEAN_OPTION); // QA:[RG]::verified // TODO: message
         final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
         QL.require(arguments.payoff instanceof StrikedTypePayoff , NON_STRIKED_PAYOFF_GIVEN); // QA:[RG]::verified // TODO: message
 

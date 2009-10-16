@@ -74,7 +74,7 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
     @Override
     public void calculate() /* @ReadOnly */ {
 
-        QL.require(arguments.exercise.type() == Exercise.Type.EUROPEAN, "not an European option"); // TODO: message
+        QL.require(arguments.exercise.type() == Exercise.Type.European, "not an European option"); // TODO: message
 
         final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
         QL.require(payoff!=null, "non-striked payoff given"); // TODO: message

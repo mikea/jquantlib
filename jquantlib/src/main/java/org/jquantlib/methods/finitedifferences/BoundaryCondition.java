@@ -31,7 +31,7 @@ import org.jquantlib.math.matrixutilities.Array;
 public interface BoundaryCondition<T extends Operator> {
 	
 	public static enum Side {
-		NONE, UPPER, LOWER;
+		None, Upper, Lower;
 	}
 
 	/*

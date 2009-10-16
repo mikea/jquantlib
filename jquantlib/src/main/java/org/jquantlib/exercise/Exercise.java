@@ -116,7 +116,7 @@ public abstract class Exercise {
      * @author Richard Gomes
      */
     public static enum Type {
-        AMERICAN, BERMUDAN, EUROPEAN;
+        American, Bermudan, European;
     }
 
 }
