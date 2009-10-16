@@ -60,6 +60,7 @@ import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.time.calendars.Target;
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -73,11 +74,6 @@ public class TermStructuresTest {
 
     public TermStructuresTest() {
         QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-
-        QL.error("***** INITIALIZATION INCOMPLETE :: waiting for implementation of Swaps and PiecewiseYieldTermStructure *****");
-        if (true) {
-            throw new LibraryException();
-        }
 
         this.calendar = new Target();
         this.settlementDays = 2;
@@ -187,6 +183,7 @@ public class TermStructuresTest {
     }
 
 
+    @Ignore
     @Test
     public void testImplied() {
         QL.info("Testing consistency of implied term structure...");
@@ -255,6 +252,7 @@ public class TermStructuresTest {
     }
 
 
+    @Ignore
     @Test
     public void testFSpreaded() {
         QL.info("Testing consistency of forward-spreaded term structure...");
@@ -285,6 +283,7 @@ public class TermStructuresTest {
     }
 
 
+    @Ignore
     @Test
     public void testFSpreadedObs() {
         QL.info("Testing observability of forward-spreaded term structure...");
@@ -311,6 +310,7 @@ public class TermStructuresTest {
     }
 
 
+    @Ignore
     @Test
     public void testZSpreaded() {
         QL.info("Testing consistency of zero-spreaded term structure...");
@@ -339,6 +339,7 @@ public class TermStructuresTest {
     }
 
 
+    @Ignore
     @Test
     public void testZSpreadedObs() {
         QL.info("Testing observability of zero-spreaded term structure...");

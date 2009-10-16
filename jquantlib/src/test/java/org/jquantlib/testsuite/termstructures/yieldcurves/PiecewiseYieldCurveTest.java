@@ -26,6 +26,7 @@ import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.TimeUnit;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -131,6 +132,7 @@ public class PiecewiseYieldCurveTest {
         QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
+    @Ignore
     @Test
     public void fakeTestCase() {
         // This is not a test case.

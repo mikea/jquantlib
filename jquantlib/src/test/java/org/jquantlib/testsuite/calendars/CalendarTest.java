@@ -31,6 +31,7 @@ import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.time.calendars.UnitedStates;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -59,6 +60,7 @@ public class CalendarTest {
     /**
      * @see <a href="http://bugs.jquantlib.org/view.php?id=356">issue 356</a>
      */
+    @Ignore
     @Test
     public void testEndOfMonth() {
         final Calendar unitedStatesCalendar = new UnitedStates(UnitedStates.Market.NYSE);
