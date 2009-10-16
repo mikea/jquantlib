@@ -77,7 +77,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
             final double a,
             final double sigma) {
 
-        super(termStructure.currentLink().forwardRate(0.0, 0.0, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate(),
+        super(termStructure.currentLink().forwardRate(0.0, 0.0, Compounding.Continuous, Frequency.NoFrequency).rate(),
                 a, 0.0, sigma, 0.0);
 
         if (System.getProperty("EXPERIMENTAL") == null) {
@@ -132,7 +132,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         final double /* @DiscountFactor */discount1 = termStructureConsistentModelClass.termStructure().currentLink().discount(t);
         final double /* @DiscountFactor */discount2 = termStructureConsistentModelClass.termStructure().currentLink().discount(T);
         final double /* @Rate */forward = termStructureConsistentModelClass.termStructure().currentLink().forwardRate(t, t,
-                Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+                Compounding.Continuous, Frequency.NoFrequency).rate();
         final double /* @Real */temp = sigma() * B(t, T);
         final double /* @Real */value = B(t, T) * forward - 0.25 * temp * temp * B(0.0, 2.0 * t);
         return Math.exp(value) * discount2 / discount1;
@@ -232,7 +232,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
             @Override
             public double value(final Array params, final double t) {
                 final double forwardRate =
-                    termStructure_.currentLink().forwardRate(t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+                    termStructure_.currentLink().forwardRate(t, t, Compounding.Continuous, Frequency.NoFrequency).rate();
                 final double temp = sigma_*(1.0 - Math.exp(-a_*t))/a_;
                 return (forwardRate + 0.5*temp*temp);
             }

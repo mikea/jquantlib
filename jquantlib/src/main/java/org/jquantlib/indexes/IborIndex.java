@@ -103,12 +103,12 @@ public class IborIndex extends InterestRateIndex {
 
     protected static BusinessDayConvention euriborConvention(final Period p) {
         switch (p.units()) {
-        case DAYS:
-        case WEEKS:
-            return BusinessDayConvention.FOLLOWING;
-        case MONTHS:
-        case YEARS:
-            return BusinessDayConvention.MODIFIED_FOLLOWING;
+        case Days:
+        case Weeks:
+            return BusinessDayConvention.Following;
+        case Months:
+        case Years:
+            return BusinessDayConvention.ModifiedFollowing;
         default:
             throw new LibraryException("invalid time units"); // QA:[RG]::verified // TODO: message
         }
@@ -116,11 +116,11 @@ public class IborIndex extends InterestRateIndex {
 
     protected static boolean euriborEOM(final Period p) {
         switch (p.units()) {
-        case DAYS:
-        case WEEKS:
+        case Days:
+        case Weeks:
             return false;
-        case MONTHS:
-        case YEARS:
+        case Months:
+        case Years:
             return true;
         default:
             throw new LibraryException("invalid time units");  // QA:[RG]::verified // TODO: message

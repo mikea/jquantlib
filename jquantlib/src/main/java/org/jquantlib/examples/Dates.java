@@ -87,7 +87,7 @@ public class Dates {
         System.out.println("The first date of the month to which todays date belong to is = "+dateStartOfMonth);
 
         //Let's try getting the first date of the month to which today's date belong to using Period
-        final Period period = new Period(-today.dayOfMonth()+1,TimeUnit.DAYS);
+        final Period period = new Period(-today.dayOfMonth()+1,TimeUnit.Days);
         Date dateStartOfMonthUsingPeriod = today.add(period);
         System.out.println("The first date of the month to which today's date belong to using period is = "+dateStartOfMonthUsingPeriod);
 

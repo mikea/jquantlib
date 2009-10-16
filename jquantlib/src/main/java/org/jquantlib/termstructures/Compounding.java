@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -27,19 +27,22 @@ package org.jquantlib.termstructures;
  */
 public enum Compounding {
 	/**
-	 * 1+rt
+	 * {@latex$ 1+rt }
 	 */
-	SIMPLE,          
+	Simple,
+
 	/**
-	 * (1+r)^t
+	 * {@latex$ (1+r)^t }
 	 */
-	COMPOUNDED,
+	Compounded,
+
 	/**
-	 * e^{rt}
+	 * {@latex$ e^{rt} }
 	 */
-	CONTINUOUS,
+	Continuous,
+
 	/**
 	 * Simple up to the first period then Compounded
 	 */
-	SIMPLE_THEN_COMPOUNDED;
+	SimpleThenCompounded;
 }

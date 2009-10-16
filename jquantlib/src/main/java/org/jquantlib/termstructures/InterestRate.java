@@ -70,7 +70,7 @@ public class InterestRate {
      * @category constructors
      */
     public InterestRate(final/* @Rate */double r, final DayCounter dc, final Compounding comp) {
-        this(r, dc, comp, Frequency.ANNUAL);
+        this(r, dc, comp, Frequency.Annual);
     }
 
     /**
@@ -89,9 +89,9 @@ public class InterestRate {
         this.compound = comp;
         this.freqMakesSense = false;
 
-        if (this.compound == Compounding.COMPOUNDED || this.compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
+        if (this.compound == Compounding.Compounded || this.compound == Compounding.SimpleThenCompounded) {
             freqMakesSense = true;
-            QL.require(freq != Frequency.ONCE && freq != Frequency.NO_FREQUENCY , "frequency not allowed for this interest rate"); // QA:[RG]::verified // TODO: message
+            QL.require(freq != Frequency.Once && freq != Frequency.NoFrequency , "frequency not allowed for this interest rate"); // QA:[RG]::verified // TODO: message
             this.freq = freq.toInteger();
         }
     }
@@ -117,16 +117,16 @@ public class InterestRate {
 
         /* @Rate */final double r = rate;
 
-        if (compound == Compounding.SIMPLE) {
+        if (compound == Compounding.Simple) {
             // 1+r*t
             return 1.0 + r * t;
-        } else if (compound == Compounding.COMPOUNDED) {
+        } else if (compound == Compounding.Compounded) {
             // (1+r/f)^(f*t)
             return Math.pow((1 + r / freq), (freq * t));
-        } else if (compound == Compounding.CONTINUOUS) {
+        } else if (compound == Compounding.Continuous) {
             // e^(r*t)
             return Math.exp((r * t));
-        } else if (compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
+        } else if (compound == Compounding.SimpleThenCompounded) {
             if (t < (1 / (double) freq)) {
                 // 1+r*t
                 return 1.0 + r * t;
@@ -165,7 +165,7 @@ public class InterestRate {
      * @category inspectors
      */
     public final Frequency frequency() {
-        return freqMakesSense ? Frequency.valueOf(this.freq) : Frequency.NO_FREQUENCY;
+        return freqMakesSense ? Frequency.valueOf(this.freq) : Frequency.NoFrequency;
     }
 
     // --- discount/compound factor calculations
@@ -218,7 +218,7 @@ public class InterestRate {
     }
 
     public final InterestRate equivalentRate(final/* @Time */double t, final Compounding comp) {
-        return equivalentRate(t, comp, Frequency.ANNUAL);
+        return equivalentRate(t, comp, Frequency.Annual);
     }
 
     /**
@@ -235,7 +235,7 @@ public class InterestRate {
     }
 
     public final InterestRate equivalentRate(final Date d1, final Date d2, final DayCounter resultDC, final Compounding comp) {
-        return equivalentRate(d1, d2, resultDC, comp, Frequency.ANNUAL);
+        return equivalentRate(d1, d2, resultDC, comp, Frequency.Annual);
     }
 
     /**
@@ -270,19 +270,19 @@ public class InterestRate {
 
         /* @Rate */double rate;
         switch (comp) {
-        case SIMPLE:
+        case Simple:
             // rate = (compound - 1)/time
             rate = (c - 1) / t;
             break;
-        case COMPOUNDED:
+        case Compounded:
             // rate = (compound^(1/(f*t))-1)*f
             rate = (Math.pow(c, (1 / (f * t))) - 1) * f;
             break;
-        case CONTINUOUS:
+        case Continuous:
             // rate = log(compound)/t
             rate = Math.log(c) / t;
             break;
-        case SIMPLE_THEN_COMPOUNDED:
+        case SimpleThenCompounded:
             if (t <= (1 / f)) {
                 // rate = (compound - 1)/time
                 rate = (c - 1) / t;
@@ -299,12 +299,12 @@ public class InterestRate {
 
     static public InterestRate impliedRate(final/* @CompoundFactor */double compound, final/* @Time */double t,
             final DayCounter resultDC, final Compounding comp) {
-        return impliedRate(compound, t, resultDC, comp, Frequency.ANNUAL);
+        return impliedRate(compound, t, resultDC, comp, Frequency.Annual);
     }
 
     static public InterestRate impliedRate(final/* @CompoundFactor */double compound, final Date d1, final Date d2,
             final DayCounter resultDC, final Compounding comp) {
-        return impliedRate(compound, d1, d2, resultDC, comp, Frequency.ANNUAL);
+        return impliedRate(compound, d1, d2, resultDC, comp, Frequency.Annual);
     }
 
     /**
@@ -326,18 +326,18 @@ public class InterestRate {
 
         final StringBuilder sb = new StringBuilder();
         sb.append(rate).append(' ').append(dc).append(' ');
-        if (compound == Compounding.SIMPLE) {
+        if (compound == Compounding.Simple) {
             sb.append("simple compounding");
-        } else if (compound == Compounding.COMPOUNDED) {
-            if ((freq == Frequency.NO_FREQUENCY.toInteger()) || (freq == Frequency.ONCE.toInteger())) {
+        } else if (compound == Compounding.Compounded) {
+            if ((freq == Frequency.NoFrequency.toInteger()) || (freq == Frequency.Once.toInteger())) {
                 throw new IllegalArgumentException(freq + " frequency not allowed for this interest rate");
             } else {
                 sb.append(freq + " compounding");
             }
-        } else if (compound == Compounding.CONTINUOUS) {
+        } else if (compound == Compounding.Continuous) {
             sb.append("continuous compounding");
-        } else if (compound == Compounding.SIMPLE_THEN_COMPOUNDED) {
-            if ((freq == Frequency.NO_FREQUENCY.toInteger()) || (freq == Frequency.ONCE.toInteger())) {
+        } else if (compound == Compounding.SimpleThenCompounded) {
+            if ((freq == Frequency.NoFrequency.toInteger()) || (freq == Frequency.Once.toInteger())) {
                 throw new IllegalArgumentException(freq + " frequency not allowed for this interest rate");
             } else {
                 sb.append("simple compounding up to " + (12 / freq) + " months, then " + freq + " compounding");

@@ -44,16 +44,16 @@ public final class PeriodParser {
         TimeUnit units = null;
         int index = -1;
         if ((index = str.indexOf('d')) > 0 || (index = str.indexOf('D')) > 0) {
-            units = TimeUnit.DAYS;
+            units = TimeUnit.Days;
             enforceUnit(index, str, units);
         } else if ((index = str.indexOf('w')) > 0 || (index = str.indexOf('W')) > 0) {
-            units = TimeUnit.WEEKS;
+            units = TimeUnit.Weeks;
             enforceUnit(index, str, units);
         } else if ((index = str.indexOf('m')) > 0 || (index = str.indexOf('M')) > 0) {
-            units = TimeUnit.MONTHS;
+            units = TimeUnit.Months;
             enforceUnit(index, str, units);
         } else if ((index = str.indexOf('y')) > 0 || (index = str.indexOf('Y')) > 0) {
-            units = TimeUnit.YEARS;
+            units = TimeUnit.Years;
             enforceUnit(index, str, units);
         }
 

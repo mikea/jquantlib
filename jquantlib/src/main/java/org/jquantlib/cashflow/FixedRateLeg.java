@@ -23,7 +23,7 @@ public class FixedRateLeg extends Leg {
     public FixedRateLeg(final Schedule schedule, final DayCounter paymentDayCounter){
         this.schedule_=(schedule);
         this.paymentDayCounter_=(paymentDayCounter);
-        this.paymentAdjustment_ = BusinessDayConvention.FOLLOWING;
+        this.paymentAdjustment_ = BusinessDayConvention.Following;
     }
 
     public FixedRateLeg withNotionals(/* Real */final double notional) {
@@ -37,7 +37,7 @@ public class FixedRateLeg extends Leg {
     }
 
     public FixedRateLeg withCouponRates(/* @Rate */final double couponRate) {
-        couponRates_ = new InterestRate[]{new InterestRate(couponRate, paymentDayCounter_, Compounding.SIMPLE)};
+        couponRates_ = new InterestRate[]{new InterestRate(couponRate, paymentDayCounter_, Compounding.Simple)};
 
         //TODO: Code review :: incomplete code
         if (true) {
@@ -57,7 +57,7 @@ public class FixedRateLeg extends Leg {
     public FixedRateLeg withCouponRates(/* @Rate */final double [] couponRates) {
         couponRates_ = new InterestRate[couponRates.length];
         for(int i = 0; i<couponRates.length; i++) {
-            couponRates_[i] = new InterestRate(couponRates[i], paymentDayCounter_, Compounding.SIMPLE);
+            couponRates_[i] = new InterestRate(couponRates[i], paymentDayCounter_, Compounding.Simple);
         }
         return this;
     }

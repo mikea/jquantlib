@@ -180,8 +180,8 @@ public class HestonProcess extends StochasticProcess {
                         : 0.0;
 
                 final double[] result = new double[2];
-                result[0] = riskFreeRate_.currentLink().forwardRate(t, t, Compounding.CONTINUOUS).rate()
-                - dividendYield_.currentLink().forwardRate(t, t, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+                result[0] = riskFreeRate_.currentLink().forwardRate(t, t, Compounding.Continuous).rate()
+                - dividendYield_.currentLink().forwardRate(t, t, Compounding.Continuous).rate() - 0.5 * vol * vol;
 
                 result[1] = kappav_ * (thetav_ - ((discretization_ == Discretization.PartialTruncation) ? x1 : vol * vol));
                 return new Array(result);
@@ -238,8 +238,8 @@ public class HestonProcess extends StochasticProcess {
             case PartialTruncation:
                 vol = (x01 > 0.0) ? Math.sqrt(x01) : 0.0;
                 vol2 = sigmav_ * vol;
-                mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
-                - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+                mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.Continuous).rate()
+                - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.Continuous).rate() - 0.5 * vol * vol;
                 nu = kappav_ * (thetav_ - x01);
 
                 retVal[0] = x00 * Math.exp(mu * dt + vol * dw0 * sdt);
@@ -248,8 +248,8 @@ public class HestonProcess extends StochasticProcess {
             case FullTruncation:
                 vol = (x01 > 0.0) ? Math.sqrt(x01) : 0.0;
                 vol2 = sigmav_ * vol;
-                mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
-                - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+                mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.Continuous).rate()
+                - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.Continuous).rate() - 0.5 * vol * vol;
                 nu = kappav_ * (thetav_ - vol * vol);
 
                 retVal[0] = x00 * Math.exp(mu * dt + vol * dw0 * sdt);
@@ -258,8 +258,8 @@ public class HestonProcess extends StochasticProcess {
             case Reflection:
                 vol = Math.sqrt(Math.abs(x01));
                 vol2 = sigmav_ * vol;
-                mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
-                - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+                mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.Continuous).rate()
+                - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.Continuous).rate() - 0.5 * vol * vol;
                 nu = kappav_ * (thetav_ - vol * vol);
 
                 retVal[0] = x00 * Math.exp(mu * dt + vol * dw0 * sdt);
@@ -272,8 +272,8 @@ public class HestonProcess extends StochasticProcess {
                 // process. For further details please read the wilmott thread
                 // "QuantLib code is very high quatlity"
                 vol = (x01 > 0.0) ? Math.sqrt(x01) : 0.0;
-                mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate()
-                - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.CONTINUOUS).rate() - 0.5 * vol * vol;
+                mu = riskFreeRate_.currentLink().forwardRate(t0, t0, Compounding.Continuous).rate()
+                - dividendYield_.currentLink().forwardRate(t0, t0, Compounding.Continuous).rate() - 0.5 * vol * vol;
 
                 df = 4 * thetav_ * kappav_ / (sigmav_ * sigmav_);
                 ncp = 4 * kappav_ * Math.exp(-kappav_ * dt) / (sigmav_ * sigmav_ * (1 - Math.exp(-kappav_ * dt))) * x01;

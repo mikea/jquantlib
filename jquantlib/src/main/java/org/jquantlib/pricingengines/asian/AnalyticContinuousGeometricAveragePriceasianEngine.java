@@ -87,12 +87,12 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
                 process.riskFreeRate().currentLink().zeroRate(
                         exercise,
                         rfdc,
-                        Compounding.CONTINUOUS,
-                        Frequency.NO_FREQUENCY).rate() + process.dividendYield().currentLink().zeroRate(
+                        Compounding.Continuous,
+                        Frequency.NoFrequency).rate() + process.dividendYield().currentLink().zeroRate(
                                 exercise,
                                 divdc,
-                                Compounding.CONTINUOUS,
-                                Frequency.NO_FREQUENCY).rate() + volatility*volatility/6.0);
+                                Compounding.Continuous,
+                                Frequency.NoFrequency).rate() + volatility*volatility/6.0);
 
         /*@Time*/ final double t_q = divdc.yearFraction(
                 process.dividendYield().currentLink().referenceDate(), exercise);

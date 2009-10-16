@@ -85,7 +85,7 @@ public class FRA {
 
         final Calendar calendar = euribor3m.currentLink().fixingCalendar();
         final int fixingDays = euribor3m.currentLink().fixingDays();
-        final Date settlementDate = calendar.advance(todaysDate, fixingDays, TimeUnit.MONTHS );
+        final Date settlementDate = calendar.advance(todaysDate, fixingDays, TimeUnit.Months );
 
         System.out.println("Today: "+ todaysDate.weekday() + "," + todaysDate);
 

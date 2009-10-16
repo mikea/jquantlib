@@ -62,7 +62,7 @@ public class Bonds {
         final int fixingDays = 3;
         /* Natural */final int settlementDays = 3;
 
-        final Date todaysDate = calendar.advance(settlementDate, -fixingDays, TimeUnit.DAYS);
+        final Date todaysDate = calendar.advance(settlementDate, -fixingDays, TimeUnit.Days);
         new Settings().setEvaluationDate(todaysDate);
 
         System.out.println("Today: " + todaysDate.weekday() + ", " + todaysDate);
@@ -92,17 +92,17 @@ public class Bonds {
         final DayCounter zcBondsDayCounter = Actual365Fixed.getDayCounter();
 
         final RateHelper zc3m = new DepositRateHelper(
-                new Handle<Quote>(zc3mRate), new Period(3, TimeUnit.MONTHS),
+                new Handle<Quote>(zc3mRate), new Period(3, TimeUnit.Months),
                 fixingDays, calendar,
-                BusinessDayConvention.MODIFIED_FOLLOWING, true, zcBondsDayCounter);
+                BusinessDayConvention.ModifiedFollowing, true, zcBondsDayCounter);
         final RateHelper zc6m = new DepositRateHelper(
-                new Handle<Quote>(zc6mRate), new Period(6, TimeUnit.MONTHS),
+                new Handle<Quote>(zc6mRate), new Period(6, TimeUnit.Months),
                 fixingDays, calendar,
-                BusinessDayConvention.MODIFIED_FOLLOWING, true, zcBondsDayCounter);
+                BusinessDayConvention.ModifiedFollowing, true, zcBondsDayCounter);
         final RateHelper zc1y = new DepositRateHelper(
-                new Handle<Quote>(zc1yRate), new Period(1, TimeUnit.YEARS),
+                new Handle<Quote>(zc1yRate), new Period(1, TimeUnit.Years),
                 fixingDays, calendar,
-                BusinessDayConvention.MODIFIED_FOLLOWING, true, zcBondsDayCounter);
+                BusinessDayConvention.ModifiedFollowing, true, zcBondsDayCounter);
 
         // setup bonds
         /* @Real */final double redemption = 100.0;
@@ -150,10 +150,10 @@ public class Bonds {
             // be passed
             final Schedule schedule = new Schedule(
                     issueDates[i], maturities[i],
-                    new Period(Frequency.SEMI_ANNUAL),
+                    new Period(Frequency.Semiannual),
                     new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
-                    BusinessDayConvention.UNADJUSTED,
-                    BusinessDayConvention.UNADJUSTED,
+                    BusinessDayConvention.Unadjusted,
+                    BusinessDayConvention.Unadjusted,
                     DateGeneration.Rule.Backward,
                     false,
                     Date.todaysDate(),
@@ -164,7 +164,7 @@ public class Bonds {
                             // std::vector<Rate>(1,couponRates[i]),
                             Arrays.asList(new double[] { couponRates[i] }),
                             ActualActual.getDayCounter(ActualActual.Convention.BOND),
-                            BusinessDayConvention.UNADJUSTED,
+                            BusinessDayConvention.Unadjusted,
                             redemption,
                             issueDates[i]));
 
@@ -256,28 +256,28 @@ public class Bonds {
         // deposits
         final DayCounter depositDayCounter = null;// Actual360();
 
-        final RateHelper d1w = (new DepositRateHelper(new Handle<Quote>(d1wRate), new Period(1, TimeUnit.WEEKS), fixingDays, calendar,
-                BusinessDayConvention.MODIFIED_FOLLOWING, true, depositDayCounter));
-        final RateHelper d1m = (new DepositRateHelper(new Handle<Quote>(d1mRate), new Period(1, TimeUnit.MONTHS), fixingDays, calendar,
-                BusinessDayConvention.MODIFIED_FOLLOWING, true, depositDayCounter));
-        final RateHelper d3m = (new DepositRateHelper(new Handle<Quote>(d3mRate), new Period(3, TimeUnit.MONTHS), fixingDays, calendar,
-                BusinessDayConvention.MODIFIED_FOLLOWING, true, depositDayCounter));
-        final RateHelper d6m = (new DepositRateHelper(new Handle<Quote>(d6mRate), new Period(6, TimeUnit.MONTHS), fixingDays, calendar,
-                BusinessDayConvention.MODIFIED_FOLLOWING, true, depositDayCounter));
-        final RateHelper d9m = (new DepositRateHelper(new Handle<Quote>(d9mRate), new Period(9, TimeUnit.MONTHS), fixingDays, calendar,
-                BusinessDayConvention.MODIFIED_FOLLOWING, true, depositDayCounter));
-        final RateHelper d1y = (new DepositRateHelper(new Handle<Quote>(d1yRate), new Period(1, TimeUnit.YEARS), fixingDays, calendar,
-                BusinessDayConvention.MODIFIED_FOLLOWING, true, depositDayCounter));
+        final RateHelper d1w = (new DepositRateHelper(new Handle<Quote>(d1wRate), new Period(1, TimeUnit.Weeks), fixingDays, calendar,
+                BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));
+        final RateHelper d1m = (new DepositRateHelper(new Handle<Quote>(d1mRate), new Period(1, TimeUnit.Months), fixingDays, calendar,
+                BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));
+        final RateHelper d3m = (new DepositRateHelper(new Handle<Quote>(d3mRate), new Period(3, TimeUnit.Months), fixingDays, calendar,
+                BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));
+        final RateHelper d6m = (new DepositRateHelper(new Handle<Quote>(d6mRate), new Period(6, TimeUnit.Months), fixingDays, calendar,
+                BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));
+        final RateHelper d9m = (new DepositRateHelper(new Handle<Quote>(d9mRate), new Period(9, TimeUnit.Months), fixingDays, calendar,
+                BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));
+        final RateHelper d1y = (new DepositRateHelper(new Handle<Quote>(d1yRate), new Period(1, TimeUnit.Years), fixingDays, calendar,
+                BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));
 
         // setup swaps
-        final Frequency swFixedLegFrequency = Frequency.ANNUAL;
-        final BusinessDayConvention swFixedLegConvention = BusinessDayConvention.UNADJUSTED;
+        final Frequency swFixedLegFrequency = Frequency.Annual;
+        final BusinessDayConvention swFixedLegConvention = BusinessDayConvention.Unadjusted;
         final DayCounter swFixedLegDayCounter = Thirty360.getDayCounter(Convention.EUROPEAN);
 
         // TODO and FIXME: not sure whether the class stuff works properly
         final IborIndex swFloatingLegIndex = Euribor.getEuribor6M(new Handle<YieldTermStructure>(YieldTermStructure.class));
 
-        final Period forwardStart = new Period(1, TimeUnit.DAYS);
+        final Period forwardStart = new Period(1, TimeUnit.Days);
 
         // RateHelper s2y = (new SwapRateHelper(
         // new Handle<Quote>(s2yRate), new Period(2, TimeUnit.YEARS),

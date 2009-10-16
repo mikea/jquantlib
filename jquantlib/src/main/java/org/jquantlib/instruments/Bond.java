@@ -296,7 +296,7 @@ public abstract class Bond extends Instrument {
         this.paymentDayCounter = paymentDayCounter;
         this.paymentConvention = paymentConvention;
         this.discountCurve = discountCurve;
-        this.frequency = Frequency.NO_FREQUENCY;
+        this.frequency = Frequency.NoFrequency;
 
         final Date evaluationDate = new Settings().evaluationDate();
 
@@ -469,7 +469,7 @@ public abstract class Bond extends Instrument {
         final Date d = (date.isNull()) ? new Settings().evaluationDate() : date;
 
         // usually, the settlement is at T+n...
-        final Date settlement = calendar_.advance(d, settlementDays_, TimeUnit.DAYS);
+        final Date settlement = calendar_.advance(d, settlementDays_, TimeUnit.Days);
         // ...but the bond won't be traded until the issue date (if given.)
 
 
@@ -1005,8 +1005,8 @@ public abstract class Bond extends Instrument {
             /* @Real */final double faceAmount, final Leg cashflows,
             /* @Rate */final double yield, final DayCounter dayCounter,
             final Compounding compounding, Frequency frequency, final Date settlement) {
-        if (frequency == Frequency.NO_FREQUENCY || frequency == Frequency.ONCE) {
-            frequency = Frequency.ANNUAL;
+        if (frequency == Frequency.NoFrequency || frequency == Frequency.Once) {
+            frequency = Frequency.Annual;
         }
 
         final InterestRate y = new InterestRate(yield, dayCounter, compounding,
@@ -1035,7 +1035,7 @@ public abstract class Bond extends Instrument {
                         // if (coupon)
                         lastDate = ((Coupon) coupon).accrualStartDate();
                     } else {
-                        lastDate = couponDate.sub(new Period(1, TimeUnit.YEARS));
+                        lastDate = couponDate.sub(new Period(1, TimeUnit.Years));
                     }
                 }
                 discount *= y.discountFactor(settlement, couponDate, lastDate,
@@ -1096,7 +1096,7 @@ public abstract class Bond extends Instrument {
             final Frequency freq, final Date settlement,
             final Handle<YieldTermStructure> discountCurve) {
 
-        assert(freq!=Frequency.NO_FREQUENCY && freq != Frequency.ONCE):"invalid frequency:" + freq.toString();
+        assert(freq!=Frequency.NoFrequency && freq != Frequency.Once):"invalid frequency:" + freq.toString();
 
         final Handle<Quote> zSpreadQuoteHandle = new Handle<Quote>(new SimpleQuote(
                 zSpread));

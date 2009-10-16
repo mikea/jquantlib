@@ -24,6 +24,7 @@ package org.jquantlib.testsuite.calendars;
 import junit.framework.Assert;
 
 import org.jquantlib.QL;
+import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
@@ -51,7 +52,7 @@ public class CalendarTest {
         final Date d = new Date(11, Month.OCTOBER, 2009);
         final Date dCopy = d.clone();
         Assert.assertEquals(dCopy, d);
-        final Date advancedDate = nullCalendar.advance(d, new Period(3, TimeUnit.MONTHS));
+        final Date advancedDate = nullCalendar.advance(d, new Period(3, TimeUnit.Months));
         Assert.assertEquals(dCopy, d);
         Assert.assertFalse(advancedDate.equals(d));
     }
@@ -63,15 +64,64 @@ public class CalendarTest {
     @Ignore
     @Test
     public void testEndOfMonth() {
+
+        final class Entry {
+            public Date date;
+            public boolean expected;
+
+            private Entry (final Date d, final boolean e) {
+                date = d;
+                expected = e;
+            }
+        }
+
+        final Entry[] entries = {
+                new Entry( new Date(28, 5, 2009), false),
+                new Entry( new Date(29, 5, 2009), false),
+                new Entry( new Date(30, 5, 2009), false),
+                new Entry( new Date(31, 5, 2009), false),
+                new Entry( new Date( 1, 6, 2009), false),
+                };
+
         final Calendar unitedStatesCalendar = new UnitedStates(UnitedStates.Market.NYSE);
-        final boolean expected[] = new boolean[] { false, true, false, false, false };
-        for (int days=0; days<expected.length; days++) {
-            final Date date = new Date(28, 5, 2009);
-            date.addAssign(days);
-            final boolean result = unitedStatesCalendar.isEndOfMonth(date);
-            System.out.printf("%s is the last business day? %b\n", date.isoDate().toString(), result);
-            Assert.assertTrue(result==expected[days]);
+        for (final Entry entry : entries) {
+            final boolean result = unitedStatesCalendar.isEndOfMonth(entry.date);
+            System.out.printf("%s is the last business day? %b\n", entry.date.isoDate(), result);
+            Assert.assertTrue(result==entry.expected);
         }
     }
+
+
+    @Ignore
+    @Test
+    public void testAdjust_ModifiedFollowing() {
+
+        final class Entry {
+            public Date date;
+            public Date expected;
+
+            private Entry (final Date d, final Date e) {
+                date = d;
+                expected = e;
+            }
+        }
+
+        final Entry[] entries = {
+                new Entry( new Date(28, 5, 2009), new Date(29, 5, 2009) ),
+                new Entry( new Date(29, 5, 2009), new Date(30, 5, 2009) ),
+                new Entry( new Date(30, 5, 2009), new Date(29, 5, 2009) ),
+                new Entry( new Date(31, 5, 2009), new Date( 1, 6, 2009) ),
+                new Entry( new Date( 1, 6, 2009), new Date( 2, 6, 2009) ),
+            };
+
+        final Calendar unitedStatesCalendar = new UnitedStates(UnitedStates.Market.NYSE);
+        for (final Entry entry : entries) {
+            final Date result = unitedStatesCalendar.adjust(entry.date, BusinessDayConvention.ModifiedFollowing);
+            System.out.printf("Next business day after %s is %s\n", entry.date.isoDate(), result.isoDate());
+            Assert.assertTrue(result.equals(entry.expected));
+        }
+    }
+
+
 
 }

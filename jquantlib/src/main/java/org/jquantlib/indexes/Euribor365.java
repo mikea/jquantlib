@@ -35,72 +35,72 @@ public class Euribor365 extends IborIndex {
                 euriborEOM(tenor),
                 Actual365Fixed.getDayCounter(),
                 h);
-        QL.require(this.tenor().units() != TimeUnit.DAYS , "for daily tenors dedicated DailyTenor constructor must be used"); // QA:[RG]::verified // TODO: message
+        QL.require(this.tenor().units() != TimeUnit.Days , "for daily tenors dedicated DailyTenor constructor must be used"); // QA:[RG]::verified // TODO: message
     }
 
 
     public static Euribor365 getEuribor365_1W(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(1, TimeUnit.WEEKS), h);
+        return new Euribor365(new Period(1, TimeUnit.Weeks), h);
     }
 
     public static Euribor365 getEuribor365_2W(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(2, TimeUnit.WEEKS), h);
+        return new Euribor365(new Period(2, TimeUnit.Weeks), h);
     }
 
     public static Euribor365 getEuribor365_3W(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(3, TimeUnit.WEEKS), h);
+        return new Euribor365(new Period(3, TimeUnit.Weeks), h);
     }
 
     public static Euribor365 getEuribor365_1M(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(1, TimeUnit.MONTHS), h);
+        return new Euribor365(new Period(1, TimeUnit.Months), h);
     }
 
     public static Euribor365 getEuribor365_2M(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(1, TimeUnit.MONTHS), h);
+        return new Euribor365(new Period(1, TimeUnit.Months), h);
     }
 
     public static Euribor365 getEuribor365_3M(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(3, TimeUnit.MONTHS), h);
+        return new Euribor365(new Period(3, TimeUnit.Months), h);
     }
 
     public static Euribor365 getEuribor365_4M(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(4, TimeUnit.MONTHS), h);
+        return new Euribor365(new Period(4, TimeUnit.Months), h);
     }
 
     public static Euribor365 getEuribor365_5M(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(5, TimeUnit.MONTHS), h);
+        return new Euribor365(new Period(5, TimeUnit.Months), h);
     }
 
     public static Euribor365 getEuribor365_6M(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(6, TimeUnit.MONTHS), h);
+        return new Euribor365(new Period(6, TimeUnit.Months), h);
     }
 
     public static Euribor365 getEuribor365_7M(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(7, TimeUnit.MONTHS), h);
+        return new Euribor365(new Period(7, TimeUnit.Months), h);
     }
 
     public static Euribor365 getEuribor365_8M(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(8, TimeUnit.MONTHS), h);
+        return new Euribor365(new Period(8, TimeUnit.Months), h);
     }
 
     public static Euribor365 getEuribor365_9M(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(9, TimeUnit.MONTHS), h);
+        return new Euribor365(new Period(9, TimeUnit.Months), h);
     }
 
     public static Euribor365 getEuribor365_10M(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(10, TimeUnit.MONTHS), h);
+        return new Euribor365(new Period(10, TimeUnit.Months), h);
     }
 
     public static Euribor365 getEuribor365_11M(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(11, TimeUnit.MONTHS), h);
+        return new Euribor365(new Period(11, TimeUnit.Months), h);
     }
 
     public static Euribor365 getEuribor1Y(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(1, TimeUnit.YEARS), h);
+        return new Euribor365(new Period(1, TimeUnit.Years), h);
     }
 
     public static Euribor365 getEuribor365_SW(final Handle<YieldTermStructure> h) {
-        return new Euribor365(new Period(1, TimeUnit.WEEKS), h);
+        return new Euribor365(new Period(1, TimeUnit.Weeks), h);
     }
 
 }

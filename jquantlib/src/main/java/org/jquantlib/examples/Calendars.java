@@ -110,7 +110,7 @@ public class Calendars {
         }
 
         // Advance the first holiday date using calendars's advance(date) API and get the nexBusinessDay
-        final Date nextBusinessDay = unitedStatesCalendar.advance(firstHolidayDate, new Period(1, TimeUnit.DAYS));
+        final Date nextBusinessDay = unitedStatesCalendar.advance(firstHolidayDate, new Period(1, TimeUnit.Days));
         if (unitedStatesCalendar.isBusinessDay(nextBusinessDay)) {
             System.out.println("NextBusinessDayFromFirstHolidayFromToday = "+ nextBusinessDay + " is a business date");
         }
@@ -118,65 +118,65 @@ public class Calendars {
         // Adjust todaysDate using different businessDayConventions
 
         // Using FOLLOWING as a business day convention
-        final Date nextFollowingBusinessDay = unitedStatesCalendar.adjust(dateToday,BusinessDayConvention.FOLLOWING);
+        final Date nextFollowingBusinessDay = unitedStatesCalendar.adjust(dateToday,BusinessDayConvention.Following);
         if (unitedStatesCalendar.isBusinessDay(nextFollowingBusinessDay)) {
             System. out.println("NextFollowingBusinessDate = "+ nextFollowingBusinessDay+ " from today is a business date");
         }
 
         // Using MODIFIED_FOLLOWING as a business day convention
-        final Date nextModified_FollowingBusinessDay = unitedStatesCalendar.adjust(dateToday, BusinessDayConvention.MODIFIED_FOLLOWING);
+        final Date nextModified_FollowingBusinessDay = unitedStatesCalendar.adjust(dateToday, BusinessDayConvention.ModifiedFollowing);
         if (unitedStatesCalendar.isBusinessDay(nextModified_FollowingBusinessDay)) {
             System.out.println("NextModified_FollowingBusinessDate = "+ nextModified_FollowingBusinessDay+ " from today is a business date");
         }
 
         // Using PRECEDING as a business day convention
-        final Date nextPrecidingBusinessDay = unitedStatesCalendar.adjust(dateToday,BusinessDayConvention.PRECEDING);
+        final Date nextPrecidingBusinessDay = unitedStatesCalendar.adjust(dateToday,BusinessDayConvention.Preceding);
         if (unitedStatesCalendar.isBusinessDay(nextPrecidingBusinessDay)) {
             System.out.println("NextPrecidingBusinessDay = "+ nextPrecidingBusinessDay+ " from today is a business date");
         }
 
         // Using MODIFIED_PRECEDING as a business day convention
-        final Date nextModified_PrecidingBusinessDay = unitedStatesCalendar.adjust(dateToday, BusinessDayConvention.MODIFIED_PRECEDING);
+        final Date nextModified_PrecidingBusinessDay = unitedStatesCalendar.adjust(dateToday, BusinessDayConvention.ModifiedPreceding);
         if (unitedStatesCalendar.isBusinessDay(nextModified_PrecidingBusinessDay)) {
             System.out.println("NextModified_PrecidingBusinessDay = "+ nextModified_PrecidingBusinessDay+ " from today is a business date");
         }
 
         // Using UNADJUSTED as a business day convention
-        final Date nextUnadjustedBusinessDay = unitedStatesCalendar.adjust(dateToday,BusinessDayConvention.UNADJUSTED);
+        final Date nextUnadjustedBusinessDay = unitedStatesCalendar.adjust(dateToday,BusinessDayConvention.Unadjusted);
         if (unitedStatesCalendar.isBusinessDay(nextModified_PrecidingBusinessDay)) {
             System.out.println("NextUnadjustedBusinessDay = "+ nextUnadjustedBusinessDay+ " from today is a business date and is same as today");
         }
 
         // Advance the current date using calendars's advance(date,n,unit) where n = 10 and unit=DAYS
-        Date advancedDate = unitedStatesCalendar.advance(dateToday, 10,TimeUnit.DAYS);
+        Date advancedDate = unitedStatesCalendar.advance(dateToday, 10,TimeUnit.Days);
         System.out.println("Next business date when today's date is advanced by 10 days = "+ advancedDate);
 
         // Advance the current date using calendars's advance(date,n,unit) where n = 10 and unit=WEEKS
-        advancedDate = unitedStatesCalendar.advance(dateToday, 10, TimeUnit.WEEKS);
+        advancedDate = unitedStatesCalendar.advance(dateToday, 10, TimeUnit.Weeks);
         System.out.println("Next business date when today's date is advanced by 10 weeks = "+ advancedDate);
 
         // Advance the current date using calendars's advance(date,n,unit) where n = 10 and unit=MONTHS
-        advancedDate = unitedStatesCalendar.advance(dateToday, 10, TimeUnit.MONTHS);
+        advancedDate = unitedStatesCalendar.advance(dateToday, 10, TimeUnit.Months);
         System.out.println("Next business date when today's date is advanced by 10 months = "+ advancedDate);
 
         // Advance the current date using calendars's advance(date,n,unit) where n = 10 and unit=YEARS
-        advancedDate = unitedStatesCalendar.advance(dateToday, 10, TimeUnit.YEARS);
+        advancedDate = unitedStatesCalendar.advance(dateToday, 10, TimeUnit.Years);
         System.out.println("Next business date when today's date is advanced by 10 years = "+ advancedDate);
 
         // Advance the current date using calendars's advance(date,period-->lenth=1,Unit=Days,BusinessDayConvention=FOLLOWING)
-        advancedDate = unitedStatesCalendar.advance(dateToday,new Period(1, TimeUnit.DAYS), BusinessDayConvention.FOLLOWING);
+        advancedDate = unitedStatesCalendar.advance(dateToday,new Period(1, TimeUnit.Days), BusinessDayConvention.Following);
         System.out.println("Next business date when today's date is advanced 1 day = "+ advancedDate);
 
         // Advance the current date using calendars's advance(date,period-->lenth=1,Unit=WEEKS,BusinessDayConvention=MODIFIED_FOLLOWING)
-        advancedDate = unitedStatesCalendar.advance(dateToday,new Period(1, TimeUnit.WEEKS),BusinessDayConvention.MODIFIED_FOLLOWING);
+        advancedDate = unitedStatesCalendar.advance(dateToday,new Period(1, TimeUnit.Weeks),BusinessDayConvention.ModifiedFollowing);
         System.out.println("Next business date when today's date is advanced 1 week = "+ advancedDate);
 
         // Advance the current date using calendars's advance(date,period-->lenth=1,Unit=MONTHS,BusinessDayConvention=MODIFIED_PRECEDING)
-        advancedDate = unitedStatesCalendar.advance(dateToday,new Period(1, TimeUnit.MONTHS),BusinessDayConvention.MODIFIED_PRECEDING);
+        advancedDate = unitedStatesCalendar.advance(dateToday,new Period(1, TimeUnit.Months),BusinessDayConvention.ModifiedPreceding);
         System.out.println("Next business date when today's date is advanced 1 month = "+ advancedDate);
 
         // Advance the current date using calendars's advance(date,period-->lenth=1,Unit=YEARS,BusinessDayConvention=PRECEDING)
-        advancedDate = unitedStatesCalendar.advance(dateToday,new Period(1, TimeUnit.YEARS), BusinessDayConvention.PRECEDING);
+        advancedDate = unitedStatesCalendar.advance(dateToday,new Period(1, TimeUnit.Years), BusinessDayConvention.Preceding);
         System.out.println("Next business date when today's date is advanced 1 year = "+ advancedDate);
 
         //<==================Joining Calendars===============================>

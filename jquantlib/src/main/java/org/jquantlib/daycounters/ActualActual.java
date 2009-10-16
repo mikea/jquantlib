@@ -217,7 +217,7 @@ public class ActualActual extends AbstractDayCounter {
 
                     // the last notional payment date
                     final Date previousRef = refPeriodStart.add(new Period(
-                            -months, TimeUnit.MONTHS));
+                            -months, TimeUnit.Months));
                     if (d2.gt(refPeriodStart)) {
                         return yearFraction(d1, refPeriodStart, previousRef,
                                 refPeriodStart)
@@ -246,8 +246,8 @@ public class ActualActual extends AbstractDayCounter {
                 int i = 0;
                 Date newRefStart, newRefEnd;
                 do {
-                    newRefStart = refPeriodEnd.add(new Period(months * i, TimeUnit.MONTHS));
-                    newRefEnd = refPeriodEnd.add(new Period(months * (i + 1), TimeUnit.MONTHS));
+                    newRefStart = refPeriodEnd.add(new Period(months * i, TimeUnit.Months));
+                    newRefEnd = refPeriodEnd.add(new Period(months * (i + 1), TimeUnit.Months));
                     if (d2.lt(newRefEnd)) {
                         break;
                     } else {

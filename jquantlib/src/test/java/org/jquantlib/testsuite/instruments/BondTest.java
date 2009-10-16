@@ -110,14 +110,14 @@ public class BondTest {
         final int lengths[] = { 3, 5, 10, 15, 20 };
         /* @Natural */final int settlementDays = 3;
         /* @Real */final double coupons[] = { 0.02, 0.05, 0.08 };
-        final Frequency frequencies[] = { Frequency.SEMI_ANNUAL, Frequency.ANNUAL };
+        final Frequency frequencies[] = { Frequency.Semiannual, Frequency.Annual };
         final DayCounter bondDayCount = Thirty360.getDayCounter();
-        final BusinessDayConvention accrualConvention = BusinessDayConvention.UNADJUSTED;
-        final BusinessDayConvention paymentConvention = BusinessDayConvention.MODIFIED_FOLLOWING;
+        final BusinessDayConvention accrualConvention = BusinessDayConvention.Unadjusted;
+        final BusinessDayConvention paymentConvention = BusinessDayConvention.ModifiedFollowing;
         /* @Real */final double redemption = 100.0;
 
         /* @Real */final double yields[] = { 0.03, 0.04, 0.05, 0.06, 0.07 };
-        final Compounding compounding[] = { Compounding.COMPOUNDED, Compounding.CONTINUOUS };
+        final Compounding compounding[] = { Compounding.Compounded, Compounding.Continuous };
 
         for (/* @Size */int i = 0; i < (issueMonths).length; i++) {
             for (/* @Size */int j = 0; j < (lengths).length; j++) {
@@ -125,9 +125,9 @@ public class BondTest {
                     for (/* @Size */int l = 0; l < (frequencies).length; l++) {
                         for (/* @Size */int n = 0; n < (compounding).length; n++) {
                             System.out.println("ok");
-                            final Date dated = vars.calendar.advance(vars.today, issueMonths[i], TimeUnit.MONTHS);
+                            final Date dated = vars.calendar.advance(vars.today, issueMonths[i], TimeUnit.Months);
                             final Date issue = dated;
-                            final Date maturity = vars.calendar.advance(issue, lengths[j], TimeUnit.YEARS);
+                            final Date maturity = vars.calendar.advance(issue, lengths[j], TimeUnit.Years);
 
                             final Schedule sch = new Schedule(dated,
                                     maturity, new
@@ -157,7 +157,7 @@ public class BondTest {
                                         QL.error("yield recalculation failed:\n" + "    issue:     " + issue + "\n"
                                                 + "    maturity:  " + maturity + "\n" + "    coupon:    " + coupons[k] + "\n"
                                                 + "    frequency: " + frequencies[l] + "\n\n" + "    yield:  " + yields[m] + " "
-                                                + (compounding[n] == Compounding.CONTINUOUS ? "compounded" : "continuous") + "\n"
+                                                + (compounding[n] == Compounding.Continuous ? "compounded" : "continuous") + "\n"
                                                 + "    price:  " + price + "\n" + "    yield': " + (calculated) + "\n"
                                                 + "    price': " + price2);
                                     }

@@ -73,11 +73,11 @@ public class Schedule {
     //
 
     public Schedule(final List<Date> dates) {
-    	this(dates, new NullCalendar(), BusinessDayConvention.UNADJUSTED);
+    	this(dates, new NullCalendar(), BusinessDayConvention.Unadjusted);
     }
 
     public Schedule(final List<Date> dates, final Calendar calendar) {
-    	this(dates, calendar, BusinessDayConvention.UNADJUSTED);
+    	this(dates, calendar, BusinessDayConvention.Unadjusted);
     }
 
     public Schedule(final List<Date> dates, final Calendar calendar, final BusinessDayConvention convention) {
@@ -213,7 +213,7 @@ public class Schedule {
         switch (rule_) {
 
           case Zero:
-            tenor_ = new Period(0, TimeUnit.DAYS);
+            tenor_ = new Period(0, TimeUnit.Days);
             dates_.add(effectiveDate);
             dates_.add(terminationDate);
             isRegular_.add(new Boolean(true));
@@ -254,7 +254,7 @@ public class Schedule {
             }
 
             if (endOfMonth && calendar.isEndOfMonth(seed)) {
-                convention = BusinessDayConvention.PRECEDING;
+                convention = BusinessDayConvention.Preceding;
             }
 
             if (calendar.adjust(dates_.get(0),convention).ne(
@@ -315,7 +315,7 @@ public class Schedule {
             }
 
             if (endOfMonth && calendar.isEndOfMonth(seed)) {
-                convention = BusinessDayConvention.PRECEDING;
+                convention = BusinessDayConvention.Preceding;
             }
 
             if (calendar.adjust(dates_.get(dates_.size()-1),terminationDateConvention).ne(
@@ -355,7 +355,7 @@ public class Schedule {
         // specifications, unless otherwise specified in the
         // confirmation of the deal or unless we're creating a CDS
         // schedule
-        if (terminationDateConvention != BusinessDayConvention.UNADJUSTED
+        if (terminationDateConvention != BusinessDayConvention.Unadjusted
             || rule_ == DateGeneration.Rule.Twentieth
             || rule_ == DateGeneration.Rule.TwentiethIMM) {
             dates_.set(dates_.size()-1, calendar.adjust(dates_.get(dates_.size()-1),
@@ -641,7 +641,7 @@ public class Schedule {
     private Date nextTwentieth(final Date d, final DateGeneration.Rule rule) {
         final Date result = new Date(20, d.month(), d.year());
         if (result.lt(d) ) {
-            result.addAssign(new Period(1, TimeUnit.MONTHS)); //result +=1*Months
+            result.addAssign(new Period(1, TimeUnit.Months)); //result +=1*Months
         }
         if (rule == DateGeneration.Rule.TwentiethIMM) {
             final Month m = result.month();
@@ -649,7 +649,7 @@ public class Schedule {
             if (mVal % 3 != 0) { // not a main IMM nmonth
                 final int skip = 3 - mVal % 3;
 //                result += skip*Months;
-            	result.addAssign(new Period(skip, TimeUnit.MONTHS));
+            	result.addAssign(new Period(skip, TimeUnit.Months));
             }
         }
         return result;

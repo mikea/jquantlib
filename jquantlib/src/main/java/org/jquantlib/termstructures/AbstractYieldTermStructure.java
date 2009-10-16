@@ -221,7 +221,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      */
     @Override
     public final InterestRate zeroRate(final Date d, final DayCounter resultDayCounter, final Compounding comp) {
-        return zeroRate(d, resultDayCounter, comp, Frequency.ANNUAL);
+        return zeroRate(d, resultDayCounter, comp, Frequency.Annual);
     }
 
     /* (non-Javadoc)
@@ -268,7 +268,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      */
     @Override
     public InterestRate forwardRate(final Date d1, final Date d2, final DayCounter resultDayCounter, final Compounding comp) {
-        return forwardRate(d1, d2, resultDayCounter, comp, Frequency.ANNUAL);
+        return forwardRate(d1, d2, resultDayCounter, comp, Frequency.Annual);
     }
 
     // FIXME: code review: is this method needed ???
@@ -312,7 +312,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      */
     @Override
     public InterestRate forwardRate(final /*@Time*/ double  t1, final /*@Time*/ double  t2, final Compounding comp) {
-        return forwardRate(t1, t2, comp, Frequency.ANNUAL);
+        return forwardRate(t1, t2, comp, Frequency.Annual);
     }
 
     /* (non-Javadoc)
@@ -406,7 +406,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
         final Date[] dates = new Date[tenor + 1];
         dates[0] = startDate;
         for (int i = 1; i <= tenor; i++) {
-            dates[i] = startDate.add(new Period(i, TimeUnit.YEARS));
+            dates[i] = startDate.add(new Period(i, TimeUnit.Years));
         }
         return parRate(dates, freq, extrapolate);
     }

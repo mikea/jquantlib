@@ -180,7 +180,7 @@ public class FloatingRateCoupon extends Coupon implements Observer {
         // if isInArrears_ fix at the end of period
         final Date refDate = isInArrears ? accrualEndDate : accrualStartDate;
         // FIXME: "isInArrears" : not specified in original implementation
-        return index_.fixingCalendar().advance(refDate, -fixingDays, TimeUnit.DAYS, BusinessDayConvention.PRECEDING, isInArrears);
+        return index_.fixingCalendar().advance(refDate, -fixingDays, TimeUnit.Days, BusinessDayConvention.Preceding, isInArrears);
     }
 
     public double gearing()  {

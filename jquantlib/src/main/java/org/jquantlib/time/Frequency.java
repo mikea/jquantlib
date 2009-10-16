@@ -49,17 +49,19 @@ import org.jquantlib.lang.exceptions.LibraryException;
  */
 // TODO: document methods
 public enum Frequency {
-    /** null frequency */		NO_FREQUENCY     (-1),
-    /** only once */			ONCE			 (0),
-    /** once a year */			ANNUAL			 (1),
-    /** twice a year */			SEMI_ANNUAL		 (2),
-    /** every fourth month */	EVERY_FOURTH_DAY (3),
-    /** every third month */	QUARTERLY		 (4),
-    /** every second month */	BI_MONTHLY		 (6),
-    /** once a month */			MONTHLY			 (12),
-    /** every second week */	BI_WEEKLY		 (26),
-    /** once a week */			WEEKLY			 (52),
-    /** once a day */			DAILY			 (365);
+    /** null frequency */		        NoFrequency      (-1),
+    /** only once */			        Once			 (0),
+    /** once a year */			        Annual			 (1),
+    /** twice a year */			        Semiannual		 (2),
+    /** every fourth month */	        EveryFourthMonth (3),
+    /** every third month */	        Quarterly		 (4),
+    /** every second month */	        Bimonthly		 (6),
+    /** once a month */			        Monthly			 (12),
+    /** every fourth week */            EveryFourthWeek  (13),
+    /** every second week */	        Biweekly		 (26),
+    /** once a week */			        Weekly			 (52),
+    /** once a day */			        Daily			 (365),
+    /** some other unknown frequency */ OtherFrequency   (999);
 
     private final int enumValue;
 
@@ -70,29 +72,33 @@ public enum Frequency {
     static public Frequency valueOf(final int value) {
         switch (value) {
         case -1:
-            return Frequency.NO_FREQUENCY;
+            return Frequency.NoFrequency;
         case 0:
-            return Frequency.ONCE;
+            return Frequency.Once;
         case 1:
-            return Frequency.ANNUAL;
+            return Frequency.Annual;
         case 2:
-            return Frequency.SEMI_ANNUAL;
+            return Frequency.Semiannual;
         case 3:
-            return Frequency.EVERY_FOURTH_DAY;
+            return Frequency.EveryFourthMonth;
         case 4:
-            return Frequency.QUARTERLY;
+            return Frequency.Quarterly;
         case 6:
-            return Frequency.BI_MONTHLY;
+            return Frequency.Bimonthly;
         case 12:
-            return Frequency.MONTHLY;
+            return Frequency.Monthly;
+        case 13:
+            return Frequency.EveryFourthWeek;
         case 26:
-            return Frequency.BI_WEEKLY;
+            return Frequency.Biweekly;
         case 52:
-            return Frequency.WEEKLY;
+            return Frequency.Weekly;
         case 365:
-            return Frequency.DAILY;
+            return Frequency.Daily;
+        case 999:
+            return Frequency.OtherFrequency;
         default:
-            throw new LibraryException("value must be one of -1,0,1,2,3,4,6,12,26,52,365"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("value must be one of -1,0,1,2,3,4,6,12,13,26,52,365,999"); // QA:[RG]::verified // TODO: message
         }
     }
 

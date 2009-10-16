@@ -523,7 +523,7 @@ public class AmericanOptionTest {
             for (final double strike : strikes) {
                 for (final int year : years) {
 
-                    final Date exDate = today.add(new Period(year, TimeUnit.YEARS));
+                    final Date exDate = today.add(new Period(year, TimeUnit.Years));
                     final Exercise exercise = new AmericanExercise(today, exDate);
                     final StrikedTypePayoff payoff = new PlainVanillaPayoff(type, strike);
 

@@ -221,7 +221,7 @@ public class TermStructuresTest {
         //        final Date today = calendar.advance(Date.todaysDate());
         final Date today = new Settings().evaluationDate();
         final Date newToday = today.add(Period.ONE_YEAR_FORWARD.times(3));
-        final Date newSettlement = new Target().advance(newToday, settlementDays, TimeUnit.DAYS);
+        final Date newSettlement = new Target().advance(newToday, settlementDays, TimeUnit.Days);
 
         // final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>() {};
         final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(YieldTermStructure.class);

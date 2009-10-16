@@ -338,7 +338,7 @@ public class CashFlows {
     public double irr(final Leg leg, final double marketPrice, final DayCounter dayCounter, final Compounding compounding) {
         return irr(
                 leg, marketPrice, dayCounter, compounding,
-                Frequency.NO_FREQUENCY, new Date(),
+                Frequency.NoFrequency, new Date(),
                 1.0e-10, 10000, 0.05);
     }
 
@@ -408,16 +408,16 @@ public class CashFlows {
 
                 P += c * B;
                 switch (rate.compounding()) {
-                case SIMPLE:
+                case Simple:
                     d2Pdy2 += c * 2.0 * B * B * B * t * t;
                     break;
-                case COMPOUNDED:
+                case Compounded:
                     d2Pdy2 += c * B * t * (N * t + 1) / (N * (1 + y / N) * (1 + y / N));
                     break;
-                case CONTINUOUS:
+                case Continuous:
                     d2Pdy2 += c * B * t * t;
                     break;
-                case SIMPLE_THEN_COMPOUNDED:
+                case SimpleThenCompounded:
                 default:
                     throw new LibraryException(unsupported_compounding_type); // QA:[RG]::verified
                 }
@@ -480,16 +480,16 @@ public class CashFlows {
 
                 P += c * B;
                 switch (rate.compounding()) {
-                case SIMPLE:
+                case Simple:
                     dPdy -= c * B * B * t;
                     break;
-                case COMPOUNDED:
+                case Compounded:
                     dPdy -= c * B * t / (1 + y / N);
                     break;
-                case CONTINUOUS:
+                case Continuous:
                     dPdy -= c * B * t;
                     break;
-                case SIMPLE_THEN_COMPOUNDED:
+                case SimpleThenCompounded:
                 default:
                     throw new LibraryException(unsupported_compounding_type); // QA:[RG]::verified
                 }
@@ -507,7 +507,7 @@ public class CashFlows {
 
         final double y = rate.rate();
         final int N = rate.frequency().toInteger();
-        QL.require(rate.compounding().equals(Compounding.COMPOUNDED), compounded_rate_required);
+        QL.require(rate.compounding().equals(Compounding.Compounded), compounded_rate_required);
         QL.require(N>=1, unsupported_frequency);
         return (1 + y / N) * modifiedDuration(cashflows, rate, settlementDate);
     }

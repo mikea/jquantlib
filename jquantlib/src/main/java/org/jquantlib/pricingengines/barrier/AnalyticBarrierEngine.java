@@ -211,8 +211,8 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
     }
 
     private double /*@Rate*/  riskFreeRate()  {
-        final InterestRate rate =  this.process.riskFreeRate().currentLink().zeroRate(residualTime(), Compounding.CONTINUOUS,
-                Frequency.NO_FREQUENCY, false);
+        final InterestRate rate =  this.process.riskFreeRate().currentLink().zeroRate(residualTime(), Compounding.Continuous,
+                Frequency.NoFrequency, false);
         return rate.rate();
     }
 
@@ -222,7 +222,7 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
 
     private double /*@Rate*/  dividendYield()  {
         final InterestRate yield = this.process.dividendYield().currentLink().zeroRate(
-                residualTime(), Compounding.CONTINUOUS, Frequency.NO_FREQUENCY, false);
+                residualTime(), Compounding.Continuous, Frequency.NoFrequency, false);
         return yield.rate();
     }
 

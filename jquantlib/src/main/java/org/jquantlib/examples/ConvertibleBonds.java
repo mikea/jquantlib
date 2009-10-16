@@ -110,17 +110,17 @@ public class ConvertibleBonds {
         QL.info("Set the global evaluation date to the adjusted today's date: " + today.shortDate());
 
         //Set up settlement, exercise and issue dates
-        final Date settlementDate = calendar.advance(today, settlementDays, TimeUnit.DAYS);
+        final Date settlementDate = calendar.advance(today, settlementDays, TimeUnit.Days);
         QL.info("SettlementDate is: " + settlementDate.shortDate());
         QL.info("Check that we haven't messed up with references --> today's date is still: " + today.shortDate());
-        final Date exerciseDate = calendar.advance(settlementDate, length, TimeUnit.YEARS);
+        final Date exerciseDate = calendar.advance(settlementDate, length, TimeUnit.Years);
         QL.info("Excercise date is: " + exerciseDate.shortDate());
-        final Date issueDate = calendar.advance(exerciseDate, -length, TimeUnit.YEARS);
+        final Date issueDate = calendar.advance(exerciseDate, -length, TimeUnit.Years);
         QL.info("Issue date is: " + issueDate.shortDate());
 
         //Fix business day convention and compounding?? frequency
-        final BusinessDayConvention convention = BusinessDayConvention.MODIFIED_FOLLOWING;
-        final Frequency frequency = Frequency.ANNUAL;
+        final BusinessDayConvention convention = BusinessDayConvention.ModifiedFollowing;
+        final Frequency frequency = Frequency.Annual;
 
         final Schedule schedule = new Schedule(
                 issueDate, exerciseDate,
@@ -158,7 +158,7 @@ public class ConvertibleBonds {
         }
 
         // Assume dividends are paid every 6 months.
-        for (final Date d = today.add(new Period(6, TimeUnit.MONTHS)); d.lt(exerciseDate); d.addAssign(new Period(6, TimeUnit.MONTHS))) {
+        for (final Date d = today.add(new Period(6, TimeUnit.Months)); d.lt(exerciseDate); d.addAssign(new Period(6, TimeUnit.Months))) {
             dividends.add(new FixedDividend(1.0, d));
         }
 

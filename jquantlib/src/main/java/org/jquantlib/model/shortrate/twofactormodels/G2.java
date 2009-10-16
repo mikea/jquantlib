@@ -249,8 +249,8 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
 
             @Override
             public double /* @Real */value(final Array a, final double /* @Time */t) {
-                final double /* @Rate */forward = termStructure_.currentLink().forwardRate(t, t, Compounding.CONTINUOUS,
-                        Frequency.NO_FREQUENCY).rate();
+                final double /* @Rate */forward = termStructure_.currentLink().forwardRate(t, t, Compounding.Continuous,
+                        Frequency.NoFrequency).rate();
 
                 final double /* @Real */temp1 = sigma_ * (1.0 - Math.exp(-a_ * t)) / a_;
                 final double /* @Real */temp2 = eta_ * (1.0 - Math.exp(-b_ * t)) / b_;

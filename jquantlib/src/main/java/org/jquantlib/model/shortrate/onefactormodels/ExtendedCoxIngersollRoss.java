@@ -110,8 +110,8 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         }
         final double sigma2 = sigma() * sigma();
         final double h = Math.sqrt(k() * k() + 2 * sigma2);
-        final double r0 = termstructureConsistentModel.termStructure().currentLink().forwardRate(0.0, 0.0, Compounding.CONTINUOUS,
-                Frequency.NO_FREQUENCY).rate();
+        final double r0 = termstructureConsistentModel.termStructure().currentLink().forwardRate(0.0, 0.0, Compounding.Continuous,
+                Frequency.NoFrequency).rate();
         final double b = B(t, s);
 
         final double rho = 2.0 * h / (sigma2 * (Math.exp(h * t) - 1.0));
@@ -235,7 +235,7 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
             @Override
             public double value(final Array params, final double t) {
                 final double forwardRate = termStructure_.currentLink().forwardRate(
-                        t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+                        t, t, Compounding.Continuous, Frequency.NoFrequency).rate();
                 final double h = Math.sqrt(k_*k_ + 2.0 * sigma_ * sigma_);
                 final double expth = Math.exp(t*h);
                 final double temp = 2.0*h + (k_+h)*(expth - 1.0);

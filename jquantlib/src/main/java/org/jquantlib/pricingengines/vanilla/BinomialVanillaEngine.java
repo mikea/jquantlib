@@ -127,8 +127,8 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
         QL.require(s0 > 0.0 , "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         final double v = process.blackVolatility().currentLink().blackVol(arguments.exercise.lastDate(), s0);
         final Date maturityDate = arguments.exercise.lastDate();
-        final double r = process.riskFreeRate().currentLink().zeroRate(maturityDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
-        final double q = process.dividendYield().currentLink().zeroRate(maturityDate, divdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+        final double r = process.riskFreeRate().currentLink().zeroRate(maturityDate, rfdc, Compounding.Continuous, Frequency.NoFrequency).rate();
+        final double q = process.dividendYield().currentLink().zeroRate(maturityDate, divdc, Compounding.Continuous, Frequency.NoFrequency).rate();
         final Date referenceDate = process.riskFreeRate().currentLink().referenceDate();
 
         // binomial trees with constant coefficient

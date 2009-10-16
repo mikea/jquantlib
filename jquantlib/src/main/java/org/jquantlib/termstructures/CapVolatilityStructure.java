@@ -63,7 +63,7 @@ public abstract class CapVolatilityStructure extends AbstractTermStructure {
 
     // ! returns the volatility for a given cap/floor length and strike rate
     public double volatility(final Period optionTenor, final double strike, final boolean extrapolate) {
-        final Date exerciseDate = calendar().advance(referenceDate(), optionTenor, BusinessDayConvention.FOLLOWING); // FIXME: Original
+        final Date exerciseDate = calendar().advance(referenceDate(), optionTenor, BusinessDayConvention.Following); // FIXME: Original
         // C++ comment
         return volatility(exerciseDate, strike, extrapolate);
     }

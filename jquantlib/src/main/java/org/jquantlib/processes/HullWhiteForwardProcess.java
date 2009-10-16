@@ -63,8 +63,8 @@ public class HullWhiteForwardProcess extends ForwardMeasureProcess1D {
             final double a,
             final double sigma) {
         super();
-        this.process = new OrnsteinUhlenbeckProcess(a, sigma, h.currentLink().forwardRate(0.0, 0.0, Compounding.CONTINUOUS,
-                Frequency.NO_FREQUENCY).rate());
+        this.process = new OrnsteinUhlenbeckProcess(a, sigma, h.currentLink().forwardRate(0.0, 0.0, Compounding.Continuous,
+                Frequency.NoFrequency).rate());
         this.h = h;
         this.a = a;
         this.sigma = sigma;
@@ -86,7 +86,7 @@ public class HullWhiteForwardProcess extends ForwardMeasureProcess1D {
             final/* @Time */double t) /* @ReadOnly */{
         double alfa = a > Constants.QL_EPSILON ? (sigma / a) * (1 - Math.exp(-a * t)) : sigma * t;
         alfa *= 0.5 * alfa;
-        alfa += h.currentLink().forwardRate(t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+        alfa += h.currentLink().forwardRate(t, t, Compounding.Continuous, Frequency.NoFrequency).rate();
         return alfa;
     }
 
@@ -128,8 +128,8 @@ public class HullWhiteForwardProcess extends ForwardMeasureProcess1D {
             final double x) /* @ReadOnly */{
         double alpha_drift = sigma * sigma / (2 * a) * (1 - Math.exp(-2 * a * t));
         final double shift = 0.0001;
-        final double f = h.currentLink().forwardRate(t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
-        final double fup = h.currentLink().forwardRate(t + shift, t + shift, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+        final double f = h.currentLink().forwardRate(t, t, Compounding.Continuous, Frequency.NoFrequency).rate();
+        final double fup = h.currentLink().forwardRate(t + shift, t + shift, Compounding.Continuous, Frequency.NoFrequency).rate();
         final double f_prime = (fup - f) / shift;
         alpha_drift += a * f + f_prime;
         return process.drift(t, x) + alpha_drift - B(t, T_) * sigma * sigma;

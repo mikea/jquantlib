@@ -45,23 +45,23 @@ public class TestCalendarReferences {
     public void testCalendarAdvance() {
         final Calendar calendar = new Target();
         final Date today = new Date(20, Month.JUNE, 2008);
-        final Period thirtyYears = new Period(30, TimeUnit.YEARS);
+        final Period thirtyYears = new Period(30, TimeUnit.Years);
 
         // check advance should return different reference
-        Date nextDate = calendar.advance(today, new Period(1,TimeUnit.DAYS));
+        Date nextDate = calendar.advance(today, new Period(1,TimeUnit.Days));
         assertNotSame(today, nextDate);
 
-        nextDate = calendar.advance(today, 10, TimeUnit.DAYS);
+        nextDate = calendar.advance(today, 10, TimeUnit.Days);
         assertNotSame(today, nextDate);
 
-        nextDate = calendar.advance(today, thirtyYears, BusinessDayConvention.FOLLOWING);
+        nextDate = calendar.advance(today, thirtyYears, BusinessDayConvention.Following);
         assertNotSame(today, nextDate);
 
 
-        nextDate = calendar.advance(today, thirtyYears, BusinessDayConvention.FOLLOWING, true);
+        nextDate = calendar.advance(today, thirtyYears, BusinessDayConvention.Following, true);
         assertNotSame(today, nextDate);
 
-        nextDate = calendar.advance(today, 10, TimeUnit.DAYS, BusinessDayConvention.FOLLOWING, true);
+        nextDate = calendar.advance(today, 10, TimeUnit.Days, BusinessDayConvention.Following, true);
         assertNotSame(today, nextDate);
     }
 
@@ -71,7 +71,7 @@ public class TestCalendarReferences {
         final Date today = new Date(20, Month.JUNE, 2008);
 
         // check advance should return same reference
-        final Date nextDate = calendar.adjust(today, BusinessDayConvention.FOLLOWING);
+        final Date nextDate = calendar.adjust(today, BusinessDayConvention.Following);
 //        assertSame(today, nextDate);
         assertEquals(today, nextDate);
     }

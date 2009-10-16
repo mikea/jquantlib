@@ -22,7 +22,7 @@ public class IborLeg {
     public IborLeg(final Schedule schedule, final IborIndex index) {
         schedule_ = (schedule);
         index_ = (index);
-        paymentAdjustment_ = BusinessDayConvention.FOLLOWING;
+        paymentAdjustment_ = BusinessDayConvention.Following;
         inArrears_ = (false);
         zeroPayments_ = (false);
     }

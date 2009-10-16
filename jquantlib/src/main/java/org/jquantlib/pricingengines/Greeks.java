@@ -56,8 +56,8 @@ public class Greeks {
 
     	/*@Real*/ final double u = p.stateVariable().currentLink().value();
     	//TODO update zeroRate so that we do not need to set frequency and extrapolate
-    	/*@Rate*/ final double r = p.riskFreeRate().currentLink().zeroRate(0.0, Compounding.CONTINUOUS, Frequency.ANNUAL, false).rate();
-    	/*@Rate*/ final double q = p.dividendYield().currentLink().zeroRate(0.0, Compounding.CONTINUOUS, Frequency.ANNUAL, false).rate();
+    	/*@Rate*/ final double r = p.riskFreeRate().currentLink().zeroRate(0.0, Compounding.Continuous, Frequency.Annual, false).rate();
+    	/*@Rate*/ final double q = p.dividendYield().currentLink().zeroRate(0.0, Compounding.Continuous, Frequency.Annual, false).rate();
     	/*@Volatility*/ final double v = p.localVolatility().currentLink().localVol(0.0, u);
 
     	return r*value -(r-q)*u*delta - 0.5*v*v*u*u*gamma;

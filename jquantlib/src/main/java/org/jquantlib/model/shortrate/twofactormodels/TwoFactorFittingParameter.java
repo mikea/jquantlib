@@ -69,7 +69,7 @@ public class TwoFactorFittingParameter extends TermStructureFittingParameter {
         public double /*@Real*/ value(final Array a, double /*@Time*/ t) {
             Double /*@Rate*/ forward =
                     //  termStructure_->forwardRate(t, t, Continuous,  NoFrequency);
-                    termStructure_.currentLink().forwardRate(t, t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+                    termStructure_.currentLink().forwardRate(t, t, Compounding.Continuous, Frequency.NoFrequency).rate();
 
             Double /*@Real*/ temp1 = sigma_ * (1.0 - Math.exp(-a_ * t)) / a_;
             Double /*@Real*/ temp2 = eta_ * (1.0 - Math.exp(-b_ * t)) / b_;

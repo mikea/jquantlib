@@ -637,11 +637,11 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     private int advance(final Date date, final int n, final TimeUnit units) {
         switch (units) {
-        case DAYS:
+        case Days:
             return (n+date.serialNumber);
-        case WEEKS:
+        case Weeks:
             return (7 * n + date.serialNumber);
-        case MONTHS: {
+        case Months: {
             int d = date.dayOfMonth();
             int m = date.month().value() + n;
             int y = date.year();
@@ -663,7 +663,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             //QL.debug("{}", result);
             return result;
         }
-        case YEARS: {
+        case Years: {
             int d = date.dayOfMonth();
             final int m = date.month().value();
             final int y = date.year() + n;

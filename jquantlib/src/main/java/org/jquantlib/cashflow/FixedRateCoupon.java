@@ -52,7 +52,7 @@ public class FixedRateCoupon extends Coupon {
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
         
-        this.rate = new InterestRate(rate, dayCounter, Compounding.SIMPLE);
+        this.rate = new InterestRate(rate, dayCounter, Compounding.Simple);
         this.dayCounter = dayCounter;
     }
 

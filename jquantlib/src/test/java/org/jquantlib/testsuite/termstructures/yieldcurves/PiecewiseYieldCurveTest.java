@@ -73,59 +73,59 @@ public class PiecewiseYieldCurveTest {
     }
 
     private final Datum[] depositData = {
-            new Datum(1, TimeUnit.WEEKS, 4.559),
-            new Datum(1, TimeUnit.MONTHS, 4.581),
-            new Datum(2, TimeUnit.MONTHS, 4.573),
-            new Datum(3, TimeUnit.MONTHS, 4.557),
-            new Datum(6, TimeUnit.MONTHS, 4.496),
-            new Datum(9, TimeUnit.MONTHS, 4.490) };
+            new Datum(1, TimeUnit.Weeks, 4.559),
+            new Datum(1, TimeUnit.Months, 4.581),
+            new Datum(2, TimeUnit.Months, 4.573),
+            new Datum(3, TimeUnit.Months, 4.557),
+            new Datum(6, TimeUnit.Months, 4.496),
+            new Datum(9, TimeUnit.Months, 4.490) };
 
     private final Datum[] fraData = {
-            new Datum(1, TimeUnit.MONTHS, 4.581),
-            new Datum(2, TimeUnit.MONTHS, 4.573),
-            new Datum(3, TimeUnit.MONTHS, 4.557),
-            new Datum(6, TimeUnit.MONTHS, 4.496),
-            new Datum(9, TimeUnit.MONTHS, 4.490) };
+            new Datum(1, TimeUnit.Months, 4.581),
+            new Datum(2, TimeUnit.Months, 4.573),
+            new Datum(3, TimeUnit.Months, 4.557),
+            new Datum(6, TimeUnit.Months, 4.496),
+            new Datum(9, TimeUnit.Months, 4.490) };
 
     private final Datum[] swapData = {
-            new Datum(1, TimeUnit.YEARS, 4.54),
-            new Datum(2, TimeUnit.YEARS, 4.63),
-            new Datum(3, TimeUnit.YEARS, 4.75),
-            new Datum(4, TimeUnit.YEARS, 4.86),
-            new Datum(5, TimeUnit.YEARS, 4.99),
-            new Datum(6, TimeUnit.YEARS, 5.11),
-            new Datum(7, TimeUnit.YEARS, 5.23),
-            new Datum(8, TimeUnit.YEARS, 5.33),
-            new Datum(9, TimeUnit.YEARS, 5.41),
-            new Datum(10, TimeUnit.YEARS, 5.47),
-            new Datum(12, TimeUnit.YEARS, 5.60),
-            new Datum(15, TimeUnit.YEARS, 5.75),
-            new Datum(20, TimeUnit.YEARS, 5.89),
-            new Datum(25, TimeUnit.YEARS, 5.95),
-            new Datum(30, TimeUnit.YEARS, 5.96) };
+            new Datum(1, TimeUnit.Years, 4.54),
+            new Datum(2, TimeUnit.Years, 4.63),
+            new Datum(3, TimeUnit.Years, 4.75),
+            new Datum(4, TimeUnit.Years, 4.86),
+            new Datum(5, TimeUnit.Years, 4.99),
+            new Datum(6, TimeUnit.Years, 5.11),
+            new Datum(7, TimeUnit.Years, 5.23),
+            new Datum(8, TimeUnit.Years, 5.33),
+            new Datum(9, TimeUnit.Years, 5.41),
+            new Datum(10, TimeUnit.Years, 5.47),
+            new Datum(12, TimeUnit.Years, 5.60),
+            new Datum(15, TimeUnit.Years, 5.75),
+            new Datum(20, TimeUnit.Years, 5.89),
+            new Datum(25, TimeUnit.Years, 5.95),
+            new Datum(30, TimeUnit.Years, 5.96) };
 
     private final BondDatum[] bondData = {
-            new BondDatum(6, TimeUnit.MONTHS, 5, Frequency.SEMI_ANNUAL, 4.75,
+            new BondDatum(6, TimeUnit.Months, 5, Frequency.Semiannual, 4.75,
                     101.320),
-                    new BondDatum(1, TimeUnit.YEARS, 3, Frequency.SEMI_ANNUAL, 2.75,
+                    new BondDatum(1, TimeUnit.Years, 3, Frequency.Semiannual, 2.75,
                             100.590),
-                            new BondDatum(2, TimeUnit.YEARS, 5, Frequency.SEMI_ANNUAL, 5.00,
+                            new BondDatum(2, TimeUnit.Years, 5, Frequency.Semiannual, 5.00,
                                     105.650),
-                                    new BondDatum(5, TimeUnit.YEARS, 11, Frequency.SEMI_ANNUAL, 5.50,
+                                    new BondDatum(5, TimeUnit.Years, 11, Frequency.Semiannual, 5.50,
                                             113.610),
-                                            new BondDatum(10, TimeUnit.YEARS, 11, Frequency.SEMI_ANNUAL, 3.75,
+                                            new BondDatum(10, TimeUnit.Years, 11, Frequency.Semiannual, 3.75,
                                                     104.070) };
 
-    private final Datum[] bmaData = { new Datum(1, TimeUnit.YEARS, 67.56),
-            new Datum(2, TimeUnit.YEARS, 68.00),
-            new Datum(3, TimeUnit.YEARS, 68.25),
-            new Datum(4, TimeUnit.YEARS, 68.50),
-            new Datum(5, TimeUnit.YEARS, 68.81),
-            new Datum(7, TimeUnit.YEARS, 69.50),
-            new Datum(10, TimeUnit.YEARS, 70.44),
-            new Datum(15, TimeUnit.YEARS, 71.69),
-            new Datum(20, TimeUnit.YEARS, 72.69),
-            new Datum(30, TimeUnit.YEARS, 73.81) };
+    private final Datum[] bmaData = { new Datum(1, TimeUnit.Years, 67.56),
+            new Datum(2, TimeUnit.Years, 68.00),
+            new Datum(3, TimeUnit.Years, 68.25),
+            new Datum(4, TimeUnit.Years, 68.50),
+            new Datum(5, TimeUnit.Years, 68.81),
+            new Datum(7, TimeUnit.Years, 69.50),
+            new Datum(10, TimeUnit.Years, 70.44),
+            new Datum(15, TimeUnit.Years, 71.69),
+            new Datum(20, TimeUnit.Years, 72.69),
+            new Datum(30, TimeUnit.Years, 73.81) };
 
 
     public PiecewiseYieldCurveTest() {

@@ -64,7 +64,7 @@ public class ZeroYield implements CurveTraits {
 
     @Override
     public double guess(YieldTermStructure c, Date d) {
-        return c.zeroRate(d, c.dayCounter(), Compounding.CONTINUOUS, Frequency.ANNUAL, true).rate();
+        return c.zeroRate(d, c.dayCounter(), Compounding.Continuous, Frequency.Annual, true).rate();
     }
 
     @Override

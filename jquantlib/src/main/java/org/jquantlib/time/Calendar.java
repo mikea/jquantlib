@@ -159,7 +159,7 @@ public class Calendar {
      * @return last business Date based on passed date
      */
     public Date endOfMonth(final Date d) /* @ReadOnly */{
-        return adjust(Date.endOfMonth(d), BusinessDayConvention.PRECEDING);
+        return adjust(Date.endOfMonth(d), BusinessDayConvention.Preceding);
     }
 
     /**
@@ -215,7 +215,7 @@ public class Calendar {
      * @note The input date is not modified
      */
     public Date adjust(final Date date) /* @ReadOnly */ {
-        return adjust(date, BusinessDayConvention.FOLLOWING);
+        return adjust(date, BusinessDayConvention.Following);
     }
 
 
@@ -226,25 +226,25 @@ public class Calendar {
      * @note The input date is not modified
      */
     public Date adjust(final Date d, final BusinessDayConvention c) /* @ReadOnly */ {
-        if (c == BusinessDayConvention.UNADJUSTED) {
+        if (c == BusinessDayConvention.Unadjusted) {
             return d.clone();
         }
         final Date d1 = d.clone();
-        if (c == BusinessDayConvention.FOLLOWING || c == BusinessDayConvention.MODIFIED_FOLLOWING) {
+        if (c == BusinessDayConvention.Following || c == BusinessDayConvention.ModifiedFollowing) {
             while (isHoliday(d1)) {
                 d1.inc();
             }
-            if (c == BusinessDayConvention.MODIFIED_FOLLOWING) {
+            if (c == BusinessDayConvention.ModifiedFollowing) {
                 if (d1.month() != d.month()) {
-                    return adjust(d, BusinessDayConvention.PRECEDING);
+                    return adjust(d, BusinessDayConvention.Preceding);
                 }
             }
-        } else if (c == BusinessDayConvention.PRECEDING || c == BusinessDayConvention.MODIFIED_PRECEDING) {
+        } else if (c == BusinessDayConvention.Preceding || c == BusinessDayConvention.ModifiedPreceding) {
             while (isHoliday(d1)) {
                 d1.dec();
             }
-            if (c == BusinessDayConvention.MODIFIED_PRECEDING && d1.month() != d.month()) {
-                return adjust(d, BusinessDayConvention.FOLLOWING);
+            if (c == BusinessDayConvention.ModifiedPreceding && d1.month() != d.month()) {
+                return adjust(d, BusinessDayConvention.Following);
             }
         } else {
             QL.error(UKNOWN_BUSINESS_DAY_CONVENTION);
@@ -291,7 +291,7 @@ public class Calendar {
             final Date date,
             final int n,
             final TimeUnit unit) /* @ReadOnly */ {
-        return advance(date, n, unit, BusinessDayConvention.FOLLOWING, false);
+        return advance(date, n, unit, BusinessDayConvention.Following, false);
     }
 
     /**
@@ -301,7 +301,7 @@ public class Calendar {
      * @note The input date is not modified.
      */
     public Date advance(final Date date, final Period period) /* @ReadOnly */ {
-        return advance(date, period, BusinessDayConvention.FOLLOWING, false);
+        return advance(date, period, BusinessDayConvention.Following, false);
     }
 
     /**
@@ -318,7 +318,7 @@ public class Calendar {
         QL.require(d != null && !d.isNull(), "null date");
         if (n == 0) {
             return adjust(d, c);
-        } else if (unit == TimeUnit.DAYS) {
+        } else if (unit == TimeUnit.Days) {
             final Date d1 = d.clone();
             if (n > 0) {
                 while (n > 0) {
@@ -338,7 +338,7 @@ public class Calendar {
                 }
             }
             return d1;
-        } else if (unit == TimeUnit.WEEKS) {
+        } else if (unit == TimeUnit.Weeks) {
             final Date d1 = d.add(new Period(n, unit));
             return adjust(d1, c);
         } else {

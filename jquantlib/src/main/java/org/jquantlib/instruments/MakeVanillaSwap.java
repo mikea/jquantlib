@@ -44,14 +44,14 @@ public class MakeVanillaSwap {
     public MakeVanillaSwap (
             final Period swapTenor,
             final IborIndex index) {
-        this(swapTenor, index, 0.0, new Period(0,TimeUnit.DAYS));
+        this(swapTenor, index, 0.0, new Period(0,TimeUnit.Days));
     }
 
     public MakeVanillaSwap (
             final Period swapTenor,
             final IborIndex index,
             final /*Rate*/ double fixedRate) {
-        this(swapTenor, index, fixedRate, new Period(0,TimeUnit.DAYS));
+        this(swapTenor, index, fixedRate, new Period(0,TimeUnit.Days));
     }
 
     public MakeVanillaSwap(
@@ -69,10 +69,10 @@ public class MakeVanillaSwap {
         floatCalendar_ = (index.fixingCalendar());
         type_ = (VanillaSwap.Type.Payer);
         nominal_ = (1.0);
-        fixedTenor_ = (new Period(1, TimeUnit.YEARS));
+        fixedTenor_ = (new Period(1, TimeUnit.Years));
         floatTenor_ = (index.tenor());
-        fixedConvention_ = (BusinessDayConvention.MODIFIED_FOLLOWING);
-        fixedTerminationDateConvention_ = (BusinessDayConvention.MODIFIED_FOLLOWING);
+        fixedConvention_ = (BusinessDayConvention.ModifiedFollowing);
+        fixedTerminationDateConvention_ = (BusinessDayConvention.ModifiedFollowing);
         floatConvention_ = (index.getConvention());
         floatTerminationDateConvention_ = (index.getConvention());
         fixedRule_ = (DateGeneration.Rule.Backward);

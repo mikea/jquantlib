@@ -69,7 +69,7 @@ public class ZeroSpreadedTermStructure extends ZeroYieldStructure  {
                     zeroRate.dayCounter(),
                     zeroRate.compounding(),
                     zeroRate.frequency());
-        return spreadedRate.equivalentRate(t, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+        return spreadedRate.equivalentRate(t, Compounding.Continuous, Frequency.NoFrequency).rate();
     }
 
 

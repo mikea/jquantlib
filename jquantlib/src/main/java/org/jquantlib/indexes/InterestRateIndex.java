@@ -161,7 +161,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
     @Override
     public String name() {
         final StringBuilder builder = new StringBuilder(familyName);
-        if (tenor.units() == TimeUnit.DAYS) {
+        if (tenor.units() == TimeUnit.Days) {
             if (fixingDays == 0) {
                 builder.append("ON");
             } else if (fixingDays == 2) {
@@ -177,7 +177,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
     }
 
     public Date fixingDate(final Date valueDate) {
-        final Date fixingDate = fixingCalendar().advance(valueDate, (fixingDays), TimeUnit.DAYS);
+        final Date fixingDate = fixingCalendar().advance(valueDate, (fixingDays), TimeUnit.Days);
         QL.ensure(isValidFixingDate(fixingDate) , "fixing date is not valid"); // TODO: message
         return fixingDate;
     }
@@ -214,7 +214,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
 
     public Date valueDate(final Date fixingDate) {
         QL.require(isValidFixingDate(fixingDate) , "Fixing date is not valid"); // QA:[RG]::verified // TODO: message
-        return fixingCalendar().advance(fixingDate, fixingDays, TimeUnit.DAYS);
+        return fixingCalendar().advance(fixingDate, fixingDays, TimeUnit.Days);
     }
 
 

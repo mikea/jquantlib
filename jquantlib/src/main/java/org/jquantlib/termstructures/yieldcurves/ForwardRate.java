@@ -64,7 +64,7 @@ public class ForwardRate implements CurveTraits {
 
     @Override
     public double guess(YieldTermStructure c, Date d) {
-        return c.forwardRate(d, d, c.dayCounter(), Compounding.CONTINUOUS, Frequency.ANNUAL, true).rate();
+        return c.forwardRate(d, d, c.dayCounter(), Compounding.Continuous, Frequency.Annual, true).rate();
     }
 
     @Override

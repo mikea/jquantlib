@@ -87,14 +87,14 @@ public class FlatForward extends AbstractYieldTermStructure {
             final Handle<? extends Quote> forward,
             final DayCounter dayCounter,
             final Compounding compounding) {
-        this(referenceDate, forward, dayCounter, compounding, Frequency.ANNUAL);
+        this(referenceDate, forward, dayCounter, compounding, Frequency.Annual);
     }
 
     public FlatForward(
             final Date referenceDate,
             final Handle<? extends Quote> forward,
             final DayCounter dayCounter) {
-        this(referenceDate, forward, dayCounter, Compounding.CONTINUOUS);
+        this(referenceDate, forward, dayCounter, Compounding.Continuous);
     }
 
     // --------------------------------------------
@@ -117,14 +117,14 @@ public class FlatForward extends AbstractYieldTermStructure {
             final /*@Rate*/ double forward,
             final DayCounter dayCounter,
             final Compounding compounding) {
-        this(referenceDate, forward, dayCounter, compounding, Frequency.ANNUAL);
+        this(referenceDate, forward, dayCounter, compounding, Frequency.Annual);
     }
 
     public FlatForward(
             final Date referenceDate,
             final /*@Rate*/ double forward,
             final DayCounter dayCounter) {
-        this(referenceDate, forward, dayCounter, Compounding.CONTINUOUS);
+        this(referenceDate, forward, dayCounter, Compounding.Continuous);
     }
 
     // --------------------------------------------
@@ -153,7 +153,7 @@ public class FlatForward extends AbstractYieldTermStructure {
             final Calendar calendar,
             final Handle<? extends Quote> forward,
             final DayCounter dayCounter) {
-        this(settlementDays, calendar, forward, dayCounter, Compounding.CONTINUOUS);
+        this(settlementDays, calendar, forward, dayCounter, Compounding.Continuous);
     }
 
     public FlatForward(
@@ -162,7 +162,7 @@ public class FlatForward extends AbstractYieldTermStructure {
             final Handle<? extends Quote> forward,
             final DayCounter dayCounter,
             final Compounding compounding) {
-        this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.ANNUAL);
+        this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.Annual);
     }
 
     // --------------------------------------------
@@ -186,7 +186,7 @@ public class FlatForward extends AbstractYieldTermStructure {
             final Calendar calendar,
             final /*@Rate*/ double forward,
             final DayCounter dayCounter) {
-        this(settlementDays, calendar, forward, dayCounter, Compounding.CONTINUOUS);
+        this(settlementDays, calendar, forward, dayCounter, Compounding.Continuous);
     }
 
     public FlatForward(
@@ -195,7 +195,7 @@ public class FlatForward extends AbstractYieldTermStructure {
             final /*@Rate*/ double forward,
             final DayCounter dayCounter,
             final Compounding compounding) {
-        this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.ANNUAL);
+        this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.Annual);
     }
 
     // --------------------------------------------

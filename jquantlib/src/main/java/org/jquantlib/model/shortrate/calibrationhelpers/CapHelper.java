@@ -76,7 +76,7 @@ public class CapHelper extends CalibrationHelper {
         final Schedule fixedSchedule = new Schedule(
                 startDate, maturity,
                 new Period(fixedLegFrequency), index.fixingCalendar(),
-                BusinessDayConvention.UNADJUSTED, BusinessDayConvention.UNADJUSTED,
+                BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted,
                 DateGeneration.Rule.Forward, false);
 
         //TODO: Code review :: incomplete code

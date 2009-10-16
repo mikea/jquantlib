@@ -162,9 +162,9 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 
         final Date exDate = arguments.exercise.lastDate();
         /*@Rate*/ final double dividendRate = process.dividendYield().currentLink().
-        zeroRate(exDate, divdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+        zeroRate(exDate, divdc, Compounding.Continuous, Frequency.NoFrequency).rate();
         /*@Rate*/ final double riskFreeRate = process.riskFreeRate().currentLink().
-        zeroRate(exDate, rfdc, Compounding.CONTINUOUS, Frequency.NO_FREQUENCY).rate();
+        zeroRate(exDate, rfdc, Compounding.Continuous, Frequency.NoFrequency).rate();
         /*@Rate*/ final double nu = riskFreeRate - dividendRate - 0.5*vola*vola;
 
         /*@Real*/ final double  s = process.stateVariable().currentLink().value();

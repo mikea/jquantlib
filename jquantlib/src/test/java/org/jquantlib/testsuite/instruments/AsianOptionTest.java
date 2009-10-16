@@ -208,8 +208,8 @@ public class AsianOptionTest {
                     final List<Date> fixingDates = new ArrayList<Date>();
 
                     final Date d = today.clone();
-                    final Period THREEMONTH = new Period(3, TimeUnit.MONTHS);
-                    d.addAssign(new Period(3, TimeUnit.MONTHS));
+                    final Period THREEMONTH = new Period(3, TimeUnit.Months);
+                    d.addAssign(new Period(3, TimeUnit.Months));
                     for (d.addAssign(THREEMONTH); d.le(maturity.lastDate()); d.addAssign(THREEMONTH)) {
                         fixingDates.add(d.clone());
                     }

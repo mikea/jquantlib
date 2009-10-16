@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -43,10 +43,10 @@ package org.jquantlib.time;
 
 /**
  * Business Day conventions
- * 
+ *
  * <p>These conventions specify the algorithm used to adjust a date in case
  * it is not a valid business day.
- *   
+ *
  * @author Richard Gomes
  */
 public enum BusinessDayConvention {
@@ -54,7 +54,8 @@ public enum BusinessDayConvention {
 	/**
 	 * Choose the first business day after the given holiday.
 	 */
-	FOLLOWING,
+	Following,
+
 	/**
 	 * Choose the first business day after
 	 * the given holiday unless it belongs
@@ -62,13 +63,14 @@ public enum BusinessDayConvention {
 	 * choose the first business day before
 	 * the holiday.
 	 */
-	MODIFIED_FOLLOWING,
+	ModifiedFollowing,
+
 	/**
 	 * Choose the first business day before
 	 * the given holiday.
 	 */
-	PRECEDING,
-	
+	Preceding,
+
 	// NON ISDA
 	/**
 	 * Choose the first business day before
@@ -77,10 +79,10 @@ public enum BusinessDayConvention {
 	 * choose the first business day after
 	 * the holiday.
 	 */
-	MODIFIED_PRECEDING,
-	
+	ModifiedPreceding,
+
 	/**
 	 * Do not adjust.
 	 */
-	UNADJUSTED;
+	Unadjusted;
 }

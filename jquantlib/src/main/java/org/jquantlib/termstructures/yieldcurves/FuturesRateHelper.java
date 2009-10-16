@@ -62,7 +62,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
         earliestDate = immDate;
         latestDate = calendar.advance(
                 immDate,
-                new Period(nMonths, TimeUnit.MONTHS),
+                new Period(nMonths, TimeUnit.Months),
                 convention,
                 endOfMonth);
         yearFraction = dayCounter.yearFraction(earliestDate, latestDate);
@@ -85,7 +85,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
         earliestDate = immDate;
         latestDate = calendar.advance(
                 immDate,
-                new Period(nMonths, TimeUnit.MONTHS),
+                new Period(nMonths, TimeUnit.Months),
                 convention,
                 endOfMonth);
         yearFraction = dayCounter.yearFraction(earliestDate, latestDate);

@@ -23,7 +23,7 @@ public class CmsLeg {
 
         schedule_ = (schedule);
         swapIndex_ = (swapIndex);
-        paymentAdjustment_ = (BusinessDayConvention.FOLLOWING);
+        paymentAdjustment_ = (BusinessDayConvention.Following);
         inArrears_ = (false);
         zeroPayments_ = (false);
 

@@ -65,7 +65,7 @@ public class DatesTest {
         final Date counter = minDate.clone();
 
         // 10 years of futures must not exceed Date::maxDate
-        final Period period = new Period(-10, TimeUnit.YEARS);
+        final Period period = new Period(-10, TimeUnit.Years);
         final Date last = maxDate.clone().addAssign(period);
 
         final StopClock clock = new StopClock();

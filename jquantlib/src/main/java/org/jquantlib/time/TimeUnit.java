@@ -48,7 +48,7 @@ package org.jquantlib.time;
  * @author Richard Gomes
  */
 public enum TimeUnit {
-    DAYS, WEEKS, MONTHS, YEARS;
+    Days, Weeks, Months, Years;
 
     /**
      * Returns the name of time unit in long format (e.g. "week")

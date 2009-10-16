@@ -59,7 +59,7 @@ public abstract class CapletVolatilityStructure extends AbstractTermStructure {
     }
 
     public double volatility(final Period optionTenor, final double strike, final boolean extrapolate) {
-        final Date exerciseDate = calendar().advance(referenceDate(), optionTenor, BusinessDayConvention.FOLLOWING); // FIXME
+        final Date exerciseDate = calendar().advance(referenceDate(), optionTenor, BusinessDayConvention.Following); // FIXME
         return volatility(exerciseDate, strike, extrapolate);
     }
 
@@ -85,7 +85,7 @@ public abstract class CapletVolatilityStructure extends AbstractTermStructure {
     }
 
     public double blackVariance(final Period optionTenor, final double strike, final boolean extrapolate) {
-        final Date exerciseDate = calendar().advance(referenceDate(), optionTenor, BusinessDayConvention.FOLLOWING); // FIXME
+        final Date exerciseDate = calendar().advance(referenceDate(), optionTenor, BusinessDayConvention.Following); // FIXME
         return blackVariance(exerciseDate, strike, extrapolate);
 
     }

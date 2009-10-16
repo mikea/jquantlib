@@ -53,10 +53,10 @@ public class ScheduleTest {
     @Test
     public void testSchedule() {
         final Calendar calendar = new Target();
-        final Period maturity = new Period(30, TimeUnit.YEARS);
+        final Period maturity = new Period(30, TimeUnit.Years);
         final Date maturityDate = startDate.add(maturity);
-        final Period accPeriodTenor = new Period(6, TimeUnit.MONTHS);
-        final BusinessDayConvention modFollow = BusinessDayConvention.MODIFIED_FOLLOWING;
+        final Period accPeriodTenor = new Period(6, TimeUnit.Months);
+        final BusinessDayConvention modFollow = BusinessDayConvention.ModifiedFollowing;
         final DateGeneration.Rule dateRule = DateGeneration.Rule.Backward;
 
         final Schedule firstConstrSchedule = new Schedule(
@@ -66,7 +66,7 @@ public class ScheduleTest {
 
         final List<Date> dates = new ArrayList<Date>();
         dates.add(startDate);
-        dates.add(calendar.advance(startDate, new Period(10, TimeUnit.WEEKS),modFollow));
+        dates.add(calendar.advance(startDate, new Period(10, TimeUnit.Weeks),modFollow));
 
         final Schedule secondConstrSchedule = new Schedule(dates, calendar, modFollow);
 

@@ -113,7 +113,7 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOptionEngine 
             final Date d = cashflow.date();
             if (d.gt(settlementDate)) {
                 delta_theta -= cashflow.amount()
-                * process.riskFreeRate().currentLink().zeroRate(d, rfdc, Compounding.CONTINUOUS, Frequency.ANNUAL).rate()
+                * process.riskFreeRate().currentLink().zeroRate(d, rfdc, Compounding.Continuous, Frequency.Annual).rate()
                 * process.riskFreeRate().currentLink().discount(d);
                 delta_rho += cashflow.amount() * process.time(d) * process.riskFreeRate().currentLink().discount(t);
             }

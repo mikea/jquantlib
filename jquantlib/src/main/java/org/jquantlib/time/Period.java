@@ -68,32 +68,32 @@ public class Period {
     /**
      * Constant that can be used to represent one year period forward
      */
-    public static final Period ONE_YEAR_FORWARD = new Period(1, TimeUnit.YEARS);
+    public static final Period ONE_YEAR_FORWARD = new Period(1, TimeUnit.Years);
 
     /**
      * Constant that can be used to represent one year period in the past
      */
-    public static final Period ONE_YEAR_BACKWARD = new Period(-1, TimeUnit.YEARS);
+    public static final Period ONE_YEAR_BACKWARD = new Period(-1, TimeUnit.Years);
 
     /**
      * Constant that can be used to represent one year period forward
      */
-    public static final Period ONE_MONTH_FORWARD = new Period(1, TimeUnit.MONTHS);
+    public static final Period ONE_MONTH_FORWARD = new Period(1, TimeUnit.Months);
 
     /**
      * Constant that can be used to represent one year period in the past
      */
-    public static final Period ONE_MONTH_BACKWARD = new Period(-1, TimeUnit.MONTHS);
+    public static final Period ONE_MONTH_BACKWARD = new Period(-1, TimeUnit.Months);
 
     /**
      * Constant that can be used to represent one year period forward
      */
-    public static final Period ONE_DAY_FORWARD = new Period(1, TimeUnit.DAYS);
+    public static final Period ONE_DAY_FORWARD = new Period(1, TimeUnit.Days);
 
     /**
      * Constant that can be used to represent one year period in the past
      */
-    public static final Period ONE_DAY_BACKWARD = new Period(-1, TimeUnit.DAYS);
+    public static final Period ONE_DAY_BACKWARD = new Period(-1, TimeUnit.Days);
 
 
     /**
@@ -111,7 +111,7 @@ public class Period {
      */
     public Period() {
         this.length = 0;
-        this.units = TimeUnit.DAYS;
+        this.units = TimeUnit.Days;
     }
 
     /**
@@ -132,31 +132,32 @@ public class Period {
      */
     public Period(final Frequency f) {
         switch (f) {
-        case ONCE:
-        case NO_FREQUENCY:
+        case Once:
+        case NoFrequency:
             // same as Period()
-            units = TimeUnit.DAYS;
+            units = TimeUnit.Days;
             length = 0;
             break;
-        case ANNUAL:
-            units = TimeUnit.YEARS;
+        case Annual:
+            units = TimeUnit.Years;
             length = 1;
             break;
-        case SEMI_ANNUAL:
-        case EVERY_FOURTH_DAY:
-        case QUARTERLY:
-        case BI_MONTHLY:
-        case MONTHLY:
-            units = TimeUnit.MONTHS;
+        case Semiannual:
+        case EveryFourthMonth:
+        case Quarterly:
+        case Bimonthly:
+        case Monthly:
+            units = TimeUnit.Months;
             length = 12 / f.toInteger();
             break;
-        case BI_WEEKLY:
-        case WEEKLY:
-            units = TimeUnit.WEEKS;
+        case EveryFourthWeek:
+        case Biweekly:
+        case Weekly:
+            units = TimeUnit.Weeks;
             length = 52 / f.toInteger();
             break;
-        case DAILY:
-            units = TimeUnit.DAYS;
+        case Daily:
+            units = TimeUnit.Days;
             length = 1; // FIXME: review
             break;
         default:
@@ -189,26 +190,39 @@ public class Period {
         // unsigned version
         final int length = Math.abs(this.length);
 
-        if (length == 0)
-            return Frequency.NO_FREQUENCY;
+        if (length == 0) {
+            return Frequency.NoFrequency;
+        }
 
         switch (units) {
-        case YEARS:
-            QL.require(length == 1 , CANNOT_INSTANTIATE); // QA:[RG]::verified
-            return Frequency.ANNUAL;
-        case MONTHS:
-            QL.require((12 % length) == 0 && (length <= 12) , CANNOT_INSTANTIATE); // QA:[RG]::verified
-            return Frequency.valueOf(12 / length);
-        case WEEKS:
-            if (length == 1)
-                return Frequency.WEEKLY;
-            else if (length == 2)
-                return Frequency.BI_WEEKLY;
-            else
-                throw new LibraryException(CANNOT_INSTANTIATE); // QA:[RG]::verified
-        case DAYS:
-            QL.require(length == 1 , CANNOT_INSTANTIATE); // QA:[RG]::verified
-            return Frequency.DAILY;
+        case Years:
+            if (length == 1) {
+                return Frequency.Annual;
+            } else {
+                return Frequency.OtherFrequency;
+            }
+          case Months:
+            if (12%length == 0 && length <= 12) {
+                return Frequency.valueOf(12 / length);
+            } else {
+                return Frequency.OtherFrequency;
+            }
+          case Weeks:
+            if (length==1) {
+                return Frequency.Weekly;
+            } else if (length==2) {
+                return Frequency.Biweekly;
+            } else if (length==4) {
+                return Frequency.EveryFourthWeek;
+            } else {
+                return Frequency.OtherFrequency;
+            }
+          case Days:
+            if (length==1) {
+                return Frequency.Daily;
+            } else {
+                return Frequency.OtherFrequency;
+            }
         default:
             throw new LibraryException(UNKNOWN_TIME_UNIT); // QA:[RG]::verified
         }
@@ -242,20 +256,26 @@ public class Period {
 
     @Override
     public boolean equals(final Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         final Period other = (Period) obj;
-        if (length != other.length)
+        if (length != other.length) {
             return false;
+        }
         if (units == null) {
-            if (other.units != null)
+            if (other.units != null) {
                 return false;
-        } else if (!units.equals(other.units))
+            }
+        } else if (!units.equals(other.units)) {
             return false;
+        }
         return true;
     }
 
@@ -280,88 +300,95 @@ public class Period {
     }
 
     public boolean lt(final Period p2) {
-        if (this.length == 0)
+        if (this.length == 0) {
             return (p2.length > 0);
-        if (p2.length == 0)
+        }
+        if (p2.length == 0) {
             return (this.length < 0);
+        }
 
         switch (this.units) {
-        case DAYS:
+        case Days:
             switch (p2.units) {
-            case DAYS:
+            case Days:
                 return (this.length < p2.length);
-            case WEEKS:
+            case Weeks:
                 return (this.length < p2.length * 7);
-            case MONTHS:
-                if (this.length < p2.length * 28)
+            case Months:
+                if (this.length < p2.length * 28) {
                     return true;
-                else
+                } else {
                     throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
-            case YEARS:
+                }
+            case Years:
                 return (this.length < p2.length * 365);
             default:
                 throw new LibraryException(UNKNOWN_UNITS); // QA:[RG]::verified
             }
-        case WEEKS:
+        case Weeks:
             switch (p2.units) {
-            case DAYS:
+            case Days:
                 return (this.length * 7 < p2.length);
-            case WEEKS:
+            case Weeks:
                 return (this.length < p2.length);
-            case MONTHS:
-                if (this.length * 7 < p2.length * 28)
+            case Months:
+                if (this.length * 7 < p2.length * 28) {
                     return true;
-                else
+                } else {
                     throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
-            case YEARS:
-                if (this.length * 7 < p2.length * 365)
+                }
+            case Years:
+                if (this.length * 7 < p2.length * 365) {
                     return true;
-                else
+                } else {
                     throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
+                }
             default:
                 throw new LibraryException(UNKNOWN_UNITS); // QA:[RG]::verified
             }
-        case MONTHS:
+        case Months:
             switch (p2.units) {
-            case DAYS:
+            case Days:
                 // Sup[days in this.length months] < days in p2
-                if (this.length * 31 < p2.length)
+                if (this.length * 31 < p2.length) {
                     return true;
-                // almost 28 days in p1 and less than 28 days in p2
-                else if ((this.length != 0) && p2.length < 28)
+                } else if ((this.length != 0) && p2.length < 28) {
                     return false;
-                else
+                } else {
                     throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
-            case WEEKS:
-                if (this.length * 31 < p2.length * 7)
+                }
+            case Weeks:
+                if (this.length * 31 < p2.length * 7) {
                     return true;
-                else
+                } else {
                     throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
-            case MONTHS:
+                }
+            case Months:
                 return (this.length < p2.length);
-            case YEARS:
+            case Years:
                 return (this.length < p2.length * 12);
             default:
                 throw new LibraryException(UNKNOWN_UNITS); // QA:[RG]::verified
             }
-        case YEARS:
+        case Years:
             switch (p2.units) {
-            case DAYS:
-                if (this.length * 366 < p2.length)
+            case Days:
+                if (this.length * 366 < p2.length) {
                     return true;
-                // almost 365 days in p1 and less than 365 days in p2
-                else if ((this.length != 0) && p2.length < 365)
+                } else if ((this.length != 0) && p2.length < 365) {
                     return false;
-                else
+                } else {
                     throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
-            case WEEKS:
-                if (this.length * 366 < p2.length * 7)
+                }
+            case Weeks:
+                if (this.length * 366 < p2.length * 7) {
                     return true;
-                else
+                } else {
                     throw new LibraryException(UNDECIDABLE_COMPARISON); // QA:[RG]::verified
-            case MONTHS:
+                }
+            case Months:
                 return (this.length * 12 < p2.length);
-            case YEARS:
+            case Years:
                 return (this.length < p2.length);
             default:
                 throw new LibraryException(UNKNOWN_UNITS); // QA:[RG]::verified
@@ -399,10 +426,11 @@ public class Period {
      */
     private String getInternalLongFormat() {
         String suffix;
-        if (this.length == 1)
+        if (this.length == 1) {
             suffix = "";
-        else
+        } else {
             suffix = "s";
+        }
         final StringBuilder sb = new StringBuilder();
         final Formatter formatter = new Formatter(sb, Locale.US);
         formatter.format("%d %s%s", this.length, this.units.getLongFormat(),
@@ -421,28 +449,29 @@ public class Period {
     }
 
     public void normalize() {
-        if (length!=0)
+        if (length!=0) {
             switch (units) {
-            case DAYS:
+            case Days:
                 //if (!(length%7)) {
                 //FIXME....c++ true !=null ? always true???
                 if (!(length%7!=0)) {
                     length/=7;
-                    units = TimeUnit.WEEKS;
+                    units = TimeUnit.Weeks;
                 }
                 break;
-            case MONTHS:
+            case Months:
                 if (!(length%12!=0)) {
                     length/=12;
-                    units = TimeUnit.YEARS;
+                    units = TimeUnit.Years;
                 }
                 break;
-            case WEEKS:
-            case YEARS:
+            case Weeks:
+            case Years:
                 break;
             default:
                 QL.require(false , UNKNOWN_TIME_UNIT); // QA:[RG]::verified
             }
+        }
     }
 
 }

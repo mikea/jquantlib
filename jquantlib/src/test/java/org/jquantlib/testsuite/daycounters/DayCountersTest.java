@@ -242,7 +242,7 @@ public class DayCountersTest {
 
         QL.info("Testing simple day counter...");
 
-        final Period p[] = new Period[] { new Period(3, TimeUnit.MONTHS), new Period(6, TimeUnit.MONTHS), new Period(1, TimeUnit.YEARS) };
+        final Period p[] = new Period[] { new Period(3, TimeUnit.Months), new Period(6, TimeUnit.Months), new Period(1, TimeUnit.Years) };
         /*@Time*/ final double expected[] = { 0.25, 0.5, 1.0 };
 
         // 4 years should be enough
@@ -269,7 +269,7 @@ public class DayCountersTest {
 
         QL.info("Testing 1/1 day counter...");
 
-        final Period p[] = new Period[]{ new Period(3, TimeUnit.MONTHS), new Period(6, TimeUnit.MONTHS), new Period(1, TimeUnit.YEARS) };
+        final Period p[] = new Period[]{ new Period(3, TimeUnit.Months), new Period(6, TimeUnit.Months), new Period(1, TimeUnit.Years) };
         /*@Time*/ final double expected[] = new double[] { 1.0, 1.0, 1.0 };
 
         // 1 years should be enough

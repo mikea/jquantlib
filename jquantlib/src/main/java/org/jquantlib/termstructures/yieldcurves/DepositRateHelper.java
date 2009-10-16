@@ -136,7 +136,7 @@ public class DepositRateHelper<T extends TermStructure> extends RelativeDateRate
     @Override
     protected void initializeDates() {
         earliestDate = iborIndex.fixingCalendar().advance(evaluationDate,
-                iborIndex.fixingDays(), TimeUnit.DAYS);
+                iborIndex.fixingDays(), TimeUnit.Days);
         latestDate = iborIndex.maturityDate(earliestDate);
         fixingDate = iborIndex.fixingDate(earliestDate);
 

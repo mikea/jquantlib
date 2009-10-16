@@ -185,7 +185,7 @@ public class OperatorTest {
         final Date today = Date.todaysDate();
 
         Date exercise = today.clone();
-        exercise = exercise.add(new Period(2,TimeUnit.YEARS));
+        exercise = exercise.add(new Period(2,TimeUnit.Years));
 
 
         final double residualTime = dc.yearFraction(today, exercise);

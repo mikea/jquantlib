@@ -351,7 +351,7 @@ public abstract class AbstractTermStructure implements TermStructure {
     public Date referenceDate() {
         if (moving) {
             if (!updated) {
-                referenceDate = calendar().advance(today, settlementDays, TimeUnit.DAYS);
+                referenceDate = calendar().advance(today, settlementDays, TimeUnit.Days);
                 updated = true;
             }
         }
