@@ -94,7 +94,8 @@ public class CalendarTest {
 
     @Test
     public void testAdjust_ModifiedFollowing() {
-    	System.out.println("Testing testAdjust_ModifiedFollowing");
+    	System.out.println("Testing BusinessDayConvention.ModifiedFollowing");
+
         final class Entry {
             public Date date;
             public Date expected;
@@ -111,25 +112,58 @@ public class CalendarTest {
                 new Entry( new Date(30, 5, 2009), new Date(29, 5, 2009) ),
                 new Entry( new Date(31, 5, 2009), new Date(29, 5, 2009) ),
                 new Entry( new Date( 1, 6, 2009), new Date( 1, 6, 2009) ),
+                new Entry( new Date( 2, 6, 2009), new Date( 2, 6, 2009) ),
+                new Entry( new Date( 3, 6, 2009), new Date( 3, 6, 2009) ),
+                // ---
+                new Entry( new Date(23, 1, 1973), new Date(23, 1, 1973) ),
+                new Entry( new Date(24, 1, 1973), new Date(24, 1, 1973) ),
+                new Entry( new Date(25, 1, 1973), new Date(26, 1, 1973) ),
+                new Entry( new Date(26, 1, 1973), new Date(26, 1, 1973) ),
             };
 
         final Calendar unitedStatesCalendar = new UnitedStates(UnitedStates.Market.NYSE);
         for (final Entry entry : entries) {
             final Date result = unitedStatesCalendar.adjust(entry.date, BusinessDayConvention.ModifiedFollowing);
-            System.out.printf("Nearest business day to %s is %s\n", entry.date.isoDate(), result.isoDate());
+            System.out.println("adjusted is " + result.isoDate() + "  ::  expected is " + entry.expected.isoDate());
             Assert.assertEquals(result, entry.expected);
         }
     }
 
     @Test
-    public void testAdjust_modifiedPreceeding() {
-    	
-    	  Date d =  new Date(30,5,2009);
-    	  Date expected = new Date(29,5,2009);
-    	  Calendar c = new UnitedStates(UnitedStates.Market.NYSE);
-    	  Date d1 = c.adjust(d,BusinessDayConvention.ModifiedFollowing);
-    	  System.out.println("adjusted=" + d1 + ",expected=" + expected);
-    	  Assert.assertEquals(d1, expected);
+    public void testAdjust_ModifiedPreceeding() {
+        System.out.println("Testing BusinessDayConvention.ModifiedPreceding");
+
+        final class Entry {
+            public Date date;
+            public Date expected;
+
+            private Entry (final Date d, final Date e) {
+                date = d;
+                expected = e;
+            }
+        }
+
+        final Entry[] entries = {
+                new Entry( new Date(28, 5, 2009), new Date(28, 5, 2009) ),
+                new Entry( new Date(29, 5, 2009), new Date(29, 5, 2009) ),
+                new Entry( new Date(30, 5, 2009), new Date(29, 5, 2009) ),
+                new Entry( new Date(31, 5, 2009), new Date(29, 5, 2009) ),
+                new Entry( new Date( 1, 6, 2009), new Date( 1, 6, 2009) ),
+                new Entry( new Date( 2, 6, 2009), new Date( 2, 6, 2009) ),
+                new Entry( new Date( 3, 6, 2009), new Date( 3, 6, 2009) ),
+                // ---
+                new Entry( new Date(23, 1, 1973), new Date(23, 1, 1973) ),
+                new Entry( new Date(24, 1, 1973), new Date(24, 1, 1973) ),
+                new Entry( new Date(25, 1, 1973), new Date(24, 1, 1973) ),
+                new Entry( new Date(26, 1, 1973), new Date(26, 1, 1973) ),
+            };
+
+        final Calendar unitedStatesCalendar = new UnitedStates(UnitedStates.Market.NYSE);
+        for (final Entry entry : entries) {
+            final Date result = unitedStatesCalendar.adjust(entry.date, BusinessDayConvention.ModifiedPreceding);
+            System.out.println("adjusted is " + result.isoDate() + "  ::  expected is " + entry.expected.isoDate());
+            Assert.assertEquals(result, entry.expected);
+        }
     }
 
 }

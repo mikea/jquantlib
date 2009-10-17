@@ -44,7 +44,7 @@ package org.jquantlib.time;
 /**
  * Business Day conventions
  *
- * <p>These conventions specify the algorithm used to adjust a date in case
+ * These conventions specify the algorithm used to adjust a date in case
  * it is not a valid business day.
  *
  * @author Richard Gomes
