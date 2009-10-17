@@ -87,15 +87,14 @@ public class CalendarTest {
         for (final Entry entry : entries) {
             final boolean result = unitedStatesCalendar.isEndOfMonth(entry.date);
             System.out.printf("%s is the last business day? %b\n", entry.date.isoDate(), result);
-            Assert.assertTrue(result==entry.expected);
+            Assert.assertEquals(result,entry.expected);
         }
     }
 
 
-    @Ignore
     @Test
     public void testAdjust_ModifiedFollowing() {
-
+    	System.out.println("Testing testAdjust_ModifiedFollowing");
         final class Entry {
             public Date date;
             public Date expected;
@@ -107,21 +106,30 @@ public class CalendarTest {
         }
 
         final Entry[] entries = {
-                new Entry( new Date(28, 5, 2009), new Date(29, 5, 2009) ),
-                new Entry( new Date(29, 5, 2009), new Date(30, 5, 2009) ),
+                new Entry( new Date(28, 5, 2009), new Date(28, 5, 2009) ),
+                new Entry( new Date(29, 5, 2009), new Date(29, 5, 2009) ),
                 new Entry( new Date(30, 5, 2009), new Date(29, 5, 2009) ),
-                new Entry( new Date(31, 5, 2009), new Date( 1, 6, 2009) ),
-                new Entry( new Date( 1, 6, 2009), new Date( 2, 6, 2009) ),
+                new Entry( new Date(31, 5, 2009), new Date(29, 5, 2009) ),
+                new Entry( new Date( 1, 6, 2009), new Date( 1, 6, 2009) ),
             };
 
         final Calendar unitedStatesCalendar = new UnitedStates(UnitedStates.Market.NYSE);
         for (final Entry entry : entries) {
             final Date result = unitedStatesCalendar.adjust(entry.date, BusinessDayConvention.ModifiedFollowing);
-            System.out.printf("Next business day after %s is %s\n", entry.date.isoDate(), result.isoDate());
-            Assert.assertTrue(result.equals(entry.expected));
+            System.out.printf("Nearest business day to %s is %s\n", entry.date.isoDate(), result.isoDate());
+            Assert.assertEquals(result, entry.expected);
         }
     }
 
-
+    @Test
+    public void testAdjust_modifiedPreceeding() {
+    	
+    	  Date d =  new Date(30,5,2009);
+    	  Date expected = new Date(29,5,2009);
+    	  Calendar c = new UnitedStates(UnitedStates.Market.NYSE);
+    	  Date d1 = c.adjust(d,BusinessDayConvention.ModifiedFollowing);
+    	  System.out.println("adjusted=" + d1 + ",expected=" + expected);
+    	  Assert.assertEquals(d1, expected);
+    }
 
 }
