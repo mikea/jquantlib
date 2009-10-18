@@ -385,27 +385,19 @@ public class Schedule {
 
 
     public Date previousDate(final Date  refDate) /* @ReadOnly */ {
-//        throw new UnsupportedOperationException();
-//        Iterator<Date> res = lower_bound(refDate);
-//        Date dres = res.next();
-//        if (dres.ne(dates_.get(0) ))
+//        std::vector<Date>::const_iterator res = lower_bound(refDate);
+//        if (res!=dates_.begin())
 //            return *(--res);
 //        else
 //            return Date();
-        if (dates_.size() > 0) {
-            int index = -1;
-            for (int i = 0; i < dates_.size(); i++) {
-                final Date d = dates_.get(i);
-                if (d.equals(refDate)) {
-                    index = i;
-                    break;
-                }
-            }
-            if (index > 0) {
-                return dates_.get(index - 1).clone();
-            }
-        }
-        return new Date();
+        
+        int index = Date.lowerBound(dates_, refDate);
+    	if ( index > 0 ) {
+    		return dates_.get(index-1).clone();
+    	}
+    	else {
+    		return new Date();
+    	}
     }
 
     public Date nextDate(final Date  refDate) /* @ReadOnly */ {
@@ -414,20 +406,14 @@ public class Schedule {
 //            return *res;
 //        else
 //            return Date();
-        if (dates_.size() > 0) {
-            int index = -1;
-            for (int i = 0; i < dates_.size(); i++) {
-                final Date d = dates_.get(i);
-                if (d.equals(refDate)) {
-                    index = i;
-                    break;
-                }
-            }
-            if (index >= 0 && index != dates_.size() - 1) {
-                return dates_.get(index + 1).clone();
-            }
-        }
-        return new Date();
+    	
+    	int index = Date.lowerBound(dates_, refDate);
+    	if ( index < dates_.size() ) {
+    		return dates_.get(index).clone();
+    	}
+    	else {
+    		return new Date();
+    	}
     }
 
     public List<Date> dates() /* @ReadOnly */ {
@@ -503,14 +489,13 @@ public class Schedule {
         throw new UnsupportedOperationException();
     }
 
-    public Iterator<Date> lower_bound() /* @ReadOnly */ {
-        return lower_bound( new Date() );
+    public int lowerBound() /* @ReadOnly */ {
+        return lowerBound( new Date() );
      }
 
-    public Iterator<Date> lower_bound(final Date refDate) /* @ReadOnly */{
+    public int lowerBound(final Date refDate) /* @ReadOnly */{
         Date d = (refDate.isNull() ? new Settings().evaluationDate() : refDate);
-        d = d.clone();
-        return std_lower_bound(d);
+        return Date.lowerBound(dates_, d.clone());
     }
 
 

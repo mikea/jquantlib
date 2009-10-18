@@ -95,7 +95,7 @@ public class ScheduleTest {
 
     private void testNextAndPrevDate(final Schedule schedule) {
         final Date nextDate = schedule.nextDate(startDate);
-        assertTrue(nextDate.gt(startDate));
+        assertTrue(nextDate.ge(startDate));
 
         final Date prevDate = schedule.previousDate(nextDate);
         assertTrue(nextDate.gt(prevDate));

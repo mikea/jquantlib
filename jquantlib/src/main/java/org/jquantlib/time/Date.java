@@ -898,7 +898,65 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     private static final int yearOffset(final int y) {
         return yearOffset[y - 1900];
     }
+    
+	/**
+	 * This method is equivalent to sdt:lower_bound function
+	 * Returns an index pointing to the first element in the ordered collection is equal or greater than passed value
+	 * 
+	 * @param dates order collection in ascending order
+	 * @param value Date to be compared
+	 * @return index to element which is >= passed value
+	 */
+	public static int lowerBound(final List<Date> dates, final Date value) {
+        int len = dates.size();
+        int from = 0;
+        int half;
+        int middle;
 
+        while (len > 0) {
+            half = len >> 1;
+            middle = from;
+            middle = middle + half;
+
+            if (value.compareTo(dates.get(middle)) == 1) { // value > 1
+                from = middle;
+                from++;
+                len = len - half - 1;
+            } else
+                len = half;
+        }
+        return from;
+     }
+
+	/**
+	 * This method is equivalent to C++ sdt:upper_bound function
+	 * Returns an index pointing to the first element in the ordered collection which is greater than passed value
+
+	 * @param dates order collection in ascending order
+	 * @param value Date to be compared
+	 * @return index to element which is > passed value
+	 */
+	public static int upperBound(final List<Date> dates, final Date value) {
+		
+        int len = dates.size();
+        int from = 0;
+        int half;
+        int middle;
+
+        while (len > 0) {
+            half = len >> 1;
+            middle = from;
+            middle = middle + half;
+            if (value.compareTo(dates.get(middle)) == -1) // value < 
+                len = half;
+            else {
+                from = middle;
+                from++;
+                len = len - half - 1;
+            }
+        }
+        return from;
+	}
 
     //
     // public inner classes
