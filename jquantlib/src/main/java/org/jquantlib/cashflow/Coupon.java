@@ -62,9 +62,6 @@ public abstract class Coupon extends CashFlow {
             final Date accrualEndDate){
         this(nominal, paymentDate, accrualStartDate, accrualEndDate, new Date(), new Date());
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
     }
 
     public Coupon(final double nominal,
@@ -80,9 +77,6 @@ public abstract class Coupon extends CashFlow {
         this.refPeriodStart = refPeriodStart;
         this.refPeriodEnd = refPeriodEnd;
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
     }
 
 
