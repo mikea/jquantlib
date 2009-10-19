@@ -51,7 +51,7 @@ public class FixedRateBond extends Bond {
         cashFlows_ = new FixedRateLeg(schedule, accrualDayCounter)
         .withNotionals(faceAmount)
         .withCouponRates(coupons)
-        .withPaymentAdjustment(paymentConvention);
+        .withPaymentAdjustment(paymentConvention).Leg();
 
         addRedemptionsToCashflows(new double[]{redemption});
 
