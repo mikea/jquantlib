@@ -77,7 +77,7 @@ public abstract class Coupon extends CashFlow {
         this.paymentDate = paymentDate;
         this.accrualStartDate = accrualStartDate;
         this.accrualEndDate = accrualEndDate;
-        this.refPeriodStart = refPeriodEnd;
+        this.refPeriodStart = refPeriodStart;
         this.refPeriodEnd = refPeriodEnd;
 
         if (System.getProperty("EXPERIMENTAL") == null) {
