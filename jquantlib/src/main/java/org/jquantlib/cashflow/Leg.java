@@ -55,9 +55,8 @@ public class Leg extends ArrayList<CashFlow> implements Cloneable {
     }
 
     @Override
-    public Leg clone() {
-        // TODO: code review :: please verify against QL/C++ code
-        throw new UnsupportedOperationException("Work in progress");
+    public Object clone() {
+    	return (Leg)super.clone();
     }
 
 }
