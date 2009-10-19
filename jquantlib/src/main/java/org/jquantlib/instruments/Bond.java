@@ -43,7 +43,9 @@
 
 package org.jquantlib.instruments;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.jquantlib.QL;
@@ -52,6 +54,7 @@ import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.CashFlows;
 import org.jquantlib.cashflow.Coupon;
 import org.jquantlib.cashflow.Leg;
+import org.jquantlib.cashflow.SimpleCashFlow;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Constants;
@@ -132,15 +135,14 @@ public abstract class Bond extends Instrument {
             final Date issueDate,
             final Leg coupons) {
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-
         this.settlementDays_ = (settlementDays);
         this.calendar_ = (calendar);
         this.cashFlows_ = (coupons);
         this.issueDate_ = (issueDate);
-
+        this.notionals_ = new ArrayList<Double>();
+        this.notionalSchedule_ = new ArrayList<Date>();
+        this.redemptions_ = new Leg();
+        
         if (!coupons.isEmpty()) {
             Collections.sort(cashFlows_, new EarlierThanCashFlowComparator());
             maturityDate_ = coupons.get(coupons.size() - 1).date();
@@ -197,15 +199,14 @@ public abstract class Bond extends Instrument {
             final Date issueDate,
             final Leg cashflows) {
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-
         this.settlementDays_ = (settlementDays);
         this.calendar_ = (calendar);
         this.cashFlows_ = (cashflows);
         this.maturityDate_ = (maturityDate);
         this.issueDate_ = (issueDate);
+        this.notionalSchedule_ = new ArrayList<Date>();
+        this.notionals_ = new ArrayList<Double>();
+        this.redemptions_ = new Leg();
 
         if (!cashflows.isEmpty()) {
             //notionals_ = new double[2];
@@ -298,6 +299,10 @@ public abstract class Bond extends Instrument {
         this.discountCurve = discountCurve;
         this.frequency = Frequency.NoFrequency;
 
+        this.notionals_ = new ArrayList<Double>();
+        this.notionalSchedule_ = new ArrayList<Date>();
+        this.redemptions_ = new Leg();
+ 
         final Date evaluationDate = new Settings().evaluationDate();
 
         // TODO: code review :: please verify against QL/C++ code
@@ -336,8 +341,7 @@ public abstract class Bond extends Instrument {
 
     /** Note: new Date() as default argument. */
     public /* @Real */double notional(){
-        //FIXME: wrong! should be new Date()
-        return notional(new Date());
+         return notional(new Date());
     }
 
     public/* @Real */double notional(Date date){
@@ -346,7 +350,7 @@ public abstract class Bond extends Instrument {
             //FIXME: check that settlementDate() returns a new DateInsatence
             date = settlementDate();
         }
-        if (date.le(notionalSchedule_.get(notionalSchedule_.size()-1))) {
+        if (date.gt(notionalSchedule_.get(notionalSchedule_.size()-1))) {
             // after maturity
             return 0.0;
         }
@@ -356,33 +360,20 @@ public abstract class Bond extends Instrument {
         // date, since the first is null.  After the call to
         // lower_bound, *i is the earliest date which is greater or
         // equal than d.  Its index is greater or equal to 1.
-        //FIXME: wtf...
-        if (true) {
-            throw new UnsupportedOperationException();
-        }
-        //        std::vector<Date>::const_iterator i =
-        //            std::lower_bound(++notionalSchedule_.begin(),
-        //                             notionalSchedule_.end(), d);
-        //        Size index = std::distance(notionalSchedule_.begin(), i);
-        final int index = 0;
+        int index = Collections.binarySearch(notionalSchedule_, date);
+        if (index < 0) index = - (index + 1);
 
         if (date.le(notionalSchedule_.get(index))) {
             // no doubt about what to return
             //return notionals_[index-1];
             return notionals_.get(index-1);
         } else {
-            throw new UnsupportedOperationException();
-            //FIXME:
-            //            // d is equal to a redemption date.
-            //            #if defined(QL_TODAYS_PAYMENTS)
-            //            // We consider today's payment as pending; the bond still
-            //            // has the previous notional
-            //            return notionals_[index-1];
-            //            #else
-            //            // today's payment has occurred; the bond already changed
-            //            // notional.
-            //            return notionals_[index];
-            //            #endif
+            if (new Settings().isTodaysPayments()) {
+                return notionals_.get(index-1);
+            }
+            else {
+            	return notionals_.get(index);
+            }
         }
     }
 
@@ -512,8 +503,13 @@ public abstract class Bond extends Instrument {
 
         /*@Rate*/double result = 0.0;
 
-        for(final CashFlow flow:cashFlows_){
-            if(!flow.date().eq(paymentDate)){break;}
+        // QL starts at the next cashflow and only continues to the one after to 
+        // check that it isn't the same date. Also stop at the penultimate flow. The last flow 
+        // is not a Coupon
+        int startIndex = cashFlows_.indexOf(cf);
+        for (Iterator iterator = cashFlows_.listIterator(startIndex); iterator.hasNext();) {
+			CashFlow flow = (CashFlow) iterator.next();
+            if(!flow.date().eq(paymentDate) || ! iterator.hasNext()){break;}
             final Coupon cp = (Coupon)flow;
             if (cp != null) {
                 if (firstCouponFound) {
@@ -579,7 +575,14 @@ public abstract class Bond extends Instrument {
             final Frequency freq,
             /* Real */final double accuracy,
             /* Size */final int maxEvaluations) {
-        throw new UnsupportedOperationException();
+        final Brent solver = new Brent();
+        solver.setMaxEvaluations(maxEvaluations);
+        final YieldFinder objective = new YieldFinder(notional(settlementDate()), this.cashFlows_,
+                getDirtyPrice(),
+                dc, comp, freq,
+                settlementDate());
+        return solver.solve(objective, accuracy, 0.02, 0.0, 1.0);
+
     }
 
     public/* @Rate */double yield(final DayCounter dc, final Compounding comp,
@@ -681,15 +684,20 @@ public abstract class Bond extends Instrument {
      */
     public/* @Real */double yield(/* @Real */final double cleanPrice,
             final DayCounter dc, final Compounding comp, final Frequency freq,
-            final Date settlementDate,
+            Date settlementDate,
             /* @Real */final double accuracy,
             /* @Size */final int maxEvaluations) {
+        if (settlementDate.isNull()) {
+            settlementDate = settlementDate();
+        }
+
         final Brent solver = new Brent();
+        double dirtyPrice = cleanPrice + accruedAmount(settlementDate);
         solver.setMaxEvaluations(maxEvaluations);
-        final YieldFinder objective = new YieldFinder(notional(settlementDate()), this.cashFlows_,
-                getDirtyPrice(),
+        final YieldFinder objective = new YieldFinder(notional(settlementDate), this.cashFlows_,
+                dirtyPrice,
                 dc, comp, freq,
-                settlementDate());
+                settlementDate);
         return solver.solve(objective, accuracy, 0.02, 0.0, 1.0);
     }
 
@@ -881,7 +889,7 @@ public abstract class Bond extends Instrument {
         //        arguments->cashflows = cashflows_;
         //        arguments->calendar = calendar_;
         bondArguments.settlementDate = settlementDate();
-        bondArguments.cashflows = cashFlows_.clone();
+        bondArguments.cashflows = (Leg)cashFlows_.clone();
         //FIXME: would be a copy.. since calendars are kind of immutable anyway just return the a reference
         //bondArguments.calendar = calendar_.clone();
         bondArguments.calendar = calendar_;
@@ -921,7 +929,7 @@ public abstract class Bond extends Instrument {
             /*@Real*/final double R = (i < redemptions.length) ? redemptions[i] :
                 !(redemptions.length == 0)   ? redemptions[redemptions.length-1] : 100.0;
                 /*@Real*/final double amount = (R/100.0)*(notionals_.get(i-1)-notionals_.get(i));
-                final CashFlow  redemption = null;//(new SimpleCashFlow(amount, notionalSchedule_[i]));
+                final CashFlow  redemption = new SimpleCashFlow(amount, notionalSchedule_.get(i));
                 cashFlows_.add(redemption);
                 redemptions_.add(redemption);
         }
@@ -992,11 +1000,8 @@ public abstract class Bond extends Instrument {
 
         notionalSchedule_.add(date);
         notionals_.add(0.0);
-        //FIXME: implement SimpleCashFlow
-        if(true) {
-            throw new UnsupportedOperationException();
-        }
-        final CashFlow redemptionCashflow =  null;//new SimpleCashFlow(notional*redemption/100.0, date));
+
+        final CashFlow redemptionCashflow =  new SimpleCashFlow(notional*redemption/100.0, date);
         cashFlows_.add(redemptionCashflow);
         redemptions_.add(redemptionCashflow);
     }
