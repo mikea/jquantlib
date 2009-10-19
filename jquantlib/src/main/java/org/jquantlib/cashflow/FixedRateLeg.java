@@ -94,7 +94,7 @@ public class FixedRateLeg extends Leg {
         /*@Real*/ double nominal = notionals_[0];
         if (schedule_.isRegular(1)) {
             // TODO: code review :: please verify against QL/C++ code
-            QL.require(firstPeriodDayCounter_!=null && !firstPeriodDayCounter_.equals(paymentDayCounter_) , "regular first coupon does not allow a first-period day count"); // QA:[RG]::verified // TODO: message
+            QL.require(firstPeriodDayCounter_==null || !firstPeriodDayCounter_.equals(paymentDayCounter_) , "regular first coupon does not allow a first-period day count"); // QA:[RG]::verified // TODO: message
             leg.add(new FixedRateCoupon(nominal, paymentDate, rate, paymentDayCounter_, start, end, start, end));
         } else {
             Date ref = end.sub(schedule_.tenor());
