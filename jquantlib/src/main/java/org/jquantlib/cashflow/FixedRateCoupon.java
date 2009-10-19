@@ -67,20 +67,13 @@ public class FixedRateCoupon extends Coupon {
             final Date refPeriodEnd) {
         super(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd);
 
-        //FIXME :: temporary fix... will crash if null is passed
-        /*
         if(refPeriodStart == null){
-           refPeriodStart = DateFactory.getFactory().getTodaysDate();
+           this.refPeriodStart = new Date();
         }
         if(refPeriodEnd == null){
-           refPeriodEnd = DateFactory.getFactory().getTodaysDate();
+           this.refPeriodEnd = new Date();
         }
-        */
-        
-        //TODO: Code review :: incomplete code
-        if (true)
-            throw new UnsupportedOperationException("Work in progress");
-        
+                
         this.rate = interestRate;
         this.dayCounter = dayCounter;
     }
