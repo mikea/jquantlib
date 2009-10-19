@@ -1,10 +1,14 @@
 package org.jquantlib.pricingengines.bond;
 
+import org.jquantlib.QL;
+import org.jquantlib.cashflow.CashFlows;
+import org.jquantlib.cashflow.Leg;
 import org.jquantlib.pricingengines.BondEngine;
 import org.jquantlib.pricingengines.arguments.BondArguments;
 import org.jquantlib.pricingengines.results.BondResults;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.time.Date;
 
 public class DiscountingBondEngine extends BondEngine {
 	
@@ -18,25 +22,18 @@ public class DiscountingBondEngine extends BondEngine {
     public DiscountingBondEngine(final Handle<YieldTermStructure>  discountCurve){
     	//FIXME: correct?
     	super(new BondArguments(), new BondResults());
+    	discountCurve_ = discountCurve;
+    	discountCurve_.addObserver(this);
     }
     
     @Override
     public void calculate(){
-    	throw new UnsupportedOperationException();
-//    	const Leg& cashflows = arguments_.cashflows;
-//        const Date& settlementDate = arguments_.settlementDate;
-//
-//        Date valuationDate = (*discountCurve())->referenceDate();
-//
-//        QL_REQUIRE(!discountCurve().empty(),
-//                   "no discounting term structure set");
-//        results_.value = CashFlows::npv(cashflows,
-//                                        **discountCurve(),
-//                                        valuationDate, valuationDate);
-//        results_.settlementValue = CashFlows::npv(cashflows,
-//                                                  **discountCurve(),
-//                                                  settlementDate,
-//                                                  settlementDate);
+    	final Leg cashflows = arguments.cashflows;
+    	final Date settlementDate = arguments.settlementDate;
+    	Date valuationDate = discountCurve_.currentLink().referenceDate();
+        QL.require(! discountCurve_.empty() , "no discounting term structure set"); 
+        results.value = CashFlows.getInstance().npv(cashflows, discountCurve_);
+        results.settlementValue = CashFlows.getInstance().npv(cashflows, discountCurve_, settlementDate, settlementDate, 0);
     }
     
     
