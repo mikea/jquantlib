@@ -46,19 +46,23 @@ import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.util.LazyObject;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
+
 
 /**
  * This is an abstract {@link Instrument} class which is able to use a {@link PricingEngine} implemented
  * internally or externally to it.
  * <p>
- * An <i>old style instrument</i> must provide its own calculation logic whilst a
- * <i>new style instrument</i> relies on a certain pricing engine for performing calculations.
- *
+ * 
  * @see PricingEngine
  * @see <a href="http://quantlib.org/reference/group__instruments.html">QuantLib: Financial Instruments</a>
  *
  * @author Richard Gomes
  */
+@QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.V097, reviewers = { "Femi Anthony" })
+
 public abstract class Instrument extends LazyObject {
 
     //
