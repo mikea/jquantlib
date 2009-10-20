@@ -30,6 +30,7 @@ public class DiscountingBondEngine extends BondEngine {
     public void calculate(){
     	final Leg cashflows = arguments.cashflows;
     	final Date settlementDate = arguments.settlementDate;
+    	// FIXME: valuationDate never used ???
     	Date valuationDate = discountCurve_.currentLink().referenceDate();
         QL.require(! discountCurve_.empty() , "no discounting term structure set"); 
         results.value = CashFlows.getInstance().npv(cashflows, discountCurve_);

@@ -169,7 +169,7 @@ public class Swap extends Instrument {
 
 
     //
-    // overrides NewInstrument
+    // overrides Instrument
     //
 
     @Override

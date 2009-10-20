@@ -370,13 +370,6 @@ public class Schedule {
 
     public final Date at(final int i) /* @ReadOnly */ {
     	return dates_.get(i);
-//        inline const Date& Schedule::operator[](Size i) const {
-//            #if defined(QL_EXTRA_SAFETY_CHECKS)
-//            return dates_.at(i);
-//            #else
-//            return dates_[i];
-//            #endif
-//        }
     }
 
     public final Date date(final int i) /* @ReadOnly */ {
@@ -385,33 +378,19 @@ public class Schedule {
 
 
     public Date previousDate(final Date  refDate) /* @ReadOnly */ {
-//        std::vector<Date>::const_iterator res = lower_bound(refDate);
-//        if (res!=dates_.begin())
-//            return *(--res);
-//        else
-//            return Date();
-        
         int index = Date.lowerBound(dates_, refDate);
     	if ( index > 0 ) {
     		return dates_.get(index-1).clone();
-    	}
-    	else {
+    	} else {
     		return new Date();
     	}
     }
 
     public Date nextDate(final Date  refDate) /* @ReadOnly */ {
-//        std::vector<Date>::const_iterator res = lower_bound(refDate);
-//        if (res!=dates_.end())
-//            return *res;
-//        else
-//            return Date();
-    	
     	int index = Date.lowerBound(dates_, refDate);
     	if ( index < dates_.size() ) {
     		return dates_.get(index).clone();
-    	}
-    	else {
+    	} else {
     		return new Date();
     	}
     }
@@ -470,12 +449,6 @@ public class Schedule {
     }
 
     // Iterators
-//
-//     	typedef std::vector<Date>::const_iterator const_iterator;
-//        const_iterator begin() const { return dates_.begin(); }
-//        const_iterator end() const { return dates_.end(); }
-        //@}
-
 
     @Deprecated
     //FIXME: this method will probably disappear as begin() and end() does not make sense withou pointers

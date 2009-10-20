@@ -50,16 +50,16 @@ import org.jquantlib.pricingengines.arguments.Arguments;
  * "Greek" measures a different aspect of the risk in an option position, and corresponds to a parameter on which the value of an
  * instrument or portfolio of financial instruments is dependent. The name is used because the parameters are often denoted by Greek
  * letters.
- * 
+ *
  * @note Public fields as this class works pretty much as Data Transfer Objects
- * 
+ *
  * @see Results
- * @see NewInstrument
+ * @see Instrument
  * @see PricingEngine
  * @see Arguments
  * @see <a href="http://en.wikipedia.org/wiki/Greeks_(finance)">Greeks</a>
  * @see <a href="http://www.theponytail.net/DOL/DOLnode69.htm">The Derivatives Online Pages</a>
- * 
+ *
  * @author Richard Gomes
  */
 public class Greeks extends Results {
@@ -73,7 +73,7 @@ public class Greeks extends Results {
      * <p>
      * The {@latex$\Delta} of an instrument is the mathematical derivative of the option value {@latex$V} with respect to
      * the underlyer's price, {@latex[\Delta = \frac{\partial V}{\partial S}}
-     * 
+     *
      * @see <a href="http://www.theponytail.net/DOL/DOLnode71.htm">Delta</a>
      */
     public /*@Real*/ double delta;
@@ -85,7 +85,7 @@ public class Greeks extends Results {
      * {@latex[\Gamma = \frac{\partial^2 V}{\partial S^2}}.
      * <p>
      * Gamma is important because it indicates how a portfolio will react to relatively large shifts in price.
-     * 
+     *
      * @see <a href="http://www.theponytail.net/DOL/DOLnode73.htm">Gamma</a>
      */
     public /*@Real*/ double gamma;
@@ -95,7 +95,7 @@ public class Greeks extends Results {
      * <p>
      * The {@latex[\Theta} is the negative of the derivative of the option value with respect to the amount of
      * time to expiry of the option, {@latex[\Theta = -\frac{\partial V}{\partial T}}.
-     * 
+     *
      * @see <a href="http://www.theponytail.net/DOL/DOLnode72.htm">Theta</a>
      * @see <a href="http://en.wikipedia.org/wiki/Option_time_value">Option time value</a>
      */
@@ -109,7 +109,7 @@ public class Greeks extends Results {
      * <p>
      * The term <i>kappa</i>, {@latex[\kappa}, is sometimes used instead of <i>vega</i>, as is <i>tau</i>,
      * {@latex$\tau}, though this is rare.
-     * 
+     *
      * @see <a href="http://www.theponytail.net/DOL/DOLnode74.htm">Vega</a>
      * @see <a href="http://en.wikipedia.org/wiki/Volatility_(finance)">Volatility</a>
      */
@@ -120,7 +120,7 @@ public class Greeks extends Results {
      * <p>
      * The {@latex$\rho} is the derivative of the option value with respect to the risk free rate,
      * {@latex[\rho = \frac{\partial V}{\partial r}}.
-     * 
+     *
      * @see <a href="http://www.theponytail.net/DOL/DOLnode75.htm">Rho</a>
      */
     public /*@Real*/ double rho;

@@ -900,7 +900,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     }
     
 	/**
-	 * This method is equivalent to sdt:lower_bound function
+	 * This method is equivalent to std:lower_bound function
 	 * Returns an index pointing to the first element in the ordered collection is equal or greater than passed value
 	 * 
 	 * @param dates order collection in ascending order

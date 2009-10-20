@@ -22,7 +22,11 @@
 
 package org.jquantlib.testsuite.date;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.time.Date;
@@ -34,6 +38,7 @@ import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
 import org.jquantlib.util.StopClock;
 import org.junit.Test;
+
 
 /**
  * Test various Dates
@@ -214,6 +219,32 @@ public class DatesTest {
         }
         clock.stopClock();
         clock.log();
+    }
+
+    @Test
+    public void testLowerUpperBound() {
+        final List<Date> dates = new ArrayList<Date>();
+
+        dates.add(new Date(1,1,2009));
+        dates.add(new Date(2,1,2009));
+        dates.add(new Date(3,1,2009));
+        dates.add(new Date(3,1,2009));
+        dates.add(new Date(4,1,2009));
+        dates.add(new Date(5,1,2009));
+        dates.add(new Date(7,1,2009));
+        dates.add(new Date(7,1,2009));
+        dates.add(new Date(8,1,2009));
+
+        final Date lowerDate = new Date(3,1,2009);
+        final Date upperDate = new Date(7,1,2009);
+        final int expectedLowerBound = 2;
+        final int expectedUpperBound = 8;
+        final int lowerBound = Date.lowerBound(dates, lowerDate);
+        final int upperBound = Date.upperBound(dates, upperDate);
+
+        assertEquals(lowerBound, expectedLowerBound);
+        assertEquals(upperBound, expectedUpperBound);
+
     }
 
 }

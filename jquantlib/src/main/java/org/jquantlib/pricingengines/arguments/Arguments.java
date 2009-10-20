@@ -46,12 +46,11 @@ import org.jquantlib.pricingengines.results.Results;
 /**
  * Arguments are used by <i>new-style</i> {@link Instrument}s in order to
  * inform inputs to {@link PricingEngine}s
- * 
+ *
  * @see Instrument
- * @see NewInstrument
  * @see PricingEngine
  * @see Results
- * 
+ *
  * @author Richard Gomes
  */
 // TODO: study the possibility of changing to an interface
@@ -59,7 +58,7 @@ public abstract class Arguments {
 
     /**
      * Validates arguments to be used by a PricingEngine
-     * 
+     *
      * @see PricingEngine
      */
     public abstract void validate() /*@ReadOnly*/;

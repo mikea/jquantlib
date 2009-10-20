@@ -49,14 +49,11 @@ import org.jquantlib.util.LazyObject;
 
 /**
  * This is an abstract {@link Instrument} class which is able to use a {@link PricingEngine} implemented
- * internally or externally to it. Extended classes {@link OldInstrument} and {@link NewInstrument} are
- * responsible for defining the adequate behaviour.
+ * internally or externally to it.
  * <p>
  * An <i>old style instrument</i> must provide its own calculation logic whilst a
  * <i>new style instrument</i> relies on a certain pricing engine for performing calculations.
  *
- * @see OldInstrument
- * @see NewInstrument
  * @see PricingEngine
  * @see <a href="http://quantlib.org/reference/group__instruments.html">QuantLib: Financial Instruments</a>
  *
@@ -187,8 +184,6 @@ public abstract class Instrument extends LazyObject {
     /**
      * This method must leave the instrument in a consistent
      * state when the expiration condition is met.
-     *
-     * @see NewInstrument.setupExpired()
      */
     protected void setupExpired() /*@ReadOnly*/{
         NPV = 0.0;
@@ -202,9 +197,6 @@ public abstract class Instrument extends LazyObject {
 
     /**
      * This method performs the actual calculations and set any needed results.
-     * <p>
-     * When a NewInstrument is used, the default implementation is responsible for calling the pricing engine, passing arguments to
-     * it and retrieving results.
      *
      * @see LazyObject#performCalculations
      */

@@ -52,12 +52,11 @@ import org.jquantlib.pricingengines.arguments.Arguments;
  * relative to <i>new-style</i> {@link Instrument}s
  *
  * @note Public fields as this class works pretty much as Data Transfer Objects
- * 
+ *
  * @see Instrument
- * @see NewInstrument
  * @see PricingEngine
  * @see Arguments
- * 
+ *
  * @author Richard Gomes
  */
 public class Results {
@@ -68,9 +67,8 @@ public class Results {
 
     /**
      * Represents the calculated value of an {@link Instrument}
-     * 
+     *
      * @see Instrument
-     * @see NewInstrument
      */
     public /*@Price*/ double value;
 

@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2008 Richard Gomes
- Copyright (C) 2009 John Nichol 
+ Copyright (C) 2009 John Nichol
 
  This source code is release under the BSD License.
 
@@ -86,10 +86,10 @@ public class BondTest {
 	private static class CommonVars {
 		private final Calendar calendar;
 		private final Date today;
-		private final /* @Real */double faceAmount;
+		private final double faceAmount;
 
 
-		// FIXME: class SavedSettings was entirely commented out !!!!!!!!!!!!!!!!!!!!!!!
+		// FIXME: code review :: class SavedSettings was entirely commented out!
 
 
 		// cleanup
@@ -110,28 +110,27 @@ public class BondTest {
 
 		final CommonVars vars = new CommonVars();
 
-		/* Real */final double tolerance = 1.0e-7;
-		/* Size */final int maxEvaluations = 100;
+		final double tolerance = 1.0e-7;
+		final int maxEvaluations = 100;
 
 		final int issueMonths[] = { -24, -18, -12, -6, 0, 6, 12, 18, 24 };
 		final int lengths[] = { 3, 5, 10, 15, 20 };
-		/* @Natural */final int settlementDays = 3;
-		/* @Real */final double coupons[] = { 0.02, 0.05, 0.08 };
+		final int settlementDays = 3;
+		final double coupons[] = { 0.02, 0.05, 0.08 };
 		final Frequency frequencies[] = { Frequency.Semiannual, Frequency.Annual };
 		final DayCounter bondDayCount = Thirty360.getDayCounter();
 		final BusinessDayConvention accrualConvention = BusinessDayConvention.Unadjusted;
 		final BusinessDayConvention paymentConvention = BusinessDayConvention.ModifiedFollowing;
-		/* @Real */final double redemption = 100.0;
+		final double redemption = 100.0;
 
-		/* @Real */final double yields[] = { 0.03, 0.04, 0.05, 0.06, 0.07 };
+		final double yields[] = { 0.03, 0.04, 0.05, 0.06, 0.07 };
 		final Compounding compounding[] = { Compounding.Compounded, Compounding.Continuous };
 
-		for (/* @Size */int i = 0; i < (issueMonths).length; i++) {
-			for (/* @Size */int j = 0; j < (lengths).length; j++) {
-				for (/* @Size */int k = 0; k < (coupons).length; k++) {
-					for (/* @Size */int l = 0; l < (frequencies).length; l++) {
-						for (/* @Size */int n = 0; n < (compounding).length; n++) {
-							System.out.println("ok");
+		for (int i = 0; i < (issueMonths).length; i++) {
+			for (int j = 0; j < (lengths).length; j++) {
+				for (int k = 0; k < (coupons).length; k++) {
+					for (int l = 0; l < (frequencies).length; l++) {
+						for (int n = 0; n < (compounding).length; n++) {
 							final Date dated = vars.calendar.advance(vars.today, issueMonths[i], TimeUnit.Months);
 							final Date issue = dated;
 							final Date maturity = vars.calendar.advance(issue, lengths[j], TimeUnit.Years);
@@ -149,16 +148,16 @@ public class BondTest {
 							final FixedRateBond bond = new FixedRateBond(settlementDays, vars.faceAmount, sch,
 									new double[] { coupons[k] }, bondDayCount, paymentConvention, redemption, issue);
 
-							for (/* @Size */int m = 0; m < (yields).length; m++) {
+							for (int m = 0; m < (yields).length; m++) {
 
-								/* @Real */final double price = bond.cleanPrice(
+								final double price = bond.cleanPrice(
 										yields[m], bondDayCount, compounding[n], frequencies[l]);
-								/* @Real */final double calculated = bond.yield(
+								final double calculated = bond.yield(
 										price, bondDayCount, compounding[n], frequencies[l], new Date(), tolerance, maxEvaluations);
 
 								if (Math.abs(yields[m] - calculated) > tolerance) {
 									// the difference might not matter
-									/* @Real */final double price2 = bond.cleanPrice(calculated, bondDayCount, compounding[n],
+									final double price2 = bond.cleanPrice(calculated, bondDayCount, compounding[n],
 											frequencies[l]);
 									if (Math.abs(price - price2) / price > tolerance) {
 										QL.error("yield recalculation failed:\n" + "    issue:     " + issue + "\n"
@@ -183,79 +182,79 @@ public class BondTest {
 
 		final CommonVars vars = new CommonVars();
 
-		double tolerance = 1.0e-7;
-		int maxEvaluations = 100;
+		final double tolerance = 1.0e-7;
+		final int maxEvaluations = 100;
 
-		int lengths[] = { 3, 5, 10, 15, 20 };
-		int settlementDays = 3;
-		double coupons[] = { 0.02, 0.05, 0.08 };
+		final int lengths[] = { 3, 5, 10, 15, 20 };
+		final int settlementDays = 3;
+		final double coupons[] = { 0.02, 0.05, 0.08 };
 		final Frequency frequencies[] = { Frequency.Semiannual, Frequency.Annual };
 		final DayCounter bondDayCount = Actual360.getDayCounter();
 		final BusinessDayConvention accrualConvention = BusinessDayConvention.Unadjusted;
 		final BusinessDayConvention paymentConvention = BusinessDayConvention.ModifiedFollowing;
-		double redemption = 100.0;
+		final double redemption = 100.0;
 
-		double yields[] = { 0.03, 0.04, 0.05, 0.06, 0.07 };
+		final double yields[] = { 0.03, 0.04, 0.05, 0.06, 0.07 };
 
-		for (int j=0; j<lengths.length; j++) {
-			for (int k=0; k<coupons.length; k++) {
-				for (int l=0; l<frequencies.length; l++) {
+		for (final int length : lengths) {
+			for (final double coupon : coupons) {
+				for (final Frequency frequencie : frequencies) {
 
-					Date dated = vars.today;
-					Date issue = dated;
-					Date maturity = vars.calendar.advance(issue, lengths[j], TimeUnit.Years);
+					final Date dated = vars.today;
+					final Date issue = dated;
+					final Date maturity = vars.calendar.advance(issue, length, TimeUnit.Years);
 
-					Handle<SimpleQuote> rate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-					Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(vars.today, rate, bondDayCount));
+					final Handle<SimpleQuote> rate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+					final Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(vars.today, rate, bondDayCount));
 
-					Schedule sch = new Schedule(dated, maturity,
-							new Period(frequencies[l]), vars.calendar,
+					final Schedule sch = new Schedule(dated, maturity,
+							new Period(frequencie), vars.calendar,
 							accrualConvention, accrualConvention,
 							Rule.Backward, false);
 
-					FixedRateBond bond = new FixedRateBond(settlementDays, vars.faceAmount, sch,
-							new double[] { coupons[k] },
+					final FixedRateBond bond = new FixedRateBond(settlementDays, vars.faceAmount, sch,
+							new double[] { coupon },
 							bondDayCount, paymentConvention,
 							redemption, issue);
 
-					PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
+					final PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
 					bond.setPricingEngine(bondEngine);
 
-					for (int m=0; m<yields.length; m++) {
+					for (final double yield : yields) {
 
-						rate.currentLink().setValue(yields[m]);
+						rate.currentLink().setValue(yield);
 
-						double price = bond.cleanPrice(yields[m],
+						final double price = bond.cleanPrice(yield,
 								bondDayCount, Compounding.Continuous,
-								frequencies[l]);
-						double calculatedPrice = bond.getCleanPrice();
+								frequencie);
+						final double calculatedPrice = bond.getCleanPrice();
 
 						if (Math.abs(price-calculatedPrice) > tolerance) {
-							
+
 							QL.error(
 									"price calculation failed:"
 									+ "\n    issue:     " + issue
 									+ "\n    maturity:  " + maturity
-									+ "\n    coupon:    " + coupons[k]
-									+ "\n    frequency: " + frequencies[l] + "\n"
-									+ "\n    yield:  " + yields[m]
+									+ "\n    coupon:    " + coupon
+									+ "\n    frequency: " + frequencie + "\n"
+									+ "\n    yield:  " + yield
 									+ "\n    expected:    " + price
 									+ "\n    calculated': " + calculatedPrice
 									+ "\n    error':      " + (price-calculatedPrice));
 
 						}
 
-						double calculatedYield = bond.yield(
-								bondDayCount, Compounding.Continuous, frequencies[l],
+						final double calculatedYield = bond.yield(
+								bondDayCount, Compounding.Continuous, frequencie,
 								tolerance, maxEvaluations);
-						if (Math.abs(yields[m]-calculatedYield) > tolerance) {
+						if (Math.abs(yield-calculatedYield) > tolerance) {
 							QL.error(
 									"yield calculation failed:"
 									+ "\n    issue:     " + issue
 									+ "\n    maturity:  " + maturity
-									+ "\n    coupon:    " + coupons[k]
-									+ "\n    frequency: " + frequencies[l] + "\n"
-									+ "\n    yield:  " + yields[m]
+									+ "\n    coupon:    " + coupon
+									+ "\n    frequency: " + frequencie + "\n"
+									+ "\n    yield:  " + yield
 									+ "\n    price:    " + price
 									+ "\n    yield': " + calculatedYield);
 						}

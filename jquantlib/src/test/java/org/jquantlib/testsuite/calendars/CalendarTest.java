@@ -21,7 +21,8 @@
  */
 package org.jquantlib.testsuite.calendars;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.jquantlib.QL;
 import org.jquantlib.time.BusinessDayConvention;
@@ -34,6 +35,7 @@ import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.time.calendars.UnitedStates;
 import org.junit.Ignore;
 import org.junit.Test;
+
 
 /**
  *
@@ -51,10 +53,10 @@ public class CalendarTest {
         final NullCalendar nullCalendar = new NullCalendar();
         final Date d = new Date(11, Month.OCTOBER, 2009);
         final Date dCopy = d.clone();
-        Assert.assertEquals(dCopy, d);
+        assertEquals(dCopy, d);
         final Date advancedDate = nullCalendar.advance(d, new Period(3, TimeUnit.Months));
-        Assert.assertEquals(dCopy, d);
-        Assert.assertFalse(advancedDate.equals(d));
+        assertEquals(dCopy, d);
+        assertFalse(advancedDate.equals(d));
     }
 
 
@@ -87,7 +89,7 @@ public class CalendarTest {
         for (final Entry entry : entries) {
             final boolean result = unitedStatesCalendar.isEndOfMonth(entry.date);
             System.out.printf("%s is the last business day? %b\n", entry.date.isoDate(), result);
-            Assert.assertEquals(result,entry.expected);
+            assertEquals(result,entry.expected);
         }
     }
 
@@ -125,7 +127,7 @@ public class CalendarTest {
         for (final Entry entry : entries) {
             final Date result = unitedStatesCalendar.adjust(entry.date, BusinessDayConvention.ModifiedFollowing);
             System.out.println("adjusted is " + result.isoDate() + "  ::  expected is " + entry.expected.isoDate());
-            Assert.assertEquals(result, entry.expected);
+            assertEquals(result, entry.expected);
         }
     }
 
@@ -162,7 +164,7 @@ public class CalendarTest {
         for (final Entry entry : entries) {
             final Date result = unitedStatesCalendar.adjust(entry.date, BusinessDayConvention.ModifiedPreceding);
             System.out.println("adjusted is " + result.isoDate() + "  ::  expected is " + entry.expected.isoDate());
-            Assert.assertEquals(result, entry.expected);
+            assertEquals(result, entry.expected);
         }
     }
 

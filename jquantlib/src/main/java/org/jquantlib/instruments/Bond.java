@@ -109,7 +109,8 @@ public abstract class Bond extends Instrument {
     protected BusinessDayConvention paymentConvention;
     protected Handle<YieldTermStructure> discountCurve;
     protected Frequency frequency;
-    //name conflict with innner class...
+
+    //FIXME: name conflict with inner class...
     protected Leg cashFlows_;
     protected Date maturityDate_;
     protected Date issueDate_;
@@ -142,7 +143,7 @@ public abstract class Bond extends Instrument {
         this.notionals_ = new ArrayList<Double>();
         this.notionalSchedule_ = new ArrayList<Date>();
         this.redemptions_ = new Leg();
-        
+
         if (!coupons.isEmpty()) {
             Collections.sort(cashFlows_, new EarlierThanCashFlowComparator());
             maturityDate_ = coupons.get(coupons.size() - 1).date();
@@ -150,13 +151,7 @@ public abstract class Bond extends Instrument {
         }
 
         final Date evaluationDate = new Settings().evaluationDate();
-
-        // TODO: code review :: please verify against QL/C++ code
-        // seems like we should have this.evaluationDate
-
         evaluationDate.addObserver(this);
-        //XXX:registerWith
-        //registerWith(evaluationDate);
     }
 
     protected Bond(
@@ -235,13 +230,7 @@ public abstract class Bond extends Instrument {
         }
 
         final Date evaluationDate = new Settings().evaluationDate();
-
-        // TODO: code review :: please verify against QL/C++ code
-        // seems like we should have this.evaluationDate
-
         evaluationDate.addObserver(this);
-        //XXX:registerWith
-        //registerWith(evaluationDate);
     }
 
     protected Bond(
@@ -302,17 +291,11 @@ public abstract class Bond extends Instrument {
         this.notionals_ = new ArrayList<Double>();
         this.notionalSchedule_ = new ArrayList<Date>();
         this.redemptions_ = new Leg();
- 
-        final Date evaluationDate = new Settings().evaluationDate();
 
-        // TODO: code review :: please verify against QL/C++ code
-        // seems like we should have this.evaluationDate
+        final Date evaluationDate = new Settings().evaluationDate();
 
         evaluationDate.addObserver(this);
         this.discountCurve.addObserver(this);
-        //XXX:registerWith
-        //registerWith(evaluationDate);
-        //registerWith(discountCurve);
     }
 
 
@@ -360,8 +343,12 @@ public abstract class Bond extends Instrument {
         // date, since the first is null.  After the call to
         // lower_bound, *i is the earliest date which is greater or
         // equal than d.  Its index is greater or equal to 1.
+
+        // FIXME:: code review !!!
         int index = Collections.binarySearch(notionalSchedule_, date);
-        if (index < 0) index = - (index + 1);
+        if (index < 0) {
+            index = - (index + 1);
+        }
 
         if (date.le(notionalSchedule_.get(index))) {
             // no doubt about what to return
@@ -369,9 +356,12 @@ public abstract class Bond extends Instrument {
             return notionals_.get(index-1);
         } else {
             if (new Settings().isTodaysPayments()) {
+                // We consider today's payment as pending; the bond still
+                // has the previous notional
                 return notionals_.get(index-1);
-            }
-            else {
+            } else {
+                // today's payment has occurred; the bond already changed
+                // notional.
             	return notionals_.get(index);
             }
         }
@@ -503,12 +493,12 @@ public abstract class Bond extends Instrument {
 
         /*@Rate*/double result = 0.0;
 
-        // QL starts at the next cashflow and only continues to the one after to 
-        // check that it isn't the same date. Also stop at the penultimate flow. The last flow 
+        // QL starts at the next cashflow and only continues to the one after to
+        // check that it isn't the same date. Also stop at the penultimate flow. The last flow
         // is not a Coupon
-        int startIndex = cashFlows_.indexOf(cf);
-        for (Iterator iterator = cashFlows_.listIterator(startIndex); iterator.hasNext();) {
-			CashFlow flow = (CashFlow) iterator.next();
+        final int startIndex = cashFlows_.indexOf(cf);
+        for (final Iterator iterator = cashFlows_.listIterator(startIndex); iterator.hasNext();) {
+			final CashFlow flow = (CashFlow) iterator.next();
             if(!flow.date().eq(paymentDate) || ! iterator.hasNext()){break;}
             final Coupon cp = (Coupon)flow;
             if (cp != null) {
@@ -692,7 +682,7 @@ public abstract class Bond extends Instrument {
         }
 
         final Brent solver = new Brent();
-        double dirtyPrice = cleanPrice + accruedAmount(settlementDate);
+        final double dirtyPrice = cleanPrice + accruedAmount(settlementDate);
         solver.setMaxEvaluations(maxEvaluations);
         final YieldFinder objective = new YieldFinder(notional(settlementDate), this.cashFlows_,
                 dirtyPrice,

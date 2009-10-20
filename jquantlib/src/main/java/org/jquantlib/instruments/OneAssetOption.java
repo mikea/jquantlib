@@ -234,7 +234,7 @@ public class OneAssetOption extends Option {
 
 
     //
-    // overrides NewInstrument
+    // overrides Instrument
     //
 
     /**

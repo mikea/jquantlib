@@ -61,7 +61,6 @@ public abstract class Coupon extends CashFlow {
             final Date accrualStartDate,
             final Date accrualEndDate){
         this(nominal, paymentDate, accrualStartDate, accrualEndDate, new Date(), new Date());
-
     }
 
     public Coupon(final double nominal,
@@ -76,7 +75,6 @@ public abstract class Coupon extends CashFlow {
         this.accrualEndDate = accrualEndDate;
         this.refPeriodStart = refPeriodStart;
         this.refPeriodEnd = refPeriodEnd;
-
     }
 
 
