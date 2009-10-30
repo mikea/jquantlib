@@ -44,14 +44,15 @@ import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.AmericanExercise;
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.instruments.OneAssetOption;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.StrikedTypePayoff;
+import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.lang.annotation.PackagePrivate;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.pricingengines.BlackCalculator;
 import org.jquantlib.pricingengines.BlackFormula;
-import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
@@ -59,7 +60,7 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  *
  * @author <Richard Gomes>
  */
-public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
+public class BaroneAdesiWhaleyApproximationEngine extends VanillaOption.EngineImpl {
 
     // TODO: refactor messages
     private static final String NOT_AN_AMERICAN_OPTION = "not an American Option";
@@ -71,11 +72,27 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
 
 
     //
+    // private final fields
+    //
+
+    final private GeneralizedBlackScholesProcess process;
+    final private OneAssetOption.ArgumentsImpl a;
+    final private OneAssetOption.ResultsImpl   r;
+    private final Option.GreeksImpl greeks;
+    private final Option.MoreGreeksImpl moreGreeks;
+
+
+    //
     // public constructors
     //
 
-    public BaroneAdesiWhaleyApproximationEngine() {
-        super();
+    public BaroneAdesiWhaleyApproximationEngine(final GeneralizedBlackScholesProcess process) {
+        this.a = (OneAssetOption.ArgumentsImpl)arguments;
+        this.r = (OneAssetOption.ResultsImpl)results;
+        this.greeks = r.greeks();
+        this.moreGreeks = r.moreGreeks();
+        this.process = process;
+        this.process.addObserver(this);
     }
 
 
@@ -85,15 +102,12 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
 
     @Override
     public void calculate() {
-        QL.require(arguments.exercise.type()==Exercise.Type.American , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified
-        QL.require(arguments.exercise instanceof AmericanExercise , NON_AMERICAN_EXERCISE_GIVEN); // QA:[RG]::verified
-        final AmericanExercise ex = (AmericanExercise)arguments.exercise;
+        QL.require(a.exercise.type()==Exercise.Type.American , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified
+        QL.require(a.exercise instanceof AmericanExercise , NON_AMERICAN_EXERCISE_GIVEN); // QA:[RG]::verified
+        final AmericanExercise ex = (AmericanExercise)a.exercise;
         QL.require(!ex.payoffAtExpiry() , PAYOFF_AT_EXPIRY_NOT_HANDLED); // QA:[RG]::verified
-        QL.require(arguments.payoff instanceof StrikedTypePayoff , NON_STRIKE_PAYOFF_GIVEN); // QA:[RG]::verified
-        final StrikedTypePayoff payoff = (StrikedTypePayoff)arguments.payoff;
-        QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , BLACK_SCHOLES_PROCESS_REQUIRED); // QA:[RG]::verified
-        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
-
+        QL.require(a.payoff instanceof StrikedTypePayoff , NON_STRIKE_PAYOFF_GIVEN); // QA:[RG]::verified
+        final StrikedTypePayoff payoff = (StrikedTypePayoff)a.payoff;
 
         final double /*@Real*/ variance = process.blackVolatility().currentLink().blackVariance(ex.lastDate(), payoff.strike());
         final double /*@DiscountFactor*/ dividendDiscount = process.dividendYield().currentLink().discount(ex.lastDate());
@@ -105,28 +119,29 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
 
         if (dividendDiscount>=1.0 && payoff.optionType()==Option.Type.CALL) {
             // early exercise never optimal
-            results.value        = black.value();
-            results.delta        = black.delta(spot);
-            results.deltaForward = black.deltaForward();
-            results.elasticity   = black.elasticity(spot);
-            results.gamma        = black.gamma(spot);
+            r.value                     = black.value();
+            greeks.delta            = black.delta(spot);
+            moreGreeks.deltaForward = black.deltaForward();
+            moreGreeks.elasticity   = black.elasticity(spot);
+            greeks.gamma            = black.gamma(spot);
 
             final DayCounter rfdc  = process.riskFreeRate().currentLink().dayCounter();
             final DayCounter divdc = process.dividendYield().currentLink().dayCounter();
             final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
-            double /*@Time*/ t = rfdc.yearFraction(process.riskFreeRate().currentLink().referenceDate(), arguments.exercise.lastDate());
-            results.rho = black.rho(t);
 
-            t = divdc.yearFraction(process.dividendYield().currentLink().referenceDate(), arguments.exercise.lastDate());
-            results.dividendRho = black.dividendRho(t);
+            double /*@Time*/ t = rfdc.yearFraction(process.riskFreeRate().currentLink().referenceDate(), a.exercise.lastDate());
+            greeks.rho = black.rho(t);
 
-            t = voldc.yearFraction(process.blackVolatility().currentLink().referenceDate(), arguments.exercise.lastDate());
-            results.vega        = black.vega(t);
-            results.theta       = black.theta(spot, t);
-            results.thetaPerDay = black.thetaPerDay(spot, t);
+            t = divdc.yearFraction(process.dividendYield().currentLink().referenceDate(), a.exercise.lastDate());
+            greeks.dividendRho = black.dividendRho(t);
 
-            results.strikeSensitivity  = black.strikeSensitivity();
-            results.itmCashProbability = black.itmCashProbability();
+            t = voldc.yearFraction(process.blackVolatility().currentLink().referenceDate(), a.exercise.lastDate());
+            greeks.vega        = black.vega(t);
+            greeks.theta       = black.theta(spot, t);
+
+            moreGreeks.thetaPerDay        = black.thetaPerDay(spot, t);
+            moreGreeks.strikeSensitivity  = black.strikeSensitivity();
+            moreGreeks.itmCashProbability = black.itmCashProbability();
         } else {
             // early exercise can be optimal
             final CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
@@ -142,19 +157,19 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
                 Q = (-(n-1.0) + Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
                 a =  (Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.op(d1));
                 if (spot<Sk) {
-                    results.value = black.value() + a * Math.pow((spot/Sk), Q);
+                    r.value = black.value() + a * Math.pow((spot/Sk), Q);
                 } else {
-                    results.value = spot - payoff.strike();
+                    r.value = spot - payoff.strike();
                 }
                 break;
             case PUT:
                 Q = (-(n-1.0) - Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
                 a = -(Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.op(-d1));
                 if (spot>Sk) {
-                    results.value = black.value() +
+                    r.value = black.value() +
                     a * Math.pow((spot/Sk), Q);
                 } else {
-                    results.value = payoff.strike() - spot;
+                    r.value = payoff.strike() - spot;
                 }
                 break;
             default:
@@ -169,6 +184,7 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOptionEngine {
     // private methods
     //
 
+    //TODO: code review :: unused method?
     private double  criticalPrice(
             final StrikedTypePayoff payoff,
             final double /*@DiscountFactor*/ riskFreeDiscount,

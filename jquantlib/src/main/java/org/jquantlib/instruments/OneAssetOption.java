@@ -41,38 +41,23 @@
 
 package org.jquantlib.instruments;
 
-import java.util.List;
-
-import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.exercise.Exercise;
-import org.jquantlib.math.AbstractSolver1D;
-import org.jquantlib.math.Ops;
-import org.jquantlib.math.solvers1D.Brent;
+import org.jquantlib.lang.reflect.ReflectConstants;
+import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.arguments.Arguments;
-import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
-import org.jquantlib.pricingengines.arguments.OptionArguments;
-import org.jquantlib.pricingengines.results.Greeks;
-import org.jquantlib.pricingengines.results.MoreGreeks;
-import org.jquantlib.pricingengines.results.OneAssetOptionResults;
-import org.jquantlib.pricingengines.results.Results;
-import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.jquantlib.processes.StochasticProcess;
-import org.jquantlib.quotes.Handle;
-import org.jquantlib.quotes.Quote;
-import org.jquantlib.quotes.SimpleQuote;
-import org.jquantlib.termstructures.BlackVolTermStructure;
-import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.time.Date;
 
+/**
+ * Base class for options on a single asset
+ *
+ * @author Richard Gomes
+ */
 public class OneAssetOption extends Option {
 
-    private static final String WRONG_ARGUMENT_TYPE = "wrong argument type";
 
-
+    //
     // private fields
     //
 
@@ -88,21 +73,15 @@ public class OneAssetOption extends Option {
     private double dividendRho;
     private double itmCashProbability;
 
-    // arguments
-    protected StochasticProcess stochasticProcess;
-
 
     //
     // public constructors
     //
 
-    public OneAssetOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
-        super(payoff, exercise, engine);
-        this.stochasticProcess = process;
-
-        this.stochasticProcess.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.stochasticProcess);
+    public OneAssetOption(
+            final Payoff payoff,
+            final Exercise exercise) {
+        super(payoff, exercise);
     }
 
     //
@@ -169,59 +148,6 @@ public class OneAssetOption extends Option {
         return itmCashProbability;
     }
 
-    /**
-     * Currently, this method returns the Black-Scholes implied volatility.
-     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
-     *
-     * Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
-     * In these cases the calculation can fail and the result (if any) is almost meaningless.
-     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g.,
-     * a target value lower than the intrinsic value in the case of American options.
-     */
-    public /* @Volatility */ double impliedVolatility(/*@Price*/ final double targetValue) /* @ReadOnly */ {
-        return impliedVolatility(targetValue, 1.0e-4, 100, 1.0e-7, 4.0);
-    }
-
-    /**
-     * Currently, this method returns the Black-Scholes implied volatility.
-     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
-     *
-     * Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
-     * In these cases the calculation can fail and the result (if any) is almost meaningless.
-     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g.,
-     * a target value lower than the intrinsic value in the case of American options.
-     */
-    public /* @Volatility */ double impliedVolatility(/*@Price*/ final double targetValue, final double tolerance, final int maxEvalutions) /* @ReadOnly */ {
-        return impliedVolatility(targetValue, tolerance, maxEvalutions, 1.0e-7, 4.0);
-    }
-
-
-    /**
-     * @Note Currently, this method returns the Black-Scholes implied volatility.
-     * It will give non-consistent results if the pricing was performed with any other methods (such as jump-diffusion models.)
-     *
-     * @Note Options with a gamma that changes sign have values that are not monotonic in the volatility, e.g binary options.
-     * In these cases the calculation can fail and the result (if any) is almost meaningless.
-     * Another possible source of failure is to have a target value that is not attainable with any volatility, e.g.,
-     * a target value lower than the intrinsic value in the case of American options.
-     */
-    public final /* @Volatility */ double impliedVolatility(
-            final /*@Price*/ double targetValue,
-            final double accuracy,
-            final int maxEvaluations,
-            final /* @Volatility */ double minVol,
-            final /* @Volatility */ double maxVol) /* @ReadOnly */ {
-        calculate();
-        QL.require(!isExpired() , "option expired"); // QA:[RG]::verified // TODO: message
-        /* @Volatility */ final double guess = (minVol+maxVol)/2.0;
-        final ImpliedVolHelper f = new ImpliedVolHelper(engine, targetValue);
-        final AbstractSolver1D<Ops.DoubleOp> solver = new Brent();
-        solver.setMaxEvaluations(maxEvaluations);
-        /* @Volatility */ final double result = solver.solve(f, accuracy, guess, minVol, maxVol);
-        return result;
-    }
-
-
     //
     // overrides Instrument
     //
@@ -240,29 +166,6 @@ public class OneAssetOption extends Option {
     /**
      * {@inheritDoc}
      *
-     * Passes the {@link StochasticProcess}, {@link Exercise}
-     */
-    @Override
-    public void setupArguments(final Arguments args) /* @ReadOnly */ {
-        QL.require(args instanceof OneAssetOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
-        final OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments) args;
-        final OptionArguments         optionArguments   = (OptionArguments) args;
-        // set up stochastic process
-        oneAssetArguments.stochasticProcess = stochasticProcess;
-        // setup exercise dates
-        optionArguments.exercise = exercise;
-        // set up stopping times
-        final int n = exercise.size();
-        final List<Double> list = new ArrayDoubleList(n);
-        for (int i=0; i<n; ++i) {
-            list.add(/*@Time*/ stochasticProcess.time(exercise.date(i)));
-        }
-        optionArguments.stoppingTimes = list;
-    }
-
-    /**
-     * {@inheritDoc}
-     *
      * Obtains {@link Greeks} and {@link MoreGreeks} calculated by a {@link PricingEngine}
      *
      * @see Greeks
@@ -270,15 +173,14 @@ public class OneAssetOption extends Option {
      * @see PricingEngine
      */
     @Override
-    public void fetchResults(final Results results) /* @ReadOnly */ {
-        QL.require(results instanceof MoreGreeks , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+    public void fetchResults(final PricingEngine.Results results) /* @ReadOnly */ {
         super.fetchResults(results);
-        final MoreGreeks moreGreeks;
-        final Greeks     greeks;
 
         // bind a Results interface to specific classes
-        moreGreeks = (MoreGreeks) results;
-        greeks     = (Greeks) results;
+        QL.require(OneAssetOption.Results.class.isAssignableFrom(results.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+        final OneAssetOption.ResultsImpl r = (OneAssetOption.ResultsImpl)results;
+        final GreeksImpl     greeks = r.greeks();
+        final MoreGreeksImpl moreGreeks = r.moreGreeks();
 
         //
         // No check on Double.NaN values - just copy. this allows:
@@ -317,87 +219,79 @@ public class OneAssetOption extends Option {
 
 
     //
-    // private inner classes
+    // public inner interfaces
     //
 
     /**
-     * Helper class for implied volatility calculation
+     * basic option arguments
+     *
+     * @author Richard Gomes
      */
-    private static class ImpliedVolHelper implements Ops.DoubleOp {
+    public interface Arguments extends Option.Arguments { }
 
-        //
-        // private final fields
-        //
-
-        private final OneAssetOptionResults impliedResults;
-        private final PricingEngine impliedEngine;
-        private final Handle<Quote> vol;
-        private final double targetValue;
+    /**
+     * Results from single-asset option calculation
+     *
+     * @author Richard Gomes
+     */
+    public interface Results extends Instrument.Results, Option.Greeks, Option.MoreGreeks { }
 
 
-        //
-        // public constructors
-        //
 
-        public ImpliedVolHelper(final PricingEngine engine, final double targetValue)  {
-            this.impliedEngine = engine;
-            this.targetValue = targetValue;
+    //
+    // public inner classes
+    //
 
-            // obtain arguments from pricing engine
-            final Arguments tmpArgs = impliedEngine.getArguments();
-            QL.require(tmpArgs instanceof OneAssetOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
-            final OneAssetOptionArguments oneAssetArguments = (OneAssetOptionArguments)tmpArgs;
+    static public class ArgumentsImpl extends Option.ArgumentsImpl implements OneAssetOption.Arguments { }
 
-            // Make a new stochastic process in order not to modify the given one.
-            // stateVariable, dividendTS and riskFreeTS can be copied since
-            // they won't be modified.
-            // Here the requirement for a Black-Scholes process is hard-coded.
-            // Making it work for a generic process would need some reflection
-            // technique (which is possible, but requires some thought),
-            // hence its postponement.
 
-            // obtain original process from arguments
-            final GeneralizedBlackScholesProcess originalProcess = (GeneralizedBlackScholesProcess)oneAssetArguments.stochasticProcess;
-            QL.require(originalProcess!=null , "Black-Scholes process required"); // QA:[RG]::verified // TODO: message
+    /**
+     * Results from single-asset option calculation
+     *
+     * @author Richard Gomes
+     */
+    static public class ResultsImpl extends Instrument.ResultsImpl implements OneAssetOption.Results {
 
-            // initialize arguments for calculation of implied volatility
-            this.vol = new Handle<Quote>(new SimpleQuote(0.0));
-            final Handle<? extends Quote> stateVariable = originalProcess.stateVariable();
-            final Handle<YieldTermStructure> dividendYield = originalProcess.dividendYield();
-            final Handle<YieldTermStructure> riskFreeRate = originalProcess.riskFreeRate();
-            final Handle<BlackVolTermStructure> blackVol = originalProcess.blackVolatility();
+        private final Option.GreeksImpl       greeks;
+        private final Option.MoreGreeksImpl   moreGreeks;
 
-            // calculate implied volatility
-            final Handle<BlackVolTermStructure> volatility = new Handle<BlackVolTermStructure>(
-                    new BlackConstantVol(
-                            blackVol.currentLink().referenceDate(),
-                            vol,
-                            blackVol.currentLink().dayCounter()));
-
-            // build a new stochastic process
-            final StochasticProcess process = new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);
-
-            // set up a new stochastic process back to the engine's arguments
-            oneAssetArguments.stochasticProcess = process;
-
-            // obtain results from pricing engine and keep for further use
-            QL.require(impliedEngine.getResults() instanceof OneAssetOptionResults , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
-            impliedResults = (OneAssetOptionResults)impliedEngine.getResults();
+        public ResultsImpl() {
+            greeks = new Option.GreeksImpl();
+            moreGreeks = new Option.MoreGreeksImpl();
         }
 
+        final public Option.GreeksImpl greeks() {
+            return greeks;
+        }
+
+        final public Option.MoreGreeksImpl moreGreeks() {
+            return moreGreeks;
+        }
 
         //
-        // implements Ops.DoubleOp
+        // implements Results
         //
 
         @Override
-        public final double op(final /* @Volatility */ double x) /* @ReadOnly */ {
-            final SimpleQuote quote = (SimpleQuote)vol.currentLink();
-            quote.setValue(x);
-            this.impliedEngine.calculate();
-            return impliedResults.value - targetValue;
+        public void reset() /* @ReadOnly */ {
+            super.reset();
+            greeks.reset();
+            moreGreeks.reset();
         }
 
+    }
+
+
+    /**
+     * The pricing engine for one-asset options
+     *
+     * @author Richard Gomes
+     */
+    static public abstract class EngineImpl extends GenericEngine<OneAssetOption.Arguments, OneAssetOption.Results> {
+
+        protected EngineImpl() {
+            super(new ArgumentsImpl(), new ResultsImpl());
+        }
     }
 
 }

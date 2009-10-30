@@ -35,7 +35,6 @@ import static org.jquantlib.time.Month.NOVEMBER;
 import static org.jquantlib.time.Month.OCTOBER;
 import static org.jquantlib.time.Month.SEPTEMBER;
 
-import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
@@ -111,7 +110,6 @@ public class Indonesia extends Calendar {
             impl = new BejImpl();
             break;
         default:
-            QL.error(UNKNOWN_MARKET);
             throw new LibraryException(UNKNOWN_MARKET);
         }
     }

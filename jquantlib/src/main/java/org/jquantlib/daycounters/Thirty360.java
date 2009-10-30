@@ -22,6 +22,9 @@
 
 package org.jquantlib.daycounters;
 
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Date;
 
@@ -50,126 +53,43 @@ import org.jquantlib.time.Date;
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
-public class Thirty360 extends AbstractDayCounter {
-
-    //
-    // public enums
-    //
+@QualityAssurance(quality=Quality.Q4_UNIT, version=Version.V097, reviewers="Richard Gomes")
+public class Thirty360 extends DayCounter {
 
     /**
      * 30/360 Calendar Conventions
      */
     public enum Convention {
-        USA, BondBasis, European, EurobondBasis, Italian;
+        USA, BondBasis,
+        European, EurobondBasis,
+        Italian;
     }
 
 
     //
-    // private final static fields
+    // public constructors
     //
 
-    private static final Thirty360 THIRTY360_US = new Thirty360(Thirty360.Convention.USA);
-    private static final Thirty360 THIRTY360_EU = new Thirty360(Thirty360.Convention.European);
-    private static final Thirty360 THIRTY360_IT = new Thirty360(Thirty360.Convention.Italian);
-
-
-    //
-    // public static final constructors
-    //
-
-    public static final Thirty360 getDayCounter() {
-        return getDayCounter(Thirty360.Convention.BondBasis);
-
+    public Thirty360() {
+        this(Convention.BondBasis);
     }
 
-    public static final Thirty360 getDayCounter(final Thirty360.Convention c) {
+    public Thirty360(final Thirty360.Convention c) {
         switch (c) {
-        case USA:
-        case BondBasis:
-            return THIRTY360_US;
-        case European:
-        case EurobondBasis:
-            return THIRTY360_EU;
-        case Italian:
-            return THIRTY360_IT;
-        default:
-            throw new LibraryException("no conversion specified"); // QA:[RG]::verified //TODO: message
+            case USA:
+            case BondBasis:
+                super.impl = new Impl_US();
+                break;
+            case European:
+            case EurobondBasis:
+                super.impl = new Impl_EU();
+                break;
+            case Italian:
+                super.impl = new Impl_IT();
+                break;
+            default:
+                throw new LibraryException("unknown 30/360 convention"); // TODO: message
         }
-    }
-
-
-    //
-    // private final fields
-    //
-
-    private final Thirty360Abstraction delegate;
-
-
-    //
-    // private constructors
-    //
-
-    private Thirty360(final Thirty360.Convention c) {
-        super();
-
-        switch (c) {
-        case USA:
-        case BondBasis:
-            delegate = new US();
-            break;
-        case European:
-        case EurobondBasis:
-            delegate = new EU();
-            break;
-        case Italian:
-            delegate = new IT();
-            break;
-        default:
-            throw new LibraryException("no conversion specified"); // QA:[RG]::verified // TODO: message
-        }
-    }
-
-
-    //
-    // public final methods
-    //
-
-    public final int compute(final int dd1, final int dd2, final int mm1, final int mm2, final int yy1, final int yy2){
-        return 360 * (yy2 - yy1) + 30 * (mm2 - mm1 - 1) + Math.max(0, 30 - dd1) + Math.min(30, dd2);
-    }
-
-
-    //
-    // implements DayCounter
-    //
-
-    @Override
-    public final String name() /* @ReadOnly */{
-        return delegate.getName();
-    }
-
-    @Override
-    public final int dayCount(final Date d1, final Date d2) /* @ReadOnly */{
-        final int dd1 = d1.dayOfMonth();
-        final int dd2 = d2.dayOfMonth();
-        final int mm1 = d1.month().value();
-        final int mm2 = d2.month().value();
-        final int yy1 = d1.year();
-        final int yy2 = d2.year();
-        return delegate.getDayCount(dd1, dd2, mm1, mm2, yy1, yy2);
-
-    }
-
-    @Override
-    public final /* @Time */ double yearFraction(
-            final Date dateStart, final Date dateEnd,
-            final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
-        return dayCount(dateStart, dateEnd) / 360.0;
-    }
-
-    @Override
-    public final /* @Time */double yearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
-        return dayCount(dateStart, dateEnd) / 360.0;
     }
 
 
@@ -178,39 +98,40 @@ public class Thirty360 extends AbstractDayCounter {
     //
 
     /**
-     * Abstraction of Thirty360 class
-     *
-     * @see <a href="http://en.wikipedia.org/wiki/Bridge_pattern">Bridge pattern</a>
-     *
-     * @author Richard Gomes
-     */
-    private interface Thirty360Abstraction {
-        public String getName();
-        public int getDayCount(int dd1, int dd2, int mm1, int mm2, int yy1, int yy2);
-    }
-
-    /**
      * Implementation of Thirty360 class abstraction according to US convention
      *
      * @see <a href="http://en.wikipedia.org/wiki/Bridge_pattern">Bridge pattern</a>
      *
      * @author Richard Gomes
      */
-    private final class US implements Thirty360Abstraction {
+    private final class Impl_US extends DayCounter.Impl {
 
         @Override
-        public final String getName() /* @ReadOnly */{
+        public final String name() /* @ReadOnly */{
             return "30/360 (Bond Basis)";
         }
 
         @Override
-        public final int getDayCount(final int dd1, int dd2, final int mm1, int mm2, final int yy1, final int yy2){
-            if (dd2 == 31 && dd1 < 30) {
-                dd2 = 1;
-                mm2++;
-            }
-            return compute(dd1,dd2,mm1,mm2,yy1,yy2);
+        protected int dayCount(final Date d1, final Date d2) /* @ReadOnly */ {
+            final int dd1 = d1.dayOfMonth();
+            int dd2 = d2.dayOfMonth();
+            final int mm1 = d1.month().value();
+            int mm2 = d2.month().value();
+            final int yy1 = d1.year();
+            final int yy2 = d2.year();
+
+            if (dd2 == 31 && dd1 < 30) { dd2 = 1; mm2++; }
+
+            return 360*(yy2-yy1) + 30*(mm2-mm1-1) + Math.max(0, 30-dd1) + Math.min(30, dd2);
         }
+
+        @Override
+        public /*@Time*/ final double yearFraction(
+                final Date dateStart, final Date dateEnd,
+                final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
+            return /*@Time*/ dayCount(dateStart, dateEnd) / 360.0;
+        }
+
     }
 
     /**
@@ -220,17 +141,32 @@ public class Thirty360 extends AbstractDayCounter {
      *
      * @author Richard Gomes
      */
-    private final class EU implements Thirty360Abstraction {
+    private final class Impl_EU extends DayCounter.Impl {
 
         @Override
-        public final String getName() /* @ReadOnly */{
+        public final String name() /* @ReadOnly */{
             return "30E/360 (Eurobond Basis)";
         }
 
         @Override
-        public final int getDayCount(final int dd1, final int dd2, final int mm1, final int mm2, final int yy1, final int yy2){
-            return compute(dd1,dd2,mm1,mm2,yy1,yy2);
+        public /*@Time*/ final double yearFraction(
+                final Date dateStart, final Date dateEnd,
+                final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
+            return /*@Time*/ dayCount(dateStart, dateEnd) / 360.0;
         }
+
+        @Override
+        protected int dayCount(final Date d1, final Date d2) /* @ReadOnly */ {
+            final int dd1 = d1.dayOfMonth();
+            final int dd2 = d2.dayOfMonth();
+            final int mm1 = d1.month().value();
+            final int mm2 = d2.month().value();
+            final int yy1 = d1.year();
+            final int yy2 = d2.year();
+
+            return 360*(yy2-yy1) + 30*(mm2-mm1-1) + Math.max(0, 30-dd1) + Math.min(30, dd2);
+        }
+
     }
 
     /**
@@ -240,23 +176,39 @@ public class Thirty360 extends AbstractDayCounter {
      *
      * @author Richard Gomes
      */
-    private final class IT implements Thirty360Abstraction {
+    private final class Impl_IT extends DayCounter.Impl {
 
         @Override
-        public final String getName() /* @ReadOnly */{
+        protected final String name() /* @ReadOnly */{
             return "30/360 (Italian)";
         }
 
         @Override
-        public final int getDayCount(int dd1, int dd2, final int mm1, final int mm2, final int yy1, final int yy2) {
+        public /*@Time*/ final double yearFraction(
+                final Date dateStart, final Date dateEnd,
+                final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
+            return /*@Time*/ dayCount(dateStart, dateEnd) / 360.0;
+        }
+
+        @Override
+        protected int dayCount(final Date d1, final Date d2) /* @ReadOnly */ {
+            int dd1 = d1.dayOfMonth();
+            int dd2 = d2.dayOfMonth();
+            final int mm1 = d1.month().value();
+            final int mm2 = d2.month().value();
+            final int yy1 = d1.year();
+            final int yy2 = d2.year();
+
             if (mm1 == 2 && dd1 > 27) {
                 dd1 = 30;
             }
             if (mm2 == 2 && dd2 > 27) {
                 dd2 = 30;
             }
-            return compute(dd1,dd2,mm1,mm2,yy1,yy2);
+
+            return 360*(yy2-yy1) + 30*(mm2-mm1-1) + Math.max(0, 30-dd1) + Math.min(30, dd2);
         }
+
     }
 
 }

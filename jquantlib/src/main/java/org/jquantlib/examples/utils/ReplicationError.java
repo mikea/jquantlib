@@ -98,7 +98,7 @@ public class ReplicationError {
 
         final Calendar calendar = new Target();
         final Date today = Date.todaysDate();
-        final DayCounter dayCount = Actual365Fixed.getDayCounter();
+        final DayCounter dayCount = new Actual365Fixed();
         final Handle<Quote> stateVariable = new Handle(new SimpleQuote(s0_.doubleValue()));
         final Handle<YieldTermStructure> riskFreeRate = new Handle(new FlatForward(today, r_.doubleValue(), dayCount));
 

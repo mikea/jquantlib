@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -46,23 +46,23 @@ package org.jquantlib.instruments;
  * Intermediate class for typed payoffs (CALL/PUT) with a fixed strike price
  */
 public abstract class StrikedTypePayoff extends TypePayoff {
-	
+
 	//
     // protected fields
     //
-    
+
     /**
-     * This field represents the {@link Option}'s strike price 
+     * This field represents the {@link Option}'s strike price
      */
     protected /*@Price*/ double strike;
 
     //
     // public constructors
     //
-    
+
     /**
 	 * Constructs a typed {@link Payoff} with a fixed strike price
-	 * 
+	 *
 	 * @param type is an {@link Option.Type}
 	 * @param strike is the strike price
 	 */
@@ -74,12 +74,23 @@ public abstract class StrikedTypePayoff extends TypePayoff {
 	//
     // public final methods
     //
-    
+
     /**
      * @return the strike value
      */
     public final /*@Price*/ double strike() {
 		return strike;
 	}
+
+    //
+    // overrides Payoff
+    //
+
+    @Override
+    public String description() /* @ReadOnly */ {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(super.description()).append(", ").append(strike).append(" strike");
+        return sb.toString();
+    }
 
 }

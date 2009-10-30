@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,40 +15,50 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.instruments;
 
 /**
- * 
+ *
  * Barrier type
- * 
+ *
  * @author <Richard Gomes>
- * 
+ *
  */
 
 public enum BarrierType {
 
     DownIn {
+        @Override
         public String toString() {
             return "Down & In";
         }
     },
     UpIn {
+        @Override
         public String toString() {
             return "Up & In";
         }
     },
     DownOut {
+        @Override
         public String toString() {
             return "Down & Out";
         }
     },
     UpOut {
+        @Override
         public String toString() {
             return "Up & Out";
+        }
+    },
+    Unknown {
+        @Override
+        public String toString() {
+            return "Unknown";
         }
     }
 }

@@ -33,7 +33,7 @@ public class Euribor365 extends IborIndex {
                 new Target(),
                 euriborConvention(tenor),
                 euriborEOM(tenor),
-                Actual365Fixed.getDayCounter(),
+                new Actual365Fixed(),
                 h);
         QL.require(this.tenor().units() != TimeUnit.Days , "for daily tenors dedicated DailyTenor constructor must be used"); // QA:[RG]::verified // TODO: message
     }

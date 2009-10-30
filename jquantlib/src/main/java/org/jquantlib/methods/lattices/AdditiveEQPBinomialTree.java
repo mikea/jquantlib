@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -29,15 +29,19 @@ import org.jquantlib.processes.StochasticProcess1D;
 
 /**
  * Additive equal probabilities binomial tree
- * 
+ *
  * @category lattices
- * 
+ *
  * @author Srinivas Hasti
  * @author Tim Swetonic
  */
 public class AdditiveEQPBinomialTree extends EqualProbabilitiesBinomialTree {
 
-    public AdditiveEQPBinomialTree(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps, @Unused @Price final double strike) {
+    public AdditiveEQPBinomialTree(
+            final StochasticProcess1D process,
+            @Time final double end,
+            @NonNegative final int steps,
+            @Unused @Price final double strike) {
         super(process, end, steps);
         up = -0.5 * driftPerStep + 0.5 * Math.sqrt(4.0 * process.variance(0.0, x0, dt) - 3.0 * driftPerStep * driftPerStep);
     }

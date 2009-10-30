@@ -23,6 +23,9 @@
 package org.jquantlib.daycounters;
 
 import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
@@ -38,7 +41,8 @@ import org.jquantlib.time.TimeUnit;
  * @author Richard Gomes
  *
  */
-public class ActualActual extends AbstractDayCounter {
+@QualityAssurance(quality=Quality.Q4_UNIT, version=Version.V097, reviewers="Richard Gomes")
+public class ActualActual extends DayCounter {
 
     //
     // public enums
@@ -48,103 +52,38 @@ public class ActualActual extends AbstractDayCounter {
      * Actual/Actual Calendar Conventions
      */
     public static enum Convention {
-        ISMA, Bond, ISDA, Historical, Actual365, AFB, Euro
-    };
+        ISMA, Bond,
+        ISDA, Historical, Actual365,
+        AFB, Euro
+    }
 
 
     //
-    // private final static fields
+    // public constructors
     //
 
-    private static final ActualActual ISMA_DAYCOUNTER = new ActualActual(Convention.ISMA);
-    private static final ActualActual ACTUAL365_DAYCOUNTER = new ActualActual(Convention.ISDA);
-    private static final ActualActual AFB_DAYCOUNTER = new ActualActual(Convention.AFB);
+    public ActualActual() {
+        this(Convention.ISDA);
+    }
 
-
-    //
-    // public static final constructors
-    //
-
-    /**
-     * Returns ActualActual day counter for the specified convention type
-     *
-     * @param convention
-     * @return
-     */
-    public static final ActualActual getDayCounter(final Convention convention) {
-        switch (convention) {
-        case ISMA:
-        case Bond:
-            return ISMA_DAYCOUNTER;
-        case ISDA:
-        case Historical:
-        case Actual365:
-            return ACTUAL365_DAYCOUNTER;
-        case AFB:
-        case Euro:
-            return AFB_DAYCOUNTER;
-        default:
-            throw new LibraryException("unknown act/act convention"); // QA:[RG]::verified// TODO: message
+    public ActualActual(final ActualActual.Convention c) {
+        switch (c) {
+            case ISMA:
+            case Bond:
+                super.impl = new ImplISMA();
+                break;
+            case ISDA:
+            case Historical:
+            case Actual365:
+                super.impl = new ImplISDA();
+                break;
+            case AFB:
+            case Euro:
+                super.impl = new ImplAFB();
+                break;
+            default:
+                throw new LibraryException("unknown act/act convention"); // TODO: message
         }
-    }
-
-
-    //
-    // private final fields
-    //
-
-    private final DayCounter delegate;
-
-
-    //
-    // private constructors
-    //
-
-    /**
-     * This constructor is intended to be used internally by <code>this</code> class at initialization time,
-     * when specialized day counters are constructed.
-     */
-    private ActualActual(final Convention convention) {
-        super();
-
-        switch (convention) {
-        case ISMA:
-        case Bond:
-            delegate = new ISMA();
-            break;
-        case ISDA:
-        case Historical:
-        case Actual365:
-            delegate = new ISDA();
-            break;
-        case AFB:
-        case Euro:
-            delegate = new AFB();
-            break;
-        default:
-            throw new LibraryException("unknown act/act convention"); // QA:[RG]::verified // TODO: message
-        }
-    }
-
-
-    //
-    // implements DayCounter
-    //
-
-    @Override
-    public final String name() {
-        return delegate.name();
-    }
-
-    @Override
-    public final double yearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
-        return delegate.yearFraction(dateStart, dateEnd);
-    }
-
-    @Override
-    public final double yearFraction(final Date dateStart, final Date dateEnd,
-            final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
-        return delegate.yearFraction(dateStart, dateEnd, refPeriodStart, refPeriodEnd);
     }
 
 
@@ -152,7 +91,7 @@ public class ActualActual extends AbstractDayCounter {
     // inner classes
     //
 
-    private static final class ISMA extends AbstractDayCounter {
+    final private class ImplISMA extends DayCounter.Impl {
 
         @Override
         public final String name() /* @ReadOnly */{
@@ -160,13 +99,9 @@ public class ActualActual extends AbstractDayCounter {
         }
 
         @Override
-        public final double yearFraction(final Date dateStart, final Date dateEnd) {
-            return yearFraction(dateStart, dateEnd, new Date(), new Date());
-        }
-
-        @Override
-        public final double yearFraction(final Date d1, final Date d2,
-                final Date d3, final Date d4) {
+        public final double yearFraction(
+                final Date d1, final Date d2,
+                final Date d3, final Date d4) /* @ReadOnly */{
 
             if (d1.equals(d2)) {
                 return 0.0;
@@ -233,12 +168,12 @@ public class ActualActual extends AbstractDayCounter {
 
                 // here refPeriodEnd is the last notional payment date
                 // d1 < refPeriodEnd < d2 AND refPeriodStart < refPeriodEnd
-                QL.require(refPeriodStart.le(d1) , "invalid dates");
+                QL.require(refPeriodStart.le(d1) , "invalid dates"); // TODO: message
 
                 // now it is: refPeriodStart <= d1 < refPeriodEnd < d2
 
                 // the part from d1 to refPeriodEnd
-                double sum = yearFraction(d1, refPeriodEnd, refPeriodStart,	refPeriodEnd);
+                double sum = yearFraction(d1, refPeriodEnd, refPeriodStart, refPeriodEnd);
 
                 // the part from refPeriodEnd to d2
                 // count how many regular periods are in [refPeriodEnd, d2],
@@ -261,7 +196,8 @@ public class ActualActual extends AbstractDayCounter {
         }
     }
 
-    private static final class ISDA extends AbstractDayCounter {
+
+    final private class ImplISDA extends DayCounter.Impl {
 
         @Override
         public final String name() /* @ReadOnly */{
@@ -269,11 +205,12 @@ public class ActualActual extends AbstractDayCounter {
         }
 
         @Override
-        public final double yearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
+        public final double yearFraction(
+                final Date dateStart, final Date dateEnd,
+                final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
             if (dateStart.equals(dateEnd)) {
                 return 0.0;
             }
-
             if (dateStart.gt(dateEnd)) {
                 return -yearFraction(dateEnd, dateStart, new Date(), new Date());
             }
@@ -292,26 +229,23 @@ public class ActualActual extends AbstractDayCounter {
             return sum;
         }
 
-        @Override
-        public final double yearFraction(final Date dateStart, final Date dateEnd, final Date d3, final Date d4) /* @ReadOnly */{
-            return this.yearFraction(dateStart, dateEnd);
-        }
-
     }
 
-    private static final class AFB extends AbstractDayCounter {
+
+    final private class ImplAFB extends DayCounter.Impl {
 
         @Override
-        public final String name() {
+        public final String name() /* @ReadOnly */ {
             return "Actual/Actual (AFB)";
         }
 
         @Override
-        public final double yearFraction(final Date dateStart, final Date dateEnd) {
+        public final double yearFraction(
+                final Date dateStart, final Date dateEnd,
+                final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
             if (dateStart.equals(dateEnd)) {
                 return 0.0;
             }
-
             if (dateStart.gt(dateEnd)) {
                 return -1.0 * yearFraction(dateEnd, dateStart, new Date(), new Date());
             }
@@ -344,15 +278,6 @@ public class ActualActual extends AbstractDayCounter {
                 }
             }
             return sum + dayCount(dateStart, newD2) / den;
-        }
-
-        @Override
-        public final double yearFraction(
-                final Date dateStart,
-                final Date dateEnd,
-                final Date refPeriodStart,
-                final Date refPeriodEnd) {
-            return this.yearFraction(dateStart, dateEnd);
         }
 
     }

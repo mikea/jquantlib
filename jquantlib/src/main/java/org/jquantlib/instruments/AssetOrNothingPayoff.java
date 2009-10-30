@@ -79,6 +79,11 @@ public class AssetOrNothingPayoff extends StrikedTypePayoff {
     // Overrides Payoff
     //
 
+    @Override
+    public String name() /* @ReadOnly */ {
+        return "AssetOrNothing";
+    }
+
     /**
      * {@inheritDoc}
      * <p>
@@ -89,13 +94,14 @@ public class AssetOrNothingPayoff extends StrikedTypePayoff {
      * where {@latex$ S_{T}} is the asset price at maturity
      */
     @Override
-    public final /* @Price */double valueOf(final/* @Price */double assetPrice) {
-		if (type == Option.Type.CALL)
-            return (assetPrice - strike > 0.0) ? assetPrice : 0.0;
-        else if (type == Option.Type.PUT)
-            return (strike - assetPrice > 0.0) ? assetPrice : 0.0;
-        else
+    public final double get(final double price) /* @ReadOnly */ {
+		if (type == Option.Type.CALL) {
+            return (price - strike > 0.0) ? price : 0.0;
+        } else if (type == Option.Type.PUT) {
+            return (strike - price > 0.0) ? price : 0.0;
+        } else {
             throw new LibraryException("unknown/illegal option type"); // QA:[RG]::verified // TODO: message
+        }
 	}
 
 
@@ -106,10 +112,11 @@ public class AssetOrNothingPayoff extends StrikedTypePayoff {
 	@Override
 	public void accept(final TypedVisitor<Payoff> v) {
 		final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null)
+		if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             super.accept(v);
+        }
 	}
 
 }

@@ -182,7 +182,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      *  More traditional constructor.
      * 
      * @param d
-     * @param m
+     * @param moreGreeks
      * @param y
      */
     public Date(final int day, final Month month, final int year) {
@@ -193,7 +193,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      *  More traditional constructor.
      * 
      * @param d
-     * @param m
+     * @param moreGreeks
      * @param y
      */
     public Date(final int day, final int month, final int year) {

@@ -84,7 +84,7 @@ public class MakeVanillaSwap {
         floatFirstDate_ = today.clone();
         floatNextToLastDate_ = today.clone();
         floatSpread_ = (0.0);
-        fixedDayCount_ = (Thirty360.getDayCounter());
+        fixedDayCount_ = (new Thirty360());
         floatDayCount_ = (index.dayCounter());
         engine_ = new DiscountingSwapEngine(index.termStructure());
     }

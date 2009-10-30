@@ -22,7 +22,7 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.instruments;
 
 import org.jquantlib.exercise.Exercise;
-import org.jquantlib.pricingengines.arguments.Arguments;
+import org.jquantlib.pricingengines.PricingEngine.Arguments;
 
 /**
  *
@@ -43,12 +43,14 @@ import org.jquantlib.pricingengines.arguments.Arguments;
  *
  * \todo add greeks and explicit exercise lag
  */
+//TODO: code review
 public class Swaption {// extends Option {
 
     // ! %settlement information
     public Swaption(final VanillaSwap swap, final Exercise exercise, final Settlement.Type delivery /* = Settlement::Physical */) {
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
     }
 
     // @Override

@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -40,58 +40,53 @@
 
 package org.jquantlib.daycounters;
 
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Date;
 
 /**
  * Actual/360 day count convention, also known as "Act/360", or "A/360".
- * 
+ *
  * @see <a href="http://en.wikipedia.org/wiki/Day_count_convention">Day count Convention</a>
- * 
+ *
+ * @category daycounters
+ *
  * @author Richard Gomes
  * @author Srinivas Hasti
  */
-// TODO: code review :: please verify against QL/C++ code
-public class Actual360 extends AbstractDayCounter {
+@QualityAssurance(quality=Quality.Q4_UNIT, version=Version.V097, reviewers="Richard Gomes")
+public class Actual360 extends DayCounter {
 
-	//
-	// static constructors
-	//
-	
-    private static final Actual360  actual360   = new Actual360();
-	
-    // TODO: code review :: please verify against QL/C++ code
-    // remove static :: review similar classes too.
-	public static final Actual360 getDayCounter() {
-		return actual360;
-	}
 
-	
+    public Actual360() {
+        super.impl = new Impl();
+    }
+
+
     //
-    // private default constructor
+    // private inner classes
     //
-    
-    private Actual360() { }
 
-    
-    //
-    // implements DayCounter
-    //
-    
-    @Override
-	public final String name() /* @ReadOnly */{
-		return "Actual/360";
-	}
+    final private class Impl extends DayCounter.Impl {
 
-    @Override
-	public /*@Time*/ final double yearFraction(final Date dateStart, final Date dateEnd) /* @ReadOnly */{
-		return dayCount(dateStart, dateEnd) / 360.0;
-	}
+        //
+        // implements DayCounter
+        //
 
-    @Override
-	public /*@Time*/ final double yearFraction(
-	        final Date dateStart, final Date dateEnd, final Date refPeriodStart,
-			final Date refPeriodEnd) /* @ReadOnly */{
-		return dayCount(dateStart, dateEnd) / 360.0;
-	}
+        @Override
+        public final String name() /* @ReadOnly */{
+            return "Actual/360";
+        }
+
+        @Override
+        public /*@Time*/ final double yearFraction(
+                final Date dateStart, final Date dateEnd,
+                final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
+            return /*@Time*/ dayCount(dateStart, dateEnd) / 360.0;
+        }
+
+    }
+
 
 }

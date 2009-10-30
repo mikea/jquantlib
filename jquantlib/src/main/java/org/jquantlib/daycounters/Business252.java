@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Daniel Kong
+ Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
 
@@ -22,46 +23,62 @@
 
 package org.jquantlib.daycounters;
 
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
+import org.jquantlib.time.calendars.Brazil;
 
 /**
  * Business/252 day count convention
- * 
+ *
  * @see <a href="http://en.wikipedia.org/wiki/Day_count_convention">Day count Convention</a>
- * 
+ *
  * @author Daniel Kong
+ * @author Richard Gomes
  */
-public class Business252 extends AbstractDayCounter {
+@QualityAssurance(quality=Quality.Q4_UNIT, version=Version.V097, reviewers="Richard Gomes")
+public class Business252 extends DayCounter {
 
-    private final Calendar calendar;
 
-    public Business252(final Calendar calendar){
-        this.calendar = calendar;
+    public Business252() {
+        this(new Brazil());
     }
 
-    @Override
-    public final String name() {
-        return "Business/252(" + calendar.name() + ")";
+    public Business252(final Calendar calendar) {
+        super.impl = new Impl(calendar);
     }
 
-    @Override
-    public final int dayCount(final Date dateStart, final Date dateEnd) {
-        //TODO:int or long?
-        //consider changing calendar or dayCounter? Daniel
-        //        return calendar.businessDaysBetween(dateStart, dateEnd, false, false);
-        return (int) calendar.businessDaysBetween(dateStart, dateEnd, false, false);
 
-    }
+    //
+    // private inner classes
+    //
 
-    @Override
-    public double yearFraction(final Date dateStart, final Date dateEnd) {
-        return this.yearFraction(dateStart, dateEnd, new Date(), new Date());
-    }
+    final private class Impl extends DayCounter.Impl {
 
-    @Override
-    public double yearFraction(final Date dateStart, final Date dateEnd, final Date refPeriodStart, final Date refPeriodEnd) {
-        return dayCount(dateStart, dateEnd)/252.0;
+        private final Calendar calendar;
+
+        //
+        // implements DayCounter
+        //
+
+        private Impl(final Calendar calendar) {
+            this.calendar = calendar;
+        }
+
+        @Override
+        public final String name() /* @ReadOnly */{
+            return "Business/252(" + calendar.name() + ")";
+        }
+
+        @Override
+        public /*@Time*/ final double yearFraction(
+                final Date dateStart, final Date dateEnd,
+                final Date refPeriodStart, final Date refPeriodEnd) /* @ReadOnly */{
+            return /*@Time*/ dayCount(dateStart, dateEnd) / 252.0;
+        }
+
     }
 
 }

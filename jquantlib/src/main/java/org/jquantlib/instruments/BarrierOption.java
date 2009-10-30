@@ -42,11 +42,11 @@ package org.jquantlib.instruments;
 
 import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.reflect.ReflectConstants;
+import org.jquantlib.math.Constants;
+import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.arguments.Arguments;
-import org.jquantlib.pricingengines.arguments.BarrierOptionArguments;
-import org.jquantlib.pricingengines.barrier.AnalyticBarrierEngine;
-import org.jquantlib.processes.StochasticProcess;
 
 /**
  * Barrier option on a single asset.
@@ -56,9 +56,7 @@ import org.jquantlib.processes.StochasticProcess;
  * @author <Richard Gomes>
  *
  */
-public class BarrierOption extends OneAssetStrikedOption {
-
-    private static final String WRONG_ARGUMENT_TYPE = "wrong argument type";
+public class BarrierOption extends OneAssetOption {
 
     //
     // protected fields
@@ -73,26 +71,14 @@ public class BarrierOption extends OneAssetStrikedOption {
     // public constructors
     //
 
-    public BarrierOption(final StochasticProcess process, final Payoff payoff,
-			final Exercise exercise, final PricingEngine engine) {
+    public BarrierOption(
+            final BarrierType barrierType,
+			final double barrier,
+			final double rebate,
+			final StrikedTypePayoff payoff,
+			final Exercise exercise) {
 
-		super(process, payoff, exercise, engine);
-		if (engine == null)
-            setPricingEngine(new AnalyticBarrierEngine());
-	}
-
-    public BarrierOption(final BarrierType barrierType,
-            			final double barrier,
-            			final double rebate,
-            			final StochasticProcess process,
-            			final StrikedTypePayoff payoff,
-            			final Exercise exercise,
-            			final PricingEngine engine){
-
-    	super(process,payoff, exercise, engine);
-    	if (engine == null)
-            setPricingEngine(new AnalyticBarrierEngine());
-
+    	super(payoff, exercise);
     	this.barrierType = barrierType;
     	this.barrier = barrier;
     	this.rebate = rebate;
@@ -104,15 +90,142 @@ public class BarrierOption extends OneAssetStrikedOption {
     //
 
     @Override
-    public void setupArguments(final Arguments args) {
-        QL.require(args instanceof BarrierOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+    public void setupArguments(final PricingEngine.Arguments arguments) {
+        super.setupArguments(arguments);
+        QL.require(BarrierOption.Arguments.class.isAssignableFrom(arguments.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+        final BarrierOption.ArgumentsImpl a = (BarrierOption.ArgumentsImpl) arguments;
+        a.barrierType = barrierType;
+        a.barrier = barrier;
+        a.rebate = rebate;
+    }
 
-        final BarrierOptionArguments moreArgs = (BarrierOptionArguments) args;
-        moreArgs.barrierType = barrierType;
-        moreArgs.barrier = barrier;
-        moreArgs.rebate = rebate;
 
-        super.setupArguments(args);
+//
+//    //
+//    // inner interfaces
+//    //
+//
+//    /**
+//     * barrier option arguments
+//     *
+//     * @author Richard Gomes
+//     */
+//    public interface Arguments extends OneAssetOption.Arguments { }
+//
+//
+//    /**
+//     * barrier option results
+//     *
+//     * @author Richard Gomes
+//     */
+//    public interface Results extends OneAssetOption.Results { }
+//
+//
+//    /**
+//     * barrier option price engine
+//     *
+//     * @author Richard Gomes
+//     */
+//    public interface Engine extends PricingEngine, Observer { }
+
+
+    //
+    // inner classes
+    //
+
+
+
+    /**
+     * This class defines validation for option arguments
+     *
+     * @author <Richard Gomes>
+     *
+     */
+    static public class ArgumentsImpl extends OneAssetOption.ArgumentsImpl implements BarrierOption.Arguments {
+
+        // TODO: refactor messages
+        private static final String UNKNOWN_TYPE = "unknown type";
+
+        //
+        // public fields
+        //
+
+        // FIXME: public fields here is a bad design technique :(
+        public BarrierType barrierType;
+        public double barrier, rebate;
+
+
+        //
+        // public constructors
+        //
+
+        public ArgumentsImpl() {
+            this.barrierType = BarrierType.Unknown;
+            this.barrier = Constants.NULL_REAL;
+            this.rebate = Constants.NULL_REAL;
+        }
+
+
+        //
+        // public methods
+        //
+
+        /**
+         * This method performs additional validation of needed to conform to the barrier type.
+         * The validation is done by comparing the underlying price against the barrier type.
+         *
+         * @see org.jquantlib.pricingengines.arguments.OneAssetStrikedOptionArguments#validate()
+         */
+        @Override
+        public void validate() {
+            super.validate();
+
+            switch (barrierType) {
+            case DownIn:
+            case UpIn:
+            case DownOut:
+            case UpOut:
+              break;
+            default:
+                throw new LibraryException(UNKNOWN_TYPE); // QA:[RG]::verified
+          }
+
+          QL.require(barrier != Constants.NULL_REAL, "no barrier given"); // TODO: message
+          QL.require(rebate != Constants.NULL_REAL, "no rebate given"); // TODO: message
+        }
+    }
+
+
+    static public class ResultsImpl extends OneAssetOption.ResultsImpl implements BarrierOption.Results { }
+
+
+    /**
+     * Barrier-option engine base class
+     *
+     * @author <Richard Gomes>
+     */
+    static public abstract class EngineImpl extends GenericEngine<BarrierOption.Arguments, OneAssetOption.Results> {
+
+        final private BarrierOption.ArgumentsImpl a;
+
+        protected EngineImpl() {
+            super(new ArgumentsImpl(), new ResultsImpl());
+            this.a = (BarrierOption.ArgumentsImpl)arguments;
+        }
+
+        protected boolean triggered(final /*@Real*/ double underlying) /* @ReadOnly */ {
+            switch (a.barrierType) {
+              case DownIn:
+              case DownOut:
+                return underlying < a.barrier;
+              case UpIn:
+              case UpOut:
+                return underlying > a.barrier;
+              default:
+                throw new LibraryException("Unknown type"); // TODO: message
+            }
+        }
+
     }
 
 }

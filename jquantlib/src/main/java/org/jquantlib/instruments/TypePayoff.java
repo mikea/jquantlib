@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -46,9 +46,9 @@ import org.jquantlib.instruments.Option.Type;
 
 /**
  * Intermediate class for typed payoffs (CALL/PUT)
- * 
+ *
  * @see Option.Type
- * 
+ *
  * @author Richard Gomes
  */
 public abstract class TypePayoff extends Payoff {
@@ -56,7 +56,7 @@ public abstract class TypePayoff extends Payoff {
 	//
     // protected fields
     //
-    
+
     /**
      * This protected field represents the {@link Type} backing this {@link Payoff}
      */
@@ -65,29 +65,42 @@ public abstract class TypePayoff extends Payoff {
 	//
     // public constructors
     //
-    
+
     /**
      * Constructs a {@link Payoff} backed on a {@link Type}
-     * 
+     *
      * @param type is the {@link Type} backing this {@link Payoff}
-     * 
+     *
      * @see Option.Type
      */
     public TypePayoff(final Option.Type type) {
 		this.type = type;
 	}
 
+
 	//
     // public final methods
     //
-    
+
     /**
      * @return the {@link Type} backing this {@link Payoff}
-     * 
+     *
      * @see Option.Type
      */
     public final Option.Type optionType() {
 		return this.type;
 	}
+
+
+    //
+    // overrides Payoff
+    //
+
+    @Override
+    public String description() /* @ReadOnly */ {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(name()).append(' ').append(optionType());
+        return sb.toString();
+    }
 
 }

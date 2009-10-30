@@ -33,7 +33,7 @@ public class StocksTest {
         s.addObserver(priceChange);
 
         // verify initial price
-        if (iniPrice != s.getNPV()) {
+        if (iniPrice != s.NPV()) {
             fail("stock quote valuation failed");
         }
 
@@ -45,7 +45,7 @@ public class StocksTest {
             fail("Observer was not notified of instrument change");
         }
 
-        if (newPrice != s.getNPV()) {
+        if (newPrice != s.NPV()) {
             fail("stock quote havent changed value");
         }
 

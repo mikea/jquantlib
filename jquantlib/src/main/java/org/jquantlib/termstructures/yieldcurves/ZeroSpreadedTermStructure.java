@@ -36,11 +36,8 @@ public class ZeroSpreadedTermStructure extends ZeroYieldStructure  {
         this.comp = comp;
         this.freq = freq;
 
-        this.originalCurve.addObserver(this);
-        this.spread.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.originalCurve);
-        //registerWith(this.spread);
+        this.originalCurve.currentLink().addObserver(this);
+        this.spread.currentLink().addObserver(this);
     }
 
 

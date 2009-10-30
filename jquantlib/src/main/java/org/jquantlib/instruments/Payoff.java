@@ -63,13 +63,21 @@ public abstract class Payoff implements TypedVisitable<Payoff> {
 
 
     //
-    // protected abstract methods
+    // public abstract methods
     //
+
+    /**
+     * @warning This method is used for output and comparison between payoffs.
+     * It is <b>not</b> meant to be used for writing switch-on-type code.
+     */
+    public abstract String name() /* @ReadOnly */ ;
+
+    public abstract String description() /* @ReadOnly */ ;
 
     /**
      * Returns the value of an {@link Instrument} at maturity under {@link Payoff} conditions
      */
-    public abstract /* @Price */double valueOf(/* @Price */double price);
+    public abstract double get(double price) /* @ReadOnly */;
 
 
 	//
@@ -79,10 +87,20 @@ public abstract class Payoff implements TypedVisitable<Payoff> {
 	@Override
 	public void accept(final TypedVisitor<Payoff> v) {
 		final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null)
+		if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             throw new LibraryException("null payoff visitor"); // QA:[RG]::verified //TODO: message
+        }
 	}
+
+    //
+    // overrides Object
+    //
+
+    @Override
+    public String toString() {
+        return description();
+    }
 
 }

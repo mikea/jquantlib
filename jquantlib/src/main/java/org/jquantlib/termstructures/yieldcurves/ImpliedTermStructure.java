@@ -63,8 +63,6 @@ public class ImpliedTermStructure<T extends YieldTermStructure> extends Abstract
         super(referenceDate);
         this.originalCurve = h;
         this.originalCurve.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.originalCurve);
     }
 
     @Override

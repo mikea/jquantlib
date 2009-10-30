@@ -98,6 +98,18 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
     // Overrides Payoff
     //
 
+    @Override
+    public String name() /* @ReadOnly */ {
+        return "CashOrNothing";
+    }
+
+    @Override
+    public String description() /* @ReadOnly */ {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(super.description()).append(", ").append(cashPayoff).append(" cash payoff");
+        return sb.toString();
+    }
+
     /**
      * {@inheritDoc}
      * <p>
@@ -108,13 +120,14 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
      * where {@latex$ S_{T}} is the asset price at maturity and {@latex$ X} is the predetermined cash payoff
      */
 	@Override
-	public final/* @Price */double valueOf(final/* @Price */double price) {
-		if (type == Option.Type.CALL)
+    public final double get(final double price) /* @ReadOnly */ {
+		if (type == Option.Type.CALL) {
             return (price-strike > 0.0 ? cashPayoff : 0.0);
-        else if (type == Option.Type.PUT)
+        } else if (type == Option.Type.PUT) {
             return (strike-price > 0.0 ? cashPayoff : 0.0);
-        else
+        } else {
             throw new LibraryException(UNKNOWN_OPTION_TYPE); // QA:[RG]::verified
+        }
 	}
 
 
@@ -125,10 +138,11 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
 	@Override
 	public void accept(final TypedVisitor<Payoff> v) {
 		final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null)
+		if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             super.accept(v);
+        }
 	}
 
 }

@@ -13,54 +13,62 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
+import org.jquantlib.instruments.OneAssetOption;
+import org.jquantlib.instruments.Option;
 import org.jquantlib.math.SampledCurve;
 import org.jquantlib.methods.finitedifferences.StandardFiniteDifferenceModel;
-import org.jquantlib.pricingengines.Greeks;
-import org.jquantlib.pricingengines.OneAssetOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
  * Pricing engine for European options using finite-differences
- * 
+ *
  * @category vanillaengines
- * 
+ *
  * @author Srinivas Hasti
  */
 //TODO: class comments
 //TODO: work in progress
-public class FDEuropeanEngine extends OneAssetOptionEngine {
-    
+public class FDEuropeanEngine extends OneAssetOption.EngineImpl {
+
+    //
+    // private final fields
+    //
+
+    private final FDVanillaEngine fdVanillaEngine;
+
+
     //
     // private fields
     //
-    
-    private final FDVanillaEngine fdVanillaEngine;
+
     private SampledCurve prices;
+
 
     //
     // public constructors
     //
-    
-    public FDEuropeanEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
+
+    public FDEuropeanEngine(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints, final boolean timeDependent) {
         fdVanillaEngine = new FDVanillaEngine(process, timeSteps, gridPoints, timeDependent);
         prices = new SampledCurve(gridPoints);
+        process.addObserver(this);
     }
 
-    public FDEuropeanEngine(GeneralizedBlackScholesProcess stochProcess, int binomialSteps, int samples) {
+    public FDEuropeanEngine(final GeneralizedBlackScholesProcess stochProcess, final int binomialSteps, final int samples) {
         this(stochProcess,binomialSteps,samples,false);
     }
 
-    
+
     //
     // implements PricingEngine
     //
-    
+
     @Override
     public void calculate() {
         fdVanillaEngine.setupArguments(arguments);
@@ -69,16 +77,19 @@ public class FDEuropeanEngine extends OneAssetOptionEngine {
         fdVanillaEngine.initializeOperator();
         fdVanillaEngine.initializeBoundaryConditions();
 
-        StandardFiniteDifferenceModel model = new StandardFiniteDifferenceModel(fdVanillaEngine.finiteDifferenceOperator, fdVanillaEngine.bcS);
+        final StandardFiniteDifferenceModel model = new StandardFiniteDifferenceModel(fdVanillaEngine.finiteDifferenceOperator, fdVanillaEngine.bcS);
 
         prices = new SampledCurve(fdVanillaEngine.intrinsicValues);
         prices.setValues( model.rollback(prices.values(), fdVanillaEngine.getResidualTime(), 0, fdVanillaEngine.timeSteps) );
 
-        results.value = prices.valueAtCenter();
-        results.delta = prices.firstDerivativeAtCenter();
-        results.gamma = prices.secondDerivativeAtCenter();
-        results.theta = Greeks.blackScholesTheta(fdVanillaEngine.process, results.value, results.delta, results.gamma);
-        results.addAdditionalResult("priceCurve",prices);
+        final OneAssetOption.ResultsImpl r = (OneAssetOption.ResultsImpl)results;
+        final Option.GreeksImpl greeks = r.greeks();
+        // final Option.MoreGreeksImpl moreGreeks = r.moreGreeks();
+        r.value = prices.valueAtCenter();
+        greeks.delta = prices.firstDerivativeAtCenter();
+        greeks.gamma = prices.secondDerivativeAtCenter();
+        greeks.theta = greeks.blackScholesTheta(fdVanillaEngine.process, r.value, greeks.delta, greeks.gamma);
+        r.additionalResults().put("priceCurve", prices);
     }
 
 }

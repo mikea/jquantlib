@@ -41,61 +41,139 @@
 package org.jquantlib.termstructures;
 
 import org.jquantlib.QL;
-import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.termstructures.volatilities.VolatilityTermStructure;
+import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
-import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.TypedVisitable;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
-// FIXME: format comments, etc
-public abstract class LocalVolTermStructure extends AbstractTermStructure implements TermStructure, TypedVisitable<TermStructure> {
+// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+public abstract class LocalVolTermStructure extends VolatilityTermStructure implements TypedVisitable<TermStructure> {
 
-    //! default constructor
-    /*! \warning term structures initialized by means of this
-                     constructor must manage their own reference date
-                     by overriding the referenceDate() method.
+    //
+    // public constructors
+    //
+    // See the TermStructure documentation for issues regarding constructors.
+    //
+
+    /**
+     * 'default' constructor
+     * <p>
+     * @warning term structures initialized by means of this
+     *          constructor must manage their own reference date
+     *          by overriding the referenceDate() method.
      */
     public LocalVolTermStructure() {
-        this(Actual365Fixed.getDayCounter());
+        this(new Calendar(), BusinessDayConvention.Following, new DayCounter());
     }
 
-    public LocalVolTermStructure(final DayCounter dc) {
-        super(dc);
+    /**
+     * 'default' constructor
+     * <p>
+     * @warning term structures initialized by means of this
+     *          constructor must manage their own reference date
+     *          by overriding the referenceDate() method.
+     */
+    public LocalVolTermStructure(final Calendar cal) {
+        this(cal, BusinessDayConvention.Following, new DayCounter());
     }
 
+    /**
+     * 'default' constructor
+     * <p>
+     * @warning term structures initialized by means of this
+     *          constructor must manage their own reference date
+     *          by overriding the referenceDate() method.
+     */
+    public LocalVolTermStructure(
+            final Calendar cal,
+            final BusinessDayConvention bdc) {
+        this(cal, bdc, new DayCounter());
+    }
 
-    //! initialize with a fixed reference date
+    /**
+     * 'default' constructor
+     * <p>
+     * @warning term structures initialized by means of this
+     *          constructor must manage their own reference date
+     *          by overriding the referenceDate() method.
+     */
+    public LocalVolTermStructure(
+            final Calendar cal,
+            final BusinessDayConvention bdc,
+            final DayCounter dc) {
+        super(cal, bdc, dc);
+    }
 
+    /**
+     *  initialize with a fixed reference date
+     */
     public LocalVolTermStructure(final Date referenceDate) {
-        this(referenceDate, new NullCalendar());
+        this(referenceDate, new Calendar(), BusinessDayConvention.Following, new DayCounter());
     }
 
-    public LocalVolTermStructure(final Date referenceDate, final Calendar cal) {
-        this(referenceDate, cal, Actual365Fixed.getDayCounter());
-
+    /**
+     *  initialize with a fixed reference date
+     */
+    public LocalVolTermStructure(
+            final Date referenceDate,
+            final Calendar cal) {
+        this(referenceDate, cal, BusinessDayConvention.Following, new DayCounter());
     }
 
-    public LocalVolTermStructure(final Date referenceDate, final Calendar cal, final DayCounter dc) {
-        super(referenceDate, cal, dc);
+    /**
+     *  initialize with a fixed reference date
+     */
+    public LocalVolTermStructure(
+            final Date referenceDate,
+            final Calendar cal,
+            final BusinessDayConvention bdc) {
+        this(referenceDate, cal, bdc, new DayCounter());
     }
 
-
-    //! calculate the reference date based on the global evaluation date
-
-    public LocalVolTermStructure(final int settlementDays) {
-        this(settlementDays, new NullCalendar());
+    /**
+     *  initialize with a fixed reference date
+     */
+    public LocalVolTermStructure(
+            final Date referenceDate,
+            final Calendar cal,
+            final BusinessDayConvention bdc,
+            final DayCounter dc) {
+        super(referenceDate, cal, bdc, dc);
     }
 
-    public LocalVolTermStructure(final int settlementDays, final Calendar cal) {
-        this(settlementDays, cal, Actual365Fixed.getDayCounter());
+    /**
+     * calculate the reference date based on the global evaluation date
+     */
+    public LocalVolTermStructure(
+            /*@Natural*/ final int settlementDays,
+            final Calendar cal) {
+        this(settlementDays, cal, BusinessDayConvention.Following, new DayCounter());
     }
 
-    public LocalVolTermStructure(final int settlementDays, final Calendar cal, final DayCounter dc) {
-        super(settlementDays, cal, dc);
+    /**
+     * calculate the reference date based on the global evaluation date
+     */
+    public LocalVolTermStructure(
+            /*@Natural*/ final int settlementDays,
+            final Calendar cal,
+            final BusinessDayConvention bdc) {
+        this(settlementDays, cal, bdc, new DayCounter());
+    }
+
+    /**
+     * calculate the reference date based on the global evaluation date
+     */
+    public LocalVolTermStructure(
+            /*@Natural*/ final int settlementDays,
+            final Calendar cal,
+            final BusinessDayConvention bdc,
+            final DayCounter dc) {
+        super(settlementDays, cal, bdc, dc);
     }
 
 
@@ -120,11 +198,13 @@ public abstract class LocalVolTermStructure extends AbstractTermStructure implem
     /**
      * @return the minimum strike for which the term structure can return vols
      */
+    @Override
     public abstract /*@Price*/ double minStrike();
 
     /**
      * @return the maximum strike for which the term structure can return vols
      */
+    @Override
     public abstract /*@Price*/ double maxStrike();
 
 
@@ -157,10 +237,11 @@ public abstract class LocalVolTermStructure extends AbstractTermStructure implem
     @Override
     public void accept(final TypedVisitor<TermStructure> v) {
         final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null)
+        if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             throw new LibraryException("not a local-volatility term structure visitor"); // QA:[RG]::verified // TODO: message
+        }
     }
 
 }

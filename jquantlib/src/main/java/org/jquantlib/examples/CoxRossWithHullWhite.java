@@ -82,6 +82,7 @@ import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.AmericanExercise;
+import org.jquantlib.exercise.BermudanExercise;
 import org.jquantlib.exercise.EuropeanExercise;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.EuropeanOption;
@@ -89,10 +90,6 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.VanillaOption;
-import org.jquantlib.methods.lattices.CoxRossRubinstein;
-import org.jquantlib.pricingengines.vanilla.BinomialVanillaEngine;
-import org.jquantlib.processes.HullWhiteProcess;
-import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
@@ -100,15 +97,19 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
+import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
+import org.jquantlib.time.Period;
+import org.jquantlib.time.TimeUnit;
+import org.jquantlib.time.calendars.Target;
 import org.jquantlib.util.StopClock;
 
 /**
  * Calculates equity option values using HullWhite process and Cox-Ross-Rubinstein engine
- * 
+ *
  * @see http://quantlib.org/reference/_equity_option_8cpp-example.html
- * 
+ *
  * @author Richard Gomes
  */
 public class CoxRossWithHullWhite {
@@ -123,6 +124,13 @@ public class CoxRossWithHullWhite {
         final StopClock clock = new StopClock();
         clock.startClock();
 
+        // set up dates
+        final Calendar calendar = new Target();
+        final Date todaysDate = new Date(15, Month.MAY, 1998);
+        final Date settlementDate = new Date(17, Month.MAY, 1998);
+        new Settings().setEvaluationDate(todaysDate);
+
+        // our options
         final Option.Type type = Option.Type.PUT;
         final double strike = 40.0;
         final double underlying = 36.0;
@@ -130,12 +138,8 @@ public class CoxRossWithHullWhite {
         final double volatility = 0.2;
         final double dividendYield = 0.00;
 
-        final Date todaysDate = new Date(15, Month.MAY, 1998);
-        final Date settlementDate = new Date(17, Month.MAY, 1998);
-        new Settings().setEvaluationDate(todaysDate);
-
         final Date maturity = new Date(17, Month.MAY, 1999);
-        final DayCounter dayCounter = Actual365Fixed.getDayCounter();
+        final DayCounter dayCounter = new Actual365Fixed();
 
         // write column headings
         //                 "         1         2         3         4         5         6         7         8"
@@ -147,15 +151,12 @@ public class CoxRossWithHullWhite {
         final Exercise europeanExercise = new EuropeanExercise(maturity);
 
         // Define exercise for Bermudan Options
-        /*
-		int bermudanForwards = 4;
-		Date[] exerciseDates = new Date[bermudanForwards];
-		for (int i = 1; i < bermudanForwards; i++) {
-		        Date forward = settlementDate.adjust(new Period(3 * i, TimeUnit.MONTHS));
-		        exerciseDates[i] = forward;
-		    }
-	    Exercise bermudanExercise = new BermudanExercise(exerciseDates);
-         */
+        final int bermudanForwards = 4;
+        final Date[] exerciseDates = new Date[bermudanForwards];
+        for (int i = 1; i <= bermudanForwards; i++) {
+            exerciseDates[i] = settlementDate.add(new Period(3 * i, TimeUnit.Months));
+        }
+        final Exercise bermudanExercise = new BermudanExercise(exerciseDates);
 
         // Define exercise for American Options
         final Exercise americanExercise = new AmericanExercise(settlementDate, maturity);
@@ -164,20 +165,17 @@ public class CoxRossWithHullWhite {
         final Handle<Quote> underlyingH = new Handle<Quote>(new SimpleQuote(underlying));
         final Handle<YieldTermStructure> flatDividendTS = new Handle<YieldTermStructure>(new FlatForward(settlementDate, dividendYield, dayCounter));
         final Handle<YieldTermStructure> flatTermStructure = new Handle<YieldTermStructure>(new FlatForward(settlementDate, riskFreeRate, dayCounter));
-        final Handle<BlackVolTermStructure> flatVolTS = new Handle<BlackVolTermStructure>(new BlackConstantVol(settlementDate, volatility, dayCounter));
-
+        final Handle<BlackVolTermStructure> flatVolTS = new Handle<BlackVolTermStructure>(new BlackConstantVol(settlementDate, calendar, volatility, dayCounter));
         final Payoff payoff = new PlainVanillaPayoff(type, strike);
-        final StochasticProcess stochasticProcess = new HullWhiteProcess(flatDividendTS, 0, 0);
 
         // European Options
-        final VanillaOption europeanOption = new EuropeanOption(stochasticProcess, payoff, europeanExercise);
+        final VanillaOption europeanOption = new EuropeanOption(payoff, europeanExercise);
 
         // Bermundan options (can be thought as a collection of European Options)
-        //VanillaOption bermudanOption = new VanillaOption(stochasticProcess,payoff, bermudanExercise, null);
+        final VanillaOption bermudanOption = new VanillaOption(payoff, bermudanExercise);
 
         // American Options
-        // FIXME: see http://bugs.jquantlib.org/view.php?id=202
-        final VanillaOption americanOption = new VanillaOption(stochasticProcess, payoff, americanExercise, null);
+        final VanillaOption americanOption = new VanillaOption(payoff, americanExercise);
 
         // define line formatting
         //              "         0         1         2         3         4         5         6         7         8"
@@ -187,18 +185,24 @@ public class CoxRossWithHullWhite {
         final String fmt    = "%34s %13.9f %13.9f %13.9f\n";
         final String fmttbd = "%34s %13.9f %13.9f %13.9f  (TO BE DONE)\n";
 
+//        final StochasticProcess hwProcess = new HullWhiteProcess(flatDividendTS, 0, 0);
+//        final BlackScholesMertonProcess bsmProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
+
+
         final String method = "CoxRossRubinstein with HullWhite";
         final int timeSteps = 801;
 
-        europeanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(timeSteps){} );
-        // TODO: bermudanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(timeSteps){} );
-        americanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(timeSteps){} );
-        // TODO: System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), bermudanOption.getNPV(), americanOption.getNPV() } );
-        System.out.printf(fmt, new Object[] { method, europeanOption.getNPV(), Double.NaN, americanOption.getNPV() } );
+        throw new UnsupportedOperationException("work in progress");
 
 
-        clock.stopClock();
-        clock.log();
+//        europeanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(hwProcess, timeSteps){} );
+//        bermudanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(hwProcess, timeSteps){} );
+//        americanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(hwProcess, timeSteps){} );
+//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.getNPV(), americanOption.NPV() } );
+
+
+//        clock.stopClock();
+//        clock.log();
 
     }
 

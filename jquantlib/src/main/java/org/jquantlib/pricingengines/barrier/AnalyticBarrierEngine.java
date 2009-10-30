@@ -43,6 +43,7 @@
 package org.jquantlib.pricingengines.barrier;
 
 import org.jquantlib.QL;
+import org.jquantlib.instruments.BarrierOption;
 import org.jquantlib.instruments.BarrierType;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.lang.exceptions.LibraryException;
@@ -62,7 +63,7 @@ import org.jquantlib.time.Frequency;
  * @author <Richard Gomes>
  */
 @SuppressWarnings("PMD.TooManyMethods")
-public class AnalyticBarrierEngine extends BarrierOptionEngine {
+public class AnalyticBarrierEngine extends BarrierOption.EngineImpl {
 
     // TODO: refactor messages
     private static final String BS_PROCESS_REQUIRED = "Black-Scholes process required";
@@ -78,16 +79,28 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
     private final CumulativeNormalDistribution f;
 
     // these fields are initialised every time calculate() is called
-    private transient GeneralizedBlackScholesProcess process;
+    // FIXME: code review
+    private transient final GeneralizedBlackScholesProcess process;
     private transient PlainVanillaPayoff payoff;
+
+    //
+    // final private fields
+    //
+
+    final private BarrierOption.ArgumentsImpl a;
+    final private BarrierOption.ResultsImpl   r;
 
 
     //
     // public constructors
     //
 
-    public AnalyticBarrierEngine() {
+    public AnalyticBarrierEngine(final GeneralizedBlackScholesProcess process) {
         this.f = new CumulativeNormalDistribution();
+        this.a = (BarrierOption.ArgumentsImpl)arguments;
+        this.r = (BarrierOption.ResultsImpl)results;
+        this.process = process;
+        this.process.addObserver(this);
     }
 
 
@@ -97,44 +110,42 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
 
     @Override
     public void calculate() {
-        QL.require(getArguments().payoff instanceof PlainVanillaPayoff , NON_PLAIN_PAYOFF_GIVEN); // QA:[RG]::verified // TODO: message
-        this.payoff = (PlainVanillaPayoff)getArguments().payoff;
+        QL.require(a.payoff instanceof PlainVanillaPayoff, NON_PLAIN_PAYOFF_GIVEN); // QA:[RG]::verified // TODO: message
+        this.payoff = (PlainVanillaPayoff)a.payoff;
         QL.require(payoff.strike()>0.0 , STRIKE_MUST_BE_POSITIVE); // QA:[RG]::verified // TODO: message
-        QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , BS_PROCESS_REQUIRED); // QA:[RG]::verified // TODO: message
-        this.process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
 
         final double strike = payoff.strike();
-        final BarrierType barrierType = arguments.barrierType;
+        final BarrierType barrierType = a.barrierType;
 
         switch (payoff.optionType()) {
             case CALL:
                 switch (barrierType) {
                     case DownIn:
                         if (strike >= barrier()) {
-                            results.value = C(1,1) + E(1);
+                            r.value = C(1,1) + E(1);
                         } else {
-                            results.value = A(1) - B(1) + D(1,1) + E(1);
+                            r.value = A(1) - B(1) + D(1,1) + E(1);
                         }
                         break;
                     case  UpIn:
                         if (strike >= barrier()) {
-                            results.value = A(1) + E(-1);
+                            r.value = A(1) + E(-1);
                         } else {
-                            results.value = B(1) - C(-1,1) + D(-1,1) + E(-1);
+                            r.value = B(1) - C(-1,1) + D(-1,1) + E(-1);
                         }
                         break;
                     case  DownOut:
                         if (strike >= barrier()) {
-                            results.value = A(1) - C(1,1) + F(1);
+                            r.value = A(1) - C(1,1) + F(1);
                         } else {
-                            results.value = B(1) - D(1,1) + F(1);
+                            r.value = B(1) - D(1,1) + F(1);
                         }
                         break;
                     case  UpOut:
                         if (strike >= barrier()) {
-                            results.value = F(-1);
+                            r.value = F(-1);
                         } else {
-                            results.value = A(1) - B(1) + C(-1,1) - D(-1,1) + F(-1);
+                            r.value = A(1) - B(1) + C(-1,1) - D(-1,1) + F(-1);
                         }
                         break;
                 }
@@ -143,30 +154,30 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
                 switch (barrierType) {
                     case  DownIn:
                         if (strike >= barrier()) {
-                            results.value = B(-1) - C(1,-1) + D(1,-1) + E(1);
+                            r.value = B(-1) - C(1,-1) + D(1,-1) + E(1);
                         } else {
-                            results.value = A(-1) + E(1);
+                            r.value = A(-1) + E(1);
                         }
                         break;
                     case  UpIn:
                         if (strike >= barrier()) {
-                            results.value = A(-1) - B(-1) + D(-1,-1) + E(-1);
+                            r.value = A(-1) - B(-1) + D(-1,-1) + E(-1);
                         } else {
-                            results.value = C(-1,-1) + E(-1);
+                            r.value = C(-1,-1) + E(-1);
                         }
                         break;
                     case  DownOut:
                         if (strike >= barrier()) {
-                            results.value = A(-1) - B(-1) + C(1,-1) - D(1,-1) + F(1);
+                            r.value = A(-1) - B(-1) + C(1,-1) - D(1,-1) + F(1);
                         } else {
-                            results.value = F(1);
+                            r.value = F(1);
                         }
                         break;
                     case  UpOut:
                         if (strike >= barrier()) {
-                            results.value = B(-1) - D(-1,-1) + F(-1);
+                            r.value = B(-1) - D(-1,-1) + F(-1);
                         } else {
-                            results.value = A(-1) - C(-1,-1) + F(-1);
+                            r.value = A(-1) - C(-1,-1) + F(-1);
                         }
                         break;
                 }
@@ -191,7 +202,7 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
     }
 
     private double /*@Time*/  residualTime()  {
-        return this.process.time(arguments.exercise.lastDate());
+        return this.process.time(a.exercise.lastDate());
     }
 
     private double /*@Volatility*/  volatility()  {
@@ -203,11 +214,11 @@ public class AnalyticBarrierEngine extends BarrierOptionEngine {
     }
 
     private double  barrier()  {
-        return arguments.barrier;
+        return a.barrier;
     }
 
     private double  rebate()  {
-        return arguments.rebate;
+        return a.rebate;
     }
 
     private double /*@Rate*/  riskFreeRate()  {

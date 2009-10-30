@@ -84,18 +84,18 @@ public class Processes {
         final double[] volatilities = {0.1,0.2,0.3,0.4,0.5,0.6};
 
         //Following is the curve
-        final BlackVarianceTermStructure varianceCurve = new BlackVarianceCurve(today, dates,volatilities, Actual365Fixed.getDayCounter(), false);
+        final BlackVarianceTermStructure varianceCurve = new BlackVarianceCurve(today, dates,volatilities, new Actual365Fixed(), false);
         ((BlackVarianceCurve)varianceCurve).setInterpolation();
 
         //Dividend termstructure
         final SimpleQuote dividendQuote = new SimpleQuote(0.3);
         final RelinkableHandle<Quote>  handleToInterestRateQuote = new RelinkableHandle<Quote>(dividendQuote);
-        final YieldTermStructure dividendTermStructure = new FlatForward(2,new UnitedStates(Market.NYSE),handleToInterestRateQuote,Actual365Fixed.getDayCounter(),Compounding.Continuous,Frequency.Daily);
+        final YieldTermStructure dividendTermStructure = new FlatForward(2,new UnitedStates(Market.NYSE),handleToInterestRateQuote, new Actual365Fixed(), Compounding.Continuous,Frequency.Daily);
 
         //Risk free term structure
         final SimpleQuote riskFreeRateQuote = new SimpleQuote(0.3);
         final RelinkableHandle<Quote>  handleToRiskFreeRateQuote = new RelinkableHandle<Quote>(riskFreeRateQuote);
-        final YieldTermStructure riskFreeTermStructure = new FlatForward(2,new UnitedStates(Market.NYSE),handleToRiskFreeRateQuote,Actual365Fixed.getDayCounter(),Compounding.Continuous,Frequency.Daily);
+        final YieldTermStructure riskFreeTermStructure = new FlatForward(2,new UnitedStates(Market.NYSE),handleToRiskFreeRateQuote, new Actual365Fixed(), Compounding.Continuous,Frequency.Daily);
 
         //Creating the process
         final StochasticProcess1D process = new GeneralizedBlackScholesProcess(handleToStockQuote,new RelinkableHandle<YieldTermStructure>(dividendTermStructure),new RelinkableHandle<YieldTermStructure>(riskFreeTermStructure),new RelinkableHandle<BlackVolTermStructure>(varianceCurve),new EulerDiscretization());

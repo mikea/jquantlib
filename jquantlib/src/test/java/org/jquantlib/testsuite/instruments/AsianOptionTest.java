@@ -62,10 +62,9 @@ import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.instruments.Option.Type;
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.asian.AnalyticContinuousGeometricAveragePriceasianEngine;
+import org.jquantlib.pricingengines.asian.AnalyticContinuousGeometricAveragePriceAsianEngine;
 import org.jquantlib.pricingengines.asian.AnalyticDiscreteGeometricAveragePriceAsianEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
-import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
@@ -97,7 +96,7 @@ public class AsianOptionTest {
 
         final Date today = new Settings().evaluationDate();
 
-        final DayCounter dc = Actual360.getDayCounter();
+        final DayCounter dc = new Actual360();
 
         QL.info("Today: " + today);
 
@@ -109,10 +108,10 @@ public class AsianOptionTest {
         final SimpleQuote vol = new SimpleQuote(0.20);
         final BlackVolTermStructure volTS = Utilities.flatVol(today, vol.value(), dc);
 
-        final StochasticProcess stochProcess = new org.jquantlib.processes.BlackScholesMertonProcess(new Handle<Quote>(spot),
+        final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
                 new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
 
-        final PricingEngine engine = new AnalyticDiscreteGeometricAveragePriceAsianEngine();
+        final PricingEngine engine = new AnalyticDiscreteGeometricAveragePriceAsianEngine(stochProcess);
 
         final AverageType averageType = AverageType.Geometric;
         /* @Real */final double runningAccumulator = 1.0;
@@ -142,10 +141,11 @@ public class AsianOptionTest {
             QL.info(d.toString());
         }
 
-        final DiscreteAveragingAsianOption option = new DiscreteAveragingAsianOption(averageType, runningAccumulator, pastFixings,
-                fixingDates, stochProcess, payoff, exercise, engine);
+        final DiscreteAveragingAsianOption option = new DiscreteAveragingAsianOption(
+                averageType, runningAccumulator, pastFixings, fixingDates, payoff, exercise);
+        option.setPricingEngine(engine);
 
-        /* @Real */final double calculated = option.getNPV();
+        /* @Real */final double calculated = option.NPV();
         /* @Real */final double expected = 5.3425606635;
 
         /* @Real */final double tolerance = 1e-10;
@@ -177,19 +177,21 @@ public class AsianOptionTest {
         /* @Integer */final int lengths[] = { 1, 2 };
         /* @Volatility */final double vols[] = { 0.11, 0.50, 1.20 };
 
-        final DayCounter dc = Actual360.getDayCounter();
+        final DayCounter dc = new Actual360();
 
-        final SimpleQuote spot = new SimpleQuote(0.0);
-        final SimpleQuote qRate = new SimpleQuote(0.0);
-        final YieldTermStructure qTS = Utilities.flatRate(new Handle<SimpleQuote>(qRate), dc);
-        final SimpleQuote rRate = new SimpleQuote(0.0);
-        final YieldTermStructure rTS = Utilities.flatRate(new Handle<SimpleQuote>(rRate), dc);
+        final SimpleQuote           spot  = new SimpleQuote(0.0);
+        final SimpleQuote           qRate = new SimpleQuote(0.0);
+        final YieldTermStructure    qTS   = Utilities.flatRate(qRate, dc);
+        final SimpleQuote           rRate = new SimpleQuote(0.0);
+        final YieldTermStructure    rTS   = Utilities.flatRate(rRate, dc);
+        final SimpleQuote           vol   = new SimpleQuote(0.0);
+        final BlackVolTermStructure volTS = Utilities.flatVol(vol, dc);
 
-        final SimpleQuote vol = new SimpleQuote(0.0);
-        final BlackVolTermStructure volTS = Utilities.flatVol(new Handle<SimpleQuote>(vol), dc);
-
-        final StochasticProcess process = new BlackScholesMertonProcess(new Handle<Quote>(spot), new Handle<YieldTermStructure>(qTS),
-                new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
+        final BlackScholesMertonProcess process = new BlackScholesMertonProcess(
+                new Handle<Quote>(spot),
+                new Handle<YieldTermStructure>(qTS),
+                new Handle<YieldTermStructure>(rTS),
+                new Handle<BlackVolTermStructure>(volTS));
 
         final Date today = new Settings().evaluationDate();
 
@@ -214,10 +216,11 @@ public class AsianOptionTest {
                         fixingDates.add(d.clone());
                     }
 
-                    final PricingEngine engine = new AnalyticDiscreteGeometricAveragePriceAsianEngine();
+                    final PricingEngine engine = new AnalyticDiscreteGeometricAveragePriceAsianEngine(process);
 
-                    final DiscreteAveragingAsianOption option = new DiscreteAveragingAsianOption(AverageType.Geometric, runningAverage,
-                            pastFixings, fixingDates, process, payoff, maturity, engine);
+                    final DiscreteAveragingAsianOption option = new DiscreteAveragingAsianOption(
+                            AverageType.Geometric, runningAverage, pastFixings, fixingDates, payoff, maturity);
+                    option.setPricingEngine(engine);
 
                     for (final double u : underlyings) {
                         for (final double q : qRates) {
@@ -229,7 +232,7 @@ public class AsianOptionTest {
                                     rRate.setValue(r);
                                     vol.setValue(v);
 
-                                    final double value = option.getNPV();
+                                    final double value = option.NPV();
                                     final Map<String, Double> calculated = new HashMap<String, Double>();
                                     calculated.put("delta", option.delta());
                                     calculated.put("gamma", option.gamma());
@@ -243,10 +246,10 @@ public class AsianOptionTest {
                                         // perturb spot and get delta and gamma
                                         final double du = u * 1.0e-4;
                                         spot.setValue(u + du);
-                                        double value_p = option.getNPV();
+                                        double value_p = option.NPV();
                                         final double delta_p = option.delta();
                                         spot.setValue(u - du);
-                                        double value_m = option.getNPV();
+                                        double value_m = option.NPV();
                                         final double delta_m = option.delta();
                                         spot.setValue(u);
                                         expected.put("delta", (value_p - value_m) / (2 * du));
@@ -255,26 +258,26 @@ public class AsianOptionTest {
                                         // perturb rates and get rho and dividend rho
                                         final double dr = r * 1.0e-4;
                                         rRate.setValue(r + dr);
-                                        value_p = option.getNPV();
+                                        value_p = option.NPV();
                                         rRate.setValue(r - dr);
-                                        value_m = option.getNPV();
+                                        value_m = option.NPV();
                                         rRate.setValue(r);
                                         expected.put("rho", (value_p - value_m) / (2 * dr));
 
                                         final double dq = q * 1.0e-4;
                                         qRate.setValue(q + dq);
-                                        value_p = option.getNPV();
+                                        value_p = option.NPV();
                                         qRate.setValue(q - dq);
-                                        value_m = option.getNPV();
+                                        value_m = option.NPV();
                                         qRate.setValue(q);
                                         expected.put("divRho", (value_p - value_m) / (2 * dq));
 
                                         // perturb volatility and get vega
                                         final double dv = v * 1.0e-4;
                                         vol.setValue(v + dv);
-                                        value_p = option.getNPV();
+                                        value_p = option.NPV();
                                         vol.setValue(v - dv);
-                                        value_m = option.getNPV();
+                                        value_m = option.NPV();
                                         vol.setValue(v);
                                         expected.put("vega", (value_p - value_m) / (2 * dv));
 
@@ -283,9 +286,9 @@ public class AsianOptionTest {
                                         final Date tomorrow = today.add(1);
                                         final double dT = dc.yearFraction(yesterday, tomorrow);
                                         new Settings().setEvaluationDate(yesterday);
-                                        value_m = option.getNPV();
+                                        value_m = option.NPV();
                                         new Settings().setEvaluationDate(tomorrow);
-                                        value_p = option.getNPV();
+                                        value_p = option.NPV();
                                         expected.put("theta", (value_p - value_m) / dT);
                                         new Settings().setEvaluationDate(today);
                                         // compare
@@ -310,44 +313,29 @@ public class AsianOptionTest {
         }
     }
 
-    private void reportFailure(final String greekName, final AverageType averageType, final double runningAccumulator, final int pastFixings,
-            final List<Date> fixingDates, final StrikedTypePayoff payoff, final Exercise exercise, final double s, final double q, final double r, final Date today,
-            final double v, final double expected, final double calculated, final double tolerance) {
-
-        fail(exercise + " Asian option with " + averageType + " and " + payoff + " payoff:\n" + "    running variable: "
-                + runningAccumulator + "\n" + "    past fixings:     " + pastFixings + "\n" + "    future fixings:   "
-                + fixingDates.size() + "\n" + "    underlying value: " + s + "\n" + "    strike:           " + payoff.strike()
-                + "\n" + "    dividend yield:   " + q + "\n" + "    risk-free rate:   " + r + "\n" + "    reference date:   "
-                + today + "\n" + "    maturity:         " + exercise.lastDate() + "\n" + "    volatility:       " + v + "\n\n"
-                + "    expected   " + greekName + ": " + expected + "\n" + "    calculated " + greekName + ": " + calculated + "\n"
-                + "    error:            " + Math.abs(expected - calculated) + "\n" + "    tolerance:        " + tolerance);
-
-    }
-
-    //XXX @Ignore
     @Test
     public void testAnalyticContinuousGeometricAveragePrice() {
         QL.info("Testing analytic continuous geometric average-price Asians...");
-        final DayCounter dc = Actual360.getDayCounter();
+        final DayCounter dc = new Actual360();
         // data from "Option Pricing Formulas", Haug, pag.96-97
 
         final Date today = new Settings().evaluationDate();
 
         QL.info("Today: " + today);
 
-        final SimpleQuote spot = new SimpleQuote(80.0);
-        final SimpleQuote qRate = new SimpleQuote(-0.03);
-        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<SimpleQuote>(qRate), dc);
-        final SimpleQuote rRate = new SimpleQuote(0.05);
-        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<SimpleQuote>(rRate), dc);
-        final SimpleQuote vol = new SimpleQuote(0.20);
-        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<SimpleQuote>(vol), dc);
+        final SimpleQuote           spot  = new SimpleQuote(80.0);
+        final SimpleQuote           qRate = new SimpleQuote(-0.03);
+        final YieldTermStructure    qTS   = Utilities.flatRate(today, qRate, dc);
+        final SimpleQuote           rRate = new SimpleQuote(0.05);
+        final YieldTermStructure    rTS   = Utilities.flatRate(today, rRate, dc);
+        final SimpleQuote           vol   = new SimpleQuote(0.20);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, vol, dc);
 
         final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
                 new Handle<Quote>(spot), new Handle<YieldTermStructure>(qTS),
                 new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
+        final PricingEngine engine = new AnalyticContinuousGeometricAveragePriceAsianEngine(stochProcess);
 
-        final PricingEngine engine = new AnalyticContinuousGeometricAveragePriceasianEngine();
         final AverageType averageType = AverageType.Geometric;
         final Option.Type type = Option.Type.PUT;
         /* @Real */final double strike = 85.0;
@@ -360,10 +348,10 @@ public class AsianOptionTest {
         final StrikedTypePayoff payoff = new PlainVanillaPayoff(type, strike);
         final Exercise exercise = new EuropeanExercise(exerciseDate);
 
-        final ContinuousAveragingAsianOption option = new ContinuousAveragingAsianOption(
-                averageType, stochProcess, payoff, exercise, engine);
+        final ContinuousAveragingAsianOption option = new ContinuousAveragingAsianOption(averageType, payoff, exercise);
+        option.setPricingEngine(engine);
 
-        /* @Real */double calculated = option.getNPV();
+        /* @Real */double calculated = option.NPV();
         /* @Real */final double expected = 4.6922;
         /* @Real */double tolerance = 1.0e-4;
 
@@ -381,11 +369,13 @@ public class AsianOptionTest {
         for (/* @Size */int i = 0; i < 91; i++) {
             fixingDates.add(today.clone().addAssign(i));
         }
-        final PricingEngine engine2 = new AnalyticDiscreteGeometricAveragePriceAsianEngine();
-        final DiscreteAveragingAsianOption option2 = new DiscreteAveragingAsianOption(averageType, runningAccumulator, pastFixings,
-                fixingDates, stochProcess, payoff, exercise, engine2);
 
-        calculated = option2.getNPV();
+        final PricingEngine engine2 = new AnalyticDiscreteGeometricAveragePriceAsianEngine(stochProcess);
+        final DiscreteAveragingAsianOption option2 = new DiscreteAveragingAsianOption(
+                averageType, runningAccumulator, pastFixings, fixingDates, payoff, exercise);
+        option2.setPricingEngine(engine2);
+
+        calculated = option2.NPV();
         tolerance = 3.0e-3;
         if (Math.abs(calculated - expected) > tolerance) {
             reportFailure("value", averageType, runningAccumulator, pastFixings, fixingDates, payoff, exercise, spot.value(),
@@ -414,19 +404,25 @@ public class AsianOptionTest {
         /* @Integer */final int lengths[] = { 1, 2 };
         /* @Volatility */final double vols[] = { 0.11, 0.50, 1.20 };
 
-        final DayCounter dc = Actual360.getDayCounter();
+        final DayCounter dc = new Actual360();
 
-        final SimpleQuote spot = new SimpleQuote(0.0);
-        final SimpleQuote qRate = new SimpleQuote(0.0);
-        final YieldTermStructure qTS = Utilities.flatRate(new Handle<SimpleQuote>(qRate), dc);
-        final SimpleQuote rRate = new SimpleQuote(0.0);
-        final YieldTermStructure rTS = Utilities.flatRate(new Handle<SimpleQuote>(rRate), dc);
-        final SimpleQuote vol = new SimpleQuote(0.0);
-        final BlackVolTermStructure volTS = Utilities.flatVol(new Handle<SimpleQuote>(vol), dc);
+        final SimpleQuote           spot  = new SimpleQuote(0.0);
+        final SimpleQuote           qRate = new SimpleQuote(0.0);
+        final YieldTermStructure    qTS   = Utilities.flatRate(qRate, dc);
+        final SimpleQuote           rRate = new SimpleQuote(0.0);
+        final YieldTermStructure    rTS   = Utilities.flatRate(rRate, dc);
+        final SimpleQuote           vol   = new SimpleQuote(0.0);
+        final BlackVolTermStructure volTS = Utilities.flatVol(vol, dc);
 
         final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
-                new Handle<Quote>(spot), new Handle<YieldTermStructure>(qTS),
-                new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
+                new Handle<Quote>(spot),
+                new Handle<YieldTermStructure>(qTS),
+                new Handle<YieldTermStructure>(rTS),
+                new Handle<BlackVolTermStructure>(volTS));
+
+        final PricingEngine engine = new AnalyticContinuousGeometricAveragePriceAsianEngine(stochProcess);
+
+
 
         final Date today = new Settings().evaluationDate();
 
@@ -436,12 +432,11 @@ public class AsianOptionTest {
 
                     final Date exerciseDate = new Date(today.dayOfMonth(), today.month(), today.year() + length);
                     final EuropeanExercise maturity = new EuropeanExercise(exerciseDate);
-
-                    final PricingEngine engine = new AnalyticContinuousGeometricAveragePriceasianEngine();
                     final PlainVanillaPayoff payoff = new PlainVanillaPayoff(type, strike);
 
                     final ContinuousAveragingAsianOption option = new ContinuousAveragingAsianOption(
-                            AverageType.Geometric, stochProcess, payoff, maturity, engine);
+                            AverageType.Geometric, payoff, maturity);
+                    option.setPricingEngine(engine);
 
                     /* @Size */final int pastFixings = Integer.MAX_VALUE;
                     /* @Real */final double runningAverage = Double.NaN;
@@ -456,7 +451,7 @@ public class AsianOptionTest {
                                     rRate.setValue(r);
                                     vol.setValue(v);
 
-                                    /* @Real */final double value = option.getNPV();
+                                    /* @Real */final double value = option.NPV();
                                     final Map<String, Double> calculated = new HashMap<String, Double>();
                                     calculated.put("delta", option.delta());
                                     calculated.put("gamma", option.gamma());
@@ -470,10 +465,10 @@ public class AsianOptionTest {
                                         // perturb spot and get delta and gamma
                                         /* @Real */final double du = u * 1.0e-4;
                                         spot.setValue(u + du);
-                                        /* @Real */double value_p = option.getNPV();
+                                        /* @Real */double value_p = option.NPV();
                                         /* @Real */final double delta_p = option.delta();
                                         spot.setValue(u - du);
-                                        /* @Real */double value_m = option.getNPV();
+                                        /* @Real */double value_m = option.NPV();
                                         /* @Real */final double delta_m = option.delta();
                                         spot.setValue(u);
                                         expected.put("delta", (value_p - value_m) / (2 * du));
@@ -482,26 +477,26 @@ public class AsianOptionTest {
                                         // perturb rates and get rho and dividend rho
                                         /* @Spread */final double dr = r * 1.0e-4;
                                         rRate.setValue(r + dr);
-                                        value_p = option.getNPV();
+                                        value_p = option.NPV();
                                         rRate.setValue(r - dr);
-                                        value_m = option.getNPV();
+                                        value_m = option.NPV();
                                         rRate.setValue(r);
                                         expected.put("rho", (value_p - value_m) / (2 * dr));
 
                                         /* @Spread */final double dq = q * 1.0e-4;
                                         qRate.setValue(q + dq);
-                                        value_p = option.getNPV();
+                                        value_p = option.NPV();
                                         qRate.setValue(q - dq);
-                                        value_m = option.getNPV();
+                                        value_m = option.NPV();
                                         qRate.setValue(q);
                                         expected.put("divRho", (value_p - value_m) / (2 * dq));
 
                                         // perturb volatility and get vega
                                         /* @Volatility */final double dv = v * 1.0e-4;
                                         vol.setValue(v + dv);
-                                        value_p = option.getNPV();
+                                        value_p = option.NPV();
                                         vol.setValue(v - dv);
-                                        value_m = option.getNPV();
+                                        value_m = option.NPV();
                                         vol.setValue(v);
                                         expected.put("vega", (value_p - value_m) / (2 * dv));
 
@@ -510,9 +505,9 @@ public class AsianOptionTest {
                                         final Date tomorrow = today.add(1);
                                         /* @Time */final double dT = dc.yearFraction(yesterday, tomorrow);
                                         new Settings().setEvaluationDate(yesterday);
-                                        value_m = option.getNPV();
+                                        value_m = option.NPV();
                                         new Settings().setEvaluationDate(tomorrow);
-                                        value_p = option.getNPV();
+                                        value_p = option.NPV();
                                         expected.put("theta", (value_p - value_m) / dT);
                                         new Settings().setEvaluationDate(today);
                                         // compare
@@ -536,4 +531,20 @@ public class AsianOptionTest {
             }
         }
     }
+
+
+    private void reportFailure(final String greekName, final AverageType averageType, final double runningAccumulator, final int pastFixings,
+            final List<Date> fixingDates, final StrikedTypePayoff payoff, final Exercise exercise, final double s, final double q, final double r, final Date today,
+            final double v, final double expected, final double calculated, final double tolerance) {
+
+        fail(exercise + " Asian option with " + averageType + " and " + payoff + " payoff:\n" + "    running variable: "
+                + runningAccumulator + "\n" + "    past fixings:     " + pastFixings + "\n" + "    future fixings:   "
+                + fixingDates.size() + "\n" + "    underlying value: " + s + "\n" + "    strike:           " + payoff.strike()
+                + "\n" + "    dividend yield:   " + q + "\n" + "    risk-free rate:   " + r + "\n" + "    reference date:   "
+                + today + "\n" + "    maturity:         " + exercise.lastDate() + "\n" + "    volatility:       " + v + "\n\n"
+                + "    expected   " + greekName + ": " + expected + "\n" + "    calculated " + greekName + ": " + calculated + "\n"
+                + "    error:            " + Math.abs(expected - calculated) + "\n" + "    tolerance:        " + tolerance);
+
+    }
+
 }

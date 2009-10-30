@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -46,10 +46,11 @@ import org.jquantlib.math.matrixutilities.Matrix;
 
 
 /**
- * 
+ *
  * @author Richard Gomes
  */
 // TODO: class comments
+//TODO: code review :: http://bugs.jquantlib.org/view.php?id=394
 public class EulerDiscretization implements LinearDiscretization {
 
     //
@@ -63,7 +64,7 @@ public class EulerDiscretization implements LinearDiscretization {
      */
     @Override
     public Array driftDiscretization(
-                final StochasticProcess sp, 
+                final StochasticProcess sp,
                 /* @Time */final double t0, /* @Price */ final Array x0, /* @Time */ final double dt) {
         return sp.drift(t0, x0).mulAssign(dt);
     }
@@ -75,7 +76,7 @@ public class EulerDiscretization implements LinearDiscretization {
      */
     @Override
     public Matrix diffusionDiscretization(
-                final StochasticProcess sp, 
+                final StochasticProcess sp,
                 /* @Time */final double t0, /* @Price */ final Array x0, /* @Time */final double dt) {
         return sp.diffusion(t0, x0).mulAssign(Math.sqrt(dt));
     }
@@ -87,13 +88,13 @@ public class EulerDiscretization implements LinearDiscretization {
      */
     @Override
     public Matrix covarianceDiscretization(
-                final StochasticProcess sp, 
+                final StochasticProcess sp,
                 /* @Time */final double t0, /* @Price */ final Array x0, /* @Time */final double dt) {
         final Matrix sigma = sp.diffusion(t0, x0);
         return sigma.mul(sigma.transpose()).mulAssign(dt);
     }
 
-    
+
     //
     // Implements Discretization1D
     //
@@ -105,7 +106,7 @@ public class EulerDiscretization implements LinearDiscretization {
      */
     @Override
     public /* @Drift */ double driftDiscretization(
-                final StochasticProcess1D sp, 
+                final StochasticProcess1D sp,
                 /* @Time */final double t0, /* @Price */ final double x0, /* @Time */final double dt) {
         return sp.drift(t0, x0) * dt;
     }
@@ -117,7 +118,7 @@ public class EulerDiscretization implements LinearDiscretization {
      */
     @Override
     public /* @Diffusion */ double diffusionDiscretization(
-                final StochasticProcess1D sp, 
+                final StochasticProcess1D sp,
                 /* @Time */final double t0, /* @Price */ final double x0, /* @Time */final double dt) {
         return sp.diffusion(t0, x0) * Math.sqrt(dt);
     }

@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -28,12 +28,13 @@ import org.jquantlib.processes.StochasticProcess1D;
 
 /**
  * Binomial tree base class
- * 
+ *
  * @category lattices
- * 
+ *
  * @author Srinivas Hasti
  * @author Tim Swetonic
  */
+// TODO: http://bugs.jquantlib.org/view.php?id=394
 public abstract class BinomialTree extends Tree {
 
     public static final Branches branches = Branches.BINOMIAL;
@@ -50,11 +51,13 @@ public abstract class BinomialTree extends Tree {
         driftPerStep = process.drift(0.0, x0) * dt;
     }
 
-	public final int size(final int i) {
+	@Override
+    public final int size(final int i) {
 		return i + 1;
 	}
 
-	public final int descendant(final int unused, final int index, final int branch) {
+	@Override
+    public final int descendant(final int unused, final int index, final int branch) {
 		return index + branch;
 	}
 

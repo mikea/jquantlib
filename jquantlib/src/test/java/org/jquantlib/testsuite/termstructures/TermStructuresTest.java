@@ -152,7 +152,7 @@ public class TermStructuresTest {
     public void testReferenceChange() {
         QL.info("Testing term structure against evaluation date change...");
 
-        final YieldTermStructure localTermStructure = new FlatForward(settlementDays, new NullCalendar(), 0.03, Actual360.getDayCounter());
+        final YieldTermStructure localTermStructure = new FlatForward(settlementDays, new NullCalendar(), 0.03, new Actual360());
 
         final int days[] = { 10, 30, 60, 120, 360, 720 };
         /*@DiscountFactor*/ final double[] expected = new /*@DiscountFactor*/ double[days.length];
@@ -239,7 +239,7 @@ public class TermStructuresTest {
         final Quote quote = new SimpleQuote(100.0);
         final Flag anotherFlag = new Flag();
         quote.addObserver(anotherFlag);
-        h.linkTo(new FlatForward(today, new Handle<Quote>(quote), Actual360.getDayCounter()));
+        h.linkTo(new FlatForward(today, new Handle<Quote>(quote), new Actual360()));
         if (!anotherFlag.isUp()) {
             fail("Observer was not notified of term structure change");
         }

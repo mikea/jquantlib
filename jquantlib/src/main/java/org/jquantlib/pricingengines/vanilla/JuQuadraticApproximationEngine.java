@@ -44,12 +44,12 @@ import org.jquantlib.exercise.AmericanExercise;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.StrikedTypePayoff;
+import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.distributions.NormalDistribution;
 import org.jquantlib.pricingengines.BlackCalculator;
 import org.jquantlib.pricingengines.BlackFormula;
-import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
@@ -59,7 +59,7 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  *
  * @author <Richard Gomes>
  */
-public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
+public class JuQuadraticApproximationEngine extends VanillaOption.EngineImpl {
 
     // TODO: refactor messages
     private static final String NOT_AN_AMERICAN_OPTION = "not an American Option";
@@ -72,11 +72,27 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 
 
     //
+    // private final fields
+    //
+
+    final private GeneralizedBlackScholesProcess process;
+    final private VanillaOption.ArgumentsImpl a;
+    final private VanillaOption.ResultsImpl   r;
+    private final Option.GreeksImpl greeks;
+    private final Option.MoreGreeksImpl moreGreeks;
+
+
+    //
     // public constructors
     //
 
-    public JuQuadraticApproximationEngine() {
-        super();
+    public JuQuadraticApproximationEngine(final GeneralizedBlackScholesProcess process) {
+        this.a = (VanillaOption.ArgumentsImpl)arguments;
+        this.r = (VanillaOption.ResultsImpl)results;
+        this.greeks = r.greeks();
+        this.moreGreeks = r.moreGreeks();
+        this.process = process;
+        this.process.addObserver(this);
     }
 
 
@@ -86,14 +102,12 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 
     @Override
     public void calculate() {
-        QL.require(arguments.exercise.type()==Exercise.Type.American , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified
-        QL.require(arguments.exercise instanceof AmericanExercise , NON_AMERICAN_EXERCISE_GIVEN); // QA:[RG]::verified
-        final AmericanExercise ex = (AmericanExercise)arguments.exercise;
+        QL.require(a.exercise.type()==Exercise.Type.American , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified
+        QL.require(a.exercise instanceof AmericanExercise , NON_AMERICAN_EXERCISE_GIVEN); // QA:[RG]::verified
+        final AmericanExercise ex = (AmericanExercise)a.exercise;
         QL.require(!ex.payoffAtExpiry() , PAYOFF_AT_EXPIRY_NOT_HANDLED); // QA:[RG]::verified
-        QL.require(arguments.payoff instanceof StrikedTypePayoff , NON_STRIKE_PAYOFF_GIVEN); // QA:[RG]::verified
-        final StrikedTypePayoff payoff = (StrikedTypePayoff)arguments.payoff;
-        QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , BLACK_SCHOLES_PROCESS_REQUIRED); // QA:[RG]::verified
-        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
+        QL.require(a.payoff instanceof StrikedTypePayoff , NON_STRIKE_PAYOFF_GIVEN); // QA:[RG]::verified
+        final StrikedTypePayoff payoff = (StrikedTypePayoff)a.payoff;
 
         final double /* @Real */variance = process.blackVolatility().currentLink().blackVariance(ex.lastDate(), payoff.strike());
         final double /* @DiscountFactor */dividendDiscount = process.dividendYield().currentLink().discount(ex.lastDate());
@@ -105,28 +119,28 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
 
         if (dividendDiscount>=1.0 && payoff.optionType()==Option.Type.CALL) {
             // early exercise never optimal
-            results.value        = black.value();
-            results.delta        = black.delta(spot);
-            results.deltaForward = black.deltaForward();
-            results.elasticity   = black.elasticity(spot);
-            results.gamma        = black.gamma(spot);
+            r.value           = black.value();
+            greeks.delta            = black.delta(spot);
+            moreGreeks.deltaForward = black.deltaForward();
+            moreGreeks.elasticity   = black.elasticity(spot);
+            greeks.gamma            = black.gamma(spot);
 
             final DayCounter rfdc  = process.riskFreeRate().currentLink().dayCounter();
             final DayCounter divdc = process.dividendYield().currentLink().dayCounter();
             final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
-            double /*@Time*/ t = rfdc.yearFraction(process.riskFreeRate().currentLink().referenceDate(), arguments.exercise.lastDate());
-            results.rho = black.rho(t);
+            double /*@Time*/ t = rfdc.yearFraction(process.riskFreeRate().currentLink().referenceDate(), a.exercise.lastDate());
+            greeks.rho = black.rho(t);
 
-            t = divdc.yearFraction(process.dividendYield().currentLink().referenceDate(), arguments.exercise.lastDate());
-            results.dividendRho = black.dividendRho(t);
+            t = divdc.yearFraction(process.dividendYield().currentLink().referenceDate(), a.exercise.lastDate());
+            greeks.dividendRho = black.dividendRho(t);
 
-            t = voldc.yearFraction(process.blackVolatility().currentLink().referenceDate(), arguments.exercise.lastDate());
-            results.vega = black.vega(t);
-            results.theta = black.theta(spot, t);
-            results.thetaPerDay = black.thetaPerDay(spot, t);
+            t = voldc.yearFraction(process.blackVolatility().currentLink().referenceDate(), a.exercise.lastDate());
+            greeks.vega            = black.vega(t);
+            greeks.theta           = black.theta(spot, t);
+            moreGreeks.thetaPerDay = black.thetaPerDay(spot, t);
 
-            results.strikeSensitivity  = black.strikeSensitivity();
-            results.itmCashProbability = black.itmCashProbability();
+            moreGreeks.strikeSensitivity  = black.strikeSensitivity();
+            moreGreeks.itmCashProbability = black.itmCashProbability();
         } else {
             // early exercise can be optimal
             final CumulativeNormalDistribution cumNormalDist = new CumulativeNormalDistribution();
@@ -177,23 +191,19 @@ public class JuQuadraticApproximationEngine extends VanillaOptionEngine {
             final double /* @Real */chi = temp_spot_ratio * (b * temp_spot_ratio + c);
 
             if (phi * (Sk - spot) > 0) {
-                results.value = black.value() + hA * Math.pow((spot / Sk), lambda) / (1 - chi);
+                r.value = black.value() + hA * Math.pow((spot / Sk), lambda) / (1 - chi);
             } else {
-                results.value = phi * (spot - payoff.strike());
+                r.value = phi * (spot - payoff.strike());
             }
 
-            if (Double.isNaN(results.value)){
-                final double hh = 0.0;
-                final double gg = hh; //TODO: code review: variable never read?
-            }
             final double /* @Real */temp_chi_prime = (2 * b / spot) * Math.log(spot / Sk);
             final double /* @Real */chi_prime = temp_chi_prime + c / spot;
             final double /* @Real */chi_double_prime = 2 * b / (spot * spot) - temp_chi_prime / spot - c / (spot * spot);
-            results.delta = phi * dividendDiscount * cumNormalDist.op(phi * d1_Sk)
+            greeks.delta = phi * dividendDiscount * cumNormalDist.op(phi * d1_Sk)
             + (lambda / (spot * (1 - chi)) + chi_prime / ((1 - chi)*(1 - chi))) *
             (phi * (Sk - payoff.strike()) - black_Sk) * Math.pow((spot/Sk), lambda);
 
-            results.gamma = phi * dividendDiscount * normalDist.op(phi*d1_Sk) /
+            greeks.gamma = phi * dividendDiscount * normalDist.op(phi*d1_Sk) /
             (spot * Math.sqrt(variance))
             + (2 * lambda * chi_prime / (spot * (1 - chi) * (1 - chi))
                     + 2 * chi_prime * chi_prime / ((1 - chi) * (1 - chi) * (1 - chi))

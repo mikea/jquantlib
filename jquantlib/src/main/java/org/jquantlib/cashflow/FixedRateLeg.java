@@ -56,7 +56,7 @@ public class FixedRateLeg extends Leg {
 
     public FixedRateLeg withCouponRates(/* @Rate */final double [] couponRates) {
         couponRates_ = new InterestRate[couponRates.length];
-        for(int i = 0; i<couponRates.length; i++) {
+        for (int i = 0; i<couponRates.length; i++) {
             couponRates_[i] = new InterestRate(couponRates[i], paymentDayCounter_, Compounding.Simple);
         }
         return this;

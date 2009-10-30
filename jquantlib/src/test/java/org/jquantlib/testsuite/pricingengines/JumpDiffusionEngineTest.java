@@ -18,13 +18,11 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.instruments.Option.Type;
-import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.pricingengines.vanilla.JumpDiffusionEngine;
 import org.jquantlib.processes.Merton76Process;
-import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
+import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -209,25 +207,29 @@ public class JumpDiffusionEngineTest {
         };
 
         final Date today = new Settings().evaluationDate();
+        final DayCounter dc = new Actual360();
 
-        final DayCounter dc = Actual360.getDayCounter();
-        final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        final YieldTermStructure qTS = Utilities.flatRate(today, qRate, dc);
-        final Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        final YieldTermStructure rTS = Utilities.flatRate(today, rRate, dc);
-        final Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final SimpleQuote           spot  = new SimpleQuote(0.0);
+        final SimpleQuote           qRate = new SimpleQuote(0.0);
+        final YieldTermStructure    qTS   = Utilities.flatRate(today, qRate, dc);
+        final SimpleQuote           rRate = new SimpleQuote(0.0);
+        final YieldTermStructure    rTS   = Utilities.flatRate(today, rRate, dc);
+        final SimpleQuote           vol   = new SimpleQuote(0.0);
         final BlackVolTermStructure volTS = Utilities.flatVol(today, vol, dc);
 
-        final Handle<SimpleQuote> jumpIntensity = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        final Handle<SimpleQuote> meanLogJump = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        final Handle<SimpleQuote> jumpVol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final SimpleQuote jumpIntensity = new SimpleQuote(0.0);
+        final SimpleQuote meanLogJump   = new SimpleQuote(0.0);
+        final SimpleQuote jumpVol       = new SimpleQuote(0.0);
 
-        final StochasticProcess stochProcess = new Merton76Process(spot, new Handle<YieldTermStructure>(qTS),
-                new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS), jumpIntensity, meanLogJump, jumpVol);
-
-        final VanillaOptionEngine baseEngine = new AnalyticEuropeanEngine();
-        final PricingEngine engine = new JumpDiffusionEngine(baseEngine);
+        final Merton76Process stochProcess = new Merton76Process(
+                new Handle<Quote>(spot),
+                new Handle<YieldTermStructure>(qTS),
+                new Handle<YieldTermStructure>(rTS),
+                new Handle<BlackVolTermStructure>(volTS),
+                new Handle<Quote>(jumpIntensity),
+                new Handle<Quote>(meanLogJump),
+                new Handle<Quote>(jumpVol));
+        final PricingEngine engine = new JumpDiffusionEngine(stochProcess);
 
         for (final HaugMertonData value : values) {
             final StrikedTypePayoff payoff = new PlainVanillaPayoff(value.type, value.strike);
@@ -235,23 +237,23 @@ public class JumpDiffusionEngineTest {
             final Date exDate = today.add((int) (value.t * 360 + 0.5));
             final Exercise exercise = new EuropeanExercise(exDate);
 
-            spot.currentLink().setValue(value.s);
-            qRate.currentLink().setValue(value.q);
-            rRate.currentLink().setValue(value.r);
+            spot.setValue(value.s);
+            qRate.setValue(value.q);
+            rRate.setValue(value.r);
 
-            jumpIntensity.currentLink().setValue(value.jumpIntensity);
+            jumpIntensity.setValue(value.jumpIntensity);
 
             // delta in Haug's notation
             final double /* @Real */jVol = value.v * Math.sqrt(value.gamma / value.jumpIntensity);
-            jumpVol.currentLink().setValue(jVol);
+            jumpVol.setValue(jVol);
 
             // z in Haug's notation
             final double /* @Real */diffusionVol = value.v * Math.sqrt(1.0 - value.gamma);
-            vol.currentLink().setValue(diffusionVol);
+            vol.setValue(diffusionVol);
 
             // Haug is assuming zero meanJump
             final double /* @Real */meanJump = 0.0;
-            meanLogJump.currentLink().setValue(Math.log(1.0 + meanJump) - 0.5 * jVol * jVol);
+            meanLogJump.setValue(Math.log(1.0 + meanJump) - 0.5 * jVol * jVol);
 
             final double totalVol = Math.sqrt(value.jumpIntensity * jVol * jVol + diffusionVol * diffusionVol);
             final double volError = Math.abs(totalVol - value.v);
@@ -260,9 +262,10 @@ public class JumpDiffusionEngineTest {
                 throw new ArithmeticException(" mismatch");
             }
 
-            final EuropeanOption option = new EuropeanOption(stochProcess, payoff, exercise, engine);
+            final EuropeanOption option = new EuropeanOption(payoff, exercise);
+            option.setPricingEngine(engine);
 
-            final double /* @Real */calculated = option.getNPV();
+            final double /* @Real */calculated = option.NPV();
             final double /* @Real */error = Math.abs(calculated - value.result);
             if (error > value.tol) {
                 REPORT_FAILURE_2("value", payoff, exercise, value.s, value.q, value.r, today, value.v,
@@ -315,40 +318,45 @@ public class JumpDiffusionEngineTest {
         final double mLJ[] = { -0.20, 0.0, 0.20 };
         final double jV[] = { 0.01, 0.25 };
 
-        final DayCounter dc = Actual360.getDayCounter();
+        final DayCounter dc = new Actual360();
 
-        final Handle<SimpleQuote> spot = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        final Handle<SimpleQuote> qRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        final YieldTermStructure qTS = Utilities.flatRate(qRate, dc);
-        final Handle<SimpleQuote> rRate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        final YieldTermStructure rTS = Utilities.flatRate(rRate, dc);
-        final Handle<SimpleQuote> vol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+        final SimpleQuote           spot  = new SimpleQuote(0.0);
+        final SimpleQuote           qRate = new SimpleQuote(0.0);
+        final YieldTermStructure    qTS   = Utilities.flatRate(qRate, dc);
+        final SimpleQuote           rRate = new SimpleQuote(0.0);
+        final YieldTermStructure    rTS   = Utilities.flatRate(rRate, dc);
+        final SimpleQuote           vol   = new SimpleQuote(0.0);
         final BlackVolTermStructure volTS = Utilities.flatVol(vol, dc);
 
-        final Handle<SimpleQuote> jumpIntensity = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        final Handle<SimpleQuote> meanLogJump = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-        final Handle<SimpleQuote> jumpVol = new Handle<SimpleQuote>(new SimpleQuote(0.0));
-
-        final StochasticProcess stochProcess = new Merton76Process(spot, new Handle<YieldTermStructure>(qTS),
-                new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS), jumpIntensity, meanLogJump, jumpVol);
+        final SimpleQuote jumpIntensity = new SimpleQuote(0.0);
+        final SimpleQuote meanLogJump   = new SimpleQuote(0.0);
+        final SimpleQuote jumpVol       = new SimpleQuote(0.0);
 
         StrikedTypePayoff payoff = null;
 
-        final VanillaOptionEngine baseEngine = new AnalyticEuropeanEngine();
+        final Merton76Process stochProcess = new Merton76Process(
+                new Handle<Quote>(spot),
+                new Handle<YieldTermStructure>(qTS),
+                new Handle<YieldTermStructure>(rTS),
+                new Handle<BlackVolTermStructure>(volTS),
+                new Handle<Quote>(jumpIntensity),
+                new Handle<Quote>(meanLogJump),
+                new Handle<Quote>(jumpVol));
+
         // The jumpdiffusionengine greeks are very sensitive to the convergence level.
         // A tolerance of 1.0e-08 is usually sufficient to get reasonable results
-        final PricingEngine engine = new JumpDiffusionEngine(baseEngine, 1e-08);
+        final PricingEngine engine = new JumpDiffusionEngine(stochProcess, 1e-08);
 
         final Date today = new Settings().evaluationDate();
 
         for (final Type type : types) {
             for (final double strike : strikes) {
                 for (final double element : jInt) {
-                    jumpIntensity.currentLink().setValue(element);
+                    jumpIntensity.setValue(element);
                     for (final double element2 : mLJ) {
-                        meanLogJump.currentLink().setValue(element2);
+                        meanLogJump.setValue(element2);
                         for (final double element3 : jV) {
-                            jumpVol.currentLink().setValue(element3);
+                            jumpVol.setValue(element3);
                             for (final double residualTime : residualTimes) {
                                 final Date exDate = today.add((int) (residualTime * 360 + 0.5));
                                 final Exercise exercise = new EuropeanExercise(exDate);
@@ -364,18 +372,19 @@ public class JumpDiffusionEngineTest {
                                     } else if (kk == 3) {
                                         payoff = new GapPayoff(type, strike, 100.0);
                                     }
-                                    final EuropeanOption option = new EuropeanOption(stochProcess, payoff, exercise, engine);
+                                    final EuropeanOption option = new EuropeanOption(payoff, exercise);
+                                    option.setPricingEngine(engine);
 
                                     for (final double u : underlyings) {
                                         for (final double q : qRates) {
                                             for (final double r : rRates) {
                                                 for (final double v : vols) {
-                                                    spot.currentLink().setValue(u);
-                                                    qRate.currentLink().setValue(q);
-                                                    rRate.currentLink().setValue(r);
-                                                    vol.currentLink().setValue(v);
+                                                    spot.setValue(u);
+                                                    qRate.setValue(q);
+                                                    rRate.setValue(r);
+                                                    vol.setValue(v);
 
-                                                    final double value = option.getNPV();
+                                                    final double value = option.NPV();
                                                     calculated.put("delta", option.delta());
                                                     calculated.put("gamma", option.gamma());
                                                     calculated.put("theta", option.theta());
@@ -383,52 +392,52 @@ public class JumpDiffusionEngineTest {
                                                     calculated.put("divRho", option.dividendRho());
                                                     calculated.put("vega", option.vega());
 
-                                                    if (value > spot.currentLink().value() * 1.0e-5) {
+                                                    if (value > spot.value() * 1.0e-5) {
                                                         // perturb spot and get delta and gamma
                                                         final double du = u * 1.0e-5;
-                                                        spot.currentLink().setValue(u + du);
-                                                        double value_p = option.getNPV();
+                                                        spot.setValue(u + du);
+                                                        double value_p = option.NPV();
                                                         final double delta_p = option.delta();
-                                                        spot.currentLink().setValue(u - du);
-                                                        double value_m = option.getNPV();
+                                                        spot.setValue(u - du);
+                                                        double value_m = option.NPV();
                                                         final double delta_m = option.delta();
-                                                        spot.currentLink().setValue(u);
+                                                        spot.setValue(u);
                                                         expected.put("delta", (value_p - value_m) / (2 * du));
                                                         expected.put("gamma", (delta_p - delta_m) / (2 * du));
 
                                                         // perturb rates and get rho and dividend rho
                                                         final double dr = 1.0e-5;
-                                                        rRate.currentLink().setValue(r + dr);
-                                                        value_p = option.getNPV();
-                                                        rRate.currentLink().setValue(r - dr);
-                                                        value_m = option.getNPV();
-                                                        rRate.currentLink().setValue(r);
+                                                        rRate.setValue(r + dr);
+                                                        value_p = option.NPV();
+                                                        rRate.setValue(r - dr);
+                                                        value_m = option.NPV();
+                                                        rRate.setValue(r);
                                                         expected.put("rho", (value_p - value_m) / (2 * dr));
 
                                                         final double dq = 1.0e-5;
-                                                        qRate.currentLink().setValue(q + dq);
-                                                        value_p = option.getNPV();
-                                                        qRate.currentLink().setValue(q - dq);
-                                                        value_m = option.getNPV();
-                                                        qRate.currentLink().setValue(q);
+                                                        qRate.setValue(q + dq);
+                                                        value_p = option.NPV();
+                                                        qRate.setValue(q - dq);
+                                                        value_m = option.NPV();
+                                                        qRate.setValue(q);
                                                         expected.put("divRho", (value_p - value_m) / (2 * dq));
 
                                                         // perturb volatility and get vega
                                                         final double dv = v * 1.0e-4;
-                                                        vol.currentLink().setValue(v + dv);
-                                                        value_p = option.getNPV();
-                                                        vol.currentLink().setValue(v - dv);
-                                                        value_m = option.getNPV();
-                                                        vol.currentLink().setValue(v);
+                                                        vol.setValue(v + dv);
+                                                        value_p = option.NPV();
+                                                        vol.setValue(v - dv);
+                                                        value_m = option.NPV();
+                                                        vol.setValue(v);
                                                         expected.put("vega", (value_p - value_m) / (2 * dv));
 
                                                         final Date yesterday = today.sub(1);
                                                         final Date tomorrow = today.add(1);
                                                         final double dT = dc.yearFraction(yesterday, tomorrow);
                                                         new Settings().setEvaluationDate(yesterday);
-                                                        value_m = option.getNPV();
+                                                        value_m = option.NPV();
                                                         new Settings().setEvaluationDate(tomorrow);
-                                                        value_p = option.getNPV();
+                                                        value_p = option.NPV();
                                                         expected.put("theta", (value_p - value_m) / dT);
 
                                                         new Settings().setEvaluationDate(today);

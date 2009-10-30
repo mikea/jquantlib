@@ -34,13 +34,18 @@ public class PricerSetter implements TypedVisitor<Object> {
     }
 
 
-    public void setCouponPricer(final Leg leg, final FloatingRateCouponPricer pricer) {
+    //
+    // static public methods
+    //
+
+    static public void setCouponPricer(final Leg leg, final FloatingRateCouponPricer pricer) {
         final PricerSetter setter = new PricerSetter(pricer);
-        for (int i=0; i<leg.size(); i++)
+        for (int i=0; i<leg.size(); i++) {
             leg.get(i).accept(setter);
+        }
     }
 
-    public void setCouponPricers(final Leg leg, final List<FloatingRateCouponPricer> pricers) {
+    static public void setCouponPricers(final Leg leg, final List<FloatingRateCouponPricer> pricers) {
         QL.require(leg.size()>0 , "no cashflows");
         QL.require(leg.size() == pricers.size() , "mismatch between leg size and number of pricers");
         final int nCashFlows = leg.size();
@@ -58,12 +63,15 @@ public class PricerSetter implements TypedVisitor<Object> {
 
     @Override
     public Visitor<Object> getVisitor(final Class<? extends Object> klass) {
-        if (klass==CashFlow.class)
+        if (klass==CashFlow.class) {
             return new CashFlowVisitor();
-        if (klass==Coupon.class)
+        }
+        if (klass==Coupon.class) {
             return new CouponVisitor();
-        if (klass==IborCoupon.class)
+        }
+        if (klass==IborCoupon.class) {
             return new IborCouponVisitor();
+        }
 
         //        if (klass == CmsCoupon.class)
         //            return new CmsCouponVisitor();
@@ -109,8 +117,9 @@ public class PricerSetter implements TypedVisitor<Object> {
             if (IborCouponPricer.class.isAssignableFrom(pricer.getClass())) {
                 final IborCoupon c = (IborCoupon) o;
                 c.setPricer(pricer);
-            } else
+            } else {
                 QL.require(false , INCOMPATIBLE_PRICER);
+            }
         }
     }
 

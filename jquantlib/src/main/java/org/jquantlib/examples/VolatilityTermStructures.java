@@ -45,7 +45,7 @@ import org.jquantlib.time.calendars.UnitedStates.Market;
 import org.jquantlib.util.StopClock;
 
 /**
- * 
+ *
  * This class explores the functionalities provided by volatility termstructures.The different types
  * of volatilities termstructures covered in this class are as shown below-
  * (1)BlackConstantVol
@@ -55,7 +55,7 @@ import org.jquantlib.util.StopClock;
  * (5)LocalConstantVol
  * (6)LocalVolCurve
  * (7)LocalVolSurface
- * 
+ *
  * @author Apratim Rajendra
  *
  */
@@ -93,7 +93,7 @@ public class VolatilityTermStructures {
         //such a volatility termstructure.
         final SimpleQuote volatilityQuote = new SimpleQuote(0.3);
         final RelinkableHandle<Quote>  handleToVolatilityQuote = new RelinkableHandle<Quote>(volatilityQuote);
-        BlackVolatilityTermStructure constantVolatility = new BlackConstantVol(2,new UnitedStates(Market.NYSE),handleToVolatilityQuote,Actual365Fixed.getDayCounter());
+        BlackVolatilityTermStructure constantVolatility = new BlackConstantVol(2,new UnitedStates(Market.NYSE),handleToVolatilityQuote, new Actual365Fixed());
 
         //Calculating blackVolatility using maturity as 10 days after today and strike as 20
         Double volatility1 = constantVolatility.blackVol(date10.clone(), 20);
@@ -140,7 +140,7 @@ public class VolatilityTermStructures {
         //As BlackConstantVol termstructure has been initialized using relinkable handle so lets change the observable SimpleQuote of this handle
         //and see the change getting reflected to all the calculations done above.
         volatilityQuote.setValue(0.04) ;
-        constantVolatility = new BlackConstantVol(2,new UnitedStates(Market.NYSE),handleToVolatilityQuote,Actual365Fixed.getDayCounter());
+        constantVolatility = new BlackConstantVol(2,new UnitedStates(Market.NYSE),handleToVolatilityQuote, new Actual365Fixed());
 
         //Calculating blackVolatility using maturity as 10 days after today and strike as 20
         volatility1 = constantVolatility.blackVol(date10.clone(), 20);
@@ -197,7 +197,7 @@ public class VolatilityTermStructures {
         final double[] volatilities = {0.1,0.2,0.3,0.4,0.5,0.6};
 
         //Following is the curve
-        final BlackVarianceTermStructure varianceCurve = new BlackVarianceCurve(today,dates,volatilities,Actual365Fixed.getDayCounter(),false);
+        final BlackVarianceTermStructure varianceCurve = new BlackVarianceCurve(today,dates,volatilities, new Actual365Fixed(), false);
         ((BlackVarianceCurve)varianceCurve).setInterpolation();
 
         //Calculating blackVolatility using maturity as 12 days after today and strike as 20
@@ -258,7 +258,7 @@ public class VolatilityTermStructures {
         //Following is the variance surface where variance = f(strike,maturity) and f = function
         final BlackVarianceTermStructure varianceSurface = new BlackVarianceSurface(
                 today, datesAxis,
-                strikeAxis, volatilityMatrix, Actual365Fixed.getDayCounter(),
+                strikeAxis, volatilityMatrix, new Actual365Fixed(),
                 Extrapolation.InterpolatorDefaultExtrapolation,
                 Extrapolation.InterpolatorDefaultExtrapolation);
         ((BlackVarianceSurface)varianceSurface).setInterpolation(null);
@@ -372,7 +372,7 @@ public class VolatilityTermStructures {
 
         //Let's set the quoteValue = 0.05 and use the constantVolatility a BlackConstantVol
         volatilityQuote.setValue(0.05);
-        final LocalVolTermStructure localConstantVolatility = new LocalConstantVol(2,new UnitedStates(Market.NYSE),handleToVolatilityQuote,Actual365Fixed.getDayCounter());
+        final LocalVolTermStructure localConstantVolatility = new LocalConstantVol(2,new UnitedStates(Market.NYSE),handleToVolatilityQuote, new Actual365Fixed());
 
         //Calculating blackVolatility using maturity as 10 days after today and strike as 20
         if(constantVolatility.blackVol(date10.clone(), 20) == localConstantVolatility.localVol(date10.clone(), 20,true)){

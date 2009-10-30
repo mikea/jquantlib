@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -40,11 +40,10 @@
 
 package org.jquantlib.termstructures;
 
-import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
-import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
@@ -55,121 +54,167 @@ import org.jquantlib.util.Visitor;
  * <tt>blackVarianceImpl(Time, Real, bool)</tt> method in derived classes.
  * <p>
  * Volatility is assumed to be expressed on an annual basis.
- * 
+ *
  * @note Term structures initialized by means of this constructor must manage their own reference date by overriding the
  *       referenceDate() method.
  * @note See the TermStructure documentation for issues regarding constructors.
- * 
+ *
  * @author Richard Gomes
  */
 public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
 
+
     //
     // public constructors
     //
-    
+    // See the TermStructure documentation for issues regarding constructors.
+    //
+
     /**
-     * Term structures initialized by means of this constructor must manage their own reference date by overriding the
-     * referenceDate() method.
+     * 'default' constructor
+     * <p>
+     * @warning term structures initialized by means of this
+     *          constructor must manage their own reference date
+     *          by overriding the referenceDate() method.
      */
     public BlackVarianceTermStructure() {
-        this(Actual365Fixed.getDayCounter());
+        this(new Calendar(), BusinessDayConvention.Following, new DayCounter());
     }
 
-    // --------------------------------------------------------------------------------------------------
-    // Term structures initialized by means of this constructor must manage their own reference date 
-    // by overriding the referenceDate() method.
-    // --------------------------------------------------------------------------------------------------
-    
     /**
-     * Term structures initialized by means of this constructor must manage their own reference date by overriding the
-     * referenceDate() method.
-     * 
-     * @note See the TermStructure documentation for issues regarding constructors.
+     * 'default' constructor
+     * <p>
+     * @warning term structures initialized by means of this
+     *          constructor must manage their own reference date
+     *          by overriding the referenceDate() method.
      */
-    public BlackVarianceTermStructure(final DayCounter dc) {
-        super(dc);
+    public BlackVarianceTermStructure(final Calendar cal) {
+        this(cal, BusinessDayConvention.Following, new DayCounter());
     }
 
     /**
-     * Initialize with a fixed reference date
-     * 
-     * @note See the TermStructure documentation for issues regarding constructors.
+     * 'default' constructor
+     * <p>
+     * @warning term structures initialized by means of this
+     *          constructor must manage their own reference date
+     *          by overriding the referenceDate() method.
+     */
+    public BlackVarianceTermStructure(
+            final Calendar cal,
+            final BusinessDayConvention bdc) {
+        this(cal, bdc, new DayCounter());
+    }
+
+    /**
+     * 'default' constructor
+     * <p>
+     * @warning term structures initialized by means of this
+     *          constructor must manage their own reference date
+     *          by overriding the referenceDate() method.
+     */
+    public BlackVarianceTermStructure(
+            final Calendar cal,
+            final BusinessDayConvention bdc,
+            final DayCounter dc) {
+        super(cal, bdc, dc);
+    }
+
+    /**
+     *  initialize with a fixed reference date
      */
     public BlackVarianceTermStructure(final Date referenceDate) {
-        this(referenceDate, new NullCalendar());
+        this(referenceDate, new Calendar(), BusinessDayConvention.Following, new DayCounter());
     }
 
     /**
-     * Initialize with a fixed reference date
-     * 
-     * @note See the TermStructure documentation for issues regarding constructors.
+     *  initialize with a fixed reference date
      */
-    public BlackVarianceTermStructure(final Date referenceDate, final Calendar cal) {
-        this(referenceDate, cal, Actual365Fixed.getDayCounter());
+    public BlackVarianceTermStructure(
+            final Date referenceDate,
+            final Calendar cal) {
+        this(referenceDate, cal, BusinessDayConvention.Following, new DayCounter());
     }
 
     /**
-     * Initialize with a fixed reference date
-     * 
-     * @note See the TermStructure documentation for issues regarding constructors.
+     *  initialize with a fixed reference date
      */
-    public BlackVarianceTermStructure(final Date referenceDate, final Calendar cal, final DayCounter dc) {
-        super(referenceDate, cal, dc);
-    }
-
-
-    // --------------------------------------------------------------------------------------------------
-    // Calculate the reference date based on the global evaluation date
-    // --------------------------------------------------------------------------------------------------
-    
-    /**
-     * Calculate the reference date based on the global evaluation date
-     * 
-     * @note See the TermStructure documentation for issues regarding constructors.
-     */
-    public BlackVarianceTermStructure(int settlementDays, final Calendar cal) {
-        super(settlementDays, cal, Actual365Fixed.getDayCounter());
+    public BlackVarianceTermStructure(
+            final Date referenceDate,
+            final Calendar cal,
+            final BusinessDayConvention bdc) {
+        this(referenceDate, cal, bdc, new DayCounter());
     }
 
     /**
-     * Calculate the reference date based on the global evaluation date
-     * 
-     * @note See the TermStructure documentation for issues regarding constructors.
+     *  initialize with a fixed reference date
      */
-    public BlackVarianceTermStructure(int settlementDays, final Calendar cal, final DayCounter dc) {
-        super(settlementDays, cal, dc);
+    public BlackVarianceTermStructure(
+            final Date referenceDate,
+            final Calendar cal,
+            final BusinessDayConvention bdc,
+            final DayCounter dc) {
+        super(referenceDate, cal, bdc, dc);
+    }
+
+    /**
+     * calculate the reference date based on the global evaluation date
+     */
+    public BlackVarianceTermStructure(
+            /*@Natural*/ final int settlementDays,
+            final Calendar cal) {
+        this(settlementDays, cal, BusinessDayConvention.Following, new DayCounter());
+    }
+
+    /**
+     * calculate the reference date based on the global evaluation date
+     */
+    public BlackVarianceTermStructure(
+            /*@Natural*/ final int settlementDays,
+            final Calendar cal,
+            final BusinessDayConvention bdc) {
+        this(settlementDays, cal, bdc, new DayCounter());
+    }
+
+    /**
+     * calculate the reference date based on the global evaluation date
+     */
+    public BlackVarianceTermStructure(
+            /*@Natural*/ final int settlementDays,
+            final Calendar cal,
+            final BusinessDayConvention bdc,
+            final DayCounter dc) {
+        super(settlementDays, cal, bdc, dc);
     }
 
 
     //
     // Overrides BlackVolTermStructure
     //
-    
+
     /**
      * Returns the volatility for the given strike and date calculating it from the variance.
      */
     @Override
     protected final/* @Volatility */double blackVolImpl(final/* @Time */double maturity, final/* @Price */double strike) {
         /* @Time */double nonZeroMaturity;
-        /* @Time */double m = maturity;
+        /* @Time */final double m = maturity;
         if (m == 0.0) {
             nonZeroMaturity = 0.00001;
         } else {
             nonZeroMaturity = m;
         }
-        /* @Variance */double var = blackVarianceImpl(/* Time */nonZeroMaturity, strike);
+        /* @Variance */final double var = blackVarianceImpl(/* Time */nonZeroMaturity, strike);
         return Math.sqrt(var / nonZeroMaturity);
     }
 
-    
+
     //
     // implements TypedVisitable
     //
 
     @Override
     public void accept(final TypedVisitor<TermStructure> v) {
-        Visitor<TermStructure> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
+        final Visitor<TermStructure> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
         if (v1 != null) {
             v1.visit(this);
         } else {

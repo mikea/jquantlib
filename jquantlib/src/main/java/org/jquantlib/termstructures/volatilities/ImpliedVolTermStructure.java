@@ -67,7 +67,7 @@ public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
         super(referenceDate);
         this.originalTS = originalTS;
 
-        this.originalTS.addObserver(this);
+        this.originalTS.currentLink().addObserver(this);
         //XXX:registerWith
         //registerWith(originalTS);
     }

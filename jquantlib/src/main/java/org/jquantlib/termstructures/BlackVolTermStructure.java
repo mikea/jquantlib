@@ -25,6 +25,8 @@ package org.jquantlib.termstructures;
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.termstructures.volatilities.VolatilityTermStructure;
+import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.util.TypedVisitable;
@@ -41,19 +43,20 @@ import org.jquantlib.util.Visitor;
  *
  * @author Richard Gomes
  */
-// FIXME: code review
-public abstract class BlackVolTermStructure extends AbstractTermStructure implements TermStructure, TypedVisitable<TermStructure> {
+public abstract class BlackVolTermStructure extends VolatilityTermStructure implements TypedVisitable<TermStructure> {
 
     static private final double dT = 1.0/365.0;
 
     /**
      * The minimum strike for which the term structure can return vols
      */
+    @Override
     public abstract /*@Price*/ double minStrike();
 
     /**
      * The maximum strike for which the term structure can return vols
      */
+    @Override
     public abstract /*@Price*/ double maxStrike();
 
     protected abstract /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike);
@@ -62,19 +65,132 @@ public abstract class BlackVolTermStructure extends AbstractTermStructure implem
 
 
 
-    // Constructors
+    //
+    // public constructors
+    //
+    // See the TermStructure documentation for issues regarding constructors.
+    //
 
-    public BlackVolTermStructure(final DayCounter dc) {
-        super(dc);
+    /**
+     * 'default' constructor
+     * <p>
+     * @warning term structures initialized by means of this
+     *          constructor must manage their own reference date
+     *          by overriding the referenceDate() method.
+     */
+    public BlackVolTermStructure() {
+        this(new Calendar(), BusinessDayConvention.Following, new DayCounter());
     }
 
-    public BlackVolTermStructure(final Date refDate, final Calendar cal, final DayCounter dc) {
-        super(refDate, cal, dc);
+    /**
+     * 'default' constructor
+     * <p>
+     * @warning term structures initialized by means of this
+     *          constructor must manage their own reference date
+     *          by overriding the referenceDate() method.
+     */
+    public BlackVolTermStructure(final Calendar cal) {
+        this(cal, BusinessDayConvention.Following, new DayCounter());
     }
 
-    public BlackVolTermStructure(final int settlDays, final Calendar cal, final DayCounter dc) {
-        super(settlDays, cal, dc);
+    /**
+     * 'default' constructor
+     * <p>
+     * @warning term structures initialized by means of this
+     *          constructor must manage their own reference date
+     *          by overriding the referenceDate() method.
+     */
+    public BlackVolTermStructure(
+            final Calendar cal,
+            final BusinessDayConvention bdc) {
+        this(cal, bdc, new DayCounter());
     }
+
+    /**
+     * 'default' constructor
+     * <p>
+     * @warning term structures initialized by means of this
+     *          constructor must manage their own reference date
+     *          by overriding the referenceDate() method.
+     */
+    public BlackVolTermStructure(
+            final Calendar cal,
+            final BusinessDayConvention bdc,
+            final DayCounter dc) {
+        super(cal, bdc, dc);
+    }
+
+    /**
+     *  initialize with a fixed reference date
+     */
+    public BlackVolTermStructure(final Date referenceDate) {
+        this(referenceDate, new Calendar(), BusinessDayConvention.Following, new DayCounter());
+    }
+
+    /**
+     *  initialize with a fixed reference date
+     */
+    public BlackVolTermStructure(
+            final Date referenceDate,
+            final Calendar cal) {
+        this(referenceDate, cal, BusinessDayConvention.Following, new DayCounter());
+    }
+
+    /**
+     *  initialize with a fixed reference date
+     */
+    public BlackVolTermStructure(
+            final Date referenceDate,
+            final Calendar cal,
+            final BusinessDayConvention bdc) {
+        this(referenceDate, cal, bdc, new DayCounter());
+    }
+
+    /**
+     *  initialize with a fixed reference date
+     */
+    public BlackVolTermStructure(
+            final Date referenceDate,
+            final Calendar cal,
+            final BusinessDayConvention bdc,
+            final DayCounter dc) {
+        super(referenceDate, cal, bdc, dc);
+    }
+
+    /**
+     * calculate the reference date based on the global evaluation date
+     */
+    public BlackVolTermStructure(
+            /*@Natural*/ final int settlementDays,
+            final Calendar cal) {
+        this(settlementDays, cal, BusinessDayConvention.Following, new DayCounter());
+    }
+
+    /**
+     * calculate the reference date based on the global evaluation date
+     */
+    public BlackVolTermStructure(
+            /*@Natural*/ final int settlementDays,
+            final Calendar cal,
+            final BusinessDayConvention bdc) {
+        this(settlementDays, cal, bdc, new DayCounter());
+    }
+
+    /**
+     * calculate the reference date based on the global evaluation date
+     */
+    public BlackVolTermStructure(
+            /*@Natural*/ final int settlementDays,
+            final Calendar cal,
+            final BusinessDayConvention bdc,
+            final DayCounter dc) {
+        super(settlementDays, cal, bdc, dc);
+    }
+
+
+    //
+    // public methods
+    //
 
     /**
      * Present (a.k.a spot) volatility
@@ -237,10 +353,11 @@ public abstract class BlackVolTermStructure extends AbstractTermStructure implem
     @Override
     public void accept(final TypedVisitor<TermStructure> v) {
         final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null)
+        if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             throw new LibraryException("not a Black-volatility term structure visitor"); // QA:[RG]::verified // TODO: message
+        }
     }
 
 }

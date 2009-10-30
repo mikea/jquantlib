@@ -50,9 +50,9 @@ import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.testsuite.util.Flag;
 import org.junit.Test;
 
-public class IntrumentsTest {
+public class InstrumentsTest {
 
-    public IntrumentsTest() {
+    public InstrumentsTest() {
         QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
@@ -69,13 +69,13 @@ public class IntrumentsTest {
         final Flag f = new Flag();
         s.addObserver(f); //f.registerWith(s);
 
-        s.getNPV();
+        s.NPV();
         me1.setValue(3.14);
         if (!f.isUp()) {
             fail("Observer was not notified of instrument change");
         }
 
-        s.getNPV();
+        s.NPV();
         f.lower();
         final SimpleQuote me2 = new SimpleQuote(0.0);
 
@@ -86,13 +86,13 @@ public class IntrumentsTest {
 
         f.lower();
         s.freeze();
-        s.getNPV();
+        s.NPV();
         me2.setValue(2.71);
         if (f.isUp()) {
             fail("Observer was notified of frozen instrument change");
         }
 
-        s.getNPV();
+        s.NPV();
         s.unfreeze();
         if (!f.isUp()) {
             fail("Observer was not notified of instrument change");

@@ -23,34 +23,56 @@ import java.util.List;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.assets.DiscretizedAsset;
+import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.time.TimeGrid;
 
 /**
  * @author Srinivas Hasti
- *
  */
 public class DiscretizedVanillaOption extends DiscretizedAsset {
 
-    // private VanillaOption.Arguments arguments_;
-    private final OneAssetOptionArguments arguments;
+    //
+    // private final fields
+    //
+
+    final private StochasticProcess process;
+    final private VanillaOption.ArgumentsImpl a;
+    // final private VanillaOption.ResultsImpl r;
     private final List<Double> stoppingTimes;
 
-    public DiscretizedVanillaOption(final OneAssetOptionArguments args, final StochasticProcess process, final TimeGrid grid) {
-        this.arguments = args;
-        final int size = args.exercise.size();
+
+    //
+    // public constructors
+    //
+
+    public DiscretizedVanillaOption(final VanillaOption.Arguments arguments, final StochasticProcess process) {
+        this(arguments, process, new TimeGrid());
+    }
+
+    public DiscretizedVanillaOption(final VanillaOption.Arguments arguments, final StochasticProcess process, final TimeGrid grid) {
+        this.a = (VanillaOption.ArgumentsImpl) arguments;
+        this.process = process;
+        final int size = a.exercise.size();
         this.stoppingTimes = new ArrayDoubleList();
         for (int i = 0; i < size; ++i) {
-            stoppingTimes.add(i, process.time(args.exercise.date(i)));
+            stoppingTimes.add(i, process.time(a.exercise.date(i)));
             if (!grid.empty()) {
                 // adjust to the given grid
                 stoppingTimes.add(i, grid.closestTime(stoppingTimes.get(i)));
             }
         }
     }
+
+    private void applySpecificCondition() {
+        final Array grid = method().grid(time());
+        for (int j = 0; j < values.size(); j++) {
+            values.set(j, Math.max(values.get(j), a.payoff.get(grid.get(j))));
+        }
+    }
+
 
     @Override
     public void reset(final int size) {
@@ -59,46 +81,41 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
     }
 
     @Override
+    public List<Double> mandatoryTimes() /* @ReadOnly */ {
+        return stoppingTimes;
+    }
+
+    @Override
+    protected void preAdjustValuesImpl() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     protected void postAdjustValuesImpl() {
 
         final double now = time();
-        switch (arguments.exercise.type()) {
-            case American:
-                if (now <= stoppingTimes.get(1) && now >= stoppingTimes.get(0)) {
+        switch (a.exercise.type()) {
+        case American:
+            if (now <= stoppingTimes.get(1) && now >= stoppingTimes.get(0)) {
+                applySpecificCondition();
+            }
+            break;
+        case European:
+            if (isOnTime(stoppingTimes.get(0))) {
+                applySpecificCondition();
+            }
+            break;
+        case Bermudan:
+            for (int i = 0; i < stoppingTimes.size(); i++) {
+                if (isOnTime(stoppingTimes.get(i))) {
                     applySpecificCondition();
                 }
-                break;
-            case European:
-                if (isOnTime(stoppingTimes.get(0))) {
-                    applySpecificCondition();
-                }
-                break;
-            case Bermudan:
-                for (int i=0; i<stoppingTimes.size(); i++) {
-                    if (isOnTime(stoppingTimes.get(i))) {
-                        applySpecificCondition();
-                    }
-                }
-                break;
-            default:
-                throw new LibraryException("invalid option type"); // QA:[RG]::verified
+            }
+            break;
+        default:
+            throw new LibraryException("invalid option type"); // QA:[RG]::verified
         }
     }
 
-    private void applySpecificCondition() {
-        final Array grid = method().grid(time());
-        for (int j=0; j<values.size(); j++) {
-            values.set(j, Math.max(values.get(j), arguments.payoff.valueOf(grid.get(j))));
-        }
-    }
-
-
-
-    /* (non-Javadoc)
-     * @see org.jquantlib.assets.DiscretizedAsset#mandatoryTimes()
-     */
-    @Override
-    public List<Double> mandatoryTimes() {
-        return stoppingTimes;
-    }
 }

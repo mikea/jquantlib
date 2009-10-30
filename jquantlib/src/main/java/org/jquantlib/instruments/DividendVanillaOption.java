@@ -45,13 +45,12 @@ import org.jquantlib.QL;
 import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.reflect.ReflectConstants;
+import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.arguments.Arguments;
-import org.jquantlib.pricingengines.arguments.DividendVanillaOptionArguments;
 import org.jquantlib.pricingengines.vanilla.AnalyticDividendEuropeanEngine;
 import org.jquantlib.pricingengines.vanilla.finitedifferences.FDDividendAmericanEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.time.Date;
 
@@ -59,7 +58,7 @@ import org.jquantlib.time.Date;
  * Single-asset vanilla option (no barriers) with discrete dividends
  *
  * @category instruments
- * 
+ *
  * @author Richard Gomes
  */
 public class DividendVanillaOption extends VanillaOption {
@@ -69,13 +68,11 @@ public class DividendVanillaOption extends VanillaOption {
     private final List<? extends Dividend> cashFlow;
 
     public DividendVanillaOption(
-            final StochasticProcess process,
             final Payoff payoff,
             final Exercise exercise,
             final List<Date> dividendDates,
-            final List<Double> dividends,
-            final PricingEngine engine) {
-        super(process, payoff, exercise, engine);
+            final List<Double> dividends) {
+        super(payoff, exercise);
         cashFlow = Dividend.DividendVector(dividendDates, dividends);
     }
 
@@ -84,12 +81,14 @@ public class DividendVanillaOption extends VanillaOption {
     //
 
 
+    @Override
     public /*@Volatility*/ double impliedVolatility(
             final double price,
             final GeneralizedBlackScholesProcess process) /* @ReadOnly */ {
         return impliedVolatility(price, process, 1.0e-4, 100, 1.0e-7, 4.0);
     }
 
+    @Override
     public /*@Volatility*/ double impliedVolatility(
             final double price,
             final GeneralizedBlackScholesProcess process,
@@ -97,6 +96,7 @@ public class DividendVanillaOption extends VanillaOption {
         return impliedVolatility(price, process, accuracy, 100, 1.0e-7, 4.0);
     }
 
+    @Override
     public /*@Volatility*/ double impliedVolatility(
             final double price,
             final GeneralizedBlackScholesProcess process,
@@ -105,6 +105,7 @@ public class DividendVanillaOption extends VanillaOption {
         return impliedVolatility(price, process, accuracy, maxEvaluations, 1.0e-7, 4.0);
     }
 
+    @Override
     public /*@Volatility*/ double impliedVolatility(
             final double price,
             final GeneralizedBlackScholesProcess process,
@@ -118,6 +119,7 @@ public class DividendVanillaOption extends VanillaOption {
     /**
      * see VanillaOption for notes on implied-volatility calculation.
      */
+    @Override
     public /*@Volatility*/ double impliedVolatility(
             final double targetValue,
             final GeneralizedBlackScholesProcess process,
@@ -158,17 +160,58 @@ public class DividendVanillaOption extends VanillaOption {
     }
 
 
-
-
     //
     // Overrides OneAssetStrikedOption
     //
 
     @Override
-    public void setupArguments(final Arguments args) {
-        QL.require(args instanceof DividendVanillaOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+    public void setupArguments(final PricingEngine.Arguments args) {
+        QL.require(DividendVanillaOption.ArgumentsImpl.class.isAssignableFrom(args.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
         super.setupArguments(args);
-        final DividendVanillaOptionArguments arguments = (DividendVanillaOptionArguments)args;
+        final DividendVanillaOption.ArgumentsImpl arguments = (DividendVanillaOption.ArgumentsImpl)args;
         arguments.cashFlow = cashFlow;
     }
+
+    //
+    // public inner classes
+    //
+
+    public static class ArgumentsImpl extends OneAssetOption.ArgumentsImpl implements DividendVanillaOption.Arguments {
+
+        //
+        // public fields
+        //
+
+        // FIXME: public fields here is a bad design technique :(
+        public List<? extends Dividend> cashFlow;
+
+
+        //
+        // public methods
+        //
+
+        @Override
+        public void validate() {
+            super.validate();
+            final Date exerciseDate = exercise.lastDate();
+
+            for (int i = 0; i < cashFlow.size(); i++) {
+                QL.require(cashFlow.get(i).date().le(exerciseDate) , "dividend date later than the exercise date"); // QA:[RG]::verified // TODO: message
+            }
+        }
+
+    }
+
+
+    public static class ResultsImpl extends OneAssetOption.ResultsImpl implements DividendVanillaOption.Results { }
+
+
+    static public abstract class EngineImpl extends GenericEngine<DividendVanillaOption.Arguments, DividendVanillaOption.Results> {
+
+        protected EngineImpl() {
+            super(new DividendVanillaOption.ArgumentsImpl(), new DividendVanillaOption.ResultsImpl());
+        }
+
+    }
+
 }

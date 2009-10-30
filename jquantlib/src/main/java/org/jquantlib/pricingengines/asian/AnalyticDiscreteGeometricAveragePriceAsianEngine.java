@@ -47,13 +47,13 @@ import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.AverageType;
+import org.jquantlib.instruments.DiscreteAveragingAsianOption;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.math.distributions.NormalDistribution;
 import org.jquantlib.pricingengines.BlackCalculator;
-import org.jquantlib.pricingengines.Greeks;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.time.Date;
@@ -68,21 +68,37 @@ import org.jquantlib.time.Frequency;
  *
  * @author <Richard Gomes>
  */
-public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAveragingAsianOptionEngine {
+public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAveragingAsianOption.EngineImpl {
 
     // TODO: refactor messages
     private static final String NOT_AN_EUROPEAN_OPTION = "not an European Option";
     private static final String NON_STRIKED_PAYOFF_GIVEN = "non-striked payoff given";
     private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
 
+    //
+    // private final fields
+    //
+
+    private final GeneralizedBlackScholesProcess process;
+    private final DiscreteAveragingAsianOption.ArgumentsImpl a;
+    private final DiscreteAveragingAsianOption.ResultsImpl   r;
+    private final Option.GreeksImpl greeks;
+    private final Option.MoreGreeksImpl moreGreeks;
+
 
     //
     // public constructors
     //
 
-    public AnalyticDiscreteGeometricAveragePriceAsianEngine() {
-        super();
+    public AnalyticDiscreteGeometricAveragePriceAsianEngine(final GeneralizedBlackScholesProcess process) {
+        this.process = process;
+        this.a = (DiscreteAveragingAsianOption.ArgumentsImpl)arguments;
+        this.r = (DiscreteAveragingAsianOption.ResultsImpl)results;
+        this.greeks = r.greeks();
+        this.moreGreeks = r.moreGreeks();
+        process.addObserver(this);
     }
+
 
 
     //
@@ -91,12 +107,9 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 
     @Override
     public void calculate() /*@ReadOnly*/{
-        QL.require(arguments.exercise.type()==Exercise.Type.European , NOT_AN_EUROPEAN_OPTION); // QA:[RG]::verified // TODO: message
-        final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
-        QL.require(arguments.payoff instanceof StrikedTypePayoff , NON_STRIKED_PAYOFF_GIVEN); // QA:[RG]::verified // TODO: message
-
-        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) arguments.stochasticProcess;
-        QL.require(process != null , BLACK_SCHOLES_PROCESS_REQUIRED); // QA:[RG]::verified // TODO: message
+        QL.require(a.exercise.type()==Exercise.Type.European , NOT_AN_EUROPEAN_OPTION); // QA:[RG]::verified // TODO: message
+        final StrikedTypePayoff payoff = (StrikedTypePayoff) a.payoff;
+        QL.require(a.payoff instanceof StrikedTypePayoff , NON_STRIKED_PAYOFF_GIVEN); // QA:[RG]::verified // TODO: message
 
         /*
          * This engine cannot really check for the averageType==Geometric
@@ -107,14 +120,14 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 
         double runningLog;
         int pastFixings;
-        if (arguments.averageType == AverageType.Geometric) {
-            if (!(arguments.runningAccumulator>0.0)) {
+        if (a.averageType == AverageType.Geometric) {
+            if (!(a.runningAccumulator>0.0)) {
                 throw new IllegalArgumentException(
                         "positive running product required: "
-                        + arguments.runningAccumulator + " not allowed");
+                        + a.runningAccumulator + " not allowed");
             }
-            runningLog = Math.log(arguments.runningAccumulator);
-            pastFixings = arguments.pastFixings;
+            runningLog = Math.log(a.runningAccumulator);
+            pastFixings = a.pastFixings;
         } else {  // it is being used as control variate
             runningLog = 1.0;
             pastFixings = 0;
@@ -128,10 +141,10 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         // TODO: consider double[] instead
         final List<Double> fixingTimes = new ArrayDoubleList();
         /*@Size*/ int i;
-        for (i=0; i<arguments.fixingDates.size(); i++) {
-            if (arguments.fixingDates.get(i).ge(referenceDate)) {
+        for (i=0; i<a.fixingDates.size(); i++) {
+            if (a.fixingDates.get(i).ge(referenceDate)) {
                 /*@Time*/ final double t = voldc.yearFraction(referenceDate,
-                        arguments.fixingDates.get(i));
+                        a.fixingDates.get(i));
                 fixingTimes.add(Double.valueOf(t));
             }
         }
@@ -148,7 +161,7 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
             timeSum += fixingTimes.get(k);
         }
 
-        /*@Volatility*/ final double vola = process.blackVolatility().currentLink().blackVol(arguments.exercise.lastDate(), payoff.strike());
+        /*@Volatility*/ final double vola = process.blackVolatility().currentLink().blackVol(a.exercise.lastDate(), payoff.strike());
 
         /*@Real*/ double temp = 0.0;
         for (i=pastFixings+1; i<numberOfFixings; i++) {
@@ -160,7 +173,7 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         /*@Real*/ final double sigG = vola * dsigG_dsig;
         /*@Real*/ final double dmuG_dsig = -(vola * timeSum)/N;
 
-        final Date exDate = arguments.exercise.lastDate();
+        final Date exDate = a.exercise.lastDate();
         /*@Rate*/ final double dividendRate = process.dividendYield().currentLink().
         zeroRate(exDate, divdc, Compounding.Continuous, Frequency.NoFrequency).rate();
         /*@Rate*/ final double riskFreeRate = process.riskFreeRate().currentLink().
@@ -174,13 +187,13 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         /*@Real*/ final double forwardPrice = Math.exp(muG + variance / 2.0);
 
         /*@DiscountFactor*/ final double riskFreeDiscount = process.riskFreeRate().currentLink().
-        discount(arguments.exercise.lastDate());
+        discount(a.exercise.lastDate());
 
         final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
-        results.value = black.value();
-        results.delta = futureWeight*black.delta(forwardPrice)*forwardPrice/s;
-        results.gamma = forwardPrice*futureWeight/(s*s)*(black.gamma(forwardPrice)*futureWeight*forwardPrice
+        r.value = black.value();
+        greeks.delta = futureWeight*black.delta(forwardPrice)*forwardPrice/s;
+        greeks.gamma = forwardPrice*futureWeight/(s*s)*(black.gamma(forwardPrice)*futureWeight*forwardPrice
                 - pastWeight*black.delta(forwardPrice) );
 
         /*@Real*/ double Nx_1, nx_1;
@@ -195,22 +208,22 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
             Nx_1 = (muG > Math.log(payoff.strike()) ? 1.0 : 0.0);
             nx_1 = 0.0;
         }
-        results.vega = forwardPrice * riskFreeDiscount * ( (dmuG_dsig + sigG * dsigG_dsig)*Nx_1 + nx_1*dsigG_dsig );
+        greeks.vega = forwardPrice * riskFreeDiscount * ( (dmuG_dsig + sigG * dsigG_dsig)*Nx_1 + nx_1*dsigG_dsig );
 
         if (payoff.optionType() == Option.Type.PUT) {
-            results.vega -= riskFreeDiscount * forwardPrice * (dmuG_dsig + sigG * dsigG_dsig);
+            greeks.vega -= riskFreeDiscount * forwardPrice * (dmuG_dsig + sigG * dsigG_dsig);
         }
 
-        /*@Time*/ final double tRho = rfdc.yearFraction(process.riskFreeRate().currentLink().referenceDate(), arguments.exercise.lastDate());
-        results.rho = black.rho(tRho)*timeSum/(N*tRho) - (tRho-timeSum/N)*results.value;
+        /*@Time*/ final double tRho = rfdc.yearFraction(process.riskFreeRate().currentLink().referenceDate(), a.exercise.lastDate());
+        greeks.rho = black.rho(tRho)*timeSum/(N*tRho) - (tRho-timeSum/N) * r.value;
 
         /*@Time*/ final double tDiv = divdc.yearFraction(
                 process.dividendYield().currentLink().referenceDate(),
-                arguments.exercise.lastDate());
+                a.exercise.lastDate());
 
-        results.dividendRho = black.dividendRho(tDiv)*timeSum/(N*tDiv);
-        results.strikeSensitivity = black.strikeSensitivity();
-        results.theta = Greeks.blackScholesTheta(process, results.value, results.delta, results.gamma);
+        greeks.dividendRho = black.dividendRho(tDiv)*timeSum/(N*tDiv);
+        moreGreeks.strikeSensitivity = black.strikeSensitivity();
+        greeks.theta = greeks.blackScholesTheta(process, r.value, greeks.delta, greeks.gamma);
     }
 
 }

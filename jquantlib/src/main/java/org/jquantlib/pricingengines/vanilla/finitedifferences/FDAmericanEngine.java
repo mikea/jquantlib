@@ -19,14 +19,13 @@
  */
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
-import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
  * Pricing engine for American options using finite-differences
- * 
+ *
  * @category vanillaengines
- * 
+ *
  * @author Srinivas Hasti
  */
 public class FDAmericanEngine extends FDEngineAdapter<FDAmericanCondition> {
@@ -36,22 +35,29 @@ public class FDAmericanEngine extends FDEngineAdapter<FDAmericanCondition> {
     //
 
     public FDAmericanEngine(
+            final GeneralizedBlackScholesProcess process) {
+        super(process, 100,100, false);
+    }
+
+    public FDAmericanEngine(
             final GeneralizedBlackScholesProcess process,
-            final int timeSteps,
-            final int gridPoints,
-            final boolean timeDependent) {
-        super(process, timeSteps, gridPoints, timeDependent);
+            final int timeSteps) {
+        super(process, timeSteps, 100, false);
     }
 
     public FDAmericanEngine(
             final GeneralizedBlackScholesProcess process,
             final int timeSteps,
             final int gridPoints) {
-        this(process, timeSteps, gridPoints, false);
+        super(process, timeSteps, gridPoints, false);
     }
 
-    public FDAmericanEngine(final BlackScholesMertonProcess process) {
-        this(process, 100, 100, false);
+    public FDAmericanEngine(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps,
+            final int gridPoints,
+            final boolean timeDependent) {
+        super(process, timeSteps, gridPoints, timeDependent);
     }
 
 }

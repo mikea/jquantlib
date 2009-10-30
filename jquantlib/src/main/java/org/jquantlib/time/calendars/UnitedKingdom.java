@@ -31,7 +31,6 @@ import static org.jquantlib.time.Month.MAY;
 import static org.jquantlib.time.Weekday.MONDAY;
 import static org.jquantlib.time.Weekday.TUESDAY;
 
-import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
@@ -136,7 +135,6 @@ public class UnitedKingdom extends Calendar {
             impl = new MetalsImpl();
             break;
         default:
-            QL.error(UNKNOWN_MARKET);
             throw new LibraryException(UNKNOWN_MARKET);
         }
     }

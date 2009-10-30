@@ -30,9 +30,9 @@ import org.jquantlib.processes.StochasticProcess1D;
 
 /**
  * Cox-Ross-Rubinstein (multiplicative) equal jumps binomial tree
- * 
+ *
  * @category lattices
- * 
+ *
  * @author Srinivas Hasti
  * @author Tim Swetonic
  */
@@ -43,7 +43,6 @@ public class CoxRossRubinstein extends EqualJumpsBinomialTree {
 			@Time final double end,
 			@NonNegative final int steps,
 			@Unused @Price final double strike) {
-
 		super(process, end, steps);
 
 		dx = process.stdDeviation(0.0, x0, dt);

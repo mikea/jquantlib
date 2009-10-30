@@ -90,6 +90,18 @@ public class GapPayoff extends StrikedTypePayoff {
 	// Overrides Payoff
 	//
 
+    @Override
+    public String name() /* @ReadOnly */ {
+        return "Gap";
+    }
+
+    @Override
+    public String description() /* @ReadOnly */ {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(super.description()).append(", ").append(secondStrike).append(" second strike");
+        return sb.toString();
+    }
+
     /**
      * {@inheritDoc}
      * <p>
@@ -102,13 +114,14 @@ public class GapPayoff extends StrikedTypePayoff {
      * second strike.
      */
 	@Override
-	public final /*@Price*/ double valueOf(final /*@Price*/ double price) {
-    	if (type==Option.Type.CALL)
+    public final double get(final double price) /* @ReadOnly */ {
+    	if (type==Option.Type.CALL) {
             return (price-strike >= 0.0 ? price-secondStrike : 0.0);
-        else if (type==Option.Type.PUT)
+        } else if (type==Option.Type.PUT) {
             return (strike-price >= 0.0 ? secondStrike-price : 0.0);
-        else
+        } else {
             throw new LibraryException(UNKNOWN_OPTION_TYPE); // QA:[RG]::verified
+        }
     }
 
 
@@ -119,10 +132,11 @@ public class GapPayoff extends StrikedTypePayoff {
 	@Override
 	public void accept(final TypedVisitor<Payoff> v) {
 		final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null)
+		if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             super.accept(v);
+        }
 	}
 
 }

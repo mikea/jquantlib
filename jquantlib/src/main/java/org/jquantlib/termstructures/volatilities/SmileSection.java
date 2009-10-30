@@ -82,7 +82,7 @@ public abstract class SmileSection implements Observable {
     }
 
     public SmileSection(final double timeToExpiry) {
-        this(timeToExpiry, Actual365Fixed.getDayCounter());
+        this(timeToExpiry, new Actual365Fixed());
     }
 
     @Override

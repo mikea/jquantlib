@@ -3,42 +3,45 @@ package org.jquantlib.pricingengines.bond;
 import org.jquantlib.QL;
 import org.jquantlib.cashflow.CashFlows;
 import org.jquantlib.cashflow.Leg;
-import org.jquantlib.pricingengines.BondEngine;
-import org.jquantlib.pricingengines.arguments.BondArguments;
-import org.jquantlib.pricingengines.results.BondResults;
+import org.jquantlib.instruments.Bond;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Date;
 
-public class DiscountingBondEngine extends BondEngine {
-	
-	private Handle<YieldTermStructure> discountCurve_;
+public class DiscountingBondEngine extends Bond.EngineImpl {
 
-	
-	public DiscountingBondEngine(){
+	private final Handle<YieldTermStructure> discountCurve;
+
+	public DiscountingBondEngine() {
 		this(new Handle<YieldTermStructure>(YieldTermStructure.class));
 	}
 
-    public DiscountingBondEngine(final Handle<YieldTermStructure>  discountCurve){
-    	//FIXME: correct?
-    	super(new BondArguments(), new BondResults());
-    	discountCurve_ = discountCurve;
-    	discountCurve_.addObserver(this);
+    public DiscountingBondEngine(final Handle<YieldTermStructure>  discountCurve) {
+        this.discountCurve = discountCurve;
+        this.discountCurve.currentLink().addObserver(this);
     }
-    
+
     @Override
-    public void calculate(){
-    	final Leg cashflows = arguments.cashflows;
-    	final Date settlementDate = arguments.settlementDate;
-    	// FIXME: valuationDate never used ???
-    	Date valuationDate = discountCurve_.currentLink().referenceDate();
-        QL.require(! discountCurve_.empty() , "no discounting term structure set"); 
-        results.value = CashFlows.getInstance().npv(cashflows, discountCurve_);
-        results.settlementValue = CashFlows.getInstance().npv(cashflows, discountCurve_, settlementDate, settlementDate, 0);
+    public void calculate() /* @ReadOnly */ {
+        //TODO: study performance .vs. defensive programming
+        // QL.require(Bond.Arguments.class.isAssignableFrom(arguments.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+        // QL.require(Bond.Results.class.isAssignableFrom(results.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+
+        final Bond.ArgumentsImpl a = (Bond.ArgumentsImpl)arguments;
+        final Bond.ResultsImpl   r = (Bond.ResultsImpl)results;
+
+    	final Leg cashflows = a.cashflows;
+    	final Date settlementDate = a.settlementDate;
+    	final Date valuationDate = discountCurve.currentLink().referenceDate();
+        QL.require(! discountCurve.empty() , "no discounting term structure set"); //// TODO: message
+
+        r.value           = CashFlows.getInstance().npv(cashflows, discountCurve, valuationDate,  valuationDate);
+        r.settlementValue = CashFlows.getInstance().npv(cashflows, discountCurve, settlementDate, settlementDate);
     }
-    
-    
-    public Handle<YieldTermStructure> discountCurve(){
-    	return discountCurve_;
+
+
+    public Handle<YieldTermStructure> discountCurve() /* @ReadOnly */ {
+    	return discountCurve;
     }
+
 }

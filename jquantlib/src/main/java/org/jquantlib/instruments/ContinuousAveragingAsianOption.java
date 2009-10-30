@@ -46,41 +46,98 @@ package org.jquantlib.instruments;
 
 import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
-import org.jquantlib.lang.annotation.PackagePrivate;
+import org.jquantlib.lang.reflect.ReflectConstants;
+import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.arguments.Arguments;
-import org.jquantlib.pricingengines.arguments.ContinuousAveragingAsianOptionArguments;
-import org.jquantlib.processes.StochasticProcess;
 
 /**
  * Description of the terms and conditions of a discrete average out fixed strike option.
  *
  * @author <Richard Gomes>
  */
+public class ContinuousAveragingAsianOption extends OneAssetOption {
 
-public class ContinuousAveragingAsianOption extends OneAssetStrikedOption {
+    protected AverageType averageType;
 
-    private static final String WRONG_ARGUMENT_TYPE = "wrong argument type";
-
-    @PackagePrivate
-    protected AverageType averageType_;
-
-    public ContinuousAveragingAsianOption(final AverageType averageType, final StochasticProcess process, final StrikedTypePayoff payoff,
-            final Exercise exercise, final PricingEngine engine) {
-        super(process, payoff, exercise, engine);
-        averageType_ = averageType;
-    }
-
-    public ContinuousAveragingAsianOption(final StochasticProcess process, final Payoff payoff, final Exercise exercise, final PricingEngine engine) {
-        super(process, payoff, exercise, engine);
+    public ContinuousAveragingAsianOption(
+            final AverageType averageType,
+            final StrikedTypePayoff payoff,
+            final Exercise exercise) {
+        super(payoff, exercise);
+        this.averageType = averageType;
     }
 
     @Override
-    public void setupArguments(final Arguments args) /* @ReadOnly */{
-        super.setupArguments(args);
-        QL.require(args instanceof ContinuousAveragingAsianOptionArguments , WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
-        final ContinuousAveragingAsianOptionArguments moreArgs = (ContinuousAveragingAsianOptionArguments) args;
-        moreArgs.averageType = averageType_;
+    public void setupArguments(final PricingEngine.Arguments arguments) /* @ReadOnly */{
+        super.setupArguments(arguments);
+        QL.require(ContinuousAveragingAsianOption.Arguments.class.isAssignableFrom(arguments.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+        final ContinuousAveragingAsianOption.ArgumentsImpl a = (ContinuousAveragingAsianOption.ArgumentsImpl) arguments;
+        a.averageType = averageType;
+    }
+
+
+    //
+    // public inner classes
+    //
+
+    public static class ArgumentsImpl extends OneAssetOption.ArgumentsImpl implements ContinuousAveragingAsianOption.Arguments {
+
+        // TODO: refactor messages
+        private static final String UNSPECIFIED_AVERAGE_TYPE = "unspecified average type";
+
+        //
+        // public fields
+        //
+
+        // FIXME: public fields here is a bad design technique :(
+        public AverageType averageType;
+
+
+        //
+        // public constructors
+        //
+
+        public ArgumentsImpl() {
+            super();
+        }
+
+
+        //
+        // public methods
+        //
+
+        @Override
+        public void validate() /*@ReadOnly*/{
+            super.validate();
+            QL.require(averageType!=null , UNSPECIFIED_AVERAGE_TYPE); // QA:[RG]::verified
+        }
+
+    }
+
+
+    public static class ResultsImpl
+            extends OneAssetOption.ResultsImpl
+            implements ContinuousAveragingAsianOption.Results { }
+
+
+    /**
+     * Asian option on a single asset
+     * <p>
+     * Description of the terms and conditions of a continuous average out fixed strike option.
+     *
+     * @author <Richard Gomes>
+     */
+    static public abstract class EngineImpl
+            extends GenericEngine<ContinuousAveragingAsianOption.ArgumentsImpl, ContinuousAveragingAsianOption.ResultsImpl>
+            implements ContinuousAveragingAsianOption.Results {
+
+        /**
+         * Extra arguments for single-asset continuous-average Asian option
+         */
+        protected EngineImpl() {
+            super(new ArgumentsImpl(), new ResultsImpl());
+        }
+
     }
 
 }

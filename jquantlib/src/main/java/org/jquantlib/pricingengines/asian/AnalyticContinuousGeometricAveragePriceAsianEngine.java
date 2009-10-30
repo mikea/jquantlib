@@ -47,7 +47,10 @@ import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.AverageType;
+import org.jquantlib.instruments.ContinuousAveragingAsianOption;
+import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
+import org.jquantlib.math.Constants;
 import org.jquantlib.pricingengines.BlackCalculator;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.termstructures.Compounding;
@@ -60,7 +63,32 @@ import org.jquantlib.time.Frequency;
  */
 //TODO class comments
 //TODO add reference to original paper, clewlow strickland
-public class AnalyticContinuousGeometricAveragePriceasianEngine extends ContinuousAveragingAsianOptionEngine{
+public class AnalyticContinuousGeometricAveragePriceAsianEngine extends ContinuousAveragingAsianOption.EngineImpl {
+
+    //
+    // private final fields
+    //
+
+    private final GeneralizedBlackScholesProcess process;
+    private final ContinuousAveragingAsianOption.ArgumentsImpl a;
+    private final ContinuousAveragingAsianOption.ResultsImpl   r;
+    private final Option.GreeksImpl greeks;
+    private final Option.MoreGreeksImpl moreGreeks;
+
+
+    //
+    // public constructors
+    //
+
+    public AnalyticContinuousGeometricAveragePriceAsianEngine(final GeneralizedBlackScholesProcess process) {
+        this.process = process;
+        this.a = arguments;
+        this.r = results;
+        this.greeks = r.greeks();
+        this.moreGreeks = r.moreGreeks();
+        process.addObserver(this);
+    }
+
 
     //
     // implements PricingEngine
@@ -68,14 +96,13 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
 
     @Override
     public void calculate() /*@ReadOnly*/ {
-        QL.require(arguments.averageType==AverageType.Geometric , "not a geometric average option"); // QA:[RG]::verified // TODO: message
-        QL.require(arguments.exercise.type()==Exercise.Type.European , "not an European Option"); // QA:[RG]::verified // TODO: message
-        final Date exercise = arguments.exercise.lastDate();
-        QL.require(arguments.payoff instanceof PlainVanillaPayoff , "non-plain payoff given"); // QA:[RG]::verified // TODO: message
-        final PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments.payoff;
-        QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , "Black-Scholes process required"); // QA:[RG]::verified // TODO: message
+        QL.require(a.averageType==AverageType.Geometric , "not a geometric average option"); // QA:[RG]::verified // TODO: message
+        QL.require(a.exercise.type()==Exercise.Type.European , "not an European Option"); // QA:[RG]::verified // TODO: message
+        final Date exercise = a.exercise.lastDate();
 
-        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
+        QL.require(a.payoff instanceof PlainVanillaPayoff , "non-plain payoff given"); // QA:[RG]::verified // TODO: message
+        final PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments.payoff;
+
         /*@Volatility*/ final double volatility = process.blackVolatility().currentLink().blackVol(exercise, payoff.strike());
         /*@Real*/ final double variance = process.blackVolatility().currentLink().blackVariance(exercise, payoff.strike());
         /*@DiscountFactor*/ final double  riskFreeDiscount = process.riskFreeRate().currentLink().discount(exercise);
@@ -102,22 +129,26 @@ public class AnalyticContinuousGeometricAveragePriceasianEngine extends Continuo
         /*@Real*/ final double forward = spot * dividendDiscount / riskFreeDiscount;
 
         final BlackCalculator black = new BlackCalculator(payoff, forward, Math.sqrt(variance/3.0),riskFreeDiscount);
-        results.value = black.value();
-        results.delta = black.delta(spot);
-        results.gamma = black.gamma(spot);
-        results.dividendRho = black.dividendRho(t_q)/2.0;
+        r.value = black.value();
+        greeks.delta = black.delta(spot);
+        greeks.gamma = black.gamma(spot);
+        greeks.dividendRho = black.dividendRho(t_q)/2.0;
 
         /*@Time*/ final double t_r = rfdc.yearFraction(process.riskFreeRate().currentLink().referenceDate(),
-                arguments.exercise.lastDate());
-        results.rho = black.rho(t_r) + 0.5 * black.dividendRho(t_q);
+                a.exercise.lastDate());
+        greeks.rho = black.rho(t_r) + 0.5 * black.dividendRho(t_q);
 
         /*@Time*/ final double t_v = voldc.yearFraction(
                 process.blackVolatility().currentLink().referenceDate(),
-                arguments.exercise.lastDate());
-        results.vega = black.vega(t_v)/Math.sqrt(3.0) +
+                a.exercise.lastDate());
+        greeks.vega = black.vega(t_v)/Math.sqrt(3.0) +
         black.dividendRho(t_q)*volatility/6.0;
-        results.theta = black.theta(spot, t_v);
-        //results_.theta = Null<Real>();
+
+        try {
+            greeks.theta = black.theta(spot, t_v);
+        } catch (final ArithmeticException e) {
+            greeks.theta = Constants.NULL_REAL;
+        }
     }
 
 }

@@ -1,15 +1,3 @@
-package org.jquantlib.instruments;
-
-import org.jquantlib.math.solvers1D.Brent;
-import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.jquantlib.quotes.Handle;
-import org.jquantlib.quotes.Quote;
-import org.jquantlib.quotes.SimpleQuote;
-import org.jquantlib.termstructures.BlackVolTermStructure;
-import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.termstructures.volatilities.BlackConstantVol;
-
 /*
 Copyright (C) 2009 Richard Gomes
 
@@ -48,11 +36,24 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
 
+package org.jquantlib.instruments;
+
+import org.jquantlib.math.solvers1D.Brent;
+import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.processes.GeneralizedBlackScholesProcess;
+import org.jquantlib.quotes.Handle;
+import org.jquantlib.quotes.Quote;
+import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.termstructures.BlackVolTermStructure;
+import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.volatilities.BlackConstantVol;
+
+
 /**
  * Helper class for one-asset implied-volatility calculation
  * <p>
  * The passed engine must be linked to the passed quote
- * 
+ *
  * @see VanillaOption
  */
 public class ImpliedVolatilityHelper {
@@ -99,7 +100,7 @@ public class ImpliedVolatilityHelper {
                 new BlackConstantVol(
                         blackVol.currentLink().referenceDate(),
                         blackVol.currentLink().calendar(),
-                        volQuote.value(),
+                        new Handle<Quote>(volQuote),
                         blackVol.currentLink().dayCounter()));
 
         return new GeneralizedBlackScholesProcess(stateVariable, dividendYield, riskFreeRate, volatility);

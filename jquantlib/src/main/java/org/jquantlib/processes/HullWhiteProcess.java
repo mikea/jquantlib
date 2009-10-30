@@ -47,9 +47,9 @@ import org.jquantlib.time.Frequency;
 
 /**
  * Hull-White stochastic processes
- * 
+ *
  * @category processes
- * 
+ *
  * @author Richard Gomes
  */
 public class HullWhiteProcess extends StochasticProcess1D {
@@ -64,8 +64,8 @@ public class HullWhiteProcess extends StochasticProcess1D {
             final double a,
             final double sigma) {
         super();
-        this.process = new OrnsteinUhlenbeckProcess(a, sigma, h.currentLink().forwardRate(0.0, 0.0, Compounding.Continuous,
-                Frequency.NoFrequency).rate());
+        this.process = new OrnsteinUhlenbeckProcess(
+                a, sigma, h.currentLink().forwardRate(0.0, 0.0, Compounding.Continuous, Frequency.NoFrequency).rate());
         this.h = h;
         this.a = a;
         this.sigma = sigma;

@@ -118,7 +118,7 @@ public class BondTest {
 		final int settlementDays = 3;
 		final double coupons[] = { 0.02, 0.05, 0.08 };
 		final Frequency frequencies[] = { Frequency.Semiannual, Frequency.Annual };
-		final DayCounter bondDayCount = Thirty360.getDayCounter();
+		final DayCounter bondDayCount = new Thirty360();
 		final BusinessDayConvention accrualConvention = BusinessDayConvention.Unadjusted;
 		final BusinessDayConvention paymentConvention = BusinessDayConvention.ModifiedFollowing;
 		final double redemption = 100.0;
@@ -189,7 +189,7 @@ public class BondTest {
 		final int settlementDays = 3;
 		final double coupons[] = { 0.02, 0.05, 0.08 };
 		final Frequency frequencies[] = { Frequency.Semiannual, Frequency.Annual };
-		final DayCounter bondDayCount = Actual360.getDayCounter();
+		final DayCounter bondDayCount = new Actual360();
 		final BusinessDayConvention accrualConvention = BusinessDayConvention.Unadjusted;
 		final BusinessDayConvention paymentConvention = BusinessDayConvention.ModifiedFollowing;
 		final double redemption = 100.0;
@@ -198,21 +198,23 @@ public class BondTest {
 
 		for (final int length : lengths) {
 			for (final double coupon : coupons) {
-				for (final Frequency frequencie : frequencies) {
+				for (final Frequency frequency : frequencies) {
 
 					final Date dated = vars.today;
 					final Date issue = dated;
 					final Date maturity = vars.calendar.advance(issue, length, TimeUnit.Years);
 
-					final Handle<SimpleQuote> rate = new Handle<SimpleQuote>(new SimpleQuote(0.0));
+					final SimpleQuote rate = new SimpleQuote(0.0);
 					final Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(vars.today, rate, bondDayCount));
 
-					final Schedule sch = new Schedule(dated, maturity,
-							new Period(frequencie), vars.calendar,
+					final Schedule sch = new Schedule(
+					        dated, maturity,
+							new Period(frequency), vars.calendar,
 							accrualConvention, accrualConvention,
 							Rule.Backward, false);
 
-					final FixedRateBond bond = new FixedRateBond(settlementDays, vars.faceAmount, sch,
+					final FixedRateBond bond = new FixedRateBond(
+					        settlementDays, vars.faceAmount, sch,
 							new double[] { coupon },
 							bondDayCount, paymentConvention,
 							redemption, issue);
@@ -222,30 +224,26 @@ public class BondTest {
 
 					for (final double yield : yields) {
 
-						rate.currentLink().setValue(yield);
+						rate.setValue(yield);
 
-						final double price = bond.cleanPrice(yield,
-								bondDayCount, Compounding.Continuous,
-								frequencie);
+						final double price = bond.cleanPrice(yield, bondDayCount, Compounding.Continuous, frequency);
 						final double calculatedPrice = bond.getCleanPrice();
 
 						if (Math.abs(price-calculatedPrice) > tolerance) {
-
 							QL.error(
 									"price calculation failed:"
 									+ "\n    issue:     " + issue
 									+ "\n    maturity:  " + maturity
 									+ "\n    coupon:    " + coupon
-									+ "\n    frequency: " + frequencie + "\n"
+									+ "\n    frequency: " + frequency + "\n"
 									+ "\n    yield:  " + yield
 									+ "\n    expected:    " + price
 									+ "\n    calculated': " + calculatedPrice
 									+ "\n    error':      " + (price-calculatedPrice));
-
 						}
 
 						final double calculatedYield = bond.yield(
-								bondDayCount, Compounding.Continuous, frequencie,
+								bondDayCount, Compounding.Continuous, frequency,
 								tolerance, maxEvaluations);
 						if (Math.abs(yield-calculatedYield) > tolerance) {
 							QL.error(
@@ -253,7 +251,7 @@ public class BondTest {
 									+ "\n    issue:     " + issue
 									+ "\n    maturity:  " + maturity
 									+ "\n    coupon:    " + coupon
-									+ "\n    frequency: " + frequencie + "\n"
+									+ "\n    frequency: " + frequency + "\n"
 									+ "\n    yield:  " + yield
 									+ "\n    price:    " + price
 									+ "\n    yield': " + calculatedYield);

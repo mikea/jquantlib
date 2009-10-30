@@ -6,8 +6,11 @@ import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Schedule;
 
+/**
+ * Helper class building a sequence of capped/floored ibor-rate coupons
+ */
 public class IborLeg {
-    // ! helper class building a sequence of capped/floored ibor-rate coupons
+
     private final Schedule schedule_;
     private final IborIndex index_;
     private Array notionals_;
@@ -27,7 +30,7 @@ public class IborLeg {
         zeroPayments_ = (false);
     }
 
-    public final IborLeg withNotionals(/* Real */final double notional) {
+    public final IborLeg withNotionals(/* @Real */final double notional) {
         notionals_ = new Array(new double[] { notional });// std::vector<Real>(1,notional);
         return this;
     }
@@ -47,7 +50,7 @@ public class IborLeg {
         return this;
     }
 
-    public final IborLeg withFixingDays(/* Natural */final double fixingDays) {
+    public final IborLeg withFixingDays(/* @Natural */final double fixingDays) {
         fixingDays_ = new Array(new double[] { fixingDays });// std::vector<Natural>(1,fixingDays);
         return this;
     }
@@ -57,7 +60,7 @@ public class IborLeg {
         return this;
     }
 
-    public IborLeg withGearings(/* Real */final double gearing) {
+    public IborLeg withGearings(/* @Real */final double gearing) {
         gearings_ = new Array(new double[] { gearing });
         return this;
     }
@@ -67,7 +70,7 @@ public class IborLeg {
         return this;
     }
 
-    public IborLeg withSpreads(/* Spread */final double spread) {
+    public IborLeg withSpreads(/* @Spread */final double spread) {
         spreads_ = new Array(new double[] { spread });
         return this;
     }
@@ -107,20 +110,16 @@ public class IborLeg {
         return this;
     }
 
-    public Leg Leg() {
+    public Leg Leg() /* @ReadOnly */{
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        final Leg cashflows = new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(notionals_, schedule_, index_,
+                paymentDayCounter_, paymentAdjustment_, fixingDays_, gearings_, spreads_, caps_, floors_, inArrears_, zeroPayments_);
+
+        if (caps_.empty() && floors_.empty() && !inArrears_) {
+            // TODO: PricerSetter.setCouponPricer(cashflows, new BlackIborCouponPricer());
             throw new UnsupportedOperationException("Work in progress");
+        }
 
-        final Leg cashflows = new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(
-         notionals_, schedule_, index_, paymentDayCounter_,
-         paymentAdjustment_, fixingDays_, gearings_, spreads_,
-         caps_, floors_, inArrears_, zeroPayments_);
-
-         if (caps_.empty() && floors_.empty() && !inArrears_) {
-             //TODO: Code review :: incomplete code
-             // TODO: PricerSetter.getInstance().setCouponPricer(cashflows, new BlackIborCouponPricer()));
-         }
         return cashflows;
     }
 

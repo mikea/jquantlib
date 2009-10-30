@@ -23,15 +23,15 @@ import java.lang.reflect.Constructor;
 
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
+import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.lattices.BinomialTree;
 import org.jquantlib.methods.lattices.BlackScholesLattice;
 import org.jquantlib.methods.lattices.Tree;
-import org.jquantlib.pricingengines.Greeks;
-import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.quotes.Handle;
@@ -69,25 +69,40 @@ import org.jquantlib.time.TimeGrid;
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
-public abstract class BinomialVanillaEngine<T extends BinomialTree> extends VanillaOptionEngine {
+public abstract class BinomialVanillaEngine<T extends BinomialTree> extends VanillaOption.EngineImpl {
+
+    //
+    // private final fields
+    //
+
+    final private GeneralizedBlackScholesProcess process;
+    final private int timeSteps_;
+    final private VanillaOption.ArgumentsImpl a;
+    final private VanillaOption.ResultsImpl   r;
+    private final Option.GreeksImpl greeks;
+    private final Option.MoreGreeksImpl moreGreeks;
 
     //
     // private fields
     //
 
     private final Class<T> clazz;
-    private final int timeSteps_;
 
 
     //
     // public constructors
     //
 
-    public BinomialVanillaEngine(final int timeSteps) {
-        // obtain a BinomialTree concrete implementation from a generic type (first generic parameter)
+    public BinomialVanillaEngine(final GeneralizedBlackScholesProcess process, final int timeSteps) {
         this.clazz = (Class<T>) TypeToken.getClazz(this.getClass());
+        QL.require(timeSteps > 0 , "timeSteps must be positive"); // QA:[RG]::verified // TODO: message
         this.timeSteps_ = timeSteps;
-        QL.require(timeSteps_ > 0 , "timeSteps must be positive"); // QA:[RG]::verified // TODO: message
+        this.a = (VanillaOption.ArgumentsImpl)arguments;
+        this.r = (VanillaOption.ResultsImpl)results;
+        this.greeks = r.greeks();
+        this.moreGreeks = r.moreGreeks();
+        this.process = process;
+        this.process.addObserver(this);
     }
 
 
@@ -101,7 +116,7 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
             final int timeSteps,
             final /*@Price*/ double strike) {
         try {
-            final Constructor c = clazz.getConstructor(StochasticProcess1D.class, double.class, int.class, double.class);
+            final Constructor<T> c = clazz.getConstructor(StochasticProcess1D.class, double.class, int.class, double.class);
             return clazz.cast(c.newInstance(bs, maturity, timeSteps, strike));
         } catch (final Exception e) {
             throw new LibraryException(e); // QA:[RG]::verified
@@ -115,9 +130,6 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
 
     @Override
     public void calculate() /*@ReadOnly*/ {
-        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) this.arguments.stochasticProcess;
-        QL.require(process!=null , "Black-Scholes process required"); // QA:[RG]::verified // TODO: message
-
         final DayCounter rfdc = process.riskFreeRate().currentLink().dayCounter();
         final DayCounter divdc = process.dividendYield().currentLink().dayCounter();
         final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
@@ -125,25 +137,28 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
 
         final double s0 = process.stateVariable().currentLink().value();
         QL.require(s0 > 0.0 , "negative or null underlying given"); // QA:[RG]::verified // TODO: message
-        final double v = process.blackVolatility().currentLink().blackVol(arguments.exercise.lastDate(), s0);
-        final Date maturityDate = arguments.exercise.lastDate();
-        final double r = process.riskFreeRate().currentLink().zeroRate(maturityDate, rfdc, Compounding.Continuous, Frequency.NoFrequency).rate();
+        final double v = process.blackVolatility().currentLink().blackVol(a.exercise.lastDate(), s0);
+        final Date maturityDate = a.exercise.lastDate();
+
+        //FIXME: rename R to r
+
+        final double R = process.riskFreeRate().currentLink().zeroRate(maturityDate, rfdc, Compounding.Continuous, Frequency.NoFrequency).rate();
         final double q = process.dividendYield().currentLink().zeroRate(maturityDate, divdc, Compounding.Continuous, Frequency.NoFrequency).rate();
         final Date referenceDate = process.riskFreeRate().currentLink().referenceDate();
 
         // binomial trees with constant coefficient
-        final Handle<YieldTermStructure> flatRiskFree = new Handle<YieldTermStructure>(new FlatForward(referenceDate, r, rfdc));
+        final Handle<YieldTermStructure> flatRiskFree = new Handle<YieldTermStructure>(new FlatForward(referenceDate, R, rfdc));
         final Handle<YieldTermStructure> flatDividends = new Handle<YieldTermStructure>(new FlatForward(referenceDate, q, divdc));
         final Handle<BlackVolTermStructure> flatVol = new Handle<BlackVolTermStructure>(new BlackConstantVol(referenceDate, volcal, v, voldc));
-        final PlainVanillaPayoff payoff = (PlainVanillaPayoff) arguments.payoff;
+        final PlainVanillaPayoff payoff = (PlainVanillaPayoff) a.payoff;
         QL.require(payoff!=null , "non-plain payoff given"); // QA:[RG]::verified // TODO: message
 
         final double maturity = rfdc.yearFraction(referenceDate, maturityDate);
         final StochasticProcess1D bs = new GeneralizedBlackScholesProcess(process.stateVariable(), flatDividends, flatRiskFree, flatVol);
         final TimeGrid grid = new TimeGrid(maturity, timeSteps_);
         final Tree tree = (Tree)getTreeInstance(bs, maturity, timeSteps_, payoff.strike());
-        final BlackScholesLattice<Tree> lattice = new BlackScholesLattice<Tree>(tree, r, maturity, timeSteps_);
-        final DiscretizedVanillaOption option = new DiscretizedVanillaOption(arguments, process, grid);
+        final BlackScholesLattice<Tree> lattice = new BlackScholesLattice<Tree>(tree, R, maturity, timeSteps_);
+        final DiscretizedVanillaOption option = new DiscretizedVanillaOption(a, process, grid);
 
         option.initialize(lattice, maturity);
 
@@ -159,7 +174,7 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
 
         // Rollback to second-last step, and get option value (p1) at this point
         option.rollback(grid.at(1));
-        // TODO: code review :: verifuy use of clone()
+        // TODO: code review :: verify use of clone()
         final Array va = option.values().clone();
         QL.require(va.size() == 2 , "expect 2 nodes in grid at first step"); // QA:[RG]::verified // TODO: message
         final double p1 = va.get(1);
@@ -174,10 +189,10 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
         final double delta1 = (p2h - p1) / (s2 - s1); // dp/ds
 
         // Store results
-        results.value = p0;
-        results.delta = delta0;
-        results.gamma = 2.0 * (delta1 - delta0) / (s2 - s0); // d(delta)/ds
-        results.theta = Greeks.blackScholesTheta(process, results.value, results.delta, results.gamma);
+        r.value = p0;
+        greeks.delta = delta0;
+        greeks.gamma = 2.0 * (delta1 - delta0) / (s2 - s0); // d(delta)/ds
+        greeks.theta = greeks.blackScholesTheta(process, r.value, greeks.delta, greeks.gamma);
     }
 
 }

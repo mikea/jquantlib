@@ -69,8 +69,6 @@ public class Stock extends Instrument {
         this.quote = quote;
 
         this.quote.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.quote);
     }
 
 

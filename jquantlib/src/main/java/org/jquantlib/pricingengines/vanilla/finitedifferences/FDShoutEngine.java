@@ -19,12 +19,11 @@
  */
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
-import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
  * @author Srinivas Hasti
- * 
+ *
  */
 public class FDShoutEngine extends FDEngineAdapter<FDShoutCondition> {
 
@@ -32,12 +31,8 @@ public class FDShoutEngine extends FDEngineAdapter<FDShoutCondition> {
     // public constructors
     //
 
-    public FDShoutEngine(
-            final GeneralizedBlackScholesProcess process,
-            final int timeSteps,
-            final int gridPoints,
-            final boolean timeDependent) {
-        super(process, timeSteps, gridPoints, timeDependent);
+    public FDShoutEngine(final GeneralizedBlackScholesProcess process) {
+        this(process, 100, 100, false);
     }
 
     public FDShoutEngine(
@@ -47,8 +42,12 @@ public class FDShoutEngine extends FDEngineAdapter<FDShoutCondition> {
         this(process, timeSteps, gridPoints, false);
     }
 
-    public FDShoutEngine(final BlackScholesMertonProcess process) {
-        this(process, 100, 100, false);
+    public FDShoutEngine(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps,
+            final int gridPoints,
+            final boolean timeDependent) {
+        super(process, timeSteps, gridPoints, timeDependent);
     }
 
 }

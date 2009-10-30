@@ -89,7 +89,7 @@ public class Bonds {
         final Quote zc6mRate = (new SimpleQuote(zc6mQuote));
         final Quote zc1yRate = (new SimpleQuote(zc1yQuote));
 
-        final DayCounter zcBondsDayCounter = Actual365Fixed.getDayCounter();
+        final DayCounter zcBondsDayCounter = new Actual365Fixed();
 
         final RateHelper zc3m = new DepositRateHelper(
                 new Handle<Quote>(zc3mRate), new Period(3, TimeUnit.Months),
@@ -163,7 +163,7 @@ public class Bonds {
                             100.0, schedule,
                             // std::vector<Rate>(1,couponRates[i]),
                             Arrays.asList(new double[] { couponRates[i] }),
-                            ActualActual.getDayCounter(ActualActual.Convention.Bond),
+                            new ActualActual(ActualActual.Convention.Bond),
                             BusinessDayConvention.Unadjusted,
                             redemption,
                             issueDates[i]));
@@ -177,7 +177,7 @@ public class Bonds {
 
         // Any DayCounter would be fine.
         // ActualActual::ISDA ensures that 30 years is 30.0
-        final DayCounter termStructureDayCounter = ActualActual.getDayCounter(ActualActual.Convention.ISDA);
+        final DayCounter termStructureDayCounter = new ActualActual(ActualActual.Convention.ISDA);
 
         final double tolerance = 1.0e-15;
 
@@ -272,7 +272,7 @@ public class Bonds {
         // setup swaps
         final Frequency swFixedLegFrequency = Frequency.Annual;
         final BusinessDayConvention swFixedLegConvention = BusinessDayConvention.Unadjusted;
-        final DayCounter swFixedLegDayCounter = Thirty360.getDayCounter(Convention.European);
+        final DayCounter swFixedLegDayCounter = new Thirty360(Convention.European);
 
         // TODO and FIXME: not sure whether the class stuff works properly
         final IborIndex swFloatingLegIndex = Euribor.getEuribor6M(new Handle<YieldTermStructure>(YieldTermStructure.class));

@@ -28,7 +28,7 @@ import org.jquantlib.util.StopClock;
  * (7)PiecewiseYieldCurve
  * (8)PiecewiseYieldDiscountCurve
  * (9)ZeroSpreadedTermStructure
- * 
+ *
  * @author Apratim Rajendra
  *
  */
@@ -44,7 +44,7 @@ public class YieldCurveTermStructures {
         System.out.println("//==========================================FlatForward termstructure===================");
         final SimpleQuote interestRateQuote = new SimpleQuote(0.3);
         final RelinkableHandle<Quote>  handleToInterestRateQuote = new RelinkableHandle<Quote>(interestRateQuote);
-        final YieldTermStructure flatforward = new FlatForward(2,new UnitedStates(Market.NYSE),handleToInterestRateQuote,Actual365Fixed.getDayCounter(),Compounding.Continuous,Frequency.Daily);
+        final YieldTermStructure flatforward = new FlatForward(2,new UnitedStates(Market.NYSE),handleToInterestRateQuote,new Actual365Fixed(), Compounding.Continuous,Frequency.Daily);
 
         final Date today  = Date.todaysDate();
         final Date date10 = today.clone().addAssign(10);
@@ -58,14 +58,14 @@ public class YieldCurveTermStructures {
         System.out.println("The discount factor for the date 30 days from today is = "+flatforward.discount(date30.clone()));
 
         //Calculating forward rate
-        System.out.println("The forward rate between the date 30 days from today to 50 days from today is = "+flatforward.forwardRate(date30.clone(), date50.clone(), Actual365Fixed.getDayCounter(),Compounding.Continuous).rate());
+        System.out.println("The forward rate between the date 30 days from today to 50 days from today is = "+flatforward.forwardRate(date30.clone(), date50.clone(), new Actual365Fixed(), Compounding.Continuous).rate());
 
         //Calculating parRate for the dates as shown below-
         final Date[] dates = { date10.clone(), date20.clone(), date30.clone(), date40.clone(), date50.clone() };
         System.out.println("The par rate for the bond having coupon dates as shown above is = "+flatforward.parRate(dates, Frequency.Semiannual, false));
 
         //Calculating zero rate
-        System.out.println("The zero rate for the bond having coupon date as 10 days from today = "+flatforward.zeroRate(date10.clone(), Actual365Fixed.getDayCounter(), Compounding.Continuous).rate());
+        System.out.println("The zero rate for the bond having coupon date as 10 days from today = "+flatforward.zeroRate(date10.clone(), new Actual365Fixed(), Compounding.Continuous).rate());
 
         System.out.println("//==========================================ForwardSpreadedTermStructure==================");
         //As the name suggests this termstructure adds a spread to the forward rates it calculates by getting the spread rate
@@ -79,13 +79,13 @@ public class YieldCurveTermStructures {
         System.out.println("The discount factor for the date 30 days from today is = "+forwardSpreadedTermStructure.discount(date30.clone()));
 
         //Calculating forward rate.This termstructure adds the spread as specified by the spread quote and then calculates the discount.
-        System.out.println("The forward rate between the date 30 days from today to 50 days from today is = "+forwardSpreadedTermStructure.forwardRate(date30.clone(), date50.clone(), Actual365Fixed.getDayCounter(),Compounding.Continuous).rate());
+        System.out.println("The forward rate between the date 30 days from today to 50 days from today is = "+forwardSpreadedTermStructure.forwardRate(date30.clone(), date50.clone(), new Actual365Fixed(), Compounding.Continuous).rate());
 
         //Calculating parRate for the dates(as used in the FlatForward case) as shown below-
         System.out.println("The par rate for the bond having coupon dates as shown above is = "+forwardSpreadedTermStructure.parRate(dates, Frequency.Semiannual, false));
 
         //Calculating zero rate.This termstructure adds the spread as specified by the spread quote and then calculates the discount.
-        System.out.println("The zero rate for the bond having coupon date as 10 days from today = "+forwardSpreadedTermStructure.zeroRate(date10.clone(), Actual365Fixed.getDayCounter(), Compounding.Continuous).rate());
+        System.out.println("The zero rate for the bond having coupon date as 10 days from today = "+forwardSpreadedTermStructure.zeroRate(date10.clone(), new Actual365Fixed(), Compounding.Continuous).rate());
 
         //===========================================ImpliedTermStructure============================
 

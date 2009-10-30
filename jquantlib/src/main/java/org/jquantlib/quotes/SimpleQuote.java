@@ -31,7 +31,7 @@ import org.jquantlib.math.Constants;
 
 /**
  * Market element returning a stored value
- * 
+ *
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Richard Gomes" })
@@ -102,7 +102,7 @@ public class SimpleQuote extends Quote {
 
     @Override
     public final double value() /* @ReadOnly */ {
-        QL.require(!Double.isNaN(value) , "invalid simple quote: no value available"); // QA:[RG]::verified // TODO: message
+        QL.require(isValid() , "invalid simple quote: no value available"); // QA:[RG]::verified // TODO: message
         return value;
     }
 

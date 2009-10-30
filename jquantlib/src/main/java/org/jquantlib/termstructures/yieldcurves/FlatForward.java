@@ -71,14 +71,10 @@ public class FlatForward extends AbstractYieldTermStructure {
             final Compounding compounding,
             final Frequency frequency) {
         super(referenceDate, new NullCalendar(), dayCounter);
-        this.forward = forward;
         this.compounding = compounding;
         this.frequency = frequency;
-
-        this.forward.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.forward);
-
+        this.forward = forward;
+        this.forward.currentLink().addObserver(this);
         updateRate();
     }
 
@@ -137,14 +133,10 @@ public class FlatForward extends AbstractYieldTermStructure {
             final Compounding compounding,
             final Frequency frequency) {
         super(settlementDays, calendar, dayCounter);
-        this.forward = forward;
         this.compounding = compounding;
         this.frequency = frequency;
-
-        this.forward.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.forward);
-
+        this.forward = forward;
+        this.forward.currentLink().addObserver(this);
         updateRate();
     }
 

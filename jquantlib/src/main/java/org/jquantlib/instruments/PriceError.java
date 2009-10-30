@@ -3,23 +3,22 @@ package org.jquantlib.instruments;
 import org.jquantlib.QL;
 import org.jquantlib.math.Ops.DoubleOp;
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.results.Results;
 import org.jquantlib.quotes.SimpleQuote;
 
 public class PriceError implements DoubleOp {
 
-    private final PricingEngine engine_;
-    private final Results results_;
-    private final SimpleQuote vol_;
-    private final double targetValue_;
+    private final PricingEngine engine;
+    private final Instrument.ResultsImpl results;
+    private final SimpleQuote vol;
+    private final double targetValue;
 
 
     public PriceError(final PricingEngine engine, final SimpleQuote vol, final double targetValue) {
-        this.engine_ = engine;
-        this.vol_ = vol;
-        this.targetValue_ = targetValue;
-        this.results_ = engine_.getResults();
-        QL.require(results_ != null, "pricing engine does not supply needed results"); // TODO: message
+        this.engine = engine;
+        this.vol = vol;
+        this.targetValue = targetValue;
+        this.results = (Instrument.ResultsImpl) engine.getResults();
+        QL.require(results != null, "pricing engine does not supply needed results"); // TODO: message
     }
 
 
@@ -29,9 +28,10 @@ public class PriceError implements DoubleOp {
 
     @Override
     public double op(/*@Volatility*/ final double x) /* @ReadOnly */ {
-        vol_.setValue(x);
-        engine_.calculate();
-        return results_.value - targetValue_;
+        vol.setValue(x);
+        engine.calculate();
+
+        return results.value - targetValue;
     }
 
 }

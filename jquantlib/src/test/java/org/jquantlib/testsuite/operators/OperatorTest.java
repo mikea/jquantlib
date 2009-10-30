@@ -45,8 +45,7 @@ import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.termstructures.volatilities.BlackConstantVol;
-import org.jquantlib.termstructures.yieldcurves.FlatForward;
+import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
@@ -105,7 +104,7 @@ public class OperatorTest {
             diff.set(i, y.get(i) - temp.get(i));
         }
 
-        double e = norm(diff, h);
+        double e = Utilities.norm(diff, h);
 
 
         if (e > 1.0e-6) {
@@ -117,7 +116,7 @@ public class OperatorTest {
         for (i=0; i < yd.size(); i++) {
             diff.set(i, yd.get(i) - temp.get(i));
         }
-        e = norm(diff, h);
+        e = Utilities.norm(diff, h);
         if (e > 1.0e-4) {
             fail("norm of 2nd derivative of cum minus Gaussian derivative: " + e + "\ntolerance exceeded");
         }
@@ -180,7 +179,7 @@ public class OperatorTest {
         QL.info("BSMOperator reference diagonals: \n");
         outputDiagonals(ref);
 
-        final DayCounter dc = Actual360.getDayCounter();
+        final DayCounter dc = new Actual360();
 
         final Date today = Date.todaysDate();
 
@@ -191,10 +190,10 @@ public class OperatorTest {
         final double residualTime = dc.yearFraction(today, exercise);
 
         final SimpleQuote spot = new SimpleQuote(0.0);
-        final YieldTermStructure qTS = flatRate(today, q, dc);
-        final YieldTermStructure rTS = flatRate(today, r, dc);
+        final YieldTermStructure qTS = Utilities.flatRate(today, q, dc);
+        final YieldTermStructure rTS = Utilities.flatRate(today, r, dc);
 
-        final BlackVolTermStructure volTS = flatVol(today, sigma, dc);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, sigma, dc);
 
         final GeneralizedBlackScholesProcess stochProcess = new GeneralizedBlackScholesProcess(
                 new Handle<Quote>(spot),
@@ -258,80 +257,4 @@ public class OperatorTest {
         }
     }
 
-
-    private double norm(final Array arr, final double h) {
-        //copy arr into f2, and square each value
-        final Array f2 = new Array(arr.size());
-        for(int i = 0; i < arr.size(); i++)
-        {
-            final double d = arr.get(i);
-            f2.set(i, d*d);
-        }
-        // squared values
-        //std::vector<Real> f2(end-begin);
-        //std::transform(begin,end,begin,f2.begin(),
-        //               std::multiplies<Real>());
-
-        // numeric integral of f^2
-        //double I = h * (std::accumulate(f2.begin(),f2.end(),0.0)
-        //              - 0.5*f2.front() - 0.5*f2.back());
-        //I believe this code is adding together the values in f2 (initialized to 0.0)
-        //then subtracting 0.5 * front() and also subtracting 0.5 * back()
-        double I = 0;
-        for(int i = 0; i < f2.size(); i++) {
-            I += f2.get(i);
-        }
-
-        //not sure about this...
-        I -= 0.5 * f2.first();
-        I -= 0.5 * f2.last();
-        I *= h;
-
-        return Math.sqrt(I);
-    }
-
-    private YieldTermStructure flatRate(final Date today,
-            final Quote forward,
-            final DayCounter dc) {
-        return new FlatForward(today, new Handle<Quote>(forward), dc);
-    }
-
-    private YieldTermStructure  flatRate(final Date today, final double forward, final DayCounter dc) {
-        return flatRate(today, new SimpleQuote(forward), dc);
-    }
-
-    //    boost::shared_ptr<YieldTermStructure>
-    //    flatRate(const boost::shared_ptr<Quote>& forward,
-    //             const DayCounter& dc) {
-    //        return boost::shared_ptr<YieldTermStructure>(
-    //              new FlatForward(0, NullCalendar(), Handle<Quote>(forward), dc));
-    //    }
-    //
-    //    boost::shared_ptr<YieldTermStructure>
-    //    flatRate(Rate forward, const DayCounter& dc) {
-    //        return flatRate(boost::shared_ptr<Quote>(new SimpleQuote(forward)), dc);
-    //    }
-
-
-
-    BlackVolTermStructure flatVol(final Date today,
-            final Quote vol,
-            final DayCounter dc) {
-        return new BlackConstantVol(today, new Handle<Quote>(vol), dc);
-    }
-
-    BlackVolTermStructure flatVol(final Date today, final double /*Volatility*/ vol,
-            final DayCounter dc) {
-        return flatVol(today, new SimpleQuote(vol), dc);
-    }
-
 }
-
-/*test_suite* OperatorTest::suite() {
-    test_suite* suite = BOOST_TEST_SUITE("Operator tests");
-    suite->add(BOOST_TEST_CASE(&OperatorTest::testConsistency));
-    suite->add(BOOST_TEST_CASE(&OperatorTest::testBSMOperatorConsistency));
-    return suite;
-}*/
-
-

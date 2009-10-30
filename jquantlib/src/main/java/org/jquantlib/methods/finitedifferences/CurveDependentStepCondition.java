@@ -87,7 +87,7 @@ public class CurveDependentStepCondition implements StepCondition<Array> {
         }
 
         public double getValue(final Array a, final int i) {
-            return payoff.valueOf(a.get(i));
+            return payoff.get(a.get(i));
         }
     };
 }

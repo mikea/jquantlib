@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.jquantlib.QL;
+import org.jquantlib.instruments.OneAssetOption;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.math.SampledCurve;
@@ -31,9 +32,8 @@ import org.jquantlib.methods.finitedifferences.BoundaryCondition;
 import org.jquantlib.methods.finitedifferences.NeumannBC;
 import org.jquantlib.methods.finitedifferences.OperatorFactory;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
-import org.jquantlib.pricingengines.arguments.Arguments;
-import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
-import org.jquantlib.pricingengines.results.Results;
+import org.jquantlib.pricingengines.PricingEngine.Arguments;
+import org.jquantlib.pricingengines.PricingEngine.Results;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.time.Date;
 
@@ -93,8 +93,7 @@ public class FDVanillaEngine {
     }
 
     protected void setupArguments(final Arguments a) {
-        final OneAssetOptionArguments args = (OneAssetOptionArguments) a;
-        //XXX		process = (GeneralizedBlackScholesProcess) args.stochasticProcess;
+        final OneAssetOption.ArgumentsImpl args = (OneAssetOption.ArgumentsImpl) a;
         exerciseDate = args.exercise.lastDate();
         payoff = args.payoff;
         requiredGridValue = ((StrikedTypePayoff) (payoff)).strike();

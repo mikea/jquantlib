@@ -10,7 +10,6 @@ import org.jquantlib.cashflow.FloatingRateCoupon;
 import org.jquantlib.cashflow.Leg;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.arguments.Arguments;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Date;
@@ -83,18 +82,13 @@ public class CapFloor extends Instrument {
         final Date evaluationDate = new Settings().evaluationDate();
         for (final CashFlow cashFlow : floatingLeg_) {
             cashFlow.addObserver(this);
-            //XXX:registerWith
-            // registerWith(cashFlow);
         }
 
         // TODO: code review :: please verify against QL/C++ code
         // seems like we should have this.evaluationDate
 
-        this.termStructure_.addObserver(this);
+        this.termStructure_.currentLink().addObserver(this);
         evaluationDate.addObserver(this);
-        //XXX:registerWith
-        //registerWith(termStructure_);
-        //registerWith(evaluationDate);
     }
 
     public CapFloor(
@@ -134,18 +128,13 @@ public class CapFloor extends Instrument {
         final Date evaluationDate = new Settings().evaluationDate();
         for (final CashFlow cashFlow : floatingLeg_) {
             cashFlow.addObserver(this);
-            //XXX:registerWith
-            //registerWith(cashFlow);
         }
 
         // TODO: code review :: please verify against QL/C++ code
         // Seems like we should have this.evaluationDate
 
-        this.termStructure_.addObserver(this);
+        this.termStructure_.currentLink().addObserver(this);
         evaluationDate.addObserver(this);
-        //XXX:registerWith
-        //registerWith(termStructure_);
-        //registerWith(evaluationDate);
     }
 
     public /*@Rate*/double atmRate(){
@@ -358,7 +347,7 @@ public class CapFloor extends Instrument {
 
     }
     @Override
-    protected void setupArguments(final Arguments arguments) {
+    protected void setupArguments(final PricingEngine.Arguments arguments) {
         // TODO Auto-generated method stub
 
     }

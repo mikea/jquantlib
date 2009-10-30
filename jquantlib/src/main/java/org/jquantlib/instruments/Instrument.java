@@ -40,29 +40,29 @@
 
 package org.jquantlib.instruments;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jquantlib.QL;
-import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.pricingengines.arguments.Arguments;
-import org.jquantlib.pricingengines.results.Results;
-import org.jquantlib.util.LazyObject;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
+import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.reflect.ReflectConstants;
+import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.util.LazyObject;
 
 
 /**
  * This is an abstract {@link Instrument} class which is able to use a {@link PricingEngine} implemented
  * internally or externally to it.
- * <p>
- * 
+ *
  * @see PricingEngine
  * @see <a href="http://quantlib.org/reference/group__instruments.html">QuantLib: Financial Instruments</a>
  *
  * @author Richard Gomes
  */
-@QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.V097, reviewers = { "Femi Anthony" })
-
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Femi Anthony" })
 public abstract class Instrument extends LazyObject {
 
     //
@@ -113,8 +113,7 @@ public abstract class Instrument extends LazyObject {
      * @see Arguments
      * @see PricingEngine
      */
-    protected void setupArguments(final Arguments arguments) /* @ReadOnly */ {
-        QL.error(SETUP_ARGUMENTS_NOT_IMPLEMENTED);
+    protected void setupArguments(final PricingEngine.Arguments a) /* @ReadOnly */ {
         throw new LibraryException(SETUP_ARGUMENTS_NOT_IMPLEMENTED);
     }
 
@@ -125,7 +124,6 @@ public abstract class Instrument extends LazyObject {
     //
 
     protected Instrument() {
-        super();
         this.NPV = Double.NaN;
         this.errorEstimate = 0.0;
     }
@@ -153,13 +151,19 @@ public abstract class Instrument extends LazyObject {
         update(this, null);
     }
 
-    public final/*@Price*/double getNPV() /*@ReadOnly*/{
+    /**
+     * returns the net present value of the instrument.
+     */
+    public final/*@Price*/double NPV() /*@ReadOnly*/{
         calculate();
         QL.require(!Double.isNaN(this.NPV) , "NPV not provided");  // QA:[RG]::verified // TODO: message
         return NPV;
     }
 
-    public final/*@Price*/double getErrorEstimate() /*@ReadOnly*/{
+    /**
+     * returns the error estimate on the NPV when available.
+     */
+    public final/*@Price*/double errorEstimate() /*@ReadOnly*/{
         calculate();
         QL.require(!Double.isNaN(this.errorEstimate) , "error estimate not provided"); // QA:[RG]::verified // TODO: message
         return errorEstimate;
@@ -179,7 +183,9 @@ public abstract class Instrument extends LazyObject {
      * @see Results
      * @see PricingEngine
      */
-    protected void fetchResults(final Results results) /* @ReadOnly */{
+    protected void fetchResults(final PricingEngine.Results r) /* @ReadOnly */ {
+        QL.require(PricingEngine.Results.class.isAssignableFrom(r.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+        final Instrument.ResultsImpl results = (Instrument.ResultsImpl)r;
         NPV = results.value;
         errorEstimate = results.errorEstimate;
     }
@@ -205,7 +211,7 @@ public abstract class Instrument extends LazyObject {
      * @see LazyObject#performCalculations
      */
     @Override
-    protected void performCalculations() {
+    protected void performCalculations() /*@ReadOnly*/ {
         QL.require(engine != null, SHOULD_DEFINE_PRICING_ENGINE); // QA:[RG]::verified
         engine.reset();
         setupArguments(engine.getArguments());
@@ -215,13 +221,109 @@ public abstract class Instrument extends LazyObject {
     }
 
     @Override
-    protected void calculate() /*@ReadOnly*/{
+    protected void calculate() /*@ReadOnly*/ {
         if (isExpired()) {
             setupExpired();
             calculated = true;
         } else {
             super.calculate();
         }
+    }
+
+
+    //
+    // ????? inner interfaces
+    //
+
+    /**
+     * basic instrument arguments
+     *
+     * @author Richard Gomes
+     */
+    public interface Arguments extends PricingEngine.Arguments { }
+
+    /**
+     * Results from instrument calculation
+     *
+     * @author Richard Gomes
+     */
+    public interface Results extends PricingEngine.Results { }
+
+
+
+    //
+    // ????? inner classes
+    //
+
+
+    /**
+     * Results are used by {@link PricingEngine}s in order to store results of calculations
+     * relative to <i>new-style</i> {@link Instrument}s
+     *
+     * @note Public fields as this class works pretty much as Data Transfer Objects
+     *
+     * @see Instrument
+     * @see PricingEngine
+     * @see Arguments
+     *
+     * @author Richard Gomes
+     */
+    static public class ResultsImpl implements Instrument.Results {
+
+        //
+        // public fields
+        //
+
+        /**
+         * Represents the calculated value of an {@link Instrument}
+         *
+         * @see Instrument
+         */
+        public /*@Price*/ double value;
+
+        /**
+         * Contains the estimated error due to floating point error
+         */
+        public /*@Real*/ double errorEstimate;
+
+        //TODO: Code review
+        private final Map<String, Object> additionalResults = new HashMap<String, Object>();
+
+
+        //
+        // public methods
+        //
+
+        /**
+         * returns any additional result returned by the pricing engine.
+         */
+        public Object result(final String key) /* @ReadOnly */ {
+            return this.additionalResults.get(key);
+        }
+
+        /**
+         * returns all additional result returned by the pricing engine.
+         */
+        public Map<String, Object> additionalResults() /* @ReadOnly */ {
+            return this.additionalResults;
+        }
+
+
+        //
+        // Overrides PriceEngine.Results
+        //
+
+        /**
+         * Clean up results of calculations
+         * <p>
+         * Notice that values are <b>undefined</b> after reset.
+         */
+        @Override
+        public void reset() {
+            value = errorEstimate = Double.NaN;
+            additionalResults.clear();
+        }
+
     }
 
 }

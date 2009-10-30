@@ -27,8 +27,7 @@ import org.jquantlib.cashflow.Callability;
 import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
-import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.processes.StochasticProcess;
+import org.jquantlib.math.Constants;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.time.Date;
@@ -39,7 +38,6 @@ import org.jquantlib.time.Schedule;
  *
  * @author Daniel Kong
  */
-//TODO: Work in progress
 public class ConvertibleBond extends Bond {
 
     protected double conversionRatio;
@@ -48,9 +46,8 @@ public class ConvertibleBond extends Bond {
     protected Handle<Quote> creditSpread;
     protected Option option;
 
-    public ConvertibleBond(final StochasticProcess process,
+    public ConvertibleBond(
             final Exercise exercise,
-            final PricingEngine engine,
             final double conversionRatio,
             final List<Dividend> dividends,
             final List<Callability> callability,
@@ -59,52 +56,38 @@ public class ConvertibleBond extends Bond {
             final int settlementDays,
             final DayCounter dayCounter,
             final Schedule schedule,
-            final double redemption){
-        super(settlementDays, 100.0, schedule.calendar(), dayCounter, schedule.businessDayConvention());
+            final double redemption) {
+
+        super(settlementDays, schedule.calendar(), issueDate);
         this.conversionRatio = conversionRatio;
-        this.dividends = dividends;
         this.callability = callability;
+        this.dividends = dividends;
         this.creditSpread = creditSpread;
-
-        this.issueDate_ = issueDate;
-        this.datedDate = schedule.date(0);
-        this.maturityDate_ = schedule.date(schedule.size()-1);
-        this.frequency = schedule.tenor().frequency();
-
-        setPricingEngine(engine);
-
-        // TODO: code review :: please verify against QL/C++ code
-        // seems like we should have this.process and this.creditSpread
-
-        process.addObserver(this);
-        creditSpread.addObserver(this);
-        //XXX:registerWith
-        //registerWith(process);
-        //registerWith(creditSpread);
-
+        this.maturityDate_ = schedule.endDate();
+        creditSpread.currentLink().addObserver(this);
     }
 
-    public double getConversionRatio() {
+    public double conversionRatio() /* @ReadOnly */ {
         return conversionRatio;
     }
 
-    public List<Dividend> getDividents(){
+    public List<Dividend> dividends() /* @ReadOnly */ {
         return dividends;
     }
 
-    public List<Callability> getCallability(){
+    public List<Callability> callability() /* @ReadOnly */ {
         return callability;
     }
 
-    public Handle<Quote> getCreditSpread(){
+    public Handle<Quote> creditSpread() /* @ReadOnly */ {
         return creditSpread;
     }
 
     @Override
-    protected void performCalculations() {
+    protected void performCalculations() /* @ReadOnly */ {
         option.setPricingEngine(engine);
-        NPV = option.getNPV();
-        errorEstimate = 0.0;
+        NPV = option.NPV();
+        errorEstimate = Constants.NULL_REAL;
     }
 
 }

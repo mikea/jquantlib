@@ -33,7 +33,6 @@ import static org.jquantlib.time.Month.SEPTEMBER;
 import static org.jquantlib.time.Weekday.SATURDAY;
 import static org.jquantlib.time.Weekday.SUNDAY;
 
-import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
@@ -97,7 +96,6 @@ public class China extends Calendar {
             impl = new SseImpl();
             break;
         default:
-            QL.error(UNKNOWN_MARKET);
             throw new LibraryException(UNKNOWN_MARKET);
         }
     }

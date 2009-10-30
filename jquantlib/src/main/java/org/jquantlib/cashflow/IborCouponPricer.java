@@ -35,7 +35,7 @@ public abstract class IborCouponPricer extends FloatingRateCouponPricer {
 
     public IborCouponPricer(final Handle<CapletVolatilityStructure> capletVol){
         this.capletVol_ = capletVol;
-        this.capletVol_.addObserver(this);
+        this.capletVol_.currentLink().addObserver(this);
         //XXX:registerWith
         //registerWith(this.capletVol_);
     }
@@ -45,14 +45,14 @@ public abstract class IborCouponPricer extends FloatingRateCouponPricer {
     }
 
     public void setCapletVolatility(final Handle<CapletVolatilityStructure> capletVol){
-        capletVol.deleteObserver(this);
+        capletVol.currentLink().deleteObserver(this);
         //XXX:registerWith
         //unregisterWith(capletVol);
 
         this.capletVol_ = capletVol;
         QL.require(this.capletVol_ != null , no_adequate_capletVol_given); // QA:[RG]::verified
 
-        this.capletVol_.addObserver(this);
+        this.capletVol_.currentLink().addObserver(this);
         //XXX:registerWith
         // registerWith(this.capletVol_);
         update();

@@ -61,8 +61,9 @@ public class QuotesTest {
 	    final Flag f = new Flag();
 	    me.addObserver(f);
 	    me.setValue(3.14);
-	    if (!f.isUp())
-	    	fail("Observer was not notified of quote change");
+	    if (!f.isUp()) {
+            fail("Observer was not notified of quote change");
+        }
 	}
 
 	@Test
@@ -77,15 +78,17 @@ public class QuotesTest {
 	    h.addObserver(f);
 
 	    me1.setValue(3.14);
-	    if (!f.isUp())
-	    	fail("Observer was not notified of quote change");
+	    if (!f.isUp()) {
+            fail("Observer was not notified of quote change");
+        }
 
 	    f.lower();
 	    final SimpleQuote me2 = new SimpleQuote(0.0);
 
 	    h.linkTo(me2);
-	    if (!f.isUp())
-	    	fail("Observer was not notified of quote change");
+	    if (!f.isUp()) {
+            fail("Observer was not notified of quote change");
+        }
 	}
 
 //	@Test

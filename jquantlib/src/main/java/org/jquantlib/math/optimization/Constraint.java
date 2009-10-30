@@ -37,7 +37,6 @@
 
 package org.jquantlib.math.optimization;
 
-import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
@@ -46,7 +45,7 @@ import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * Base constraint class
- * 
+ *
  * @author Richard Gomes
  */
 @QualityAssurance(quality=Quality.Q3_DOCUMENTATION, version=Version.V097, reviewers="Richard Gomes")
@@ -93,8 +92,7 @@ public abstract class Constraint {
         int icount = 0;
         while (!valid) {
             if (icount > 200) {
-                QL.error("can't update parameter vector"); // TODO: message
-                throw new LibraryException("can't update parameter vector");
+                throw new LibraryException("can't update parameter vector"); // TODO: message
             }
             diff *= 0.5;
             icount ++;

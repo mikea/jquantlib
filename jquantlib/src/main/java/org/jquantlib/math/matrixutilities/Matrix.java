@@ -592,7 +592,7 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
     /**
      * LU Decomposition
      *
-     * @param m is a rectangular Matrix
+     * @param moreGreeks is a rectangular Matrix
      * @return Structure to access L, U and piv.
      */
     public LUDecomposition lu() {

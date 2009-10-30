@@ -44,6 +44,8 @@ package org.jquantlib.pricingengines;
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.instruments.OneAssetOption;
+import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.time.Date;
@@ -70,7 +72,7 @@ import org.jquantlib.time.Date;
  * @author <Richard Gomes>
  */
 //TODO: write more test cases
-public class AnalyticEuropeanEngine extends VanillaOptionEngine {
+public class AnalyticEuropeanEngine extends OneAssetOption.EngineImpl {
 
     // TODO: refactor messages
     private static final String NOT_AN_EUROPEAN_OPTION = "not an European Option";
@@ -79,11 +81,27 @@ public class AnalyticEuropeanEngine extends VanillaOptionEngine {
 
 
     //
+    // private final fields
+    //
+
+    private final GeneralizedBlackScholesProcess process;
+    private final OneAssetOption.ArgumentsImpl a;
+    private final OneAssetOption.ResultsImpl   r;
+    private final Option.GreeksImpl            greeks;
+    private final Option.MoreGreeksImpl        moreGreeks;
+
+
+    //
     // public constructors
     //
 
-    public AnalyticEuropeanEngine() {
-        super();
+    public AnalyticEuropeanEngine(final GeneralizedBlackScholesProcess process) {
+        this.a = (OneAssetOption.ArgumentsImpl)arguments;
+        this.r = (OneAssetOption.ResultsImpl)results;
+        this.greeks = r.greeks();
+        this.moreGreeks = r.moreGreeks();
+        this.process = process;
+        this.process.addObserver(this);
     }
 
 
@@ -92,50 +110,47 @@ public class AnalyticEuropeanEngine extends VanillaOptionEngine {
     //
 
     @Override
-    public void calculate() /* @ReadOnly */{
-        QL.require(arguments.exercise.type() == Exercise.Type.European , NOT_AN_EUROPEAN_OPTION); // QA:[RG]::verified // TODO: message
-        final StrikedTypePayoff payoff = (StrikedTypePayoff) arguments.payoff;
+    public void calculate() /* @ReadOnly */ {
+        QL.require(a.exercise.type() == Exercise.Type.European , NOT_AN_EUROPEAN_OPTION); // QA:[RG]::verified // TODO: message
+        final StrikedTypePayoff payoff = (StrikedTypePayoff) a.payoff;
         QL.require(payoff != null , NON_STRIKED_PAYOFF_GIVEN); // QA:[RG]::verified // TODO: message
-        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess) arguments.stochasticProcess;
-        QL.require(process != null , BLACK_SCHOLES_PROCESS_REQUIRED); // QA:[RG]::verified // TODO: message
 
-        /* @Variance */final double variance = process.blackVolatility().currentLink().blackVariance(arguments.exercise.lastDate(), payoff.strike());
-
-        /* @DiscountFactor */final double dividendDiscount = process.dividendYield().currentLink().discount(arguments.exercise.lastDate());
-        /* @DiscountFactor */final double riskFreeDiscount = process.riskFreeRate().currentLink().discount(arguments.exercise.lastDate());
+        /* @Variance */final double variance = process.blackVolatility().currentLink().blackVariance(a.exercise.lastDate(), payoff.strike());
+        /* @DiscountFactor */final double dividendDiscount = process.dividendYield().currentLink().discount(a.exercise.lastDate());
+        /* @DiscountFactor */final double riskFreeDiscount = process.riskFreeRate().currentLink().discount(a.exercise.lastDate());
         /* @Price */final double spot = process.stateVariable().currentLink().value();
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         /* @Price */final double forwardPrice = spot * dividendDiscount / riskFreeDiscount;
         final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
-        results.value = black.value();
-        results.delta = black.delta(spot);
-        results.deltaForward = black.deltaForward();
-        results.elasticity = black.elasticity(spot);
-        results.gamma = black.gamma(spot);
+        r.value = black.value();
+        greeks.delta = black.delta(spot);
+        moreGreeks.deltaForward = black.deltaForward();
+        moreGreeks.elasticity = black.elasticity(spot);
+        greeks.gamma = black.gamma(spot);
 
         final DayCounter rfdc = process.riskFreeRate().currentLink().dayCounter();
         final DayCounter divdc = process.dividendYield().currentLink().dayCounter();
         final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
         final Date refDate = process.riskFreeRate().currentLink().referenceDate();
-        /* @Time */double t = rfdc.yearFraction(refDate, arguments.exercise.lastDate());
-        results.rho = black.rho(t);
+        /* @Time */double t = rfdc.yearFraction(refDate, a.exercise.lastDate());
+        greeks.rho = black.rho(t);
 
-        t = divdc.yearFraction(process.dividendYield().currentLink().referenceDate(), arguments.exercise.lastDate());
-        results.dividendRho = black.dividendRho(t);
+        t = divdc.yearFraction(process.dividendYield().currentLink().referenceDate(), a.exercise.lastDate());
+        greeks.dividendRho = black.dividendRho(t);
 
-        t = voldc.yearFraction(process.blackVolatility().currentLink().referenceDate(), arguments.exercise.lastDate());
-        results.vega = black.vega(t);
+        t = voldc.yearFraction(process.blackVolatility().currentLink().referenceDate(), a.exercise.lastDate());
+        greeks.vega = black.vega(t);
         try {
-            results.theta = black.theta(spot, t);
-            results.thetaPerDay = black.thetaPerDay(spot, t);
+            greeks.theta = black.theta(spot, t);
+            moreGreeks.thetaPerDay = black.thetaPerDay(spot, t);
         } catch (final Exception e) {
-            results.theta = Double.NaN;
-            results.thetaPerDay = Double.NaN;
+            greeks.theta = Double.NaN;
+            moreGreeks.thetaPerDay = Double.NaN;
         }
 
-        results.strikeSensitivity = black.strikeSensitivity();
-        results.itmCashProbability = black.itmCashProbability();
+        moreGreeks.strikeSensitivity = black.strikeSensitivity();
+        moreGreeks.itmCashProbability = black.itmCashProbability();
     }
 
 }

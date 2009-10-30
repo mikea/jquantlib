@@ -47,12 +47,28 @@ import org.jquantlib.math.matrixutilities.Matrix;
 
 
 /**
+ * 1-dimensional stochastic process
+ * <p>
+ * This class describes a stochastic process governed by
+ * <p>{@latex[ dx_t = \mu(t, x_t)dt + \sigma(t, x_t)dW_t }
  *
  * @author Richard Gomes
  */
+//TODO: code review :: http://bugs.jquantlib.org/view.php?id=394
 public abstract class StochasticProcess1D extends StochasticProcess {
 
+    static private final String ARRAY_1D_REQUIRED = "1-D array required";
+
+    //
+    // protected fields
+    //
+
     protected Discretization1D discretization1D;
+
+
+    //
+    // protected constructors
+    //
 
     protected StochasticProcess1D() { }
 
@@ -140,10 +156,9 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     }
 
 
-    // ======================================================================================================
-
-
-    static private final String ARRAY_1D_REQUIRED = "1-D array required";
+    //
+    // implements StochasticProcess
+    //
 
     @Override
     public final int size() {

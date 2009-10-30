@@ -71,9 +71,7 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
         this.earliestDate = earliestDate;
         this.latestDate = latestDate;
         this.quote = quote;
-        this.quote.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.quote);
+        this.quote.currentLink().addObserver(this);
     }
 
     public RateHelper(final Handle<Quote> quote) {
@@ -85,7 +83,7 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
         this.earliestDate = null;
         this.latestDate = null;
         this.quote = quote;
-        this.quote.addObserver(this);
+        this.quote.currentLink().addObserver(this);
         //XXX:registerWith
         // registerWith(this.quote);
     }

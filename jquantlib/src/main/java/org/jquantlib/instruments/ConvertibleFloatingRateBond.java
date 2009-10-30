@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2009 Daniel Kong
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -23,13 +23,14 @@ package org.jquantlib.instruments;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.cashflow.Callability;
 import org.jquantlib.cashflow.Dividend;
+import org.jquantlib.cashflow.IborLeg;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.indexes.IborIndex;
-import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.processes.StochasticProcess;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.time.Date;
@@ -37,60 +38,67 @@ import org.jquantlib.time.Schedule;
 
 /**
  * convertible floating-rate bond
- * 
+ *
  * Warning Most methods inherited from Bond (such as yield or
  * the yield-based dirtyPrice and cleanPrice) refer to
  * the underlying plain-vanilla bond and do not take
  * convertibility and callability into account.
- * 
+ *
  * @author Daniel Kong
  */
 //TODO: Work in progress
 public class ConvertibleFloatingRateBond extends ConvertibleBond {
 
-	public ConvertibleFloatingRateBond(final StochasticProcess process,
+	public ConvertibleFloatingRateBond(
 	          final Exercise exercise,
-	          final PricingEngine engine,
-	          double conversionRatio,
+	          final double conversionRatio,
 	          final List<Dividend> dividends,
 	          final List<Callability> callability,
 	          final Handle<Quote> creditSpread,
 	          final Date issueDate,
-	          int settlementDays,
+	          final int settlementDays,
 	          final IborIndex index,
-	          /*Natural*/int fixingDays,
-//	            final List<Spread> spreads,
-	          final List<Double> spreads,
+	          final /*@Natural*/ int fixingDays,
+	          final /*@Spread*/ double[] spreads,
 	          final DayCounter dayCounter,
 	          final Schedule schedule){
-		this(process, exercise, engine, conversionRatio, 
-				dividends, callability, creditSpread, issueDate, 
-				settlementDays, index, fixingDays, spreads, dayCounter, schedule, 100);
+		this(exercise, conversionRatio, dividends, callability, creditSpread,
+		     issueDate, settlementDays, index, fixingDays, spreads, dayCounter, schedule, 100);
 	}
-	
-	public ConvertibleFloatingRateBond(final StochasticProcess process,
+
+	public ConvertibleFloatingRateBond(
 			final Exercise exercise,
-			final PricingEngine engine,
-			double conversionRatio,
+			final double conversionRatio,
 			final List<Dividend> dividends,
 			final List<Callability> callability,
 			final Handle<Quote> creditSpread,
 			final Date issueDate,
-			int settlementDays,
+			final int settlementDays,
 			final IborIndex index,
-            /*Natural*/int fixingDays,
-//            final List<Spread> spreads,
-            final List<Double> spreads,
+            final /*@Natural*/ int fixingDays,
+            final /*@Spread*/ double[] spreads,
 			final DayCounter dayCounter,
 			final Schedule schedule,
-			double redemption){
-		super(process, exercise, engine, conversionRatio, 
-				dividends, callability, creditSpread, issueDate, 
-				settlementDays, dayCounter, schedule, redemption);
-		
-		//TODO:
-		
-	
+			final double redemption) {
+		super(exercise, conversionRatio, dividends, callability, creditSpread,
+		      issueDate, settlementDays, dayCounter, schedule, redemption);
+
+        // notional forcibly set to 100
+        this.cashflows_ = new IborLeg(schedule, index)
+        .withPaymentDayCounter(dayCounter)
+        .withNotionals(100.0)
+        .withPaymentAdjustment(schedule.businessDayConvention())
+        .withFixingDays(fixingDays)
+        .withSpreads(new Array(spreads)).Leg();
+
+        addRedemptionsToCashflows(new double[] { redemption });
+
+        QL.ensure(redemptions_.size() == 1, "multiple redemptions created");
+
+        this.option = new ConvertibleBondOption(this, exercise, conversionRatio,
+                                      dividends, callability, creditSpread,
+                                      cashflows_, dayCounter, schedule,
+                                      issueDate, settlementDays, redemption);
 	}
 
 }

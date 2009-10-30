@@ -168,12 +168,10 @@ public class Schedule {
               case TwentiethIMM:
             	 String errMsg = "first date incompatible with " + rule_ +
             	 			" date generation rule";
-                QL.error(errMsg); // TODO: message
-                throw new LibraryException(errMsg);
+                throw new LibraryException(errMsg); // TODO: message
               default:
             	errMsg = "unknown Rule (" + rule_ + ")";
-                QL.error(errMsg); // TODO: message
-                throw new LibraryException(errMsg);
+                throw new LibraryException(errMsg); // TODO: message
             }
         }
         if ( nextToLastDate != null && !nextToLastDate.isNull() ) {
@@ -196,12 +194,10 @@ public class Schedule {
               case TwentiethIMM:
                 String errMsg = "next to last date incompatible with " + rule_ +
                 		" date generation rule";
-                QL.error(errMsg); // TODO: message
-                throw new LibraryException(errMsg);
+                throw new LibraryException(errMsg); // TODO: message
               default:
             	errMsg = "unknown Rule (" + rule_ + ")";
-                QL.error(errMsg); // TODO: message
-                throw new LibraryException(errMsg);
+                throw new LibraryException(errMsg); // TODO: message
             }
         }
 
@@ -334,8 +330,7 @@ public class Schedule {
 
           default:
         	final String errMsg = "unknown Rule (" + rule_ + ")";
-            QL.error(errMsg);
-            throw new LibraryException(errMsg);
+            throw new LibraryException(errMsg); // TODO: message
         }
 
         // adjustments
@@ -378,7 +373,7 @@ public class Schedule {
 
 
     public Date previousDate(final Date  refDate) /* @ReadOnly */ {
-        int index = Date.lowerBound(dates_, refDate);
+        final int index = Date.lowerBound(dates_, refDate);
     	if ( index > 0 ) {
     		return dates_.get(index-1).clone();
     	} else {
@@ -387,7 +382,7 @@ public class Schedule {
     }
 
     public Date nextDate(final Date  refDate) /* @ReadOnly */ {
-    	int index = Date.lowerBound(dates_, refDate);
+    	final int index = Date.lowerBound(dates_, refDate);
     	if ( index < dates_.size() ) {
     		return dates_.get(index).clone();
     	} else {
@@ -467,7 +462,7 @@ public class Schedule {
      }
 
     public int lowerBound(final Date refDate) /* @ReadOnly */{
-        Date d = (refDate.isNull() ? new Settings().evaluationDate() : refDate);
+        final Date d = (refDate.isNull() ? new Settings().evaluationDate() : refDate);
         return Date.lowerBound(dates_, d.clone());
     }
 

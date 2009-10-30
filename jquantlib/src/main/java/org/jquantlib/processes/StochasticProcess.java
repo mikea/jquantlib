@@ -58,6 +58,7 @@ import org.jquantlib.util.Observer;
  *
  * @author Richard Gomes
  */
+//TODO: code review :: http://bugs.jquantlib.org/view.php?id=394
 public abstract class StochasticProcess implements Observable, Observer {
 
     //
@@ -71,12 +72,7 @@ public abstract class StochasticProcess implements Observable, Observer {
     // protected constructors
     //
 
-    //FIXME: code review :: constructor added in order to get Praneet's work compiling
-    protected StochasticProcess() {
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-    }
+    protected StochasticProcess() { }
 
     /**
      * @param discretization is an Object that <b>must</b> implement {@link Discretization}.

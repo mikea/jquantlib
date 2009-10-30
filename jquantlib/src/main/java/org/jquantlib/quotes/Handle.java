@@ -56,12 +56,6 @@ import org.jquantlib.util.WeakReferenceObservable;
  *
  * @author Richard Gomes
  */
-// TODO: code review :: please verify against QL/C++ code
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-
-//TODO: ideally T should extend Ops.DoubleOp, Observable
-// and we should offer a method called "value()" which does T.evaluate()
-
 public class Handle<T extends Observable> implements Observable {
 
     protected Link link;
@@ -83,7 +77,7 @@ public class Handle<T extends Observable> implements Observable {
     }
 
     public final boolean empty() /* @ReadOnly */ {
-        return link.isEmpty();
+        return link.empty();
     }
 
     public final T currentLink() {
@@ -170,15 +164,6 @@ public class Handle<T extends Observable> implements Observable {
         // public constructors
         //
 
-        //XXX
-        //		public Link() {
-        //			this(null);
-        //		}
-        //
-        //		public Link(T observable) {
-        //			setLink(observable);
-        //		}
-
         public Link(final T observable, final boolean registerAsObserver) {
             linkTo(observable, registerAsObserver);
         }
@@ -188,8 +173,7 @@ public class Handle<T extends Observable> implements Observable {
         // public methods
         //
 
-        // TODO: code review :: please verify against QL/C++ code
-        public final boolean isEmpty() /* @ReadOnly */ {
+        public final boolean empty() /* @ReadOnly */ {
             return (this.observable==null);
         }
 
@@ -197,13 +181,7 @@ public class Handle<T extends Observable> implements Observable {
             return this.observable;
         }
 
-        //XXX
-        //		public final void setLink(final T observable) {
-        //			setLink(observable, true);
-        //		}
-
         public final void linkTo(final T observable, final boolean registerAsObserver) {
-            // remove this from observable
             if ((this.observable!=observable) || (this.isObserver!=registerAsObserver)) {
                 if (this.observable!=null && this.isObserver) {
                     this.observable.deleteObserver(this);
@@ -231,23 +209,12 @@ public class Handle<T extends Observable> implements Observable {
 
 
         //
-        // Implements Observer
+        // implements Observer
         //
-
-        //XXX:registerWith
-        //        @Override
-        //        public void registerWith(final Observable o) {
-        //            o.addObserver(this);
-        //        }
-        //
-        //        @Override
-        //        public void unregisterWith(final Observable o) {
-        //            o.deleteObserver(this);
-        //        }
 
         @Override
         public final void update(final Observable o, final Object arg) {
-            delegatedObservable.notifyObservers(arg);
+            delegatedObservable.notifyObservers(arg); //TODO:: code review
         }
 
 

@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,24 +24,24 @@ import org.jquantlib.math.Ops;
 
 /**
  * @author Srinivas Hasti
- * 
+ *
  */
 public class PayoffFunction implements Ops.DoubleOp {
-	private Payoff payOff;
+	private final Payoff payOff;
 
-	public PayoffFunction(Payoff payOff) {
+	public PayoffFunction(final Payoff payOff) {
 		super();
 		this.payOff = payOff;
 	}
 
-	
+
 	//
 	// implements Ops.DoubleOp
 	//
-	
+
 	@Override
-	public double op(double a) {
-		return payOff.valueOf(a);
+	public double op(final double a) {
+		return payOff.get(a);
 	}
 
 }

@@ -29,7 +29,6 @@ import static org.jquantlib.time.Month.SEPTEMBER;
 import static org.jquantlib.time.Weekday.FRIDAY;
 import static org.jquantlib.time.Weekday.THURSDAY;
 
-import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
@@ -81,7 +80,6 @@ public class SaudiArabia extends Calendar{
             impl = new TadawulImpl();
             break;
           default:
-              QL.error(UNKNOWN_MARKET);
               throw new LibraryException(UNKNOWN_MARKET);
         }
     }

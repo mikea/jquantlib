@@ -39,10 +39,15 @@ public class LeisenReimer extends BinomialTree {
 
 	protected double up, down, pu, pd;
 
-	public LeisenReimer(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps, @Price final double strike) {
+	public LeisenReimer(
+	        final StochasticProcess1D process,
+	        @Time final double end,
+	        @NonNegative final int steps,
+	        @Price final double strike) {
 	    super(process, end, steps);
-
-        if (strike <= 0.0) throw new IllegalArgumentException("strike must be positive");
+        if (strike <= 0.0) {
+            throw new IllegalArgumentException("strike must be positive");
+        }
 
         final int oddSteps = (steps % 2 > 0 ? steps : steps + 1);
         final double variance = process.variance(0.0, x0, end);
@@ -78,7 +83,9 @@ public class LeisenReimer extends BinomialTree {
 	// Possibly create a math-utilities class and move into there.
 	private double PeizerPrattMethod2Inversion(final double z, final int n) {
 
-		if (! (n % 2 != 0) ) throw new IllegalArgumentException("n must be an odd number");
+		if (! (n % 2 != 0) ) {
+            throw new IllegalArgumentException("n must be an odd number");
+        }
 
 		double result = (z / (n + 1.0 / 3.0 + 0.1 / (n + 1.0)));
 		result *= result;

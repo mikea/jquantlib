@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -46,25 +46,24 @@ import org.jquantlib.math.matrixutilities.Matrix;
 
 /**
  * Discretization of a stochastic process over a given time interval
- * 
+ *
  * @author Richard Gomes
  */
-//TODO: refactor this interface to StochasticProcess
-//TODO: review method names againt original C++ sources
+// TODO: code review :: http://bugs.jquantlib.org/view.php?id=394
 public interface Discretization {
 
     /**
      * Returns the drift part of the equation, i.e., {@latex$ \mu(t, \mathrm{x}_t) }
      */
     public Array driftDiscretization(
-                final StochasticProcess sp, 
+                final StochasticProcess sp,
                 final/* @Time */double t0, final Array x0, final/* @Time */double dt);
 
     /**
      * Returns the diffusion part of the equation, i.e. {@latex$ \sigma(t, \mathrm{x}_t) }
      */
     public Matrix diffusionDiscretization(
-                final StochasticProcess sp, 
+                final StochasticProcess sp,
                 final/* @Time */double t0, final Array x0, final/* @Time */double dt);
 
     /**
@@ -73,7 +72,7 @@ public interface Discretization {
      * which want to hard-code a particular discretization.
      */
     public Matrix covarianceDiscretization(
-                final StochasticProcess sp, 
+                final StochasticProcess sp,
                 final/* @Time */double t0, final Array x0, final/* @Time */double dt);
 
 }

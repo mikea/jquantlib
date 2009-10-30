@@ -47,6 +47,7 @@ import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolatilityTermStructure;
 import org.jquantlib.termstructures.TermStructure;
+import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.util.TypedVisitor;
@@ -62,60 +63,49 @@ import org.jquantlib.util.Visitor;
 public class BlackConstantVol extends BlackVolatilityTermStructure {
 
     private final Handle<? extends Quote> volatility;
-    private final DayCounter dayCounter;
 
-    public BlackConstantVol(final Date referenceDate, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
-        super(referenceDate);
+    public BlackConstantVol(
+            final Date referenceDate,
+            final Calendar cal,
+            /*@Volatility*/ final double volatility,
+            final DayCounter dc) {
+        super(referenceDate, cal, BusinessDayConvention.Following, dc);
         this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
-        this.dayCounter = dayCounter;
     }
 
-    public BlackConstantVol(final Date referenceDate, final Handle<? extends Quote> volatility, final DayCounter dayCounter) {
-        super(referenceDate);
+    public BlackConstantVol(
+                final Date referenceDate,
+                final Calendar cal,
+                final Handle<Quote> volatility,
+                final DayCounter dc) {
+        super(referenceDate, cal, BusinessDayConvention.Following, dc);
         this.volatility = volatility;
-        this.dayCounter = dayCounter;
-
-        this.volatility.addObserver(this);
-        //XXX:registerWith
-        //registerWith(volatility);
+        this.volatility.currentLink().addObserver(this);
     }
 
-    public BlackConstantVol(final int settlementDays, final Calendar calendar, final /*@Volatility*/ double volatility, final DayCounter dayCounter) {
-        super(settlementDays, calendar);
+    public BlackConstantVol(
+                /*@Natural*/ final int settlementDays,
+                final Calendar cal,
+                /*@Volatility*/ final double volatility,
+                final DayCounter dc) {
+        super(settlementDays, cal, BusinessDayConvention.Following, dc);
         this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
-        this.dayCounter = dayCounter;
     }
 
-    public BlackConstantVol(final int settlementDays, final Calendar calendar, final Handle<? extends Quote> volatility, final DayCounter dayCounter) {
-        super(settlementDays, calendar);
+    public BlackConstantVol(
+                /*@Natural*/ final int settlementDays,
+                final Calendar cal,
+                final Handle<Quote> volatility,
+                final DayCounter dc) {
+        super(settlementDays, cal, BusinessDayConvention.Following, dc);
         this.volatility = volatility;
-        this.dayCounter = dayCounter;
-
-        this.volatility.addObserver(this);
-        //XXX:registerWith
-        //registerWith(volatility);
-    }
-
-    public BlackConstantVol(final Date referenceDate,
-            final Calendar calendar, final /*@Volatility*/ double volatility,
-            final DayCounter dayCounter){
-
-        super(referenceDate,calendar);
-
-        this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
-        this.dayCounter = dayCounter;
-
+        this.volatility.currentLink().addObserver(this);
     }
 
 
     //
     // Overrides TermStructure
     //
-
-    @Override
-    public final DayCounter dayCounter() {
-        return dayCounter;
-    }
 
     @Override
     public final Date maxDate() {

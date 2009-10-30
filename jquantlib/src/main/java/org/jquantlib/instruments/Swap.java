@@ -31,10 +31,8 @@ import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.CashFlows;
 import org.jquantlib.cashflow.Leg;
 import org.jquantlib.math.Constants;
-import org.jquantlib.pricingengines.arguments.Arguments;
-import org.jquantlib.pricingengines.arguments.SwapArguments;
-import org.jquantlib.pricingengines.results.Results;
-import org.jquantlib.pricingengines.results.SwapResults;
+import org.jquantlib.pricingengines.GenericEngine;
+import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.time.Date;
 
 /**
@@ -78,8 +76,6 @@ public class Swap extends Instrument {
         for (int i = 0; i < legs.size(); i++) {
             for (final CashFlow item : legs.get(i)) {
                 item.addObserver(this);
-                //XXX:registerWith
-                //registerWith(item);
             }
         }
     }
@@ -103,8 +99,6 @@ public class Swap extends Instrument {
             for (int i = 0; i < legs.size(); i++) {
                 for (final CashFlow item : legs.get(i)) {
                     item.addObserver(this);
-                    //XXX:registerWith
-                    //registerWith(item);
                 }
             }
         }
@@ -180,32 +174,95 @@ public class Swap extends Instrument {
     }
 
     @Override
-    public void setupArguments(final Arguments args) /* @ReadOnly */{
-        final SwapArguments arguments = (SwapArguments) args;
-
-        arguments.legs = legs;
-        arguments.payer = payer;
+    public void setupArguments(final PricingEngine.Arguments arguments) /* @ReadOnly */{
+        final Swap.ArgumentsImpl a = (Swap.ArgumentsImpl)arguments;
+        a.legs = legs;
+        a.payer = payer;
     }
 
     @Override
-    public void fetchResults(final Results r) /* @ReadOnly */{
-        super.fetchResults(r);
+    public void fetchResults(final PricingEngine.Results results) /* @ReadOnly */{
+        super.fetchResults(results);
 
-        final SwapResults results = (SwapResults) r;
-
-        if (results.legNPV.length > 0) {
-            QL.require(results.legNPV.length == legNPV.length , "wrong number of leg NPV returned"); // QA:[RG]::verified // TODO: message
-            legNPV = results.legNPV;
+        final Swap.ResultsImpl r = (Swap.ResultsImpl)results;
+        if (r.legNPV.length > 0) {
+            QL.require(r.legNPV.length == legNPV.length , "wrong number of leg NPV returned"); // QA:[RG]::verified // TODO: message
+            legNPV = r.legNPV;
         } else {
             Arrays.fill(legNPV, Constants.NULL_REAL);
         }
 
-        if (results.legBPS.length > 0) {
-            QL.require(results.legBPS.length == legBPS.length , "wrong number of leg BPS returned"); // QA:[RG]::verified // TODO: message
-            legBPS = results.legBPS;
+        if (r.legBPS.length > 0) {
+            QL.require(r.legBPS.length == legBPS.length , "wrong number of leg BPS returned"); // QA:[RG]::verified // TODO: message
+            legBPS = r.legBPS;
         } else {
             Arrays.fill(legBPS, Constants.NULL_REAL);
         }
     }
+
+
+    //
+    // inner interfaces
+    //
+
+    /**
+     * basic swap arguments
+     *
+     * @author Richard Gomes
+     */
+    public interface Arguments extends Instrument.Arguments { }
+
+
+    /**
+     * basic swap results
+     *
+     * @author Richard Gomes
+     */
+    public interface Results extends Instrument.Results { }
+
+
+    //
+    // ???? inner classes
+    //
+
+    static public class ArgumentsImpl implements Swap.Arguments {
+        public List<Leg> legs;
+        public double[] payer;
+
+        @Override
+        public void validate() /* @ReadOnly */ {
+            QL.require(legs.size() == payer.length , "number of legs and multipliers differ"); // QA:[RG]::verified // TODO: message
+        }
+    }
+
+
+    static public class ResultsImpl extends Instrument.ResultsImpl implements Swap.Results {
+
+        public double[] legNPV;
+        public double[] legBPS;
+
+        @Override
+        public void reset() {
+            super.reset();
+            Arrays.fill(legNPV, 0.0);
+            Arrays.fill(legBPS, 0.0);
+        }
+
+    }
+
+    static public class EngineImpl extends GenericEngine<Swap.Arguments, Swap.Results> {
+
+        protected EngineImpl() {
+            super(new ArgumentsImpl(), new ResultsImpl());
+        }
+
+        @Override
+        //TODO: code review
+        public void calculate() /* @ReadOnly */ {
+            // nothing
+        }
+
+    }
+
 
 }

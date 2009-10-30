@@ -129,6 +129,14 @@ public class CashFlows {
         return d;
     }
 
+    public double npv(
+            final Leg cashflows,
+            final Handle<YieldTermStructure> discountCurve,
+            final Date settlementDate,
+            final Date npvDate) {
+        return npv(cashflows, discountCurve, settlementDate, npvDate, 0);
+    }
+
     /**
      * NPV of the cash flows.
      * <p>

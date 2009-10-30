@@ -23,7 +23,6 @@
 
 package org.jquantlib.time;
 
-import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
@@ -114,7 +113,6 @@ public class DateGeneration {
             case 6:
                 return "TwentiethIMM";
             default:
-                QL.error(UNKNOWN_DATE_GENERATION_RULE);
                 throw new LibraryException(UNKNOWN_DATE_GENERATION_RULE);
             }
         }

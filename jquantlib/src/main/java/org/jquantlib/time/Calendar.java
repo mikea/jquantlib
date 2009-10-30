@@ -247,7 +247,6 @@ public class Calendar {
                 return adjust(d, BusinessDayConvention.Following);
             }
         } else {
-            QL.error(UKNOWN_BUSINESS_DAY_CONVENTION);
             throw new LibraryException(UKNOWN_BUSINESS_DAY_CONVENTION);
         }
         return d1;
@@ -259,12 +258,12 @@ public class Calendar {
      *
      * @note The input date is not modified.
      */
-    
+
     public Date advance(final Date date, final Period period, final BusinessDayConvention convention) /* @ReadOnly */ {
         return advance(date, period, convention, false);
     }
 
-    
+
     /**
      * Advances the given date as specified by the given period and
      * returns the result.

@@ -48,14 +48,14 @@ public class FixedRateBond extends Bond {
         frequency_ = schedule.tenor().frequency();
         dayCounter_ = accrualDayCounter;
         //maturityDate_ = schedule.endDate();
-        cashFlows_ = new FixedRateLeg(schedule, accrualDayCounter)
+        cashflows_ = new FixedRateLeg(schedule, accrualDayCounter)
         .withNotionals(faceAmount)
         .withCouponRates(coupons)
         .withPaymentAdjustment(paymentConvention).Leg();
 
         addRedemptionsToCashflows(new double[]{redemption});
 
-        QL.ensure(!cashFlows().isEmpty(), "bond with no cashflows!");
+        QL.ensure(!cashflows().isEmpty(), "bond with no cashflows!");
         QL.ensure(redemptions_.size() == 1, "multiple redemptions created");
     }
 
@@ -129,14 +129,14 @@ public class FixedRateBond extends Bond {
                 rule, endOfMonth,
                 firstDate, nextToLastDate);
 
-        cashFlows_ = new FixedRateLeg(schedule, accrualDayCounter)
+        cashflows_ = new FixedRateLeg(schedule, accrualDayCounter)
         .withNotionals(faceAmount)
         .withCouponRates(coupons)
         .withPaymentAdjustment(paymentConvention);
 
         addRedemptionsToCashflows(new double[]{redemption});
 
-        QL.ensure(!cashFlows().isEmpty(), "bond with no cashflows!");
+        QL.ensure(!cashflows().isEmpty(), "bond with no cashflows!");
         QL.ensure(redemptions_.size() == 1, "multiple redemptions created");
     }
 

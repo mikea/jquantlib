@@ -27,7 +27,6 @@ import static org.jquantlib.time.Month.JANUARY;
 import static org.jquantlib.time.Month.MAY;
 import static org.jquantlib.time.Month.OCTOBER;
 
-import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
@@ -163,7 +162,6 @@ public class Germany extends Calendar {
             	  impl = new EurexImpl();
                 break;
               default:
-                  QL.error(UNKNOWN_MARKET);
                   throw new LibraryException(UNKNOWN_MARKET);
             }
     }

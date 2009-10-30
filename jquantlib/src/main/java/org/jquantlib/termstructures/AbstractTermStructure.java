@@ -108,17 +108,6 @@ public abstract class AbstractTermStructure implements TermStructure {
     private Date referenceDate;
 
     /**
-     * Beware that this variable must always be accessed via {@link #calendar()} method.
-     * Extended classes have the option to redefine semantics of a calendar by keeping their own private
-     * calendar variable and providing their own version of {@link #calendar()} method. When extended
-     * classes fail to provide their version of {@link #calendar()} method, <i><b>this</b>.getCalendar</i>
-     * must throw an {@link IllegalStateException} because the private variable calendar was never initialised.
-     *
-     * @see #calendar
-     */
-    private final Calendar calendar;
-
-    /**
      * Beware that this variable must always be accessed via {@link #dayCounter()} method.
      * Extended classes have the option to redefine semantics of a day counter by keeping their own private
      * dayCounter variable and providing their own version of {@link #dayCounter()} method. When extended
@@ -158,6 +147,22 @@ public abstract class AbstractTermStructure implements TermStructure {
 
 
     //
+    // protected fields
+    //
+
+    /**
+     * Beware that this variable must always be accessed via {@link #calendar()} method.
+     * Extended classes have the option to redefine semantics of a calendar by keeping their own private
+     * calendar variable and providing their own version of {@link #calendar()} method. When extended
+     * classes fail to provide their version of {@link #calendar()} method, <i><b>this</b>.getCalendar</i>
+     * must throw an {@link IllegalStateException} because the private variable calendar was never initialised.
+     *
+     * @see #calendar
+     */
+    protected Calendar calendar;
+
+
+    //
     // public constructors
     //
 
@@ -169,7 +174,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      * @see TermStructure documentation for more details about constructors.
      */
     public AbstractTermStructure() {
-        this(Actual365Fixed.getDayCounter());
+        this(new Actual365Fixed());
     }
 
     /**
@@ -206,7 +211,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      * @see TermStructure documentation for more details about constructors.
      */
     public AbstractTermStructure(final Date referenceDate, final Calendar calendar) {
-        this(referenceDate, calendar, Actual365Fixed.getDayCounter());
+        this(referenceDate, calendar, new Actual365Fixed());
     }
 
     /**
@@ -252,7 +257,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      * @see TermStructure documentation for more details about constructors.
      */
     public AbstractTermStructure(final int settlementDays, final Calendar calendar) {
-        this(settlementDays, calendar, Actual365Fixed.getDayCounter());
+        this(settlementDays, calendar, new Actual365Fixed());
     }
 
 
@@ -293,7 +298,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      * This method performs date-range check
      */
     protected void checkRange(final Date d, final boolean extrapolate) /* @ReadOnly */ {
-        QL.require(d.gt(referenceDate()) , "date before reference date"); // QA:[RG]::verified // TODO: message
+        QL.require(d.ge(referenceDate()) , "date before reference date"); // QA:[RG]::verified // TODO: message
         QL.require(extrapolate || allowsExtrapolation() || d.lt(maxDate()) , "date is past max curve"); // QA:[RG]::verified // TODO: message
     }
 
@@ -307,11 +312,11 @@ public abstract class AbstractTermStructure implements TermStructure {
 
 
     //
-    // implements ITermStructure
+    // implements TermStructure
     //
 
     /* (non-Javadoc)
-     * @see org.jquantlib.termstructures.ITermStructure#calendar()
+     * @see org.jquantlib.termstructures.TermStructure#calendar()
      */
     @Override
     public Calendar calendar() /* @ReadOnly */ {
@@ -320,7 +325,7 @@ public abstract class AbstractTermStructure implements TermStructure {
     }
 
     /* (non-Javadoc)
-     * @see org.jquantlib.termstructures.ITermStructure#timeFromReference(org.jquantlib.util.Date)
+     * @see org.jquantlib.termstructures.TermStructure#timeFromReference(org.jquantlib.util.Date)
      */
     @Override
     public final /*@Time*/ double timeFromReference(final Date date) {
@@ -328,7 +333,7 @@ public abstract class AbstractTermStructure implements TermStructure {
     }
 
     /* (non-Javadoc)
-     * @see org.jquantlib.termstructures.ITermStructure#dayCounter()
+     * @see org.jquantlib.termstructures.TermStructure#dayCounter()
      */
     @Override
     public DayCounter dayCounter() {
@@ -337,7 +342,7 @@ public abstract class AbstractTermStructure implements TermStructure {
     }
 
     /* (non-Javadoc)
-     * @see org.jquantlib.termstructures.ITermStructure#maxTime()
+     * @see org.jquantlib.termstructures.TermStructure#maxTime()
      */
     @Override
     public /*@Time*/ double maxTime(){
@@ -345,7 +350,7 @@ public abstract class AbstractTermStructure implements TermStructure {
     }
 
     /* (non-Javadoc)
-     * @see org.jquantlib.termstructures.ITermStructure#referenceDate()
+     * @see org.jquantlib.termstructures.TermStructure#referenceDate()
      */
     @Override
     public Date referenceDate() {

@@ -97,7 +97,7 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
         // TODO: code review :: please verify against QL/C++ code
         // seems like we should have this.termStructure
 
-        termStructure.addObserver(this);
+        termStructure.currentLink().addObserver(this);
         //XXX:registerWith
         //registerWith(termStructure);
     }

@@ -21,18 +21,21 @@ package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
 import java.lang.reflect.Constructor;
 
+import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
-import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
- * @author Srinivas Hasti
+ * Finite-differences pricing engine for American-style vanilla options
  *
+ * @category vanillaengines
+ *
+ * @author Srinivas Hasti
  */
 //TODO: class comments
 //TODO: work in progress
-public class FDEngineAdapter<T extends FDVanillaEngine> extends VanillaOptionEngine {
+public class FDEngineAdapter<T extends FDVanillaEngine> extends VanillaOption.EngineImpl {
 
     //
     // private fields
@@ -57,6 +60,7 @@ public class FDEngineAdapter<T extends FDVanillaEngine> extends VanillaOptionEng
         } catch (final Exception e) {
             throw new LibraryException(e); // QA:[RG]::verified
         }
+        process.addObserver(this);
     }
 
 

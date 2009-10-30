@@ -25,26 +25,38 @@ import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.cashflow.Event;
+import org.jquantlib.instruments.OneAssetOption;
+import org.jquantlib.instruments.Option;
 import org.jquantlib.math.SampledCurve;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.finitedifferences.NullCondition;
 import org.jquantlib.methods.finitedifferences.StandardFiniteDifferenceModel;
 import org.jquantlib.methods.finitedifferences.StepCondition;
-import org.jquantlib.pricingengines.arguments.Arguments;
-import org.jquantlib.pricingengines.arguments.OneAssetOptionArguments;
-import org.jquantlib.pricingengines.results.OneAssetOptionResults;
-import org.jquantlib.pricingengines.results.Results;
+import org.jquantlib.pricingengines.PricingEngine.Arguments;
+import org.jquantlib.pricingengines.PricingEngine.Results;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 //TODO: code review
 public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
 
+
+    //
+    // protected fields
+    //
+
     protected List<Event> events;
-    private List<Double> stoppingTimes;
-    private int timeStepPerPeriod;
     protected SampledCurve prices;
     protected StepCondition<Array> stepCondition;
+
+
+    //
+    // private fields
+    //
+
+    private List<Double> stoppingTimes;
+    private int timeStepPerPeriod;
     private StandardFiniteDifferenceModel model;
+
 
     public FDMultiPeriodEngine(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints, final boolean timeDependent) {
         super(process, timeSteps, gridPoints, timeDependent);
@@ -94,9 +106,9 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
     //
 
     @Override
-    protected void setupArguments(final Arguments a){
+    protected void setupArguments(final Arguments a) {
         super.setupArguments(a);
-        final OneAssetOptionArguments args = (OneAssetOptionArguments) a;
+        final OneAssetOption.ArgumentsImpl args = (OneAssetOption.ArgumentsImpl) a;
         events.clear();
         final int n = args.exercise.size();
         for (int i=0; i<n; ++i) {
@@ -105,8 +117,10 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
     }
 
     @Override
-    public void calculate(final Results r){
-        final OneAssetOptionResults results = (OneAssetOptionResults) r;
+    public void calculate(final Results results) {
+        final OneAssetOption.ResultsImpl r = (OneAssetOption.ResultsImpl) results;
+        final Option.GreeksImpl greeks = r.greeks();
+        // final Option.MoreGreeksImpl moreGreeks = r.moreGreeks();
         double beginDate, endDate;
         final int dateNumber = stoppingTimes.size();
         boolean lastDateIsResTime = false;
@@ -189,10 +203,10 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
             executeIntermediateStep(0);
         }
 
-        results.value = prices.valueAtCenter();
-        results.delta = prices.firstDerivativeAtCenter();
-        results.gamma = prices.secondDerivativeAtCenter();
-        results.addAdditionalResult("priceCurve", prices);
+        r.value = prices.valueAtCenter();
+        greeks.delta = prices.firstDerivativeAtCenter();
+        greeks.gamma = prices.secondDerivativeAtCenter();
+        r.additionalResults().put("priceCurve", prices);
     }
 
 }

@@ -77,7 +77,7 @@ import org.jquantlib.pricingengines.vanilla.JuQuadraticApproximationEngine;
 import org.jquantlib.pricingengines.vanilla.finitedifferences.FDAmericanEngine;
 import org.jquantlib.pricingengines.vanilla.finitedifferences.FDShoutEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
-import org.jquantlib.processes.StochasticProcess;
+import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
@@ -109,15 +109,15 @@ public class AmericanOptionTest {
 
         final Date today = new Settings().evaluationDate();
 
-        final DayCounter dc = Actual360.getDayCounter();
-        final SimpleQuote spot = new SimpleQuote(0.0);
-        final SimpleQuote qRate = new SimpleQuote(0.0);
-        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
-        final SimpleQuote rRate = new SimpleQuote(0.0);
-        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
-        final SimpleQuote vol = new SimpleQuote(0.0);
-        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
-        final PricingEngine engine = new BjerksundStenslandApproximationEngine();
+        final DayCounter dc = new Actual360();
+
+        final SimpleQuote           spot  = new SimpleQuote(0.0);
+        final SimpleQuote           qRate = new SimpleQuote(0.0);
+        final YieldTermStructure    qTS   = Utilities.flatRate(today, qRate, dc);
+        final SimpleQuote           rRate = new SimpleQuote(0.0);
+        final YieldTermStructure    rTS   = Utilities.flatRate(today, rRate, dc);
+        final SimpleQuote           vol   = new SimpleQuote(0.0);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, vol, dc);
 
         final double /* @Real */tolerance = 1.0e-4;
 
@@ -134,10 +134,17 @@ public class AmericanOptionTest {
             rRate.setValue(value.r);
             vol.setValue(value.v);
 
-            final StochasticProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
-                    new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(volTS));
-            final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
-            final double /* @Real */calculated = option.getNPV();
+            final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
+                    new Handle<Quote>(spot),
+                    new Handle<YieldTermStructure>(qTS),
+                    new Handle<YieldTermStructure>(rTS),
+                    new Handle<BlackVolTermStructure>(volTS));
+            final PricingEngine engine = new BjerksundStenslandApproximationEngine(stochProcess);
+
+            final VanillaOption option = new VanillaOption(payoff, exercise);
+            option.setPricingEngine(engine);
+
+            final double /* @Real */calculated = option.NPV();
             final double /* @Real */error = Math.abs(calculated - value.result);
 
             if (error > tolerance) {
@@ -201,16 +208,15 @@ public class AmericanOptionTest {
 
         final Date today = new Settings().evaluationDate();
 
-        final DayCounter dc = Actual360.getDayCounter();
-        final SimpleQuote spot = new SimpleQuote(0.0);
-        final SimpleQuote qRate = new SimpleQuote(0.0);
-        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
-        final SimpleQuote rRate = new SimpleQuote(0.0);
-        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
-        final SimpleQuote vol = new SimpleQuote(0.0);
-        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
+        final DayCounter dc = new Actual360();
 
-        final PricingEngine engine = new BaroneAdesiWhaleyApproximationEngine();
+        final SimpleQuote           spot  = new SimpleQuote(0.0);
+        final SimpleQuote           qRate = new SimpleQuote(0.0);
+        final YieldTermStructure    qTS   = Utilities.flatRate(today, qRate, dc);
+        final SimpleQuote           rRate = new SimpleQuote(0.0);
+        final YieldTermStructure    rTS   = Utilities.flatRate(today, rRate, dc);
+        final SimpleQuote           vol   = new SimpleQuote(0.0);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, vol, dc);
 
         final double /* @Real */tolerance = 3.0e-3;
 
@@ -224,11 +230,18 @@ public class AmericanOptionTest {
             rRate.setValue(value.r);
             vol.setValue(value.v);
 
-            final StochasticProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
-                    new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(
-                            volTS));
-            final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
-            final double /* @Real */calculated = option.getNPV();
+            final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
+                    new Handle<Quote>(spot),
+                    new Handle<YieldTermStructure>(qTS),
+                    new Handle<YieldTermStructure>(rTS),
+                    new Handle<BlackVolTermStructure>(volTS));
+
+            final PricingEngine engine = new BaroneAdesiWhaleyApproximationEngine(stochProcess);
+
+            final VanillaOption option = new VanillaOption(payoff, exercise);
+            option.setPricingEngine(engine);
+
+            final double /* @Real */calculated = option.NPV();
             final double /* @Real */error = Math.abs(calculated - value.result);
 
             if (error > tolerance) {
@@ -319,16 +332,15 @@ public class AmericanOptionTest {
 
         final Date today = new Settings().evaluationDate();
 
-        final DayCounter dc = Actual360.getDayCounter();
-        final SimpleQuote spot = new SimpleQuote(0.0);
-        final SimpleQuote qRate = new SimpleQuote(0.0);
-        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
-        final SimpleQuote rRate = new SimpleQuote(0.0);
-        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
-        final SimpleQuote vol = new SimpleQuote(0.0);
-        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
+        final DayCounter dc = new Actual360();
 
-        final PricingEngine engine = new JuQuadraticApproximationEngine();
+        final SimpleQuote           spot  = new SimpleQuote(0.0);
+        final SimpleQuote           qRate = new SimpleQuote(0.0);
+        final YieldTermStructure    qTS   = Utilities.flatRate(today, qRate, dc);
+        final SimpleQuote           rRate = new SimpleQuote(0.0);
+        final YieldTermStructure    rTS   = Utilities.flatRate(today, rRate, dc);
+        final SimpleQuote           vol   = new SimpleQuote(0.0);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, vol, dc);
 
         final double tolerance = 1.0e-3;
 
@@ -343,11 +355,18 @@ public class AmericanOptionTest {
             rRate.setValue(juValue.r);
             vol.setValue(juValue.v);
 
-            final StochasticProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot),
-                    new Handle<YieldTermStructure>(qTS), new Handle<YieldTermStructure>(rTS), new Handle<BlackVolTermStructure>(
-                            volTS));
-            final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
-            final double calculated = option.getNPV();
+            final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
+                    new Handle<Quote>(spot),
+                    new Handle<YieldTermStructure>(qTS),
+                    new Handle<YieldTermStructure>(rTS),
+                    new Handle<BlackVolTermStructure>(volTS));
+
+            final PricingEngine engine = new JuQuadraticApproximationEngine(stochProcess);
+
+            final VanillaOption option = new VanillaOption(payoff, exercise);
+            option.setPricingEngine(engine);
+
+            final double calculated = option.NPV();
             final double error = Math.abs(calculated - juValue.result);
 
             if (error > tolerance) {
@@ -440,15 +459,16 @@ public class AmericanOptionTest {
 
         for (final AmericanOptionData juValue : juValues) {
 
-            final DayCounter dc = Actual360.getDayCounter();
+            final DayCounter dc = new Actual360();
 
-            final SimpleQuote spot = new SimpleQuote(0.0);
-            final SimpleQuote qRate = new SimpleQuote(0.0);
-            final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
-            final SimpleQuote rRate = new SimpleQuote(0.0);
-            final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
-            final SimpleQuote vol = new SimpleQuote(0.0);
-            final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
+            final SimpleQuote           spot  = new SimpleQuote(0.0);
+            final SimpleQuote           qRate = new SimpleQuote(0.0);
+            final YieldTermStructure    qTS   = Utilities.flatRate(today, qRate, dc);
+            final SimpleQuote           rRate = new SimpleQuote(0.0);
+            final YieldTermStructure    rTS   = Utilities.flatRate(today, rRate, dc);
+            final SimpleQuote           vol   = new SimpleQuote(0.0);
+            final BlackVolTermStructure volTS = Utilities.flatVol(today, vol, dc);
+
             final StrikedTypePayoff payoff = new PlainVanillaPayoff(juValue.type, juValue.strike);
             final Date exDate = today.add(timeToDays(juValue.t));
             final Exercise exercise = new AmericanExercise(today, exDate);
@@ -465,8 +485,10 @@ public class AmericanOptionTest {
                     new Handle<BlackVolTermStructure>(volTS));
 
             final PricingEngine engine = new FDAmericanEngine(stochProcess, 100, 100);
-            final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
-            final double calculated = option.getNPV();
+            final VanillaOption option = new VanillaOption(payoff, exercise);
+            option.setPricingEngine(engine);
+
+            final double calculated = option.NPV();
             final double error = Math.abs(calculated - juValue.result);
 
             if (error > tolerance) {
@@ -508,16 +530,16 @@ public class AmericanOptionTest {
         final int years[] = { 1, 2 };
         final double vols[] = { 0.11, 0.50, 1.20 };
 
-        final DayCounter dc = Actual360.getDayCounter();
+        final DayCounter dc = new Actual360();
         final Date today = new Settings().evaluationDate();
 
-        final SimpleQuote spot = new SimpleQuote(0.0);
-        final SimpleQuote qRate = new SimpleQuote(0.0);
-        final YieldTermStructure qTS = Utilities.flatRate(today, new Handle<Quote>(qRate), dc);
-        final SimpleQuote rRate = new SimpleQuote(0.0);
-        final YieldTermStructure rTS = Utilities.flatRate(today, new Handle<Quote>(rRate), dc);
-        final SimpleQuote vol = new SimpleQuote(0.0);
-        final BlackVolTermStructure volTS = Utilities.flatVol(today, new Handle<Quote>(vol), dc);
+        final SimpleQuote           spot  = new SimpleQuote(0.0);
+        final SimpleQuote           qRate = new SimpleQuote(0.0);
+        final YieldTermStructure    qTS   = Utilities.flatRate(today, qRate, dc);
+        final SimpleQuote           rRate = new SimpleQuote(0.0);
+        final YieldTermStructure    rTS   = Utilities.flatRate(today, rRate, dc);
+        final SimpleQuote           vol   = new SimpleQuote(0.0);
+        final BlackVolTermStructure volTS = Utilities.flatVol(today, vol, dc);
 
         for (final Type type : types) {
             for (final double strike : strikes) {
@@ -535,13 +557,15 @@ public class AmericanOptionTest {
 
                     PricingEngine engine = null;
                     try {
-                        final Constructor<? extends PricingEngine> c = klass.getConstructor(BlackScholesMertonProcess.class);
+                        final Constructor<? extends PricingEngine> c = klass.getConstructor(GeneralizedBlackScholesProcess.class);
                         engine = c.newInstance(stochProcess);
                     } catch (final Exception e) {
                         e.printStackTrace();
                         fail("failed to create pricing engine");
                     }
-                    final VanillaOption option = new VanillaOption(stochProcess, payoff, exercise, engine);
+
+                    final VanillaOption option = new VanillaOption(payoff, exercise);
+                    option.setPricingEngine(engine);
 
                     for (final double u : underlyings) {
                         for (final double q : qRates) {
@@ -552,7 +576,7 @@ public class AmericanOptionTest {
                                     rRate.setValue(r);
                                     vol.setValue(v);
                                     // FLOATING_POINT_EXCEPTION
-                                    final double value = option.getNPV();
+                                    final double value = option.NPV();
                                     final double delta = option.delta();
                                     final double gamma = option.gamma();
                                     //final double theta = option.theta();
@@ -565,10 +589,10 @@ public class AmericanOptionTest {
                                         // perturb spot and get delta and gamma
                                         final double du = u * 1.0e-4;
                                         spot.setValue(u + du);
-                                        final double value_p = option.getNPV();
+                                        final double value_p = option.NPV();
                                         final double delta_p = option.delta();
                                         spot.setValue(u - du);
-                                        final double value_m = option.getNPV();
+                                        final double value_m = option.NPV();
                                         final double delta_m = option.delta();
                                         spot.setValue(u);
                                         expected.put("delta", (value_p - value_m) / (2 * du));

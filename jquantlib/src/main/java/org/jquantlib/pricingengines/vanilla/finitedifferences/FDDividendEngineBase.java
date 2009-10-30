@@ -40,13 +40,13 @@
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
 import org.jquantlib.cashflow.Dividend;
-import org.jquantlib.pricingengines.arguments.Arguments;
+import org.jquantlib.pricingengines.PricingEngine.Arguments;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.time.Date;
 
 /**
  * <p>Abstract base class for dividend engines. </p>
- * 
+ *
 @Todo <p>The dividend class really needs to be made more sophisticated to distinguish between fixed dividends and fractional dividends </p>
  */
 public abstract class FDDividendEngineBase extends FDMultiPeriodEngine {

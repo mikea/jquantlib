@@ -74,22 +74,20 @@ public class LocalVolSurface extends LocalVolTermStructure {
             final Handle<YieldTermStructure> riskFreeTS,
             final Handle<YieldTermStructure> dividendTS,
             final Handle<? extends Quote> underlying) {
-        super(blackTS.currentLink().dayCounter());
+
+        super(blackTS.currentLink().calendar(),
+              blackTS.currentLink().businessDayConvention(),
+              blackTS.currentLink().dayCounter());
+
         this.blackTS_ = blackTS;
         this.riskFreeTS_ = riskFreeTS;
         this.dividendTS_ = dividendTS;
         this.underlying_ = underlying;
 
-
-        this.blackTS_.addObserver(this);
-        this.riskFreeTS_.addObserver(this);
-        this.dividendTS_.addObserver(this);
-        this.underlying_.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.blackTS_);
-        //registerWith(this.riskFreeTS_);
-        //registerWith(this.dividendTS_);
-        //registerWith(this.underlying_);
+        this.blackTS_.currentLink().addObserver(this);
+        this.riskFreeTS_.currentLink().addObserver(this);
+        this.dividendTS_.currentLink().addObserver(this);
+        this.underlying_.currentLink().addObserver(this);
     }
 
     public LocalVolSurface(
@@ -97,19 +95,19 @@ public class LocalVolSurface extends LocalVolTermStructure {
             final Handle<YieldTermStructure> riskFreeTS,
             final Handle<YieldTermStructure> dividendTS,
             final /*@Price*/ double underlying) {
-        super(blackTS.currentLink().dayCounter());
+
+        super(blackTS.currentLink().calendar(),
+              blackTS.currentLink().businessDayConvention(),
+              blackTS.currentLink().dayCounter());
+
         this.blackTS_ = blackTS;
         this.riskFreeTS_ = riskFreeTS;
         this.dividendTS_ = dividendTS;
         this.underlying_ = new Handle<Quote>(new SimpleQuote(underlying));
 
-        this.blackTS_.addObserver(this);
-        this.riskFreeTS_.addObserver(this);
-        this.dividendTS_.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.blackTS_);
-        //registerWith(this.riskFreeTS_);
-        //registerWith(this.dividendTS_);
+        this.blackTS_.currentLink().addObserver(this);
+        this.riskFreeTS_.currentLink().addObserver(this);
+        this.dividendTS_.currentLink().addObserver(this);
     }
 
 

@@ -14,74 +14,100 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
+import org.jquantlib.instruments.OneAssetOption;
+import org.jquantlib.instruments.Option;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.finitedifferences.NullCondition;
-import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 //TODO: class comments
 //TODO: work in progress
-public class FDBermudianEngine extends VanillaOptionEngine {
+//TODO: refactor FDBermudianEngine to FDBermudanEngine
+public class FDBermudanEngine extends OneAssetOption.EngineImpl {
 
     //
     // private fields
     //
-    
-    private double extraTermInBermuda;
-    private FDMultiPeriodEngine fdVanillaEngine;
 
-    
+    private double extraTermInBermuda; // TODO: code review
+    private final FDMultiPeriodEngine fdVanillaEngine;
+
+
     //
     // public constructors
     //
-    
-    public FDBermudianEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
+
+    public FDBermudanEngine(
+            final GeneralizedBlackScholesProcess process) {
+        this(process, 100,100, false);
+    }
+
+    public FDBermudanEngine(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps) {
+        this(process, timeSteps, 100, false);
+    }
+
+    public FDBermudanEngine(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps,
+            final int gridPoints) {
+        this(process, timeSteps, gridPoints, false);
+    }
+
+    public FDBermudanEngine(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps,
+            final int gridPoints,
+            final boolean timeDependent) {
         fdVanillaEngine = new FDBermudianMPEngine(process, timeSteps, gridPoints, timeDependent);
     }
 
-    
+
     //
     // private methods
     //
-    
+
     // TODO: verify how this method is called
     private void initializeStepCondition() {
         fdVanillaEngine.stepCondition = new NullCondition<Array>();
     }
 
     // TODO: verify how this method is called
-    private void executeIntermediateStep(int step) {
-        int size = fdVanillaEngine.intrinsicValues.size();
+    private void executeIntermediateStep(final int step) {
+        final int size = fdVanillaEngine.intrinsicValues.size();
         for (int j = 0; j < size; j++) {
             fdVanillaEngine.prices.values().set(j, Math.max(fdVanillaEngine.prices.value(j), fdVanillaEngine.intrinsicValues.value(j)));
         }
     }
-    
-    
+
+
     //
     // implements PricingEngine
     //
-    
+
     @Override
     public void calculate() {
-        fdVanillaEngine.setupArguments(arguments);
+        final Option.ArgumentsImpl a = (Option.ArgumentsImpl)arguments;
+        fdVanillaEngine.setupArguments(a);
         fdVanillaEngine.calculate(results);
     }
 
-    
+
     //
     // private inner classes
     //
-    
+
     private static class FDBermudianMPEngine extends FDMultiPeriodEngine {
-        public FDBermudianMPEngine(GeneralizedBlackScholesProcess process, int timeSteps, int gridPoints, boolean timeDependent) {
+
+        public FDBermudianMPEngine(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints, final boolean timeDependent) {
             super(process, timeSteps, gridPoints, timeDependent);
         }
 
@@ -89,14 +115,14 @@ public class FDBermudianEngine extends VanillaOptionEngine {
         //
         // overrides FDMultiPeriodEngine
         //
-        
+
         @Override
-        protected void executeIntermediateStep(int step) {
-            int size = intrinsicValues.size();
+        protected void executeIntermediateStep(final int step) {
+            final int size = intrinsicValues.size();
             for (int j = 0; j < size; j++) {
                 prices.values().set(j, Math.max(prices.value(j), intrinsicValues.value(j)));
             }
         }
     }
-    
+
 }

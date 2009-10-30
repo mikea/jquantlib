@@ -33,15 +33,15 @@ import org.jquantlib.time.calendars.NullCalendar;
 public abstract class CapVolatilityStructure extends AbstractTermStructure {
 
     public CapVolatilityStructure(final DayCounter dc) {
-        super(dc == null ? Actual365Fixed.getDayCounter() : dc);
+        super(dc == null ? new Actual365Fixed() : dc);
     }
 
     public CapVolatilityStructure(final Date referenceDate, final Calendar cal, final DayCounter dc) {
-        super(referenceDate, cal == null ? new NullCalendar() : cal, dc == null ? Actual365Fixed.getDayCounter() : dc);
+        super(referenceDate, cal == null ? new NullCalendar() : cal, dc == null ? new Actual365Fixed() : dc);
     }
 
     public CapVolatilityStructure(final int settlementDays, final Calendar cal, final DayCounter dc) {
-        super(settlementDays, cal == null ? new NullCalendar() : cal, dc == null ? Actual365Fixed.getDayCounter() : dc);
+        super(settlementDays, cal == null ? new NullCalendar() : cal, dc == null ? new Actual365Fixed() : dc);
     }
 
     public double volatility(final Date end, final double strike) {

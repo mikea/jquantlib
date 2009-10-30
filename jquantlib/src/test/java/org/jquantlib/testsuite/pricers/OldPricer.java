@@ -82,7 +82,7 @@ public class OldPricer {
 
         clock.startClock();
 
-        final DayCounter dc = Actual360.getDayCounter();
+        final DayCounter dc = new Actual360();
 
         final long seed = 3456789;
 

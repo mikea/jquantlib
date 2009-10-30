@@ -41,22 +41,23 @@ package org.jquantlib.pricingengines;
 
 import java.util.List;
 
-import org.jquantlib.pricingengines.arguments.Arguments;
-import org.jquantlib.pricingengines.results.Results;
+import org.jquantlib.instruments.Instrument;
+import org.jquantlib.pricingengines.PricingEngine.Arguments;
+import org.jquantlib.pricingengines.PricingEngine.Results;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
 /**
- * This is a generic definition of a PriceEngine which takes its arguments from an {@link Arguments} structure and
- * returns its results in a {@link Results} structure.
- * 
+ * This is a generic definition of a PriceEngine which takes its arguments from an {@link Arguments} structure and returns its
+ * results in a {@link Results} structure.
+ *
  * @param <A> is an parameterized Arguments object
  * @param <R> is an parameterized Results object
- * 
+ *
  * @author Richard Gomes
  */
-public abstract class GenericEngine<A extends Arguments, R extends Results> implements PricingEngine, Observer {
+public abstract class GenericEngine<A extends Instrument.Arguments, R extends Instrument.Results> implements PricingEngine, Observer {
 
     //
     // protected fields
@@ -64,7 +65,6 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
 
     protected A arguments;
     protected R results;
-
 
     //
     // protected constructors
@@ -75,6 +75,13 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
         this.results = results;
     }
 
+    //
+    // public methods
+    //
+
+    public void update() {
+        notifyObservers();
+    }
 
     //
     // implements PricingEngine
@@ -95,16 +102,14 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
         results.reset();
     }
 
-
     //
     // implements Observer
     //
 
     @Override
     public void update(final Observable o, final Object arg) {
-        notifyObservers();
+        update();
     }
-
 
     //
     // implements Observable
@@ -112,7 +117,7 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
 
     /**
      * Implements multiple inheritance via delegate pattern to an inner class
-     * 
+     *
      * @see Observable
      * @see DefaultObservable
      */
@@ -151,13 +156,6 @@ public abstract class GenericEngine<A extends Arguments, R extends Results> impl
     @Override
     public final List<Observer> getObservers() {
         return delegatedObservable.getObservers();
-    }
-
-
-    @Override
-    public void calculate() {
-        // TODO Auto-generated method stub
-
     }
 
 }

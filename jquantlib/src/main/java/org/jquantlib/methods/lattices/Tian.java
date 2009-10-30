@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -29,9 +29,9 @@ import org.jquantlib.processes.StochasticProcess1D;
 
 /**
  * Tian tree: third moment matching, multiplicative approach
- * 
+ *
  * @category lattices
- * 
+ *
  * @author Srinivas Hasti
  */
 public class Tian extends BinomialTree {
@@ -41,11 +41,15 @@ public class Tian extends BinomialTree {
 	protected double pu;
 	protected double pd;
 
-	public Tian(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps, @Unused @Price final double strike) {
+	public Tian(
+	        final StochasticProcess1D process,
+	        @Time final double end,
+	        @NonNegative final int steps,
+	        @Unused @Price final double strike) {
 		super(process, end, steps);
 
-		double q = Math.exp(process.variance(0.0, x0, dt));
-		double r = Math.exp(driftPerStep) * Math.sqrt(q);
+		final double q = Math.exp(process.variance(0.0, x0, dt));
+		final double r = Math.exp(driftPerStep) * Math.sqrt(q);
 
 		up = 0.5 * r * q * (q + 1 + Math.sqrt(q * q + 2 * q - 3));
 		down = 0.5 * r * q * (q + 1 - Math.sqrt(q * q + 2 * q - 3));
@@ -57,16 +61,18 @@ public class Tian extends BinomialTree {
 		// treeCentering_ = (up_+down_)/2.0;
 		// up_ = up_-treeCentering_;
 
-		if (pu < 0.0 || pu > 1.0) throw new IllegalStateException("negative probablity");
+		if (pu < 0.0 || pu > 1.0) {
+            throw new IllegalStateException("negative probablity");
+        }
 	}
 
 	@Override
-	public double probability(int i, int index, int branch) {
+	public double probability(final int i, final int index, final int branch) {
 		return (branch == 1 ? pu : pd);
 	}
 
 	@Override
-	public double underlying(int i, int index) {
+	public double underlying(final int i, final int index) {
 		return x0 * Math.pow(down, i - index) * Math.pow(up, index);
 	}
 

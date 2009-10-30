@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -55,9 +55,9 @@ import org.jquantlib.time.calendars.Target;
  * <tt>zeroYieldImpl(Time, bool)</tt> method in derived classes. Discount and forward are calculated from zero yields.
  * <p>
  * Rates are assumed to be annual continuous compounding.
- * 
+ *
  * @see TermStructure documentation for issues regarding constructors.
- * 
+ *
  * @author Richard Gomes
  */
 public abstract class ZeroYieldStructure extends AbstractYieldTermStructure {
@@ -66,132 +66,140 @@ public abstract class ZeroYieldStructure extends AbstractYieldTermStructure {
 	// public constructors
 	//
 
-	
+
 	/**
 	 * @see TermStructure documentation for issues regarding constructors.
-	 * 
+	 *
 	 * @param dc
 	 */
 	public ZeroYieldStructure() {
-		this(Actual365Fixed.getDayCounter());
-		if (System.getProperty("EXPERIMENTAL") == null)
+		this(new Actual365Fixed());
+		if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 	}
 
 	/**
 	 * @see TermStructure documentation for issues regarding constructors.
-	 * 
+	 *
 	 * @param dc
 	 */
 	public ZeroYieldStructure(final DayCounter dc) {
 		super(dc);
-		if (System.getProperty("EXPERIMENTAL") == null)
+		if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 	}
 
 	// ---
-	
+
 	/**
 	 * @see TermStructure documentation for issues regarding constructors.
-	 * 
+	 *
 	 * @param refDate
 	 * @param cal
 	 * @param dc
 	 */
 	public ZeroYieldStructure(final Date refDate, final Calendar cal) {
-		this(refDate, cal, Actual365Fixed.getDayCounter());
-		if (System.getProperty("EXPERIMENTAL") == null)
+		this(refDate, cal, new Actual365Fixed());
+		if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 	}
 
 	/**
 	 * @see TermStructure documentation for issues regarding constructors.
-	 * 
+	 *
 	 * @param refDate
 	 * @param cal
 	 * @param dc
 	 */
 	public ZeroYieldStructure(final Date refDate, final DayCounter dc) {
 		this(refDate, new Target(), dc); // FIXME: code review : default calendar
-		if (System.getProperty("EXPERIMENTAL") == null)
+		if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 	}
 
 	/**
 	 * @see TermStructure documentation for issues regarding constructors.
-	 * 
+	 *
 	 * @param refDate
 	 * @param cal
 	 * @param dc
 	 */
 	public ZeroYieldStructure(final Date refDate) {
-		this(refDate, new Target(), Actual365Fixed.getDayCounter()); // FIXME: code review : default calendar
-		if (System.getProperty("EXPERIMENTAL") == null)
+		this(refDate, new Target(), new Actual365Fixed()); // FIXME: code review : default calendar
+		if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 	}
 
 
 	/**
 	 * @see TermStructure documentation for issues regarding constructors.
-	 * 
+	 *
 	 * @param refDate
 	 * @param cal
 	 * @param dc
 	 */
 	public ZeroYieldStructure(final Date refDate, final Calendar cal, final DayCounter dc) {
 		super(refDate, cal, dc);
-		if (System.getProperty("EXPERIMENTAL") == null)
+		if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 	}
 
 	// ---
-	
-	
+
+
 	/**
 	 * @see TermStructure documentation for issues regarding constructors.
-	 * 
+	 *
 	 * @param settlementDays
 	 * @param cal
 	 * @param dc
 	 */
 	public ZeroYieldStructure(final int settlementDays, final Calendar cal) {
-		this(settlementDays, cal, Actual365Fixed.getDayCounter());
-		if (System.getProperty("EXPERIMENTAL") == null)
+		this(settlementDays, cal, new Actual365Fixed());
+		if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 	}
 
 	/**
 	 * @see TermStructure documentation for issues regarding constructors.
-	 * 
+	 *
 	 * @param settlementDays
 	 * @param cal
 	 * @param dc
 	 */
 	public ZeroYieldStructure(final int settlementDays, final Calendar cal, final DayCounter dc) {
 		super(settlementDays, cal, dc);
-		if (System.getProperty("EXPERIMENTAL") == null)
+		if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 	}
 
-	
+
 	//
 	// protected methods
 	//
-	
+
 	/**
 	 * Returns the discount factor for the given date calculating it from the zero yield.
 	 */
 	@Override
-    protected /*@DiscountFactor*/ double discountImpl(/*@Time*/ double t) /* @ReadOnly */ {
-        /*@Rate*/ double r = zeroYieldImpl(t);
+    protected /*@DiscountFactor*/ double discountImpl(/*@Time*/ final double t) /* @ReadOnly */ {
+        /*@Rate*/ final double r = zeroYieldImpl(t);
         return Math.exp(-r*t);
     }
 
-	
+
 	//
 	// abstract methods
 	//
-	
+
 	protected abstract /*@Rate*/ double zeroYieldImpl(/*@Time*/ double t) /* @ReadOnly */;
-	
+
 }

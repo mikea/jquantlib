@@ -3,7 +3,7 @@
  Copyright (C) 2008 Tim Swetonic
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -16,7 +16,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -28,6 +28,7 @@ import java.util.Vector;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
 
+//TODO: http://bugs.jquantlib.org/view.php?id=394
 public class TrinomialTree extends Tree {
 
 	public static final Branches branches = Branches.TRINOMIAL;
@@ -36,35 +37,35 @@ public class TrinomialTree extends Tree {
 	protected double x0_;
 	protected Vector<Double> dx_ = new Vector<Double>();
 	protected TimeGrid timeGrid_;
-	
+
 	public TrinomialTree(final StochasticProcess1D process, final TimeGrid timeGrid) {
 	    this(process, timeGrid, false);
 	}
-	
-	public TrinomialTree(final StochasticProcess1D process, final TimeGrid timeGrid, boolean isPositive) {
+
+	public TrinomialTree(final StochasticProcess1D process, final TimeGrid timeGrid, final boolean isPositive) {
 		super(timeGrid.size());
 		dx_.add(new Double(1));
 		dx_.add(new Double(0.0));
 		timeGrid_ = timeGrid;
 		x0_ = process.x0();
 
-		int nTimeSteps = timeGrid.size() - 1;
+		final int nTimeSteps = timeGrid.size() - 1;
 		Integer jMin = 0;
 		Integer jMax = 0;
 
 		for (int i = 0; i < nTimeSteps; i++) {
-			double t = timeGrid.at(i);
-			double dt = timeGrid.dt(i);
+			final double t = timeGrid.at(i);
+			final double dt = timeGrid.dt(i);
 
 			// Variance must be independent of x
-			double v2 = process.variance(t, 0.0, dt);
-			/* Volatility */double v = Math.sqrt(v2);
+			final double v2 = process.variance(t, 0.0, dt);
+			/* Volatility */final double v = Math.sqrt(v2);
 			dx_.add(v * Math.sqrt(3.0));
 
-			Branching branching = new Branching();
+			final Branching branching = new Branching();
 			for (int j = jMin; j <= jMax; j++) {
-				double x = x0_ + j * dx_.get(i);
-				double m = process.expectation(t, x, dt);
+				final double x = x0_ + j * dx_.get(i);
+				final double m = process.expectation(t, x, dt);
 				int temp = (int) Math.floor((m - x0_) / dx_.get(i + 1) + 0.5);
 
 				if (isPositive) {
@@ -73,13 +74,13 @@ public class TrinomialTree extends Tree {
 					}
 				}
 
-				double e = m - (x0_ + temp * dx_.get(i + 1));
-				double e2 = e * e;
-				double e3 = e * Math.sqrt(3.0);
+				final double e = m - (x0_ + temp * dx_.get(i + 1));
+				final double e2 = e * e;
+				final double e3 = e * Math.sqrt(3.0);
 
-				double p1 = (1.0 + e2 / v2 - e3 / v) / 6.0;
-				double p2 = (2.0 - e2 / v2) / 3.0;
-				double p3 = (1.0 + e2 / v2 + e3 / v) / 6.0;
+				final double p1 = (1.0 + e2 / v2 - e3 / v) / 6.0;
+				final double p2 = (2.0 - e2 / v2) / 3.0;
+				final double p3 = (1.0 + e2 / v2 + e3 / v) / 6.0;
 
 				branching.add(temp, p1, p2, p3);
 			}
@@ -91,7 +92,7 @@ public class TrinomialTree extends Tree {
 
 	}
 
-	public double dx(int i) {
+	public double dx(final int i) {
 		return dx_.get(i).doubleValue();
 	}
 
@@ -100,33 +101,34 @@ public class TrinomialTree extends Tree {
 	}
 
 	@Override
-	public int size(int i) {
+	public int size(final int i) {
 		return i == 0 ? 1 : branchings_.get(i - 1).size();
 	}
 
 	@Override
-	public double underlying(int i, int index) {
-		if (i == 0)
-			return x0_;
-		else
-			return x0_ + (branchings_.get(i - 1).jMin() + (double) (index))
+	public double underlying(final int i, final int index) {
+		if (i == 0) {
+            return x0_;
+        } else {
+            return x0_ + (branchings_.get(i - 1).jMin() + (double) (index))
 					* dx(i);
+        }
 	}
 
 	@Override
-	public int descendant(int i, int index, int branch) {
+	public int descendant(final int i, final int index, final int branch) {
 		return branchings_.get(i).descendant(index, branch);
 	}
 
 	@Override
-	public double probability(int i, int index, int branch) {
+	public double probability(final int i, final int index, final int branch) {
 		return branchings_.get(i).probability(index, branch);
 	}
 
 	private static class Branching {
 
-		private Vector<Integer> k_ = new Vector<Integer>();
-		private Vector<Vector<Double>> probs_ = new Vector<Vector<Double>>(3);
+		private final Vector<Integer> k_ = new Vector<Integer>();
+		private final Vector<Vector<Double>> probs_ = new Vector<Vector<Double>>(3);
 		private int kMin_, jMin_, kMax_, jMax_;
 
 		public Branching() {
@@ -136,11 +138,11 @@ public class TrinomialTree extends Tree {
 			jMax_ = Integer.MIN_VALUE;
 		}
 
-		public int descendant(int index, int branch) {
+		public int descendant(final int index, final int branch) {
 			return k_.elementAt(index) - jMin_ - 1 + branch;
 		}
 
-		public double probability(int index, int branch) {
+		public double probability(final int index, final int branch) {
 			return probs_.elementAt(branch).elementAt(index);
 		}
 
@@ -156,12 +158,12 @@ public class TrinomialTree extends Tree {
 			return jMax_;
 		}
 
-		public void add(int k, double p1, double p2, double p3) {
+		public void add(final int k, final double p1, final double p2, final double p3) {
 			// store
 			k_.add(k);
-			Vector<Double> v1 = new Vector<Double>();
-			Vector<Double> v2 = new Vector<Double>();
-			Vector<Double> v3 = new Vector<Double>();
+			final Vector<Double> v1 = new Vector<Double>();
+			final Vector<Double> v2 = new Vector<Double>();
+			final Vector<Double> v3 = new Vector<Double>();
 			v1.add(new Double(p1));
 			v2.add(new Double(p2));
 			v3.add(new Double(p3));

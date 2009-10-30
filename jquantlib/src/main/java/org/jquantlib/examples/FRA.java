@@ -175,7 +175,7 @@ public class FRA {
 
         // Any DayCounter would be fine.
         // ActualActual::ISDA ensures that 30 years is 30.0
-        final DayCounter termStructureDayCounter = ActualActual.getDayCounter(Convention.ISDA);
+        final DayCounter termStructureDayCounter = new ActualActual(Convention.ISDA);
 
         final double tolerance = 1.0e-15;
 

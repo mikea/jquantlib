@@ -74,7 +74,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      * @see TermStructure#TermStructure() documentation for issues regarding constructors.
      */
     protected AbstractYieldTermStructure() {
-        this(Actual365Fixed.getDayCounter());
+        this(new Actual365Fixed());
     }
 
     /**
@@ -117,7 +117,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      * @see YieldTermStructure#YieldTermStructure(Date, Calendar, DayCounter)
      */
     protected AbstractYieldTermStructure(final Date referenceDate, final Calendar cal) {
-        super(referenceDate, cal, Actual365Fixed.getDayCounter());
+        super(referenceDate, cal, new Actual365Fixed());
     }
 
     /**
@@ -142,7 +142,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      * @see YieldTermStructure#YieldTermStructure(Date, Calendar, DayCounter)
      */
     protected AbstractYieldTermStructure(final Date referenceDate) {
-        super(referenceDate, new Target(), Actual365Fixed.getDayCounter());
+        super(referenceDate, new Target(), new Actual365Fixed());
     }
 
     /**
@@ -167,7 +167,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      * @see YieldTermStructure#YieldTermStructure(int, Calendar, DayCounter)
      */
     protected AbstractYieldTermStructure(final int settlementDays, final Calendar cal) {
-        super(settlementDays, cal, Actual365Fixed.getDayCounter());
+        super(settlementDays, cal, new Actual365Fixed());
     }
 
     /**
@@ -192,7 +192,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      * @see YieldTermStructure#YieldTermStructure(int, Calendar, DayCounter)
      */
     protected AbstractYieldTermStructure(final int settlementDays) {
-        super(settlementDays, new Target(), Actual365Fixed.getDayCounter());
+        super(settlementDays, new Target(), new Actual365Fixed());
     }
 
 

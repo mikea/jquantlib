@@ -42,6 +42,8 @@
 package org.jquantlib.instruments;
 
 import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.Visitor;
 
 /**
  * Plain-vanilla payoff
@@ -55,9 +57,23 @@ import org.jquantlib.lang.exceptions.LibraryException;
  * @author Richard Gomes
  */
 public class PlainVanillaPayoff extends StrikedTypePayoff {
+
+    //
+    // public constructors
+    //
+
 	public PlainVanillaPayoff(final Option.Type type, final /*@Price*/ double strike) {
 		super(type, strike);
 	}
+
+    //
+    // Overrides Payoff
+    //
+
+    @Override
+    public String name() /* @ReadOnly */ {
+        return "Vanilla";
+    }
 
 	/**
      * Pays off nothing if the underlying asset price {@latex$ S_{T}} finishes below/above the strike price {@latex$ K}, or pays
@@ -68,13 +84,29 @@ public class PlainVanillaPayoff extends StrikedTypePayoff {
      * where {@latex$ S_{T}} is the asset price at maturity and {@latex$ K} is the strike price.
 	 */
 	@Override
-    public final/*@Price*/double valueOf(final /*@Price*/ double price) {
-    	if (type==Option.Type.CALL)
+    public final double get(final double price) /* @ReadOnly */ {
+    	if (type==Option.Type.CALL) {
             return Math.max(price - strike, 0.0);
-        else if (type==Option.Type.PUT)
+        } else if (type==Option.Type.PUT) {
             return Math.max(strike - price, 0.0);
-        else
+        } else {
             throw new LibraryException(UNKNOWN_OPTION_TYPE); // QA:[RG]::verified
+        }
+    }
+
+
+	//
+    // implements TypedVisitable
+    //
+
+    @Override
+    public void accept(final TypedVisitor<Payoff> v) {
+        final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null) {
+            v1.visit(this);
+        } else {
+            super.accept(v);
+        }
     }
 
 }

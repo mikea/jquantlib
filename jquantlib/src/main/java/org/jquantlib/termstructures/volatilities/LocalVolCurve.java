@@ -51,15 +51,14 @@ import org.jquantlib.util.Visitor;
 
 public class LocalVolCurve extends LocalVolTermStructure {
 
-    private final BlackVarianceCurve blackVarianceCurve_;
+    private final BlackVarianceCurve blackVarianceCurve;
 
     public LocalVolCurve(final Handle<BlackVarianceCurve> curve) {
-        super(curve.currentLink().dayCounter());
-        blackVarianceCurve_ = curve.currentLink();
-
-        this.blackVarianceCurve_.addObserver(this);
-        //XXX:registerWith
-        //registerWith(blackVarianceCurve_);
+        super(curve.currentLink().calendar(),
+              curve.currentLink().businessDayConvention(),
+              curve.currentLink().dayCounter());
+        blackVarianceCurve = curve.currentLink();
+        this.blackVarianceCurve.addObserver(this);
     }
 
 
@@ -69,17 +68,17 @@ public class LocalVolCurve extends LocalVolTermStructure {
 
     @Override
     public final Date referenceDate() {
-        return blackVarianceCurve_.referenceDate();
+        return blackVarianceCurve.referenceDate();
     }
 
     @Override
     public final DayCounter dayCounter() {
-        return blackVarianceCurve_.dayCounter();
+        return blackVarianceCurve.dayCounter();
     }
 
     @Override
     public final Date maxDate() {
-        return blackVarianceCurve_.maxDate();
+        return blackVarianceCurve.maxDate();
     }
 
 
@@ -113,8 +112,8 @@ public class LocalVolCurve extends LocalVolTermStructure {
     protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
         /*@Time*/ final double m = maturity;
         /*@Time*/ final double dt = 1.0 / 365.0;
-        /*@Variance*/ final double var1 = blackVarianceCurve_.blackVariance(/*@Time*/ maturity, strike, true);
-        /*@Variance*/ final double var2 = blackVarianceCurve_.blackVariance(/*@Time*/ m + dt, strike, true);
+        /*@Variance*/ final double var1 = blackVarianceCurve.blackVariance(/*@Time*/ maturity, strike, true);
+        /*@Variance*/ final double var2 = blackVarianceCurve.blackVariance(/*@Time*/ m + dt, strike, true);
         final double derivative = (var2 - var1) / dt;
         return Math.sqrt(derivative);
     }

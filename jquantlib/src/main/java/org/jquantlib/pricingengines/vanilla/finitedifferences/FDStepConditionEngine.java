@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.QL;
+import org.jquantlib.instruments.OneAssetOption;
+import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.math.SampledCurve;
 import org.jquantlib.math.matrixutilities.Array;
@@ -34,15 +36,20 @@ import org.jquantlib.methods.finitedifferences.StepCondition;
 import org.jquantlib.methods.finitedifferences.StepConditionSet;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
 import org.jquantlib.pricingengines.BlackCalculator;
-import org.jquantlib.pricingengines.results.OneAssetOptionResults;
-import org.jquantlib.pricingengines.results.Results;
+import org.jquantlib.pricingengines.PricingEngine.Results;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
- * @author Srinivas Hasti
+ * Finite-difference template to generate engines
  *
+ * @author Srinivas Hasti
  */
 public abstract class FDStepConditionEngine extends FDVanillaEngine {
+
+    //
+    // protected fields
+    //
+
     protected StepCondition<Array> stepCondition;
     protected SampledCurve prices;
     protected TridiagonalOperator controlOperator;
@@ -59,8 +66,10 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
     protected abstract void initializeStepCondition();
 
     @Override
-    protected void calculate(final Results r) {
-        final OneAssetOptionResults results = (OneAssetOptionResults) (r);
+    protected void calculate(final Results results) {
+        final OneAssetOption.ResultsImpl r = (OneAssetOption.ResultsImpl)results;
+        final Option.GreeksImpl greeks = r.greeks();
+        // final Option.MoreGreeksImpl moreGreeks = r.moreGreeks();
         setGridLimits();
         initializeInitialCondition();
         initializeOperator();
@@ -108,11 +117,9 @@ public abstract class FDStepConditionEngine extends FDVanillaEngine {
 
         final BlackCalculator black = new BlackCalculator(striked_payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
-        results.value = prices.valueAtCenter() - controlPrices.valueAtCenter() + black.value();
-        results.delta = prices.firstDerivativeAtCenter() - controlPrices.firstDerivativeAtCenter() + black.delta(spot);
-        results.gamma = prices.secondDerivativeAtCenter() - controlPrices.secondDerivativeAtCenter() + black.gamma(spot);
-        // TODO:
-        // results.additionalResults["priceCurve"] = prices;
-        results.addAdditionalResult("priceCurve",prices);
+        r.value = prices.valueAtCenter() - controlPrices.valueAtCenter() + black.value();
+        greeks.delta = prices.firstDerivativeAtCenter() - controlPrices.firstDerivativeAtCenter() + black.delta(spot);
+        greeks.gamma = prices.secondDerivativeAtCenter() - controlPrices.secondDerivativeAtCenter() + black.gamma(spot);
+        r.additionalResults().put("priceCurve", prices);
     }
 }

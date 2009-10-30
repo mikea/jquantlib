@@ -43,11 +43,12 @@ import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.AmericanExercise;
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.instruments.OneAssetOption;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
+import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 import org.jquantlib.pricingengines.BlackCalculator;
-import org.jquantlib.pricingengines.VanillaOptionEngine;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
@@ -57,7 +58,7 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 // review JSR-308 annotations too
-public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine {
+public class BjerksundStenslandApproximationEngine extends VanillaOption.EngineImpl {
 
     // TODO: refactor messages
     private static final String NOT_AN_AMERICAN_OPTION = "not an American Option";
@@ -66,6 +67,16 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine {
     private static final String NON_PLAIN_PAYOFF_GIVEN = "non-plain payoff given";
     private static final String BLACK_SCHOLES_PROCESS_REQUIRED = "Black-Scholes process required";
     private static final String BJERKSUND_NOT_APPLICABLE = "Bjerksund-Stensland approximation not applicable to this set of parameters";
+
+    //
+    // private final fields
+    //
+
+    private final GeneralizedBlackScholesProcess process;
+    private final OneAssetOption.ArgumentsImpl a;
+    private final OneAssetOption.ResultsImpl   r;
+    private final Option.GreeksImpl greeks;
+    private final Option.MoreGreeksImpl moreGreeks;
 
     //
     // private fields
@@ -78,8 +89,13 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine {
     // public constructors
     //
 
-    public BjerksundStenslandApproximationEngine() {
-        super();
+    public BjerksundStenslandApproximationEngine(final GeneralizedBlackScholesProcess process) {
+        this.a = (OneAssetOption.ArgumentsImpl)arguments;
+        this.r = (OneAssetOption.ResultsImpl)results;
+        this.greeks = r.greeks();
+        this.moreGreeks = r.moreGreeks();
+        this.process = process;
+        this.process.addObserver(this);
     }
 
 
@@ -145,14 +161,12 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine {
 
     @Override
     public void calculate() /*@ReadOnly*/{
-        QL.require(arguments.exercise.type()==Exercise.Type.American , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified
-        QL.require(arguments.exercise instanceof AmericanExercise , NON_AMERICAN_EXERCISE_GIVEN); // QA:[RG]::verified
-        final AmericanExercise ex = (AmericanExercise)arguments.exercise;
+        QL.require(a.exercise.type()==Exercise.Type.American , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified
+        QL.require(a.exercise instanceof AmericanExercise , NON_AMERICAN_EXERCISE_GIVEN); // QA:[RG]::verified
+        final AmericanExercise ex = (AmericanExercise)a.exercise;
         QL.require(!ex.payoffAtExpiry() , PAYOFF_AT_EXPIRY_NOT_HANDLED); // QA:[RG]::verified
-        QL.require(arguments.payoff instanceof PlainVanillaPayoff , NON_PLAIN_PAYOFF_GIVEN); // QA:[RG]::verified
-        PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments.payoff;
-        QL.require(arguments.stochasticProcess instanceof GeneralizedBlackScholesProcess , BLACK_SCHOLES_PROCESS_REQUIRED); // QA:[RG]::verified
-        final GeneralizedBlackScholesProcess process = (GeneralizedBlackScholesProcess)arguments.stochasticProcess;
+        QL.require(a.payoff instanceof PlainVanillaPayoff , NON_PLAIN_PAYOFF_GIVEN); // QA:[RG]::verified
+        PlainVanillaPayoff payoff = (PlainVanillaPayoff)a.payoff;
 
         final double /* @Real */variance = process.blackVolatility().currentLink().blackVariance(ex.lastDate(), payoff.strike());
         double /* @DiscountFactor */dividendDiscount = process.dividendYield().currentLink().discount(ex.lastDate());
@@ -177,31 +191,32 @@ public class BjerksundStenslandApproximationEngine extends VanillaOptionEngine {
             final double /*@Real*/ forwardPrice = spot * dividendDiscount / riskFreeDiscount;
             final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
-            results.value        = black.value();
-            results.delta        = black.delta(spot);
-            results.deltaForward = black.deltaForward();
-            results.elasticity   = black.elasticity(spot);
-            results.gamma        = black.gamma(spot);
+            r.value           = black.value();
+            greeks.delta            = black.delta(spot);
+            moreGreeks.deltaForward = black.deltaForward();
+            moreGreeks.elasticity   = black.elasticity(spot);
+            greeks.gamma            = black.gamma(spot);
 
-            final DayCounter rfdc = process.riskFreeRate().currentLink().dayCounter();
+            final DayCounter rfdc  = process.riskFreeRate().currentLink().dayCounter();
             final DayCounter divdc = process.dividendYield().currentLink().dayCounter();
             final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
-            double /* @Time */t = rfdc.yearFraction(process.riskFreeRate().currentLink().referenceDate(), arguments.exercise.lastDate());
-            results.rho = black.rho(t);
 
-            t = divdc.yearFraction(process.dividendYield().currentLink().referenceDate(), arguments.exercise.lastDate());
-            results.dividendRho = black.dividendRho(t);
+            double /* @Time */t = rfdc.yearFraction(process.riskFreeRate().currentLink().referenceDate(), a.exercise.lastDate());
+            greeks.rho = black.rho(t);
 
-            t = voldc.yearFraction(process.blackVolatility().currentLink().referenceDate(), arguments.exercise.lastDate());
-            results.vega        = black.vega(t);
-            results.theta       = black.theta(spot, t);
-            results.thetaPerDay = black.thetaPerDay(spot, t);
+            t = divdc.yearFraction(process.dividendYield().currentLink().referenceDate(), a.exercise.lastDate());
+            greeks.dividendRho = black.dividendRho(t);
 
-            results.strikeSensitivity  = black.strikeSensitivity();
-            results.itmCashProbability = black.itmCashProbability();
+            t = voldc.yearFraction(process.blackVolatility().currentLink().referenceDate(), a.exercise.lastDate());
+            greeks.vega            = black.vega(t);
+            greeks.theta           = black.theta(spot, t);
+            moreGreeks.thetaPerDay = black.thetaPerDay(spot, t);
+
+            moreGreeks.strikeSensitivity  = black.strikeSensitivity();
+            moreGreeks.itmCashProbability = black.itmCashProbability();
         } else {
             // early exercise can be optimal - use approximation
-            results.value = americanCallApproximation(spot,
+            r.value = americanCallApproximation(spot,
                     strike,
                     riskFreeDiscount,
                     dividendDiscount,
