@@ -17,7 +17,7 @@ public class DiscountingSwapEngine extends Swap.EngineImpl implements /* Swap.En
 
     public DiscountingSwapEngine(final Handle<YieldTermStructure> discountCurve) /* @ReadOnly */ {
         this.discountCurve = discountCurve;
-        this.discountCurve.currentLink().addObserver(this);
+        this.discountCurve.addObserver(this);
     }
 
     @Override

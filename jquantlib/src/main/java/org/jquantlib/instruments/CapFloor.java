@@ -87,7 +87,7 @@ public class CapFloor extends Instrument {
         // TODO: code review :: please verify against QL/C++ code
         // seems like we should have this.evaluationDate
 
-        this.termStructure_.currentLink().addObserver(this);
+        this.termStructure_.addObserver(this);
         evaluationDate.addObserver(this);
     }
 
@@ -133,7 +133,7 @@ public class CapFloor extends Instrument {
         // TODO: code review :: please verify against QL/C++ code
         // Seems like we should have this.evaluationDate
 
-        this.termStructure_.currentLink().addObserver(this);
+        this.termStructure_.addObserver(this);
         evaluationDate.addObserver(this);
     }
 
@@ -409,7 +409,7 @@ public class CapFloor extends Instrument {
     //        std::vector<Rate> capRates_;
     //        std::vector<Rate> floorRates_;
     //        Handle<YieldTermStructure> termStructure_;
-    //        // helper class for implied volatility calculation
+    //        // helper class for implied USE_INDEXEDvolatility calculation
     //        class ImpliedVolHelper {
     //          public:
     //            ImpliedVolHelper(const CapFloor&,

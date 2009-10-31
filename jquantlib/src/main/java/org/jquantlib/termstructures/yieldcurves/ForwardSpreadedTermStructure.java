@@ -77,8 +77,8 @@ public class ForwardSpreadedTermStructure extends ForwardRateStructure {
         this.originalCurve = h;
         this.spread = spread;
 
-        this.originalCurve.currentLink().addObserver(this);
-        this.spread.currentLink().addObserver(this);
+        this.originalCurve.addObserver(this);
+        this.spread.addObserver(this);
     }
 
 

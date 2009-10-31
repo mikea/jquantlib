@@ -68,6 +68,7 @@ import org.jquantlib.pricingengines.bond.DiscountingBondEngine;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -267,10 +268,26 @@ public class Bond extends Instrument {
             final Calendar calendar,
             final DayCounter paymentDayCounter,
             final BusinessDayConvention paymentConvention) {
-        // TODO: code review :: please verify against QL/C++ code
+
+//        this(settlementDays, faceAmount, calendar,
+//                paymentDayCounter, paymentConvention,
+//                new Handle<YieldTermStructure>(YieldTermStructure.class)); //FIXME::RG::Handle
+
         this(settlementDays, faceAmount, calendar,
                 paymentDayCounter, paymentConvention,
-                new Handle<YieldTermStructure>(YieldTermStructure.class));
+                new Handle<YieldTermStructure>(
+                        new AbstractYieldTermStructure() {
+                            @Override
+                            protected double discountImpl(final double t) {
+                                throw new UnsupportedOperationException();
+                            }
+                            @Override
+                            public Date maxDate() {
+                                throw new UnsupportedOperationException();
+                            }
+                        } )
+        );
+
     }
 
     @Deprecated
@@ -296,7 +313,7 @@ public class Bond extends Instrument {
         final Date evaluationDate = new Settings().evaluationDate();
 
         evaluationDate.addObserver(this);
-        this.discountCurve.currentLink().addObserver(this);
+        this.discountCurve.addObserver(this);
     }
 
 
@@ -794,7 +811,7 @@ public class Bond extends Instrument {
             final Compounding comp,
             final Frequency freq,
             Date settlement) {
-        if (settlement == new Date()){
+        if (settlement.isNull()){
             settlement = settlementDate();
         }
 

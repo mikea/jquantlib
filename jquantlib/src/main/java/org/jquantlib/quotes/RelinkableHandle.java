@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -48,31 +48,32 @@ import org.jquantlib.util.Observable;
  * An instance of this class can be relinked so that it points to another
  * observable. The change will be propagated to all handles that were created as
  * copies of such instance.
- * 
+ *
  * @author Richard Gomes
  */
 public class RelinkableHandle<T extends Observable> extends Handle<T> {
-    
-    public RelinkableHandle(Class<T> klass) {
-        super(klass);
-    }
-	
+
+//XXX
+//    public RelinkableHandle(Class<T> klass) {
+//        super(klass);
+//    }
+
 	public RelinkableHandle(final T observable) {
     	this(observable, true);
     }
-    
-    public RelinkableHandle(final T observable, boolean isObserver) {
+
+    public RelinkableHandle(final T observable, final boolean isObserver) {
     	super(observable, isObserver);
     }
-    
+
     @Override
     public final void linkTo(final T observable) {
-    	super.linkTo(observable, true);
+    	super.internalLinkTo(observable, true);
     }
-    
+
     @Override
-    public final void linkTo(final T observable, boolean isObserver) {
-    	super.linkTo(observable, isObserver);
+    public final void linkTo(final T observable, final boolean isObserver) {
+    	super.internalLinkTo(observable, isObserver);
     }
-    
+
 }

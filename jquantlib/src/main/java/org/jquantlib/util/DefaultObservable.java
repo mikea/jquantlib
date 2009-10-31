@@ -58,6 +58,9 @@ import org.jquantlib.QL;
 @NotThreadSafe
 public class DefaultObservable implements Observable {
 
+    final private String OBSERVABLE_IS_NULL = "observable is null";
+    final private String CANNOT_NOTIFY_OBSERVERS = "could not notify one or more observers";
+
     //
     // private final fields
     //
@@ -70,7 +73,7 @@ public class DefaultObservable implements Observable {
     //
 
     public DefaultObservable(final Observable observable) {
-        QL.require(observable != null , "observable is null"); // QA:[RG]::verified // TODO: message
+        QL.require(observable != null, OBSERVABLE_IS_NULL);
 
         // TODO: code review :: Please review if CopyOnWriteArrayList is the best option
         this.observers = new CopyOnWriteArrayList<Observer>();
@@ -83,7 +86,6 @@ public class DefaultObservable implements Observable {
     //
 
     public void addObserver(final Observer observer) {
-        QL.require(observable != null , "observable is null"); // QA:[RG]::verified // TODO: message
         observers.add(observer);
     }
 
@@ -123,7 +125,7 @@ public class DefaultObservable implements Observable {
                 successful = false;
             }
         }
-        QL.ensure(successful, "could not notify one or more observers"); // QA:[RG]::verified // TODO: message
+        QL.ensure(successful, CANNOT_NOTIFY_OBSERVERS);
     }
 
     //

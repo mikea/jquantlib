@@ -74,7 +74,7 @@ public class FlatForward extends AbstractYieldTermStructure {
         this.compounding = compounding;
         this.frequency = frequency;
         this.forward = forward;
-        this.forward.currentLink().addObserver(this);
+        this.forward.addObserver(this);
         updateRate();
     }
 
@@ -136,7 +136,7 @@ public class FlatForward extends AbstractYieldTermStructure {
         this.compounding = compounding;
         this.frequency = frequency;
         this.forward = forward;
-        this.forward.currentLink().addObserver(this);
+        this.forward.addObserver(this);
         updateRate();
     }
 

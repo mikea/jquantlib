@@ -85,7 +85,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         this.fwdStart = fwdStart;
 
         this.iborIndex.addObserver(this);
-        this.spread.currentLink().addObserver(this);
+        this.spread.addObserver(this);
 
         initializeDates();
     }
@@ -111,7 +111,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         this.fwdStart =fwdStart;
 
         this.iborIndex.addObserver(this);
-        this.spread.currentLink().addObserver(this);
+        this.spread.addObserver(this);
 
         initializeDates();
     }
@@ -137,7 +137,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         this.fwdStart = fwdStart;
 
         this.iborIndex.addObserver(this);
-        this.spread.currentLink().addObserver(this);
+        this.spread.addObserver(this);
 
         initializeDates();
     }
@@ -158,7 +158,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         this.fwdStart = fwdStart;
 
         this.iborIndex.addObserver(this);
-        this.spread.currentLink().addObserver(this);
+        this.spread.addObserver(this);
 
         initializeDates();
     }

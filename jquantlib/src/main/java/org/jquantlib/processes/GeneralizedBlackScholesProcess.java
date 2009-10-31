@@ -104,13 +104,37 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         this.riskFreeRate = riskFreeTS;
         this.dividendYield = dividendTS;
         this.blackVolatility = blackVolTS;
-        this.localVolatility = new RelinkableHandle<LocalVolTermStructure>(LocalVolTermStructure.class);
+
+        // this.localVolatility = new RelinkableHandle<LocalVolTermStructure>(LocalVolTermStructure.class); //FIXME::RG::Handle
+
+        this.localVolatility = new RelinkableHandle<LocalVolTermStructure>(
+                new LocalVolTermStructure() {
+                    @Override
+                    protected double localVolImpl(final double t, final double strike) {
+                        throw new UnsupportedOperationException();
+                    }
+                    @Override
+                    public double maxStrike() {
+                        throw new UnsupportedOperationException();
+                    }
+                    @Override
+                    public double minStrike() {
+                        throw new UnsupportedOperationException();
+                    }
+                    @Override
+                    public Date maxDate() {
+                        throw new UnsupportedOperationException();
+                    }
+                }
+        );
+
+
         this.updated = false;
 
-        this.x0.currentLink().addObserver(this);
-        this.riskFreeRate.currentLink().addObserver(this);
-        this.dividendYield.currentLink().addObserver(this);
-        this.blackVolatility.currentLink().addObserver(this);
+        this.x0.addObserver(this);
+        this.riskFreeRate.addObserver(this);
+        this.dividendYield.addObserver(this);
+        this.blackVolatility.addObserver(this);
     }
 
     @Override

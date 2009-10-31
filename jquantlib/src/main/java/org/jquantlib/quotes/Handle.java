@@ -43,9 +43,9 @@ package org.jquantlib.quotes;
 import java.util.List;
 
 import org.jquantlib.QL;
+import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
-import org.jquantlib.util.WeakReferenceObservable;
 
 /**
  * Shared handle to an observable
@@ -58,39 +58,111 @@ import org.jquantlib.util.WeakReferenceObservable;
  */
 public class Handle<T extends Observable> implements Observable {
 
-    protected Link link;
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // In QL/C++, Handle has operators which return the inner Link class, performing
+    // a call to currentLink() behind the scenes. This is pretty handy from the calling
+    // code because you can simply dereference a Handle and (like magic!) call methods
+    // from the parameterized class.
+    //
+    // In Java we are obliged to explicitly call currentLink() in order to do the same thing.
+    //
+    // The difficulty arises when we need to register Observers.
+    //
+    // In the current implementation, we hide class Link from outside world and we only expose
+    // the Handle itself, which implements Observable. Doing this way, the calling Java code
+    // does not need to decide which object is really the Observer object because class Handle
+    // is responsible for hiding this implementation details from outside world and properly
+    // forwarding notifications to external Observers as expected.
+    //
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public Handle(final Class<T> klass) {
-        this.link = new Link(null, true);
-    }
+
+    static private final String EMPTY_HANDLE = "empty Handle cannot be dereferenced"; // TODO: message
+
+    //
+    // final private fields
+    //
+
+    /**
+     * Responsible for forwarding notifications coming from the Observable object to
+     * objects registering as Observers of <code>this</code> instance
+     */
+    final private Link link;
+
+    //
+    // private fields
+    //
+
+    private T observable;
+    private boolean isObserver = false;
+
+    //
+    // public constructors
+    //
 
     public Handle(final T observable) {
-        this.link = new Link(observable, true);
+        this.link = new Link(this);
+        internalLinkTo(observable, true);
     }
+
 
     public Handle(final T observable, final boolean registerAsObserver) {
-        this.link = new Link(observable, registerAsObserver);
+        this.link = new Link(this);
+        internalLinkTo(observable, registerAsObserver);
     }
 
-    public Handle(final Handle<T> another) {
-        this.link = another.link;
+
+    //
+    // final public methods
+    //
+
+    final public boolean empty() /* @ReadOnly */ {
+        return (this.observable==null);
     }
 
-    public final boolean empty() /* @ReadOnly */ {
-        return link.empty();
+    final public T currentLink() {
+        return this.observable;
     }
 
-    public final T currentLink() {
-        return link.currentLink();
-    }
+
+    //
+    // public methods
+    //
 
     public void linkTo(final T observable) {
-        this.linkTo(observable, true);
+        throw new UnsupportedOperationException();
     }
 
     public void linkTo(final T observable, final boolean registerAsObserver) {
-        link.linkTo(observable, registerAsObserver);
+        throw new UnsupportedOperationException();
     }
+
+
+    //
+    // protected final methods
+    //
+
+    final protected void internalLinkTo(final T observable) {
+        this.internalLinkTo(observable, true);
+    }
+
+    final protected void internalLinkTo(final T observable, final boolean registerAsObserver) {
+        if ((this.observable!=observable) || (this.isObserver!=registerAsObserver)) {
+            if (this.observable!=null && this.isObserver) {
+                this.observable.deleteObserver(link);
+            }
+            this.observable = observable;
+            this.isObserver = registerAsObserver;
+            if (this.observable!=null && this.isObserver) {
+                this.observable.addObserver(link);
+            }
+            if (this.observable!=null) {
+                this.observable.notifyObservers();
+            }
+        }
+    }
+
 
     //
     // overrides Object
@@ -98,172 +170,78 @@ public class Handle<T extends Observable> implements Observable {
 
     @Override
     public String toString() {
-        return link.toString();
+        return observable==null ? "null" : observable.toString();
     }
 
 
     //
-    // implements Observable interface
+    // implements Observable
     //
-
-    private final Observable delegatedObservable = new WeakReferenceObservable(this);
 
     @Override
     public final void addObserver(final Observer observer) {
-        delegatedObservable.addObserver(observer);
+        QL.require(observable!=null, EMPTY_HANDLE);
+        link.addObserver(observer);
     }
 
     @Override
     public final int countObservers() {
-        return delegatedObservable.countObservers();
+        QL.require(observable!=null, EMPTY_HANDLE);
+        return link.countObservers();
     }
 
     @Override
     public final void deleteObserver(final Observer observer) {
-        delegatedObservable.deleteObserver(observer);
+        QL.require(observable!=null, EMPTY_HANDLE);
+        link.deleteObserver(observer);
     }
 
     @Override
     public final void notifyObservers() {
-        delegatedObservable.notifyObservers();
+        QL.require(observable!=null, EMPTY_HANDLE);
+        link.notifyObservers();
     }
 
     @Override
     public final void notifyObservers(final Object arg) {
-        delegatedObservable.notifyObservers(arg);
+        QL.require(observable!=null, EMPTY_HANDLE);
+        link.notifyObservers(arg);
     }
 
     @Override
     public final void deleteObservers() {
-        delegatedObservable.deleteObservers();
+        QL.require(observable!=null, EMPTY_HANDLE);
+        link.deleteObservers();
     }
 
     @Override
     public final List<Observer> getObservers() {
-        return delegatedObservable.getObservers();
+        QL.require(observable!=null, EMPTY_HANDLE);
+        return link.getObservers();
     }
 
 
     //
-    // inner classes
+    // private final inner classes
     //
 
-    private class Link implements Observable, Observer {
+    /**
+     * A Link is responsible for observing the Observable object passed to Handle during it's construction
+     * or another Observable passed to {@link Handle#linkTo(Observable)} methods.
+     * <p>
+     * So, the ditto Observable notifies its Observers, a Link instance is notified, which ultimately
+     * is responsible for forwarding this notification to a list of external Observers.
+     */
+    final private class Link extends DefaultObservable implements Observer {
 
-        static private final String EMPTY_HANDLE = "empty Handle cannot be dereferenced"; // TODO: message
-
-        //
-        // private fields
-        //
-
-        private T observable	   = null;
-        private boolean isObserver = false;
-
-
-        //
-        // public constructors
-        //
-
-        public Link(final T observable, final boolean registerAsObserver) {
-            linkTo(observable, registerAsObserver);
-        }
-
-
-        //
-        // public methods
-        //
-
-        public final boolean empty() /* @ReadOnly */ {
-            return (this.observable==null);
-        }
-
-        public final T currentLink() /* @ReadOnly */ {
-            return this.observable;
-        }
-
-        public final void linkTo(final T observable, final boolean registerAsObserver) {
-            if ((this.observable!=observable) || (this.isObserver!=registerAsObserver)) {
-                if (this.observable!=null && this.isObserver) {
-                    this.observable.deleteObserver(this);
-                }
-                this.observable = observable;
-                this.isObserver = registerAsObserver;
-                if (this.observable!=null && this.isObserver) {
-                    this.observable.addObserver(this);
-                }
-                if (this.observable!=null) {
-                    this.observable.notifyObservers();
-                }
-            }
-        }
-
-
-        //
-        // overrides Object
-        //
-
-        @Override
-        public String toString() {
-            return observable==null ? "none" : observable.toString();
-        }
-
-
-        //
-        // implements Observer
-        //
-
-        @Override
-        public final void update(final Observable o, final Object arg) {
-            delegatedObservable.notifyObservers(arg); //TODO:: code review
-        }
-
-
-        //
-        // implements Observable
-        //
-
-        @Override
-        public final void addObserver(final Observer observer) {
-            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
-            observable.addObserver(observer);
+        private Link(final Observable observable) {
+            super(observable);
         }
 
         @Override
-        public final int countObservers() {
-            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
-            return observable.countObservers();
+        public void update(final Observable o, final Object arg) {
+            this.notifyObservers(arg);
         }
-
-        @Override
-        public final void deleteObserver(final Observer observer) {
-            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
-            observable.deleteObserver(observer);
-        }
-
-        @Override
-        public final void notifyObservers() {
-            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
-            observable.notifyObservers();
-        }
-
-        @Override
-        public final void notifyObservers(final Object arg) {
-            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
-            observable.notifyObservers(arg);
-        }
-
-        @Override
-        public final void deleteObservers() {
-            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
-            observable.deleteObservers();
-        }
-
-        @Override
-        public final List<Observer> getObservers() {
-            QL.require(observable!=null , EMPTY_HANDLE); // QA:[RG]::verified // TODO: message
-            return observable.getObservers();
-        }
-
     }
 
 }

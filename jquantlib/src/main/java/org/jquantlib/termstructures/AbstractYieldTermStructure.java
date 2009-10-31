@@ -51,16 +51,14 @@ import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
 
 /**
- * This abstract class defines the interface of concrete rate structures which
- * will be derived from this one.
- *
+ * This abstract class defines the interface of concrete rate structures which will be derived from this one.
  * <p>
  * Rates are assumed to be annual continuous compounding.
  */
 // TODO: add derived class ParSwapTermStructure similar to ZeroYieldTermStructure, DiscountStructure, ForwardRateStructure
 // TODO: observability against evaluation date changes is checked.
 // FIXME:: code review on return types of getSomethingRate(...)
-public abstract class AbstractYieldTermStructure extends AbstractTermStructure implements YieldTermStructure {
+abstract public class AbstractYieldTermStructure extends AbstractTermStructure implements YieldTermStructure {
 
     //
     // protected constructors
@@ -205,8 +203,7 @@ public abstract class AbstractYieldTermStructure extends AbstractTermStructure i
      *
      * @category calculations
      */
-    protected abstract /*DiscountFactor*/ double discountImpl(final /*@Time*/ double t);
-
+    abstract protected /*DiscountFactor*/ double discountImpl(final /*@Time*/ double t);
 
 
     //

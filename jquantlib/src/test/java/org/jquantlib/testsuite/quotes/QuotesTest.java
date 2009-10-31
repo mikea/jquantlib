@@ -91,6 +91,53 @@ public class QuotesTest {
         }
 	}
 
+//XXX =================================================================
+//    @Test
+//    public void testObservableHandle2() {
+//
+//        QL.info("Testing observability of quote handles...");
+//
+//        final SimpleQuote me1 = new SimpleQuote(0.0);
+//        final Handle2<Quote> h = new Handle2(me1);
+//
+//        final Flag f = new Flag();
+//        h.addObserver(f);
+//
+//        me1.setValue(3.14);
+//        if (!f.isUp()) {
+//            fail("Observer was not notified of quote change");
+//        }
+//
+//    }
+//
+//    @Test
+//    public void testObservableRelinkableHandle2() {
+//
+//        QL.info("Testing observability of quote handles...");
+//
+//        final SimpleQuote me1 = new SimpleQuote(0.0);
+//        final RelinkableHandle2<Quote> h = new RelinkableHandle2(me1);
+//
+//        final Flag f = new Flag();
+//        h.addObserver(f);
+//
+//        me1.setValue(3.14);
+//        if (!f.isUp()) {
+//            fail("Observer was not notified of quote change");
+//        }
+//
+//        f.lower();
+//        final SimpleQuote me2 = new SimpleQuote(0.0);
+//
+//        h.linkTo(me2);
+//        if (!f.isUp()) {
+//            fail("Observer was not notified of quote change");
+//        }
+//    }
+//=================================================================
+
+
+
 //	@Test
 //	public void testDerived() {
 //

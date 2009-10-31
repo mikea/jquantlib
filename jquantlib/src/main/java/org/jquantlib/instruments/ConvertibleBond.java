@@ -64,7 +64,7 @@ public class ConvertibleBond extends Bond {
         this.dividends = dividends;
         this.creditSpread = creditSpread;
         this.maturityDate_ = schedule.endDate();
-        creditSpread.currentLink().addObserver(this);
+        creditSpread.addObserver(this);
     }
 
     public double conversionRatio() /* @ReadOnly */ {

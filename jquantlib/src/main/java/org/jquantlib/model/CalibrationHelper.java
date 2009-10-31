@@ -63,8 +63,8 @@ public abstract class CalibrationHelper implements Observer, Observable {
         this.termStructure_ = termStructure;
         this.calibrateVolatility_ = calibrateVolatility;
 
-        this.volatility_.currentLink().addObserver(this);
-        this.termStructure_.currentLink().addObserver(this);
+        this.volatility_.addObserver(this);
+        this.termStructure_.addObserver(this);
         //XXX:registerWith
         //registerWith(termStructure_);
         //registerWith(volatility_);

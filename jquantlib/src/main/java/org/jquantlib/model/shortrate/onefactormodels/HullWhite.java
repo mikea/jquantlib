@@ -92,7 +92,7 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         // TODO: code review :: please verify against QL/C++ code
         // seems like we should have this.termStructure
 
-        termStructure.currentLink().addObserver(this);
+        termStructure.addObserver(this);
         //XXX:registerWith
         //registerWith(termStructure);
     }

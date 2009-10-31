@@ -80,7 +80,7 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
                 final DayCounter dc) {
         super(referenceDate, cal, BusinessDayConvention.Following, dc);
         this.volatility = volatility;
-        this.volatility.currentLink().addObserver(this);
+        this.volatility.addObserver(this);
     }
 
     public BlackConstantVol(
@@ -99,7 +99,7 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
                 final DayCounter dc) {
         super(settlementDays, cal, BusinessDayConvention.Following, dc);
         this.volatility = volatility;
-        this.volatility.currentLink().addObserver(this);
+        this.volatility.addObserver(this);
     }
 
 

@@ -39,7 +39,7 @@ public abstract class CmsCouponPricer extends FloatingRateCouponPricer {
 
     public CmsCouponPricer(final Handle<SwaptionVolatilityStructure> swaptionVol) {
         this.swaptionVol_ = swaptionVol;
-        this.swaptionVol_.currentLink().addObserver(this);
+        this.swaptionVol_.addObserver(this);
         //XXX:registerWith
         //registerWith(this.swaptionVol_);
     }
@@ -56,7 +56,7 @@ public abstract class CmsCouponPricer extends FloatingRateCouponPricer {
         this.swaptionVol_ = swaptionVol;
         QL.require(swaptionVol_!=null && swaptionVol_.currentLink() != null , no_adequate_swaptionVol_given); // QA:[RG]::verified // TODO: message
 
-        this.swaptionVol_.currentLink().addObserver(this);
+        this.swaptionVol_.addObserver(this);
         //registerWith(swaptionVol_);
         update();
     }

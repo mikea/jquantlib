@@ -19,6 +19,7 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.yieldcurves.DepositRateHelper;
@@ -134,8 +135,20 @@ public class Bonds {
         }
 
         final List<RelinkableHandle<Quote>> quoteHandle = new ArrayList<RelinkableHandle<Quote>>(numberOfBonds);
-        for(int i = 0; i<numberOfBonds; i++){
-            quoteHandle.add(new RelinkableHandle<Quote>(Quote.class));
+        for(int i = 0; i<numberOfBonds; i++) {
+            // quoteHandle.add(new RelinkableHandle<Quote>(Quote.class)); //FIXME::RG::Handle
+
+            final Quote nullQuote = new Quote() {
+                @Override
+                public boolean isValid() {
+                    throw new UnsupportedOperationException();
+                }
+                @Override
+                public double value() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+            quoteHandle.add(new RelinkableHandle<Quote>(nullQuote));
         }
 
         for (/* @Size */int i = 0; i < numberOfBonds; i++) {
@@ -274,8 +287,22 @@ public class Bonds {
         final BusinessDayConvention swFixedLegConvention = BusinessDayConvention.Unadjusted;
         final DayCounter swFixedLegDayCounter = new Thirty360(Convention.European);
 
+
         // TODO and FIXME: not sure whether the class stuff works properly
-        final IborIndex swFloatingLegIndex = Euribor.getEuribor6M(new Handle<YieldTermStructure>(YieldTermStructure.class));
+        // final IborIndex swFloatingLegIndex = Euribor.getEuribor6M(new Handle<YieldTermStructure>(YieldTermStructure.class)); //FIXME::RG::Handle
+
+        final YieldTermStructure nullYieldTermStructure = new AbstractYieldTermStructure() {
+            @Override
+            protected double discountImpl(final double t) {
+                throw new UnsupportedOperationException();
+            }
+            @Override
+            public Date maxDate() {
+                throw new UnsupportedOperationException();
+            }
+        };
+        final IborIndex swFloatingLegIndex = Euribor.getEuribor6M(new Handle<YieldTermStructure>(nullYieldTermStructure));
+
 
         final Period forwardStart = new Period(1, TimeUnit.Days);
 

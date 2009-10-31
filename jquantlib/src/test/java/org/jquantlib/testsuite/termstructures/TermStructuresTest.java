@@ -50,6 +50,7 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.termstructures.yieldcurves.ImpliedTermStructure;
@@ -223,8 +224,19 @@ public class TermStructuresTest {
         final Date newToday = today.add(Period.ONE_YEAR_FORWARD.times(3));
         final Date newSettlement = new Target().advance(newToday, settlementDays, TimeUnit.Days);
 
-        // final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>() {};
-        final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(YieldTermStructure.class);
+        // final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(YieldTermStructure.class); //FIXME::RG::Handle
+        final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(
+                new AbstractYieldTermStructure() {
+                    @Override
+                    protected double discountImpl(final double t) {
+                        throw new UnsupportedOperationException();
+                    }
+                    @Override
+                    public Date maxDate() {
+                        throw new UnsupportedOperationException();
+                    }
+                } );
+
         final YieldTermStructure implied = new ImpliedTermStructure<YieldTermStructure>(h, newSettlement);
 
         final Flag flag = new Flag();

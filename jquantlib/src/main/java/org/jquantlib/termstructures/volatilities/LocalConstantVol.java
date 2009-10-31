@@ -78,7 +78,7 @@ public class LocalConstantVol extends LocalVolTermStructure {
         this.volatility_ = volatility;
         this.dayCounter_ = dayCounter;
 
-        this.volatility_.currentLink().addObserver(this);
+        this.volatility_.addObserver(this);
         //XXX:registerWith
         //registerWith(this.volatility_);
     }
@@ -102,7 +102,7 @@ public class LocalConstantVol extends LocalVolTermStructure {
         this.volatility_ = volatility;
         this.dayCounter_ = dayCounter;
 
-        this.volatility_.currentLink().addObserver(this);
+        this.volatility_.addObserver(this);
         //XXX:registerWith
         //registerWith(this.volatility_);
     }

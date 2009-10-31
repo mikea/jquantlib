@@ -95,9 +95,9 @@ public class HestonProcess extends StochasticProcess {
 
         // TODO: code review :: please verify against QL/C++ code
 
-        this.riskFreeRate_.currentLink().addObserver(this);
-        this.dividendYield_.currentLink().addObserver(this);
-        this.s0_.currentLink().addObserver(this);
+        this.riskFreeRate_.addObserver(this);
+        this.dividendYield_.addObserver(this);
+        this.s0_.addObserver(this);
     }
 
     // TODO: code review :: please verify against QL/C++ code
