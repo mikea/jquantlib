@@ -89,17 +89,6 @@ public class WeakReferenceObservable extends DefaultObservable {
             super(referent);
         }
 
-        // XXX:registerWith
-        //        @Override
-        //        public void registerWith(final Observable o) {
-        //            o.addObserver(this);
-        //        }
-        //
-        //        @Override
-        //        public void unregisterWith(final Observable o) {
-        //            o.deleteObserver(this);
-        //        }
-
         @Override
         public void update(final Observable o, final Object arg) {
             final Observer referent = get();

@@ -43,9 +43,9 @@ package org.jquantlib.quotes;
 import java.util.List;
 
 import org.jquantlib.QL;
-import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
+import org.jquantlib.util.WeakReferenceObservable;
 
 /**
  * Shared handle to an observable
@@ -232,7 +232,8 @@ public class Handle<T extends Observable> implements Observable {
      * So, the ditto Observable notifies its Observers, a Link instance is notified, which ultimately
      * is responsible for forwarding this notification to a list of external Observers.
      */
-    final private class Link extends DefaultObservable implements Observer {
+    // see: http://bugs.jquantlib.org/view.php?id=58
+    final private class Link extends WeakReferenceObservable implements Observer {
 
         private Link(final Observable observable) {
             super(observable);

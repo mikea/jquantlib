@@ -26,8 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import net.jcip.annotations.NotThreadSafe;
-
 import org.jquantlib.QL;
 
 
@@ -55,7 +53,6 @@ import org.jquantlib.QL;
  * @author Richard Gomes
  * @author Srinivas Hasti
  */
-@NotThreadSafe
 public class DefaultObservable implements Observable {
 
     final private String OBSERVABLE_IS_NULL = "observable is null";
@@ -74,10 +71,7 @@ public class DefaultObservable implements Observable {
 
     public DefaultObservable(final Observable observable) {
         QL.require(observable != null, OBSERVABLE_IS_NULL);
-
-        // TODO: code review :: Please review if CopyOnWriteArrayList is the best option
         this.observers = new CopyOnWriteArrayList<Observer>();
-
         this.observable = observable;
     }
 
