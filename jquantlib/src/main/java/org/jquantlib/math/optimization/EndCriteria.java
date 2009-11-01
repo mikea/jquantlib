@@ -70,6 +70,10 @@ public class EndCriteria {
                 final double functionEpsilon,
                 final double gradientNormEpsilon) {
 
+            if (System.getProperty("EXPERIMENTAL") == null) {
+                throw new UnsupportedOperationException("Work in progress");
+            }
+
             this.maxIterations_ = maxIterations;
             this.rootEpsilon_ = rootEpsilon;
             this.functionEpsilon_ = functionEpsilon;
@@ -87,8 +91,9 @@ public class EndCriteria {
         public boolean checkMaxIterations(
                 final int iteration,
                 final Type ecType) {
-            if (iteration < maxIterations_)
+            if (iteration < maxIterations_) {
                 return false;
+            }
             //this is wrong!!!!!!!!!!!!!!!
             this.ecType = Type.MaxIterations;
             return true;
@@ -106,8 +111,9 @@ public class EndCriteria {
                 return false;
             }
             this.statStateIterations++;
-            if (statStateIterations <= maxStationaryStateIterations_)
+            if (statStateIterations <= maxStationaryStateIterations_) {
                 return false;
+            }
             this.ecType = Type.StationaryPoint;
             return true;
         }
@@ -124,8 +130,9 @@ public class EndCriteria {
                 return false;
             }
             this.statStateIterations++;
-            if (statStateIterations <= maxStationaryStateIterations_)
+            if (statStateIterations <= maxStationaryStateIterations_) {
                 return false;
+            }
             this.ecType = Type.StationaryFunctionValue;
             return true;
         }
@@ -135,10 +142,12 @@ public class EndCriteria {
                 final double f,
                 final boolean positiveOptimization,
                 final Type ecType) {
-            if (!positiveOptimization)
+            if (!positiveOptimization) {
                 return false;
-            if (f >= functionEpsilon_)
+            }
+            if (f >= functionEpsilon_) {
                 return false;
+            }
             this.ecType = Type.StationaryFunctionAccuracy;
             return true;
         }
@@ -148,8 +157,9 @@ public class EndCriteria {
         public boolean checkZeroGradientNorm(
                 final double gradientNorm,
                 final Type ecType) {
-            if (gradientNorm >= gradientNormEpsilon_)
+            if (gradientNorm >= gradientNormEpsilon_) {
                 return false;
+            }
             this.ecType = Type.ZeroGradientNorm;
             return true;
         }
