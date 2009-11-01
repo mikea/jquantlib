@@ -34,32 +34,27 @@ import org.jquantlib.math.Ops;
  * @author Dominik Holenstein
  */
 // TEST the correctness of the returned value is tested by checking it against known good results.
-public class InverseCumulativePoisson implements Ops.Op<Double, Double> {
+public class InverseCumulativePoisson implements Ops.DoubleOp {
 
     //
     // private fields
     //
 
-    private double lambda;
+    private final double lambda;
 
 
     //
     // public constructors
     //
 
-    //XXX
-    //	public InverseCumulativePoisson() {
-    //    	this(1.0);
-    //    }
+	public InverseCumulativePoisson() {
+    	this(1.0);
+    }
 
 
     public InverseCumulativePoisson(final double lambda) {
+        QL.require(lambda>0.0, "lambda must be positive");
         this.lambda = lambda;
-
-        // FIXME lambda_ is initialized with lambda first and then set equal to 1.0. This doesn't make sense.
-        this.lambda = 1.0;
-        if(this.lambda <= 0.0)
-            throw new ArithmeticException("lambda must be positive");
     }
 
 
@@ -83,11 +78,13 @@ public class InverseCumulativePoisson implements Ops.Op<Double, Double> {
      * @param x
      * @returns the inverse of the cumulative poisson distribution of input <code>x</code>
      */
-    public Double op (final Double x) /* @Read-only */ {
+    @Override
+    public double op (final double x) /* @Read-only */ {
         QL.require(x >= 0.0 && x <= 1.0 , "undefined outside interval [0,1]"); // QA:[RG]::verified // TODO: message
 
-        if (x == 1.0)
+        if (x == 1.0) {
             return Constants.QL_MAX_REAL;
+        }
 
         double sum = 0.0;
         int index = 0;
@@ -95,7 +92,7 @@ public class InverseCumulativePoisson implements Ops.Op<Double, Double> {
             sum += calcSummand(index);
             index++;
         }
-        return (double)(index-1);
+        return (index-1);
     }
 
 }

@@ -30,9 +30,7 @@ import org.jquantlib.math.distributions.InverseCumulativePoisson;
 import org.junit.Test;
 
 /**
- *
  * @author Dominik Holenstein
- *
  */
 
 public class InverseCumulativePoissonTest {
