@@ -79,7 +79,7 @@ public class CalendarTest {
 
         final Entry[] entries = {
                 new Entry( new Date(28, 5, 2009), false),
-                new Entry( new Date(29, 5, 2009), false),
+                new Entry( new Date(29, 5, 2009), true),
                 new Entry( new Date(30, 5, 2009), false),
                 new Entry( new Date(31, 5, 2009), false),
                 new Entry( new Date( 1, 6, 2009), false),

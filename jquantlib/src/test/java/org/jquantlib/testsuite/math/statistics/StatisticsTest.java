@@ -5,8 +5,10 @@ import static org.junit.Assert.fail;
 import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.statistics.IStatistics;
+import org.jquantlib.math.statistics.Statistics;
 import org.junit.Ignore;
 import org.junit.Test;
+
 public class StatisticsTest {
 
     private static final Array data    = new Array(new double[] { 3.0, 4.0, 5.0, 2.0, 3.0, 4.0, 5.0, 6.0, 4.0, 7.0 });
@@ -17,7 +19,7 @@ public class StatisticsTest {
         QL.info("Testing volatility model construction...");
     }
 
-    public void check(final IStatistics s, final String name) {
+    private void check(final IStatistics s, final String name) {
 
         for (int i = 0; i<data.size(); i++){
             s.add(data.get(i), weights.get(i) );
@@ -101,9 +103,17 @@ public class StatisticsTest {
     @Test
     public void testStatistics(){
         QL.info("Testing statistics ...");
-        //check(new IncrementalStatistics(), "IncrementalStatistics");
-        //check(new Statistics(), "Statistics");
+        check(new Statistics(), "Statistics");
     }
+
+    @Ignore
+    @Test
+    public void testIncrementalStatistics(){
+        QL.info("Testing statistics ...");
+        // check(new IncrementalStatistics(), "IncrementalStatistics");
+    }
+
+
 
     // TODO: code review :: please verify against QL/C++ code
     public void checkSequence(final IStatistics statistics, final String name, final int dimension){
