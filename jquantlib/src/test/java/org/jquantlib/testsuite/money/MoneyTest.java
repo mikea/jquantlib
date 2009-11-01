@@ -34,6 +34,7 @@ import org.jquantlib.currencies.Europe.EURCurrency;
 import org.jquantlib.currencies.Europe.GBPCurrency;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Rounding;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class MoneyTest {
@@ -43,6 +44,7 @@ public class MoneyTest {
         QL.info("see testsuite.money.cpp/hpp");
     }
 
+    @Ignore
     @Test
     public void testBaseCurrency(){
         QL.info("Testing money arithmetic with conversion to base currency...");
