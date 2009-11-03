@@ -36,8 +36,14 @@ import org.jquantlib.QL;
  * @note It's important to remember to instantiate an anonymous class in order to avoid <i>type erasure</i>.
  * Doing so, type information will be kept and can be retrieved at runtime.
  *
- * @see <a href="http://www.jquantlib.org/index.php/Using_TypeTokens_to_retrieve_generic_parameters">Using TypeTokens to retrieve generic parameters</a>
+ * @see TypeToken
+ * @see TypeReference
  * @see TypeNode
+ *
+ * @see <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">Super Type Tokens</a>
+ * @see <a href="http://gafter.blogspot.com/2007/05/limitation-of-super-type-tokens.html">A Limitation of Super Type Tokens</a>
+ * @see <a href="http://java.sun.com/j2se/1.5/pdf/generics-tutorial.pdf">Generics Tutorial</a>
+ * @see <a href="http://www.jquantlib.org/index.php/Using_TypeTokens_to_retrieve_generic_parameters">Using TypeTokens to retrieve generic parameters</a>
  *
  * @author Richard Gomes
  */
@@ -80,19 +86,20 @@ public class TypeTokenTree {
         final Type superclass = klass.getGenericSuperclass();
         QL.require(!(superclass instanceof Class) , ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED); // QA:[RG]::verified
         final TypeNode node = new TypeNode(klass);
-        for (final Type t : ((ParameterizedType) superclass).getActualTypeArguments() )
+        for (final Type t : ((ParameterizedType) superclass).getActualTypeArguments() ) {
             node.add(retrieve(t));
+        }
         return node;
     }
 
     private TypeNode retrieve(final Type type) {
         final TypeNode node;
-        if (type instanceof Class<?>)
+        if (type instanceof Class<?>) {
             node = new TypeNode((Class<?>)type);
-        else if (type instanceof ParameterizedType) {
+        } else if (type instanceof ParameterizedType) {
             final Type rawType = ((ParameterizedType) type).getRawType();
             node = retrieve(rawType);
-            for (final Type arg : ((ParameterizedType) type).getActualTypeArguments())
+            for (final Type arg : ((ParameterizedType) type).getActualTypeArguments()) {
                 node.add(retrieve(arg));
 //
 //TODO: code review
@@ -106,8 +113,10 @@ public class TypeTokenTree {
 //                node.add(retrieve(arg));
 //            }
 //
-        } else
+            }
+        } else {
             throw new IllegalArgumentException(ReflectConstants.ILLEGAL_TYPE_PARAMETER);
+        }
         return node;
     }
 

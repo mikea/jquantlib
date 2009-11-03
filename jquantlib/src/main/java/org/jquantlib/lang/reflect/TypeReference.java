@@ -65,10 +65,15 @@ import org.jquantlib.QL;
  *       The reason is that TypeToken and TypeReference uses the tricky Class.getGenericSuperClass(),
  *       which retrieves type information from the super class of the current caller instance.
  *
+ * @see TypeToken
  * @see TypeReference
+ * @see TypeTokenTree
  *
- * @see <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">SuperTypeTokens</a>
+ * @see <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html">Super Type Tokens</a>
+ * @see <a href="http://gafter.blogspot.com/2007/05/limitation-of-super-type-tokens.html">A Limitation of Super Type Tokens</a>
  * @see <a href="http://java.sun.com/j2se/1.5/pdf/generics-tutorial.pdf">Generics Tutorial</a>
+ * @see <a href="http://www.jquantlib.org/index.php/Using_TypeTokens_to_retrieve_generic_parameters">Using TypeTokens to retrieve generic parameters</a>
+ *
  * @author Richard Gomes
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
@@ -80,8 +85,9 @@ public abstract class TypeReference<T> {
 
     protected TypeReference() {
         final Type superclass = getClass().getGenericSuperclass();
-        if (superclass instanceof Class)
+        if (superclass instanceof Class) {
             throw new IllegalArgumentException("Class should be anonymous or extended from a generic class");
+        }
         this.types = ((ParameterizedType) superclass).getActualTypeArguments();
     }
 
@@ -130,8 +136,9 @@ public abstract class TypeReference<T> {
      */
     @SuppressWarnings("unchecked")
     public T newGenericInstance(final int n) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        if (constructor == null)
+        if (constructor == null) {
             constructor = getGenericParameterClass(n).getConstructor();
+        }
         return (T) constructor.newInstance();
     }
 
@@ -144,8 +151,9 @@ public abstract class TypeReference<T> {
         final Class<?> rawType = type instanceof Class<?> ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
 
         final Class<?>[] types = new Class[objects.length];
-        for (int i=0; i<objects.length; i++)
+        for (int i=0; i<objects.length; i++) {
             types[i] = objects[i].getClass();
+        }
         constructor = rawType.getConstructor(types);
 
         return (T) constructor.newInstance(objects);
@@ -167,9 +175,14 @@ public abstract class TypeReference<T> {
     public boolean equals(final Object o) {
         if (o instanceof TypeReference) {
             final int len = ((TypeReference)o).types.length;
-            if (len!=types.length) return false;
-            for (int i=0; i<types.length; i++)
-                if (! ((TypeReference) o).types[i].equals(this.types[i]) ) return false;
+            if (len!=types.length) {
+                return false;
+            }
+            for (int i=0; i<types.length; i++) {
+                if (! ((TypeReference) o).types[i].equals(this.types[i]) ) {
+                    return false;
+                }
+            }
             return true;
         }
         return false;
@@ -178,8 +191,9 @@ public abstract class TypeReference<T> {
     @Override
     public int hashCode() {
         int hash = 0;
-        for (final Type type : types)
+        for (final Type type : types) {
             hash = (hash << 1) + type.hashCode();
+        }
         return hash;
     }
 

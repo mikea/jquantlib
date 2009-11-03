@@ -90,6 +90,9 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.VanillaOption;
+import org.jquantlib.processes.BlackScholesMertonProcess;
+import org.jquantlib.processes.HullWhiteProcess;
+import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
@@ -185,8 +188,10 @@ public class CoxRossWithHullWhite {
         final String fmt    = "%34s %13.9f %13.9f %13.9f\n";
         final String fmttbd = "%34s %13.9f %13.9f %13.9f  (TO BE DONE)\n";
 
-//        final StochasticProcess hwProcess = new HullWhiteProcess(flatDividendTS, 0, 0);
-//        final BlackScholesMertonProcess bsmProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
+        final StochasticProcess hwProcess = new HullWhiteProcess(flatDividendTS, 0, 0);
+        final BlackScholesMertonProcess bsmProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
+
+
 
 
         final String method = "CoxRossRubinstein with HullWhite";
@@ -198,9 +203,9 @@ public class CoxRossWithHullWhite {
 //        europeanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(hwProcess, timeSteps){} );
 //        bermudanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(hwProcess, timeSteps){} );
 //        americanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(hwProcess, timeSteps){} );
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.getNPV(), americanOption.NPV() } );
-
-
+//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+//
+//
 //        clock.stopClock();
 //        clock.log();
 
