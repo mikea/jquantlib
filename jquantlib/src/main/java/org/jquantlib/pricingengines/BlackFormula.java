@@ -124,7 +124,7 @@ public class BlackFormula {
             return Math.max((forward - strike) * optionType.toInteger(), (0.0d)) * discount;
 
         if (strike == 0.0) // strike=0 iff displacement=0
-            return (optionType == Option.Type.CALL ? forward * discount : 0.0);
+            return (optionType == Option.Type.Call ? forward * discount : 0.0);
 
         @Price final double d1 = Math.log(forward / strike) / stddev + 0.5 * stddev;
         @Price final double d2 = d1 - stddev;
@@ -591,7 +591,7 @@ public class BlackFormula {
             @Price final double displacement) {
 
         if (stddev==0.0) return (forward * optionType.toInteger() > strike *optionType.toInteger() ? 1.0 : 0.0);
-        if (strike==0.0) return (optionType==Option.Type.CALL ? 1.0 : 0.0);
+        if (strike==0.0) return (optionType==Option.Type.Call ? 1.0 : 0.0);
         final double d1 = Math.log((forward+displacement)/(strike+displacement))/stddev + 0.5*stddev;
         final double d2 = d1 - stddev;
 

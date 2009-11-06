@@ -22,10 +22,10 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.September;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,16 +61,16 @@ public class SaudiArabiaCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		// Eid Al-Adha -- 5 is on Thu,6 is on Fri, weekend in yr 2004
-		expectedHol.add(new Date(1,FEBRUARY,year));
-		expectedHol.add(new Date(2,FEBRUARY,year));
-		expectedHol.add(new Date(3,FEBRUARY,year));
-		expectedHol.add(new Date(4,FEBRUARY,year));
+		expectedHol.add(new Date(1,February,year));
+		expectedHol.add(new Date(2,February,year));
+		expectedHol.add(new Date(3,February,year));
+		expectedHol.add(new Date(4,February,year));
     	//National Day -- weekend in 2004
     	//expectedHol.add(new Date(23,SEPTEMBER,year));
 		// Eid Al-Fitr -- 25,26 falls on thur,fri respectively, weekend in yr 2005
-        expectedHol.add(new Date(27,NOVEMBER,year));
-		expectedHol.add(new Date(28,NOVEMBER,year));
-		expectedHol.add(new Date(29,NOVEMBER,year));
+        expectedHol.add(new Date(27,November,year));
+		expectedHol.add(new Date(28,November,year));
+		expectedHol.add(new Date(29,November,year));
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
@@ -85,16 +85,16 @@ public class SaudiArabiaCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		// Eid Al-Adha -- 21 is on Fri, weekend in yr 2005
-		expectedHol.add(new Date(22,JANUARY,year));
-		expectedHol.add(new Date(23,JANUARY,year));
-		expectedHol.add(new Date(24,JANUARY,year));
-		expectedHol.add(new Date(25,JANUARY,year));
+		expectedHol.add(new Date(22,January,year));
+		expectedHol.add(new Date(23,January,year));
+		expectedHol.add(new Date(24,January,year));
+		expectedHol.add(new Date(25,January,year));
     	//National Day -- weekend in 2005
     	//expectedHol.add(new Date(23,SEPTEMBER,year));
 		// Eid Al-Fitr -- 17,18 falls on thur,fri , weekend in yr 2005
-        expectedHol.add(new Date(14,NOVEMBER,year));
-		expectedHol.add(new Date(15,NOVEMBER,year));
-		expectedHol.add(new Date(16,NOVEMBER,year));
+        expectedHol.add(new Date(14,November,year));
+		expectedHol.add(new Date(15,November,year));
+		expectedHol.add(new Date(16,November,year));
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
     	cbt.checkHolidayList(expectedHol, exchange, year);
@@ -109,7 +109,7 @@ public class SaudiArabiaCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
     	//National Day
-    	expectedHol.add(new Date(23,SEPTEMBER,year));
+    	expectedHol.add(new Date(23,September,year));
 
       	// Call the Holiday Check
       	final CalendarUtil cbt = new CalendarUtil();
@@ -125,7 +125,7 @@ public class SaudiArabiaCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
     	//National Day
-    	expectedHol.add(new Date(23,SEPTEMBER,year));
+    	expectedHol.add(new Date(23,September,year));
 
       	// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -141,7 +141,7 @@ public class SaudiArabiaCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
     	//National Day
-    	expectedHol.add(new Date(23,SEPTEMBER,year));
+    	expectedHol.add(new Date(23,September,year));
 
       	// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -157,7 +157,7 @@ public class SaudiArabiaCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
     	//National Day
-    	expectedHol.add(new Date(23,SEPTEMBER,year));
+    	expectedHol.add(new Date(23,September,year));
 
       	// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -205,7 +205,7 @@ public class SaudiArabiaCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
     	//National Day
-    	expectedHol.add(new Date(23,SEPTEMBER,year));
+    	expectedHol.add(new Date(23,September,year));
 
       	// Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();

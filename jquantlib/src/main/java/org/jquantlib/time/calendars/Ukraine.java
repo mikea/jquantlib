@@ -31,11 +31,11 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
 import static org.jquantlib.time.Weekday.MONDAY;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
@@ -107,23 +107,23 @@ public class Ukraine extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day (possibly moved to Monday)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == JANUARY)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == January)
                     // Orthodox Christmas
-                    || ((d == 7 || ((d == 8 || d == 9) && w == MONDAY)) && m == JANUARY)
+                    || ((d == 7 || ((d == 8 || d == 9) && w == MONDAY)) && m == January)
                     // Women's Day
-                    || ((d == 8 || ((d == 9 || d == 10) && w == MONDAY)) && m == MARCH)
+                    || ((d == 8 || ((d == 9 || d == 10) && w == MONDAY)) && m == March)
                     // Orthodox Easter MONDAY
                     || (dd == em)
                     // Holy Trinity Day
                     || (dd == em + 49)
                     // Workers' Solidarity Days
-                    || ((d == 1 || d == 2 || (d == 3 && w == MONDAY)) && m == MAY)
+                    || ((d == 1 || d == 2 || (d == 3 && w == MONDAY)) && m == May)
                     // Victory Day
-                    || ((d == 9 || ((d == 10 || d == 11) && w == MONDAY)) && m == MAY)
+                    || ((d == 9 || ((d == 10 || d == 11) && w == MONDAY)) && m == May)
                     // Constitution Day
-                    || (d == 28 && m == JUNE)
+                    || (d == 28 && m == June)
                     // Independence Day
-                    || (d == 24 && m == AUGUST)) {
+                    || (d == 24 && m == August)) {
                 return false;
             }
             return true;

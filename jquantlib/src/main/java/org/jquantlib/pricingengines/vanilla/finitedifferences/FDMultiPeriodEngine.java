@@ -21,6 +21,7 @@
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.QL;
@@ -45,28 +46,39 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
     //
 
     protected List<Event> events;
+    protected List<Double> stoppingTimes;
     protected SampledCurve prices;
     protected StepCondition<Array> stepCondition;
+    protected StandardFiniteDifferenceModel model;
 
 
     //
-    // private fields
+    // final protected fields
     //
 
-    private List<Double> stoppingTimes;
-    private int timeStepPerPeriod;
-    private StandardFiniteDifferenceModel model;
+    final private int timeStepPerPeriod;
 
+
+    //
+    // public constructors
+    //
+
+    public FDMultiPeriodEngine(final GeneralizedBlackScholesProcess process) {
+        this(process, 100, 100, false);
+    }
 
     public FDMultiPeriodEngine(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints, final boolean timeDependent) {
         super(process, timeSteps, gridPoints, timeDependent);
+        this.stoppingTimes = new ArrayList<Double>();
+        this.timeStepPerPeriod = timeSteps;
     }
 
-    public FDMultiPeriodEngine(final GeneralizedBlackScholesProcess process) {
-        super(process, 100, 100, false);
-    }
 
-    public void setupArguments(final Arguments args, final List<Event> schedule){
+    //
+    // public methods
+    //
+
+    public void setupArguments(final Arguments args, final List<Event> schedule) {
         super.setupArguments(args);
         events = schedule;
         stoppingTimes.clear();
@@ -132,8 +144,7 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
         final double dateTolerance = 1e-6;
 
         if (dateNumber > 0) {
-            // TODO: code review :: please verify against QL/C++ code
-            QL.require(getDividendTime(0) > 0 , "first date cannot be negative"); // QA:[RG]::verified // TODO: message
+            QL.require(getDividendTime(0) >= 0, "first date cannot be negative"); // QA:[RG]::verified // TODO: message
             if (getDividendTime(0) < getResidualTime() * dateTolerance) {
                 firstDateIsZero = true;
                 firstIndex = 0;
@@ -157,7 +168,7 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
             }
         }
 
-        double dt = getResidualTime()/(timeStepPerPeriod*(dateNumber+1));
+        double dt = getResidualTime() / timeStepPerPeriod*(dateNumber+1);
 
         // Ensure that dt is always smaller than the first non-zero date
         if (firstNonZeroDate <= dt) {

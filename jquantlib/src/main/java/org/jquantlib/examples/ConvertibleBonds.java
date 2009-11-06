@@ -85,7 +85,7 @@ public class ConvertibleBonds {
         QL.info("Started calculation at: " + clock.getElapsedTime());
 
         // actually never used.....
-        final Option.Type type = Option.Type.PUT;
+        final Option.Type type = Option.Type.Put;
 
         final double underlying = 36.0;
         final double spreadRate = 0.005;
@@ -142,15 +142,19 @@ public class ConvertibleBonds {
         final double[] putPrices = { 105.0 };
 
         for(int i=0; i<callLength.length; i++){
-            callability.add(new SoftCallability(new Callability.Price(callPrices[i], Callability.Price.Type.Clean),
-                    schedule.date(callLength[i]),
-                    1.20));
+            callability.add(
+                    new SoftCallability(
+                        new Callability.Price(callPrices[i], Callability.Price.Type.Clean),
+                        schedule.date(callLength[i]),
+                        1.20));
         }
 
         for (int j=0; j<putLength.length; j++) {
-            callability.add(new Callability(new Callability.Price(putPrices[j],Callability.Price.Type.Clean),
-                    Callability.Type.Put,
-                    schedule.date(putLength[j])));
+            callability.add(
+                    new Callability(
+                            new Callability.Price(putPrices[j],Callability.Price.Type.Clean),
+                            Callability.Type.Put,
+                            schedule.date(putLength[j])));
         }
 
         // Assume dividends are paid every 6 months.

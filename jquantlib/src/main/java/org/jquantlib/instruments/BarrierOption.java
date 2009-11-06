@@ -204,7 +204,8 @@ public class BarrierOption extends OneAssetOption {
      *
      * @author <Richard Gomes>
      */
-    static public abstract class EngineImpl extends GenericEngine<BarrierOption.Arguments, OneAssetOption.Results> {
+    static public abstract class EngineImpl
+            extends GenericEngine<BarrierOption.Arguments, OneAssetOption.Results> {
 
         final private BarrierOption.ArgumentsImpl a;
 

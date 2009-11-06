@@ -22,15 +22,15 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JULY;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.OCTOBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.July;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,16 +64,16 @@ public class CzechRepublicCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(1, JANUARY, year));
-        expectedHol.add(new Date(2, JANUARY, year)); // only for year 2004
-        expectedHol.add(new Date(12, APRIL, year));
-        expectedHol.add(new Date(5, JULY, year));
-        expectedHol.add(new Date(6, JULY, year));
-        expectedHol.add(new Date(28, SEPTEMBER, year));
-        expectedHol.add(new Date(28, OCTOBER, year));
-        expectedHol.add(new Date(17, NOVEMBER, year));
-        expectedHol.add(new Date(24, DECEMBER, year));
-        expectedHol.add(new Date(31, DECEMBER, year)); // only for year 2004
+        expectedHol.add(new Date(1, January, year));
+        expectedHol.add(new Date(2, January, year)); // only for year 2004
+        expectedHol.add(new Date(12, April, year));
+        expectedHol.add(new Date(5, July, year));
+        expectedHol.add(new Date(6, July, year));
+        expectedHol.add(new Date(28, September, year));
+        expectedHol.add(new Date(28, October, year));
+        expectedHol.add(new Date(17, November, year));
+        expectedHol.add(new Date(24, December, year));
+        expectedHol.add(new Date(31, December, year)); // only for year 2004
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -89,13 +89,13 @@ public class CzechRepublicCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(28, MARCH, year));
-        expectedHol.add(new Date(5, JULY, year));
-        expectedHol.add(new Date(6, JULY, year));
-        expectedHol.add(new Date(28, SEPTEMBER, year));
-        expectedHol.add(new Date(28, OCTOBER, year));
-        expectedHol.add(new Date(17, NOVEMBER, year));
-        expectedHol.add(new Date(26, DECEMBER, year));
+        expectedHol.add(new Date(28, March, year));
+        expectedHol.add(new Date(5, July, year));
+        expectedHol.add(new Date(6, July, year));
+        expectedHol.add(new Date(28, September, year));
+        expectedHol.add(new Date(28, October, year));
+        expectedHol.add(new Date(17, November, year));
+        expectedHol.add(new Date(26, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -110,15 +110,15 @@ public class CzechRepublicCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(17, APRIL, year));
-        expectedHol.add(new Date(1, MAY, year));
-        expectedHol.add(new Date(8, MAY, year));
-        expectedHol.add(new Date(5, JULY, year));
-        expectedHol.add(new Date(6, JULY, year));
-        expectedHol.add(new Date(28, SEPTEMBER, year));
-        expectedHol.add(new Date(17, NOVEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
-        expectedHol.add(new Date(26, DECEMBER, year));
+        expectedHol.add(new Date(17, April, year));
+        expectedHol.add(new Date(1, May, year));
+        expectedHol.add(new Date(8, May, year));
+        expectedHol.add(new Date(5, July, year));
+        expectedHol.add(new Date(6, July, year));
+        expectedHol.add(new Date(28, September, year));
+        expectedHol.add(new Date(17, November, year));
+        expectedHol.add(new Date(25, December, year));
+        expectedHol.add(new Date(26, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -133,16 +133,16 @@ public class CzechRepublicCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(1, JANUARY, year));
-        expectedHol.add(new Date(9, APRIL, year));
-        expectedHol.add(new Date(1, MAY, year));
-        expectedHol.add(new Date(8, MAY, year));
-        expectedHol.add(new Date(5, JULY, year));
-        expectedHol.add(new Date(6, JULY, year));
-        expectedHol.add(new Date(28, SEPTEMBER, year));
-        expectedHol.add(new Date(24, DECEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
-        expectedHol.add(new Date(26, DECEMBER, year));
+        expectedHol.add(new Date(1, January, year));
+        expectedHol.add(new Date(9, April, year));
+        expectedHol.add(new Date(1, May, year));
+        expectedHol.add(new Date(8, May, year));
+        expectedHol.add(new Date(5, July, year));
+        expectedHol.add(new Date(6, July, year));
+        expectedHol.add(new Date(28, September, year));
+        expectedHol.add(new Date(24, December, year));
+        expectedHol.add(new Date(25, December, year));
+        expectedHol.add(new Date(26, December, year));
 
 
         // Call the Holiday Check
@@ -159,15 +159,15 @@ public class CzechRepublicCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(1, JANUARY, year));
-        expectedHol.add(new Date(24, MARCH, year));
-        expectedHol.add(new Date(1, MAY, year));
-        expectedHol.add(new Date(8, MAY, year));
-        expectedHol.add(new Date(28, OCTOBER, year));
-        expectedHol.add(new Date(17, NOVEMBER, year));
-        expectedHol.add(new Date(24, DECEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
-        expectedHol.add(new Date(26, DECEMBER, year));
+        expectedHol.add(new Date(1, January, year));
+        expectedHol.add(new Date(24, March, year));
+        expectedHol.add(new Date(1, May, year));
+        expectedHol.add(new Date(8, May, year));
+        expectedHol.add(new Date(28, October, year));
+        expectedHol.add(new Date(17, November, year));
+        expectedHol.add(new Date(24, December, year));
+        expectedHol.add(new Date(25, December, year));
+        expectedHol.add(new Date(26, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -183,16 +183,16 @@ public class CzechRepublicCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(1, JANUARY, year));
-        expectedHol.add(new Date(13, APRIL, year));
-        expectedHol.add(new Date(1, MAY, year));
-        expectedHol.add(new Date(8, MAY, year));
-        expectedHol.add(new Date(6, JULY, year));
-        expectedHol.add(new Date(28, SEPTEMBER, year));
-        expectedHol.add(new Date(28, OCTOBER, year));
-        expectedHol.add(new Date(17, NOVEMBER, year));
-        expectedHol.add(new Date(24, DECEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(1, January, year));
+        expectedHol.add(new Date(13, April, year));
+        expectedHol.add(new Date(1, May, year));
+        expectedHol.add(new Date(8, May, year));
+        expectedHol.add(new Date(6, July, year));
+        expectedHol.add(new Date(28, September, year));
+        expectedHol.add(new Date(28, October, year));
+        expectedHol.add(new Date(17, November, year));
+        expectedHol.add(new Date(24, December, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -207,14 +207,14 @@ public class CzechRepublicCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(1, JANUARY, year));
-        expectedHol.add(new Date(5, APRIL, year));
-        expectedHol.add(new Date(5, JULY, year));
-        expectedHol.add(new Date(6, JULY, year));
-        expectedHol.add(new Date(28, SEPTEMBER, year));
-        expectedHol.add(new Date(28, OCTOBER, year));
-        expectedHol.add(new Date(17, NOVEMBER, year));
-        expectedHol.add(new Date(24, DECEMBER, year));
+        expectedHol.add(new Date(1, January, year));
+        expectedHol.add(new Date(5, April, year));
+        expectedHol.add(new Date(5, July, year));
+        expectedHol.add(new Date(6, July, year));
+        expectedHol.add(new Date(28, September, year));
+        expectedHol.add(new Date(28, October, year));
+        expectedHol.add(new Date(17, November, year));
+        expectedHol.add(new Date(24, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -229,13 +229,13 @@ public class CzechRepublicCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(25, APRIL, year));
-        expectedHol.add(new Date(5, JULY, year));
-        expectedHol.add(new Date(6, JULY, year));
-        expectedHol.add(new Date(28, SEPTEMBER, year));
-        expectedHol.add(new Date(28, OCTOBER, year));
-        expectedHol.add(new Date(17, NOVEMBER, year));
-        expectedHol.add(new Date(26, DECEMBER, year));
+        expectedHol.add(new Date(25, April, year));
+        expectedHol.add(new Date(5, July, year));
+        expectedHol.add(new Date(6, July, year));
+        expectedHol.add(new Date(28, September, year));
+        expectedHol.add(new Date(28, October, year));
+        expectedHol.add(new Date(17, November, year));
+        expectedHol.add(new Date(26, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -250,15 +250,15 @@ public class CzechRepublicCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(9, APRIL, year));
-        expectedHol.add(new Date(1, MAY, year));
-        expectedHol.add(new Date(8, MAY, year));
-        expectedHol.add(new Date(5, JULY, year));
-        expectedHol.add(new Date(6, JULY, year));
-        expectedHol.add(new Date(28, SEPTEMBER, year));
-        expectedHol.add(new Date(24, DECEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
-        expectedHol.add(new Date(26, DECEMBER, year));
+        expectedHol.add(new Date(9, April, year));
+        expectedHol.add(new Date(1, May, year));
+        expectedHol.add(new Date(8, May, year));
+        expectedHol.add(new Date(5, July, year));
+        expectedHol.add(new Date(6, July, year));
+        expectedHol.add(new Date(28, September, year));
+        expectedHol.add(new Date(24, December, year));
+        expectedHol.add(new Date(25, December, year));
+        expectedHol.add(new Date(26, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();

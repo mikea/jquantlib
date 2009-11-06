@@ -76,7 +76,7 @@ public class DiscreteHedging {
 			/* @Price */	 	final Number underlying = new Double(100);
 			/* @Volatility */	final Number volatility = new Double(0.20); // 20%
 			/* @Rate */    		final Number riskFreeRate = new Double(0.05); // 5%
-			final Option.Type Call = Option.Type.CALL;
+			final Option.Type Call = Option.Type.Call;
 
 			final ReplicationError rp = new ReplicationError(Call, maturity, strike,
 					underlying, volatility, riskFreeRate);

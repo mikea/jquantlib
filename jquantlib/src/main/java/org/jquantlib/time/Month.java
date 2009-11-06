@@ -28,18 +28,18 @@ import org.jquantlib.lang.exceptions.LibraryException;
  * Month names
  */
 public enum Month {
-    JANUARY   (1),
-    FEBRUARY  (2),
-    MARCH     (3),
-    APRIL     (4),
-    MAY       (5),
-    JUNE      (6),
-    JULY      (7),
-    AUGUST    (8),
-    SEPTEMBER (9),
-    OCTOBER   (10),
-    NOVEMBER  (11),
-    DECEMBER  (12);
+    January   (1),
+    February  (2),
+    March     (3),
+    April     (4),
+    May       (5),
+    June      (6),
+    July      (7),
+    August    (8),
+    September (9),
+    October   (10),
+    November  (11),
+    December  (12);
 
     private final int enumValue;
 
@@ -66,40 +66,40 @@ public enum Month {
         final Month returnMonth;
         switch (month) {
         case 1:
-            returnMonth = Month.JANUARY;
+            returnMonth = Month.January;
             break;
         case 2:
-            returnMonth = Month.FEBRUARY;
+            returnMonth = Month.February;
             break;
         case 3:
-            returnMonth = Month.MARCH;
+            returnMonth = Month.March;
             break;
         case 4:
-            returnMonth = Month.APRIL;
+            returnMonth = Month.April;
             break;
         case 5:
-            returnMonth = Month.MAY;
+            returnMonth = Month.May;
             break;
         case 6:
-            returnMonth = Month.JUNE;
+            returnMonth = Month.June;
             break;
         case 7:
-            returnMonth = Month.JULY;
+            returnMonth = Month.July;
             break;
         case 8:
-            returnMonth = Month.AUGUST;
+            returnMonth = Month.August;
             break;
         case 9:
-            returnMonth = Month.SEPTEMBER;
+            returnMonth = Month.September;
             break;
         case 10:
-            returnMonth = Month.OCTOBER;
+            returnMonth = Month.October;
             break;
         case 11:
-            returnMonth = Month.NOVEMBER;
+            returnMonth = Month.November;
             break;
         case 12:
-            returnMonth =  Month.DECEMBER;
+            returnMonth =  Month.December;
             break;
         default:
             throw new LibraryException("value must be [1,12]"); // QA:[RG]::verified // TODO: message
@@ -167,18 +167,18 @@ public enum Month {
     static public Month valueOf(final char immCode) {
         final Month returnMonth;
         switch (immCode) {
-        case 'F': returnMonth = Month.JANUARY;break;
-        case 'G': returnMonth = Month.FEBRUARY;break;
-        case 'H': returnMonth = Month.MARCH;break;
-        case 'J': returnMonth = Month.APRIL;break;
-        case 'K': returnMonth = Month.MAY;break;
-        case 'M': returnMonth = Month.JUNE;break;
-        case 'N': returnMonth = Month.JULY;break;
-        case 'Q': returnMonth = Month.AUGUST;break;
-        case 'U': returnMonth = Month.SEPTEMBER;break;
-        case 'V': returnMonth = Month.OCTOBER;break;
-        case 'X': returnMonth = Month.NOVEMBER;break;
-        case 'Z': returnMonth = Month.DECEMBER;break;
+        case 'F': returnMonth = Month.January;break;
+        case 'G': returnMonth = Month.February;break;
+        case 'H': returnMonth = Month.March;break;
+        case 'J': returnMonth = Month.April;break;
+        case 'K': returnMonth = Month.May;break;
+        case 'M': returnMonth = Month.June;break;
+        case 'N': returnMonth = Month.July;break;
+        case 'Q': returnMonth = Month.August;break;
+        case 'U': returnMonth = Month.September;break;
+        case 'V': returnMonth = Month.October;break;
+        case 'X': returnMonth = Month.November;break;
+        case 'Z': returnMonth = Month.December;break;
         default:
             throw new LibraryException("value must be one of F,G,H,J,K,M,N,Q,U,V,X,Z"); // QA:[RG]::verified // TODO: message
         }

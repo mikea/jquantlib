@@ -85,8 +85,7 @@ public class HullWhiteProcess extends StochasticProcess1D {
         return sigma;
     }
 
-    public double alpha(
-            /* @Time */final double t) /* @ReadOnly */{
+    public double alpha(final /* @Time */ double t) /* @ReadOnly */{
         double alfa = a > Constants.QL_EPSILON ? (sigma / a) * (1 - Math.exp(-a * t)) : sigma * t;
         alfa *= 0.5 * alfa;
         alfa += h.currentLink().forwardRate(t, t, Compounding.Continuous, Frequency.NoFrequency).rate();
@@ -104,7 +103,7 @@ public class HullWhiteProcess extends StochasticProcess1D {
 
     @Override
     public double drift(
-            /* @Time */final double t,
+            final /* @Time */ double t,
             final double x) /* @ReadOnly */{
         double alpha_drift = sigma * sigma / (2 * a) * (1 - Math.exp(-2 * a * t));
         final double shift = 0.0001;
@@ -117,32 +116,32 @@ public class HullWhiteProcess extends StochasticProcess1D {
 
     @Override
     public double diffusion(
-            /* @Time */final double t,
+            final /* @Time */ double t,
             final double x) /* @ReadOnly */{
         return process.diffusion(t, x);
     }
 
     @Override
     public double expectation(
-            /* @Time */final double t0,
-            final double x0, /* @Time */
-            final double dt) /* @ReadOnly */{
+            final /* @Time */ double t0,
+            final double x0,
+            final /* @Time */ double dt) /* @ReadOnly */{
         return process.expectation(t0, x0, dt) + alpha(t0 + dt) - alpha(t0) * Math.exp(-a * dt);
     }
 
     @Override
     public double stdDeviation(
-            /* @Time */final double t0,
-            final double x0, /* @Time */
-            final double dt) /* @ReadOnly */{
+            final /* @Time */ double t0,
+            final double x0,
+            final /* @Time */ double dt) /* @ReadOnly */{
         return process.stdDeviation(t0, x0, dt);
     }
 
     @Override
     public double variance(
-            /* @Time */final double t0,
-            final double x0, /* @Time */
-            final double dt) /* @ReadOnly */{
+            final /* @Time */double t0,
+            final double x0,
+            final /* @Time */ double dt) /* @ReadOnly */{
         return process.variance(t0, x0, dt);
     }
 

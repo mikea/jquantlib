@@ -22,16 +22,16 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JULY;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.OCTOBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.July;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,25 +82,25 @@ public class JapanCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		// Sun: expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 2,JANUARY,year));   // Bank Holiday
-		expectedHol.add(new Date( 3,JANUARY,year));   // Bank Holiday
-    	expectedHol.add(new Date( 9,JANUARY,year));   // Coming of Age Day
+		expectedHol.add(new Date( 2,January,year));   // Bank Holiday
+		expectedHol.add(new Date( 3,January,year));   // Bank Holiday
+    	expectedHol.add(new Date( 9,January,year));   // Coming of Age Day
 		// Sat: expectedHol.add(new Date(11,FEBRUARY,year));  // National Foundation Day
-		expectedHol.add(new Date(20,MARCH,year));     // Spring Equinox observed
+		expectedHol.add(new Date(20,March,year));     // Spring Equinox observed
 		// Sun: expectedHol.add(new Date(29,APRIL,year));     // Showa Day
-		expectedHol.add(new Date(30,APRIL,year));     // Showa Day observed
-		expectedHol.add(new Date( 3,MAY,year));       // Constitution Memorial Day
-		expectedHol.add(new Date( 4,MAY,year));       // Greenery Day
+		expectedHol.add(new Date(30,April,year));     // Showa Day observed
+		expectedHol.add(new Date( 3,May,year));       // Constitution Memorial Day
+		expectedHol.add(new Date( 4,May,year));       // Greenery Day
         // Sat: expectedHol.add(new Date( 5,MAY,year));       // Children's Day
-		expectedHol.add(new Date(16,JULY,year));      // Sea Day
-        expectedHol.add(new Date(17,SEPTEMBER,year)); // Respect for the Aged Day
+		expectedHol.add(new Date(16,July,year));      // Sea Day
+        expectedHol.add(new Date(17,September,year)); // Respect for the Aged Day
     	// Sat: expectedHol.add(new Date(22,SEPTEMBER,year)); // Autumn Equinox
-        expectedHol.add(new Date( 8,OCTOBER,year));   // Sports Day
+        expectedHol.add(new Date( 8,October,year));   // Sports Day
         // Sat: expectedHol.add(new Date( 3,NOVEMBER,year));  // Culture Day
-        expectedHol.add(new Date(23,NOVEMBER,year));  // Labor Thanksgiving Day
+        expectedHol.add(new Date(23,November,year));  // Labor Thanksgiving Day
         // Sun: expectedHol.add(new Date(23,DECEMBER,year));  // Emperor's Birthday
-        expectedHol.add(new Date(24,DECEMBER,year));  // Emperor's Birthday observed
-		expectedHol.add(new Date(31,DECEMBER,year));  // Bank Holiday
+        expectedHol.add(new Date(24,December,year));  // Emperor's Birthday observed
+		expectedHol.add(new Date(31,December,year));  // Bank Holiday
 
         new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
@@ -137,21 +137,21 @@ public class JapanCalendarTest {
 
 		// Sat: expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
 		// Sun: expectedHol.add(new Date( 2,JANUARY,year));   // Bank Holiday
-		expectedHol.add(new Date( 3,JANUARY,year));   // Bank Holiday
-    	expectedHol.add(new Date(10,JANUARY,year));   // Coming of Age Day
-		expectedHol.add(new Date(11,FEBRUARY,year));  // National Foundation Day
-		expectedHol.add(new Date(21,MARCH,year));     // Spring Equinox observed
-		expectedHol.add(new Date(29,APRIL,year));     // Showa Day
-		expectedHol.add(new Date( 3,MAY,year));       // Constitution Memorial Day
-		expectedHol.add(new Date( 4,MAY,year));       // Greenery Day
-        expectedHol.add(new Date( 5,MAY,year));       // Children's Day
-		expectedHol.add(new Date(18,JULY,year));      // Sea Day
-        expectedHol.add(new Date(19,SEPTEMBER,year)); // Respect for the Aged Day
-    	expectedHol.add(new Date(23,SEPTEMBER,year)); // Autumn Equinox
-        expectedHol.add(new Date(10,OCTOBER,year));   // Sports Day
-        expectedHol.add(new Date( 3,NOVEMBER,year));  // Culture Day
-        expectedHol.add(new Date(23,NOVEMBER,year));  // Labor Thanksgiving Day
-        expectedHol.add(new Date(23,DECEMBER,year));  // Emperor's Birthday
+		expectedHol.add(new Date( 3,January,year));   // Bank Holiday
+    	expectedHol.add(new Date(10,January,year));   // Coming of Age Day
+		expectedHol.add(new Date(11,February,year));  // National Foundation Day
+		expectedHol.add(new Date(21,March,year));     // Spring Equinox observed
+		expectedHol.add(new Date(29,April,year));     // Showa Day
+		expectedHol.add(new Date( 3,May,year));       // Constitution Memorial Day
+		expectedHol.add(new Date( 4,May,year));       // Greenery Day
+        expectedHol.add(new Date( 5,May,year));       // Children's Day
+		expectedHol.add(new Date(18,July,year));      // Sea Day
+        expectedHol.add(new Date(19,September,year)); // Respect for the Aged Day
+    	expectedHol.add(new Date(23,September,year)); // Autumn Equinox
+        expectedHol.add(new Date(10,October,year));   // Sports Day
+        expectedHol.add(new Date( 3,November,year));  // Culture Day
+        expectedHol.add(new Date(23,November,year));  // Labor Thanksgiving Day
+        expectedHol.add(new Date(23,December,year));  // Emperor's Birthday
 		// Sat: expectedHol.add(new Date(31,DECEMBER,year));  // Bank Holiday
 
         new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
@@ -187,24 +187,24 @@ public class JapanCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
+		expectedHol.add(new Date( 1,January,year));   // New Year's Day
 		// Sat: expectedHol.add(new Date( 2,JANUARY,year));   // Bank Holiday
 		// Sun: expectedHol.add(new Date( 3,JANUARY,year));   // Bank Holiday
-    	expectedHol.add(new Date(11,JANUARY,year));   // Coming of Age Day
-		expectedHol.add(new Date(11,FEBRUARY,year));  // National Foundation Day
-		expectedHol.add(new Date(22,MARCH,year));     // Spring Equinox observed
-		expectedHol.add(new Date(29,APRIL,year));     // Showa Day
-		expectedHol.add(new Date( 3,MAY,year));       // Constitution Memorial Day
-		expectedHol.add(new Date( 4,MAY,year));       // Greenery Day
-        expectedHol.add(new Date( 5,MAY,year));       // Children's Day
-		expectedHol.add(new Date(19,JULY,year));      // Sea Day
-        expectedHol.add(new Date(20,SEPTEMBER,year)); // Respect for the Aged Day
-    	expectedHol.add(new Date(23,SEPTEMBER,year)); // Autumn Equinox
-        expectedHol.add(new Date(11,OCTOBER,year));   // Sports Day
-        expectedHol.add(new Date( 3,NOVEMBER,year));  // Culture Day
-        expectedHol.add(new Date(23,NOVEMBER,year));  // Labor Thanksgiving Day
-        expectedHol.add(new Date(23,DECEMBER,year));  // Emperor's Birthday
-		expectedHol.add(new Date(31,DECEMBER,year));  // Bank Holiday
+    	expectedHol.add(new Date(11,January,year));   // Coming of Age Day
+		expectedHol.add(new Date(11,February,year));  // National Foundation Day
+		expectedHol.add(new Date(22,March,year));     // Spring Equinox observed
+		expectedHol.add(new Date(29,April,year));     // Showa Day
+		expectedHol.add(new Date( 3,May,year));       // Constitution Memorial Day
+		expectedHol.add(new Date( 4,May,year));       // Greenery Day
+        expectedHol.add(new Date( 5,May,year));       // Children's Day
+		expectedHol.add(new Date(19,July,year));      // Sea Day
+        expectedHol.add(new Date(20,September,year)); // Respect for the Aged Day
+    	expectedHol.add(new Date(23,September,year)); // Autumn Equinox
+        expectedHol.add(new Date(11,October,year));   // Sports Day
+        expectedHol.add(new Date( 3,November,year));  // Culture Day
+        expectedHol.add(new Date(23,November,year));  // Labor Thanksgiving Day
+        expectedHol.add(new Date(23,December,year));  // Emperor's Birthday
+		expectedHol.add(new Date(31,December,year));  // Bank Holiday
 
         new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
@@ -239,26 +239,26 @@ public class JapanCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 2,JANUARY,year));   // Bank Holiday
+		expectedHol.add(new Date( 1,January,year));   // New Year's Day
+		expectedHol.add(new Date( 2,January,year));   // Bank Holiday
 		//. Sat: expectedHol.add(new Date( 3,JANUARY,year));   // Bank Holiday
-    	expectedHol.add(new Date(12,JANUARY,year));   // Coming of Age Day
-		expectedHol.add(new Date(11,FEBRUARY,year));  // National Foundation Day
-		expectedHol.add(new Date(20,MARCH,year));     // Spring Equinox
-		expectedHol.add(new Date(29,APRIL,year));     // Showa Day
+    	expectedHol.add(new Date(12,January,year));   // Coming of Age Day
+		expectedHol.add(new Date(11,February,year));  // National Foundation Day
+		expectedHol.add(new Date(20,March,year));     // Spring Equinox
+		expectedHol.add(new Date(29,April,year));     // Showa Day
 		// expectedHol.add(new Date( 3,MAY,year));       // Constitution Memorial Day
-		expectedHol.add(new Date( 4,MAY,year));       // Greenery Day
-        expectedHol.add(new Date( 5,MAY,year));       // Children's Day
+		expectedHol.add(new Date( 4,May,year));       // Greenery Day
+        expectedHol.add(new Date( 5,May,year));       // Children's Day
 //        expectedHol.add(new Date( 6,MAY,year));       // alternative Constitution Memorial Day
-		expectedHol.add(new Date(20,JULY,year));      // Sea Day
-        expectedHol.add(new Date(21,SEPTEMBER,year)); // Respect for the Aged Day
-        expectedHol.add(new Date(22,SEPTEMBER,year)); // Bank Holiday
-    	expectedHol.add(new Date(23,SEPTEMBER,year)); // Autumn Equinox
-        expectedHol.add(new Date(12,OCTOBER,year));   // Sports Day
-        expectedHol.add(new Date( 3,NOVEMBER,year));  // Culture Day
-        expectedHol.add(new Date(23,NOVEMBER,year));  // Labor Thanksgiving Day
-        expectedHol.add(new Date(23,DECEMBER,year));  // Emperor's Birthday
-		expectedHol.add(new Date(31,DECEMBER,year));  // Bank Holiday
+		expectedHol.add(new Date(20,July,year));      // Sea Day
+        expectedHol.add(new Date(21,September,year)); // Respect for the Aged Day
+        expectedHol.add(new Date(22,September,year)); // Bank Holiday
+    	expectedHol.add(new Date(23,September,year)); // Autumn Equinox
+        expectedHol.add(new Date(12,October,year));   // Sports Day
+        expectedHol.add(new Date( 3,November,year));  // Culture Day
+        expectedHol.add(new Date(23,November,year));  // Labor Thanksgiving Day
+        expectedHol.add(new Date(23,December,year));  // Emperor's Birthday
+		expectedHol.add(new Date(31,December,year));  // Bank Holiday
 
         new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
@@ -293,25 +293,25 @@ public class JapanCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 2,JANUARY,year));   // Bank Holiday
-		expectedHol.add(new Date( 3,JANUARY,year));   // Bank Holiday
-    	expectedHol.add(new Date(14,JANUARY,year));   // Coming of Age Day
-		expectedHol.add(new Date(11,FEBRUARY,year));  // National Foundation Day
-		expectedHol.add(new Date(20,MARCH,year));     // Spring Equinox
-		expectedHol.add(new Date(29,APRIL,year));     // Showa Day
+		expectedHol.add(new Date( 1,January,year));   // New Year's Day
+		expectedHol.add(new Date( 2,January,year));   // Bank Holiday
+		expectedHol.add(new Date( 3,January,year));   // Bank Holiday
+    	expectedHol.add(new Date(14,January,year));   // Coming of Age Day
+		expectedHol.add(new Date(11,February,year));  // National Foundation Day
+		expectedHol.add(new Date(20,March,year));     // Spring Equinox
+		expectedHol.add(new Date(29,April,year));     // Showa Day
 		// expectedHol.add(new Date( 3,MAY,year));       // Constitution Memorial Day
 		// expectedHol.add(new Date( 4,MAY,year));       // Between Day
-        expectedHol.add(new Date( 5,MAY,year));       // Children's Day
+        expectedHol.add(new Date( 5,May,year));       // Children's Day
 //        expectedHol.add(new Date( 6,MAY,year));       // alternative Greenery Day
-		expectedHol.add(new Date(21,JULY,year));      // Sea Day
-        expectedHol.add(new Date(15,SEPTEMBER,year)); // Respect for the Aged Day
-    	expectedHol.add(new Date(23,SEPTEMBER,year)); // Autumn Equinox
-        expectedHol.add(new Date(13,OCTOBER,year));   // Sports Day
-        expectedHol.add(new Date( 3,NOVEMBER,year));  // Culture Day
-        expectedHol.add(new Date(24,NOVEMBER,year));  // Labor Thanksgiving Day
-        expectedHol.add(new Date(23,DECEMBER,year));  // Emperor's Birthday
-		expectedHol.add(new Date(31,DECEMBER,year));  // Bank Holiday
+		expectedHol.add(new Date(21,July,year));      // Sea Day
+        expectedHol.add(new Date(15,September,year)); // Respect for the Aged Day
+    	expectedHol.add(new Date(23,September,year)); // Autumn Equinox
+        expectedHol.add(new Date(13,October,year));   // Sports Day
+        expectedHol.add(new Date( 3,November,year));  // Culture Day
+        expectedHol.add(new Date(24,November,year));  // Labor Thanksgiving Day
+        expectedHol.add(new Date(23,December,year));  // Emperor's Birthday
+		expectedHol.add(new Date(31,December,year));  // Bank Holiday
 
         new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
@@ -345,24 +345,24 @@ public class JapanCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 2,JANUARY,year));   // Bank Holiday
-		expectedHol.add(new Date( 3,JANUARY,year));   // Bank Holiday
-    	expectedHol.add(new Date( 8,JANUARY,year));   // Coming of Age Day
-		expectedHol.add(new Date(12,FEBRUARY,year));  // National Foundation Day
-		expectedHol.add(new Date(21,MARCH,year));     // Spring Equinox
-		expectedHol.add(new Date(30,APRIL,year));     // Greenery Day
-		expectedHol.add(new Date( 3,MAY,year));       // Constitution Memorial Day
-		expectedHol.add(new Date( 4,MAY,year));       // Between Day
+		expectedHol.add(new Date( 1,January,year));   // New Year's Day
+		expectedHol.add(new Date( 2,January,year));   // Bank Holiday
+		expectedHol.add(new Date( 3,January,year));   // Bank Holiday
+    	expectedHol.add(new Date( 8,January,year));   // Coming of Age Day
+		expectedHol.add(new Date(12,February,year));  // National Foundation Day
+		expectedHol.add(new Date(21,March,year));     // Spring Equinox
+		expectedHol.add(new Date(30,April,year));     // Greenery Day
+		expectedHol.add(new Date( 3,May,year));       // Constitution Memorial Day
+		expectedHol.add(new Date( 4,May,year));       // Between Day
         // Sat: expectedHol.add(new Date( 5,MAY,year));       // Children's Day
-		expectedHol.add(new Date(16,JULY,year));      // Sea Day
-        expectedHol.add(new Date(17,SEPTEMBER,year)); // Respect for the Aged Day
-    	expectedHol.add(new Date(24,SEPTEMBER,year)); // Autumn Equinox
-        expectedHol.add(new Date( 8,OCTOBER,year));   // Sports Day
+		expectedHol.add(new Date(16,July,year));      // Sea Day
+        expectedHol.add(new Date(17,September,year)); // Respect for the Aged Day
+    	expectedHol.add(new Date(24,September,year)); // Autumn Equinox
+        expectedHol.add(new Date( 8,October,year));   // Sports Day
         // Sat: expectedHol.add(new Date( 3,NOVEMBER,year));  // Culture Day
-        expectedHol.add(new Date(23,NOVEMBER,year));  // Labor Thanksgiving Day
-        expectedHol.add(new Date(24,DECEMBER,year));  // Emperor's Birthday
-		expectedHol.add(new Date(31,DECEMBER,year));  // Bank Holiday
+        expectedHol.add(new Date(23,November,year));  // Labor Thanksgiving Day
+        expectedHol.add(new Date(24,December,year));  // Emperor's Birthday
+		expectedHol.add(new Date(31,December,year));  // Bank Holiday
 
         new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }
@@ -397,21 +397,21 @@ public class JapanCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		// Sun: expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 2,JANUARY,year));   // Bank Holiday
-		expectedHol.add(new Date( 3,JANUARY,year));   // Bank Holiday
-    	expectedHol.add(new Date( 9,JANUARY,year));   // Coming of Age Day
+		expectedHol.add(new Date( 2,January,year));   // Bank Holiday
+		expectedHol.add(new Date( 3,January,year));   // Bank Holiday
+    	expectedHol.add(new Date( 9,January,year));   // Coming of Age Day
 		// Sat: expectedHol.add(new Date(11,FEBRUARY,year));  // National Foundation Day
-		expectedHol.add(new Date(21,MARCH,year));     // Spring Equinox
+		expectedHol.add(new Date(21,March,year));     // Spring Equinox
 		// Sat: expectedHol.add(new Date(29,APRIL,year));     // Greenery Day
-		expectedHol.add(new Date( 3,MAY,year));       // Constitution Memorial Day
-		expectedHol.add(new Date( 4,MAY,year));       // Between Day
-        expectedHol.add(new Date( 5,MAY,year));       // Children's Day
-		expectedHol.add(new Date(17,JULY,year));      // Sea Day
-        expectedHol.add(new Date(18,SEPTEMBER,year)); // Respect for the Aged Day
+		expectedHol.add(new Date( 3,May,year));       // Constitution Memorial Day
+		expectedHol.add(new Date( 4,May,year));       // Between Day
+        expectedHol.add(new Date( 5,May,year));       // Children's Day
+		expectedHol.add(new Date(17,July,year));      // Sea Day
+        expectedHol.add(new Date(18,September,year)); // Respect for the Aged Day
     	// Sat: expectedHol.add(new Date(23,SEPTEMBER,year)); // Autumn Equinox
-        expectedHol.add(new Date( 9,OCTOBER,year));   // Sports Day
-        expectedHol.add(new Date( 3,NOVEMBER,year));  // Culture Day
-        expectedHol.add(new Date(23,NOVEMBER,year));  // Labor Thanksgiving Day
+        expectedHol.add(new Date( 9,October,year));   // Sports Day
+        expectedHol.add(new Date( 3,November,year));  // Culture Day
+        expectedHol.add(new Date(23,November,year));  // Labor Thanksgiving Day
         // Sat: expectedHol.add(new Date(23,DECEMBER,year));  // Emperor's Birthday
 		// Sun: expectedHol.add(new Date(31,DECEMBER,year));  // Bank Holiday
 
@@ -449,21 +449,21 @@ public class JapanCalendarTest {
 
 		// Sat: expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
 		// Sun: expectedHol.add(new Date( 2,JANUARY,year));   // Bank Holiday
-		expectedHol.add(new Date( 3,JANUARY,year));   // Bank Holiday
-    	expectedHol.add(new Date(10,JANUARY,year));   // Coming of Age Day
-		expectedHol.add(new Date(11,FEBRUARY,year));  // National Foundation Day
-		expectedHol.add(new Date(21,MARCH,year));     // Spring Equinox
-		expectedHol.add(new Date(29,APRIL,year));     // Greenery Day
-		expectedHol.add(new Date( 3,MAY,year));       // Constitution Memorial Day
-		expectedHol.add(new Date( 4,MAY,year));       // Between Day
-        expectedHol.add(new Date( 5,MAY,year));       // Children's Day
-		expectedHol.add(new Date(18,JULY,year));      // Sea Day
-        expectedHol.add(new Date(19,SEPTEMBER,year)); // Respect for the Aged Day
-    	expectedHol.add(new Date(23,SEPTEMBER,year)); // Autumn Equinox
-        expectedHol.add(new Date(10,OCTOBER,year));   // Sports Day
-        expectedHol.add(new Date( 3,NOVEMBER,year));  // Culture Day
-        expectedHol.add(new Date(23,NOVEMBER,year));  // Labor Thanksgiving Day
-        expectedHol.add(new Date(23,DECEMBER,year));  // Emperor's Birthday
+		expectedHol.add(new Date( 3,January,year));   // Bank Holiday
+    	expectedHol.add(new Date(10,January,year));   // Coming of Age Day
+		expectedHol.add(new Date(11,February,year));  // National Foundation Day
+		expectedHol.add(new Date(21,March,year));     // Spring Equinox
+		expectedHol.add(new Date(29,April,year));     // Greenery Day
+		expectedHol.add(new Date( 3,May,year));       // Constitution Memorial Day
+		expectedHol.add(new Date( 4,May,year));       // Between Day
+        expectedHol.add(new Date( 5,May,year));       // Children's Day
+		expectedHol.add(new Date(18,July,year));      // Sea Day
+        expectedHol.add(new Date(19,September,year)); // Respect for the Aged Day
+    	expectedHol.add(new Date(23,September,year)); // Autumn Equinox
+        expectedHol.add(new Date(10,October,year));   // Sports Day
+        expectedHol.add(new Date( 3,November,year));  // Culture Day
+        expectedHol.add(new Date(23,November,year));  // Labor Thanksgiving Day
+        expectedHol.add(new Date(23,December,year));  // Emperor's Birthday
 		// Sat: expectedHol.add(new Date(31,DECEMBER,year));  // Bank Holiday
 
         new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
@@ -498,24 +498,24 @@ public class JapanCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 2,JANUARY,year));   // Bank Holiday
+		expectedHol.add(new Date( 1,January,year));   // New Year's Day
+		expectedHol.add(new Date( 2,January,year));   // Bank Holiday
 		// Sat: expectedHol.add(new Date( 3,JANUARY,year));   // Bank Holiday
-    	expectedHol.add(new Date(12,JANUARY,year));   // Coming of Age Day
-		expectedHol.add(new Date(11,FEBRUARY,year));  // National Foundation Day
+    	expectedHol.add(new Date(12,January,year));   // Coming of Age Day
+		expectedHol.add(new Date(11,February,year));  // National Foundation Day
 		// Sat: expectedHol.add(new Date(20,MARCH,year));     // Spring Equinox
-		expectedHol.add(new Date(29,APRIL,year));     // Greenery Day
-		expectedHol.add(new Date( 3,MAY,year));       // Constitution Memorial Day
-		expectedHol.add(new Date( 4,MAY,year));       // Between Day
-        expectedHol.add(new Date( 5,MAY,year));       // Children's Day
-		expectedHol.add(new Date(19,JULY,year));      // Sea Day
-        expectedHol.add(new Date(20,SEPTEMBER,year)); // Respect for the Aged Day
-    	expectedHol.add(new Date(23,SEPTEMBER,year)); // Autumn Equinox
-        expectedHol.add(new Date(11,OCTOBER,year));   // Sports Day
-        expectedHol.add(new Date( 3,NOVEMBER,year));  // Culture Day
-        expectedHol.add(new Date(23,NOVEMBER,year));  // Labor Thanksgiving Day
-        expectedHol.add(new Date(23,DECEMBER,year));  // Emperor's Birthday
-		expectedHol.add(new Date(31,DECEMBER,year));  // Bank Holiday
+		expectedHol.add(new Date(29,April,year));     // Greenery Day
+		expectedHol.add(new Date( 3,May,year));       // Constitution Memorial Day
+		expectedHol.add(new Date( 4,May,year));       // Between Day
+        expectedHol.add(new Date( 5,May,year));       // Children's Day
+		expectedHol.add(new Date(19,July,year));      // Sea Day
+        expectedHol.add(new Date(20,September,year)); // Respect for the Aged Day
+    	expectedHol.add(new Date(23,September,year)); // Autumn Equinox
+        expectedHol.add(new Date(11,October,year));   // Sports Day
+        expectedHol.add(new Date( 3,November,year));  // Culture Day
+        expectedHol.add(new Date(23,November,year));  // Labor Thanksgiving Day
+        expectedHol.add(new Date(23,December,year));  // Emperor's Birthday
+		expectedHol.add(new Date(31,December,year));  // Bank Holiday
 
         new CalendarUtil().checkHolidayList(expectedHol, settlement, year);
     }

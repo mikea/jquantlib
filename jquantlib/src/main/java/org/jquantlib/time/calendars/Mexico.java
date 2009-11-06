@@ -22,12 +22,12 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.September;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -109,23 +109,23 @@ public class Mexico extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
                     // New Year's Day
-                    || (d == 1 && m == JANUARY)
+                    || (d == 1 && m == January)
                     // Constitution Day
-                    || (d == 5 && m == FEBRUARY)
+                    || (d == 5 && m == February)
                     // Birthday of Benito Juarez
-                    || (d == 21 && m == MARCH)
+                    || (d == 21 && m == March)
                     // Holy Thursday
                     || (dd == em - 4)
                     // Good Friday
                     || (dd == em - 3)
                     // Labour Day
-                    || (d == 1 && m == MAY)
+                    || (d == 1 && m == May)
                     // National Day
-                    || (d == 16 && m == SEPTEMBER)
+                    || (d == 16 && m == September)
                     // Our Lady of Guadalupe
-                    || (d == 12 && m == DECEMBER)
+                    || (d == 12 && m == December)
                     // Christmas
-                    || (d == 25 && m == DECEMBER)) {
+                    || (d == 25 && m == December)) {
                 return false;
             }
             return true;

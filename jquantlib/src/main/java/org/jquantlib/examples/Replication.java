@@ -59,14 +59,14 @@ public class Replication {
             final StopClock clock = new StopClock();
             clock.startClock();
 
-            final Date today = new Date(29, Month.MAY, 2006);
+            final Date today = new Date(29, Month.May, 2006);
             new Settings().setEvaluationDate(today);
 
             //the option to replicate
             final BarrierType barrierType = BarrierType.DownOut;
             final double barrier = 70.0;
             final double rebate = 0.0;
-            final Option.Type type = Option.Type.PUT;
+            final Option.Type type = Option.Type.Put;
             final double underlyingValue = 100;
             final Handle<SimpleQuote> underlying = new Handle<SimpleQuote>(new SimpleQuote(underlyingValue));
 

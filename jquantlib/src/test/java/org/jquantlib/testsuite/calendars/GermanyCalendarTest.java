@@ -1,12 +1,12 @@
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.OCTOBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.October;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,22 +44,22 @@ public class GermanyCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
-		expectedHol.add(new Date(1,JANUARY,year));
+		expectedHol.add(new Date(1,January,year));
 		// Labour Day
 		//expectedHol.add(new Date(1,MAY,year));
 		//christmas eve
-		expectedHol.add(new Date(24,DECEMBER,year));
+		expectedHol.add(new Date(24,December,year));
 		//christmas
 		//expectedHol.add(new Date(25,DECEMBER,year));
 		//boxing day
 		//expectedHol.add(new Date(26,DECEMBER,year));
 		//new years eve
-		expectedHol.add(new Date(31,DECEMBER,year));
+		expectedHol.add(new Date(31,December,year));
 
 		//good friday
-		expectedHol.add(new Date(9,APRIL,year));
+		expectedHol.add(new Date(9,April,year));
 		//easter monday
-		expectedHol.add(new Date(12,APRIL,year));
+		expectedHol.add(new Date(12,April,year));
 
 
 		// Call the Holiday Check
@@ -73,11 +73,11 @@ public class GermanyCalendarTest {
 		//expectedHol.add(new Date(3,OCTOBER,year));
 
 		//ascension
-		expectedHol.add(new Date(20,MAY,year));
+		expectedHol.add(new Date(20,May,year));
 		//whit monday
-		expectedHol.add(new Date(31,MAY,year));
+		expectedHol.add(new Date(31,May,year));
 		//corpus christi
-		expectedHol.add(new Date(10,JUNE,year));
+		expectedHol.add(new Date(10,June,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -98,14 +98,14 @@ public class GermanyCalendarTest {
 		//christmas
 		//expectedHol.add(new Date(25,DECEMBER,year));
 		//boxing day
-		expectedHol.add(new Date(26,DECEMBER,year));
+		expectedHol.add(new Date(26,December,year));
 		//new years eve
 		//expectedHol.add(new Date(31,DECEMBER,year));
 
 		//good friday
-		expectedHol.add(new Date(25,MARCH,year));
+		expectedHol.add(new Date(25,March,year));
 		//easter monday
-		expectedHol.add(new Date(28,MARCH,year));
+		expectedHol.add(new Date(28,March,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -115,14 +115,14 @@ public class GermanyCalendarTest {
 
 		QL.info("Testing Germany holiday list for the year " + year + " as recognized by Settlement ...");
 		//National Day
-		expectedHol.add(new Date(3,OCTOBER,year));
+		expectedHol.add(new Date(3,October,year));
 
 		//ascension
-		expectedHol.add(new Date(5,MAY,year));
+		expectedHol.add(new Date(5,May,year));
 		//whit monday
-		expectedHol.add(new Date(16,MAY,year));
+		expectedHol.add(new Date(16,May,year));
 		//corpus christi
-		expectedHol.add(new Date(26,MAY,year));
+		expectedHol.add(new Date(26,May,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -137,20 +137,20 @@ public class GermanyCalendarTest {
 		//new years day
 		//expectedHol.add(new Date(1,JANUARY,year));
 		// Labour Day
-		expectedHol.add(new Date(1,MAY,year));
+		expectedHol.add(new Date(1,May,year));
 		//christmas eve
 		//expectedHol.add(new Date(24,DECEMBER,year));
 		//christmas
-		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(25,December,year));
 		//boxing day
-		expectedHol.add(new Date(26,DECEMBER,year));
+		expectedHol.add(new Date(26,December,year));
 		//new years eve
 		//expectedHol.add(new Date(31,DECEMBER,year));
 
 		//good friday
-		expectedHol.add(new Date(14,APRIL,year));
+		expectedHol.add(new Date(14,April,year));
 		//easter monday
-		expectedHol.add(new Date(17,APRIL,year));
+		expectedHol.add(new Date(17,April,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -160,14 +160,14 @@ public class GermanyCalendarTest {
 
 		QL.info("Testing Germany holiday list for the year " + year + " as recognized by Settlement ...");
 		//National Day
-		expectedHol.add(new Date(3,OCTOBER,year));
+		expectedHol.add(new Date(3,October,year));
 
 		//ascension
-		expectedHol.add(new Date(25,MAY,year));
+		expectedHol.add(new Date(25,May,year));
 		//whit monday
-		expectedHol.add(new Date(5,JUNE,year));
+		expectedHol.add(new Date(5,June,year));
 		//corpus christi
-		expectedHol.add(new Date(15,JUNE,year));
+		expectedHol.add(new Date(15,June,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -180,22 +180,22 @@ public class GermanyCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
-		expectedHol.add(new Date(1,JANUARY,year));
+		expectedHol.add(new Date(1,January,year));
 		// Labour Day
-		expectedHol.add(new Date(1,MAY,year));
+		expectedHol.add(new Date(1,May,year));
 		//christmas eve
-		expectedHol.add(new Date(24,DECEMBER,year));
+		expectedHol.add(new Date(24,December,year));
 		//christmas
-		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(25,December,year));
 		//boxing day
-		expectedHol.add(new Date(26,DECEMBER,year));
+		expectedHol.add(new Date(26,December,year));
 		//new years eve
-		expectedHol.add(new Date(31,DECEMBER,year));
+		expectedHol.add(new Date(31,December,year));
 
 		//good friday
-		expectedHol.add(new Date(6,APRIL,year));
+		expectedHol.add(new Date(6,April,year));
 		//easter monday
-		expectedHol.add(new Date(9,APRIL,year));
+		expectedHol.add(new Date(9,April,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -205,14 +205,14 @@ public class GermanyCalendarTest {
 
 		QL.info("Testing Germany holiday list for the year " + year + " as recognized by Settlement ...");
 		//National Day
-		expectedHol.add(new Date(3,OCTOBER,year));
+		expectedHol.add(new Date(3,October,year));
 
 		//ascension
-		expectedHol.add(new Date(17,MAY,year));
+		expectedHol.add(new Date(17,May,year));
 		//whit monday
-		expectedHol.add(new Date(28,MAY,year));
+		expectedHol.add(new Date(28,May,year));
 		//corpus christi
-		expectedHol.add(new Date(7,JUNE,year));
+		expectedHol.add(new Date(7,June,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -227,22 +227,22 @@ public class GermanyCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
-		expectedHol.add(new Date(1,JANUARY,year));
+		expectedHol.add(new Date(1,January,year));
 		// Labour Day
-		expectedHol.add(new Date(1,MAY,year));
+		expectedHol.add(new Date(1,May,year));
 		//christmas eve
-		expectedHol.add(new Date(24,DECEMBER,year));
+		expectedHol.add(new Date(24,December,year));
 		//christmas
-		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(25,December,year));
 		//boxing day
-		expectedHol.add(new Date(26,DECEMBER,year));
+		expectedHol.add(new Date(26,December,year));
 		//new years eve
-		expectedHol.add(new Date(31,DECEMBER,year));
+		expectedHol.add(new Date(31,December,year));
 
 		//good friday
-		expectedHol.add(new Date(21,MARCH,year));
+		expectedHol.add(new Date(21,March,year));
 		//easter monday
-		expectedHol.add(new Date(24,MARCH,year));
+		expectedHol.add(new Date(24,March,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -252,14 +252,14 @@ public class GermanyCalendarTest {
 
 		QL.info("Testing Germany holiday list for the year " + year + " as recognized by Settlement ...");
 		//National Day
-		expectedHol.add(new Date(3,OCTOBER,year));
+		expectedHol.add(new Date(3,October,year));
 
 		//ascension -- same day as Labor day
 		//expectedHol.add(new Date(1,MAY,year));
 		//whit monday
-		expectedHol.add(new Date(12,MAY,year));
+		expectedHol.add(new Date(12,May,year));
 		//corpus christi
-		expectedHol.add(new Date(22,MAY,year));
+		expectedHol.add(new Date(22,May,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -272,22 +272,22 @@ public class GermanyCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
-		expectedHol.add(new Date(1,JANUARY,year));
+		expectedHol.add(new Date(1,January,year));
 		// Labour Day
-		expectedHol.add(new Date(1,MAY,year));
+		expectedHol.add(new Date(1,May,year));
 		//christmas eve
-		expectedHol.add(new Date(24,DECEMBER,year));
+		expectedHol.add(new Date(24,December,year));
 		//christmas
-		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(25,December,year));
 		//boxing day
 		//expectedHol.add(new Date(26,DECEMBER,year));
 		//new years eve
-		expectedHol.add(new Date(31,DECEMBER,year));
+		expectedHol.add(new Date(31,December,year));
 
 		//good friday
-		expectedHol.add(new Date(10,APRIL,year));
+		expectedHol.add(new Date(10,April,year));
 		//easter monday
-		expectedHol.add(new Date(13,APRIL,year));
+		expectedHol.add(new Date(13,April,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -300,11 +300,11 @@ public class GermanyCalendarTest {
 		//expectedHol.add(new Date(3,OCTOBER,year));
 
 		//ascension
-		expectedHol.add(new Date(21,MAY,year));
+		expectedHol.add(new Date(21,May,year));
 		//whit monday
-		expectedHol.add(new Date(1,JUNE,year));
+		expectedHol.add(new Date(1,June,year));
 		//corpus christi
-		expectedHol.add(new Date(11,JUNE,year));
+		expectedHol.add(new Date(11,June,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -317,22 +317,22 @@ public class GermanyCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
-		expectedHol.add(new Date(1,JANUARY,year));
+		expectedHol.add(new Date(1,January,year));
 		// Labour Day
 		//expectedHol.add(new Date(1,MAY,year));
 		//christmas eve
-		expectedHol.add(new Date(24,DECEMBER,year));
+		expectedHol.add(new Date(24,December,year));
 		//christmas
 		//expectedHol.add(new Date(25,DECEMBER,year));
 		//boxing day
 		//expectedHol.add(new Date(26,DECEMBER,year));
 		//new years eve
-		expectedHol.add(new Date(31,DECEMBER,year));
+		expectedHol.add(new Date(31,December,year));
 
 		//good friday
-		expectedHol.add(new Date(2,APRIL,year));
+		expectedHol.add(new Date(2,April,year));
 		//easter monday
-		expectedHol.add(new Date(5,APRIL,year));
+		expectedHol.add(new Date(5,April,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -345,11 +345,11 @@ public class GermanyCalendarTest {
 		//expectedHol.add(new Date(3,OCTOBER,year));
 
 		//ascension
-		expectedHol.add(new Date(13,MAY,year));
+		expectedHol.add(new Date(13,May,year));
 		//whit monday
-		expectedHol.add(new Date(24,MAY,year));
+		expectedHol.add(new Date(24,May,year));
 		//corpus christi
-		expectedHol.add(new Date(3,JUNE,year));
+		expectedHol.add(new Date(3,June,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -370,14 +370,14 @@ public class GermanyCalendarTest {
 		//christmas
 		//expectedHol.add(new Date(25,DECEMBER,year));
 		//boxing day
-		expectedHol.add(new Date(26,DECEMBER,year));
+		expectedHol.add(new Date(26,December,year));
 		//new years eve
 		//expectedHol.add(new Date(31,DECEMBER,year));
 
 		//good friday
-		expectedHol.add(new Date(22,APRIL,year));
+		expectedHol.add(new Date(22,April,year));
 		//easter monday
-		expectedHol.add(new Date(25,APRIL,year));
+		expectedHol.add(new Date(25,April,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -387,14 +387,14 @@ public class GermanyCalendarTest {
 
 		QL.info("Testing Germany holiday list for the year " + year + " as recognized by Settlement ...");
 		//National Day
-		expectedHol.add(new Date(3,OCTOBER,year));
+		expectedHol.add(new Date(3,October,year));
 
 		//ascension
-		expectedHol.add(new Date(2,JUNE,year));
+		expectedHol.add(new Date(2,June,year));
 		//whit monday
-		expectedHol.add(new Date(13,JUNE,year));
+		expectedHol.add(new Date(13,June,year));
 		//corpus christi
-		expectedHol.add(new Date(23,JUNE,year));
+		expectedHol.add(new Date(23,June,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}
@@ -409,20 +409,20 @@ public class GermanyCalendarTest {
 		//new years day
 		//expectedHol.add(new Date(1,JANUARY,year));
 		// Labour Day
-		expectedHol.add(new Date(1,MAY,year));
+		expectedHol.add(new Date(1,May,year));
 		//christmas eve
-		expectedHol.add(new Date(24,DECEMBER,year));
+		expectedHol.add(new Date(24,December,year));
 		//christmas
-		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(25,December,year));
 		//boxing day
-		expectedHol.add(new Date(26,DECEMBER,year));
+		expectedHol.add(new Date(26,December,year));
 		//new years eve
-		expectedHol.add(new Date(31,DECEMBER,year));
+		expectedHol.add(new Date(31,December,year));
 
 		//good friday
-		expectedHol.add(new Date(6,APRIL,year));
+		expectedHol.add(new Date(6,April,year));
 		//easter monday
-		expectedHol.add(new Date(9,APRIL,year));
+		expectedHol.add(new Date(9,April,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -432,14 +432,14 @@ public class GermanyCalendarTest {
 
 		QL.info("Testing Germany holiday list for the year " + year + " as recognized by Settlement ...");
 		//National Day
-		expectedHol.add(new Date(3,OCTOBER,year));
+		expectedHol.add(new Date(3,October,year));
 
 		//ascension
-		expectedHol.add(new Date(17,MAY,year));
+		expectedHol.add(new Date(17,May,year));
 		//whit monday
-		expectedHol.add(new Date(28,MAY,year));
+		expectedHol.add(new Date(28,May,year));
 		//corpus christi
-		expectedHol.add(new Date(7,JUNE,year));
+		expectedHol.add(new Date(7,June,year));
 
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
 	}

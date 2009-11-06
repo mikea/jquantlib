@@ -22,13 +22,13 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.OCTOBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 import static org.jquantlib.time.Weekday.SATURDAY;
 import static org.jquantlib.time.Weekday.SUNDAY;
 
@@ -114,13 +114,13 @@ public class Taiwan extends Calendar {
 
             if (isWeekend(w)
                 // New Year's Day
-                || (d == 1 && m == JANUARY)
+                || (d == 1 && m == January)
                 // Peace Memorial Day
-                || (d == 28 && m == FEBRUARY)
+                || (d == 28 && m == February)
                 // Labor Day
-                || (d == 1 && m == MAY)
+                || (d == 1 && m == May)
                 // Double Tenth
-                || (d == 10 && m == OCTOBER)
+                || (d == 10 && m == October)
                 ) {
                 return false;
             }
@@ -128,9 +128,9 @@ public class Taiwan extends Calendar {
             if (y == 2002) {
                 // Dragon Boat Festival and Moon Festival fall on Saturday
                 if (// Chinese Lunar New Year
-                    (d >= 9 && d <= 17 && m == FEBRUARY)
+                    (d >= 9 && d <= 17 && m == February)
                     // Tomb Sweeping Day
-                    || (d == 5 && m == APRIL)
+                    || (d == 5 && m == April)
                     ) {
                     return false;
                 }
@@ -138,11 +138,11 @@ public class Taiwan extends Calendar {
             if (y == 2003) {
                 // Tomb Sweeping Day falls on Saturday
                 if (// Chinese Lunar New Year
-                    ((d >= 31 && m == JANUARY) || (d <= 5 && m == FEBRUARY))
+                    ((d >= 31 && m == January) || (d <= 5 && m == February))
                     // Dragon Boat Festival
-                    || (d == 4 && m == JUNE)
+                    || (d == 4 && m == June)
                     // Moon Festival
-                    || (d == 11 && m == SEPTEMBER)
+                    || (d == 11 && m == September)
                     ) {
                     return false;
                 }
@@ -150,11 +150,11 @@ public class Taiwan extends Calendar {
             if (y == 2004) {
                 // Tomb Sweeping Day falls on Sunday
                 if (// Chinese Lunar New Year
-                    (d >= 21 && d <= 26 && m == JANUARY)
+                    (d >= 21 && d <= 26 && m == January)
                     // Dragon Boat Festival
-                    || (d == 22 && m == JUNE)
+                    || (d == 22 && m == June)
                     // Moon Festival
-                    || (d == 28 && m == SEPTEMBER)
+                    || (d == 28 && m == September)
                     ) {
                     return false;
                 }
@@ -162,11 +162,11 @@ public class Taiwan extends Calendar {
             if (y == 2005) {
                 // Dragon Boat and Moon Festival fall on Saturday or Sunday
                 if (// Chinese Lunar New Year
-                    (d >= 6 && d <= 13 && m == FEBRUARY)
+                    (d >= 6 && d <= 13 && m == February)
                     // Tomb Sweeping Day
-                    || (d == 5 && m == APRIL)
+                    || (d == 5 && m == April)
                     // make up for Labor Day, not seen in other years
-                    || (d == 2 && m == MAY)
+                    || (d == 2 && m == May)
                     ) {
                     return false;
                 }
@@ -174,40 +174,40 @@ public class Taiwan extends Calendar {
             if (y == 2006) {
                 // Dragon Boat and Moon Festival fall on Saturday or Sunday
                 if (// Chinese Lunar New Year
-                    ((d >= 28 && m == JANUARY) || (d <= 5 && m == FEBRUARY))
+                    ((d >= 28 && m == January) || (d <= 5 && m == February))
                     // Tomb Sweeping Day
-                    || (d == 5 && m == APRIL)
+                    || (d == 5 && m == April)
                     // Dragon Boat Festival
-                    || (d == 31 && m == MAY)
+                    || (d == 31 && m == May)
                     // Moon Festival
-                    || (d == 6 && m == OCTOBER)
+                    || (d == 6 && m == October)
                     ) {
                     return false;
                 }
             }
             if (y == 2007) {
                 if (// Chinese Lunar New Year
-                    (d >= 17 && d <= 25 && m == FEBRUARY)
+                    (d >= 17 && d <= 25 && m == February)
                     // Tomb Sweeping Day
-                    || (d == 5 && m == APRIL)
+                    || (d == 5 && m == April)
                     // adjusted holidays
-                    || (d == 6 && m == APRIL)
-                    || (d == 18 && m == JUNE)
+                    || (d == 6 && m == April)
+                    || (d == 18 && m == June)
                     // Dragon Boat Festival
-                    || (d == 19 && m == JUNE)
+                    || (d == 19 && m == June)
                     // adjusted holiday
-                    || (d == 24 && m == SEPTEMBER)
+                    || (d == 24 && m == September)
                     // Moon Festival
-                    || (d == 25 && m == SEPTEMBER)
+                    || (d == 25 && m == September)
                     ) {
                     return false;
                 }
             }
             if (y == 2008) {
                 if (// Chinese Lunar New Year
-                    (d >= 4 && d <= 11 && m == FEBRUARY)
+                    (d >= 4 && d <= 11 && m == February)
                     // Tomb Sweeping Day
-                    || (d == 4 && m == APRIL)
+                    || (d == 4 && m == April)
                     ) {
                     return false;
                 }

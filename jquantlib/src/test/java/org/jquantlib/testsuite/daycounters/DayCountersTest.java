@@ -132,81 +132,81 @@ public class DayCountersTest {
         final SingleCase testCases[] = new SingleCase[] {
                 // first example
                 new SingleCase(ActualActual.Convention.ISDA,
-                        new Date(1,Month.NOVEMBER,2003), new Date(1,Month.MAY,2004),
+                        new Date(1,Month.November,2003), new Date(1,Month.May,2004),
                         0.497724380567),
                         new SingleCase(ActualActual.Convention.ISMA,
-                                new Date(1,Month.NOVEMBER,2003), new Date(1,Month.MAY,2004),
-                                new Date(1,Month.NOVEMBER,2003), new Date(1,Month.MAY,2004),
+                                new Date(1,Month.November,2003), new Date(1,Month.May,2004),
+                                new Date(1,Month.November,2003), new Date(1,Month.May,2004),
                                 0.500000000000),
                                 new SingleCase(ActualActual.Convention.AFB,
-                                        new Date(1,Month.NOVEMBER,2003), new Date(1,Month.MAY,2004),
+                                        new Date(1,Month.November,2003), new Date(1,Month.May,2004),
                                         0.497267759563),
                                         // short first calculation period (first period)
                                         new SingleCase(ActualActual.Convention.ISDA,
-                                                new Date(1,Month.FEBRUARY,1999), new Date(1,Month.JULY,1999),
+                                                new Date(1,Month.February,1999), new Date(1,Month.July,1999),
                                                 0.410958904110),
                                                 new SingleCase(ActualActual.Convention.ISMA,
-                                                        new Date(1,Month.FEBRUARY,1999), new Date(1,Month.JULY,1999),
-                                                        new Date(1,Month.JULY,1998), new Date(1,Month.JULY,1999),
+                                                        new Date(1,Month.February,1999), new Date(1,Month.July,1999),
+                                                        new Date(1,Month.July,1998), new Date(1,Month.July,1999),
                                                         0.410958904110),
                                                         new SingleCase(ActualActual.Convention.AFB,
-                                                                new Date(1,Month.FEBRUARY,1999), new Date(1,Month.JULY,1999),
+                                                                new Date(1,Month.February,1999), new Date(1,Month.July,1999),
                                                                 0.410958904110),
                                                                 // short first calculation period (second period)
                                                                 new SingleCase(ActualActual.Convention.ISDA,
-                                                                        new Date(1,Month.JULY,1999), new Date(1,Month.JULY,2000),
+                                                                        new Date(1,Month.July,1999), new Date(1,Month.July,2000),
                                                                         1.001377348600),
                                                                         new SingleCase(ActualActual.Convention.ISMA,
-                                                                                new Date(1,Month.JULY,1999), new Date(1,Month.JULY,2000),
-                                                                                new Date(1,Month.JULY,1999), new Date(1,Month.JULY,2000),
+                                                                                new Date(1,Month.July,1999), new Date(1,Month.July,2000),
+                                                                                new Date(1,Month.July,1999), new Date(1,Month.July,2000),
                                                                                 1.000000000000),
                                                                                 new SingleCase(ActualActual.Convention.AFB,
-                                                                                        new Date(1,Month.JULY,1999), new Date(1,Month.JULY,2000),
+                                                                                        new Date(1,Month.July,1999), new Date(1,Month.July,2000),
                                                                                         1.000000000000),
                                                                                         // long first calculation period (first period)
                                                                                         new SingleCase(ActualActual.Convention.ISDA,
-                                                                                                new Date(15,Month.AUGUST,2002), new Date(15,Month.JULY,2003),
+                                                                                                new Date(15,Month.August,2002), new Date(15,Month.July,2003),
                                                                                                 0.915068493151),
                                                                                                 new SingleCase(ActualActual.Convention.ISMA,
-                                                                                                        new Date(15,Month.AUGUST,2002), new Date(15,Month.JULY,2003),
-                                                                                                        new Date(15,Month.JANUARY,2003), new Date(15,Month.JULY,2003),
+                                                                                                        new Date(15,Month.August,2002), new Date(15,Month.July,2003),
+                                                                                                        new Date(15,Month.January,2003), new Date(15,Month.July,2003),
                                                                                                         0.915760869565),
                                                                                                         new SingleCase(ActualActual.Convention.AFB,
-                                                                                                                new Date(15,Month.AUGUST,2002), new Date(15,Month.JULY,2003),
+                                                                                                                new Date(15,Month.August,2002), new Date(15,Month.July,2003),
                                                                                                                 0.915068493151),
                                                                                                                 // long first calculation period (second period)
                                                                                                                 /* Warning: the ISDA case is in disagreement with mktc1198.pdf */
                                                                                                                 new SingleCase(ActualActual.Convention.ISDA,
-                                                                                                                        new Date(15,Month.JULY,2003), new Date(15,Month.JANUARY,2004),
+                                                                                                                        new Date(15,Month.July,2003), new Date(15,Month.January,2004),
                                                                                                                         0.504004790778),
                                                                                                                         new SingleCase(ActualActual.Convention.ISMA,
-                                                                                                                                new Date(15,Month.JULY,2003), new Date(15,Month.JANUARY,2004),
-                                                                                                                                new Date(15,Month.JULY,2003), new Date(15,Month.JANUARY,2004),
+                                                                                                                                new Date(15,Month.July,2003), new Date(15,Month.January,2004),
+                                                                                                                                new Date(15,Month.July,2003), new Date(15,Month.January,2004),
                                                                                                                                 0.500000000000),
                                                                                                                                 new SingleCase(ActualActual.Convention.AFB,
-                                                                                                                                        new Date(15,Month.JULY,2003), new Date(15,Month.JANUARY,2004),
+                                                                                                                                        new Date(15,Month.July,2003), new Date(15,Month.January,2004),
                                                                                                                                         0.504109589041),
                                                                                                                                         // short final calculation period (penultimate period)
                                                                                                                                         new SingleCase(ActualActual.Convention.ISDA,
-                                                                                                                                                new Date(30,Month.JULY,1999), new Date(30,Month.JANUARY,2000),
+                                                                                                                                                new Date(30,Month.July,1999), new Date(30,Month.January,2000),
                                                                                                                                                 0.503892506924),
                                                                                                                                                 new SingleCase(ActualActual.Convention.ISMA,
-                                                                                                                                                        new Date(30,Month.JULY,1999), new Date(30,Month.JANUARY,2000),
-                                                                                                                                                        new Date(30,Month.JULY,1999), new Date(30,Month.JANUARY,2000),
+                                                                                                                                                        new Date(30,Month.July,1999), new Date(30,Month.January,2000),
+                                                                                                                                                        new Date(30,Month.July,1999), new Date(30,Month.January,2000),
                                                                                                                                                         0.500000000000),
                                                                                                                                                         new SingleCase(ActualActual.Convention.AFB,
-                                                                                                                                                                new Date(30,Month.JULY,1999), new Date(30,Month.JANUARY,2000),
+                                                                                                                                                                new Date(30,Month.July,1999), new Date(30,Month.January,2000),
                                                                                                                                                                 0.504109589041),
                                                                                                                                                                 // short final calculation period (final period)
                                                                                                                                                                 new SingleCase(ActualActual.Convention.ISDA,
-                                                                                                                                                                        new Date(30,Month.JANUARY,2000), new Date(30,Month.JUNE,2000),
+                                                                                                                                                                        new Date(30,Month.January,2000), new Date(30,Month.June,2000),
                                                                                                                                                                         0.415300546448),
                                                                                                                                                                         new SingleCase(ActualActual.Convention.ISMA,
-                                                                                                                                                                                new Date(30,Month.JANUARY,2000), new Date(30,Month.JUNE,2000),
-                                                                                                                                                                                new Date(30,Month.JANUARY,2000), new Date(30,Month.JULY,2000),
+                                                                                                                                                                                new Date(30,Month.January,2000), new Date(30,Month.June,2000),
+                                                                                                                                                                                new Date(30,Month.January,2000), new Date(30,Month.July,2000),
                                                                                                                                                                                 0.417582417582),
                                                                                                                                                                                 new SingleCase(ActualActual.Convention.AFB,
-                                                                                                                                                                                        new Date(30,Month.JANUARY,2000), new Date(30,Month.JUNE,2000),
+                                                                                                                                                                                        new Date(30,Month.January,2000), new Date(30,Month.June,2000),
                                                                                                                                                                                         0.41530054644)
         };
 
@@ -246,8 +246,8 @@ public class DayCountersTest {
         /*@Time*/ final double expected[] = { 0.25, 0.5, 1.0 };
 
         // 4 years should be enough
-        final Date first = new Date(1,Month.JANUARY,2002);
-        final Date last  = new Date(31,Month.DECEMBER,2005);
+        final Date first = new Date(1,Month.January,2002);
+        final Date last  = new Date(31,Month.December,2005);
         final DayCounter dayCounter = new SimpleDayCounter();
 
         for (final Date start = first; start.le(last); start.inc()) {
@@ -273,8 +273,8 @@ public class DayCountersTest {
         /*@Time*/ final double expected[] = new double[] { 1.0, 1.0, 1.0 };
 
         // 1 years should be enough
-        final Date first = new Date(1,Month.JANUARY,2004);
-        final Date last  = new Date(31,Month.DECEMBER,2004);
+        final Date first = new Date(1,Month.January,2004);
+        final Date last  = new Date(31,Month.December,2004);
         final DayCounter dayCounter = new SimpleDayCounter();
 
         for (final Date start = first; start.le(last); start.inc()) {
@@ -299,18 +299,18 @@ public class DayCountersTest {
         QL.info("Testing business/252 day counter...");
 
         final Date testDates[] = {
-                new Date(1,Month.FEBRUARY,2002),
-                new Date(4,Month.FEBRUARY,2002),
-                new Date(16,Month.MAY,2003),
-                new Date(17,Month.DECEMBER,2003),
-                new Date(17,Month.DECEMBER,2004),
-                new Date(19,Month.DECEMBER,2005),
-                new Date(2,Month.JANUARY,2006),
-                new Date(13,Month.MARCH,2006),
-                new Date(15,Month.MAY,2006),
-                new Date(17,Month.MARCH,2006),
-                new Date(15,Month.MAY,2006),
-                new Date(26,Month.JULY,2006) };
+                new Date(1,Month.February,2002),
+                new Date(4,Month.February,2002),
+                new Date(16,Month.May,2003),
+                new Date(17,Month.December,2003),
+                new Date(17,Month.December,2004),
+                new Date(19,Month.December,2005),
+                new Date(2,Month.January,2006),
+                new Date(13,Month.March,2006),
+                new Date(15,Month.May,2006),
+                new Date(17,Month.March,2006),
+                new Date(15,Month.May,2006),
+                new Date(26,Month.July,2006) };
 
         /*@Time*/ final double expected[] = {
                 0.0039682539683,

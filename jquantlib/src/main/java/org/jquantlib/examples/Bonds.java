@@ -56,7 +56,7 @@ public class Bonds {
         final Calendar calendar = new Target();
 
         // FIXME: outdated...
-        Date settlementDate = new Date(18, Month.SEPTEMBER, 2008);
+        Date settlementDate = new Date(18, Month.September, 2008);
         // must be a business day
         settlementDate = calendar.adjust(settlementDate);
 
@@ -111,18 +111,18 @@ public class Bonds {
         final/* @Size */int numberOfBonds = 5;
 
         final Date issueDates[] = {
-                new Date(15, Month.MARCH,    2005),
-                new Date(15, Month.JUNE,     2005),
-                new Date(30, Month.JUNE,     2006),
-                new Date(15, Month.NOVEMBER, 2002),
-                new Date(15, Month.MAY,      1987) };
+                new Date(15, Month.March,    2005),
+                new Date(15, Month.June,     2005),
+                new Date(30, Month.June,     2006),
+                new Date(15, Month.November, 2002),
+                new Date(15, Month.May,      1987) };
 
         final Date maturities[] = {
-                new Date(31, Month.AUGUST, 2010),
-                new Date(31, Month.AUGUST, 2011),
-                new Date(31, Month.AUGUST, 2013),
-                new Date(15, Month.AUGUST, 2018),
-                new Date(15, Month.MAY,    2038) };
+                new Date(31, Month.August, 2010),
+                new Date(31, Month.August, 2011),
+                new Date(31, Month.August, 2013),
+                new Date(15, Month.August, 2018),
+                new Date(15, Month.May,    2038) };
 
         /* @Real */final double couponRates[] = { 0.02375, 0.04625, 0.03125, 0.04000, 0.04500 };
 

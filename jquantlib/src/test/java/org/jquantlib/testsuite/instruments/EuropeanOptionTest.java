@@ -289,51 +289,51 @@ public class EuropeanOptionTest {
         final EuropeanOptionData values[] = new EuropeanOptionData[] {
                 // pag 2-8
                 //                              type,     strike,   spot,    q,    r,    t,  vol,   value,    tol
-                new EuropeanOptionData( Option.Type.CALL,  65.00,  60.00, 0.00, 0.08, 0.25, 0.30,  2.1334, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,   95.00, 100.00, 0.05, 0.10, 0.50, 0.20,  2.4648, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,   19.00,  19.00, 0.10, 0.10, 0.75, 0.28,  1.7011, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL,  19.00,  19.00, 0.10, 0.10, 0.75, 0.28,  1.7011, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL,   1.60,   1.56, 0.08, 0.06, 0.50, 0.12,  0.0291, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,   70.00,  75.00, 0.05, 0.10, 0.50, 0.35,  4.0870, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call,  65.00,  60.00, 0.00, 0.08, 0.25, 0.30,  2.1334, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,   95.00, 100.00, 0.05, 0.10, 0.50, 0.20,  2.4648, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,   19.00,  19.00, 0.10, 0.10, 0.75, 0.28,  1.7011, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call,  19.00,  19.00, 0.10, 0.10, 0.75, 0.28,  1.7011, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call,   1.60,   1.56, 0.08, 0.06, 0.50, 0.12,  0.0291, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,   70.00,  75.00, 0.05, 0.10, 0.50, 0.35,  4.0870, 1.0e-4),
                 // pag 24
-                new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  0.0205, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8734, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  9.9413, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.25,  0.3150, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1217, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 10.3556, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.10, 0.35,  0.9474, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3693, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 11.1381, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.15,  0.8069, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0232, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 10.5769, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.25,  2.7026, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.6997, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 12.7857, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00,  90.00, 0.10, 0.10, 0.50, 0.35,  4.9329, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.3679, 1.0e-4),
-                new EuropeanOptionData( Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 15.3086, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  9.9210, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8734, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  0.0408, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.25, 10.2155, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1217, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.25,  0.4551, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.10, 0.35, 10.8479, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3693, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.10, 0.35,  1.2376, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.15, 10.3192, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0232, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.15,  1.0646, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.25, 12.2149, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.6997, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.25,  3.2734, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00,  90.00, 0.10, 0.10, 0.50, 0.35, 14.4452, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.3679, 1.0e-4),
-                new EuropeanOptionData( Option.Type.PUT,  100.00, 110.00, 0.10, 0.10, 0.50, 0.35,  5.7963, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  0.0205, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8734, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  9.9413, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00,  90.00, 0.10, 0.10, 0.10, 0.25,  0.3150, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1217, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 10.3556, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00,  90.00, 0.10, 0.10, 0.10, 0.35,  0.9474, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3693, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 11.1381, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00,  90.00, 0.10, 0.10, 0.50, 0.15,  0.8069, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0232, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 10.5769, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00,  90.00, 0.10, 0.10, 0.50, 0.25,  2.7026, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.6997, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 12.7857, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00,  90.00, 0.10, 0.10, 0.50, 0.35,  4.9329, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.3679, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 15.3086, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00,  90.00, 0.10, 0.10, 0.10, 0.15,  9.9210, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.10, 0.15,  1.8734, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.10, 0.15,  0.0408, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00,  90.00, 0.10, 0.10, 0.10, 0.25, 10.2155, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.10, 0.25,  3.1217, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.10, 0.25,  0.4551, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00,  90.00, 0.10, 0.10, 0.10, 0.35, 10.8479, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.10, 0.35,  4.3693, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.10, 0.35,  1.2376, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00,  90.00, 0.10, 0.10, 0.50, 0.15, 10.3192, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.50, 0.15,  4.0232, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.50, 0.15,  1.0646, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00,  90.00, 0.10, 0.10, 0.50, 0.25, 12.2149, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.50, 0.25,  6.6997, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.50, 0.25,  3.2734, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00,  90.00, 0.10, 0.10, 0.50, 0.35, 14.4452, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00, 100.00, 0.10, 0.10, 0.50, 0.35,  9.3679, 1.0e-4),
+                new EuropeanOptionData( Option.Type.Put,  100.00, 110.00, 0.10, 0.10, 0.50, 0.35,  5.7963, 1.0e-4),
                 // pag 27
-                new EuropeanOptionData( Option.Type.CALL,  40.00,  42.00, 0.08, 0.04, 0.75, 0.35,  5.0975, 1.0e-4)
+                new EuropeanOptionData( Option.Type.Call,  40.00,  42.00, 0.08, 0.04, 0.75, 0.35,  5.0975, 1.0e-4)
         };
 
         final Date today = new Settings().evaluationDate();
@@ -425,17 +425,17 @@ public class EuropeanOptionTest {
 
         final EuropeanOptionData values[] = {
                 //        type, strike,   spot,    q,    r,        t,  vol,  value delta
-                new EuropeanOptionData(Option.Type.CALL, 100.00, 105.00, 0.10, 0.10, 0.500000, 0.36,  0.5946, 0),
-                new EuropeanOptionData(Option.Type.PUT,  100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -0.3566, 0),
-                new EuropeanOptionData(Option.Type.PUT,100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -4.8775, 0 ),
-                new EuropeanOptionData(Option.Type.CALL, 60.00,  55.00, 0.00, 0.10, 0.750000, 0.30,  0.0278, 0 ),
-                new EuropeanOptionData(Option.Type.PUT, 60.00,  55.00, 0.00, 0.10, 0.750000, 0.30,  0.0278, 0 ),
-                new EuropeanOptionData(Option.Type.CALL,  60.00,  55.00, 0.00, 0.10, 0.750000, 0.30, 18.9358, 0),
-                new EuropeanOptionData(Option.Type.PUT,   60.00,  55.00, 0.00, 0.10, 0.750000, 0.30, 18.9358, 0 ),
-                new EuropeanOptionData(Option.Type.PUT,  405.00, 430.00, 0.05, 0.07, 1.0/12.0, 0.20,-31.1924, 0),
-                new EuropeanOptionData(Option.Type.PUT,  405.00, 430.00, 0.05, 0.07, 1.0/12.0, 0.20, -0.0855, 0),
-                new EuropeanOptionData(Option.Type.CALL,  75.00,  72.00, 0.00, 0.09, 1.000000, 0.19, 38.7325, 0),
-                new EuropeanOptionData(Option.Type.PUT,  490.00, 500.00, 0.05, 0.08, 0.250000, 0.15, 42.2254, 0)
+                new EuropeanOptionData(Option.Type.Call, 100.00, 105.00, 0.10, 0.10, 0.500000, 0.36,  0.5946, 0),
+                new EuropeanOptionData(Option.Type.Put,  100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -0.3566, 0),
+                new EuropeanOptionData(Option.Type.Put,100.00, 105.00, 0.10, 0.10, 0.500000, 0.36, -4.8775, 0 ),
+                new EuropeanOptionData(Option.Type.Call, 60.00,  55.00, 0.00, 0.10, 0.750000, 0.30,  0.0278, 0 ),
+                new EuropeanOptionData(Option.Type.Put, 60.00,  55.00, 0.00, 0.10, 0.750000, 0.30,  0.0278, 0 ),
+                new EuropeanOptionData(Option.Type.Call,  60.00,  55.00, 0.00, 0.10, 0.750000, 0.30, 18.9358, 0),
+                new EuropeanOptionData(Option.Type.Put,   60.00,  55.00, 0.00, 0.10, 0.750000, 0.30, 18.9358, 0 ),
+                new EuropeanOptionData(Option.Type.Put,  405.00, 430.00, 0.05, 0.07, 1.0/12.0, 0.20,-31.1924, 0),
+                new EuropeanOptionData(Option.Type.Put,  405.00, 430.00, 0.05, 0.07, 1.0/12.0, 0.20, -0.0855, 0),
+                new EuropeanOptionData(Option.Type.Call,  75.00,  72.00, 0.00, 0.09, 1.000000, 0.19, 38.7325, 0),
+                new EuropeanOptionData(Option.Type.Put,  490.00, 500.00, 0.05, 0.08, 0.250000, 0.15, 42.2254, 0)
         };
 
         final Date today = new Settings().evaluationDate();
@@ -707,7 +707,7 @@ public class EuropeanOptionTest {
         final Map<String,Double> expected = new HashMap<String, Double>();
         final Map<String,Double> calculated = new HashMap<String, Double>();
 
-        final Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+        final Option.Type types[] = { Option.Type.Call, Option.Type.Put };
         final double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
         final double underlyings[] = { 100.0 };
         final double qRates[] = { 0.04, 0.05, 0.06 };
@@ -875,7 +875,7 @@ public class EuropeanOptionTest {
         final double tolerance = 1.0e-6;
 
         // test options
-        final Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+        final Option.Type types[] = { Option.Type.Call, Option.Type.Put };
         final double strikes[] = { 90.0, 99.5, 100.0, 100.5, 110.0 };
         final int lengths[] = { 36, 180, 360, 1080 };
 
@@ -989,7 +989,7 @@ public class EuropeanOptionTest {
 
         final Date exerciseDate = today.add(Period.ONE_YEAR_FORWARD);
         final Exercise exercise = new EuropeanExercise(exerciseDate);
-        final StrikedTypePayoff payoff = new PlainVanillaPayoff(Option.Type.CALL, 100);
+        final StrikedTypePayoff payoff = new PlainVanillaPayoff(Option.Type.Call, 100);
 
         final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(
                 new Handle<Quote>(u),
@@ -1055,7 +1055,7 @@ public class EuropeanOptionTest {
         final Map<String, Double> expected = new HashMap<String, Double>();
 
         // test options
-        final Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+        final Option.Type types[] = { Option.Type.Call, Option.Type.Put };
         final double strikes[] = { 75.0, 100.0, 125.0 };
         final int lengths[] = { 1 };
 

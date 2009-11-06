@@ -90,7 +90,6 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.VanillaOption;
-import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.HullWhiteProcess;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
@@ -129,19 +128,19 @@ public class CoxRossWithHullWhite {
 
         // set up dates
         final Calendar calendar = new Target();
-        final Date todaysDate = new Date(15, Month.MAY, 1998);
-        final Date settlementDate = new Date(17, Month.MAY, 1998);
+        final Date todaysDate = new Date(15, Month.May, 1998);
+        final Date settlementDate = new Date(17, Month.May, 1998);
         new Settings().setEvaluationDate(todaysDate);
 
         // our options
-        final Option.Type type = Option.Type.PUT;
+        final Option.Type type = Option.Type.Put;
         final double strike = 40.0;
         final double underlying = 36.0;
         /*@Rate*/final double riskFreeRate = 0.06;
         final double volatility = 0.2;
         final double dividendYield = 0.00;
 
-        final Date maturity = new Date(17, Month.MAY, 1999);
+        final Date maturity = new Date(17, Month.May, 1999);
         final DayCounter dayCounter = new Actual365Fixed();
 
         // write column headings
@@ -189,7 +188,7 @@ public class CoxRossWithHullWhite {
         final String fmttbd = "%34s %13.9f %13.9f %13.9f  (TO BE DONE)\n";
 
         final StochasticProcess hwProcess = new HullWhiteProcess(flatDividendTS, 0, 0);
-        final BlackScholesMertonProcess bsmProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
+        //XXX final BlackScholesMertonProcess bsmProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
 
 
 
@@ -200,9 +199,9 @@ public class CoxRossWithHullWhite {
         throw new UnsupportedOperationException("work in progress");
 
 
-//        europeanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(hwProcess, timeSteps){} );
-//        bermudanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(hwProcess, timeSteps){} );
-//        americanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(hwProcess, timeSteps){} );
+//        europeanOption.setPricingEngine(new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(hwProcess, timeSteps){} );
+//        bermudanOption.setPricingEngine(new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(hwProcess, timeSteps){} );
+//        americanOption.setPricingEngine(new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(hwProcess, timeSteps){} );
 //        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
 //
 //

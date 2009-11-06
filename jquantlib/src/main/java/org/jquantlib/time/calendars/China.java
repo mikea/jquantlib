@@ -22,14 +22,14 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.OCTOBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 import static org.jquantlib.time.Weekday.SATURDAY;
 import static org.jquantlib.time.Weekday.SUNDAY;
 
@@ -125,33 +125,33 @@ public class China extends Calendar {
 
             if (isWeekend(w)
                     // New Year's Day
-                    || (d == 1 && m == JANUARY)
-                    || (d == 3 && m == JANUARY && y == 2005)
-                    || ((d == 2 || d == 3) && m == JANUARY && y == 2006)
-                    || (d <= 3 && m == JANUARY && y == 2007)
-                    || (d == 31 && m == DECEMBER && y == 2007)
-                    || (d == 1 && m == JANUARY && y == 2008)
-                    || (d == 1 && m == JANUARY && y == 200)
-                    || (d == 2 && m == JANUARY && y == 2009)
+                    || (d == 1 && m == January)
+                    || (d == 3 && m == January && y == 2005)
+                    || ((d == 2 || d == 3) && m == January && y == 2006)
+                    || (d <= 3 && m == January && y == 2007)
+                    || (d == 31 && m == December && y == 2007)
+                    || (d == 1 && m == January && y == 2008)
+                    || (d == 1 && m == January && y == 200)
+                    || (d == 2 && m == January && y == 2009)
                     // Chinese New Year
-                    || (d >= 19 && d <= 28 && m == JANUARY && y == 2004) || (d >= 7 && d <= 15 && m == FEBRUARY && y == 2005)
-                    || (((d >= 26 && m == JANUARY) || (d <= 3 && m == FEBRUARY)) && y == 2006)
-                    || (d >= 17 && d <= 25 && m == FEBRUARY && y == 2007)
-                    || (d >= 6 && d <= 12 && m == FEBRUARY && y == 2008)
-                    || (d >= 26 && d <= 30 && m == JANUARY && y == 2009)
+                    || (d >= 19 && d <= 28 && m == January && y == 2004) || (d >= 7 && d <= 15 && m == February && y == 2005)
+                    || (((d >= 26 && m == January) || (d <= 3 && m == February)) && y == 2006)
+                    || (d >= 17 && d <= 25 && m == February && y == 2007)
+                    || (d >= 6 && d <= 12 && m == February && y == 2008)
+                    || (d >= 26 && d <= 30 && m == January && y == 2009)
                     // Ching Ming Festival
-                    || (d == 4 && m == APRIL && y == 2008)
-                    || (d == 6 && m == APRIL && y == 2009)
+                    || (d == 4 && m == April && y == 2008)
+                    || (d == 6 && m == April && y == 2009)
                     // Labor Day
-                    || (d >= 1 && d <= 7 && m == MAY && y <= 2007) || (d >= 1 && d <= 2 && m == MAY && y == 2008)
-                    || (d == 1 && m == MAY && y == 2009)
+                    || (d >= 1 && d <= 7 && m == May && y <= 2007) || (d >= 1 && d <= 2 && m == May && y == 2008)
+                    || (d == 1 && m == May && y == 2009)
                     // Tuen Ng Festival
-                    || (d == 9 && m == JUNE && y == 2008) || (d >= 28 && d <= 29 && m == MAY && y == 2009)
+                    || (d == 9 && m == June && y == 2008) || (d >= 28 && d <= 29 && m == May && y == 2009)
                     // Mid-Autumn Festival
-                    || (d == 15 && m == SEPTEMBER && y == 2008)
+                    || (d == 15 && m == September && y == 2008)
                     // National Day
-                    || (d >= 1 && d <= 7 && m == OCTOBER && y <= 2007) || (d >= 29 && m == SEPTEMBER && y == 2008)
-                    || (d <= 3 && m == OCTOBER && y == 2008) || (d >= 1 && d <= 8 && m == OCTOBER && y == 2009)) {
+                    || (d >= 1 && d <= 7 && m == October && y <= 2007) || (d >= 29 && m == September && y == 2008)
+                    || (d <= 3 && m == October && y == 2008) || (d >= 1 && d <= 8 && m == October && y == 2009)) {
                 return false;
             }
             return true;

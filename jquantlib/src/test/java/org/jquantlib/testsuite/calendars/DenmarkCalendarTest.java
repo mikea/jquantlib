@@ -22,12 +22,12 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,20 +60,20 @@ public class DenmarkCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date(1, JANUARY, year));
+		expectedHol.add(new Date(1, January, year));
 		// maunday thursday
-		expectedHol.add(new Date(8, APRIL, year));
+		expectedHol.add(new Date(8, April, year));
 		// good friday
-		expectedHol.add(new Date(9, APRIL, year));
+		expectedHol.add(new Date(9, April, year));
 		// easter monday
-		expectedHol.add(new Date(12, APRIL, year));
+		expectedHol.add(new Date(12, April, year));
 
 		// great prayer day
-		expectedHol.add(new Date(7, MAY, year));
+		expectedHol.add(new Date(7, May, year));
 		// ascension
-		expectedHol.add(new Date(20, MAY, year));
+		expectedHol.add(new Date(20, May, year));
 		// whit monday
-		expectedHol.add(new Date(31, MAY, year));
+		expectedHol.add(new Date(31, May, year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -87,20 +87,20 @@ public class DenmarkCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date(24, MARCH, year));
+		expectedHol.add(new Date(24, March, year));
 		// good friday
-		expectedHol.add(new Date(25, MARCH, year));
+		expectedHol.add(new Date(25, March, year));
 		// easter monday
-		expectedHol.add(new Date(28, MARCH, year));
+		expectedHol.add(new Date(28, March, year));
 
 		// great prayer day
-		expectedHol.add(new Date(22, APRIL, year));
+		expectedHol.add(new Date(22, April, year));
 		// ascension
-		expectedHol.add(new Date(5, MAY, year));
+		expectedHol.add(new Date(5, May, year));
 		// whit monday
-		expectedHol.add(new Date(16, MAY, year));
+		expectedHol.add(new Date(16, May, year));
 		// boxing day
-		expectedHol.add(new Date(26, DECEMBER, year));
+		expectedHol.add(new Date(26, December, year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -114,22 +114,22 @@ public class DenmarkCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date(13, APRIL, year));
+		expectedHol.add(new Date(13, April, year));
 		// maunday thursday
-		expectedHol.add(new Date(14, APRIL, year));
+		expectedHol.add(new Date(14, April, year));
 		// good friday
-		expectedHol.add(new Date(17, APRIL, year));
+		expectedHol.add(new Date(17, April, year));
 		// easter monday
-		expectedHol.add(new Date(12, MAY, year));
+		expectedHol.add(new Date(12, May, year));
 
 		// great prayer day
-		expectedHol.add(new Date(25, MAY, year));
+		expectedHol.add(new Date(25, May, year));
 		// ascension
-		expectedHol.add(new Date(5, JUNE, year));
+		expectedHol.add(new Date(5, June, year));
 		// christmas
-		expectedHol.add(new Date(25, DECEMBER, year));
+		expectedHol.add(new Date(25, December, year));
 		// boxing day
-		expectedHol.add(new Date(26, DECEMBER, year));
+		expectedHol.add(new Date(26, December, year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -143,30 +143,30 @@ public class DenmarkCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date(1, JANUARY, year));
+		expectedHol.add(new Date(1, January, year));
 		// maunday thursday
-		expectedHol.add(new Date(5, APRIL, year));
+		expectedHol.add(new Date(5, April, year));
 		// good friday
-		expectedHol.add(new Date(6, APRIL, year));
+		expectedHol.add(new Date(6, April, year));
 		// easter monday
-		expectedHol.add(new Date(9, APRIL, year));
+		expectedHol.add(new Date(9, April, year));
 
 		// great prayer day
-		expectedHol.add(new Date(4, MAY, year));
+		expectedHol.add(new Date(4, May, year));
 		// ascension
-		expectedHol.add(new Date(17, MAY, year));
+		expectedHol.add(new Date(17, May, year));
 		// whit monday
-		expectedHol.add(new Date(28, MAY, year));
+		expectedHol.add(new Date(28, May, year));
 		// constitution day
-		expectedHol.add(new Date(5, JUNE, year));
+		expectedHol.add(new Date(5, June, year));
 		// christmas eve
-		expectedHol.add(new Date(24, DECEMBER, year));
+		expectedHol.add(new Date(24, December, year));
 		// christmas
-		expectedHol.add(new Date(25, DECEMBER, year));
+		expectedHol.add(new Date(25, December, year));
 		// boxing day
-		expectedHol.add(new Date(26, DECEMBER, year));
+		expectedHol.add(new Date(26, December, year));
 		// new year's eve
-		expectedHol.add(new Date(31, DECEMBER, year));
+		expectedHol.add(new Date(31, December, year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -181,30 +181,30 @@ public class DenmarkCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date(1, JANUARY, year));
+		expectedHol.add(new Date(1, January, year));
 		// maunday thursday
-		expectedHol.add(new Date(20, MARCH, year));
+		expectedHol.add(new Date(20, March, year));
 		// good friday
-		expectedHol.add(new Date(21, MARCH, year));
+		expectedHol.add(new Date(21, March, year));
 		// easter monday
-		expectedHol.add(new Date(24, MARCH, year));
+		expectedHol.add(new Date(24, March, year));
 
 		// great prayer day
-		expectedHol.add(new Date(18, APRIL, year));
+		expectedHol.add(new Date(18, April, year));
 		// ascension
-		expectedHol.add(new Date(1, MAY, year));
+		expectedHol.add(new Date(1, May, year));
 		// whit monday
-		expectedHol.add(new Date(12, MAY, year));
+		expectedHol.add(new Date(12, May, year));
 		// constitution day
-		expectedHol.add(new Date(5, JUNE, year));
+		expectedHol.add(new Date(5, June, year));
 		// christmas eve
-		expectedHol.add(new Date(24, DECEMBER, year));
+		expectedHol.add(new Date(24, December, year));
 		// christmas
-		expectedHol.add(new Date(25, DECEMBER, year));
+		expectedHol.add(new Date(25, December, year));
 		// boxing day
-		expectedHol.add(new Date(26, DECEMBER, year));
+		expectedHol.add(new Date(26, December, year));
 		// boxing day
-		expectedHol.add(new Date(31, DECEMBER, year));
+		expectedHol.add(new Date(31, December, year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -218,29 +218,29 @@ public class DenmarkCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date(1, JANUARY, year));
+		expectedHol.add(new Date(1, January, year));
 		// maunday thursday
-		expectedHol.add(new Date(9, APRIL, year));
+		expectedHol.add(new Date(9, April, year));
 		// good friday
-		expectedHol.add(new Date(10, APRIL, year));
+		expectedHol.add(new Date(10, April, year));
 		// easter monday
-		expectedHol.add(new Date(13, APRIL, year));
+		expectedHol.add(new Date(13, April, year));
 
 		// great prayer day
-		expectedHol.add(new Date(8, MAY, year));
+		expectedHol.add(new Date(8, May, year));
 		// ascension
-		expectedHol.add(new Date(21, MAY, year));
+		expectedHol.add(new Date(21, May, year));
 		// ascension
-		expectedHol.add(new Date(22, MAY, year));
+		expectedHol.add(new Date(22, May, year));
 		// whit monday
-		expectedHol.add(new Date(1, JUNE, year));
+		expectedHol.add(new Date(1, June, year));
 		// constitution day
-		expectedHol.add(new Date(5, JUNE, year));
+		expectedHol.add(new Date(5, June, year));
 		// christmas eve
-		expectedHol.add(new Date(24, DECEMBER, year));
+		expectedHol.add(new Date(24, December, year));
 		// christmas
-		expectedHol.add(new Date(25, DECEMBER, year));
-		expectedHol.add(new Date(31, DECEMBER, year));
+		expectedHol.add(new Date(25, December, year));
+		expectedHol.add(new Date(31, December, year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -254,20 +254,20 @@ public class DenmarkCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date(1, JANUARY, year));
+		expectedHol.add(new Date(1, January, year));
 		// maunday thursday
-		expectedHol.add(new Date(1, APRIL, year));
+		expectedHol.add(new Date(1, April, year));
 		// good friday
-		expectedHol.add(new Date(2, APRIL, year));
+		expectedHol.add(new Date(2, April, year));
 		// easter monday
-		expectedHol.add(new Date(5, APRIL, year));
+		expectedHol.add(new Date(5, April, year));
 
 		// great prayer day
-		expectedHol.add(new Date(30, APRIL, year));
+		expectedHol.add(new Date(30, April, year));
 		// ascension
-		expectedHol.add(new Date(13, MAY, year));
+		expectedHol.add(new Date(13, May, year));
 		// whit monday
-		expectedHol.add(new Date(24, MAY, year));
+		expectedHol.add(new Date(24, May, year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -281,24 +281,24 @@ public class DenmarkCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date(5, APRIL, year));
+		expectedHol.add(new Date(5, April, year));
 		// maunday thursday
-		expectedHol.add(new Date(6, APRIL, year));
+		expectedHol.add(new Date(6, April, year));
 		// good friday
-		expectedHol.add(new Date(9, APRIL, year));
+		expectedHol.add(new Date(9, April, year));
 		// easter monday
-		expectedHol.add(new Date(4, MAY, year));
+		expectedHol.add(new Date(4, May, year));
 
 		// great prayer day
-		expectedHol.add(new Date(17, MAY, year));
+		expectedHol.add(new Date(17, May, year));
 		// ascension
-		expectedHol.add(new Date(28, MAY, year));
+		expectedHol.add(new Date(28, May, year));
 		// whit monday
-		expectedHol.add(new Date(5, JUNE, year));
+		expectedHol.add(new Date(5, June, year));
 		// christmas
-		expectedHol.add(new Date(25, DECEMBER, year));
+		expectedHol.add(new Date(25, December, year));
 		// boxing day
-		expectedHol.add(new Date(26, DECEMBER, year));
+		expectedHol.add(new Date(26, December, year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
@@ -312,20 +312,20 @@ public class DenmarkCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date(21, APRIL, year));
+		expectedHol.add(new Date(21, April, year));
 		// maunday thursday
-		expectedHol.add(new Date(22, APRIL, year));
+		expectedHol.add(new Date(22, April, year));
 		// good friday
-		expectedHol.add(new Date(25, APRIL, year));
+		expectedHol.add(new Date(25, April, year));
 		// easter monday
-		expectedHol.add(new Date(20, MAY, year));
+		expectedHol.add(new Date(20, May, year));
 
 		// great prayer day
-		expectedHol.add(new Date(2, JUNE, year));
+		expectedHol.add(new Date(2, June, year));
 		// ascension
-		expectedHol.add(new Date(13, JUNE, year));
+		expectedHol.add(new Date(13, June, year));
 		// boxing day
-		expectedHol.add(new Date(26, DECEMBER, year));
+		expectedHol.add(new Date(26, December, year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();

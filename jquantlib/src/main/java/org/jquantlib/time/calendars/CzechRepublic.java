@@ -31,13 +31,13 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JULY;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.OCTOBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.July;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -124,32 +124,32 @@ public class CzechRepublic extends Calendar {
 			final int em = easterMonday(y);
 			if (isWeekend(w)
 					// New Year's Day
-					|| (d == 1 && m == JANUARY)
+					|| (d == 1 && m == January)
 					// Easter Monday
 					|| (dd == em)
 					// Labour Day
-					|| (d == 1 && m == MAY)
+					|| (d == 1 && m == May)
 					// Liberation Day
-					|| (d == 8 && m == MAY)
+					|| (d == 8 && m == May)
 					// SS. Cyril and Methodius
-					|| (d == 5 && m == JULY)
+					|| (d == 5 && m == July)
 					// Jan Hus Day
-					|| (d == 6 && m == JULY)
+					|| (d == 6 && m == July)
 					// Czech Statehood Day
-					|| (d == 28 && m == SEPTEMBER)
+					|| (d == 28 && m == September)
 					// Independence Day
-					|| (d == 28 && m == OCTOBER)
+					|| (d == 28 && m == October)
 					// Struggle for Freedom and Democracy Day
-					|| (d == 17 && m == NOVEMBER)
+					|| (d == 17 && m == November)
 					// Christmas Eve
-					|| (d == 24 && m == DECEMBER)
+					|| (d == 24 && m == December)
 					// Christmas
-					|| (d == 25 && m == DECEMBER)
+					|| (d == 25 && m == December)
 					// St. Stephen
-					|| (d == 26 && m == DECEMBER)
+					|| (d == 26 && m == December)
 					// unidentified closing days for stock exchange
-					|| (d == 2 && m == JANUARY && y == 2004)
-					|| (d == 31 && m == DECEMBER && y == 2004)) {
+					|| (d == 2 && m == January && y == 2004)
+					|| (d == 31 && m == December && y == 2004)) {
                 return false;
             }
 			return true;

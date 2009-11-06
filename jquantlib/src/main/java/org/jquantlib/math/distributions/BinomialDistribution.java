@@ -103,16 +103,19 @@ public class BinomialDistribution implements Ops.IntToDouble {
     @Override
     public double op(final int k) {
 
-        if (k > nExp)
+        if (k > nExp) {
             return 0.0;
+        }
 
         // p == 1.0
-        if (logP == 0.0)
+        if (logP == 0.0) {
             return (k == nExp ? 1.0 : 0.0);
+        }
 
         // p==0.0
-        if (logOneMinusP == 0.0)
+        if (logOneMinusP == 0.0) {
             return (k == 0 ? 1.0 : 0.0);
+        }
 
         return Math.exp(binomialCoefficientLn(nExp, k) + k * logP + (nExp - k) * logOneMinusP);
     }
@@ -145,6 +148,25 @@ public class BinomialDistribution implements Ops.IntToDouble {
     //XXX
     private double binomialCoefficient(final int n, final int k) {
     	return Math.floor(0.5 + Math.exp(binomialCoefficientLn(n, k)));
+    }
+
+
+    /**
+     * Given an odd integer n and a real number z it returns p such that:
+     * <pre>
+     * 1 - CumulativeBinomialDistribution((n-1)/2, n, p) = CumulativeNormalDistribution(z)
+     * </pre>
+     * Pre-condition: n must be odd
+     */
+    static public /*@Real*/ double PeizerPrattMethod2Inversion(final double z, final long n) {
+
+        QL.require(n%2==1,"n must be an odd number"); // TODO: message
+
+        /*@Real*/ double result = (z/(n+1.0/3.0+0.1/(n+1.0)));
+        result *= result;
+        result = Math.exp(-result*(n+1.0/6.0));
+        result = 0.5 + (z>0 ? 1 : -1) * Math.sqrt((0.25 * (1.0-result)));
+        return result;
     }
 
 }

@@ -58,11 +58,11 @@ public class EstimatorsTest {
         QL.info("Testing volatility model construction...");
 
         final Date[] dates = new Date[] {
-                new Date(25, Month.MARCH, 2005),
-                new Date(29, Month.MARCH, 2005),
-                new Date(15, Month.MARCH, 2005),
-                new Date(21, Month.MARCH, 2005),
-                new Date(27, Month.MARCH, 2005) };
+                new Date(25, Month.March, 2005),
+                new Date(29, Month.March, 2005),
+                new Date(15, Month.March, 2005),
+                new Date(21, Month.March, 2005),
+                new Date(27, Month.March, 2005) };
 
         final double[] values = new double[] { 1.2, 2.3, 0.3, 2.0, 2.5 };
 

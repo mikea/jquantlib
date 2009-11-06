@@ -103,9 +103,9 @@ public class AmericanOptionTest {
         // type, strike, spot, q, r, t, vol, value, tol
         final AmericanOptionData values[] = {
                 // From "Option pricing formulas", Haug, McGraw-Hill 1998, pag 27
-                new AmericanOptionData(Option.Type.CALL, 40.00, 42.00, 0.08, 0.04, 0.75, 0.35, 5.2704),
+                new AmericanOptionData(Option.Type.Call, 40.00, 42.00, 0.08, 0.04, 0.75, 0.35, 5.2704),
                 // From "Option pricing formulas", Haug, McGraw-Hill 1998, VBA
-                new AmericanOptionData(Option.Type.PUT, 40.00, 36.00, 0.00, 0.06, 1.00, 0.20, 4.4531) };
+                new AmericanOptionData(Option.Type.Put, 40.00, 36.00, 0.00, 0.06, 1.00, 0.20, 4.4531) };
 
         final Date today = new Settings().evaluationDate();
 
@@ -169,42 +169,42 @@ public class AmericanOptionTest {
          */
         final AmericanOptionData values[] = {
                 // type, strike, spot, q, r, t, vol, value
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10, 0.10, 0.10, 0.15, 0.0206),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15, 1.8771),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15, 10.0089),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10, 0.10, 0.10, 0.25, 0.3159),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25, 3.1280),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 10.3919),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10, 0.10, 0.10, 0.35, 0.9495),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35, 4.3777),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 11.1679),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10, 0.10, 0.50, 0.15, 0.8208),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15, 4.0842),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 10.8087),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10, 0.10, 0.50, 0.25, 2.7437),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25, 6.8015),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 13.0170),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.10, 0.10, 0.50, 0.35, 5.0063),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35, 9.5106),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 15.5689),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10, 0.10, 0.10, 0.15, 10.0000),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15, 1.8770),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15, 0.0410),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10, 0.10, 0.10, 0.25, 10.2533),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25, 3.1277),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 0.4562),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10, 0.10, 0.10, 0.35, 10.8787),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35, 4.3777),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 1.2402),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10, 0.10, 0.50, 0.15, 10.5595),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15, 4.0842),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 1.0822),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10, 0.10, 0.50, 0.25, 12.4419),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25, 6.8014),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 3.3226),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 90.00, 0.10, 0.10, 0.50, 0.35, 14.6945),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35, 9.5104),
-                new AmericanOptionData(Option.Type.PUT, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 5.8823) };
+                new AmericanOptionData(Option.Type.Call, 100.00, 90.00, 0.10, 0.10, 0.10, 0.15, 0.0206),
+                new AmericanOptionData(Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15, 1.8771),
+                new AmericanOptionData(Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15, 10.0089),
+                new AmericanOptionData(Option.Type.Call, 100.00, 90.00, 0.10, 0.10, 0.10, 0.25, 0.3159),
+                new AmericanOptionData(Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25, 3.1280),
+                new AmericanOptionData(Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 10.3919),
+                new AmericanOptionData(Option.Type.Call, 100.00, 90.00, 0.10, 0.10, 0.10, 0.35, 0.9495),
+                new AmericanOptionData(Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35, 4.3777),
+                new AmericanOptionData(Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 11.1679),
+                new AmericanOptionData(Option.Type.Call, 100.00, 90.00, 0.10, 0.10, 0.50, 0.15, 0.8208),
+                new AmericanOptionData(Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15, 4.0842),
+                new AmericanOptionData(Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 10.8087),
+                new AmericanOptionData(Option.Type.Call, 100.00, 90.00, 0.10, 0.10, 0.50, 0.25, 2.7437),
+                new AmericanOptionData(Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25, 6.8015),
+                new AmericanOptionData(Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 13.0170),
+                new AmericanOptionData(Option.Type.Call, 100.00, 90.00, 0.10, 0.10, 0.50, 0.35, 5.0063),
+                new AmericanOptionData(Option.Type.Call, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35, 9.5106),
+                new AmericanOptionData(Option.Type.Call, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 15.5689),
+                new AmericanOptionData(Option.Type.Put, 100.00, 90.00, 0.10, 0.10, 0.10, 0.15, 10.0000),
+                new AmericanOptionData(Option.Type.Put, 100.00, 100.00, 0.10, 0.10, 0.10, 0.15, 1.8770),
+                new AmericanOptionData(Option.Type.Put, 100.00, 110.00, 0.10, 0.10, 0.10, 0.15, 0.0410),
+                new AmericanOptionData(Option.Type.Put, 100.00, 90.00, 0.10, 0.10, 0.10, 0.25, 10.2533),
+                new AmericanOptionData(Option.Type.Put, 100.00, 100.00, 0.10, 0.10, 0.10, 0.25, 3.1277),
+                new AmericanOptionData(Option.Type.Put, 100.00, 110.00, 0.10, 0.10, 0.10, 0.25, 0.4562),
+                new AmericanOptionData(Option.Type.Put, 100.00, 90.00, 0.10, 0.10, 0.10, 0.35, 10.8787),
+                new AmericanOptionData(Option.Type.Put, 100.00, 100.00, 0.10, 0.10, 0.10, 0.35, 4.3777),
+                new AmericanOptionData(Option.Type.Put, 100.00, 110.00, 0.10, 0.10, 0.10, 0.35, 1.2402),
+                new AmericanOptionData(Option.Type.Put, 100.00, 90.00, 0.10, 0.10, 0.50, 0.15, 10.5595),
+                new AmericanOptionData(Option.Type.Put, 100.00, 100.00, 0.10, 0.10, 0.50, 0.15, 4.0842),
+                new AmericanOptionData(Option.Type.Put, 100.00, 110.00, 0.10, 0.10, 0.50, 0.15, 1.0822),
+                new AmericanOptionData(Option.Type.Put, 100.00, 90.00, 0.10, 0.10, 0.50, 0.25, 12.4419),
+                new AmericanOptionData(Option.Type.Put, 100.00, 100.00, 0.10, 0.10, 0.50, 0.25, 6.8014),
+                new AmericanOptionData(Option.Type.Put, 100.00, 110.00, 0.10, 0.10, 0.50, 0.25, 3.3226),
+                new AmericanOptionData(Option.Type.Put, 100.00, 90.00, 0.10, 0.10, 0.50, 0.35, 14.6945),
+                new AmericanOptionData(Option.Type.Put, 100.00, 100.00, 0.10, 0.10, 0.50, 0.35, 9.5104),
+                new AmericanOptionData(Option.Type.Put, 100.00, 110.00, 0.10, 0.10, 0.50, 0.35, 5.8823) };
 
         final Date today = new Settings().evaluationDate();
 
@@ -262,58 +262,58 @@ public class AmericanOptionTest {
         final AmericanOptionData juValues[] = {
                 // type, strike, spot, q, r, t, vol, value, tol
                 // These values are from Exhibit 3 - Short dated Put Options
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.006),
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 0.201),
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 0.433),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.006),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 0.201),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 0.433),
 
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.851),
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 1.576),
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 1.984),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.851),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 1.576),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 1.984),
 
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 5.000),
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 5.084),
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 5.260),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 5.000),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 5.084),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 5.260),
 
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 0.078),
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 0.697),
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 1.218),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 0.078),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 0.697),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 1.218),
 
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 1.309),
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 2.477),
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 3.161),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 1.309),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 2.477),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 3.161),
 
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 5.059),
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 5.699),
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 6.231),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 5.059),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 5.699),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 6.231),
 
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 0.247),
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 1.344),
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 2.150),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 0.247),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 1.344),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 2.150),
 
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 1.767),
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 3.381),
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 4.342),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 1.767),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 3.381),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 4.342),
 
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 5.288),
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 6.501),
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 7.367),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 5.288),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 6.501),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 7.367),
 
                 // Type in Exhibits 4 and 5 if you have some spare time ;-)
 
                 // type, strike, spot, q, r, t, vol, value, tol
                 // These values are from Exhibit 6 - Long dated Call Options
                 // with dividends
-                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.2, 2.605),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.2, 5.182),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2, 9.065),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.2, 14.430),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.2, 21.398),
+                new AmericanOptionData(Option.Type.Call, 100.00, 80.00, 0.07, 0.03, 3.0, 0.2, 2.605),
+                new AmericanOptionData(Option.Type.Call, 100.00, 90.00, 0.07, 0.03, 3.0, 0.2, 5.182),
+                new AmericanOptionData(Option.Type.Call, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2, 9.065),
+                new AmericanOptionData(Option.Type.Call, 100.00, 110.00, 0.07, 0.03, 3.0, 0.2, 14.430),
+                new AmericanOptionData(Option.Type.Call, 100.00, 120.00, 0.07, 0.03, 3.0, 0.2, 21.398),
 
-                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.4, 11.336),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.4, 15.711),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.4, 20.760),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.4, 26.440),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.4, 32.709),
+                new AmericanOptionData(Option.Type.Call, 100.00, 80.00, 0.07, 0.03, 3.0, 0.4, 11.336),
+                new AmericanOptionData(Option.Type.Call, 100.00, 90.00, 0.07, 0.03, 3.0, 0.4, 15.711),
+                new AmericanOptionData(Option.Type.Call, 100.00, 100.00, 0.07, 0.03, 3.0, 0.4, 20.760),
+                new AmericanOptionData(Option.Type.Call, 100.00, 110.00, 0.07, 0.03, 3.0, 0.4, 26.440),
+                new AmericanOptionData(Option.Type.Call, 100.00, 120.00, 0.07, 0.03, 3.0, 0.4, 32.709),
 
                 // FIXME case of zero interest rates not handled
                 // new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.0, 3.0, 0.3, 5.552 ),
@@ -322,11 +322,11 @@ public class AmericanOptionTest {
                 // new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.0, 3.0, 0.3, 18.458 ),
                 // new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.0, 3.0, 0.3, 24.786 ),
 
-                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.03, 0.07, 3.0, 0.3, 17.411),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.03, 0.07, 3.0, 0.3, 23.402),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
+                new AmericanOptionData(Option.Type.Call, 100.00, 80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
+                new AmericanOptionData(Option.Type.Call, 100.00, 90.00, 0.03, 0.07, 3.0, 0.3, 17.411),
+                new AmericanOptionData(Option.Type.Call, 100.00, 100.00, 0.03, 0.07, 3.0, 0.3, 23.402),
+                new AmericanOptionData(Option.Type.Call, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
+                new AmericanOptionData(Option.Type.Call, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
 
         QL.info("Testing Ju approximation for American options...");
 
@@ -388,58 +388,58 @@ public class AmericanOptionTest {
         final AmericanOptionData juValues[] = {
                 // type, strike, spot, q, r, t, vol, value, tol
                 // These values are from Exhibit 3 - Short dated Put Options
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.006),
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 0.201),
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 0.433),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.006),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 0.201),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 0.433),
 
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.851),
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 1.576),
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 1.984),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 0.851),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 1.576),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 1.984),
 
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 5.000),
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 5.084),
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 5.260),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.2, 5.000),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.2, 5.084),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.2, 5.260),
 
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 0.078),
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 0.697),
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 1.218),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 0.078),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 0.697),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 1.218),
 
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 1.309),
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 2.477),
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 3.161),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 1.309),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 2.477),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 3.161),
 
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 5.059),
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 5.699),
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 6.231),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.3, 5.059),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.3, 5.699),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.3, 6.231),
 
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 0.247),
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 1.344),
-                new AmericanOptionData(Option.Type.PUT, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 2.150),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 0.247),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 1.344),
+                new AmericanOptionData(Option.Type.Put, 35.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 2.150),
 
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 1.767),
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 3.381),
-                new AmericanOptionData(Option.Type.PUT, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 4.342),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 1.767),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 3.381),
+                new AmericanOptionData(Option.Type.Put, 40.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 4.342),
 
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 5.288),
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 6.501),
-                new AmericanOptionData(Option.Type.PUT, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 7.367),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.0833, 0.4, 5.288),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.3333, 0.4, 6.501),
+                new AmericanOptionData(Option.Type.Put, 45.00, 40.00, 0.0, 0.0488, 0.5833, 0.4, 7.367),
 
                 // Type in Exhibits 4 and 5 if you have some spare time ;-)
 
                 // type, strike, spot, q, r, t, vol, value, tol
                 // These values are from Exhibit 6 - Long dated Call Options
                 // with dividends
-                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.2, 2.605),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.2, 5.182),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2, 9.065),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.2, 14.430),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.2, 21.398),
+                new AmericanOptionData(Option.Type.Call, 100.00, 80.00, 0.07, 0.03, 3.0, 0.2, 2.605),
+                new AmericanOptionData(Option.Type.Call, 100.00, 90.00, 0.07, 0.03, 3.0, 0.2, 5.182),
+                new AmericanOptionData(Option.Type.Call, 100.00, 100.00, 0.07, 0.03, 3.0, 0.2, 9.065),
+                new AmericanOptionData(Option.Type.Call, 100.00, 110.00, 0.07, 0.03, 3.0, 0.2, 14.430),
+                new AmericanOptionData(Option.Type.Call, 100.00, 120.00, 0.07, 0.03, 3.0, 0.2, 21.398),
 
-                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.03, 3.0, 0.4, 11.336),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.07, 0.03, 3.0, 0.4, 15.711),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.07, 0.03, 3.0, 0.4, 20.760),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.03, 3.0, 0.4, 26.440),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.03, 3.0, 0.4, 32.709),
+                new AmericanOptionData(Option.Type.Call, 100.00, 80.00, 0.07, 0.03, 3.0, 0.4, 11.336),
+                new AmericanOptionData(Option.Type.Call, 100.00, 90.00, 0.07, 0.03, 3.0, 0.4, 15.711),
+                new AmericanOptionData(Option.Type.Call, 100.00, 100.00, 0.07, 0.03, 3.0, 0.4, 20.760),
+                new AmericanOptionData(Option.Type.Call, 100.00, 110.00, 0.07, 0.03, 3.0, 0.4, 26.440),
+                new AmericanOptionData(Option.Type.Call, 100.00, 120.00, 0.07, 0.03, 3.0, 0.4, 32.709),
 
                 // FIXME case of zero interest rates not handled
                 // new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.07, 0.0, 3.0, 0.3, 5.552 ),
@@ -448,11 +448,11 @@ public class AmericanOptionTest {
                 // new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.07, 0.0, 3.0, 0.3, 18.458 ),
                 // new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.07, 0.0, 3.0, 0.3, 24.786 ),
 
-                new AmericanOptionData(Option.Type.CALL, 100.00, 80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 90.00, 0.03, 0.07, 3.0, 0.3, 17.411),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 100.00, 0.03, 0.07, 3.0, 0.3, 23.402),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
-                new AmericanOptionData(Option.Type.CALL, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
+                new AmericanOptionData(Option.Type.Call, 100.00, 80.00, 0.03, 0.07, 3.0, 0.3, 12.177),
+                new AmericanOptionData(Option.Type.Call, 100.00, 90.00, 0.03, 0.07, 3.0, 0.3, 17.411),
+                new AmericanOptionData(Option.Type.Call, 100.00, 100.00, 0.03, 0.07, 3.0, 0.3, 23.402),
+                new AmericanOptionData(Option.Type.Call, 100.00, 110.00, 0.03, 0.07, 3.0, 0.3, 30.028),
+                new AmericanOptionData(Option.Type.Call, 100.00, 120.00, 0.03, 0.07, 3.0, 0.3, 37.177) };
 
         final Date today = new Settings().evaluationDate();
         final double tolerance = 8.0e-2;
@@ -522,7 +522,7 @@ public class AmericanOptionTest {
         tolerance.put("gamma", 2.0e-4);
         tolerance.put("theta", 1.0e-4);
 
-        final Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+        final Option.Type types[] = { Option.Type.Call, Option.Type.Put };
         final double strikes[] = { 50.0, 99.5, 100.0, 100.5, 150.0 };
         final double underlyings[] = { 100.0 };
         final double qRates[] = { 0.04, 0.05, 0.06 };

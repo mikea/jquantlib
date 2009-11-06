@@ -22,10 +22,10 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.May;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -102,21 +102,21 @@ public class Denmark extends Calendar {
 	            // Whit Monday
 	            || (dd == em+49)
 	            // New Year's Day
-	            || (d == 1  && m == JANUARY)
+	            || (d == 1  && m == January)
 	            // Constitution Day, June 5th
-	            || (d == 5  && m == JUNE)
+	            || (d == 5  && m == June)
 	            // Christmas
-					|| (d == 25 && m == DECEMBER)
+					|| (d == 25 && m == December)
 	            // Boxing Day
-	            || (d == 26 && m == DECEMBER)
+	            || (d == 26 && m == December)
 
 	            // below added according to http://nordic.nasdaqomxtrader.com/trading/tradinghours/
                 // Christmas eve
-                || (d == 24 && m == DECEMBER && (y == 2008 || y == 2009 || y == 2007))
+                || (d == 24 && m == December && (y == 2008 || y == 2009 || y == 2007))
                 // new year eve
-                || (d == 31 && m ==DECEMBER && (y == 2008 || y == 2009 || y == 2007))
+                || (d == 31 && m ==December && (y == 2008 || y == 2009 || y == 2007))
 
-                || (d == 22 && m == MAY && y == 2009)) {
+                || (d == 22 && m == May && y == 2009)) {
                 return false;
             }
 	        return true;

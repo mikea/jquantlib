@@ -117,7 +117,7 @@ public class JuQuadraticApproximationEngine extends VanillaOption.EngineImpl {
         final double /* @Real */forwardPrice = spot * dividendDiscount / riskFreeDiscount;
         final BlackCalculator black = new BlackCalculator(payoff, forwardPrice, Math.sqrt(variance), riskFreeDiscount);
 
-        if (dividendDiscount>=1.0 && payoff.optionType()==Option.Type.CALL) {
+        if (dividendDiscount>=1.0 && payoff.optionType()==Option.Type.Call) {
             // early exercise never optimal
             r.value           = black.value();
             greeks.delta            = black.delta(spot);
@@ -158,10 +158,10 @@ public class JuQuadraticApproximationEngine extends VanillaOption.EngineImpl {
             double /*@Real*/ phi;
 
             switch (payoff.optionType()) {
-            case CALL:
+            case Call:
                 phi = 1;
                 break;
-            case PUT:
+            case Put:
                 phi = -1;
                 break;
             default:

@@ -46,7 +46,6 @@ import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.ReflectConstants;
-import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.vanilla.AnalyticDividendEuropeanEngine;
 import org.jquantlib.pricingengines.vanilla.finitedifferences.FDDividendAmericanEngine;
@@ -176,7 +175,7 @@ public class DividendVanillaOption extends VanillaOption {
     // public inner classes
     //
 
-    public static class ArgumentsImpl extends OneAssetOption.ArgumentsImpl implements DividendVanillaOption.Arguments {
+    public static class ArgumentsImpl extends VanillaOption.ArgumentsImpl implements DividendVanillaOption.Arguments {
 
         //
         // public fields
@@ -194,19 +193,20 @@ public class DividendVanillaOption extends VanillaOption {
         public void validate() {
             super.validate();
             final Date exerciseDate = exercise.lastDate();
-
             for (int i = 0; i < cashFlow.size(); i++) {
-                QL.require(cashFlow.get(i).date().le(exerciseDate) , "dividend date later than the exercise date"); // QA:[RG]::verified // TODO: message
+                final Date d = cashFlow.get(i).date();
+                QL.require(d.le(exerciseDate), "dividend date later than the exercise date"); // QA:[RG]::verified // TODO: message
             }
         }
-
     }
 
 
-    public static class ResultsImpl extends OneAssetOption.ResultsImpl implements DividendVanillaOption.Results { }
+    public static class ResultsImpl extends VanillaOption.ResultsImpl implements DividendVanillaOption.Results { }
 
 
-    static public abstract class EngineImpl extends GenericEngine<DividendVanillaOption.Arguments, DividendVanillaOption.Results> {
+    static public abstract class EngineImpl
+            extends VanillaOption.EngineImpl
+            implements DividendVanillaOption.Engine {
 
         protected EngineImpl() {
             super(new DividendVanillaOption.ArgumentsImpl(), new DividendVanillaOption.ResultsImpl());

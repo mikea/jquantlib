@@ -23,13 +23,13 @@ import java.lang.reflect.Constructor;
 
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.experimental.lattices.ExtendedTian;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.methods.lattices.BinomialTree;
 import org.jquantlib.methods.lattices.BlackScholesLattice;
 import org.jquantlib.methods.lattices.Tree;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
@@ -69,7 +69,7 @@ import org.jquantlib.time.TimeGrid;
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
-public abstract class BinomialVanillaEngine<T extends BinomialTree> extends VanillaOption.EngineImpl {
+public abstract class BinomialVanillaEngine<T extends Tree> extends VanillaOption.EngineImpl {
 
     //
     // private final fields
@@ -116,8 +116,13 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
             final int timeSteps,
             final /*@Price*/ double strike) {
         try {
-            final Constructor<T> c = clazz.getConstructor(StochasticProcess1D.class, double.class, int.class, double.class);
-            return clazz.cast(c.newInstance(bs, maturity, timeSteps, strike));
+            if (this.clazz == ExtendedTian.class) {
+                final Constructor<T> c = clazz.getConstructor(StochasticProcess1D.class, double.class, int.class);
+                return clazz.cast(c.newInstance(bs, maturity, timeSteps));
+            } else {
+                final Constructor<T> c = clazz.getConstructor(StochasticProcess1D.class, double.class, int.class, double.class);
+                return clazz.cast(c.newInstance(bs, maturity, timeSteps, strike));
+            }
         } catch (final Exception e) {
             throw new LibraryException(e); // QA:[RG]::verified
         }
@@ -154,9 +159,15 @@ public abstract class BinomialVanillaEngine<T extends BinomialTree> extends Vani
         QL.require(payoff!=null , "non-plain payoff given"); // QA:[RG]::verified // TODO: message
 
         final double maturity = rfdc.yearFraction(referenceDate, maturityDate);
+
+
+
         final StochasticProcess1D bs = new GeneralizedBlackScholesProcess(process.stateVariable(), flatDividends, flatRiskFree, flatVol);
         final TimeGrid grid = new TimeGrid(maturity, timeSteps_);
         final Tree tree = (Tree)getTreeInstance(bs, maturity, timeSteps_, payoff.strike());
+
+
+
         final BlackScholesLattice<Tree> lattice = new BlackScholesLattice<Tree>(tree, R, maturity, timeSteps_);
         final DiscretizedVanillaOption option = new DiscretizedVanillaOption(a, process, grid);
 

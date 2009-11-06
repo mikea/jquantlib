@@ -936,9 +936,9 @@ public class Bond extends Instrument {
         // the coupons.
         redemptions_.clear();
         for (int i=1; i<notionalSchedule_.size(); ++i) {
-            /*@Real*/final double R = (i < redemptions.length) ? redemptions[i] :
-                !(redemptions.length == 0)   ? redemptions[redemptions.length-1] : 100.0;
-                /*@Real*/final double amount = (R/100.0)*(notionals_.get(i-1)-notionals_.get(i));
+            final /*@Real*/ double R = (i < redemptions.length) ? redemptions[i] :
+                !(redemptions.length == 0) ? redemptions[redemptions.length-1] : 100.0;
+                final /*@Real*/ double amount = (R/100.0)*(notionals_.get(i-1)-notionals_.get(i));
                 final CashFlow  redemption = new SimpleCashFlow(amount, notionalSchedule_.get(i));
                 cashflows_.add(redemption);
                 redemptions_.add(redemption);
@@ -1200,7 +1200,9 @@ public class Bond extends Instrument {
      *
      * @author Richard Gomes
      */
-    static public abstract class EngineImpl extends GenericEngine<Bond.Arguments, Bond.Results> implements Bond.Engine {
+    static public abstract class EngineImpl
+            extends GenericEngine<Bond.Arguments, Bond.Results>
+            implements Bond.Engine {
 
         protected EngineImpl() {
             super(new ArgumentsImpl(), new ResultsImpl());

@@ -669,7 +669,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             final int y = date.year() + n;
 
             QL.ensure(y >= 1900 && y <= 2099 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
-            if (d == 29 && m == Month.FEBRUARY.value() && !isLeap(y)) {
+            if (d == 29 && m == Month.February.value() && !isLeap(y)) {
                 d = 28;
             }
 

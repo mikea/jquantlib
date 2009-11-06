@@ -132,7 +132,7 @@ public class AmericanPayoffAtHit {
 
         // up-and-in cash-(at-hit)-or-nothing option
         // a.k.a. american call with cash-or-nothing payoff
-        if (optionType.equals(Type.CALL)) {
+        if (optionType.equals(Type.Call)) {
             if (strike > spot) {
                 alpha     = 1.0-cum_d1;//  N(-d1)
                 DalphaDd1 =    -  n_d1; // -n( d1)
@@ -147,7 +147,7 @@ public class AmericanPayoffAtHit {
         }
         // down-and-in cash-(at-hit)-or-nothing option
         // a.k.a. american put with cash-or-nothing payoff
-        else if (optionType.equals(Type.PUT)) {
+        else if (optionType.equals(Type.Put)) {
             if (strike < spot) {
                 alpha     =     cum_d1;//  N(d1)
                 DalphaDd1 =       n_d1; //  n(d1)
@@ -164,8 +164,8 @@ public class AmericanPayoffAtHit {
 
         muPlusLambda = mu + lambda;
         muMinusLambda = mu - lambda;
-        inTheMoney = (optionType.equals(Type.CALL) && strike < spot) ||
-        (optionType.equals(Type.PUT) && strike > spot);
+        inTheMoney = (optionType.equals(Type.Call) && strike < spot) ||
+        (optionType.equals(Type.Put) && strike > spot);
 
         //
         // TODO: code review

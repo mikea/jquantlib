@@ -105,12 +105,12 @@ public class EquityOptions {
 
         // set up dates
         final Calendar calendar = new Target();
-        final Date todaysDate = new Date(15, Month.MAY, 1998);
-        final Date settlementDate = new Date(17, Month.MAY, 1998);
+        final Date todaysDate = new Date(15, Month.May, 1998);
+        final Date settlementDate = new Date(17, Month.May, 1998);
         new Settings().setEvaluationDate(todaysDate);
 
         // our options
-        final Option.Type type = Option.Type.PUT;
+        final Option.Type type = Option.Type.Put;
         final double strike = 40.0;
         final double underlying = 36.0;
         /*@Rate*/final double riskFreeRate = 0.06;
@@ -118,7 +118,7 @@ public class EquityOptions {
         final double dividendYield = 0.00;
 
 
-        final Date maturity = new Date(17, Month.MAY, 1999);
+        final Date maturity = new Date(17, Month.May, 1999);
         final DayCounter dayCounter = new Actual365Fixed();
 
         // define line formatting

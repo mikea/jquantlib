@@ -113,7 +113,7 @@ public class InverseCumulativeNormal implements InverseCumulative {
         QL.require(sigma > 0.0 , SIGMA_MUST_BE_POSITIVE); // QA:[RG]::verified // TODO: message
         this.average = average;
         this.sigma = sigma;
-        this.highPrecision = new Settings().isRefineHighPrecision();
+        this.highPrecision = new Settings().isRefineHighPrecisionUsingHalleysMethod();
     }
 
 

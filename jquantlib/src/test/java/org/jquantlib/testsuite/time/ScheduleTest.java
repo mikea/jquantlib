@@ -46,7 +46,7 @@ public class ScheduleTest {
 
     public ScheduleTest() {
         QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
-        this.startDate = new Date(20, Month.AUGUST, 2007);
+        this.startDate = new Date(20, Month.August, 2007);
     }
 
 

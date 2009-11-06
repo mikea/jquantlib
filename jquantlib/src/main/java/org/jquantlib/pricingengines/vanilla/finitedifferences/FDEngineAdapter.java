@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2007 Srinivas Hasti
+ Copyright (C) 2009 Richard Gomes
 
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
@@ -17,13 +18,31 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+
+/*
+ Copyright (C) 2005 Joseph Wang
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
 import java.lang.reflect.Constructor;
 
-import org.jquantlib.instruments.VanillaOption;
+import org.jquantlib.instruments.OneAssetOption;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.reflect.TypeToken;
+import org.jquantlib.lang.reflect.ReflectConstants;
+import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 /**
@@ -32,16 +51,30 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  * @category vanillaengines
  *
  * @author Srinivas Hasti
+ * @author Richard Gomes
  */
-//TODO: class comments
-//TODO: work in progress
-public class FDEngineAdapter<T extends FDVanillaEngine> extends VanillaOption.EngineImpl {
+public abstract class FDEngineAdapter
+        <Base extends FDVanillaEngine, Engine extends OneAssetOption.Engine>
+        implements OneAssetOption.Engine {
 
     //
     // private fields
     //
 
-    private final FDVanillaEngine fdVanillaEngine;
+    private final FDVanillaEngine baseInstance;
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // THESE ARE COMMENTS REGARDING THE USE OF THE 2nd TYPE PARAMETER
+    //
+    // Whilst in C++ the template engine at compile time allocates the second type parameter as one of the base classes
+    // of "this" class, in Java we decided by employ the p-impl idiom to allocate the second parameter because the
+    // type of this parameter is known at compile time anyway.
+    // In order to keep resemblance with original QuantLib/C++ code, we define the second parameter but we never use it
+    // because extended classes are responsible for initialize the p-impl reference, which also implies that it belongs
+    // to the expect type, i.e.: the type the extend class expects for it.
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private final Class<Engine> engineClass;
+    protected OneAssetOption.Engine impl;
 
 
     //
@@ -53,12 +86,18 @@ public class FDEngineAdapter<T extends FDVanillaEngine> extends VanillaOption.En
             final int timeSteps,
             final int gridPoints,
             final boolean timeDependent) {
+
         try {
-            final Class<T> rsgClass = (Class<T>) TypeToken.getClazz(this.getClass());
-            final Constructor<T> c = rsgClass.getConstructor(GeneralizedBlackScholesProcess.class, int.class, int.class, boolean.class);
-            fdVanillaEngine = c.newInstance(process, timeSteps, gridPoints, timeDependent);
+            // instantiate 1st generic parameter : a base FD engine
+            final Class<Base> fdBaseClass = (Class<Base>) new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
+            final Constructor<Base> baseConstructor = fdBaseClass.getConstructor(GeneralizedBlackScholesProcess.class, int.class, int.class, boolean.class);
+            baseInstance = baseConstructor.newInstance(process, timeSteps, gridPoints, timeDependent);
+
+            // instantiate 2nd generic parameter : a pricing engine ( SEE COMMENTS on field engineClass )
+            engineClass = (Class<Engine>) new TypeTokenTree(this.getClass()).getRoot().get(1).getElement();
+
         } catch (final Exception e) {
-            throw new LibraryException(e); // QA:[RG]::verified
+            throw new LibraryException(e);
         }
         process.addObserver(this);
     }
@@ -69,8 +108,16 @@ public class FDEngineAdapter<T extends FDVanillaEngine> extends VanillaOption.En
     //
 
     @Override
-    public void calculate() {
-        fdVanillaEngine.setupArguments(arguments);
-        fdVanillaEngine.calculate(results);
+    public void calculate() /* @ReadOnly */ {
+        // minimum sanity check on the p-impl idiom
+        if (impl==null) {
+            throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        }
+        if (!engineClass.isAssignableFrom(impl.getClass())) {
+            throw new LibraryException(ReflectConstants.ILLEGAL_TYPE_PARAMETER);
+        }
+        baseInstance.setupArguments(impl.getArguments());
+        baseInstance.calculate(impl.getResults());
     }
+
 }

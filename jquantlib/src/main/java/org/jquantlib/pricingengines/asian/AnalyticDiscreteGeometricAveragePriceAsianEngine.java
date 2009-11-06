@@ -210,7 +210,7 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         }
         greeks.vega = forwardPrice * riskFreeDiscount * ( (dmuG_dsig + sigG * dsigG_dsig)*Nx_1 + nx_1*dsigG_dsig );
 
-        if (payoff.optionType() == Option.Type.PUT) {
+        if (payoff.optionType() == Option.Type.Put) {
             greeks.vega -= riskFreeDiscount * forwardPrice * (dmuG_dsig + sigG * dsigG_dsig);
         }
 

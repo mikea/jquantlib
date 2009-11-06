@@ -23,13 +23,13 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JULY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.OCTOBER;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.July;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.October;
 import static org.jquantlib.time.Weekday.FRIDAY;
 import static org.jquantlib.time.Weekday.MONDAY;
 
@@ -114,30 +114,30 @@ public class Argentina extends Calendar {
 
 			if (isWeekend(w)
 			// New Year's Day
-					|| (d == 1 && m == JANUARY)
+					|| (d == 1 && m == January)
 					// Holy Thursday
 					|| (dd == em - 4)
 					// Good Friday
 					|| (dd == em - 3)
 					// Labour Day
-					|| (d == 1 && m == MAY)
+					|| (d == 1 && m == May)
 					// May Revolution
-					|| (d == 25 && m == MAY)
+					|| (d == 25 && m == May)
 					// Death of General Manuel Belgrano
-					|| (d >= 15 && d <= 21 && w == MONDAY && m == JUNE)
+					|| (d >= 15 && d <= 21 && w == MONDAY && m == June)
 					// Independence Day
-					|| (d == 9 && m == JULY)
+					|| (d == 9 && m == July)
 					// Death of General Jos� de San Mart�n
-					|| (d >= 15 && d <= 21 && w == MONDAY && m == AUGUST)
+					|| (d >= 15 && d <= 21 && w == MONDAY && m == August)
 					// Columbus Day
 					|| ((d == 10 || d == 11 || d == 12 || d == 15 || d == 16)
-							&& w == MONDAY && m == OCTOBER)
+							&& w == MONDAY && m == October)
 					// Immaculate Conception
-					|| (d == 8 && m == DECEMBER)
+					|| (d == 8 && m == December)
 					// Christmas Eve
-					|| (d == 24 && m == DECEMBER)
+					|| (d == 24 && m == December)
 					// New Year's Eve
-					|| ((d == 31 || (d == 30 && w == FRIDAY)) && m == DECEMBER)) {
+					|| ((d == 31 || (d == 30 && w == FRIDAY)) && m == December)) {
                 return false;
             }
 			return true;

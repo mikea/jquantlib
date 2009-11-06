@@ -58,7 +58,7 @@ public abstract class Dividend extends CashFlow {
 	// public abstract methods
 	//
 
-	public abstract double getAmount(final double underlying);
+	public abstract double amount(final double underlying);
 
 
 	//

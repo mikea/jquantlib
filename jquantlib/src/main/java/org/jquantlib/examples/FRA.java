@@ -80,7 +80,7 @@ public class FRA {
         final RelinkableHandle<YieldTermStructure> euriborTermStructure = null;
         final Handle<IborIndex> euribor3m = new Handle<IborIndex>(Euribor365.getEuribor365_3M(euriborTermStructure));
 
-        final Date todaysDate = new Date(23, Month.MAY, 2006);
+        final Date todaysDate = new Date(23, Month.May, 2006);
         new Settings().setEvaluationDate(todaysDate);
 
         final Calendar calendar = euribor3m.currentLink().fixingCalendar();

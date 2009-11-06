@@ -46,7 +46,7 @@ import org.jquantlib.time.Date;
  */
 public class FDVanillaEngine {
     protected GeneralizedBlackScholesProcess process;
-    protected /* Size */ int timeSteps, gridPoints;
+    protected /* @Size */ int timeSteps, gridPoints;
     protected boolean timeDependent;
     protected /* Real */ double requiredGridValue;
     protected Date exerciseDate;

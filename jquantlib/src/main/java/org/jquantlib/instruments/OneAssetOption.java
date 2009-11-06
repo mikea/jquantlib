@@ -48,6 +48,7 @@ import org.jquantlib.lang.reflect.ReflectConstants;
 import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.time.Date;
+import org.jquantlib.util.Observer;
 
 /**
  * Base class for options on a single asset
@@ -237,6 +238,9 @@ public class OneAssetOption extends Option {
     public interface Results extends Instrument.Results, Option.Greeks, Option.MoreGreeks { }
 
 
+    public interface Engine extends PricingEngine, Observer { }
+
+
 
     //
     // public inner classes
@@ -287,11 +291,18 @@ public class OneAssetOption extends Option {
      *
      * @author Richard Gomes
      */
-    static public abstract class EngineImpl extends GenericEngine<OneAssetOption.Arguments, OneAssetOption.Results> {
+    static abstract public class EngineImpl
+            extends GenericEngine<OneAssetOption.Arguments, OneAssetOption.Results>
+            implements OneAssetOption.Engine {
 
-        protected EngineImpl() {
+        public EngineImpl() {
             super(new ArgumentsImpl(), new ResultsImpl());
         }
+
+        public EngineImpl(final OneAssetOption.Arguments arguments, final OneAssetOption.Results results) {
+            super(arguments, results);
+        }
+
     }
 
 }

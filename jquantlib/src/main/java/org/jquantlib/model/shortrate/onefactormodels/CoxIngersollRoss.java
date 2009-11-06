@@ -119,9 +119,9 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
 
         if (t < Constants.QL_EPSILON) {
             switch(type) {
-                case CALL:
+                case Call:
                     return Math.max(discountS - strike, 0.0);
-                case PUT:
+                case Put:
                     return Math.max(strike - discountS, 0.0);
                 default:
                     throw new LibraryException(unsupported_option_type); // QA:[RG]::verified
@@ -146,7 +146,7 @@ public class CoxIngersollRoss extends OneFactorAffineModel {
         final double /*@Real*/ call = discountS*chis.op(2.0*z*(rho+psi+b)) -
         strike*discountT*chit.op(2.0*z*(rho+psi));
 
-        if (type == Option.Type.CALL) {
+        if (type == Option.Type.Call) {
             return 0.0;
         } else {
             return 1.0;

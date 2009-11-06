@@ -46,7 +46,7 @@ public class FractionalDividend extends Dividend {
 	}
 
 	@Override
-	public double getAmount(final double underlying) {
+	public double amount(final double underlying) {
 		return rate*underlying;
 	}
 

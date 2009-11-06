@@ -100,9 +100,9 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         final double discountS = termstructureConsistentModel.termStructure().currentLink().discount(s);
         if(t<Constants.QL_EPSILON) {
             switch (type) {
-                case CALL:
+                case Call:
                     return Math.max(discountS - strike, 0);
-                case PUT:
+                case Put:
                     return Math.max(strike - discountS, 0);
                 default:
                     throw new LibraryException(unsupported_option_type);
@@ -127,7 +127,7 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         final double z = Math.log(super.A(t, s) / strike) / b;
         final double call = discountS * chis.op(2.0 * z * (rho + psi + b)) - strike * discountT
         * chit.op(2.0 * z * (rho + psi));
-        if (type.equals(Option.Type.CALL)) {
+        if (type.equals(Option.Type.Call)) {
             return call;
         } else {
             return call - discountS + strike * discountT;

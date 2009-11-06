@@ -43,7 +43,7 @@ public class FixedDividend extends Dividend {
 	//
 	
 	@Override
-	public double getAmount(final double underlying) {
+	public double amount(final double underlying) {
 		return amount;
 	}
 

@@ -23,13 +23,13 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
 
 import java.util.List;
 import java.util.Vector;
@@ -112,13 +112,13 @@ public class SwitzerlandCalendarTest {
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-		expectedHol.add(new Date(1,JANUARY,year));
-		expectedHol.add(new Date(2,JANUARY,year));
-    	expectedHol.add(new Date(9,APRIL,year));
-    	expectedHol.add(new Date(12,APRIL,year));
+		expectedHol.add(new Date(1,January,year));
+		expectedHol.add(new Date(2,January,year));
+    	expectedHol.add(new Date(9,April,year));
+    	expectedHol.add(new Date(12,April,year));
     	// expectedHol.add(DateFactory.getDateUtil().getDate(1,MAY,year)); --> Saturday
-    	expectedHol.add(new Date(20,MAY,year));
-    	expectedHol.add(new Date(31,MAY,year));
+    	expectedHol.add(new Date(20,May,year));
+    	expectedHol.add(new Date(31,May,year));
 
 //    	if(market == Switzerland.Market.Settlement)
 //    	{
@@ -139,12 +139,12 @@ public class SwitzerlandCalendarTest {
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-    	expectedHol.add(new Date(25,MARCH,year));
-    	expectedHol.add(new Date(28,MARCH,year));
-    	expectedHol.add(new Date(5,MAY,year));
-    	expectedHol.add(new Date(16,MAY,year));
-    	expectedHol.add(new Date(1,AUGUST,year));
-    	expectedHol.add(new Date(26,DECEMBER,year));
+    	expectedHol.add(new Date(25,March,year));
+    	expectedHol.add(new Date(28,March,year));
+    	expectedHol.add(new Date(5,May,year));
+    	expectedHol.add(new Date(16,May,year));
+    	expectedHol.add(new Date(1,August,year));
+    	expectedHol.add(new Date(26,December,year));
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -158,15 +158,15 @@ public class SwitzerlandCalendarTest {
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-		expectedHol.add(new Date(2,JANUARY,year));
-    	expectedHol.add(new Date(14,APRIL,year));
-    	expectedHol.add(new Date(17,APRIL,year));
-    	expectedHol.add(new Date(1,MAY,year));
-    	expectedHol.add(new Date(25,MAY,year));
-    	expectedHol.add(new Date(5,JUNE,year));
-    	expectedHol.add(new Date(1,AUGUST,year));
-    	expectedHol.add(new Date(25,DECEMBER,year));
-    	expectedHol.add(new Date(26,DECEMBER,year));
+		expectedHol.add(new Date(2,January,year));
+    	expectedHol.add(new Date(14,April,year));
+    	expectedHol.add(new Date(17,April,year));
+    	expectedHol.add(new Date(1,May,year));
+    	expectedHol.add(new Date(25,May,year));
+    	expectedHol.add(new Date(5,June,year));
+    	expectedHol.add(new Date(1,August,year));
+    	expectedHol.add(new Date(25,December,year));
+    	expectedHol.add(new Date(26,December,year));
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -180,16 +180,16 @@ public class SwitzerlandCalendarTest {
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-		expectedHol.add(new Date(1,JANUARY,year));
-		expectedHol.add(new Date(2,JANUARY,year));
-    	expectedHol.add(new Date(6,APRIL,year));
-    	expectedHol.add(new Date(9,APRIL,year));
-    	expectedHol.add(new Date(1,MAY,year));
-    	expectedHol.add(new Date(17,MAY,year));
-    	expectedHol.add(new Date(28,MAY,year));
-    	expectedHol.add(new Date(1,AUGUST,year));
-    	expectedHol.add(new Date(25,DECEMBER,year));
-    	expectedHol.add(new Date(26,DECEMBER,year));
+		expectedHol.add(new Date(1,January,year));
+		expectedHol.add(new Date(2,January,year));
+    	expectedHol.add(new Date(6,April,year));
+    	expectedHol.add(new Date(9,April,year));
+    	expectedHol.add(new Date(1,May,year));
+    	expectedHol.add(new Date(17,May,year));
+    	expectedHol.add(new Date(28,May,year));
+    	expectedHol.add(new Date(1,August,year));
+    	expectedHol.add(new Date(25,December,year));
+    	expectedHol.add(new Date(26,December,year));
 
 //    	if(market == Switzerland.Market.Settlement)
 //    	{
@@ -209,15 +209,15 @@ public class SwitzerlandCalendarTest {
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-		expectedHol.add(new Date(1,JANUARY,year));
-		expectedHol.add(new Date(2,JANUARY,year));
-    	expectedHol.add(new Date(21,MARCH,year));
-    	expectedHol.add(new Date(24,MARCH,year));
-    	expectedHol.add(new Date(1,MAY,year));
-    	expectedHol.add(new Date(12,MAY,year));
-    	expectedHol.add(new Date(1,AUGUST,year));
-    	expectedHol.add(new Date(25,DECEMBER,year));
-    	expectedHol.add(new Date(26,DECEMBER,year));
+		expectedHol.add(new Date(1,January,year));
+		expectedHol.add(new Date(2,January,year));
+    	expectedHol.add(new Date(21,March,year));
+    	expectedHol.add(new Date(24,March,year));
+    	expectedHol.add(new Date(1,May,year));
+    	expectedHol.add(new Date(12,May,year));
+    	expectedHol.add(new Date(1,August,year));
+    	expectedHol.add(new Date(25,December,year));
+    	expectedHol.add(new Date(26,December,year));
 
 //    	if(market == Switzerland.Market.Settlement)
 //    	{
@@ -237,15 +237,15 @@ public class SwitzerlandCalendarTest {
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-		expectedHol.add(new Date(1,JANUARY,year));
-		expectedHol.add(new Date(2,JANUARY,year));
-    	expectedHol.add(new Date(10,APRIL,year));
-    	expectedHol.add(new Date(13,APRIL,year));
-    	expectedHol.add(new Date(1,MAY,year));
-    	expectedHol.add(new Date(21,MAY,year));
-    	expectedHol.add(new Date(01,JUNE,year));
+		expectedHol.add(new Date(1,January,year));
+		expectedHol.add(new Date(2,January,year));
+    	expectedHol.add(new Date(10,April,year));
+    	expectedHol.add(new Date(13,April,year));
+    	expectedHol.add(new Date(1,May,year));
+    	expectedHol.add(new Date(21,May,year));
+    	expectedHol.add(new Date(01,June,year));
     	// expectedHol.add(DateFactory.getDateUtil().getDate(1,AUGUST,year)); --> Saturday
-    	expectedHol.add(new Date(25,DECEMBER,year));
+    	expectedHol.add(new Date(25,December,year));
     	// expectedHol.add(DateFactory.getDateUtil().getDate(26,DECEMBER,year)); --> Saturday
 
 //    	if(market == Switzerland.Market.Settlement)
@@ -266,11 +266,11 @@ public class SwitzerlandCalendarTest {
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-		expectedHol.add(new Date(1,JANUARY,year));
-    	expectedHol.add(new Date(2,APRIL,year));
-    	expectedHol.add(new Date(5,APRIL,year));
-    	expectedHol.add(new Date(13,MAY,year));
-    	expectedHol.add(new Date(24,MAY,year));
+		expectedHol.add(new Date(1,January,year));
+    	expectedHol.add(new Date(2,April,year));
+    	expectedHol.add(new Date(5,April,year));
+    	expectedHol.add(new Date(13,May,year));
+    	expectedHol.add(new Date(24,May,year));
 
 //    	if(market == Switzerland.Market.Settlement)
 //    	{
@@ -290,12 +290,12 @@ public class SwitzerlandCalendarTest {
 
 		final List<Date> expectedHol = new Vector<Date>();
 
-    	expectedHol.add(new Date(22,APRIL,year));
-    	expectedHol.add(new Date(25,APRIL,year));
-    	expectedHol.add(new Date(2,JUNE,year));
-    	expectedHol.add(new Date(13,JUNE,year));
-    	expectedHol.add(new Date(1,AUGUST,year));
-    	expectedHol.add(new Date(26,DECEMBER,year));
+    	expectedHol.add(new Date(22,April,year));
+    	expectedHol.add(new Date(25,April,year));
+    	expectedHol.add(new Date(2,June,year));
+    	expectedHol.add(new Date(13,June,year));
+    	expectedHol.add(new Date(1,August,year));
+    	expectedHol.add(new Date(26,December,year));
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -309,15 +309,15 @@ public class SwitzerlandCalendarTest {
 		final List<Date> expectedHol = new Vector<Date>();
 
 		// expectedHol.add(DateFactory.getDateUtil().getDate(1,JANUARY,year)); --> Sunday
-		expectedHol.add(new Date(2,JANUARY,year));
-    	expectedHol.add(new Date(6,APRIL,year));
-    	expectedHol.add(new Date(9,APRIL,year));
-    	expectedHol.add(new Date(1,MAY,year));
-    	expectedHol.add(new Date(17,MAY,year));
-    	expectedHol.add(new Date(28,MAY,year));
-    	expectedHol.add(new Date(1,AUGUST,year));
-    	expectedHol.add(new Date(25,DECEMBER,year));
-    	expectedHol.add(new Date(26,DECEMBER,year));
+		expectedHol.add(new Date(2,January,year));
+    	expectedHol.add(new Date(6,April,year));
+    	expectedHol.add(new Date(9,April,year));
+    	expectedHol.add(new Date(1,May,year));
+    	expectedHol.add(new Date(17,May,year));
+    	expectedHol.add(new Date(28,May,year));
+    	expectedHol.add(new Date(1,August,year));
+    	expectedHol.add(new Date(25,December,year));
+    	expectedHol.add(new Date(26,December,year));
 
 //    	if(market == Switzerland.Market.Settlement)
 //    	{

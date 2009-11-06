@@ -89,7 +89,7 @@ public class IMM {
         }
 
         final Month m = date.month();
-        return (m==Month.MARCH || m==Month.JUNE || m==Month.SEPTEMBER || m==Month.DECEMBER);
+        return (m==Month.March || m==Month.June || m==Month.September || m==Month.December);
     }
 
 

@@ -84,7 +84,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
 
     @Override
     public double capletPrice(final double effectiveCap)  {
-        final double capletPrice = optionletPrice(Option.Type.CALL, effectiveCap);
+        final double capletPrice = optionletPrice(Option.Type.Call, effectiveCap);
         return gearing_ * capletPrice;
     }
 
@@ -95,7 +95,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
 
     @Override
     public double floorletPrice(final double effectiveFloor)  {
-        final double floorletPrice = optionletPrice(Option.Type.PUT, effectiveFloor);
+        final double floorletPrice = optionletPrice(Option.Type.Put, effectiveFloor);
         return gearing_ * floorletPrice;
     }
 
@@ -110,7 +110,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
         if (fixingDate.le(new Settings().evaluationDate())) {
             // the amount is determined
             double a, b;
-            if (optionType==Option.Type.CALL) {
+            if (optionType==Option.Type.Call) {
                 a = coupon_.indexFixing();
                 b = effStrike;
             } else {

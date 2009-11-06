@@ -21,12 +21,12 @@
  */
 
 package org.jquantlib.time.calendars;
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.May;
 import static org.jquantlib.time.Weekday.MONDAY;
 import static org.jquantlib.time.Weekday.THURSDAY;
 
@@ -117,7 +117,7 @@ public class Iceland extends Calendar {
               if (isWeekend(w)
                   // New Year's Day (possibly moved to Monday)
                   || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY))
-                      && m == JANUARY)
+                      && m == January)
                   // Holy Thursday
                   || (dd == em-4)
                   // Good Friday
@@ -125,21 +125,21 @@ public class Iceland extends Calendar {
                   // Easter MONDAY
                   || (dd == em)
                   // First day of Summer
-                  || (d >= 19 && d <= 25 && w == THURSDAY && m == APRIL)
+                  || (d >= 19 && d <= 25 && w == THURSDAY && m == April)
                   // Ascension THURSDAY
                   || (dd == em+38)
                   // Pentecost MONDAY
                   || (dd == em+49)
                   // Labour Day
-                  || (d == 1 && m == MAY)
+                  || (d == 1 && m == May)
                   // Independence Day
-                  || (d == 17 && m == JUNE)
+                  || (d == 17 && m == June)
                   // Commerce Day
-                  || (d <= 7 && w == MONDAY && m == AUGUST)
+                  || (d <= 7 && w == MONDAY && m == August)
                   // Christmas
-                  || (d == 25 && m == DECEMBER)
+                  || (d == 25 && m == December)
                   // Boxing Day
-                  || (d == 26 && m == DECEMBER)) {
+                  || (d == 26 && m == December)) {
                 return false;
             }
               return true;

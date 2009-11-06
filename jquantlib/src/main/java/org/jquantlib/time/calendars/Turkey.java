@@ -31,15 +31,15 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.OCTOBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 import static org.jquantlib.time.Weekday.SATURDAY;
 import static org.jquantlib.time.Weekday.SUNDAY;
 
@@ -102,56 +102,56 @@ public class Turkey extends Calendar {
 
             if (isWeekend(w)
             // New Year's Day
-                    || (d == 1 && m == JANUARY)
+                    || (d == 1 && m == January)
                     // 23 nisan / National Holiday
-                    || (d == 23 && m == APRIL)
+                    || (d == 23 && m == April)
                     // 19 may/ National Holiday
-                    || (d == 19 && m == MAY)
+                    || (d == 19 && m == May)
                     // 30 aug/ National Holiday
-                    || (d == 30 && m == AUGUST)
+                    || (d == 30 && m == August)
                     // /29 ekim National Holiday
-                    || (d == 29 && m == OCTOBER)) {
+                    || (d == 29 && m == October)) {
                 return false;
             }
 
             // Local Holidays
             if (y == 2004) {
                 // kurban
-                if ((m == FEBRUARY && d <= 4)
+                if ((m == February && d <= 4)
                 // ramazan
-                        || (m == NOVEMBER && d >= 14 && d <= 16)) {
+                        || (m == November && d >= 14 && d <= 16)) {
                     return false;
                 }
             } else if (y == 2005) {
                 // kurban
-                if ((m == JANUARY && d >= 19 && d <= 21)
+                if ((m == January && d >= 19 && d <= 21)
                 // ramazan
-                        || (m == NOVEMBER && d >= 2 && d <= 5)) {
+                        || (m == November && d >= 2 && d <= 5)) {
                     return false;
                 }
             } else if (y == 2006) {
                 // kurban
-                if ((m == JANUARY && d >= 9 && d <= 13)
+                if ((m == January && d >= 9 && d <= 13)
                 // ramazan
-                        || (m == OCTOBER && d >= 23 && d <= 25)
+                        || (m == October && d >= 23 && d <= 25)
                         // kurban
-                        || (m == DECEMBER && d >= 30)) {
+                        || (m == December && d >= 30)) {
                     return false;
                 }
             } else if (y == 2007) {
                 // kurban
-                if ((m == JANUARY && d <= 4)
+                if ((m == January && d <= 4)
                 // ramazan
-                        || (m == OCTOBER && d >= 11 && d <= 14)
+                        || (m == October && d >= 11 && d <= 14)
                         // kurban
-                        || (m == DECEMBER && d >= 19 && d <= 23)) {
+                        || (m == December && d >= 19 && d <= 23)) {
                     return false;
                 }
             } else if (y == 2008) {
                 // ramazan
-                if ((m == SEPTEMBER && d >= 29) || (m == OCTOBER && d <= 2)
+                if ((m == September && d >= 29) || (m == October && d <= 2)
                 // kurban
-                        || (m == DECEMBER && d >= 7 && d <= 11)) {
+                        || (m == December && d >= 7 && d <= 11)) {
                     return false;
                 }
             }

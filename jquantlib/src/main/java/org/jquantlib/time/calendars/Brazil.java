@@ -23,12 +23,12 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JULY;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.July;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
 import static org.jquantlib.time.Weekday.FRIDAY;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
@@ -147,21 +147,21 @@ public class Brazil extends Calendar {
 
             if (isWeekend(w)
                     // New Year's Day
-                    || (d == 1 && m == Month.JANUARY)
+                    || (d == 1 && m == Month.January)
                     // Tiradentes Day
-                    || (d == 21 && m == Month.APRIL)
+                    || (d == 21 && m == Month.April)
                     // Labor Day
-                    || (d == 1 && m == Month.MAY)
+                    || (d == 1 && m == Month.May)
                     // Independence Day
-                    || (d == 7 && m == Month.SEPTEMBER)
+                    || (d == 7 && m == Month.September)
                     // Nossa Sra. Aparecida Day
-                    || (d == 12 && m == Month.OCTOBER)
+                    || (d == 12 && m == Month.October)
                     // All Souls Day
-                    || (d == 2 && m == Month.NOVEMBER)
+                    || (d == 2 && m == Month.November)
                     // Republic Day
-                    || (d == 15 && m == Month.NOVEMBER)
+                    || (d == 15 && m == Month.November)
                     // Christmas
-                    || (d == 25 && m == Month.DECEMBER)
+                    || (d == 25 && m == Month.December)
                     // Passion of Christ
                     || (dd == em - 3)
                     // Carnival
@@ -193,15 +193,15 @@ public class Brazil extends Calendar {
 
             if (isWeekend(w)
                     // New Year's Day
-                    || (d == 1 && m == JANUARY)
+                    || (d == 1 && m == January)
                     // Sao Paulo City Day
-                    || (d == 25 && m == JANUARY)
+                    || (d == 25 && m == January)
                     // Tiradentes Day
-                    || (d == 21 && m == APRIL)
+                    || (d == 21 && m == April)
                     // Labor Day
-                    || (d == 1 && m == MAY)
+                    || (d == 1 && m == May)
                     // Revolution Day
-                    || (d == 9 && m == JULY)
+                    || (d == 9 && m == July)
                     // Nossa Sra. Aparecida Day
                     // || (d == 12 && m == OCTOBER)-> not closed at the 12th October
                     // All Souls Day
@@ -211,11 +211,11 @@ public class Brazil extends Calendar {
                     // || (d == 15 && m == NOVEMBER) -> not closed at the 15th
                     // November
                     // Black Awareness Day
-                    || (d == 20 && m == NOVEMBER && y >= 2007)
+                    || (d == 20 && m == November && y >= 2007)
                     // Christmas Eve
-                    || (d == 24 && m == DECEMBER)
+                    || (d == 24 && m == December)
                     // Christmas
-                    || (d == 25 && m == DECEMBER)
+                    || (d == 25 && m == December)
                     // Passion of Christ / Good Friday
                     || (dd == em - 3)
                     // Carnival
@@ -223,7 +223,7 @@ public class Brazil extends Calendar {
                     // Corpus Christi
                     || (dd == em + 59)
                     // last business day of the year
-                    || (m == DECEMBER && (d == 31 || (d >= 29 && w == FRIDAY)))) {
+                    || (m == December && (d == 31 || (d >= 29 && w == FRIDAY)))) {
                 return false;
             }
             return true;

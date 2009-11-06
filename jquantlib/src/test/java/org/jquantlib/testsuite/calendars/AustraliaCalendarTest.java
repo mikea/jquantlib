@@ -22,13 +22,13 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.OCTOBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.October;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,20 +63,20 @@ public class AustraliaCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-    	expectedHol.add(new Date(1,JANUARY,year));
-    	expectedHol.add(new Date(28,JANUARY,year));
+    	expectedHol.add(new Date(1,January,year));
+    	expectedHol.add(new Date(28,January,year));
 
     	//good friday
-    	expectedHol.add(new Date(21,MARCH,year));
+    	expectedHol.add(new Date(21,March,year));
     	//easter monday
-    	expectedHol.add(new Date(24,MARCH,year));
+    	expectedHol.add(new Date(24,March,year));
 
-    	expectedHol.add(new Date(25,APRIL,year));
-    	expectedHol.add(new Date(9,JUNE,year));
-    	expectedHol.add(new Date(4,AUGUST,year));
-        expectedHol.add(new Date(6,OCTOBER,year));
-        expectedHol.add(new Date(25,DECEMBER,year));
-        expectedHol.add(new Date(26,DECEMBER,year));
+    	expectedHol.add(new Date(25,April,year));
+    	expectedHol.add(new Date(9,June,year));
+    	expectedHol.add(new Date(4,August,year));
+        expectedHol.add(new Date(6,October,year));
+        expectedHol.add(new Date(25,December,year));
+        expectedHol.add(new Date(26,December,year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -90,16 +90,16 @@ public class AustraliaCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(1,JANUARY,year));
-        expectedHol.add(new Date(26,JANUARY,year));
-        expectedHol.add(new Date(9,APRIL,year));
-        expectedHol.add(new Date(12,APRIL,year));
-        expectedHol.add(new Date(26,APRIL,year));
-        expectedHol.add(new Date(14,JUNE,year));
-        expectedHol.add(new Date(2,AUGUST,year));
-        expectedHol.add(new Date(4,OCTOBER,year));
-        expectedHol.add(new Date(27,DECEMBER,year));
-        expectedHol.add(new Date(28,DECEMBER,year));
+        expectedHol.add(new Date(1,January,year));
+        expectedHol.add(new Date(26,January,year));
+        expectedHol.add(new Date(9,April,year));
+        expectedHol.add(new Date(12,April,year));
+        expectedHol.add(new Date(26,April,year));
+        expectedHol.add(new Date(14,June,year));
+        expectedHol.add(new Date(2,August,year));
+        expectedHol.add(new Date(4,October,year));
+        expectedHol.add(new Date(27,December,year));
+        expectedHol.add(new Date(28,December,year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -113,18 +113,18 @@ public class AustraliaCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(26,JANUARY,year));
-        expectedHol.add(new Date(25,MARCH,year));
+        expectedHol.add(new Date(26,January,year));
+        expectedHol.add(new Date(25,March,year));
 
         //good friday
-        expectedHol.add(new Date(28,MARCH,year));
+        expectedHol.add(new Date(28,March,year));
 
-        expectedHol.add(new Date(25,APRIL,year));
-        expectedHol.add(new Date(13,JUNE,year));
-        expectedHol.add(new Date(1,AUGUST,year));
-        expectedHol.add(new Date(3,OCTOBER,year));
-        expectedHol.add(new Date(26,DECEMBER,year));
-        expectedHol.add(new Date(27,DECEMBER,year));
+        expectedHol.add(new Date(25,April,year));
+        expectedHol.add(new Date(13,June,year));
+        expectedHol.add(new Date(1,August,year));
+        expectedHol.add(new Date(3,October,year));
+        expectedHol.add(new Date(26,December,year));
+        expectedHol.add(new Date(27,December,year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -138,15 +138,15 @@ public class AustraliaCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(26,JANUARY,year));
-        expectedHol.add(new Date(14,APRIL,year));
-        expectedHol.add(new Date(17,APRIL,year));
-        expectedHol.add(new Date(25,APRIL,year));
-        expectedHol.add(new Date(12,JUNE,year));
-        expectedHol.add(new Date(7,AUGUST,year));
-        expectedHol.add(new Date(2,OCTOBER,year));
-        expectedHol.add(new Date(25,DECEMBER,year));
-        expectedHol.add(new Date(26,DECEMBER,year));
+        expectedHol.add(new Date(26,January,year));
+        expectedHol.add(new Date(14,April,year));
+        expectedHol.add(new Date(17,April,year));
+        expectedHol.add(new Date(25,April,year));
+        expectedHol.add(new Date(12,June,year));
+        expectedHol.add(new Date(7,August,year));
+        expectedHol.add(new Date(2,October,year));
+        expectedHol.add(new Date(25,December,year));
+        expectedHol.add(new Date(26,December,year));
 
 
         // Call the Holiday Check
@@ -161,18 +161,18 @@ public class AustraliaCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(1,JANUARY,year));
-        expectedHol.add(new Date(26,JANUARY,year));
+        expectedHol.add(new Date(1,January,year));
+        expectedHol.add(new Date(26,January,year));
 
         //good friday
-        expectedHol.add(new Date(6,APRIL,year));
-        expectedHol.add(new Date(9,APRIL,year));
-        expectedHol.add(new Date(25,APRIL,year));
-        expectedHol.add(new Date(11,JUNE,year));
-        expectedHol.add(new Date(6,AUGUST,year));
-        expectedHol.add(new Date(1,OCTOBER,year));
-        expectedHol.add(new Date(25,DECEMBER,year));
-        expectedHol.add(new Date(26,DECEMBER,year));
+        expectedHol.add(new Date(6,April,year));
+        expectedHol.add(new Date(9,April,year));
+        expectedHol.add(new Date(25,April,year));
+        expectedHol.add(new Date(11,June,year));
+        expectedHol.add(new Date(6,August,year));
+        expectedHol.add(new Date(1,October,year));
+        expectedHol.add(new Date(25,December,year));
+        expectedHol.add(new Date(26,December,year));
 
 
         // Call the Holiday Check
@@ -187,15 +187,15 @@ public class AustraliaCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(1,JANUARY,year));
-        expectedHol.add(new Date(26,JANUARY,year));
-        expectedHol.add(new Date(10,APRIL,year));
-        expectedHol.add(new Date(13,APRIL,year));
-        expectedHol.add(new Date(8,JUNE,year));
-        expectedHol.add(new Date(3,AUGUST,year));
-        expectedHol.add(new Date(5,OCTOBER,year));
-        expectedHol.add(new Date(25,DECEMBER,year));
-        expectedHol.add(new Date(28,DECEMBER,year));
+        expectedHol.add(new Date(1,January,year));
+        expectedHol.add(new Date(26,January,year));
+        expectedHol.add(new Date(10,April,year));
+        expectedHol.add(new Date(13,April,year));
+        expectedHol.add(new Date(8,June,year));
+        expectedHol.add(new Date(3,August,year));
+        expectedHol.add(new Date(5,October,year));
+        expectedHol.add(new Date(25,December,year));
+        expectedHol.add(new Date(28,December,year));
 
 
         // Call the Holiday Check
@@ -210,16 +210,16 @@ public class AustraliaCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(1,JANUARY,year));
-        expectedHol.add(new Date(26,JANUARY,year));
-        expectedHol.add(new Date(2,APRIL,year));
-        expectedHol.add(new Date(5,APRIL,year));
-        expectedHol.add(new Date(26,APRIL,year));
-        expectedHol.add(new Date(14,JUNE,year));
-        expectedHol.add(new Date(2,AUGUST,year));
-        expectedHol.add(new Date(4,OCTOBER,year));
-        expectedHol.add(new Date(27,DECEMBER,year));
-        expectedHol.add(new Date(28,DECEMBER,year));
+        expectedHol.add(new Date(1,January,year));
+        expectedHol.add(new Date(26,January,year));
+        expectedHol.add(new Date(2,April,year));
+        expectedHol.add(new Date(5,April,year));
+        expectedHol.add(new Date(26,April,year));
+        expectedHol.add(new Date(14,June,year));
+        expectedHol.add(new Date(2,August,year));
+        expectedHol.add(new Date(4,October,year));
+        expectedHol.add(new Date(27,December,year));
+        expectedHol.add(new Date(28,December,year));
 
 
         // Call the Holiday Check
@@ -234,14 +234,14 @@ public class AustraliaCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(26,JANUARY,year));
-        expectedHol.add(new Date(22,APRIL,year));
-        expectedHol.add(new Date(25,APRIL,year));
-        expectedHol.add(new Date(13,JUNE,year));
-        expectedHol.add(new Date(1,AUGUST,year));
-        expectedHol.add(new Date(3,OCTOBER,year));
-        expectedHol.add(new Date(26,DECEMBER,year));
-        expectedHol.add(new Date(27,DECEMBER,year));
+        expectedHol.add(new Date(26,January,year));
+        expectedHol.add(new Date(22,April,year));
+        expectedHol.add(new Date(25,April,year));
+        expectedHol.add(new Date(13,June,year));
+        expectedHol.add(new Date(1,August,year));
+        expectedHol.add(new Date(3,October,year));
+        expectedHol.add(new Date(26,December,year));
+        expectedHol.add(new Date(27,December,year));
 
 
         // Call the Holiday Check
@@ -256,15 +256,15 @@ public class AustraliaCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-        expectedHol.add(new Date(26,JANUARY,year));
-        expectedHol.add(new Date(6,APRIL,year));
-        expectedHol.add(new Date(9,APRIL,year));
-        expectedHol.add(new Date(25,APRIL,year));
-        expectedHol.add(new Date(11,JUNE,year));
-        expectedHol.add(new Date(6,AUGUST,year));
-        expectedHol.add(new Date(1,OCTOBER,year));
-        expectedHol.add(new Date(25,DECEMBER,year));
-        expectedHol.add(new Date(26,DECEMBER,year));
+        expectedHol.add(new Date(26,January,year));
+        expectedHol.add(new Date(6,April,year));
+        expectedHol.add(new Date(9,April,year));
+        expectedHol.add(new Date(25,April,year));
+        expectedHol.add(new Date(11,June,year));
+        expectedHol.add(new Date(6,August,year));
+        expectedHol.add(new Date(1,October,year));
+        expectedHol.add(new Date(25,December,year));
+        expectedHol.add(new Date(26,December,year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();

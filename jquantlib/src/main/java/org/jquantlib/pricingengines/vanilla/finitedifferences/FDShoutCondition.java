@@ -26,10 +26,24 @@ import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.time.Frequency;
 
 /**
+ * This class conditionally extends other classes
+ * <p>
+ * <pre>
+ * FDDividendEngine------------|
+ * FDDividendEngineMerton73----|
+ * FDDividenEngineShiftScale---|
+ * FDStepConditionEngine-------|o---FDShoutCondition
+ * </pre>
+ *
+ * @see <a href="http://bugs.jquantlib.org/view.php?id=425">issue 425</a>
+ *
  * @author Srinivas Hasti
- * 
+ * @author Richard Gomes
  */
-public class FDShoutCondition extends FDStepConditionEngine {
+//TODO: http://bugs.jquantlib.org/view.php?id=425
+public class FDShoutCondition
+        <T                            /* TODO: should be:: T extends FDDividendEngineBase & FDStepConditionEngine */ >
+        extends FDStepConditionEngine /* TODO: should be:: implements FDDividendEngineBase, FDStepConditionEngine */ {
 
     public FDShoutCondition(final GeneralizedBlackScholesProcess process) {
         this(process, 100, 100);
@@ -52,7 +66,7 @@ public class FDShoutCondition extends FDStepConditionEngine {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.jquantlib.pricingengines.vanilla.finitedifferences.FDStepConditionEngine
      * #initializeStepCondition()

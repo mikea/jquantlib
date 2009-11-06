@@ -22,10 +22,10 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.May;
 import static org.jquantlib.time.Weekday.FRIDAY;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
@@ -92,9 +92,9 @@ public class Finland extends Calendar {
 	        final int em = easterMonday(y);
 	        if (isWeekend(w)
 	            // New Year's Day
-	            || (d == 1 && m == JANUARY)
+	            || (d == 1 && m == January)
 	            // Epiphany
-	            || (d == 6 && m == JANUARY)
+	            || (d == 6 && m == January)
 	            // Good Friday
 	            || (dd == em-3)
 	            // Easter Monday
@@ -102,17 +102,17 @@ public class Finland extends Calendar {
 	            // Ascension Thursday
 	            || (dd == em+38)
 	            // Labour Day
-	            || (d == 1 && m == MAY)
+	            || (d == 1 && m == May)
 	            // Midsummer Eve (Friday between June 18-24)
-	            || (w == FRIDAY && (d >= 18 && d <= 24) && m == JUNE)
+	            || (w == FRIDAY && (d >= 18 && d <= 24) && m == June)
 	            // Independence Day
-	            || (d == 6 && m == DECEMBER)
+	            || (d == 6 && m == December)
 	            // Christmas Eve
-	            || (d == 24 && m == DECEMBER)
+	            || (d == 24 && m == December)
 	            // Christmas
-	            || (d == 25 && m == DECEMBER)
+	            || (d == 25 && m == December)
 	            // Boxing Day
-	            || (d == 26 && m == DECEMBER)) {
+	            || (d == 26 && m == December)) {
                 return false;
             }
 	        return true;

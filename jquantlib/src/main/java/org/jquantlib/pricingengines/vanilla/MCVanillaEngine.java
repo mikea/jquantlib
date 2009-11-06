@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -40,17 +40,21 @@ package org.jquantlib.pricingengines.vanilla;
 
 /**
  * Pricing engine for vanilla options using Monte Carlo simulation
- * 
+ *
  * @category vanillaengines
- * 
+ *
  * @author Richard Gomes
  */
 public class MCVanillaEngine /*extends McSimulation<MC extends Variate, RNG extends RandomNumberGenerator, S>*/ {
 
+    public MCVanillaEngine() {
+        throw new UnsupportedOperationException("work in progress");
+    }
+
 }
 
 
-//template <template <class> class MC, class RNG, 
+//template <template <class> class MC, class RNG,
 //class S = Statistics, class Inst = VanillaOption>
 //class MCVanillaEngine : public Inst::engine,
 //              public McSimulation<MC,RNG,S> {
@@ -71,7 +75,7 @@ public class MCVanillaEngine /*extends McSimulation<MC extends Variate, RNG exte
 //path_pricer_type;
 //typedef typename McSimulation<MC,RNG,S>::stats_type
 //stats_type;
-//typedef typename McSimulation<MC,RNG,S>::result_type 
+//typedef typename McSimulation<MC,RNG,S>::result_type
 //result_type;
 //// constructor
 //MCVanillaEngine(Size timeSteps,
@@ -124,7 +128,7 @@ public class MCVanillaEngine /*extends McSimulation<MC extends Variate, RNG exte
 //brownianBridge_(brownianBridge), seed_(seed) {}
 //
 //template <template <class> class MC, class RNG, class S, class Inst>
-//inline typename MCVanillaEngine<MC,RNG,S,Inst>::result_type 
+//inline typename MCVanillaEngine<MC,RNG,S,Inst>::result_type
 //MCVanillaEngine<MC,RNG,S,Inst>::controlVariateValue() const {
 //
 //boost::shared_ptr<PricingEngine> controlPE =
@@ -145,7 +149,7 @@ public class MCVanillaEngine /*extends McSimulation<MC extends Variate, RNG exte
 //const typename Inst::results* controlResults =
 //  dynamic_cast<const typename Inst::results*>(
 //                                       controlPE->getResults());
-//QL_REQUIRE(controlResults, 
+//QL_REQUIRE(controlResults,
 //     "engine returns an inconsistent result type");
 //
 //return result_type(controlResults->value);

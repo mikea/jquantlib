@@ -22,13 +22,13 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.OCTOBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.October;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,17 +80,17 @@ public class NewZealandCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		// Sun: expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 2,JANUARY,year));   // New Years Day observed
-		expectedHol.add(new Date( 3,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(new Date(23,JANUARY,year));   // Anniversary Day
-		expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(new Date( 6,APRIL,year));     // Good Friday
-		expectedHol.add(new Date( 9,APRIL,year));     // Earter Monday
-		expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
-        expectedHol.add(new Date( 4,JUNE,year));      // Queen's Birthday
-        expectedHol.add(new Date(22,OCTOBER,year));   // Labour Day
-        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+		expectedHol.add(new Date( 2,January,year));   // New Years Day observed
+		expectedHol.add(new Date( 3,January,year));   // Day after New Years Day
+		expectedHol.add(new Date(23,January,year));   // Anniversary Day
+		expectedHol.add(new Date( 6,February,year));  // Waitangi Day
+		expectedHol.add(new Date( 6,April,year));     // Good Friday
+		expectedHol.add(new Date( 9,April,year));     // Earter Monday
+		expectedHol.add(new Date(25,April,year));     // Anzac Day
+        expectedHol.add(new Date( 4,June,year));      // Queen's Birthday
+        expectedHol.add(new Date(22,October,year));   // Labour Day
+        expectedHol.add(new Date(25,December,year));  // Christmas Day
+        expectedHol.add(new Date(26,December,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -125,18 +125,18 @@ public class NewZealandCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		// Sat: expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 3,JANUARY,year));   // New Years Day observed
-		expectedHol.add(new Date( 4,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(new Date(24,JANUARY,year));   // Anniversary Day
+		expectedHol.add(new Date( 3,January,year));   // New Years Day observed
+		expectedHol.add(new Date( 4,January,year));   // Day after New Years Day
+		expectedHol.add(new Date(24,January,year));   // Anniversary Day
 		// Sun: expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(new Date(22,APRIL,year));     // Good Friday
-		expectedHol.add(new Date(25,APRIL,year));     // Earter Monday
-		expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
-        expectedHol.add(new Date( 6,JUNE,year));      // Queen's Birthday
-        expectedHol.add(new Date(24,OCTOBER,year));   // Labour Day
+		expectedHol.add(new Date(22,April,year));     // Good Friday
+		expectedHol.add(new Date(25,April,year));     // Earter Monday
+		expectedHol.add(new Date(25,April,year));     // Anzac Day
+        expectedHol.add(new Date( 6,June,year));      // Queen's Birthday
+        expectedHol.add(new Date(24,October,year));   // Labour Day
         // Sun: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
-        expectedHol.add(new Date(27,DECEMBER,year));  // Christmas Day observed
+        expectedHol.add(new Date(26,December,year));  // Boxing Day
+        expectedHol.add(new Date(27,December,year));  // Christmas Day observed
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -170,19 +170,19 @@ public class NewZealandCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 4,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(new Date(25,JANUARY,year));   // Anniversary Day
+		expectedHol.add(new Date( 1,January,year));   // New Year's Day
+		expectedHol.add(new Date( 4,January,year));   // Day after New Years Day
+		expectedHol.add(new Date(25,January,year));   // Anniversary Day
 		// Sat: expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(new Date( 2,APRIL,year));     // Good Friday
-		expectedHol.add(new Date( 5,APRIL,year));     // Earter Monday
+		expectedHol.add(new Date( 2,April,year));     // Good Friday
+		expectedHol.add(new Date( 5,April,year));     // Earter Monday
 		// Sun: expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
-        expectedHol.add(new Date( 7,JUNE,year));      // Queen's Birthday
-        expectedHol.add(new Date(25,OCTOBER,year));   // Labour Day
+        expectedHol.add(new Date( 7,June,year));      // Queen's Birthday
+        expectedHol.add(new Date(25,October,year));   // Labour Day
         // Sat: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
         // Sun: expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
-        expectedHol.add(new Date(27,DECEMBER,year));  // Christmas Day observed
-        expectedHol.add(new Date(28,DECEMBER,year));  // Boxing Day observed
+        expectedHol.add(new Date(27,December,year));  // Christmas Day observed
+        expectedHol.add(new Date(28,December,year));  // Boxing Day observed
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -212,17 +212,17 @@ public class NewZealandCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 2,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(new Date(19,JANUARY,year));   // Anniversary Day
-		expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(new Date(10,APRIL,year));     // Good Friday
-		expectedHol.add(new Date(13,APRIL,year));     // Earter Monday
+		expectedHol.add(new Date( 1,January,year));   // New Year's Day
+		expectedHol.add(new Date( 2,January,year));   // Day after New Years Day
+		expectedHol.add(new Date(19,January,year));   // Anniversary Day
+		expectedHol.add(new Date( 6,February,year));  // Waitangi Day
+		expectedHol.add(new Date(10,April,year));     // Good Friday
+		expectedHol.add(new Date(13,April,year));     // Earter Monday
 		// Sat: expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
-        expectedHol.add(new Date( 1,JUNE,year));      // Queen's Birthday
-        expectedHol.add(new Date(26,OCTOBER,year));   // Labour Day
-        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(28,DECEMBER,year));  // Boxing Day
+        expectedHol.add(new Date( 1,June,year));      // Queen's Birthday
+        expectedHol.add(new Date(26,October,year));   // Labour Day
+        expectedHol.add(new Date(25,December,year));  // Christmas Day
+        expectedHol.add(new Date(28,December,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -251,17 +251,17 @@ public class NewZealandCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 2,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(new Date(21,JANUARY,year));   // Anniversary Day
-		expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(new Date(21,MARCH,year));     // Good Friday
-		expectedHol.add(new Date(24,MARCH,year));     // Earter Monday
-		expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
-        expectedHol.add(new Date( 2,JUNE,year));      // Queen's Birthday
-        expectedHol.add(new Date(27,OCTOBER,year));   // Labour Day
-        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+		expectedHol.add(new Date( 1,January,year));   // New Year's Day
+		expectedHol.add(new Date( 2,January,year));   // Day after New Years Day
+		expectedHol.add(new Date(21,January,year));   // Anniversary Day
+		expectedHol.add(new Date( 6,February,year));  // Waitangi Day
+		expectedHol.add(new Date(21,March,year));     // Good Friday
+		expectedHol.add(new Date(24,March,year));     // Earter Monday
+		expectedHol.add(new Date(25,April,year));     // Anzac Day
+        expectedHol.add(new Date( 2,June,year));      // Queen's Birthday
+        expectedHol.add(new Date(27,October,year));   // Labour Day
+        expectedHol.add(new Date(25,December,year));  // Christmas Day
+        expectedHol.add(new Date(26,December,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -293,17 +293,17 @@ public class NewZealandCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 2,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(new Date(22,JANUARY,year));   // Anniversary Day
-		expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(new Date( 6,APRIL,year));     // Good Friday
-		expectedHol.add(new Date( 9,APRIL,year));     // Earter Monday
-		expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
-        expectedHol.add(new Date( 4,JUNE,year));      // Queen's Birthday
-        expectedHol.add(new Date(22,OCTOBER,year));   // Labour Day
-        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+		expectedHol.add(new Date( 1,January,year));   // New Year's Day
+		expectedHol.add(new Date( 2,January,year));   // Day after New Years Day
+		expectedHol.add(new Date(22,January,year));   // Anniversary Day
+		expectedHol.add(new Date( 6,February,year));  // Waitangi Day
+		expectedHol.add(new Date( 6,April,year));     // Good Friday
+		expectedHol.add(new Date( 9,April,year));     // Earter Monday
+		expectedHol.add(new Date(25,April,year));     // Anzac Day
+        expectedHol.add(new Date( 4,June,year));      // Queen's Birthday
+        expectedHol.add(new Date(22,October,year));   // Labour Day
+        expectedHol.add(new Date(25,December,year));  // Christmas Day
+        expectedHol.add(new Date(26,December,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -337,17 +337,17 @@ public class NewZealandCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		// expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 2,JANUARY,year));   // New Year's Day observed
-		expectedHol.add(new Date( 3,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(new Date(23,JANUARY,year));   // Anniversary Day
-		expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(new Date(14,APRIL,year));     // Good Friday
-		expectedHol.add(new Date(17,APRIL,year));     // Earter Monday
-		expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
-        expectedHol.add(new Date( 5,JUNE,year));      // Queen's Birthday
-        expectedHol.add(new Date(23,OCTOBER,year));   // Labour Day
-        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+		expectedHol.add(new Date( 2,January,year));   // New Year's Day observed
+		expectedHol.add(new Date( 3,January,year));   // Day after New Years Day
+		expectedHol.add(new Date(23,January,year));   // Anniversary Day
+		expectedHol.add(new Date( 6,February,year));  // Waitangi Day
+		expectedHol.add(new Date(14,April,year));     // Good Friday
+		expectedHol.add(new Date(17,April,year));     // Earter Monday
+		expectedHol.add(new Date(25,April,year));     // Anzac Day
+        expectedHol.add(new Date( 5,June,year));      // Queen's Birthday
+        expectedHol.add(new Date(23,October,year));   // Labour Day
+        expectedHol.add(new Date(25,December,year));  // Christmas Day
+        expectedHol.add(new Date(26,December,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -382,18 +382,18 @@ public class NewZealandCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 		// expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 3,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(new Date( 4,JANUARY,year));   // New Years Day observed
-		expectedHol.add(new Date(24,JANUARY,year));   // Anniversary Day
+		expectedHol.add(new Date( 3,January,year));   // Day after New Years Day
+		expectedHol.add(new Date( 4,January,year));   // New Years Day observed
+		expectedHol.add(new Date(24,January,year));   // Anniversary Day
 		// Sun: expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(new Date(25,MARCH,year));     // Good Friday
-		expectedHol.add(new Date(28,MARCH,year));     // Earter Monday
-		expectedHol.add(new Date(25,APRIL,year));     // Anzac Day
-        expectedHol.add(new Date( 6,JUNE,year));      // Queen's Birthday
-        expectedHol.add(new Date(24,OCTOBER,year));   // Labour Day
+		expectedHol.add(new Date(25,March,year));     // Good Friday
+		expectedHol.add(new Date(28,March,year));     // Earter Monday
+		expectedHol.add(new Date(25,April,year));     // Anzac Day
+        expectedHol.add(new Date( 6,June,year));      // Queen's Birthday
+        expectedHol.add(new Date(24,October,year));   // Labour Day
         // Sun: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
-        expectedHol.add(new Date(27,DECEMBER,year));  // Christmas Day observed
+        expectedHol.add(new Date(26,December,year));  // Boxing Day
+        expectedHol.add(new Date(27,December,year));  // Christmas Day observed
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -427,18 +427,18 @@ public class NewZealandCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date( 1,JANUARY,year));   // New Year's Day
-		expectedHol.add(new Date( 2,JANUARY,year));   // Day after New Years Day
-		expectedHol.add(new Date(19,JANUARY,year));   // Anniversary Day
-		expectedHol.add(new Date( 6,FEBRUARY,year));  // Waitangi Day
-		expectedHol.add(new Date( 9,APRIL,year));     // Good Friday
-		expectedHol.add(new Date(12,APRIL,year));     // Anzac Day
-        expectedHol.add(new Date( 7,JUNE,year));      // Queen's Birthday
-        expectedHol.add(new Date(25,OCTOBER,year));   // Labour Day
+		expectedHol.add(new Date( 1,January,year));   // New Year's Day
+		expectedHol.add(new Date( 2,January,year));   // Day after New Years Day
+		expectedHol.add(new Date(19,January,year));   // Anniversary Day
+		expectedHol.add(new Date( 6,February,year));  // Waitangi Day
+		expectedHol.add(new Date( 9,April,year));     // Good Friday
+		expectedHol.add(new Date(12,April,year));     // Anzac Day
+        expectedHol.add(new Date( 7,June,year));      // Queen's Birthday
+        expectedHol.add(new Date(25,October,year));   // Labour Day
         // Sat: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
         // Sun: expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
-        expectedHol.add(new Date(27,DECEMBER,year));  // Christmas Day observed
-        expectedHol.add(new Date(28,DECEMBER,year));  // Boxing Day observed
+        expectedHol.add(new Date(27,December,year));  // Christmas Day observed
+        expectedHol.add(new Date(28,December,year));  // Boxing Day observed
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();

@@ -82,7 +82,8 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
      *            is an Object that <b>must</b> implement {@link Discretization}
      *            <b>and</b> {@link Discretization1D}.
      */
-    public GeneralizedBlackScholesProcess(final Handle<? extends Quote> x0,
+    public GeneralizedBlackScholesProcess(
+            final Handle<? extends Quote> x0,
             final Handle<YieldTermStructure> dividendTS,
             final Handle<YieldTermStructure> riskFreeTS,
             final Handle<BlackVolTermStructure> blackVolTS) {
@@ -94,7 +95,8 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
      *            is an Object that <b>must</b> implement {@link Discretization}
      *            <b>and</b> {@link Discretization1D}.
      */
-    public GeneralizedBlackScholesProcess(final Handle<? extends Quote> x0,
+    public GeneralizedBlackScholesProcess(
+            final Handle<? extends Quote> x0,
             final Handle<YieldTermStructure> dividendTS,
             final Handle<YieldTermStructure> riskFreeTS,
             final Handle<BlackVolTermStructure> blackVolTS,
@@ -143,7 +145,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     }
 
     @Override
-    public/* @Drift */double drift(final/* @Time */double t, final/* @Price */double x) {
+    public /* @Drift */ double drift(final/* @Time */double t, final/* @Price */double x) {
         /* @Diffusion */final double sigma = diffusion(t, x);
         // we could be more anticipatory if we know the right dt
         // for which the drift will be used

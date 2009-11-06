@@ -21,13 +21,13 @@
  */
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.OCTOBER;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -96,21 +96,21 @@ public class Hungary extends Calendar {
                 // Whit Monday
                 || (dd == em+49)
                 // New Year's Day
-                || (d == 1  && m == JANUARY)
+                || (d == 1  && m == January)
                 // National Day
-                || (d == 15  && m == MARCH)
+                || (d == 15  && m == March)
                 // Labour Day
-                || (d == 1  && m == MAY)
+                || (d == 1  && m == May)
                 // Constitution Day
-                || (d == 20  && m == AUGUST)
+                || (d == 20  && m == August)
                 // Republic Day
-                || (d == 23  && m == OCTOBER)
+                || (d == 23  && m == October)
                 // All Saints Day
-                || (d == 1  && m == NOVEMBER)
+                || (d == 1  && m == November)
                 // Christmas
-                || (d == 25 && m == DECEMBER)
+                || (d == 25 && m == December)
                 // 2nd Day of Christmas
-                || (d == 26 && m == DECEMBER)) {
+                || (d == 26 && m == December)) {
                 return false;
             }
             return true;

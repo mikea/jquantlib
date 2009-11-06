@@ -22,12 +22,12 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,17 +81,17 @@ public class NorwayCalendarTest {
 
 		// Sun: expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(new Date( 1,APRIL,year));		// Palm Sunday
-		expectedHol.add(new Date( 5,APRIL,year));		// Maundy Thursday
-		expectedHol.add(new Date( 6,APRIL,year));		// Good Friday
+		expectedHol.add(new Date( 5,April,year));		// Maundy Thursday
+		expectedHol.add(new Date( 6,April,year));		// Good Friday
 		// Sun: expectedHol.add(new Date( 8,APRIL,year));     // Easter Day
-		expectedHol.add(new Date( 9,APRIL,year));     // Easter Monday
-		expectedHol.add(new Date( 1,MAY,year));		// Official holiday
-        expectedHol.add(new Date(17,MAY,year));		// Ascension Day
-        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
+		expectedHol.add(new Date( 9,April,year));     // Easter Monday
+		expectedHol.add(new Date( 1,May,year));		// Official holiday
+        expectedHol.add(new Date(17,May,year));		// Ascension Day
+        expectedHol.add(new Date(17,May,year));		// Constitution Day
         // Sun: expectedHol.add(new Date(27,MAY,year));   	// Whit Sunday
-        expectedHol.add(new Date(28,MAY,year));   	// Whit Monday
-        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+        expectedHol.add(new Date(28,May,year));   	// Whit Monday
+        expectedHol.add(new Date(25,December,year));  // Christmas Day
+        expectedHol.add(new Date(26,December,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -128,17 +128,17 @@ public class NorwayCalendarTest {
 
 		// Sat: expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(new Date(17,APRIL,year));		// Palm Sunday
-		expectedHol.add(new Date(21,APRIL,year));		// Maundy Thursday
-		expectedHol.add(new Date(22,APRIL,year));		// Good Friday
+		expectedHol.add(new Date(21,April,year));		// Maundy Thursday
+		expectedHol.add(new Date(22,April,year));		// Good Friday
 		// Sun: expectedHol.add(new Date(24,APRIL,year));     // Easter Day
-		expectedHol.add(new Date(25,APRIL,year));     // Easter Monday
+		expectedHol.add(new Date(25,April,year));     // Easter Monday
 		// Sun: expectedHol.add(new Date( 1,MAY,year));		// Official holiday
-        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
-        expectedHol.add(new Date( 2,JUNE,year));		// Ascension Day
+        expectedHol.add(new Date(17,May,year));		// Constitution Day
+        expectedHol.add(new Date( 2,June,year));		// Ascension Day
         // Sun: expectedHol.add(new Date(12,JUNE,year));   	// Whit Sunday
-        expectedHol.add(new Date(13,JUNE,year));   	// Whit Monday
+        expectedHol.add(new Date(13,June,year));   	// Whit Monday
         // Sun: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+        expectedHol.add(new Date(26,December,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -173,17 +173,17 @@ public class NorwayCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 
-		expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		expectedHol.add(new Date( 1,January,year));	// New Year's Day
 		// Sun: expectedHol.add(new Date(28,MARCH,year));		// Palm Sunday
-		expectedHol.add(new Date( 1,APRIL,year));		// Maundy Thursday
-		expectedHol.add(new Date( 2,APRIL,year));		// Good Friday
+		expectedHol.add(new Date( 1,April,year));		// Maundy Thursday
+		expectedHol.add(new Date( 2,April,year));		// Good Friday
 		// Sun: expectedHol.add(new Date( 4,APRIL,year));     // Easter Day
-		expectedHol.add(new Date( 5,APRIL,year));     // Easter Monday
+		expectedHol.add(new Date( 5,April,year));     // Easter Monday
 		// Sat: expectedHol.add(new Date( 1,MAY,year));		// Official holiday
-        expectedHol.add(new Date(13,MAY,year));		// Ascension Day
-        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
+        expectedHol.add(new Date(13,May,year));		// Ascension Day
+        expectedHol.add(new Date(17,May,year));		// Constitution Day
         // Sun: expectedHol.add(new Date(23,MAY,year));   	// Whit Sunday
-        expectedHol.add(new Date(24,MAY,year));   	// Whit Monday
+        expectedHol.add(new Date(24,May,year));   	// Whit Monday
         // Sat: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
         // Sun: expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
@@ -222,18 +222,18 @@ public class NorwayCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 
-		expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		expectedHol.add(new Date( 1,January,year));	// New Year's Day
 		// Sun: expectedHol.add(new Date( 5,APRIL,year));		// Palm Sunday
-		expectedHol.add(new Date( 9,APRIL,year));		// Maundy Thursday
-		expectedHol.add(new Date(10,APRIL,year));		// Good Friday
+		expectedHol.add(new Date( 9,April,year));		// Maundy Thursday
+		expectedHol.add(new Date(10,April,year));		// Good Friday
 		// Sun: expectedHol.add(new Date(12,APRIL,year));     // Easter Day
-		expectedHol.add(new Date(13,APRIL,year));     // Easter Monday
-		expectedHol.add(new Date( 1,MAY,year));		// Official holiday
+		expectedHol.add(new Date(13,April,year));     // Easter Monday
+		expectedHol.add(new Date( 1,May,year));		// Official holiday
         // Sun: expectedHol.add(new Date(17,MAY,year));		// Constitution Day
-        expectedHol.add(new Date(21,MAY,year));		// Ascension Day
+        expectedHol.add(new Date(21,May,year));		// Ascension Day
         // Sun: expectedHol.add(new Date(31,MAY,year));   	// Whit Sunday
-        expectedHol.add(new Date( 1,JUNE,year));   	// Whit Monday
-        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
+        expectedHol.add(new Date( 1,June,year));   	// Whit Monday
+        expectedHol.add(new Date(25,December,year));  // Christmas Day
         // Sat: expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 
     	// Call the Holiday Check
@@ -270,19 +270,19 @@ public class NorwayCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
 
-		expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		expectedHol.add(new Date( 1,January,year));	// New Year's Day
 		// Sun: expectedHol.add(new Date(16,MARCH,year));		// Palm Sunday
-		expectedHol.add(new Date(20,MARCH,year));		// Maundy Thursday
-		expectedHol.add(new Date(21,MARCH,year));		// Good Friday
+		expectedHol.add(new Date(20,March,year));		// Maundy Thursday
+		expectedHol.add(new Date(21,March,year));		// Good Friday
 		// Sun: expectedHol.add(new Date(23,MARCH,year));     // Easter Day
-		expectedHol.add(new Date(24,MARCH,year));     // Easter Monday
-		expectedHol.add(new Date( 1,MAY,year));		// Official holiday
-        expectedHol.add(new Date( 1,MAY,year));		// Ascension Day
+		expectedHol.add(new Date(24,March,year));     // Easter Monday
+		expectedHol.add(new Date( 1,May,year));		// Official holiday
+        expectedHol.add(new Date( 1,May,year));		// Ascension Day
         // Sun: expectedHol.add(new Date(11,MAY,year));   	// Whit Sunday
-        expectedHol.add(new Date(12,MAY,year));   	// Whit Monday
+        expectedHol.add(new Date(12,May,year));   	// Whit Monday
         // Sat: expectedHol.add(new Date(17,MAY,year));		// Constitution Day
-        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+        expectedHol.add(new Date(25,December,year));  // Christmas Day
+        expectedHol.add(new Date(26,December,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -316,19 +316,19 @@ public class NorwayCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		expectedHol.add(new Date( 1,January,year));	// New Year's Day
 		// Sun: expectedHol.add(new Date( 1,APRIL,year));		// Palm Sunday
-		expectedHol.add(new Date( 5,APRIL,year));		// Maundy Thursday
-		expectedHol.add(new Date( 6,APRIL,year));		// Good Friday
+		expectedHol.add(new Date( 5,April,year));		// Maundy Thursday
+		expectedHol.add(new Date( 6,April,year));		// Good Friday
 		// Sun: expectedHol.add(new Date( 8,APRIL,year));     // Easter Day
-		expectedHol.add(new Date( 9,APRIL,year));     // Easter Monday
-		expectedHol.add(new Date( 1,MAY,year));		// Official holiday
-        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
-        expectedHol.add(new Date(17,MAY,year));		// Ascension Day
+		expectedHol.add(new Date( 9,April,year));     // Easter Monday
+		expectedHol.add(new Date( 1,May,year));		// Official holiday
+        expectedHol.add(new Date(17,May,year));		// Constitution Day
+        expectedHol.add(new Date(17,May,year));		// Ascension Day
         // Sun: expectedHol.add(new Date(27,MAY,year));   	// Whit Sunday
-        expectedHol.add(new Date(28,MAY,year));   	// Whit Monday
-        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+        expectedHol.add(new Date(28,May,year));   	// Whit Monday
+        expectedHol.add(new Date(25,December,year));  // Christmas Day
+        expectedHol.add(new Date(26,December,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -366,17 +366,17 @@ public class NorwayCalendarTest {
 
 		// Sun: expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(new Date( 9,APRIL,year));		// Palm Sunday
-		expectedHol.add(new Date(13,APRIL,year));		// Maundy Thursday
-		expectedHol.add(new Date(14,APRIL,year));		// Good Friday
+		expectedHol.add(new Date(13,April,year));		// Maundy Thursday
+		expectedHol.add(new Date(14,April,year));		// Good Friday
 		// Sun: expectedHol.add(new Date(16,APRIL,year));     // Easter Day
-		expectedHol.add(new Date(17,APRIL,year));     // Easter Monday
-		expectedHol.add(new Date( 1,MAY,year));		// Official holiday
-        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
-        expectedHol.add(new Date(25,MAY,year));		// Ascension Day
+		expectedHol.add(new Date(17,April,year));     // Easter Monday
+		expectedHol.add(new Date( 1,May,year));		// Official holiday
+        expectedHol.add(new Date(17,May,year));		// Constitution Day
+        expectedHol.add(new Date(25,May,year));		// Ascension Day
         // Sun: expectedHol.add(new Date( 4,JUNE,year));   	// Whit Sunday
-        expectedHol.add(new Date( 5,JUNE,year));   	// Whit Monday
-        expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+        expectedHol.add(new Date( 5,June,year));   	// Whit Monday
+        expectedHol.add(new Date(25,December,year));  // Christmas Day
+        expectedHol.add(new Date(26,December,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -412,17 +412,17 @@ public class NorwayCalendarTest {
 
 		// Sat: expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
 		// Sun: expectedHol.add(new Date(20,APRIL,year));		// Palm Sunday
-		expectedHol.add(new Date(24,MARCH,year));		// Maundy Thursday
-		expectedHol.add(new Date(25,MARCH,year));		// Good Friday
+		expectedHol.add(new Date(24,March,year));		// Maundy Thursday
+		expectedHol.add(new Date(25,March,year));		// Good Friday
 		// Sun: expectedHol.add(new Date(27,MARCH,year));     // Easter Day
-		expectedHol.add(new Date(28,MARCH,year));     // Easter Monday
+		expectedHol.add(new Date(28,March,year));     // Easter Monday
 		// Sun: expectedHol.add(new Date( 1,MAY,year));		// Official holiday
-        expectedHol.add(new Date( 5,MAY,year));		// Ascension Day
+        expectedHol.add(new Date( 5,May,year));		// Ascension Day
         // Sun: expectedHol.add(new Date(15,MAY,year));   	// Whit Sunday
-        expectedHol.add(new Date(16,MAY,year));   	// Whit Monday
-        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
+        expectedHol.add(new Date(16,May,year));   	// Whit Monday
+        expectedHol.add(new Date(17,May,year));		// Constitution Day
         // Sun: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
-        expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
+        expectedHol.add(new Date(26,December,year));  // Boxing Day
 
     	// Call the Holiday Check
     	final CalendarUtil cbt = new CalendarUtil();
@@ -456,17 +456,17 @@ public class NorwayCalendarTest {
         
     	final List<Date> expectedHol = new ArrayList<Date>();
 
-		expectedHol.add(new Date( 1,JANUARY,year));	// New Year's Day
+		expectedHol.add(new Date( 1,January,year));	// New Year's Day
 		// Sun: expectedHol.add(new Date( 4,APRIL,year));		// Palm Sunday
-		expectedHol.add(new Date( 8,APRIL,year));		// Maundy Thursday
-		expectedHol.add(new Date( 9,APRIL,year));		// Good Friday
+		expectedHol.add(new Date( 8,April,year));		// Maundy Thursday
+		expectedHol.add(new Date( 9,April,year));		// Good Friday
 		// Sun: expectedHol.add(new Date(11,APRIL,year));     // Easter Day
-		expectedHol.add(new Date(12,APRIL,year));     // Easter Monday
+		expectedHol.add(new Date(12,April,year));     // Easter Monday
 		// Sat: expectedHol.add(new Date( 1,MAY,year));		// Official holiday
-        expectedHol.add(new Date(17,MAY,year));		// Constitution Day
-        expectedHol.add(new Date(20,MAY,year));		// Ascension Day
+        expectedHol.add(new Date(17,May,year));		// Constitution Day
+        expectedHol.add(new Date(20,May,year));		// Ascension Day
         // Sun: expectedHol.add(new Date(30,MAY,year));   	// Whit Sunday
-        expectedHol.add(new Date(31,MAY,year));   	// Whit Monday
+        expectedHol.add(new Date(31,May,year));   	// Whit Monday
         // Sat: expectedHol.add(new Date(25,DECEMBER,year));  // Christmas Day
         // Sun: expectedHol.add(new Date(26,DECEMBER,year));  // Boxing Day
 

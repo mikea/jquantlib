@@ -90,8 +90,8 @@ public abstract class Option extends Instrument {
      */
     public static enum Type {
 
-        PUT(-1),
-        CALL(1);
+        Put(-1),
+        Call(1);
 
         private int value;
 

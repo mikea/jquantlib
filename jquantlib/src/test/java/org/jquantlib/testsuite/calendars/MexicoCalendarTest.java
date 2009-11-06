@@ -1,13 +1,13 @@
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.September;
 
 import java.util.List;
 import java.util.Vector;
@@ -225,11 +225,11 @@ public class MexicoCalendarTest {
         final int year = 2004;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-		expectedHol.add(new Date( 1, JANUARY, year));
-        expectedHol.add(new Date( 5, FEBRUARY, year));//Zahid:Changed from 2 to 5
-        expectedHol.add(new Date( 8, APRIL, year));
-        expectedHol.add(new Date( 9, APRIL, year));
-        expectedHol.add(new Date(16, SEPTEMBER, year));
+		expectedHol.add(new Date( 1, January, year));
+        expectedHol.add(new Date( 5, February, year));//Zahid:Changed from 2 to 5
+        expectedHol.add(new Date( 8, April, year));
+        expectedHol.add(new Date( 9, April, year));
+        expectedHol.add(new Date(16, September, year));
 //        expectedHol.add(new Date( 2, NOVEMBER, year)); //Zahid:
 //        expectedHol.add(new Date(15, NOVEMBER, year)); //Zahid
 
@@ -245,13 +245,13 @@ public class MexicoCalendarTest {
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
 //        expectedHol.add(new Date( 5, FEBRUARY, year)); //Changed from 7 to 5, it Sat
-        expectedHol.add(new Date(21, MARCH, year));
-        expectedHol.add(new Date(24, MARCH, year));
-        expectedHol.add(new Date(25, MARCH, year));
-        expectedHol.add(new Date(16, SEPTEMBER, year));
+        expectedHol.add(new Date(21, March, year));
+        expectedHol.add(new Date(24, March, year));
+        expectedHol.add(new Date(25, March, year));
+        expectedHol.add(new Date(16, September, year));
 //        expectedHol.add(new Date( 2, NOVEMBER, year));
 //        expectedHol.add(new Date(14, NOVEMBER, year));
-        expectedHol.add(new Date(12, DECEMBER, year));
+        expectedHol.add(new Date(12, December, year));
 
 
         // Call the Holiday Check
@@ -266,14 +266,14 @@ public class MexicoCalendarTest {
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
 //        expectedHol.add(new Date( 5, FEBRUARY, year));//Zahid: Changed from 6 to 5, it is Sun
-        expectedHol.add(new Date(21, MARCH, year));
-        expectedHol.add(new Date(13, APRIL, year));
-        expectedHol.add(new Date(14, APRIL, year));
-        expectedHol.add(new Date( 1, MAY, year));
+        expectedHol.add(new Date(21, March, year));
+        expectedHol.add(new Date(13, April, year));
+        expectedHol.add(new Date(14, April, year));
+        expectedHol.add(new Date( 1, May, year));
 //        expectedHol.add(new Date( 2, NOVEMBER, year));
 //        expectedHol.add(new Date(20, NOVEMBER, year));
-        expectedHol.add(new Date(12, DECEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(12, December, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -302,16 +302,16 @@ public class MexicoCalendarTest {
         final int year = 2007;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-        expectedHol.add(new Date( 1, JANUARY, year));
-        expectedHol.add(new Date( 5, FEBRUARY, year));
-        expectedHol.add(new Date(21, MARCH, year));
-        expectedHol.add(new Date( 5, APRIL, year));
-        expectedHol.add(new Date( 6, APRIL, year));
-        expectedHol.add(new Date( 1, MAY, year));
+        expectedHol.add(new Date( 1, January, year));
+        expectedHol.add(new Date( 5, February, year));
+        expectedHol.add(new Date(21, March, year));
+        expectedHol.add(new Date( 5, April, year));
+        expectedHol.add(new Date( 6, April, year));
+        expectedHol.add(new Date( 1, May, year));
 //        expectedHol.add(new Date( 2, NOVEMBER, year));
 //        expectedHol.add(new Date(19, NOVEMBER, year));
-        expectedHol.add(new Date(12, DECEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(12, December, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -325,15 +325,15 @@ public class MexicoCalendarTest {
         final int year = 2008;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-        expectedHol.add(new Date( 1, JANUARY, year));
-        expectedHol.add(new Date( 5, FEBRUARY, year));// Changed from 4 to 5
-        expectedHol.add(new Date(20, MARCH, year));
-        expectedHol.add(new Date(21, MARCH, year));
-        expectedHol.add(new Date( 1, MAY, year));
-        expectedHol.add(new Date(16, SEPTEMBER, year));
+        expectedHol.add(new Date( 1, January, year));
+        expectedHol.add(new Date( 5, February, year));// Changed from 4 to 5
+        expectedHol.add(new Date(20, March, year));
+        expectedHol.add(new Date(21, March, year));
+        expectedHol.add(new Date( 1, May, year));
+        expectedHol.add(new Date(16, September, year));
 //        expectedHol.add(new Date(17, NOVEMBER, year));
-        expectedHol.add(new Date(12, DECEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(12, December, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -345,15 +345,15 @@ public class MexicoCalendarTest {
         final int year = 2009;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-        expectedHol.add(new Date( 1, JANUARY, year));
-        expectedHol.add(new Date( 5, FEBRUARY, year)); //Zahid Changed from 2 to 5
-        expectedHol.add(new Date( 9, APRIL, year));
-        expectedHol.add(new Date(10, APRIL, year));
-        expectedHol.add(new Date( 1, MAY, year));
-        expectedHol.add(new Date(16, SEPTEMBER, year));
+        expectedHol.add(new Date( 1, January, year));
+        expectedHol.add(new Date( 5, February, year)); //Zahid Changed from 2 to 5
+        expectedHol.add(new Date( 9, April, year));
+        expectedHol.add(new Date(10, April, year));
+        expectedHol.add(new Date( 1, May, year));
+        expectedHol.add(new Date(16, September, year));
 //        expectedHol.add(new Date( 2, NOVEMBER, year));
 //        expectedHol.add(new Date(16, NOVEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -366,11 +366,11 @@ public class MexicoCalendarTest {
         final int year = 2010;
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
-        expectedHol.add(new Date( 1, JANUARY, year));
-        expectedHol.add(new Date( 5, FEBRUARY, year)); //Changed from 1 to 5
-        expectedHol.add(new Date( 1, APRIL, year));
-        expectedHol.add(new Date( 2, APRIL, year));
-        expectedHol.add(new Date(16, SEPTEMBER, year));
+        expectedHol.add(new Date( 1, January, year));
+        expectedHol.add(new Date( 5, February, year)); //Changed from 1 to 5
+        expectedHol.add(new Date( 1, April, year));
+        expectedHol.add(new Date( 2, April, year));
+        expectedHol.add(new Date(16, September, year));
 //        expectedHol.add(new Date( 2, NOVEMBER, year));
 //        expectedHol.add(new Date(15, NOVEMBER, year));
 
@@ -386,13 +386,13 @@ public class MexicoCalendarTest {
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
 //        expectedHol.add(new Date( 5, FEBRUARY, year)); //Changed from 7 to 5, it is Saturday
-        expectedHol.add(new Date(21, MARCH, year));
-        expectedHol.add(new Date(21, APRIL, year));
-        expectedHol.add(new Date(22, APRIL, year));
-        expectedHol.add(new Date(16, SEPTEMBER, year));
+        expectedHol.add(new Date(21, March, year));
+        expectedHol.add(new Date(21, April, year));
+        expectedHol.add(new Date(22, April, year));
+        expectedHol.add(new Date(16, September, year));
 //        expectedHol.add(new Date( 2, NOVEMBER, year));
 //        expectedHol.add(new Date(14, NOVEMBER, year));
-        expectedHol.add(new Date(12, DECEMBER, year));
+        expectedHol.add(new Date(12, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -406,14 +406,14 @@ public class MexicoCalendarTest {
         QL.info("Testing Mexican BVM holiday list for the year " + year + "...");
 
 //        expectedHol.add(new Date( 5, FEBRUARY, year));//Changed from 6 to 5, it is Sunday
-        expectedHol.add(new Date(21, MARCH, year));
-        expectedHol.add(new Date( 5, APRIL, year));
-        expectedHol.add(new Date( 6, APRIL, year));
-        expectedHol.add(new Date( 1, MAY, year));
+        expectedHol.add(new Date(21, March, year));
+        expectedHol.add(new Date( 5, April, year));
+        expectedHol.add(new Date( 6, April, year));
+        expectedHol.add(new Date( 1, May, year));
 //        expectedHol.add(new Date( 2, NOVEMBER, year));
 //        expectedHol.add(new Date(19, NOVEMBER, year));
-        expectedHol.add(new Date(12, DECEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(12, December, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();

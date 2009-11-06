@@ -23,17 +23,17 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JULY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.OCTOBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.July;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 import static org.jquantlib.time.Weekday.MONDAY;
 import static org.jquantlib.time.Weekday.SATURDAY;
 import static org.jquantlib.time.Weekday.SUNDAY;
@@ -131,71 +131,71 @@ public class Japan extends Calendar {
 	        // checks
 	        if (isWeekend(w)
 	            // New Year's Day
-	            || (d == 1  && m == JANUARY)
+	            || (d == 1  && m == January)
 	            // Bank Holiday
-	            || (d == 2  && m == JANUARY)
+	            || (d == 2  && m == January)
 	            // Bank Holiday
-	            || (d == 3  && m == JANUARY)
+	            || (d == 3  && m == January)
 	            // Coming of Age Day (2nd Monday in JANUARY),
 	            // was JANUARY 15th until 2000
-	            || (w == MONDAY && (d >= 8 && d <= 14) && m == JANUARY
+	            || (w == MONDAY && (d >= 8 && d <= 14) && m == January
 	                && y >= 2000)
-	            || ((d == 15 || (d == 16 && w == MONDAY)) && m == JANUARY
+	            || ((d == 15 || (d == 16 && w == MONDAY)) && m == January
 	                && y < 2000)
 	            // National Foundation Day
-	            || ((d == 11 || (d == 12 && w == MONDAY)) && m == FEBRUARY)
+	            || ((d == 11 || (d == 12 && w == MONDAY)) && m == February)
 	            // Vernal Equinox
-	            || ((d == ve || (d == ve+1 && w == MONDAY)) && m == MARCH)
+	            || ((d == ve || (d == ve+1 && w == MONDAY)) && m == March)
 	            // Greenery Day
-	            || ((d == 29 || (d == 30 && w == MONDAY)) && m == APRIL)
+	            || ((d == 29 || (d == 30 && w == MONDAY)) && m == April)
 	            // Constitution Memorial Day
-	            || (d == 3  && m == MAY)
+	            || (d == 3  && m == May)
 	            // Holiday for a Nation
-	            || (d == 4  && m == MAY)
+	            || (d == 4  && m == May)
 	            // Children's Day
-	            || ((d == 5  || (d == 6 && w == MONDAY)) && m == MAY)
+	            || ((d == 5  || (d == 6 && w == MONDAY)) && m == May)
 	            // Marine Day (3rd MONDAY in July),
 	            // was July 20th until 2003, not a holiday before 1996
-	            || (w == MONDAY && (d >= 15 && d <= 21) && m == JULY
+	            || (w == MONDAY && (d >= 15 && d <= 21) && m == July
 	                && y >= 2003)
-	            || ((d == 20 || (d == 21 && w == MONDAY)) && m == JULY
+	            || ((d == 20 || (d == 21 && w == MONDAY)) && m == July
 	                && y >= 1996 && y < 2003)
 	            // Respect for the Aged Day (3rd MONDAY in September),
 	            // was September 15th until 2003
-	            || (w == MONDAY && (d >= 15 && d <= 21) && m == SEPTEMBER
+	            || (w == MONDAY && (d >= 15 && d <= 21) && m == September
 	                && y >= 2003)
-	            || ((d == 15 || (d == 16 && w == MONDAY)) && m == SEPTEMBER
+	            || ((d == 15 || (d == 16 && w == MONDAY)) && m == September
 	                && y < 2003)
 	            // If a single day falls between Respect for the Aged Day
 	            // and the Autumnal Equinox, it is holiday
 	            || (w == TUESDAY && d+1 == ae && d >= 16 && d <= 22
-	                && m == SEPTEMBER && y >= 2003)
+	                && m == September && y >= 2003)
 	            // Autumnal Equinox
-	            || ((d == ae || (d == ae+1 && w == MONDAY)) && m == SEPTEMBER)
+	            || ((d == ae || (d == ae+1 && w == MONDAY)) && m == September)
 	            // Health and Sports Day (2nd MONDAY in October),
 	            // was October 10th until 2000
-	            || (w == MONDAY && (d >= 8 && d <= 14) && m == OCTOBER
+	            || (w == MONDAY && (d >= 8 && d <= 14) && m == October
 	                && y >= 2000)
-	            || ((d == 10 || (d == 11 && w == MONDAY)) && m == OCTOBER
+	            || ((d == 10 || (d == 11 && w == MONDAY)) && m == October
 	                && y < 2000)
 	            // National Culture Day
-	            || ((d == 3  || (d == 4 && w == MONDAY)) && m == NOVEMBER)
+	            || ((d == 3  || (d == 4 && w == MONDAY)) && m == November)
 	            // Labor Thanksgiving Day
-	            || ((d == 23 || (d == 24 && w == MONDAY)) && m == NOVEMBER)
+	            || ((d == 23 || (d == 24 && w == MONDAY)) && m == November)
 	            // Emperor's Birthday
-	            || ((d == 23 || (d == 24 && w == MONDAY)) && m == DECEMBER
+	            || ((d == 23 || (d == 24 && w == MONDAY)) && m == December
 	                && y >= 1989)
 	            // Bank Holiday
-	            || (d == 31 && m == DECEMBER)
+	            || (d == 31 && m == December)
 	            // one-shot holidays
 	            // Marriage of Prince Akihito
-	            || (d == 10 && m == APRIL && y == 1959)
+	            || (d == 10 && m == April && y == 1959)
 	            // Rites of Imperial Funeral
-	            || (d == 24 && m == FEBRUARY && y == 1989)
+	            || (d == 24 && m == February && y == 1989)
 	            // Enthronement Ceremony
-	            || (d == 12 && m == NOVEMBER && y == 1990)
+	            || (d == 12 && m == November && y == 1990)
 	            // Marriage of Prince Naruhito
-	            || (d == 9 && m == JUNE && y == 1993)) {
+	            || (d == 9 && m == June && y == 1993)) {
                 return false;
             }
 	        return true;

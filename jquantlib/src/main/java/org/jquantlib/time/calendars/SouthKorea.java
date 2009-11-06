@@ -21,17 +21,17 @@
  */
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JULY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.OCTOBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.July;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 import static org.jquantlib.time.Weekday.SATURDAY;
 import static org.jquantlib.time.Weekday.SUNDAY;
 
@@ -146,55 +146,55 @@ public class SouthKorea extends Calendar {
 
             if (isWeekend(w)
                     // New Year's Day
-                    || (d == 1 && m == JANUARY)
+                    || (d == 1 && m == January)
                     // Independence Day
-                    || (d == 1 && m == MARCH)
+                    || (d == 1 && m == March)
                     // Arbour Day
-                    || (d == 5 && m == APRIL && y <= 2005)
+                    || (d == 5 && m == April && y <= 2005)
                     // Labour Day
-                    || (d == 1 && m == MAY)
+                    || (d == 1 && m == May)
                     // Children's Day
-                    || (d == 5 && m == MAY)
+                    || (d == 5 && m == May)
                     // Memorial Day
-                    || (d == 6 && m == JUNE)
+                    || (d == 6 && m == June)
                     // Constitution Day
-                    || (d == 17 && m == JULY && y <= 2007)
+                    || (d == 17 && m == July && y <= 2007)
                     // Liberation Day
-                    || (d == 15 && m == AUGUST)
+                    || (d == 15 && m == August)
                     // National Foundation Day
-                    || (d == 3 && m == OCTOBER)
+                    || (d == 3 && m == October)
                     // Christmas Day
-                    || (d == 25 && m == DECEMBER)
+                    || (d == 25 && m == December)
 
                     // Lunar New Year
-                    || ((d == 21 || d == 22 || d == 23) && m == JANUARY && y == 2004)
-                    || ((d == 8 || d == 9 || d == 10) && m == FEBRUARY && y == 2005)
-                    || ((d == 28 || d == 29 || d == 30) && m == JANUARY && y == 2006)
-                    || (d == 19 && m == FEBRUARY && y == 2007)
-                    || ((d == 6 || d == 7 || d == 8) && m == FEBRUARY && y == 2008)
-                    || ((d == 25 || d == 26 || d == 27) && m == JANUARY && y == 2009)
-                    || ((d == 13 || d == 14 || d == 15) && m == FEBRUARY && y == 2010)
+                    || ((d == 21 || d == 22 || d == 23) && m == January && y == 2004)
+                    || ((d == 8 || d == 9 || d == 10) && m == February && y == 2005)
+                    || ((d == 28 || d == 29 || d == 30) && m == January && y == 2006)
+                    || (d == 19 && m == February && y == 2007)
+                    || ((d == 6 || d == 7 || d == 8) && m == February && y == 2008)
+                    || ((d == 25 || d == 26 || d == 27) && m == January && y == 2009)
+                    || ((d == 13 || d == 14 || d == 15) && m == February && y == 2010)
                     // Election Day 2004
-                    || (d == 15 && m == APRIL && y == 2004) // National Assembly
-                    || (d == 31 && m == MAY && y == 2006) // Regional election
-                    || (d == 19 && m == DECEMBER && y == 2007) // Presidency
-                    || (d == 9 && m == APRIL && y == 2008)
+                    || (d == 15 && m == April && y == 2004) // National Assembly
+                    || (d == 31 && m == May && y == 2006) // Regional election
+                    || (d == 19 && m == December && y == 2007) // Presidency
+                    || (d == 9 && m == April && y == 2008)
                     // Buddha's birthday
-                    || (d == 26 && m == MAY && y == 2004)
-                    || (d == 15 && m == MAY && y == 2005)
-                    || (d == 5 && m == MAY && y == 2006)
-                    || (d == 24 && m == MAY && y == 2007)
-                    || (d == 12 && m == MAY && y == 2008)
-                    || (d == 2 && m == MAY && y == 2009)
-                    || (d == 21 && m == MAY && y == 2010)
+                    || (d == 26 && m == May && y == 2004)
+                    || (d == 15 && m == May && y == 2005)
+                    || (d == 5 && m == May && y == 2006)
+                    || (d == 24 && m == May && y == 2007)
+                    || (d == 12 && m == May && y == 2008)
+                    || (d == 2 && m == May && y == 2009)
+                    || (d == 21 && m == May && y == 2010)
                     // Harvest Moon Day
-                    || ((d == 27 || d == 28 || d == 29) && m == SEPTEMBER && y == 2004)
-                    || ((d == 17 || d == 18 || d == 19) && m == SEPTEMBER && y == 2005)
-                    || ((d == 5 || d == 6 || d == 7) && m == OCTOBER && y == 2006)
-                    || ((d == 24 || d == 25 || d == 26) && m == SEPTEMBER && y == 2007)
-                    || ((d == 13 || d == 14 || d == 15) && m == SEPTEMBER && y == 2008)
-                    || ((d == 2 || d == 3 || d == 4) && m == OCTOBER && y == 2009)
-                    || ((d == 21 || d == 22 || d == 23) && m == SEPTEMBER && y == 2010)) {
+                    || ((d == 27 || d == 28 || d == 29) && m == September && y == 2004)
+                    || ((d == 17 || d == 18 || d == 19) && m == September && y == 2005)
+                    || ((d == 5 || d == 6 || d == 7) && m == October && y == 2006)
+                    || ((d == 24 || d == 25 || d == 26) && m == September && y == 2007)
+                    || ((d == 13 || d == 14 || d == 15) && m == September && y == 2008)
+                    || ((d == 2 || d == 3 || d == 4) && m == October && y == 2009)
+                    || ((d == 21 || d == 22 || d == 23) && m == September && y == 2010)) {
                 return false;
             }
             return true;
@@ -219,8 +219,8 @@ public class SouthKorea extends Calendar {
             final int y = date.year();
 
             if (// Year-end closing
-            (d == 31 && m == DECEMBER && y == 2004) || (d == 30 && m == DECEMBER && y == 2005)
-                    || (d == 29 && m == DECEMBER && y == 2006) || (d == 31 && m == DECEMBER && y == 2007)) {
+            (d == 31 && m == December && y == 2004) || (d == 30 && m == December && y == 2005)
+                    || (d == 29 && m == December && y == 2006) || (d == 31 && m == December && y == 2007)) {
                 return false;
             }
 

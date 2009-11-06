@@ -22,18 +22,18 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JULY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.OCTOBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.July;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 
 import java.util.List;
 import java.util.Vector;
@@ -70,33 +70,33 @@ public class IndonesiaCalendarTest {
         QL.info("Testing Indonesia's holiday list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
         // New Year
-        expectedHol.add(new Date(1, JANUARY, year));
-        expectedHol.add(new Date(2, JANUARY, year));
-        expectedHol.add(new Date(26, JANUARY, year));
-        expectedHol.add(new Date(9, MARCH, year));
-        expectedHol.add(new Date(26, MARCH, year));
-        expectedHol.add(new Date(10, APRIL, year));
+        expectedHol.add(new Date(1, January, year));
+        expectedHol.add(new Date(2, January, year));
+        expectedHol.add(new Date(26, January, year));
+        expectedHol.add(new Date(9, March, year));
+        expectedHol.add(new Date(26, March, year));
+        expectedHol.add(new Date(10, April, year));
         // Ascension Thursday
-        expectedHol.add(new Date(21, MAY, year));
+        expectedHol.add(new Date(21, May, year));
 
         // Waisak
-        expectedHol.add(new Date(20, JULY, year));
+        expectedHol.add(new Date(20, July, year));
 
         // Independence Day
-        expectedHol.add(new Date(17, AUGUST, year));
-        expectedHol.add(new Date(18, SEPTEMBER, year));
-        expectedHol.add(new Date(21, SEPTEMBER, year));
-        expectedHol.add(new Date(22, SEPTEMBER, year));
-        expectedHol.add(new Date(23, SEPTEMBER, year));
+        expectedHol.add(new Date(17, August, year));
+        expectedHol.add(new Date(18, September, year));
+        expectedHol.add(new Date(21, September, year));
+        expectedHol.add(new Date(22, September, year));
+        expectedHol.add(new Date(23, September, year));
 
         // Ied Adha
-        expectedHol.add(new Date(27, NOVEMBER, year));
+        expectedHol.add(new Date(27, November, year));
 
         // Christmas
-        expectedHol.add(new Date(18, DECEMBER, year));
-        expectedHol.add(new Date(24, DECEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
-        expectedHol.add(new Date(31, DECEMBER, year));
+        expectedHol.add(new Date(18, December, year));
+        expectedHol.add(new Date(24, December, year));
+        expectedHol.add(new Date(25, December, year));
+        expectedHol.add(new Date(31, December, year));
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
@@ -108,41 +108,41 @@ public class IndonesiaCalendarTest {
         QL.info("Testing Indonesia's holiday list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
         // New Year
-        expectedHol.add(new Date(1, JANUARY, year));
-        expectedHol.add(new Date(10, JANUARY, year));
-        expectedHol.add(new Date(11, JANUARY, year));
-        expectedHol.add(new Date(7, FEBRUARY, year));
-        expectedHol.add(new Date(8, FEBRUARY, year));
-        expectedHol.add(new Date(7, MARCH, year));
-        expectedHol.add(new Date(20, MARCH, year));
-        expectedHol.add(new Date(21, MARCH, year));
+        expectedHol.add(new Date(1, January, year));
+        expectedHol.add(new Date(10, January, year));
+        expectedHol.add(new Date(11, January, year));
+        expectedHol.add(new Date(7, February, year));
+        expectedHol.add(new Date(8, February, year));
+        expectedHol.add(new Date(7, March, year));
+        expectedHol.add(new Date(20, March, year));
+        expectedHol.add(new Date(21, March, year));
         // Ascension Thursday
-        expectedHol.add(new Date(1, MAY, year));
+        expectedHol.add(new Date(1, May, year));
 
         // National leaves
-        expectedHol.add(new Date(20, MAY, year));
+        expectedHol.add(new Date(20, May, year));
 
         // Waisak
-        expectedHol.add(new Date(30, JULY, year));
+        expectedHol.add(new Date(30, July, year));
 
         // Independence Day
-        expectedHol.add(new Date(18, AUGUST, year));
-        expectedHol.add(new Date(30, SEPTEMBER, year));
+        expectedHol.add(new Date(18, August, year));
+        expectedHol.add(new Date(30, September, year));
 
         // National leaves
-        expectedHol.add(new Date(1, OCTOBER, year));
-        expectedHol.add(new Date(2, OCTOBER, year));
-        expectedHol.add(new Date(3, OCTOBER, year));
+        expectedHol.add(new Date(1, October, year));
+        expectedHol.add(new Date(2, October, year));
+        expectedHol.add(new Date(3, October, year));
 
 
         // Ied Adha
-        expectedHol.add(new Date(8, DECEMBER, year));
+        expectedHol.add(new Date(8, December, year));
 
         // Christmas
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
-        expectedHol.add(new Date(29, DECEMBER, year));
-        expectedHol.add(new Date(31, DECEMBER, year));
+        expectedHol.add(new Date(29, December, year));
+        expectedHol.add(new Date(31, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -156,60 +156,60 @@ public class IndonesiaCalendarTest {
         QL.info("Testing Indonesia's holiday list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
         // New Year
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
 
         // Nyepi
-        expectedHol.add(new Date(19, MARCH, year));
+        expectedHol.add(new Date(19, March, year));
 
         // Good Friday
-        expectedHol.add(new Date(6, APRIL, year));
+        expectedHol.add(new Date(6, April, year));
 
         // Ascension Thursday
-        expectedHol.add(new Date(17, MAY, year));
+        expectedHol.add(new Date(17, May, year));
 
         // National leaves
-        expectedHol.add(new Date(18, MAY, year));
+        expectedHol.add(new Date(18, May, year));
 
         // Waisak
-        expectedHol.add(new Date(1, JUNE, year));
+        expectedHol.add(new Date(1, June, year));
 
         // Independence Day
-        expectedHol.add(new Date(17, AUGUST, year));
+        expectedHol.add(new Date(17, August, year));
 
         // National leaves
-        expectedHol.add(new Date(12, OCTOBER, year));
-        expectedHol.add(new Date(15, OCTOBER, year));
-        expectedHol.add(new Date(16, OCTOBER, year));
-        expectedHol.add(new Date(24, OCTOBER, year));
+        expectedHol.add(new Date(12, October, year));
+        expectedHol.add(new Date(15, October, year));
+        expectedHol.add(new Date(16, October, year));
+        expectedHol.add(new Date(24, October, year));
 
         // Ied Adha
-        expectedHol.add(new Date(20, DECEMBER, year));
+        expectedHol.add(new Date(20, December, year));
 
         // Christmas
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         //New holidays as per QL0.9.7
         //Islamic New year
-        expectedHol.add(new Date(10, JANUARY, year));
-        expectedHol.add(new Date(11, JANUARY, year));
+        expectedHol.add(new Date(10, January, year));
+        expectedHol.add(new Date(11, January, year));
         //Chinese  New year
-        expectedHol.add(new Date(7, FEBRUARY, year));
-        expectedHol.add(new Date(8, FEBRUARY, year));
+        expectedHol.add(new Date(7, February, year));
+        expectedHol.add(new Date(8, February, year));
 
         // Saka's New Year
-        expectedHol.add(new Date(7, MARCH, year));
+        expectedHol.add(new Date(7, March, year));
         // Birthday of the prophet Muhammad SAW
-        expectedHol.add(new Date(20, MARCH, year));
+        expectedHol.add(new Date(20, March, year));
         // Isra' Mi'raj of the prophet Muhammad SAW, Sunday
-        expectedHol.add(new Date(30, JULY, year));
+        expectedHol.add(new Date(30, July, year));
 
         // National leaves
-        expectedHol.add(new Date(1, OCTOBER, year));
-        expectedHol.add(new Date(2,  OCTOBER, year));
-        expectedHol.add(new Date(3,  OCTOBER, year));
+        expectedHol.add(new Date(1, October, year));
+        expectedHol.add(new Date(2,  October, year));
+        expectedHol.add(new Date(3,  October, year));
 
         // New Year's Eve
-        expectedHol.add(new Date(31, DECEMBER, year));
+        expectedHol.add(new Date(31, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -226,42 +226,42 @@ public class IndonesiaCalendarTest {
         // expectedHol.add(new Date(1,JANUARY,year));
 
         // Idul Adha
-        expectedHol.add(new Date(10, JANUARY, year));
+        expectedHol.add(new Date(10, January, year));
 
         // Moslem's New Year Day
-        expectedHol.add(new Date(31, JANUARY, year));
+        expectedHol.add(new Date(31, January, year));
 
         // Nyepi
-        expectedHol.add(new Date(30, MARCH, year));
+        expectedHol.add(new Date(30, March, year));
 
         // Birthday of Prophet Muhammad SAW
-        expectedHol.add(new Date(10, APRIL, year));
+        expectedHol.add(new Date(10, April, year));
 
         // Good Friday
-        expectedHol.add(new Date(14, APRIL, year));
+        expectedHol.add(new Date(14, April, year));
 
         // Ascension Thursday
-        expectedHol.add(new Date(25, MAY, year));
+        expectedHol.add(new Date(25, May, year));
 
         // Independence Day
-        expectedHol.add(new Date(17, AUGUST, year));
+        expectedHol.add(new Date(17, August, year));
 
         // Ascension of Prophet Muhammad SAW
-        expectedHol.add(new Date(21, AUGUST, year));
+        expectedHol.add(new Date(21, August, year));
 
         // National leaves
-        expectedHol.add(new Date(23, OCTOBER, year));
+        expectedHol.add(new Date(23, October, year));
 
         // Idul Fitri
-        expectedHol.add(new Date(24, OCTOBER, year));
-        expectedHol.add(new Date(25, OCTOBER, year));
+        expectedHol.add(new Date(24, October, year));
+        expectedHol.add(new Date(25, October, year));
 
         // National Leaves
-        expectedHol.add(new Date(26, OCTOBER, year));
-        expectedHol.add(new Date(27, OCTOBER, year));
+        expectedHol.add(new Date(26, October, year));
+        expectedHol.add(new Date(27, October, year));
 
         // Christmas
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);
@@ -277,51 +277,51 @@ public class IndonesiaCalendarTest {
         // expectedHol.add(new Date(1,JANUARY,year));
 
         // Idul Adha
-        expectedHol.add(new Date(21, JANUARY, year));
+        expectedHol.add(new Date(21, January, year));
 
         // Imlek
-        expectedHol.add(new Date(9, FEBRUARY, year));
+        expectedHol.add(new Date(9, February, year));
 
         // Moslem's New Year Day
-        expectedHol.add(new Date(10, FEBRUARY, year));
+        expectedHol.add(new Date(10, February, year));
 
         // Nyepi
-        expectedHol.add(new Date(11, MARCH, year));
+        expectedHol.add(new Date(11, March, year));
 
         // Good Friday
-        expectedHol.add(new Date(25, MARCH, year));
+        expectedHol.add(new Date(25, March, year));
 
         // Birthday of Prophet Muhammad SAW
-        expectedHol.add(new Date(22, APRIL, year));
+        expectedHol.add(new Date(22, April, year));
 
         // Ascension Thursday
-        expectedHol.add(new Date(5, MAY, year));
+        expectedHol.add(new Date(5, May, year));
 
         // Waisak
-        expectedHol.add(new Date(24, MAY, year));
+        expectedHol.add(new Date(24, May, year));
 
         // Independence Day
-        expectedHol.add(new Date(17, AUGUST, year));
+        expectedHol.add(new Date(17, August, year));
 
         // Ascension of Prophet Muhammad SAW
-        expectedHol.add(new Date(2, SEPTEMBER, year));
+        expectedHol.add(new Date(2, September, year));
 
         // National Leaves
-        expectedHol.add(new Date(2, NOVEMBER, year));
+        expectedHol.add(new Date(2, November, year));
 
         // Idul Fitri
-        expectedHol.add(new Date(3, NOVEMBER, year));
-        expectedHol.add(new Date(4, NOVEMBER, year));
+        expectedHol.add(new Date(3, November, year));
+        expectedHol.add(new Date(4, November, year));
 
         // National Leaves
-        expectedHol.add(new Date(7, NOVEMBER, year));
-        expectedHol.add(new Date(8, NOVEMBER, year));
+        expectedHol.add(new Date(7, November, year));
+        expectedHol.add(new Date(8, November, year));
 
         // Christmas -- weekend in yr 2005
         // expectedHol.add(new Date(25,DECEMBER,year));
 
         // National Leaves
-        expectedHol.add(new Date(26, DECEMBER, year));
+        expectedHol.add(new Date(26, December, year));
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, c, year);

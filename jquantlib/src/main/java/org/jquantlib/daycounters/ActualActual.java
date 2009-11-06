@@ -267,13 +267,13 @@ public class ActualActual extends DayCounter {
             double den = 365.0;
 
             if (Date.isLeap(newD2.year())) {
-                if (newD2.gt(new Date(29, Month.FEBRUARY, newD2.year())) &&
-                        dateStart.le(new Date(29, Month.FEBRUARY, newD2.year()))) {
+                if (newD2.gt(new Date(29, Month.February, newD2.year())) &&
+                        dateStart.le(new Date(29, Month.February, newD2.year()))) {
                     den += 1.0;
                 }
             } else if (Date.isLeap(dateStart.year())) {
-                if (newD2.gt(new Date(29, Month.FEBRUARY, dateStart.year())) &&
-                        dateStart.le(new Date(29, Month.FEBRUARY, dateStart.year()))) {
+                if (newD2.gt(new Date(29, Month.February, dateStart.year())) &&
+                        dateStart.le(new Date(29, Month.February, dateStart.year()))) {
                     den += 1.0;
                 }
             }

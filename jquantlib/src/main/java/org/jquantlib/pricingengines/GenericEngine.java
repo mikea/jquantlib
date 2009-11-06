@@ -57,7 +57,9 @@ import org.jquantlib.util.Observer;
  *
  * @author Richard Gomes
  */
-public abstract class GenericEngine<A extends Instrument.Arguments, R extends Instrument.Results> implements PricingEngine, Observer {
+public abstract class GenericEngine
+            <A extends Instrument.Arguments, R extends Instrument.Results>
+            implements PricingEngine, Observer {
 
     //
     // protected fields

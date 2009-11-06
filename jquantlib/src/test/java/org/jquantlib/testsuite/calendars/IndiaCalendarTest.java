@@ -22,16 +22,16 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.OCTOBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 
 import java.util.List;
 import java.util.Vector;
@@ -70,16 +70,16 @@ public class IndiaCalendarTest {
         QL.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
 
-        expectedHol.add(new Date(21, JANUARY, year));
-        expectedHol.add(new Date(26, JANUARY, year));
-        expectedHol.add(new Date(25, MARCH, year));
-        expectedHol.add(new Date(14, APRIL, year));
-        expectedHol.add(new Date(15, AUGUST, year));
-        expectedHol.add(new Date(7, SEPTEMBER, year));
-        expectedHol.add(new Date(12, OCTOBER, year));
-        expectedHol.add(new Date(1, NOVEMBER, year));
-        expectedHol.add(new Date(3, NOVEMBER, year));
-        expectedHol.add(new Date(15, NOVEMBER, year));
+        expectedHol.add(new Date(21, January, year));
+        expectedHol.add(new Date(26, January, year));
+        expectedHol.add(new Date(25, March, year));
+        expectedHol.add(new Date(14, April, year));
+        expectedHol.add(new Date(15, August, year));
+        expectedHol.add(new Date(7, September, year));
+        expectedHol.add(new Date(12, October, year));
+        expectedHol.add(new Date(1, November, year));
+        expectedHol.add(new Date(3, November, year));
+        expectedHol.add(new Date(15, November, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -95,19 +95,19 @@ public class IndiaCalendarTest {
         QL.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
 
-        expectedHol.add(new Date(11, JANUARY, year));
-        expectedHol.add(new Date(26, JANUARY, year));
-        expectedHol.add(new Date(9, FEBRUARY, year));
-        expectedHol.add(new Date(15, MARCH, year));
-        expectedHol.add(new Date(6, APRIL, year));
-        expectedHol.add(new Date(11, APRIL, year));
-        expectedHol.add(new Date(14, APRIL, year));
-        expectedHol.add(new Date(1, MAY, year));
-        expectedHol.add(new Date(15, AUGUST, year));
-        expectedHol.add(new Date(2, OCTOBER, year));
-        expectedHol.add(new Date(24, OCTOBER, year));
-        expectedHol.add(new Date(25, OCTOBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(11, January, year));
+        expectedHol.add(new Date(26, January, year));
+        expectedHol.add(new Date(9, February, year));
+        expectedHol.add(new Date(15, March, year));
+        expectedHol.add(new Date(6, April, year));
+        expectedHol.add(new Date(11, April, year));
+        expectedHol.add(new Date(14, April, year));
+        expectedHol.add(new Date(1, May, year));
+        expectedHol.add(new Date(15, August, year));
+        expectedHol.add(new Date(2, October, year));
+        expectedHol.add(new Date(24, October, year));
+        expectedHol.add(new Date(25, October, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -121,19 +121,19 @@ public class IndiaCalendarTest {
         QL.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
 
-        expectedHol.add(new Date(1, JANUARY, year));
-        expectedHol.add(new Date(26, JANUARY, year));
-        expectedHol.add(new Date(30, JANUARY, year));
-        expectedHol.add(new Date(16, FEBRUARY, year));
-        expectedHol.add(new Date(27, MARCH, year));
-        expectedHol.add(new Date(6, APRIL, year));
-        expectedHol.add(new Date(1, MAY, year));
-        expectedHol.add(new Date(2, MAY, year));
-        expectedHol.add(new Date(15, AUGUST, year));
-        expectedHol.add(new Date(2, OCTOBER, year));
-        expectedHol.add(new Date(9, NOVEMBER, year));
-        expectedHol.add(new Date(21, DECEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(1, January, year));
+        expectedHol.add(new Date(26, January, year));
+        expectedHol.add(new Date(30, January, year));
+        expectedHol.add(new Date(16, February, year));
+        expectedHol.add(new Date(27, March, year));
+        expectedHol.add(new Date(6, April, year));
+        expectedHol.add(new Date(1, May, year));
+        expectedHol.add(new Date(2, May, year));
+        expectedHol.add(new Date(15, August, year));
+        expectedHol.add(new Date(2, October, year));
+        expectedHol.add(new Date(9, November, year));
+        expectedHol.add(new Date(21, December, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -148,22 +148,22 @@ public class IndiaCalendarTest {
         QL.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
 
-        expectedHol.add(new Date(6, MARCH, year));
-        expectedHol.add(new Date(20, MARCH, year));
-        expectedHol.add(new Date(21, MARCH, year)); // Good Friday
-        expectedHol.add(new Date(14, APRIL, year));
-        expectedHol.add(new Date(18, APRIL, year));
-        expectedHol.add(new Date(1, MAY, year));
-        expectedHol.add(new Date(19, MAY, year));
-        expectedHol.add(new Date(15, AUGUST, year));
-        expectedHol.add(new Date(3, SEPTEMBER, year));
-        expectedHol.add(new Date(2, OCTOBER, year));
-        expectedHol.add(new Date(9, OCTOBER, year));
-        expectedHol.add(new Date(28, OCTOBER, year));
-        expectedHol.add(new Date(30, OCTOBER, year));
-        expectedHol.add(new Date(13, NOVEMBER, year));
-        expectedHol.add(new Date(9, DECEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(6, March, year));
+        expectedHol.add(new Date(20, March, year));
+        expectedHol.add(new Date(21, March, year)); // Good Friday
+        expectedHol.add(new Date(14, April, year));
+        expectedHol.add(new Date(18, April, year));
+        expectedHol.add(new Date(1, May, year));
+        expectedHol.add(new Date(19, May, year));
+        expectedHol.add(new Date(15, August, year));
+        expectedHol.add(new Date(3, September, year));
+        expectedHol.add(new Date(2, October, year));
+        expectedHol.add(new Date(9, October, year));
+        expectedHol.add(new Date(28, October, year));
+        expectedHol.add(new Date(30, October, year));
+        expectedHol.add(new Date(13, November, year));
+        expectedHol.add(new Date(9, December, year));
+        expectedHol.add(new Date(25, December, year));
 //        expectedHol.add(new Date(27, NOVEMBER, year));
 
         // Call the Holiday Check
@@ -179,21 +179,21 @@ public class IndiaCalendarTest {
         QL.info("Testing " + India.Market.NSE + " holidays list for the year " + year + "...");
         final List<Date> expectedHol = new Vector<Date>();
 //        expectedHol.add(new Date(8, JANUARY, year));
-        expectedHol.add(new Date(26, JANUARY, year));
+        expectedHol.add(new Date(26, January, year));
 //        expectedHol.add(new Date(23, FEBRUARY, year));
 //        expectedHol.add(new Date(10, MARCH, year));
 //        expectedHol.add(new Date(11, MARCH, year)); // Good Friday
 //        expectedHol.add(new Date(3, APRIL, year));
 //        expectedHol.add(new Date(7, APRIL, year));
-        expectedHol.add(new Date(10, APRIL, year));
-        expectedHol.add(new Date(14, APRIL, year));
+        expectedHol.add(new Date(10, April, year));
+        expectedHol.add(new Date(14, April, year));
 //        expectedHol.add(new Date(1, MAY, year));
 //        expectedHol.add(new Date(21, SEPTEMBER, year));
 //        expectedHol.add(new Date(28, SEPTEMBER, year));
-        expectedHol.add(new Date(2, OCTOBER, year));
+        expectedHol.add(new Date(2, October, year));
 //        expectedHol.add(new Date(19, OCTOBER, year));
 //        expectedHol.add(new Date(2, NOVEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 //        expectedHol.add(new Date(28, DECEMBER, year));
 
         // Call the Holiday Check

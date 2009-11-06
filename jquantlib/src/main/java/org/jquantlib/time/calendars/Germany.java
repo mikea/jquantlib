@@ -22,10 +22,10 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.OCTOBER;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.October;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -184,7 +184,7 @@ public class Germany extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
                 // New Year's Day
-                || (d == 1 && m == JANUARY)
+                || (d == 1 && m == January)
                 // Good Friday
                 || (dd == em-3)
                 // Easter Monday
@@ -196,17 +196,17 @@ public class Germany extends Calendar {
                 // Corpus Christi
                 || (dd == em+59)
                 // Labour Day
-                || (d == 1 && m == MAY)
+                || (d == 1 && m == May)
                 // National Day
-                || (d == 3 && m == OCTOBER)
+                || (d == 3 && m == October)
                 // Christmas Eve
-                || (d == 24 && m == DECEMBER)
+                || (d == 24 && m == December)
                 // Christmas
-                || (d == 25 && m == DECEMBER)
+                || (d == 25 && m == December)
                 // Boxing Day
-                || (d == 26 && m == DECEMBER)
+                || (d == 26 && m == December)
                 // New Year's Eve
-                || (d == 31 && m == DECEMBER)) {
+                || (d == 31 && m == December)) {
                 return false;
             }
             return true;
@@ -226,21 +226,21 @@ public class Germany extends Calendar {
 			final int em = easterMonday(y);
 			if (isWeekend(w)
 			// New Year's Day
-					|| (d == 1 && m == JANUARY)
+					|| (d == 1 && m == January)
 					// Good Friday
 					|| (dd == em - 3)
 					// Easter Monday
 					|| (dd == em)
 					// Labour Day
-					|| (d == 1 && m == MAY)
+					|| (d == 1 && m == May)
 					// Christmas' Eve
-					|| (d == 24 && m == DECEMBER)
+					|| (d == 24 && m == December)
 					// Christmas
-					|| (d == 25 && m == DECEMBER)
+					|| (d == 25 && m == December)
 					// Christmas Day
-					|| (d == 26 && m == DECEMBER)
+					|| (d == 26 && m == December)
 					// New Year's Eve
-					|| (d == 31 && m == DECEMBER)) {
+					|| (d == 31 && m == December)) {
                 return false;
             }
 			return true;
@@ -262,21 +262,21 @@ public class Germany extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
                 // New Year's Day
-                || (d == 1 && m == JANUARY)
+                || (d == 1 && m == January)
                 // Good Friday
                 || (dd == em-3)
                 // Easter Monday
                 || (dd == em)
                 // Labour Day
-                || (d == 1 && m == MAY)
+                || (d == 1 && m == May)
                 // Christmas' Eve
-                || (d == 24 && m == DECEMBER)
+                || (d == 24 && m == December)
                 // Christmas
-                || (d == 25 && m == DECEMBER)
+                || (d == 25 && m == December)
                 // Christmas Day
-                || (d == 26 && m == DECEMBER)
+                || (d == 26 && m == December)
                 // New Year's Eve
-                || (d == 31 && m == DECEMBER)) {
+                || (d == 31 && m == December)) {
                 return false;
             }
             return true;
@@ -298,21 +298,21 @@ public class Germany extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
                 // New Year's Day
-                || (d == 1 && m == JANUARY)
+                || (d == 1 && m == January)
                 // Good Friday
                 || (dd == em-3)
                 // Easter Monday
                 || (dd == em)
                 // Labour Day
-                || (d == 1 && m == MAY)
+                || (d == 1 && m == May)
                 // Christmas' Eve
-                || (d == 24 && m == DECEMBER)
+                || (d == 24 && m == December)
                 // Christmas
-                || (d == 25 && m == DECEMBER)
+                || (d == 25 && m == December)
                 // Christmas Day
-                || (d == 26 && m == DECEMBER)
+                || (d == 26 && m == December)
                 // New Year's Eve
-                || (d == 31 && m == DECEMBER)) {
+                || (d == 31 && m == December)) {
                 return false;
             }
             return true;

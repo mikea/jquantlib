@@ -53,157 +53,157 @@ public class JumpDiffusionEngineTest {
         final HaugMertonData values[] = {
                 //        type, strike,   spot,    q,    r,    t,  vol, int, gamma, value, tol
                 // gamma = 0.25, strike = 80
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.25, 20.67, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.25, 21.74, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.25, 23.63, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.25, 20.65, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.25, 21.70, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.25, 23.61, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.25, 20.64, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.25, 21.70, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.25, 23.61, 1e-2) , // Haug 23.28
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.25, 20.67, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.25, 21.74, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.25, 23.63, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.25, 20.65, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.25, 21.70, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.25, 23.61, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.25, 20.64, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.25, 21.70, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.25, 23.61, 1e-2) , // Haug 23.28
                 // gamma = 0.25, strike = 90
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.25, 11.00, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.25, 12.74, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.25, 15.40, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.25, 10.98, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.25, 12.75, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.25, 15.42, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.25, 10.98, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.25, 12.75, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.25, 15.42, 1e-2) , // Haug 15.20
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.25, 11.00, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.25, 12.74, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.25, 15.40, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.25, 10.98, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.25, 12.75, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.25, 15.42, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.25, 10.98, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.25, 12.75, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.25, 15.42, 1e-2) , // Haug 15.20
                 // gamma = 0.25, strike = 100
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.25,  3.42, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.25,  5.88, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.25,  8.95, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.25,  3.51, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.25,  5.96, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.25,  9.02, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.25,  3.53, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.25,  5.97, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.25,  9.03, 1e-2) , // Haug 8.89
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.25,  3.42, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.25,  5.88, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.25,  8.95, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.25,  3.51, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.25,  5.96, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.25,  9.02, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.25,  3.53, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.25,  5.97, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.25,  9.03, 1e-2) , // Haug 8.89
                 // gamma = 0.25, strike = 110
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.25,  0.55, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.25,  2.11, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.25,  4.67, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.25,  0.56, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.25,  2.16, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.25,  4.73, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.25,  0.56, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.25,  2.17, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.25,  4.74, 1e-2) , // Haug 4.66
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.25,  0.55, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.25,  2.11, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.25,  4.67, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.25,  0.56, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.25,  2.16, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.25,  4.73, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.25,  0.56, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.25,  2.17, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.25,  4.74, 1e-2) , // Haug 4.66
                 // gamma = 0.25, strike = 120
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.25,  0.10, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.25,  0.64, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.25,  2.23, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.25,  0.06, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.25,  0.63, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.25,  2.25, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.25,  0.05, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.25,  0.62, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.25,  2.25, 1e-2) , // Haug 2.21
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.25,  0.10, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.25,  0.64, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.25,  2.23, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.25,  0.06, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.25,  0.63, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.25,  2.25, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.25,  0.05, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.25,  0.62, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.25,  2.25, 1e-2) , // Haug 2.21
 
                 // gamma = 0.50, strike = 80
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.50, 20.72, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.50, 21.83, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.50, 23.71, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.50, 20.66, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.50, 21.73, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.50, 23.63, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.50, 20.65, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.50, 21.71, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.50, 23.61, 1e-2) , // Haug 23.28
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.50, 20.72, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.50, 21.83, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.50, 23.71, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.50, 20.66, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.50, 21.73, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.50, 23.63, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.50, 20.65, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.50, 21.71, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.50, 23.61, 1e-2) , // Haug 23.28
                 // gamma = 0.50, strike = 90
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.50, 11.04, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.50, 12.72, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.50, 15.34, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.50, 11.02, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.50, 12.76, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.50, 15.41, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.50, 11.00, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.50, 12.75, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.50, 15.41, 1e-2) , // Haug 15.18
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.50, 11.04, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.50, 12.72, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.50, 15.34, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.50, 11.02, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.50, 12.76, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.50, 15.41, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.50, 11.00, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.50, 12.75, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.50, 15.41, 1e-2) , // Haug 15.18
                 // gamma = 0.50, strike = 100
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.50,  3.14, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.50,  5.58, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.50,  8.71, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.50,  3.39, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.50,  5.87, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.50,  8.96, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.50,  3.46, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.50,  5.93, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.50,  9.00, 1e-2) , // Haug 8.85
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.50,  3.14, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.50,  5.58, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.50,  8.71, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.50,  3.39, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.50,  5.87, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.50,  8.96, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.50,  3.46, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.50,  5.93, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.50,  9.00, 1e-2) , // Haug 8.85
                 // gamma = 0.50, strike = 110
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.50,  0.53, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.50,  1.93, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.50,  4.42, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.50,  0.58, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.50,  2.11, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.50,  4.67, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.50,  0.57, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.50,  2.14, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.50,  4.71, 1e-2) , // Haug 4.62
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.50,  0.53, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.50,  1.93, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.50,  4.42, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.50,  0.58, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.50,  2.11, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.50,  4.67, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.50,  0.57, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.50,  2.14, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.50,  4.71, 1e-2) , // Haug 4.62
                 // gamma = 0.50, strike = 120
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.50,  0.19, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.50,  0.71, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.50,  2.15, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.50,  0.10, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.50,  0.66, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.50,  2.23, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.50,  0.07, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.50,  0.64, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.50,  2.24, 1e-2) , // Haug 2.19
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.50,  0.19, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.50,  0.71, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.50,  2.15, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.50,  0.10, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.50,  0.66, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.50,  2.23, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.50,  0.07, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.50,  0.64, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.50,  2.24, 1e-2) , // Haug 2.19
 
                 // gamma = 0.75, strike = 80
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.75, 20.79, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.75, 21.96, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.75, 23.86, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.75, 20.68, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.75, 21.78, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.75, 23.67, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.75, 20.66, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.75, 21.74, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.75, 23.64, 1e-2) , // Haug 23.30
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.75, 20.79, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.75, 21.96, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.75, 23.86, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.75, 20.68, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.75, 21.78, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.75, 23.67, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.75, 20.66, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.75, 21.74, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  80.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.75, 23.64, 1e-2) , // Haug 23.30
                 // gamma = 0.75, strike = 90
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.75, 11.11, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.75, 12.75, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.75, 15.30, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.75, 11.09, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.75, 12.78, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.75, 15.39, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.75, 11.04, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.75, 12.76, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.75, 15.40, 1e-2) , // Haug 15.17
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.75, 11.11, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.75, 12.75, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.75, 15.30, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.75, 11.09, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.75, 12.78, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.75, 15.39, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.75, 11.04, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.75, 12.76, 1e-2) ,
+                new HaugMertonData( Option.Type.Call,  90.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.75, 15.40, 1e-2) , // Haug 15.17
                 // gamma = 0.75, strike = 100
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.75,  2.70, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.75,  5.08, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.75,  8.24, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.75,  3.16, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.75,  5.71, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.75,  8.85, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.75,  3.33, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.75,  5.85, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.75,  8.95, 1e-2) , // Haug 8.79
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.75,  2.70, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.75,  5.08, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.75,  8.24, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.75,  3.16, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.75,  5.71, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.75,  8.85, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.75,  3.33, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.75,  5.85, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 100.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.75,  8.95, 1e-2) , // Haug 8.79
                 // gamma = 0.75, strike = 110
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.75,  0.54, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.75,  1.69, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.75,  3.99, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.75,  0.62, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.75,  2.05, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.75,  4.57, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.75,  0.60, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.75,  2.11, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.75,  4.66, 1e-2) , // Haug 4.56
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.75,  0.54, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.75,  1.69, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.75,  3.99, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.75,  0.62, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.75,  2.05, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.75,  4.57, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.75,  0.60, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.75,  2.11, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 110.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.75,  4.66, 1e-2) , // Haug 4.56
                 // gamma = 0.75, strike = 120
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.75,  0.29, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.75,  0.84, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.75,  2.09, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.75,  0.15, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.75,  0.71, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.75,  2.21, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.75,  0.11, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.75,  0.67, 1e-2) ,
-                new HaugMertonData( Option.Type.CALL, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.75,  2.23, 1e-2)  // Haug 2.17
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25, 1.0,  0.75,  0.29, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25, 1.0,  0.75,  0.84, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25, 1.0,  0.75,  2.09, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25, 5.0,  0.75,  0.15, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25, 5.0,  0.75,  0.71, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25, 5.0,  0.75,  2.21, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.10, 0.25,10.0,  0.75,  0.11, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.25, 0.25,10.0,  0.75,  0.67, 1e-2) ,
+                new HaugMertonData( Option.Type.Call, 120.00, 100.00, 0.00, 0.08, 0.50, 0.25,10.0,  0.75,  2.23, 1e-2)  // Haug 2.17
         };
 
         final Date today = new Settings().evaluationDate();
@@ -302,7 +302,7 @@ public class JumpDiffusionEngineTest {
         tolerance.put("divRho", 1.0e-4);
         tolerance.put("vega", 1.0e-4);
 
-        final Option.Type types[] = { Option.Type.PUT, Option.Type.CALL };
+        final Option.Type types[] = { Option.Type.Put, Option.Type.Call };
 
         final double strikes[] = { 50.0, 100.0, 150.0 };
         final double underlyings[] = { 100.0 };

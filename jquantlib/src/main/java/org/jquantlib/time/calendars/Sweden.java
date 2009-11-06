@@ -32,10 +32,10 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.May;
 import static org.jquantlib.time.Weekday.FRIDAY;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
@@ -104,26 +104,26 @@ public class Sweden extends Calendar {
 	                // Whit Monday
 	                || (dd == em+49)
 	                // New Year's Day
-	                || (d == 1  && m == JANUARY)
+	                || (d == 1  && m == January)
 	                // Epiphany
-	                || (d == 6  && m == JANUARY)
+	                || (d == 6  && m == January)
 	                // May Day
-	                || (d == 1  && m == MAY)
+	                || (d == 1  && m == May)
 	                // June 6 id National Day but is not a holiday.
 	                // It has been debated wheter or not this day should be
 	                // declared as a holiday.
 	                // As of 2002 the Stockholmborsen is open that day
 	                // || (d == 6  && m == June)
 	                // Midsummer Eve (Friday between June 18-24)
-	                || (w == FRIDAY && (d >= 18 && d <= 24) && m == JUNE)
+	                || (w == FRIDAY && (d >= 18 && d <= 24) && m == June)
 	                // Christmas Eve
-	                || (d == 24 && m == DECEMBER)
+	                || (d == 24 && m == December)
 	                // Christmas Day
-	                || (d == 25 && m == DECEMBER)
+	                || (d == 25 && m == December)
 	                // Boxing Day
-	                || (d == 26 && m == DECEMBER)
+	                || (d == 26 && m == December)
 	                // New Year's Eve
-	                || (d == 31 && m == DECEMBER)) {
+	                || (d == 31 && m == December)) {
                     return false;
                 }
 	            return true;

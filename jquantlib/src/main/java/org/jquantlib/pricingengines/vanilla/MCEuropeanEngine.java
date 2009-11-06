@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -40,16 +40,20 @@ package org.jquantlib.pricingengines.vanilla;
 
 /**
  * European option pricing engine using Monte Carlo simulation
- * 
+ *
  * @category vanillaengines
- *  
+ *
  * @author Richard Gomes
  */
 //test the correctness of the returned value is tested by checking it against analytic results.
 public class MCEuropeanEngine /*extends MCVanillaEngine<
-        SingleVariate extends Variate, 
-        RNG extends RandomNumberGenerator, 
+        SingleVariate extends Variate,
+        RNG extends RandomNumberGenerator,
         S extends Statistics>*/ {
+
+    public MCEuropeanEngine() {
+        throw new UnsupportedOperationException("work in progress");
+    }
 
 }
 

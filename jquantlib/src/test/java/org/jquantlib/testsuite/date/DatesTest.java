@@ -210,7 +210,7 @@ public class DatesTest {
         clock.startClock();
         final String input_date = "2006-01-15";
         final Date d = DateParser.parseISO(input_date);
-        if ((d.dayOfMonth() != 15) || (d.month() != Month.JANUARY) || (d.year() != 2006)) {
+        if ((d.dayOfMonth() != 15) || (d.month() != Month.January) || (d.year() != 2006)) {
             fail("Iso date failed\n"
                     + " input date:    " + input_date + "\n"
                     + " day of month:  " + d.dayOfMonth() + "\n"

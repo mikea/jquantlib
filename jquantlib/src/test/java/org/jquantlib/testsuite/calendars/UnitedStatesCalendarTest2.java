@@ -21,17 +21,17 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JULY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.OCTOBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.July;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,30 +71,30 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Thursday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(19, JANUARY, year));
+        expectedHol.add(new Date(19, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(16, FEBRUARY, year));
+        expectedHol.add(new Date(16, February, year));
         // Good Friday
-        expectedHol.add(new Date(9, APRIL, year));
+        expectedHol.add(new Date(9, April, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(31, MAY, year));
+        expectedHol.add(new Date(31, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(5, JULY, year));
+        expectedHol.add(new Date(5, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(6, SEPTEMBER, year));
+        expectedHol.add(new Date(6, September, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(25, NOVEMBER, year));
+        expectedHol.add(new Date(25, November, year));
 	// expectedHol.add(new Date(26,NOVEMBER,year));
         // Presidential election day, first Tuesday in November of election years(until 1980)
         // 2004 was an election year
         // commenting this to make the unit tests pass :-(
         // expectedHol.add(new Date(2,NOVEMBER,year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(24, DECEMBER, year));
+        expectedHol.add(new Date(24, December, year));
          // Special closings for 2004 - Reagan's death and day after thanksgiving
-        expectedHol.add(new Date(11, JUNE, year));
+        expectedHol.add(new Date(11, June, year));
         
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -113,22 +113,22 @@ public class UnitedStatesCalendarTest2 {
         // JANUARY 1 was a Saturday
         
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(17, JANUARY, year));
+        expectedHol.add(new Date(17, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(21, FEBRUARY, year));
+        expectedHol.add(new Date(21, February, year));
         // Good Friday
-        expectedHol.add(new Date(25, MARCH, year));
+        expectedHol.add(new Date(25, March, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(30, MAY, year));
+        expectedHol.add(new Date(30, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(5, SEPTEMBER, year));
+        expectedHol.add(new Date(5, September, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(24, NOVEMBER, year));
+        expectedHol.add(new Date(24, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
         //expectedHol.add(new Date(25,DECEMBER,year));
-        expectedHol.add(new Date(26, DECEMBER, year));
+        expectedHol.add(new Date(26, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -145,24 +145,24 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Sunday
-        expectedHol.add(new Date(2, JANUARY, year));
+        expectedHol.add(new Date(2, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(16, JANUARY, year));
+        expectedHol.add(new Date(16, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(20, FEBRUARY, year));
+        expectedHol.add(new Date(20, February, year));
         // Good Friday
-        expectedHol.add(new Date(14, APRIL, year));
+        expectedHol.add(new Date(14, April, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(29, MAY, year));
+        expectedHol.add(new Date(29, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(4, SEPTEMBER, year));
+        expectedHol.add(new Date(4, September, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(23, NOVEMBER, year));
+        expectedHol.add(new Date(23, November, year));
         // Nov. 7 was an election day, but was not a holiday
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -179,25 +179,25 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Monday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // President Ford's death
-        expectedHol.add(new Date(2, JANUARY, year));
+        expectedHol.add(new Date(2, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(15, JANUARY, year));
+        expectedHol.add(new Date(15, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(19, FEBRUARY, year));
+        expectedHol.add(new Date(19, February, year));
         // Good Friday
-        expectedHol.add(new Date(6, APRIL, year));
+        expectedHol.add(new Date(6, April, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(28, MAY, year));
+        expectedHol.add(new Date(28, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(3, SEPTEMBER, year));
+        expectedHol.add(new Date(3, September, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(22, NOVEMBER, year));
+        expectedHol.add(new Date(22, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -214,25 +214,25 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Tuesday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(21, JANUARY, year));
+        expectedHol.add(new Date(21, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(18, FEBRUARY, year));
+        expectedHol.add(new Date(18, February, year));
         // Good Friday
-        expectedHol.add(new Date(21, MARCH, year));
+        expectedHol.add(new Date(21, March, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(26, MAY, year));
+        expectedHol.add(new Date(26, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(1, SEPTEMBER, year));
+        expectedHol.add(new Date(1, September, year));
         // This is a year of Presidential Elections, Nov.4 is a Holiday
         // expectedHol.add(new Date(4,NOVEMBER,year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(27, NOVEMBER, year));
+        expectedHol.add(new Date(27, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -249,24 +249,24 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 will be a Wednesday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(19, JANUARY, year));
+        expectedHol.add(new Date(19, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(16, FEBRUARY, year));
+        expectedHol.add(new Date(16, February, year));
         // Good Friday
-        expectedHol.add(new Date(10, APRIL, year));
+        expectedHol.add(new Date(10, April, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(25, MAY, year));
+        expectedHol.add(new Date(25, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(3, JULY, year));
+        expectedHol.add(new Date(3, July, year));
         //  expectedHol.add(new Date(4,JULY,year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(7, SEPTEMBER, year));
+        expectedHol.add(new Date(7, September, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(26, NOVEMBER, year));
+        expectedHol.add(new Date(26, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -283,23 +283,23 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 will be a Friday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(18, JANUARY, year));
+        expectedHol.add(new Date(18, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(15, FEBRUARY, year));
+        expectedHol.add(new Date(15, February, year));
         // Good Friday
-        expectedHol.add(new Date(2, APRIL, year));
+        expectedHol.add(new Date(2, April, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(31, MAY, year));
+        expectedHol.add(new Date(31, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(5, JULY, year));
+        expectedHol.add(new Date(5, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(6, SEPTEMBER, year));
+        expectedHol.add(new Date(6, September, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(25, NOVEMBER, year));
+        expectedHol.add(new Date(25, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(24, DECEMBER, year));
+        expectedHol.add(new Date(24, December, year));
         //expectedHol.add(new Date(25,DECEMBER,year));
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -317,27 +317,27 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Thursday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(19, JANUARY, year));
+        expectedHol.add(new Date(19, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(16, FEBRUARY, year));
+        expectedHol.add(new Date(16, February, year));
         // Good Friday
-        expectedHol.add(new Date(9, APRIL, year));
+        expectedHol.add(new Date(9, April, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(31, MAY, year));
+        expectedHol.add(new Date(31, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(5, JULY, year));
+        expectedHol.add(new Date(5, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(6, SEPTEMBER, year));
+        expectedHol.add(new Date(6, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(11, OCTOBER, year));
+        expectedHol.add(new Date(11, October, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(25, NOVEMBER, year));
+        expectedHol.add(new Date(25, November, year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(11, NOVEMBER, year));
+        expectedHol.add(new Date(11, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(24, DECEMBER, year));
+        expectedHol.add(new Date(24, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -354,25 +354,25 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(17, JANUARY, year));
+        expectedHol.add(new Date(17, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(21, FEBRUARY, year));
+        expectedHol.add(new Date(21, February, year));
         // Good Friday
-        expectedHol.add(new Date(25, MARCH, year));
+        expectedHol.add(new Date(25, March, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(30, MAY, year));
+        expectedHol.add(new Date(30, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(5, SEPTEMBER, year));
+        expectedHol.add(new Date(5, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(10, OCTOBER, year));
+        expectedHol.add(new Date(10, October, year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(11, NOVEMBER, year));
+        expectedHol.add(new Date(11, November, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(24, NOVEMBER, year));
+        expectedHol.add(new Date(24, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(26, DECEMBER, year));
+        expectedHol.add(new Date(26, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -389,27 +389,27 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Sunday
-        expectedHol.add(new Date(2, JANUARY, year));
-        expectedHol.add(new Date(16, JANUARY, year));
+        expectedHol.add(new Date(2, January, year));
+        expectedHol.add(new Date(16, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(20, FEBRUARY, year));
+        expectedHol.add(new Date(20, February, year));
         // Good Friday
-        expectedHol.add(new Date(14, APRIL, year));
+        expectedHol.add(new Date(14, April, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(29, MAY, year));
+        expectedHol.add(new Date(29, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(4, SEPTEMBER, year));
+        expectedHol.add(new Date(4, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(9, OCTOBER, year));
+        expectedHol.add(new Date(9, October, year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(10, NOVEMBER, year));
+        expectedHol.add(new Date(10, November, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(23, NOVEMBER, year));
+        expectedHol.add(new Date(23, November, year));
         // Nov. 7 was an election day, but was not a holiday
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -426,26 +426,26 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Monday
-        expectedHol.add(new Date(1, JANUARY, year));
-        expectedHol.add(new Date(15, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
+        expectedHol.add(new Date(15, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(19, FEBRUARY, year));
+        expectedHol.add(new Date(19, February, year));
         // Good Friday
-        expectedHol.add(new Date(6, APRIL, year));
+        expectedHol.add(new Date(6, April, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(28, MAY, year));
+        expectedHol.add(new Date(28, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(3, SEPTEMBER, year));
+        expectedHol.add(new Date(3, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(8, OCTOBER, year));
+        expectedHol.add(new Date(8, October, year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(12, NOVEMBER, year));
+        expectedHol.add(new Date(12, November, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(22, NOVEMBER, year));
+        expectedHol.add(new Date(22, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
         cbt.checkHolidayList(expectedHol, govtBond, year);
@@ -461,29 +461,29 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Tuesday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(21, JANUARY, year));
+        expectedHol.add(new Date(21, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(18, FEBRUARY, year));
+        expectedHol.add(new Date(18, February, year));
         // Good Friday
-        expectedHol.add(new Date(21, MARCH, year));
+        expectedHol.add(new Date(21, March, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(26, MAY, year));
+        expectedHol.add(new Date(26, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(1, SEPTEMBER, year));
+        expectedHol.add(new Date(1, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(13, OCTOBER, year));
+        expectedHol.add(new Date(13, October, year));
         // This is a year of Presidential Elections, Nov.4 is a Holiday
         //	expectedHol.add(new Date(4,NOVEMBER,year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(11, NOVEMBER, year));
+        expectedHol.add(new Date(11, November, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(27, NOVEMBER, year));
+        expectedHol.add(new Date(27, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -500,27 +500,27 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 will be a Wednesday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(19, JANUARY, year));
+        expectedHol.add(new Date(19, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(16, FEBRUARY, year));
+        expectedHol.add(new Date(16, February, year));
         // Good Friday
-        expectedHol.add(new Date(10, APRIL, year));
+        expectedHol.add(new Date(10, April, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(25, MAY, year));
+        expectedHol.add(new Date(25, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(3, JULY, year));
+        expectedHol.add(new Date(3, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(7, SEPTEMBER, year));
+        expectedHol.add(new Date(7, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(12, OCTOBER, year));
+        expectedHol.add(new Date(12, October, year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(11, NOVEMBER, year));
+        expectedHol.add(new Date(11, November, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(26, NOVEMBER, year));
+        expectedHol.add(new Date(26, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -537,27 +537,27 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 will be a Friday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(18, JANUARY, year));
+        expectedHol.add(new Date(18, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(15, FEBRUARY, year));
+        expectedHol.add(new Date(15, February, year));
         // Good Friday
-        expectedHol.add(new Date(2, APRIL, year));
+        expectedHol.add(new Date(2, April, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(31, MAY, year));
+        expectedHol.add(new Date(31, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(5, JULY, year));
+        expectedHol.add(new Date(5, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(6, SEPTEMBER, year));
+        expectedHol.add(new Date(6, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(11, OCTOBER, year));
+        expectedHol.add(new Date(11, October, year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(11, NOVEMBER, year));
+        expectedHol.add(new Date(11, November, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(25, NOVEMBER, year));
+        expectedHol.add(new Date(25, November, year));
         // Cmvn mvnhristmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(24, DECEMBER, year));
+        expectedHol.add(new Date(24, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -575,15 +575,15 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Thursday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(31, MAY, year));
+        expectedHol.add(new Date(31, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(5, JULY, year));
+        expectedHol.add(new Date(5, July, year));
 
-        expectedHol.add(new Date(6, SEPTEMBER, year));
+        expectedHol.add(new Date(6, September, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(25, NOVEMBER, year));
+        expectedHol.add(new Date(25, November, year));
         // Christmas, December 25th (moved to Monday if Sunday )
         
         // Call the Holiday Check
@@ -601,14 +601,14 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(30, MAY, year));
+        expectedHol.add(new Date(30, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
-        expectedHol.add(new Date(5, SEPTEMBER, year));
+        expectedHol.add(new Date(4, July, year));
+        expectedHol.add(new Date(5, September, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(24, NOVEMBER, year));
+        expectedHol.add(new Date(24, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(26, DECEMBER, year));
+        expectedHol.add(new Date(26, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -625,16 +625,16 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Sunday
-        expectedHol.add(new Date(2, JANUARY, year));
+        expectedHol.add(new Date(2, January, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(29, MAY, year));
+        expectedHol.add(new Date(29, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(23, NOVEMBER, year));
-        expectedHol.add(new Date(4, SEPTEMBER, year));
+        expectedHol.add(new Date(23, November, year));
+        expectedHol.add(new Date(4, September, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -651,16 +651,16 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Monday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(28, MAY, year));
+        expectedHol.add(new Date(28, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
-        expectedHol.add(new Date(3, SEPTEMBER, year));
+        expectedHol.add(new Date(4, July, year));
+        expectedHol.add(new Date(3, September, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(22, NOVEMBER, year));
+        expectedHol.add(new Date(22, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -677,16 +677,16 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Tuesday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(26, MAY, year));
+        expectedHol.add(new Date(26, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
-        expectedHol.add(new Date(1, SEPTEMBER, year));
+        expectedHol.add(new Date(4, July, year));
+        expectedHol.add(new Date(1, September, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(27, NOVEMBER, year));
+        expectedHol.add(new Date(27, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -703,16 +703,16 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 will be a Wednesday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(25, MAY, year));
+        expectedHol.add(new Date(25, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
         //       expectedHol.add(new Date(4,JULY,year));
-        expectedHol.add(new Date(7, SEPTEMBER, year));
+        expectedHol.add(new Date(7, September, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(26, NOVEMBER, year));
+        expectedHol.add(new Date(26, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -729,15 +729,15 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 will be a Friday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(31, MAY, year));
+        expectedHol.add(new Date(31, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
         //    expectedHol.add(new Date(4,JULY,year));
-        expectedHol.add(new Date(5, JULY, year));
-        expectedHol.add(new Date(6, SEPTEMBER, year));
+        expectedHol.add(new Date(5, July, year));
+        expectedHol.add(new Date(6, September, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(25, NOVEMBER, year));
+        expectedHol.add(new Date(25, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
         
         // Call the Holiday Check
@@ -754,31 +754,31 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Thursday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Let's check the first weekend
-        expectedHol.add(new Date(2, JANUARY, year));
-        expectedHol.add(new Date(3, JANUARY, year));
+        expectedHol.add(new Date(2, January, year));
+        expectedHol.add(new Date(3, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(19, JANUARY, year));
+        expectedHol.add(new Date(19, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(16, FEBRUARY, year));
+        expectedHol.add(new Date(16, February, year));
         // Good Friday
-        expectedHol.add(new Date(9, APRIL, year));
+        expectedHol.add(new Date(9, April, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(31, MAY, year));
+        expectedHol.add(new Date(31, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(6, SEPTEMBER, year));
+        expectedHol.add(new Date(6, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(11, OCTOBER, year));
+        expectedHol.add(new Date(11, October, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(25, NOVEMBER, year));
+        expectedHol.add(new Date(25, November, year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(11, NOVEMBER, year));
+        expectedHol.add(new Date(11, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(24, DECEMBER, year));
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(24, December, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -795,23 +795,23 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(17, JANUARY, year));
+        expectedHol.add(new Date(17, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(21, FEBRUARY, year));
+        expectedHol.add(new Date(21, February, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(30, MAY, year));
+        expectedHol.add(new Date(30, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(5, SEPTEMBER, year));
+        expectedHol.add(new Date(5, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(10, OCTOBER, year));
+        expectedHol.add(new Date(10, October, year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(11, NOVEMBER, year));
+        expectedHol.add(new Date(11, November, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(24, NOVEMBER, year));
+        expectedHol.add(new Date(24, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(26, DECEMBER, year));
+        expectedHol.add(new Date(26, December, year));
 
 
         // Call the Holiday Check
@@ -829,27 +829,27 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Sunday
-        expectedHol.add(new Date(2, JANUARY, year));
+        expectedHol.add(new Date(2, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(16, JANUARY, year));
+        expectedHol.add(new Date(16, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(20, FEBRUARY, year));
+        expectedHol.add(new Date(20, February, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(29, MAY, year));
+        expectedHol.add(new Date(29, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(4, SEPTEMBER, year));
+        expectedHol.add(new Date(4, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(9, OCTOBER, year));
+        expectedHol.add(new Date(9, October, year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(10, NOVEMBER, year));
+        expectedHol.add(new Date(10, November, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(23, NOVEMBER, year));
+        expectedHol.add(new Date(23, November, year));
         // Nov. 7 was an election day, but was not a holiday
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
         //expectedHol.add(new Date(24,DECEMBER,year));
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -866,27 +866,27 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Monday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(15, JANUARY, year));
+        expectedHol.add(new Date(15, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(19, FEBRUARY, year));
+        expectedHol.add(new Date(19, February, year));
         // Good Friday
         //expectedHol.add(new Date(6,APRIL,year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(28, MAY, year));
+        expectedHol.add(new Date(28, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(3, SEPTEMBER, year));
-        expectedHol.add(new Date(8, OCTOBER, year));
+        expectedHol.add(new Date(3, September, year));
+        expectedHol.add(new Date(8, October, year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
         //expectedHol.add(new Date(11,NOVEMBER,year));
-        expectedHol.add(new Date(12, NOVEMBER, year));
+        expectedHol.add(new Date(12, November, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(22, NOVEMBER, year));
+        expectedHol.add(new Date(22, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
 
         // Call the Holiday Check
@@ -904,29 +904,29 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 was a Tuesday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(21, JANUARY, year));
+        expectedHol.add(new Date(21, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(18, FEBRUARY, year));
+        expectedHol.add(new Date(18, February, year));
         // Good Friday
-        expectedHol.add(new Date(21, MARCH, year));
+        expectedHol.add(new Date(21, March, year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(26, MAY, year));
+        expectedHol.add(new Date(26, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(4, JULY, year));
+        expectedHol.add(new Date(4, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(1, SEPTEMBER, year));
+        expectedHol.add(new Date(1, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(13, OCTOBER, year));
+        expectedHol.add(new Date(13, October, year));
         // This is a year of Presidential Elections, Nov.4 is a Holiday
         //	expectedHol.add(new Date(4,NOVEMBER,year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(11, NOVEMBER, year));
+        expectedHol.add(new Date(11, November, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(27, NOVEMBER, year));
+        expectedHol.add(new Date(27, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
 
         // Call the Holiday Check
@@ -944,28 +944,28 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 will be a Wednesday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(19, JANUARY, year));
+        expectedHol.add(new Date(19, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(16, FEBRUARY, year));
+        expectedHol.add(new Date(16, February, year));
         // Good Friday
-        expectedHol.add(new Date(10,APRIL,year));
+        expectedHol.add(new Date(10,April,year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(25, MAY, year));
+        expectedHol.add(new Date(25, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(3, JULY, year));
+        expectedHol.add(new Date(3, July, year));
         //     expectedHol.add(new Date(4,JULY,year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(7, SEPTEMBER, year));
+        expectedHol.add(new Date(7, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(12, OCTOBER, year));
+        expectedHol.add(new Date(12, October, year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(11, NOVEMBER, year));
+        expectedHol.add(new Date(11, November, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(26, NOVEMBER, year));
+        expectedHol.add(new Date(26, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(25, DECEMBER, year));
+        expectedHol.add(new Date(25, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();
@@ -982,28 +982,28 @@ public class UnitedStatesCalendarTest2 {
         final List<Date> expectedHol = new ArrayList<Date>();
     
         // JANUARY 1 will be a Friday
-        expectedHol.add(new Date(1, JANUARY, year));
+        expectedHol.add(new Date(1, January, year));
         // Martin Luther King's birthday, third Monday in JANUARY (since 1998)
-        expectedHol.add(new Date(18, JANUARY, year));
+        expectedHol.add(new Date(18, January, year));
         // Presidents' Day (a.k.a. Washington's birthday), third Monday in February
-        expectedHol.add(new Date(15, FEBRUARY, year));
+        expectedHol.add(new Date(15, February, year));
         // Good Friday
-        expectedHol.add(new Date(2, APRIL,year));
+        expectedHol.add(new Date(2, April,year));
         // Memorial Day, last Monday in May
-        expectedHol.add(new Date(31, MAY, year));
+        expectedHol.add(new Date(31, May, year));
         // Independence Day, July 4th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(5, JULY, year));
+        expectedHol.add(new Date(5, July, year));
         // Labor Day, first Monday in September
-        expectedHol.add(new Date(6, SEPTEMBER, year));
+        expectedHol.add(new Date(6, September, year));
         // Columbus Day, second Monday in October
-        expectedHol.add(new Date(11, OCTOBER, year));
+        expectedHol.add(new Date(11, October, year));
         // Veterans' Day, November 11th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(11, NOVEMBER, year));
+        expectedHol.add(new Date(11, November, year));
         // Thanksgiving Day, fourth Thursday in November
-        expectedHol.add(new Date(25, NOVEMBER, year));
+        expectedHol.add(new Date(25, November, year));
         // Christmas, December 25th (moved to Monday if Sunday or Friday if Saturday)
-        expectedHol.add(new Date(24, DECEMBER, year));
-        expectedHol.add(new Date(31, DECEMBER, year));
+        expectedHol.add(new Date(24, December, year));
+        expectedHol.add(new Date(31, December, year));
 
         // Call the Holiday Check
         CalendarUtil cbt = new CalendarUtil();

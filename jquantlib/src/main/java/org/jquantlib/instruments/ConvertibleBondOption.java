@@ -70,7 +70,7 @@ public class ConvertibleBondOption extends OneAssetOption {
             final Date issueDate,
             final int settlementDays,
             final double redemption){
-    	super(new PlainVanillaPayoff(Option.Type.CALL, bond.getFaceAmount()/100.0*redemption/conversionRatio),exercise);
+    	super(new PlainVanillaPayoff(Option.Type.Call, bond.getFaceAmount()/100.0*redemption/conversionRatio),exercise);
     	this.bond = bond;
     	this.conversionRatio = conversionRatio;
     	this.dividends =dividends;
@@ -237,7 +237,8 @@ public class ConvertibleBondOption extends OneAssetOption {
     }
 
 
-    static public abstract class EngineImpl extends GenericEngine<ConvertibleBondOption.ArgumentsImpl, ConvertibleBondOption.ResultsImpl> {
+    static public abstract class EngineImpl
+            extends GenericEngine<ConvertibleBondOption.ArgumentsImpl, ConvertibleBondOption.ResultsImpl> {
 
         protected EngineImpl() {
             super(new ArgumentsImpl(), new ResultsImpl());

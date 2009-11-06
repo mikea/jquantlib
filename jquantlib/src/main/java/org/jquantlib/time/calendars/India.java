@@ -31,16 +31,16 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.OCTOBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -146,17 +146,17 @@ public class India extends Calendar {
 
 	        if (isWeekend(w)
 	            // Republic Day
-	            || (d == 26 && m == JANUARY)
+	            || (d == 26 && m == January)
 	            // Good Friday
 	            || (dd == em-3)
 	            // Ambedkar Jayanti
-	            || (d == 14 && m == APRIL)
+	            || (d == 14 && m == April)
 	            // Independence Day
-	            || (d == 15 && m == AUGUST)
+	            || (d == 15 && m == August)
 	            // Gandhi Jayanti
-	            || (d == 2 && m == OCTOBER)
+	            || (d == 2 && m == October)
 	            // Christmas
-	            || (d == 25 && m == DECEMBER)
+	            || (d == 25 && m == December)
 	            ) {
                 return false;
             }
@@ -164,88 +164,88 @@ public class India extends Calendar {
 	            // Moharram, Holi, Maharashtra Day, and Ramzan Id fall
 	            // on Saturday or Sunday in 2005
 	            if (// Bakri Id
-	                (d == 21 && m == JANUARY)
+	                (d == 21 && m == January)
 	                // Ganesh Chaturthi
-	                || (d == 7 && m == SEPTEMBER)
+	                || (d == 7 && m == September)
 	                // Dasara
-	                || (d == 12 && m == OCTOBER)
+	                || (d == 12 && m == October)
 	                // Laxmi Puja
-	                || (d == 1 && m == NOVEMBER)
+	                || (d == 1 && m == November)
 	                // Bhaubeej
-	                || (d == 3 && m == NOVEMBER)
+	                || (d == 3 && m == November)
 	                // Guru Nanak Jayanti
-	                || (d == 15 && m == NOVEMBER)
+	                || (d == 15 && m == November)
 	                ) {
                     return false;
                 }
 	        }
 	        if (y == 2006) {
 	            if (// Bakri Id
-	                (d == 11 && m == JANUARY)
+	                (d == 11 && m == January)
 	                // Moharram
-	                || (d == 9 && m == FEBRUARY)
+	                || (d == 9 && m == February)
 	                // Holi
-	                || (d == 15 && m == MARCH)
+	                || (d == 15 && m == March)
 	                // Ram Navami
-	                || (d == 6 && m == APRIL)
+	                || (d == 6 && m == April)
 	                // Mahavir Jayanti
-	                || (d == 11 && m == APRIL)
+	                || (d == 11 && m == April)
 	                // Maharashtra Day
-	                || (d == 1 && m == MAY)
+	                || (d == 1 && m == May)
 	                // Bhaubeej
-	                || (d == 24 && m == OCTOBER)
+	                || (d == 24 && m == October)
 	                // Ramzan Id
-	                || (d == 25 && m == OCTOBER)
+	                || (d == 25 && m == October)
 	                ) {
                     return false;
                 }
 	        }
 	        if (y == 2007) {
 	            if (// Bakri Id
-	                (d == 1 && m == JANUARY)
+	                (d == 1 && m == January)
 	                // Moharram
-	                || (d == 30 && m == JANUARY)
+	                || (d == 30 && m == January)
 	                // Mahashivratri
-	                || (d == 16 && m == FEBRUARY)
+	                || (d == 16 && m == February)
 	                // Ram Navami
-	                || (d == 27 && m == MARCH)
+	                || (d == 27 && m == March)
 	                // Maharashtra Day
-	                || (d == 1 && m == MAY)
+	                || (d == 1 && m == May)
 	                // Buddha Pournima
-	                || (d == 2 && m == MAY)
+	                || (d == 2 && m == May)
 	                // Laxmi Puja
-	                || (d == 9 && m == NOVEMBER)
+	                || (d == 9 && m == November)
 	                // Bakri Id (again)
-	                || (d == 21 && m == DECEMBER)
+	                || (d == 21 && m == December)
 	                ) {
                     return false;
                 }
 	        }
 	        if (y == 2008) {
 	            if (// Mahashivratri
-	                (d == 6 && m == MARCH)
+	                (d == 6 && m == March)
 	                // Id-E-Milad
-	                || (d == 20 && m == MARCH)
+	                || (d == 20 && m == March)
 	                // Mahavir Jayanti
-	                || (d == 18 && m == APRIL)
+	                || (d == 18 && m == April)
 	                // Maharashtra Day
-	                || (d == 1 && m == MAY)
+	                || (d == 1 && m == May)
 	                // Buddha Pournima
-	                || (d == 19 && m == MAY)
+	                || (d == 19 && m == May)
 	                // Ganesh Chaturthi
-	                || (d == 3 && m == SEPTEMBER)
+	                || (d == 3 && m == September)
 	                // Ramzan Id
-	                || (d == 2 && m == OCTOBER)
+	                || (d == 2 && m == October)
 	                // Dasara
-	                || (d == 9 && m == OCTOBER)
+	                || (d == 9 && m == October)
 	                // Laxmi Puja
-	                || (d == 28 && m == OCTOBER)
+	                || (d == 28 && m == October)
 	                // Bhau bhij
-	                || (d == 30 && m == OCTOBER)
+	                || (d == 30 && m == October)
 	                // Gurunanak Jayanti
-	                || (d == 13 && m == NOVEMBER)
+	                || (d == 13 && m == November)
 	                // Bakri Id
-	                || (d == 9 && m == DECEMBER)
+	                || (d == 9 && m == December)
 	                ) {
                     return false;
                 }

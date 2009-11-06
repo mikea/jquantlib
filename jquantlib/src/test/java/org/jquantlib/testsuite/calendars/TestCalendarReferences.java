@@ -44,7 +44,7 @@ public class TestCalendarReferences {
     @Test
     public void testCalendarAdvance() {
         final Calendar calendar = new Target();
-        final Date today = new Date(20, Month.JUNE, 2008);
+        final Date today = new Date(20, Month.June, 2008);
         final Period thirtyYears = new Period(30, TimeUnit.Years);
 
         // check advance should return different reference
@@ -68,7 +68,7 @@ public class TestCalendarReferences {
     @Test
     public void testCalendarAdjust(){
         final Calendar calendar = new Target();
-        final Date today = new Date(20, Month.JUNE, 2008);
+        final Date today = new Date(20, Month.June, 2008);
 
         // check advance should return same reference
         final Date nextDate = calendar.adjust(today, BusinessDayConvention.Following);

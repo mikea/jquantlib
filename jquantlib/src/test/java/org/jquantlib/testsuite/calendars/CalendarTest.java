@@ -51,7 +51,7 @@ public class CalendarTest {
     @Test
     public void testAdvance() {
         final NullCalendar nullCalendar = new NullCalendar();
-        final Date d = new Date(11, Month.OCTOBER, 2009);
+        final Date d = new Date(11, Month.October, 2009);
         final Date dCopy = d.clone();
         assertEquals(dCopy, d);
         final Date advancedDate = nullCalendar.advance(d, new Period(3, TimeUnit.Months));

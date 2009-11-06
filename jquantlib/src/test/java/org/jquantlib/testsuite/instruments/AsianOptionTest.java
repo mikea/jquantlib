@@ -117,7 +117,7 @@ public class AsianOptionTest {
         /* @Real */final double runningAccumulator = 1.0;
         /* @Size */final int pastFixings = 0;
         /* @Size */final int futureFixings = 10;
-        final Option.Type type = Option.Type.CALL;
+        final Option.Type type = Option.Type.Call;
         /* @Real */final double strike = 100.0;
         final StrikedTypePayoff payoff = new PlainVanillaPayoff(type, strike);
 
@@ -169,7 +169,7 @@ public class AsianOptionTest {
         tolerance.put("divRho", 1.0e-5);
         tolerance.put("vega", 1.0e-5);
 
-        final Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+        final Option.Type types[] = { Option.Type.Call, Option.Type.Put };
         /* @Real */final double underlyings[] = { 100.0 };
         /* @Real */final double strikes[] = { 90.0, 100.0, 110.0 };
         /* @Real */final double qRates[] = { 0.04, 0.05, 0.06 };
@@ -337,7 +337,7 @@ public class AsianOptionTest {
         final PricingEngine engine = new AnalyticContinuousGeometricAveragePriceAsianEngine(stochProcess);
 
         final AverageType averageType = AverageType.Geometric;
-        final Option.Type type = Option.Type.PUT;
+        final Option.Type type = Option.Type.Put;
         /* @Real */final double strike = 85.0;
 
         final Date exerciseDate = today.clone().addAssign(90);
@@ -396,7 +396,7 @@ public class AsianOptionTest {
         tolerance.put("divRho", 1.0e-5);
         tolerance.put("vega", 1.0e-5);
 
-        final Option.Type types[] = { Option.Type.CALL, Option.Type.PUT };
+        final Option.Type types[] = { Option.Type.Call, Option.Type.Put };
         /* @Real */final double underlyings[] = { 100.0 };
         /* @Real */final double strikes[] = { 90.0, 100.0, 110.0 };
         /* @Real */final double qRates[] = { 0.04, 0.05, 0.06 };

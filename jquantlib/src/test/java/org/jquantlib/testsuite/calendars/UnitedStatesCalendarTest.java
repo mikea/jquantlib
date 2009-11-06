@@ -48,17 +48,17 @@ public class UnitedStatesCalendarTest {
 	    List<Date> expectedHol = new ArrayList<Date>();
 	    int year = 2004;
 	    
-	    expectedHol.add(new Date(1, JANUARY,year));
-	    expectedHol.add(new Date(19,JANUARY,year));
-	    expectedHol.add(new Date(16,FEBRUARY,year));
-	    expectedHol.add(new Date(9,APRIL,year));//good friday
-	    expectedHol.add(new Date(31,MAY,year));
-	    expectedHol.add(new Date(5, JULY,year));
-	    expectedHol.add(new Date(6, SEPTEMBER,year));
-	    expectedHol.add(new Date(11,OCTOBER,year));
-	    expectedHol.add(new Date(11,NOVEMBER,year));
-	    expectedHol.add(new Date(25,NOVEMBER,year));
-	    expectedHol.add(new Date(24,DECEMBER,year));
+	    expectedHol.add(new Date(1, January,year));
+	    expectedHol.add(new Date(19,January,year));
+	    expectedHol.add(new Date(16,February,year));
+	    expectedHol.add(new Date(9,April,year));//good friday
+	    expectedHol.add(new Date(31,May,year));
+	    expectedHol.add(new Date(5, July,year));
+	    expectedHol.add(new Date(6, September,year));
+	    expectedHol.add(new Date(11,October,year));
+	    expectedHol.add(new Date(11,November,year));
+	    expectedHol.add(new Date(25,November,year));
+	    expectedHol.add(new Date(24,December,year));
 //	    expectedHol.add(new Date(31,DECEMBER,year));
 	    
 	    Calendar c = new UnitedStates(UnitedStates.Market.SETTLEMENT);
@@ -67,16 +67,16 @@ public class UnitedStatesCalendarTest {
 		expectedHol.clear();
 		
 		year = 2005;
-	    expectedHol.add(new Date(17,JANUARY,year));
-	    expectedHol.add(new Date(21,FEBRUARY,year));
-	    expectedHol.add(new Date(25,MARCH,year));//good friday
-	    expectedHol.add(new Date(30,MAY,year));
-	    expectedHol.add(new Date(4, JULY,year));
-	    expectedHol.add(new Date(5,SEPTEMBER,year));
-	    expectedHol.add(new Date(10,OCTOBER,year));
-	    expectedHol.add(new Date(11,NOVEMBER,year));
-	    expectedHol.add(new Date(24,NOVEMBER,2005));
-	    expectedHol.add(new Date(26,DECEMBER,year));
+	    expectedHol.add(new Date(17,January,year));
+	    expectedHol.add(new Date(21,February,year));
+	    expectedHol.add(new Date(25,March,year));//good friday
+	    expectedHol.add(new Date(30,May,year));
+	    expectedHol.add(new Date(4, July,year));
+	    expectedHol.add(new Date(5,September,year));
+	    expectedHol.add(new Date(10,October,year));
+	    expectedHol.add(new Date(11,November,year));
+	    expectedHol.add(new Date(24,November,2005));
+	    expectedHol.add(new Date(26,December,year));
 	    
 		cbt.checkHolidayList(expectedHol, c, year);
 
@@ -89,17 +89,17 @@ public class UnitedStatesCalendarTest {
 	    final CalendarUtil cbt = new CalendarUtil();
 	    int year = 2004;
 	    List<Date> expectedHol = new ArrayList<Date>();
-	    expectedHol.add(new Date(1,JANUARY,year));
-	    expectedHol.add(new Date(19,JANUARY,year));
-	    expectedHol.add(new Date(16,FEBRUARY,year));
-	    expectedHol.add(new Date(9,APRIL,year));
-	    expectedHol.add(new Date(31,MAY,year));
-	    expectedHol.add(new Date(5,JULY,year));
-	    expectedHol.add(new Date(6,SEPTEMBER,year));
-	    expectedHol.add(new Date(11,OCTOBER,year));
-	    expectedHol.add(new Date(11,NOVEMBER,year));
-	    expectedHol.add(new Date(25,NOVEMBER,year));
-	    expectedHol.add(new Date(24,DECEMBER,year));
+	    expectedHol.add(new Date(1,January,year));
+	    expectedHol.add(new Date(19,January,year));
+	    expectedHol.add(new Date(16,February,year));
+	    expectedHol.add(new Date(9,April,year));
+	    expectedHol.add(new Date(31,May,year));
+	    expectedHol.add(new Date(5,July,year));
+	    expectedHol.add(new Date(6,September,year));
+	    expectedHol.add(new Date(11,October,year));
+	    expectedHol.add(new Date(11,November,year));
+	    expectedHol.add(new Date(25,November,year));
+	    expectedHol.add(new Date(24,December,year));
 
 	    Calendar c = new UnitedStates(UnitedStates.Market.GOVERNMENTBOND);
 	    cbt.checkHolidayList(expectedHol, c, year);
@@ -115,80 +115,80 @@ public class UnitedStatesCalendarTest {
 	    List<Date> expectedHol = new ArrayList<Date>();
 	    
 	    int year = 2004;
-	    expectedHol.add(new Date(1,JANUARY,year));
-	    expectedHol.add(new Date(19,JANUARY,year));
-	    expectedHol.add(new Date(16,FEBRUARY,year));
-	    expectedHol.add(new Date(9,APRIL,year));
-	    expectedHol.add(new Date(31,MAY,year));
-	    expectedHol.add(new Date(11,JUNE,year));
-	    expectedHol.add(new Date(5,JULY,year));
-	    expectedHol.add(new Date(6,SEPTEMBER,year));
-	    expectedHol.add(new Date(25,NOVEMBER,year));
-	    expectedHol.add(new Date(24,DECEMBER,year));
+	    expectedHol.add(new Date(1,January,year));
+	    expectedHol.add(new Date(19,January,year));
+	    expectedHol.add(new Date(16,February,year));
+	    expectedHol.add(new Date(9,April,year));
+	    expectedHol.add(new Date(31,May,year));
+	    expectedHol.add(new Date(11,June,year));
+	    expectedHol.add(new Date(5,July,year));
+	    expectedHol.add(new Date(6,September,year));
+	    expectedHol.add(new Date(25,November,year));
+	    expectedHol.add(new Date(24,December,year));
 	    
 	    cbt.checkHolidayList(expectedHol, c, year);
 	    
 	    expectedHol.clear();
 	    year = 2005;
-	    expectedHol.add(new Date(17,JANUARY,year));
-	    expectedHol.add(new Date(21,FEBRUARY,year));
-	    expectedHol.add(new Date(25,MARCH,year));
-	    expectedHol.add(new Date(30,MAY,year));
-	    expectedHol.add(new Date(4,JULY,year));
-	    expectedHol.add(new Date(5,SEPTEMBER,year));
-	    expectedHol.add(new Date(24,NOVEMBER,year));
-	    expectedHol.add(new Date(26,DECEMBER,year));
+	    expectedHol.add(new Date(17,January,year));
+	    expectedHol.add(new Date(21,February,year));
+	    expectedHol.add(new Date(25,March,year));
+	    expectedHol.add(new Date(30,May,year));
+	    expectedHol.add(new Date(4,July,year));
+	    expectedHol.add(new Date(5,September,year));
+	    expectedHol.add(new Date(24,November,year));
+	    expectedHol.add(new Date(26,December,year));
 	    
 	    cbt.checkHolidayList(expectedHol, c, year);
 	    
 	    expectedHol.clear();
 	    year = 2006;
-	    expectedHol.add(new Date(2,JANUARY,year));
-	    expectedHol.add(new Date(16,JANUARY,year));
-	    expectedHol.add(new Date(20,FEBRUARY,year));
-	    expectedHol.add(new Date(14,APRIL,year));
-	    expectedHol.add(new Date(29,MAY,year));
-	    expectedHol.add(new Date(4,JULY,year));
-	    expectedHol.add(new Date(4,SEPTEMBER,year));
-	    expectedHol.add(new Date(23,NOVEMBER,year));
-	    expectedHol.add(new Date(25,DECEMBER,year));
+	    expectedHol.add(new Date(2,January,year));
+	    expectedHol.add(new Date(16,January,year));
+	    expectedHol.add(new Date(20,February,year));
+	    expectedHol.add(new Date(14,April,year));
+	    expectedHol.add(new Date(29,May,year));
+	    expectedHol.add(new Date(4,July,year));
+	    expectedHol.add(new Date(4,September,year));
+	    expectedHol.add(new Date(23,November,year));
+	    expectedHol.add(new Date(25,December,year));
 	    cbt.checkHolidayList(expectedHol, c, year);
 	    
 	    cbt.checkHolidayList(expectedHol, c, year);
 	    
 
 	    List<Date> histClose = new ArrayList<Date>();
-	    histClose.add(new Date(11,JUNE,2004));     // Reagan's funeral
-	    histClose.add(new Date(14,SEPTEMBER,2001));// September 11, 2001
-	    histClose.add(new Date(13,SEPTEMBER,2001));// September 11, 2001
-	    histClose.add(new Date(12,SEPTEMBER,2001));// September 11, 2001
-	    histClose.add(new Date(11,SEPTEMBER,2001));// September 11, 2001
-	    histClose.add(new Date(14,JULY,1977));     // 1977 Blackout
-	    histClose.add(new Date(25,JANUARY,1973));  // Johnson's funeral.
-	    histClose.add(new Date(28,DECEMBER,1972)); // Truman's funeral
-	    histClose.add(new Date(21,JULY,1969));     // Lunar exploration nat. day
-	    histClose.add(new Date(31,MARCH,1969));    // Eisenhower's funeral
-	    histClose.add(new Date(10,FEBRUARY,1969)); // heavy snow
-	    histClose.add(new Date(5,JULY,1968));      // Day after Independence Day
+	    histClose.add(new Date(11,June,2004));     // Reagan's funeral
+	    histClose.add(new Date(14,September,2001));// September 11, 2001
+	    histClose.add(new Date(13,September,2001));// September 11, 2001
+	    histClose.add(new Date(12,September,2001));// September 11, 2001
+	    histClose.add(new Date(11,September,2001));// September 11, 2001
+	    histClose.add(new Date(14,July,1977));     // 1977 Blackout
+	    histClose.add(new Date(25,January,1973));  // Johnson's funeral.
+	    histClose.add(new Date(28,December,1972)); // Truman's funeral
+	    histClose.add(new Date(21,July,1969));     // Lunar exploration nat. day
+	    histClose.add(new Date(31,March,1969));    // Eisenhower's funeral
+	    histClose.add(new Date(10,February,1969)); // heavy snow
+	    histClose.add(new Date(5,July,1968));      // Day after Independence Day
 	    // June 12-Dec. 31, 1968
 	    // Four day week (closed on Wednesdays) - Paperwork Crisis
-	    histClose.add(new Date(12,JUNE,1968));
-	    histClose.add(new Date(19,JUNE,1968));
-	    histClose.add(new Date(26,JUNE,1968));
-	    histClose.add(new Date(3,JULY,1968 ));
-	    histClose.add(new Date(10,JULY,1968));
-	    histClose.add(new Date(17,JULY,1968));
-	    histClose.add(new Date(20,NOVEMBER,1968));
-	    histClose.add(new Date(27,NOVEMBER,1968));
-	    histClose.add(new Date(4,DECEMBER,1968 ));
-	    histClose.add(new Date(11,DECEMBER,1968));
-	    histClose.add(new Date(18,DECEMBER,1968));
+	    histClose.add(new Date(12,June,1968));
+	    histClose.add(new Date(19,June,1968));
+	    histClose.add(new Date(26,June,1968));
+	    histClose.add(new Date(3,July,1968 ));
+	    histClose.add(new Date(10,July,1968));
+	    histClose.add(new Date(17,July,1968));
+	    histClose.add(new Date(20,November,1968));
+	    histClose.add(new Date(27,November,1968));
+	    histClose.add(new Date(4,December,1968 ));
+	    histClose.add(new Date(11,December,1968));
+	    histClose.add(new Date(18,December,1968));
 	    // Presidential election days
-	    histClose.add(new Date(4,NOVEMBER,1980));
-	    histClose.add(new Date(2,NOVEMBER,1976));
-	    histClose.add(new Date(7,NOVEMBER,1972));
-	    histClose.add(new Date(5,NOVEMBER,1968));
-	    histClose.add(new Date(3,NOVEMBER,1964));
+	    histClose.add(new Date(4,November,1980));
+	    histClose.add(new Date(2,November,1976));
+	    histClose.add(new Date(7,November,1972));
+	    histClose.add(new Date(5,November,1968));
+	    histClose.add(new Date(3,November,1964));
 
 	    for (Date d: histClose) {
 	        if (!c.isHoliday(d)) {
@@ -208,15 +208,15 @@ public class UnitedStatesCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
-		expectedHol.add(new Date(1,JANUARY,year));
+		expectedHol.add(new Date(1,January,year));
 		//memorial day
-		expectedHol.add(new Date(31,MAY,year));
+		expectedHol.add(new Date(31,May,year));
 		//independence day (following monday)
-		expectedHol.add(new Date(5,JULY,year));
+		expectedHol.add(new Date(5,July,year));
 		//labor day
-		expectedHol.add(new Date(6,SEPTEMBER,year));
+		expectedHol.add(new Date(6,September,year));
 		//thanksgiving
-		expectedHol.add(new Date(25,NOVEMBER,year));
+		expectedHol.add(new Date(25,November,year));
 		//christmas
 		//expectedHol.add(new Date(25,DECEMBER,year));
 
@@ -224,17 +224,17 @@ public class UnitedStatesCalendarTest {
 		final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cNERC, year);
 
-		final Date reagan_funeral = new Date(11,JUNE,year);
-		final Date good_friday = new Date(9,APRIL,year);
+		final Date reagan_funeral = new Date(11,June,year);
+		final Date good_friday = new Date(9,April,year);
 
 		//MLK day
-		expectedHol.add(new Date(19,JANUARY,year));
+		expectedHol.add(new Date(19,January,year));
 		//presidents' day
-		expectedHol.add(new Date(16,FEBRUARY,year));
+		expectedHol.add(new Date(16,February,year));
 		//good friday
 		expectedHol.add(good_friday);
 		//christmas (previous friday)
-		expectedHol.add(new Date(24,DECEMBER,year));
+		expectedHol.add(new Date(24,December,year));
 		//President Reagan's funeral
 		expectedHol.add(reagan_funeral);
 
@@ -243,9 +243,9 @@ public class UnitedStatesCalendarTest {
 		expectedHol.remove(reagan_funeral);
 
 		//Colombus day
-		expectedHol.add(new Date(11,OCTOBER,year));
+		expectedHol.add(new Date(11,October,year));
 		//Veteran's day
-		expectedHol.add(new Date(11,NOVEMBER,year));
+		expectedHol.add(new Date(11,November,year));
 
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 
@@ -266,35 +266,35 @@ public class UnitedStatesCalendarTest {
 		//new years day (following monday)
 		//expectedHol.add(new Date(1,JANUARY,year));
 		//memorial day
-		expectedHol.add(new Date(30,MAY,year));
+		expectedHol.add(new Date(30,May,year));
 		//independence day
-		expectedHol.add(new Date(4,JULY,year));
+		expectedHol.add(new Date(4,July,year));
 		//labor day
-		expectedHol.add(new Date(5,SEPTEMBER,year));
+		expectedHol.add(new Date(5,September,year));
 		//thanksgiving
-		expectedHol.add(new Date(24,NOVEMBER,year));
+		expectedHol.add(new Date(24,November,year));
 		//christmas (following monday)
-		expectedHol.add(new Date(26,DECEMBER,year));
+		expectedHol.add(new Date(26,December,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cNERC, year);
 
-		final Date good_friday = new Date(25,MARCH,year);
+		final Date good_friday = new Date(25,March,year);
 
 		//MLK day
-		expectedHol.add(new Date(17,JANUARY,year));
+		expectedHol.add(new Date(17,January,year));
 		//presidents' day
-		expectedHol.add(new Date(21,FEBRUARY,year));
+		expectedHol.add(new Date(21,February,year));
 		//good friday
 		expectedHol.add(good_friday);
 
 		cbt.checkHolidayList(expectedHol, cNYSE, year);
 
 		//Colombus day
-		expectedHol.add(new Date(10,OCTOBER,year));
+		expectedHol.add(new Date(10,October,year));
 		//Veteran's day
-		expectedHol.add(new Date(11,NOVEMBER,year));
+		expectedHol.add(new Date(11,November,year));
 
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 
@@ -311,37 +311,37 @@ public class UnitedStatesCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day (following monday)
-		expectedHol.add(new Date(2,JANUARY,year));
+		expectedHol.add(new Date(2,January,year));
 		//memorial day
-		expectedHol.add(new Date(29,MAY,year));
+		expectedHol.add(new Date(29,May,year));
 		//independence day
-		expectedHol.add(new Date(4,JULY,year));
+		expectedHol.add(new Date(4,July,year));
 		//labor day
-		expectedHol.add(new Date(4,SEPTEMBER,year));
+		expectedHol.add(new Date(4,September,year));
 		//thanksgiving
-		expectedHol.add(new Date(23,NOVEMBER,year));
+		expectedHol.add(new Date(23,November,year));
 		//christmas
-		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(25,December,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cNERC, year);
 
-		final Date good_friday = new Date(14,APRIL,year);
+		final Date good_friday = new Date(14,April,year);
 
 		//MLK day
-		expectedHol.add(new Date(16,JANUARY,year));
+		expectedHol.add(new Date(16,January,year));
 		//presidents' day
-		expectedHol.add(new Date(20,FEBRUARY,year));
+		expectedHol.add(new Date(20,February,year));
 		//good friday
 		expectedHol.add(good_friday);
 
 		cbt.checkHolidayList(expectedHol, cNYSE, year);
 
 		//Colombus day
-		expectedHol.add(new Date(9,OCTOBER,year));
+		expectedHol.add(new Date(9,October,year));
 		//Veteran's day (previous friday)
-		expectedHol.add(new Date(10,NOVEMBER,year));
+		expectedHol.add(new Date(10,November,year));
 
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 
@@ -358,29 +358,29 @@ public class UnitedStatesCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
-		expectedHol.add(new Date(1,JANUARY,year));
+		expectedHol.add(new Date(1,January,year));
 		//memorial day
-		expectedHol.add(new Date(28,MAY,year));
+		expectedHol.add(new Date(28,May,year));
 		//independence day
-		expectedHol.add(new Date(4,JULY,year));
+		expectedHol.add(new Date(4,July,year));
 		//labor day
-		expectedHol.add(new Date(3,SEPTEMBER,year));
+		expectedHol.add(new Date(3,September,year));
 		//thanksgiving
-		expectedHol.add(new Date(22,NOVEMBER,year));
+		expectedHol.add(new Date(22,November,year));
 		//christmas
-		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(25,December,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cNERC, year);
 
-		final Date ford_funeral = new Date(2,JANUARY,year);
-		final Date good_friday = new Date(6,APRIL,year);
+		final Date ford_funeral = new Date(2,January,year);
+		final Date good_friday = new Date(6,April,year);
 
 		//MLK day
-		expectedHol.add(new Date(15,JANUARY,year));
+		expectedHol.add(new Date(15,January,year));
 		//presidents' day
-		expectedHol.add(new Date(19,FEBRUARY,year));
+		expectedHol.add(new Date(19,February,year));
 		//good friday
 		expectedHol.add(good_friday);
 		// President Ford's funeral
@@ -391,9 +391,9 @@ public class UnitedStatesCalendarTest {
 		expectedHol.remove(ford_funeral);
 
 		//Colombus day
-		expectedHol.add(new Date(8,OCTOBER,year));
+		expectedHol.add(new Date(8,October,year));
 		//Veteran's day (next monday)
-		expectedHol.add(new Date(12,NOVEMBER,year));
+		expectedHol.add(new Date(12,November,year));
 
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 
@@ -412,37 +412,37 @@ public class UnitedStatesCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
-		expectedHol.add(new Date(1,JANUARY,year));
+		expectedHol.add(new Date(1,January,year));
 		//memorial day
-		expectedHol.add(new Date(26,MAY,year));
+		expectedHol.add(new Date(26,May,year));
 		//independence day
-		expectedHol.add(new Date(4,JULY,year));
+		expectedHol.add(new Date(4,July,year));
 		//labor day
-		expectedHol.add(new Date(1,SEPTEMBER,year));
+		expectedHol.add(new Date(1,September,year));
 		//thanksgiving
-		expectedHol.add(new Date(27,NOVEMBER,year));
+		expectedHol.add(new Date(27,November,year));
 		//christmas
-		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(25,December,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cNERC, year);
 
-		final Date good_friday = new Date(21,MARCH,year);
+		final Date good_friday = new Date(21,March,year);
 
 		//MLK day
-		expectedHol.add(new Date(21,JANUARY,year));
+		expectedHol.add(new Date(21,January,year));
 		//presidents' day
-		expectedHol.add(new Date(18,FEBRUARY,year));
+		expectedHol.add(new Date(18,February,year));
 		//good friday
 		expectedHol.add(good_friday);
 
 		cbt.checkHolidayList(expectedHol, cNYSE, year);
 
 		//Colombus day
-		expectedHol.add(new Date(13,OCTOBER,year));
+		expectedHol.add(new Date(13,October,year));
 		//Veteran's day
-		expectedHol.add(new Date(11,NOVEMBER,year));
+		expectedHol.add(new Date(11,November,year));
 
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 
@@ -459,39 +459,39 @@ public class UnitedStatesCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
-		expectedHol.add(new Date(1,JANUARY,year));
+		expectedHol.add(new Date(1,January,year));
 		//memorial day
-		expectedHol.add(new Date(25,MAY,year));
+		expectedHol.add(new Date(25,May,year));
 		//independence day
 		//expectedHol.add(new Date(4,JULY,year));
 		//labor day
-		expectedHol.add(new Date(7,SEPTEMBER,year));
+		expectedHol.add(new Date(7,September,year));
 		//thanksgiving
-		expectedHol.add(new Date(26,NOVEMBER,year));
+		expectedHol.add(new Date(26,November,year));
 		//christmas
-		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(25,December,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cNERC, year);
 
-		final Date good_friday = new Date(10,APRIL,year);
+		final Date good_friday = new Date(10,April,year);
 
 		//MLK day
-		expectedHol.add(new Date(19,JANUARY,year));
+		expectedHol.add(new Date(19,January,year));
 		//preseidents' day
-		expectedHol.add(new Date(16,FEBRUARY,year));
+		expectedHol.add(new Date(16,February,year));
 		//good friday
 		expectedHol.add(good_friday);
 		//independence day (previous friday)
-		expectedHol.add(new Date(3,JULY,year));
+		expectedHol.add(new Date(3,July,year));
 
 		cbt.checkHolidayList(expectedHol, cNYSE, year);
 
 		//Colombus day
-		expectedHol.add(new Date(12,OCTOBER,year));
+		expectedHol.add(new Date(12,October,year));
 		//Veteran's day
-		expectedHol.add(new Date(11,NOVEMBER,year));
+		expectedHol.add(new Date(11,November,year));
 
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 		cbt.checkHolidayList(expectedHol, cSettlement, year);
@@ -505,15 +505,15 @@ public class UnitedStatesCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
-		expectedHol.add(new Date(1,JANUARY,year));
+		expectedHol.add(new Date(1,January,year));
 		//memorial day
-		expectedHol.add(new Date(31,MAY,year));
+		expectedHol.add(new Date(31,May,year));
 		//independence day (following monday)
-		expectedHol.add(new Date(5,JULY,year));
+		expectedHol.add(new Date(5,July,year));
 		//labor day
-		expectedHol.add(new Date(6,SEPTEMBER,year));
+		expectedHol.add(new Date(6,September,year));
 		//thanksgiving
-		expectedHol.add(new Date(25,NOVEMBER,year));
+		expectedHol.add(new Date(25,November,year));
 		//christmas
 		//expectedHol.add(new Date(25,DECEMBER,year));
 
@@ -521,23 +521,23 @@ public class UnitedStatesCalendarTest {
 		final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cNERC, year);
 
-		final Date good_friday = new Date(2,APRIL,year);
+		final Date good_friday = new Date(2,April,year);
 
 		//MLK day
-		expectedHol.add(new Date(18,JANUARY,year));
+		expectedHol.add(new Date(18,January,year));
 		//preseidents' day
-		expectedHol.add(new Date(15,FEBRUARY,year));
+		expectedHol.add(new Date(15,February,year));
 		//good friday
 		expectedHol.add(good_friday);
 		//christmas (previous friday)
-		expectedHol.add(new Date(24,DECEMBER,year));
+		expectedHol.add(new Date(24,December,year));
 
 		cbt.checkHolidayList(expectedHol, cNYSE, year);
 
 		//Colombus day
-		expectedHol.add(new Date(11,OCTOBER,year));
+		expectedHol.add(new Date(11,October,year));
 		//Veteran's day
-		expectedHol.add(new Date(11,NOVEMBER,year));
+		expectedHol.add(new Date(11,November,year));
 
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 
@@ -557,35 +557,35 @@ public class UnitedStatesCalendarTest {
 		//new years day
 		//expectedHol.add(new Date(1,JANUARY,year));
 		//memorial day
-		expectedHol.add(new Date(30,MAY,year));
+		expectedHol.add(new Date(30,May,year));
 		//independence day
-		expectedHol.add(new Date(4,JULY,year));
+		expectedHol.add(new Date(4,July,year));
 		//labor day
-		expectedHol.add(new Date(5,SEPTEMBER,year));
+		expectedHol.add(new Date(5,September,year));
 		//thanksgiving
-		expectedHol.add(new Date(24,NOVEMBER,year));
+		expectedHol.add(new Date(24,November,year));
 		//christmas (following monday)
-		expectedHol.add(new Date(26,DECEMBER,year));
+		expectedHol.add(new Date(26,December,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cNERC, year);
 
-		final Date good_friday = new Date(22,APRIL,year);
+		final Date good_friday = new Date(22,April,year);
 
 		//MLK day
-		expectedHol.add(new Date(17,JANUARY,year));
+		expectedHol.add(new Date(17,January,year));
 		//preseidents' day
-		expectedHol.add(new Date(21,FEBRUARY,year));
+		expectedHol.add(new Date(21,February,year));
 		//good friday
 		expectedHol.add(good_friday);
 
 		cbt.checkHolidayList(expectedHol, cNYSE, year);
 
 		//Colombus day
-		expectedHol.add(new Date(10,OCTOBER,year));
+		expectedHol.add(new Date(10,October,year));
 		//Veteran's day
-		expectedHol.add(new Date(11,NOVEMBER,year));
+		expectedHol.add(new Date(11,November,year));
 
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 
@@ -600,37 +600,37 @@ public class UnitedStatesCalendarTest {
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day (following monday)
-		expectedHol.add(new Date(2,JANUARY,year));
+		expectedHol.add(new Date(2,January,year));
 		//memorial day
-		expectedHol.add(new Date(28,MAY,year));
+		expectedHol.add(new Date(28,May,year));
 		//independence day
-		expectedHol.add(new Date(4,JULY,year));
+		expectedHol.add(new Date(4,July,year));
 		//labor day
-		expectedHol.add(new Date(3,SEPTEMBER,year));
+		expectedHol.add(new Date(3,September,year));
 		//thanksgiving
-		expectedHol.add(new Date(22,NOVEMBER,year));
+		expectedHol.add(new Date(22,November,year));
 		//christmas
-		expectedHol.add(new Date(25,DECEMBER,year));
+		expectedHol.add(new Date(25,December,year));
 
 		// Call the Holiday Check
 		final CalendarUtil cbt = new CalendarUtil();
 		cbt.checkHolidayList(expectedHol, cNERC, year);
 
-		final Date good_friday = new Date(6,APRIL,year);
+		final Date good_friday = new Date(6,April,year);
 
 		//MLK day
-		expectedHol.add(new Date(16,JANUARY,year));
+		expectedHol.add(new Date(16,January,year));
 		//preseidents' day
-		expectedHol.add(new Date(20,FEBRUARY,year));
+		expectedHol.add(new Date(20,February,year));
 		//good friday
 		expectedHol.add(good_friday);
 
 		cbt.checkHolidayList(expectedHol, cNYSE, year);
 
 		//Colombus day
-		expectedHol.add(new Date(8,OCTOBER,year));
+		expectedHol.add(new Date(8,October,year));
 		//Veteran's day (next monday)
-		expectedHol.add(new Date(12,NOVEMBER,year));
+		expectedHol.add(new Date(12,November,year));
 
 		cbt.checkHolidayList(expectedHol, cGovBond, year);
 

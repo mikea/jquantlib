@@ -12,6 +12,6 @@ public class ReflectConstants {
     public static final String MISSING_GENERIC_PARAMETER_TYPE = "Missing generic parameter type";
     public static final String GENERIC_PARAMETER_MUST_BE_CONCRETE_CLASS = "Generic parameter must be a concrete class";
     public static final String ILLEGAL_TYPE_PARAMETER = "Illegal type parameter";
-    public static final String WRONG_ARGUMENT_TYPE = "Wrong argument type";
+    public static final String WRONG_ARGUMENT_TYPE = "Unexpected type for type parameter";
 
 }

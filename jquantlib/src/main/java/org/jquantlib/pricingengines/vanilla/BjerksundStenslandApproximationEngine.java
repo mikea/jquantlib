@@ -175,7 +175,7 @@ public class BjerksundStenslandApproximationEngine extends VanillaOption.EngineI
         QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         double /* @Real */strike = payoff.strike();
 
-        if (payoff.optionType()==Option.Type.PUT) {
+        if (payoff.optionType()==Option.Type.Put) {
             // use put-call symmetry
             // swap spot and strike, has to be done inline
             double tmp = spot; spot = strike; strike = tmp;
@@ -183,7 +183,7 @@ public class BjerksundStenslandApproximationEngine extends VanillaOption.EngineI
             // swap riskFreeDiscount and dividenDiscount, has to be done inline
             tmp = riskFreeDiscount; riskFreeDiscount = dividendDiscount; dividendDiscount = tmp;
 
-            payoff = new PlainVanillaPayoff(Option.Type.CALL, strike);
+            payoff = new PlainVanillaPayoff(Option.Type.Call, strike);
         }
 
         if (dividendDiscount>=1.0) {

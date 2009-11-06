@@ -77,9 +77,9 @@ public class InverseCumulativeNormalTest {
         final Settings settings = new Settings();
 
         //FIXME: obtain original value :: this is a thread safety problem :(
-        final boolean oldHighPrecision = settings.isRefineHighPrecision();
+        final boolean oldHighPrecision = settings.isRefineHighPrecisionUsingHalleysMethod();
 
-        settings.setRefineHighPrecision(false);
+        settings.setRefineHighPrecisionUsingHalleysMethod(false);
         InverseCumulativeNormal icn;
 
         //test the normal values
@@ -97,7 +97,7 @@ public class InverseCumulativeNormalTest {
 
 
         //test the normal values using high machine precision Halley's method
-        settings.setRefineHighPrecision(true);
+        settings.setRefineHighPrecisionUsingHalleysMethod(true);
         icn = new InverseCumulativeNormal();
         for (final double[] precisionTestvalue : precision_testvalues) {
             final double x_position = precisionTestvalue[0];
@@ -112,7 +112,7 @@ public class InverseCumulativeNormalTest {
         }
 
         //FIXME: back to original value :: this is a thread safety problem :(
-        settings.setRefineHighPrecision(oldHighPrecision);
+        settings.setRefineHighPrecisionUsingHalleysMethod(oldHighPrecision);
     }
 
 }

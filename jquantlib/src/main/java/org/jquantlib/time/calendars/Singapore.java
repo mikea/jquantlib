@@ -22,14 +22,14 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.OCTOBER;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -110,54 +110,54 @@ public class Singapore extends Calendar {
 
               if (isWeekend(w)
                   // New Year's Day
-                  || (d == 1 && m == JANUARY)
+                  || (d == 1 && m == January)
                   // Good Friday
                   || (dd == em-3)
                   // Labor Day
-                  || (d == 1 && m == MAY)
+                  || (d == 1 && m == May)
                   // National Day
-                  || (d == 9 && m == AUGUST)
+                  || (d == 9 && m == August)
                   // Christmas Day
-                  || (d == 25 && m == DECEMBER)
+                  || (d == 25 && m == December)
 
                   // Chinese New Year
-                  || ((d == 22 || d == 23) && m == JANUARY && y == 2004)
-                  || ((d == 9 || d == 10) && m == FEBRUARY && y == 2005)
-                  || ((d == 30 || d == 31) && m == JANUARY && y == 2006)
-                  || ((d == 19 || d == 20) && m == FEBRUARY && y == 2007)
-                  || ((d == 7 || d == 8) && m == FEBRUARY && y == 2008)
-                  || ((d == 26 || d == 27) && m == JANUARY && y == 2009) //Zahid
+                  || ((d == 22 || d == 23) && m == January && y == 2004)
+                  || ((d == 9 || d == 10) && m == February && y == 2005)
+                  || ((d == 30 || d == 31) && m == January && y == 2006)
+                  || ((d == 19 || d == 20) && m == February && y == 2007)
+                  || ((d == 7 || d == 8) && m == February && y == 2008)
+                  || ((d == 26 || d == 27) && m == January && y == 2009) //Zahid
 
                   // Hari Raya Haji
-                  || ((d == 1 || d == 2) && m == FEBRUARY && y == 2004)
-                  || (d == 21 && m == JANUARY && y == 2005)
-                  || (d == 10 && m == JANUARY && y == 2006)
-                  || (d == 2 && m == JANUARY && y == 2007)
-                  || (d == 20 && m == DECEMBER && y == 2007)
-                  || (d == 8 && m == DECEMBER && y == 2008)
+                  || ((d == 1 || d == 2) && m == February && y == 2004)
+                  || (d == 21 && m == January && y == 2005)
+                  || (d == 10 && m == January && y == 2006)
+                  || (d == 2 && m == January && y == 2007)
+                  || (d == 20 && m == December && y == 2007)
+                  || (d == 8 && m == December && y == 2008)
 
                   // Vesak Poya Day
-                  || (d == 2 && m == JUNE && y == 2004)
-                  || (d == 22 && m == MAY && y == 2005)
-                  || (d == 12 && m == MAY && y == 2006)
-                  || (d == 31 && m == MAY && y == 2007)
-                  || (d == 18 && m == MAY && y == 2008)
+                  || (d == 2 && m == June && y == 2004)
+                  || (d == 22 && m == May && y == 2005)
+                  || (d == 12 && m == May && y == 2006)
+                  || (d == 31 && m == May && y == 2007)
+                  || (d == 18 && m == May && y == 2008)
 
                   // Deepavali
-                  || (d == 11 && m == NOVEMBER && y == 2004)
-                  || (d == 8 && m == NOVEMBER && y == 2007)
-                  || (d == 28 && m == OCTOBER && y == 2008)
-                  || (d == 27 && m == NOVEMBER && y == 2009) //Zahid
+                  || (d == 11 && m == November && y == 2004)
+                  || (d == 8 && m == November && y == 2007)
+                  || (d == 28 && m == October && y == 2008)
+                  || (d == 27 && m == November && y == 2009) //Zahid
 
                   // Diwali
-                  || (d == 1 && m == NOVEMBER && y == 2005)
+                  || (d == 1 && m == November && y == 2005)
 
                   // Hari Raya Puasa
-                  || ((d == 14 || d == 15) && m == NOVEMBER && y == 2004)
-                  || (d == 3 && m == NOVEMBER && y == 2005)
-                  || (d == 24 && m == OCTOBER && y == 2006)
-                  || (d == 13 && m == OCTOBER && y == 2007)
-                  || (d == 1 && m == OCTOBER && y == 2008)
+                  || ((d == 14 || d == 15) && m == November && y == 2004)
+                  || (d == 3 && m == November && y == 2005)
+                  || (d == 24 && m == October && y == 2006)
+                  || (d == 13 && m == October && y == 2007)
+                  || (d == 1 && m == October && y == 2008)
                   ) {
                 return false;
             }

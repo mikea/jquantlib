@@ -22,12 +22,12 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.OCTOBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.October;
 import static org.jquantlib.time.Weekday.MONDAY;
 import static org.jquantlib.time.Weekday.TUESDAY;
 
@@ -92,28 +92,28 @@ public class Australia extends Calendar {
         final int em = easterMonday(y);
         if (isWeekend(w)
             // New Year's Day (possibly moved to Monday)
-            || (d == 1  && m == JANUARY)
+            || (d == 1  && m == January)
             // Australia Day, JANUARY 26th (possibly moved to Monday)
             || ((d == 26 || ((d == 27 || d == 28) && w == MONDAY)) &&
-                m == JANUARY)
+                m == January)
             // Good Friday
             || (dd == em-3)
             // Easter Monday
             || (dd == em)
             // ANZAC Day, April 25th (possibly moved to Monday)
-            || ((d == 25 || (d == 26 && w == MONDAY)) && m == APRIL)
+            || ((d == 25 || (d == 26 && w == MONDAY)) && m == April)
             // Queen's Birthday, second Monday in June
-            || ((d > 7 && d <= 14) && w == MONDAY && m == JUNE)
+            || ((d > 7 && d <= 14) && w == MONDAY && m == June)
             // Bank Holiday, first Monday in August
-            || (d <= 7 && w == MONDAY && m == AUGUST)
+            || (d <= 7 && w == MONDAY && m == August)
             // Labour Day, first Monday in October
-            || (d <= 7 && w == MONDAY && m == OCTOBER)
+            || (d <= 7 && w == MONDAY && m == October)
             // Christmas, December 25th (possibly Monday or Tuesday)
             || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY)))
-                && m == DECEMBER)
+                && m == December)
             // Boxing Day, DECEMBER 26th (possibly MONDAY or TUESDAY)
             || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY)))
-                && m == DECEMBER)) {
+                && m == December)) {
             return false;
         }
         return true;

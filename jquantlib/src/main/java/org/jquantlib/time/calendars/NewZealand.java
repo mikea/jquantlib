@@ -22,12 +22,12 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.OCTOBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.October;
 import static org.jquantlib.time.Weekday.MONDAY;
 import static org.jquantlib.time.Weekday.TUESDAY;
 
@@ -104,30 +104,30 @@ public class NewZealand extends Calendar {
 	        if (isWeekend(w)
 	            // New Year's Day (possibly moved to Monday or Tuesday)
 	            || ((d == 1 || (d == 3 && (w == MONDAY || w == TUESDAY))) &&
-	                m == JANUARY)
+	                m == January)
 	            // Day after New Year's Day (possibly moved to Mon or TUESDAY)
 	            || ((d == 2 || (d == 4 && (w == MONDAY || w == TUESDAY))) &&
-	                m == JANUARY)
+	                m == January)
 	            // Anniversary Day, MONDAY nearest JANUARY 22nd
-	            || ((d >= 19 && d <= 25) && w == MONDAY && m == JANUARY)
+	            || ((d >= 19 && d <= 25) && w == MONDAY && m == January)
 	            // Waitangi Day. February 6th
-	            || (d == 6 && m == FEBRUARY)
+	            || (d == 6 && m == February)
 	            // Good Friday
 	            || (dd == em-3)
 	            // Easter MONDAY
 	            || (dd == em)
 	            // ANZAC Day. April 25th
-	            || (d == 25 && m == APRIL)
+	            || (d == 25 && m == April)
 	            // Queen's Birthday, first MONDAY in June
-	            || (d <= 7 && w == MONDAY && m == JUNE)
+	            || (d <= 7 && w == MONDAY && m == June)
 	            // Labour Day, fourth MONDAY in October
-	            || ((d >= 22 && d <= 28) && w == MONDAY && m == OCTOBER)
+	            || ((d >= 22 && d <= 28) && w == MONDAY && m == October)
 	            // Christmas, December 25th (possibly MONDAY or TUESDAY)
 	            || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY)))
-	                && m == DECEMBER)
+	                && m == December)
 	            // Boxing Day, DECEMBER 26th (possibly MONDAY or TUESDAY)
 	            || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY)))
-	                && m == DECEMBER)) {
+	                && m == December)) {
                 return false;
             }
 	        return true;

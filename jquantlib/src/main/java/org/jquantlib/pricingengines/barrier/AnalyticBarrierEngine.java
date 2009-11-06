@@ -118,7 +118,7 @@ public class AnalyticBarrierEngine extends BarrierOption.EngineImpl {
         final BarrierType barrierType = a.barrierType;
 
         switch (payoff.optionType()) {
-            case CALL:
+            case Call:
                 switch (barrierType) {
                     case DownIn:
                         if (strike >= barrier()) {
@@ -150,7 +150,7 @@ public class AnalyticBarrierEngine extends BarrierOption.EngineImpl {
                         break;
                 }
                 break;
-            case PUT:
+            case Put:
                 switch (barrierType) {
                     case  DownIn:
                         if (strike >= barrier()) {

@@ -45,6 +45,8 @@ import org.jquantlib.QL;
 import org.jquantlib.time.Date;
 
 /**
+ * American exercise
+ * <p>
  * An American option can be exercised at any time between two
  * predefined dates. In case the first date is omitted, the
  * option can be exercised at any time before the expiry date.
@@ -74,20 +76,8 @@ public class AmericanExercise extends EarlyExercise {
 	public AmericanExercise(final Date earliestDate, final Date latestDate, final boolean payoffAtExpiry) {
 		super(Exercise.Type.American, payoffAtExpiry);
 		QL.require(earliestDate.le(latestDate) , "earliest > latest exercise date");  // QA:[RG]::verified // TODO: message
-		super.dates.add(earliestDate);
-		super.dates.add(latestDate);
+		super.dates.add(earliestDate.clone());
+		super.dates.add(latestDate.clone());
     }
-
-// TODO: code review :: please verify against QL/C++ code
-// TODO: check that everywhere the American condition is applied from earliestDate and not earlier
-
-//	public AmericanExercise(final Date latestDate) {
-//		this(latestDate, false);
-//	}
-//
-//	public AmericanExercise(final Date latestDate, boolean payoffAtExpiry) {
-//		super(Exercise.Type.American, payoffAtExpiry);
-//		add(latestDate);
-//    }
 
 }

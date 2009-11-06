@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2009 Richard Gomes
+ Copyright (C) 2007 Srinivas Hasti
 
  This source code is release under the BSD License.
 
@@ -19,6 +19,7 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+
 /*
  Copyright (C) 2005 Joseph Wang
  Copyright (C) 2007 StatPro Italia srl
@@ -47,11 +48,12 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  * The merton 73 engine is the classic engine described in most derivatives texts. However, Haug, Haug, and Lewis in "Back to
  * Basics: a new approach to the discrete dividend problem" argues that this scheme underprices call options. This is set as the
  * default engine, because it is consistent with the analytic version.
- * 
+ *
  * @category vanillaengines
+ *
+ * @author Srinivas Hasti
  */
 public class FDDividendEngineMerton73 extends FDDividendEngineBase {
-
 
     //
     // public methods

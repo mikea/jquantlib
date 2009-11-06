@@ -70,6 +70,8 @@ import org.jquantlib.util.Observable;
  */
 public interface PricingEngine extends Observable {
 
+    public final static String PRICING_ENGINE_NOT_SET = "Pricing engine not set";
+
 	public PricingEngine.Arguments getArguments();
 	public PricingEngine.Results getResults();
 
@@ -79,12 +81,11 @@ public interface PricingEngine extends Observable {
 
 
 	//TODO: for the time being.
-	// This method must be removed from there and declared on extended interfaces when necessary
+	// This method must be removed from there and declared on extended interfaces when necessary /////
 	public abstract void update();
+	//////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-    public abstract interface Arguments {
+	public abstract interface Arguments {
           public void validate();
     }
 

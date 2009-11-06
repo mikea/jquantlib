@@ -23,10 +23,10 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.MAY;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.May;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -90,9 +90,9 @@ public class Switzerland extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
                     // New Year's Day
-                    || (d == 1 && m == JANUARY)
+                    || (d == 1 && m == January)
                     // Berchtoldstag
-                    || (d == 2 && m == JANUARY)
+                    || (d == 2 && m == January)
                     // Good Friday
                     || (dd == em - 3)
                     // Easter Monday
@@ -102,13 +102,13 @@ public class Switzerland extends Calendar {
                     // Whit Monday
                     || (dd == em + 49)
                     // Labour Day
-                    || (d == 1 && m == MAY)
+                    || (d == 1 && m == May)
                     // National Day
-                    || (d == 1 && m == AUGUST)
+                    || (d == 1 && m == August)
                     // Christmas
-                    || (d == 25 && m == DECEMBER)
+                    || (d == 25 && m == December)
                     // St. Stephen's Day
-                    || (d == 26 && m == DECEMBER)) {
+                    || (d == 26 && m == December)) {
                 return false;
             }
             return true;

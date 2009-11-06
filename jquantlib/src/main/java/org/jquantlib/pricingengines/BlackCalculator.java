@@ -149,12 +149,12 @@ public class BlackCalculator {
         // in case of plain-vanilla payoffs, it is also the only part
         // which is executed.
         final Option.Type optionType = payoff.optionType();
-        if (optionType == Option.Type.CALL) {
+        if (optionType == Option.Type.Call) {
             alpha = cum_d1;// N(d1)
             dAlpha_dD1 = n_d1;// n(d1)
             beta = -cum_d2;// -N(d2)
             dBeta_dD2 = -n_d2;// -n(d2)
-        } else if (optionType == Option.Type.PUT) {
+        } else if (optionType == Option.Type.Put) {
             alpha = -1.0 + cum_d1;// -N(-d1)
             dAlpha_dD1 = n_d1;// n( d1)
             beta = 1.0 - cum_d2;// N(-d2)
@@ -470,10 +470,10 @@ public class BlackCalculator {
                 black.x = payoff.getCashPayoff();
                 black.dx_dStrike = 0.0;
                 final Option.Type optionType = payoff.optionType();
-                if (optionType == Option.Type.CALL) {
+                if (optionType == Option.Type.Call) {
                     black.beta = black.cum_d2;
                     black.dBeta_dD2 = black.n_d2;
-                } else if (optionType == Option.Type.PUT) {
+                } else if (optionType == Option.Type.Put) {
                     black.beta = 1.0 - black.cum_d2;
                     black.dBeta_dD2 = -black.n_d2;
                 } else
@@ -495,10 +495,10 @@ public class BlackCalculator {
                 final AssetOrNothingPayoff payoff = (AssetOrNothingPayoff)o;
                 black.beta = black.dBeta_dD2 = 0.0;
                 final Option.Type optionType = payoff.optionType();
-                if (optionType == Option.Type.CALL) {
+                if (optionType == Option.Type.Call) {
                     black.alpha = black.cum_d1;
                     black.dAlpha_dD1 = black.n_d1;
-                } else if (optionType == Option.Type.PUT) {
+                } else if (optionType == Option.Type.Put) {
                     black.alpha = 1.0 - black.cum_d1;
                     black.dAlpha_dD1 = -black.n_d1;
                 } else

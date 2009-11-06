@@ -29,10 +29,11 @@ import org.jquantlib.math.Constants;
 /**
  * Ornstein-Uhlenbeck process class
  * <p>
- * This class describes the Ornstein-Uhlenbeck process governed by <p>{@latex[ dx = a (r - x_t) dt + \sigma dW_t }
+ * This class describes the Ornstein-Uhlenbeck process governed by
+ * {@latex[ dx = a (r - x_t) dt + \sigma dW_t }
  *
  * @category processes
- * 
+ *
  * @author Praneet Tiwari
  * @author Richard Gomes
  */

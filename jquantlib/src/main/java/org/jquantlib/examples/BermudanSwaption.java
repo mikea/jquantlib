@@ -22,7 +22,7 @@
 
 package org.jquantlib.examples;
 
-import static org.jquantlib.time.Month.FEBRUARY;
+import static org.jquantlib.time.Month.February;
 
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
@@ -56,7 +56,7 @@ public class BermudanSwaption {
         final StopClock clock = new StopClock();
         clock.startClock();
 
-        final Date todaysDate = new Date(15, FEBRUARY, 2002);
+        final Date todaysDate = new Date(15, February, 2002);
 
         // TODO: code review :: please verify against QL/C++ code
         final Calendar calendar = new Calendar() {
@@ -69,7 +69,7 @@ public class BermudanSwaption {
             }
         };
 
-        final Date settlementDate = new Date(19, FEBRUARY, 2002);
+        final Date settlementDate = new Date(19, February, 2002);
         new Settings().setEvaluationDate(todaysDate);
 
         // TODO: code review :: please verify against QL/C++ code

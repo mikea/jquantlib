@@ -22,10 +22,10 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.SEPTEMBER;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.September;
 import static org.jquantlib.time.Weekday.FRIDAY;
 import static org.jquantlib.time.Weekday.THURSDAY;
 
@@ -106,13 +106,13 @@ public class SaudiArabia extends Calendar{
 			final int y = date.year();
 			if (isWeekend(w)
 					// National Day
-					|| (d == 23 && m == SEPTEMBER)
+					|| (d == 23 && m == September)
 					// Eid Al-Adha
-					|| (d >= 1 && d <= 6 && m == FEBRUARY && y == 2004)
-					|| (d >= 21 && d <= 25 && m == JANUARY && y == 2005)
+					|| (d >= 1 && d <= 6 && m == February && y == 2004)
+					|| (d >= 21 && d <= 25 && m == January && y == 2005)
 					// Eid Al-Fitr
-					|| (d >= 25 && d <= 29 && m == NOVEMBER && y == 2004)
-					|| (d >= 14 && d <= 18 && m == NOVEMBER && y == 2005)) {
+					|| (d >= 25 && d <= 29 && m == November && y == 2004)
+					|| (d >= 14 && d <= 18 && m == November && y == 2005)) {
                 return false;
             }
 			return true;

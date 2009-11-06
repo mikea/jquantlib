@@ -126,7 +126,7 @@ public class AmericanPayoffAtExpiry {
 
         // up-and-in cash-(at-hit)-or-nothing option
         // a.k.a. american call with cash-or-nothing payoff
-        if (optionType.equals(Type.CALL)) {
+        if (optionType.equals(Type.Call)) {
             if (strike > spot) {
                 alpha     = 1.0-cum_d2;//  N(-d2)
                 DalphaDd1 =    -  n_d2; // -n( d2)
@@ -141,7 +141,7 @@ public class AmericanPayoffAtExpiry {
         }
         // down-and-in cash-(at-hit)-or-nothing option
         // a.k.a. american put with cash-or-nothing payoff
-        else if (optionType.equals(Type.PUT)) {
+        else if (optionType.equals(Type.Put)) {
             if (strike < spot) {
                 alpha     =     cum_d2;//  N(d2)
                 DalphaDd1 =       n_d2; //  n(d2)
@@ -156,8 +156,8 @@ public class AmericanPayoffAtExpiry {
         } else
             throw new IllegalArgumentException("invalid option type");
 
-        inTheMoney = (optionType.equals(Type.CALL) && strike < spot) ||
-        (optionType.equals(Type.PUT) && strike > spot);
+        inTheMoney = (optionType.equals(Type.Call) && strike < spot) ||
+        (optionType.equals(Type.Put) && strike > spot);
         if (inTheMoney) {
             y         = 1.0;
             x         = 1.0;

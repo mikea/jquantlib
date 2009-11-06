@@ -121,9 +121,9 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
      */
 	@Override
     public final double get(final double price) /* @ReadOnly */ {
-		if (type == Option.Type.CALL) {
+		if (type == Option.Type.Call) {
             return (price-strike > 0.0 ? cashPayoff : 0.0);
-        } else if (type == Option.Type.PUT) {
+        } else if (type == Option.Type.Put) {
             return (strike-price > 0.0 ? cashPayoff : 0.0);
         } else {
             throw new LibraryException(UNKNOWN_OPTION_TYPE); // QA:[RG]::verified

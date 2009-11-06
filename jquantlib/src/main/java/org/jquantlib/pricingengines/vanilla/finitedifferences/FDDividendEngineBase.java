@@ -1,4 +1,5 @@
 /*
+ Copyright (C) 2007 Srinivas Hasti
  Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
@@ -19,6 +20,7 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+
 /*
  Copyright (C) 2005 Joseph Wang
  Copyright (C) 2007 StatPro Italia srl
@@ -39,18 +41,28 @@
 
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jquantlib.QL;
 import org.jquantlib.cashflow.Dividend;
+import org.jquantlib.cashflow.Event;
+import org.jquantlib.instruments.DividendVanillaOption;
+import org.jquantlib.lang.reflect.ReflectConstants;
 import org.jquantlib.pricingengines.PricingEngine.Arguments;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.time.Date;
 
 /**
- * <p>Abstract base class for dividend engines. </p>
+ * Abstract base class for dividend engines
  *
-@Todo <p>The dividend class really needs to be made more sophisticated to distinguish between fixed dividends and fractional dividends </p>
+ * @todo The dividend class really needs to be made more sophisticated to distinguish between fixed dividends and fractional dividends
+ *
+ * @author Srinivas Hasti
+ * @author Richard Gomes
  */
+//TODO: The dividend class really needs to be made more sophisticated to distinguish between fixed dividends and fractional dividends
 public abstract class FDDividendEngineBase extends FDMultiPeriodEngine {
-
 
     //
     // public methods
@@ -88,8 +100,14 @@ public abstract class FDDividendEngineBase extends FDMultiPeriodEngine {
     //
 
     @Override
-    protected void setupArguments(final Arguments  a) /* @ReadOnly */ {
-        throw new UnsupportedOperationException();
+    protected void setupArguments(final Arguments  args) /* @ReadOnly */ {
+        QL.require(DividendVanillaOption.ArgumentsImpl.class.isAssignableFrom(args.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+        final DividendVanillaOption.ArgumentsImpl arguments = (DividendVanillaOption.ArgumentsImpl)args;
+        final List<Event> events = new ArrayList<Event>(arguments.cashFlow.size());
+        for (final Dividend cashFlow : arguments.cashFlow) {
+            events.add(cashFlow);
+        }
+        super.setupArguments(args, events);
     }
 
     protected double getDividendAmount(final int i) /* @ReadOnly */ {
@@ -104,7 +122,8 @@ public abstract class FDDividendEngineBase extends FDMultiPeriodEngine {
     protected double getDiscountedDividend(final int i) /* @ReadOnly */ {
         final double dividend = getDividendAmount(i);
         final Date date = events.get(i).date();
-        final double discount = process.riskFreeRate().currentLink().discount(date) / process.dividendYield().currentLink().discount(date);
+        final double discount = process.riskFreeRate().currentLink().discount(date)
+                              / process.dividendYield().currentLink().discount(date);
         return dividend * discount;
     }
 

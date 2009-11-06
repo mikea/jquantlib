@@ -29,21 +29,13 @@ import org.jquantlib.time.Date;
 
 /**
  * Settings for the application.
- *
  * <p>
- * Settings are mutable values which have a life cycle of a certain operation of
- * sequence of operations defined by the application.
+ * This class aggregates mutable values which have life cycle of a certain operation or
+ * sequence of operations defined by the enclosing thread.
  *
+ * @see ThreadLocal
  */
 public class Settings {
-
-    //    /**
-    //     * Define this to have singletons return different instances for different sessions.
-    //     * <p>
-    //     * You will have to provide and link with the library a sessionId() function in
-    //     * namespace QuantLib, returning a different session id for each session.
-    //     */
-    //    private static final String ENABLE_SESSIONS = "ENABLE_SESSIONS";
 
     /**
      * Define this if negative yield rates should be allowed. This might not be safe.
@@ -119,13 +111,10 @@ public class Settings {
         return var==null? false : (Boolean) var;
     }
 
-    //TODO change to isRefineToFullMachinePrecisionUsingHalleysMethod
-    public boolean isRefineHighPrecision() {
+    public boolean isRefineHighPrecisionUsingHalleysMethod() {
         final Object var = attrs.get().get(REFINE_TO_FULL_MACHINE_PRECISION_USING_HALLEYS_METHOD);
         return var==null? false : (Boolean) var;
     }
-
-
 
     public void setNegativeRates(final boolean negativeRates) {
         attrs.get().put(NEGATIVE_RATES, negativeRates);
@@ -148,11 +137,9 @@ public class Settings {
         attrs.get().put(ENFORCES_TODAYS_HISTORIC_FIXINGS, enforceTodaysHistoricFixings);
     }
 
-    //TODO change to setRefineToFullMachinePrecisionUsingHalleysMethod
-    public void setRefineHighPrecision(final boolean refineToFullMachinePrecisionUsingHalleysMethod) {
+    public void setRefineHighPrecisionUsingHalleysMethod(final boolean refineToFullMachinePrecisionUsingHalleysMethod) {
         attrs.get().put(REFINE_TO_FULL_MACHINE_PRECISION_USING_HALLEYS_METHOD, refineToFullMachinePrecisionUsingHalleysMethod);
     }
-
 
 
 

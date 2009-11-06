@@ -145,12 +145,11 @@ public class VanillaOption extends OneAssetOption {
 
 
 
+    //
+    // public interfaces
+    //
 
-
-
-//    VanillaOption.Arguments;
-//    VanillaOption.Results;
-//    VanillaOption.Engine;
+    public interface Engine extends OneAssetOption.Engine {}
 
 
 
@@ -159,7 +158,19 @@ public class VanillaOption extends OneAssetOption {
      *
      * @author Richard Gomes
      */
-    static public abstract class EngineImpl extends OneAssetOption.EngineImpl { }
+    static public abstract class EngineImpl
+            extends OneAssetOption.EngineImpl
+            implements VanillaOption.Engine {
+
+        protected EngineImpl() {
+            super(new OneAssetOption.ArgumentsImpl(), new OneAssetOption.ResultsImpl());
+        }
+
+        protected EngineImpl(final VanillaOption.Arguments arguments, final VanillaOption.Results results) {
+            super(arguments, results);
+        }
+
+    }
 
 
 }

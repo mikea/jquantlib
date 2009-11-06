@@ -41,8 +41,8 @@ public class CalendarUtil {
     protected void checkHolidayList(final List<Date> expected, final Calendar c, final int year) {
 
         final List<Date> calculated = Calendar.holidayList(c,
-                new Date(1, Month.JANUARY, year),
-                new Date(31, Month.DECEMBER, year),
+                new Date(1, Month.January, year),
+                new Date(31, Month.December, year),
                 false);
 
         int error = 0;

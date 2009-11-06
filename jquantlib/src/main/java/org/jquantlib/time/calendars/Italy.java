@@ -22,13 +22,13 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -139,29 +139,29 @@ public class Italy extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day
-                    || (d == 1 && m == JANUARY)
+                    || (d == 1 && m == January)
                     // Epiphany
-                    || (d == 6 && m == JANUARY)
+                    || (d == 6 && m == January)
                     // Easter Monday
                     || (dd == em)
                     // Liberation Day
-                    || (d == 25 && m == APRIL)
+                    || (d == 25 && m == April)
                     // Labour Day
-                    || (d == 1 && m == MAY)
+                    || (d == 1 && m == May)
                     // Republic Day
-                    || (d == 2 && m == JUNE && y >= 2000)
+                    || (d == 2 && m == June && y >= 2000)
                     // Assumption
-                    || (d == 15 && m == AUGUST)
+                    || (d == 15 && m == August)
                     // All Saints' Day
-                    || (d == 1 && m == NOVEMBER)
+                    || (d == 1 && m == November)
                     // Immaculate Conception
-                    || (d == 8 && m == DECEMBER)
+                    || (d == 8 && m == December)
                     // Christmas
-                    || (d == 25 && m == DECEMBER)
+                    || (d == 25 && m == December)
                     // St. Stephen
-                    || (d == 26 && m == DECEMBER)
+                    || (d == 26 && m == December)
                     // DECEMBER 31st, 1999 only
-                    || (d == 31 && m == DECEMBER && y == 1999)) {
+                    || (d == 31 && m == December && y == 1999)) {
                 return false;
             }
             return true;
@@ -183,23 +183,23 @@ public class Italy extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day
-                    || (d == 1 && m == JANUARY)
+                    || (d == 1 && m == January)
                     // Good Friday
                     || (dd == em - 3)
                     // Easter Monday
                     || (dd == em)
                     // Labour Day
-                    || (d == 1 && m == MAY)
+                    || (d == 1 && m == May)
                     // Assumption
-                    || (d == 15 && m == AUGUST)
+                    || (d == 15 && m == August)
                     // Christmas' Eve
-                    || (d == 24 && m == DECEMBER)
+                    || (d == 24 && m == December)
                     // Christmas
-                    || (d == 25 && m == DECEMBER)
+                    || (d == 25 && m == December)
                     // St. Stephen
-                    || (d == 26 && m == DECEMBER)
+                    || (d == 26 && m == December)
                     // New Year's Eve
-                    || (d == 31 && m == DECEMBER)) {
+                    || (d == 31 && m == December)) {
                 return false;
             }
             return true;

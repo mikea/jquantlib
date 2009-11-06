@@ -22,11 +22,11 @@
 
 package org.jquantlib.time.calendars;
 
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -98,21 +98,21 @@ public class Poland extends Calendar {
 	            // Corpus Christi
 	            || (dd == em+59)
 	            // New Year's Day
-	            || (d == 1  && m == JANUARY)
+	            || (d == 1  && m == January)
 	            // May Day
-	            || (d == 1  && m == MAY)
+	            || (d == 1  && m == May)
 	            // Constitution Day
-	            || (d == 3  && m == MAY)
+	            || (d == 3  && m == May)
 	            // Assumption of the Blessed Virgin Mary
-	            || (d == 15  && m == AUGUST)
+	            || (d == 15  && m == August)
 	            // All Saints Day
-	            || (d == 1  && m == NOVEMBER)
+	            || (d == 1  && m == November)
 	            // Independence Day
-	            || (d ==11  && m == NOVEMBER)
+	            || (d ==11  && m == November)
 	            // Christmas
-	            || (d == 25 && m == DECEMBER)
+	            || (d == 25 && m == December)
 	            // 2nd Day of Christmas
-	            || (d == 26 && m == DECEMBER)) {
+	            || (d == 26 && m == December)) {
                 return false;
             }
 	        return true;

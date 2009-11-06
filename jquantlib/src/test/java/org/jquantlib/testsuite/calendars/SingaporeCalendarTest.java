@@ -22,16 +22,16 @@
 
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.APRIL;
-import static org.jquantlib.time.Month.AUGUST;
-import static org.jquantlib.time.Month.DECEMBER;
-import static org.jquantlib.time.Month.FEBRUARY;
-import static org.jquantlib.time.Month.JANUARY;
-import static org.jquantlib.time.Month.JUNE;
-import static org.jquantlib.time.Month.MARCH;
-import static org.jquantlib.time.Month.MAY;
-import static org.jquantlib.time.Month.NOVEMBER;
-import static org.jquantlib.time.Month.OCTOBER;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.August;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,32 +67,32 @@ public class SingaporeCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	//New year's day
-    	expectedHol.add(new Date(1,JANUARY,year));
+    	expectedHol.add(new Date(1,January,year));
 
 		//Chinese New Year
-		expectedHol.add(new Date(22,JANUARY,year));
-		expectedHol.add(new Date(23,JANUARY,year));
+		expectedHol.add(new Date(22,January,year));
+		expectedHol.add(new Date(23,January,year));
 
 		// Hari Raya Haji
-		expectedHol.add(new Date(2,FEBRUARY,year));
+		expectedHol.add(new Date(2,February,year));
 
 		//good friday
-		expectedHol.add(new Date(9,APRIL,year));
+		expectedHol.add(new Date(9,April,year));
 
     	//labour day -- weekend in yr 2004
     	//expectedHol.add(new Date(1,MAY,year));
 
 		//Vesak day
-		expectedHol.add(new Date(2,JUNE,year));
+		expectedHol.add(new Date(2,June,year));
 
     	// National Day
-    	expectedHol.add(new Date(9,AUGUST,year));
+    	expectedHol.add(new Date(9,August,year));
 
 		//Deepavali
-		expectedHol.add(new Date(11,NOVEMBER,year));
+		expectedHol.add(new Date(11,November,year));
 
     	// Hari Raya Puasa -- 14 is in the weekends of 2004
-		expectedHol.add(new Date(15,NOVEMBER,year));
+		expectedHol.add(new Date(15,November,year));
 
 		//christmas  -- weekend in yr 2004
     	//expectedHol.add(new Date(25,DECEMBER,year));
@@ -117,14 +117,14 @@ public class SingaporeCalendarTest {
     	//New year's day -- weekend in yr 2005
     	//expectedHol.add(new Date(1,JANUARY,year));
 		// Hari Raya Haji
-		expectedHol.add(new Date(21,JANUARY,year));
+		expectedHol.add(new Date(21,January,year));
 
 		//Chinese New Year
-    	expectedHol.add(new Date(9,FEBRUARY,year));
-		expectedHol.add(new Date(10,FEBRUARY,year));
+    	expectedHol.add(new Date(9,February,year));
+		expectedHol.add(new Date(10,February,year));
 
 		//good friday
-		expectedHol.add(new Date(25,MARCH,year));
+		expectedHol.add(new Date(25,March,year));
 
     	//labour day -- weekend in yr 2005
     	//expectedHol.add(new Date(1,MAY,year));
@@ -133,11 +133,11 @@ public class SingaporeCalendarTest {
 		//expectedHol.add(new Date(22,MAY,year));
 
     	// National Day
-    	expectedHol.add(new Date(9,AUGUST,year));
+    	expectedHol.add(new Date(9,August,year));
 		//Diwali
-		expectedHol.add(new Date(1,NOVEMBER,year));
+		expectedHol.add(new Date(1,November,year));
     	// Hari Raya Puasa -- weekend in 2005
-		expectedHol.add(new Date(3,NOVEMBER,year));
+		expectedHol.add(new Date(3,November,year));
 
 		//christmas  -- weekend in yr 2005
     	//expectedHol.add(new Date(25,DECEMBER,year));
@@ -162,30 +162,30 @@ public class SingaporeCalendarTest {
     	//New year's day -- weekend in 2006
     	//expectedHol.add(new Date(1,JANUARY,year));
 		// Hari Raya Haji
-		expectedHol.add(new Date(10,JANUARY,year));
+		expectedHol.add(new Date(10,January,year));
 
 		//Chinese New Year
-    	expectedHol.add(new Date(30,JANUARY,year));
-		expectedHol.add(new Date(31,JANUARY,year));
+    	expectedHol.add(new Date(30,January,year));
+		expectedHol.add(new Date(31,January,year));
 
 		//good friday
-		expectedHol.add(new Date(14,APRIL,year));
+		expectedHol.add(new Date(14,April,year));
 
     	//labour day
-    	expectedHol.add(new Date(1,MAY,year));
+    	expectedHol.add(new Date(1,May,year));
 
 		//Vesak day
-		expectedHol.add(new Date(12,MAY,year));
+		expectedHol.add(new Date(12,May,year));
 
     	// National Day
-    	expectedHol.add(new Date(9,AUGUST,year));
+    	expectedHol.add(new Date(9,August,year));
     	// Hari Raya Puasa -- weekend in 2007
-		expectedHol.add(new Date(24,OCTOBER,year));
+		expectedHol.add(new Date(24,October,year));
 
 
 
 		//christmas
-    	expectedHol.add(new Date(25,DECEMBER,year));
+    	expectedHol.add(new Date(25,December,year));
 
 
         // Call the Holiday Check
@@ -221,36 +221,36 @@ public class SingaporeCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	//New year's day
-    	expectedHol.add(new Date(1,JANUARY,year));
+    	expectedHol.add(new Date(1,January,year));
 		// Hari Raya Haji
-		expectedHol.add(new Date(2,JANUARY,year));
+		expectedHol.add(new Date(2,January,year));
 
 		//Chinese New Year
-    	expectedHol.add(new Date(19,FEBRUARY,year));
-		expectedHol.add(new Date(20,FEBRUARY,year));
+    	expectedHol.add(new Date(19,February,year));
+		expectedHol.add(new Date(20,February,year));
 
 		//good friday
-		expectedHol.add(new Date(6,APRIL,year));
+		expectedHol.add(new Date(6,April,year));
 
     	//labour day
-    	expectedHol.add(new Date(1,MAY,year));
+    	expectedHol.add(new Date(1,May,year));
 
 		//Vesak day
-		expectedHol.add(new Date(31,MAY,year));
+		expectedHol.add(new Date(31,May,year));
 
     	// National Day
-    	expectedHol.add(new Date(9,AUGUST,year));
+    	expectedHol.add(new Date(9,August,year));
     	// Hari Raya Puasa -- weekend in 2007
 		//expectedHol.add(new Date(13,OCTOBER,year));
 		// Deepavali
-		expectedHol.add(new Date(8,NOVEMBER,year));
+		expectedHol.add(new Date(8,November,year));
 
 
 		// Hari Raya Haji
-		expectedHol.add(new Date(20,DECEMBER,year));
+		expectedHol.add(new Date(20,December,year));
 
 		//christmas
-    	expectedHol.add(new Date(25,DECEMBER,year));
+    	expectedHol.add(new Date(25,December,year));
 
 
         // Call the Holiday Check
@@ -285,18 +285,18 @@ public class SingaporeCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	//New year's day
-    	expectedHol.add(new Date(1,JANUARY,year));
+    	expectedHol.add(new Date(1,January,year));
 
 
 		//Chinese New Year
-    	expectedHol.add(new Date(7,FEBRUARY,year));
-		expectedHol.add(new Date(8,FEBRUARY,year));
+    	expectedHol.add(new Date(7,February,year));
+		expectedHol.add(new Date(8,February,year));
 
 		//good friday
-		expectedHol.add(new Date(21,MARCH,year));
+		expectedHol.add(new Date(21,March,year));
 
     	//labour day
-    	expectedHol.add(new Date(1,MAY,year));
+    	expectedHol.add(new Date(1,May,year));
 
     	//Vesak day
 //    	expectedHol.add(new Date(18,MAY,year)); //Zahid 18 from 19, Sunday
@@ -305,16 +305,16 @@ public class SingaporeCalendarTest {
     	// expectedHol.add(new Date(9,AUGUST,year));
 
     	// Hari Raya Puasa -- weekend in 2007
-		expectedHol.add(new Date(1,OCTOBER,year));
+		expectedHol.add(new Date(1,October,year));
 
 		// Deepavali
-		expectedHol.add(new Date(28,OCTOBER,year));//Zahid 28 from 27
+		expectedHol.add(new Date(28,October,year));//Zahid 28 from 27
 
 		// Hari Raya Haji
-		expectedHol.add(new Date(8,DECEMBER,year));
+		expectedHol.add(new Date(8,December,year));
 
 		//christmas
-    	expectedHol.add(new Date(25,DECEMBER,year));
+    	expectedHol.add(new Date(25,December,year));
 
         // Call the Holiday Check
         final CalendarUtil cbt = new CalendarUtil();
@@ -347,17 +347,17 @@ public class SingaporeCalendarTest {
     	final List<Date> expectedHol = new ArrayList<Date>();
 
     	//New year's day
-    	expectedHol.add(new Date(1,JANUARY,year));
+    	expectedHol.add(new Date(1,January,year));
 
     	// Chinese New Year
-    	expectedHol.add(new Date(26,JANUARY,year));
-    	expectedHol.add(new Date(27,JANUARY,year));
+    	expectedHol.add(new Date(26,January,year));
+    	expectedHol.add(new Date(27,January,year));
 
     	// Good Friday
-    	expectedHol.add(new Date(10,APRIL,year));
+    	expectedHol.add(new Date(10,April,year));
 
 		//labour day
-    	expectedHol.add(new Date(1,MAY,year));
+    	expectedHol.add(new Date(1,May,year));
 
     	// Vesak Day
     	//expectedHol.add(new Date(9,MAY,year));
@@ -372,10 +372,10 @@ public class SingaporeCalendarTest {
     	//expectedHol.add(new Date(15,NOVEMBER,year));
 
     	// Hari Raya Haji
-    	expectedHol.add(new Date(27,NOVEMBER,year));
+    	expectedHol.add(new Date(27,November,year));
 
 		//christmas
-    	expectedHol.add(new Date(25,DECEMBER,year));
+    	expectedHol.add(new Date(25,December,year));
 
 
         // Call the Holiday Check
