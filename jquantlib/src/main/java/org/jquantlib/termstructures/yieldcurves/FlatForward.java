@@ -54,6 +54,13 @@ import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
+/**
+ * Flat interest-rate curve
+ *
+ * @category yieldtermstructures
+ *
+ * @author Richard Gomes
+ */
 public class FlatForward extends AbstractYieldTermStructure {
 
     private final Handle<? extends Quote> forward;
@@ -62,7 +69,9 @@ public class FlatForward extends AbstractYieldTermStructure {
     private InterestRate rate;
 
 
-    // --------------------------------------------
+    //
+    // public constructors
+    //
 
     public FlatForward(
             final Date referenceDate,
@@ -190,11 +199,10 @@ public class FlatForward extends AbstractYieldTermStructure {
         this(settlementDays, calendar, forward, dayCounter, compounding, Frequency.Annual);
     }
 
-    // --------------------------------------------
 
-    private void updateRate() {
-        rate = new InterestRate(forward.currentLink().value(), this.dayCounter(), this.compounding, this.frequency);
-    }
+    //
+    // public methods
+    //
 
     public final Compounding compounding() {
         return compounding;
@@ -202,6 +210,15 @@ public class FlatForward extends AbstractYieldTermStructure {
 
     public final Frequency compoundingFrequency() {
         return frequency;
+    }
+
+
+    //
+    // private methods
+    //
+
+    private void updateRate() {
+        rate = new InterestRate(forward.currentLink().value(), this.dayCounter(), this.compounding, this.frequency);
     }
 
 

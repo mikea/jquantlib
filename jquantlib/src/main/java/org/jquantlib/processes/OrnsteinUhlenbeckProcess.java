@@ -40,8 +40,8 @@ import org.jquantlib.math.Constants;
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class OrnsteinUhlenbeckProcess extends StochasticProcess1D {
 
-    private static final String negative_speed_given = "negative speed given";
-    private static final String negative_volatility_given = "negative volatilty given";
+    static private final String NEGATIVE_SPEED_GIVEN = "negative speed given";
+    static private final String NEGATIVE_VOLATILITY_GIVEN = "negative volatilty given";
 
     private final double /* @Real */x0_, speed_, level_;
     private final double /* @Volatility */volatility_;
@@ -66,12 +66,8 @@ public class OrnsteinUhlenbeckProcess extends StochasticProcess1D {
             final double /* @Real */level) {
         super();
 
-        QL.require(speed >= 0.0, negative_speed_given); // QA:[RG]::verified // TODO: message
-        QL.require(vol >= 0.0, negative_volatility_given); // QA:[RG]::verified // TODO: message
-
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        QL.require(speed >= 0.0, NEGATIVE_SPEED_GIVEN); // QA:[RG]::verified // TODO: message
+        QL.require(vol >= 0.0, NEGATIVE_VOLATILITY_GIVEN); // QA:[RG]::verified // TODO: message
 
         x0_ = (x0);
         speed_ = (speed);

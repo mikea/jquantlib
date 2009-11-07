@@ -37,7 +37,7 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.testsuite;
+package org.jquantlib.testsuite.instruments;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;

@@ -38,7 +38,6 @@
  */
 package org.jquantlib.processes;
 
-import org.jquantlib.QL;
 import org.jquantlib.math.Constants;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.Compounding;
@@ -63,14 +62,18 @@ public class HullWhiteProcess extends StochasticProcess1D {
             final Handle<YieldTermStructure> h,
             final double a,
             final double sigma) {
-        super();
         this.process = new OrnsteinUhlenbeckProcess(
-                a, sigma, h.currentLink().forwardRate(0.0, 0.0, Compounding.Continuous, Frequency.NoFrequency).rate());
+                a,
+                sigma,
+                h.currentLink()
+                    .forwardRate(
+                            0.0,
+                            0.0,
+                            Compounding.Continuous, Frequency.NoFrequency)
+                    .rate());
         this.h = h;
         this.a = a;
         this.sigma = sigma;
-        QL.require(this.a >= 0.0, "negative a given");
-        QL.require(this.sigma >= 0.0, "negative sigma given");
     }
 
     //
