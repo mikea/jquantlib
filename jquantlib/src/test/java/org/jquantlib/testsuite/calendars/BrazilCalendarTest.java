@@ -57,7 +57,7 @@ public class BrazilCalendarTest {
 	private final Calendar settlement;
 
 	public BrazilCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	    exchange = new Brazil(Brazil.Market.BOVESPA);
 	    settlement = new Brazil(Brazil.Market.SETTLEMENT);
 	}

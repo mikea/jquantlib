@@ -299,8 +299,7 @@ public class TimeGrid {
 
 
     public @NonNegative int index(@Time @NonNegative final double t) /* @ReadOnly */ {
-        @NonNegative
-        final int i = closestIndex(t);
+        final @NonNegative int i = closestIndex(t);
         if (Closeness.isCloseEnough(t, times.get(i))) {
             return i;
         } else if (t < front()) {

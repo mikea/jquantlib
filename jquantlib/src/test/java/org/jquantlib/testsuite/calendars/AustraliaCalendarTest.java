@@ -51,7 +51,7 @@ public class AustraliaCalendarTest {
 	private final Calendar exchange;
 
 	public AustraliaCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	    exchange = new Australia();//.getCalendar(Australia.Market.SETTLEMENT);
 	}
 

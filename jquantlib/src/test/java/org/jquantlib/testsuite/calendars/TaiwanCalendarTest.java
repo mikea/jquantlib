@@ -51,7 +51,7 @@ public class TaiwanCalendarTest {
 	private final List<Date> expectedHol = null;
 
 	public TaiwanCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 		this.exchange = new Taiwan(Taiwan.Market.TSEC);
 	}
 

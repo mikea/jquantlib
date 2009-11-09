@@ -52,7 +52,7 @@ public class ChinaCalendarTest {
     private final Calendar exchange;
 
 	public ChinaCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
         exchange = new China(China.Market.SSE);
 	}
 

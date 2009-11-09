@@ -101,9 +101,8 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
         convAdj = new Handle<Quote>(new SimpleQuote(conv));
         earliestDate = immDate;
         final Calendar cal = i.fixingCalendar();
-        latestDate = cal.advance(immDate, i.tenor(), i.getConvention());
-        yearFraction = i.dayCounter().yearFraction(earliestDate,
-                latestDate);
+        latestDate = cal.advance(immDate, i.tenor(), i.businessDayConvention());
+        yearFraction = i.dayCounter().yearFraction(earliestDate, latestDate);
     }
 
     @Override

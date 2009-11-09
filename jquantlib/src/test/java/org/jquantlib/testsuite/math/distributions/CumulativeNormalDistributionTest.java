@@ -34,7 +34,7 @@ import org.junit.Test;
 public class CumulativeNormalDistributionTest {
 
 	public CumulativeNormalDistributionTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 	@Test

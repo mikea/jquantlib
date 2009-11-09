@@ -66,7 +66,7 @@ import org.junit.Test;
 public class DayCountersTest {
 
     public DayCountersTest() {
-        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
     private static class SingleCase {

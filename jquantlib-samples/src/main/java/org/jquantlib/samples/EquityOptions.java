@@ -37,9 +37,10 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
  */
 
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
 
+import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
@@ -91,14 +92,15 @@ import org.jquantlib.util.StopClock;
  *
  * @author Richard Gomes
  */
-public class EquityOptions {
+public class EquityOptions implements Runnable {
 
-    /**
-     * @param args
-     */
     public static void main(final String[] args) {
+        new EquityOptions().run();
+    }
 
-        System.out.println("\n\n::::: "+EquityOptions.class.getSimpleName()+" :::::");
+    public void run() {
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();
@@ -143,7 +145,7 @@ public class EquityOptions {
 		final int bermudanForwards = 4;
 		final Date[] exerciseDates = new Date[bermudanForwards];
 		for (int i = 1; i <= bermudanForwards; i++) {
-		    exerciseDates[i] = settlementDate.add(new Period(3 * i, TimeUnit.Months));
+		    exerciseDates[i-1] = settlementDate.add(new Period(3*i, TimeUnit.Months));
 		}
 	    final Exercise bermudanExercise = new BermudanExercise(exerciseDates);
 

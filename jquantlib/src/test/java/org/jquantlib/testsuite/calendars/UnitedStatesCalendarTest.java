@@ -34,7 +34,7 @@ public class UnitedStatesCalendarTest {
 	private final Calendar cSettlement;
 
 	public UnitedStatesCalendarTest() {
-        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
         this.cNYSE      = new UnitedStates(UnitedStates.Market.NYSE);
         this.cGovBond   = new UnitedStates(UnitedStates.Market.GOVERNMENTBOND);
         this.cNERC      = new UnitedStates(UnitedStates.Market.NERC);

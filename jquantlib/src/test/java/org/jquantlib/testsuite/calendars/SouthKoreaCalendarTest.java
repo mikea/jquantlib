@@ -55,7 +55,7 @@ public class SouthKoreaCalendarTest {
     private List<Date> expectedHol = null;
 
     public SouthKoreaCalendarTest() {
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
     @Before

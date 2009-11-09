@@ -38,7 +38,7 @@ import org.junit.Test;
 public class TridiagonalOperatorTest {
 
 	public TridiagonalOperatorTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
     @Test

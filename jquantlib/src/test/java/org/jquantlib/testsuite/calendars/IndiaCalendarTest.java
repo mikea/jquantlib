@@ -55,7 +55,7 @@ public class IndiaCalendarTest {
     private Calendar c = null;
 
     public IndiaCalendarTest() {
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
     @Before

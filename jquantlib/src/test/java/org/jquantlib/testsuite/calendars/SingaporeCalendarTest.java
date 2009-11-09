@@ -52,7 +52,7 @@ import org.junit.Test;
 public class SingaporeCalendarTest {
 
 	public SingaporeCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 	// 2004

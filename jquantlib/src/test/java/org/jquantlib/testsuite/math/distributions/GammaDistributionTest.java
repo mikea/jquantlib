@@ -36,7 +36,7 @@ import org.junit.Test;
 public class GammaDistributionTest {
 
 	public GammaDistributionTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 	//FIXME Compare the test values to QuantLib

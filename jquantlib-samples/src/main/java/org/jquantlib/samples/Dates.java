@@ -20,8 +20,9 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
+import org.jquantlib.QL;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
@@ -30,18 +31,22 @@ import org.jquantlib.time.Weekday;
 import org.jquantlib.util.StopClock;
 
 /**
- * 
+ *
  * This class explores the functionalities provided by Date interface.
- * 
+ *
  * @author Apratim Rajendra
  *
  */
 
-public class Dates {
+public class Dates implements Runnable {
 
-    public static void main(final String args[]){
+    public static void main(final String[] args) {
+        new Dates().run();
+    }
 
-        System.out.println("\n\n::::: "+Dates.class.getSimpleName()+" :::::");
+    public void run() {
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();

@@ -55,7 +55,7 @@ public class CanadaCalendarTest {
     private final Calendar exchange;
 
 	public CanadaCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
         settlement = new Canada(Canada.Market.SETTLEMENT);
         exchange = new Canada(Canada.Market.TSX);
 	}

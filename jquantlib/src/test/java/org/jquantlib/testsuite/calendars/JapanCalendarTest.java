@@ -47,7 +47,7 @@ public class JapanCalendarTest {
     private final Calendar settlement;
 
     public JapanCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	    this.settlement = new Japan();
 	}
 

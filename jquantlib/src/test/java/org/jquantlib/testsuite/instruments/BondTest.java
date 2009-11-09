@@ -80,7 +80,7 @@ import org.junit.Test;
 public class BondTest {
 
 	public BondTest() {
-		QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+		QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 	}
 
 	private static class CommonVars {

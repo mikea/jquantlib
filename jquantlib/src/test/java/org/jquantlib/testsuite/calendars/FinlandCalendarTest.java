@@ -49,7 +49,7 @@ public class FinlandCalendarTest {
     private final Calendar exchange;
 
 	public FinlandCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	    //TODO: this.settlement = Finland.getCalendar(Finland.Market.Settlement);
 	    this.exchange   = new Finland();
 	}

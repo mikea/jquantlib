@@ -27,7 +27,7 @@ public class IcelandCalendarTest {
     private final Calendar exchange;
 
 	public IcelandCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	    //TODO: this.settlement = Iceland.getCalendar(Iceland.Market.Settlement);
 	    this.exchange   = new Iceland(Iceland.Market.ICEX);
 	}

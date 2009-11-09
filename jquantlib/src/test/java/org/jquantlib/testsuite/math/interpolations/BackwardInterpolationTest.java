@@ -44,7 +44,7 @@ public class BackwardInterpolationTest {
 	private static double tolerance;
 
 	public BackwardInterpolationTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 
         interpolation = new BackwardFlat().interpolate(x.constIterator(), y.constIterator());
         length = x.size();

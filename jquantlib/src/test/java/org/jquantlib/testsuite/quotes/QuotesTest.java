@@ -41,7 +41,7 @@ import org.junit.Test;
 public class QuotesTest {
 
 	public QuotesTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 //	private double add10(final double x) { return x+10; }

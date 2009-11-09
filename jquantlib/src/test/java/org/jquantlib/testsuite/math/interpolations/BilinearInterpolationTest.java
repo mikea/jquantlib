@@ -46,8 +46,8 @@ public class BilinearInterpolationTest {
 	private final double tolerance;
 
     public BilinearInterpolationTest() {
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
-        QL.info("\n\n::::: Testing use of interpolations as functors... :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: Testing use of interpolations as functors... :::::");
 
         // fill zz using f(x,y) = x + y;
         zz = new Matrix(x.size(), y.size());

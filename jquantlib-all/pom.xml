@@ -64,6 +64,7 @@
 
     <modules>
         <module>../jquantlib</module>
+        <module>../jquantlib-helpers</module>
         <module>../jquantlib-samples</module>
         <!-- module>../jquantlib-osgi</module-->
     </modules>
@@ -594,6 +595,137 @@
         </plugins>
     </build>
 
+    <reporting>
+        <plugins>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <id>html</id>
+                        <configuration>
+                            <destDir>apidocs/${project.version}</destDir>
+                            <outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
+                            <reportOutputDirectory>${project.reporting.outputDirectory}/apidocs/${project.version}</reportOutputDirectory>
+                        </configuration>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet>
+                        <id>test-html</id>
+                        <configuration>
+                            <destDir>testapidocs/${project.version}</destDir>
+                            <outputDirectory>${project.build.directory}/testapidocs/${project.version}</outputDirectory>
+                            <reportOutputDirectory>${project.reporting.outputDirectory}/testapidocs/${project.version}</reportOutputDirectory>
+                        </configuration>
+                        <reports>
+                            <report>test-javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <configuration>
+                    <linkJavadoc>true</linkJavadoc>
+                    <javadocDir>target/site/apidocs/${project.version}</javadocDir>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changelog-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <id>dual-report</id>
+                        <configuration>
+                            <type>range</type>
+                            <range>30</range>
+                        </configuration>
+                        <reports>
+                            <report>changelog</report>
+                            <report>file-activity</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+                <configuration>
+                    <tags>
+                        <tag>TODO</tag>
+                        <tag>FIXME</tag>
+                        <tag>XXX</tag>
+                        <tag>TEST</tag>
+                        <tag>PENDING</tag>
+                        <tag>PERFORMANCE</tag>
+                        <tag>@Override</tag>
+                        <tag>@Deprecated</tag>
+                        <tag>@SupressWarnings</tag>
+                        <tag>@Ignore</tag>
+                        <tag>@Unused</tag>
+                        <tag>@note</tag>
+                        <tag>@warning</tag>
+                        <tag>@test</tag>
+                        <tag>@bug</tag>
+                    </tags>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <linkXref>true</linkXref>
+                    <sourceEncoding>utf-8</sourceEncoding>
+                    <minimumTokens>100</minimumTokens>
+                    <targetJdk>${props.compile.jdk.target}</targetJdk>
+                    <excludes>
+                        <exclude>**/*Bean.java</exclude>
+                        <exclude>**/generated/*.java</exclude>
+                    </excludes>
+                    <rulesets>
+                        <ruleset>/rulesets/basic.xml</ruleset>
+                        <ruleset>/rulesets/braces.xml</ruleset>
+                        <ruleset>/rulesets/naming.xml</ruleset>
+                        <ruleset>/rulesets/finalizers.xml</ruleset>
+                        <ruleset>/rulesets/logging-java.xml</ruleset>
+                        <ruleset>/rulesets/migrating.xml</ruleset>
+                        <ruleset>/rulesets/controversial.xml</ruleset>
+                        <ruleset>${basedir}/../jquantlib-all/src/main/pmd/architectural.xml</ruleset> 
+                    </rulesets>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>pmd</report>
+                            <report>cpd</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <configuration>
+                    <report>maven-findbugs-plugin</report>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+        
+    </reporting>
+    
     <profiles>
 
         <profile>
@@ -711,95 +843,6 @@
                                 -nodefontsize 9 -nodefontpackagesize 7 </additionalparam>
                             <useStandardDocletOptions>true</useStandardDocletOptions>
                         </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jxr-plugin</artifactId>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-changelog-plugin</artifactId>
-                        <reportSets>
-                            <reportSet>
-                                <id>dual-report</id>
-                                <configuration>
-                                    <type>range</type>
-                                    <range>30</range>
-                                </configuration>
-                                <reports>
-                                    <report>changelog</report>
-                                    <report>file-activity</report>
-                                </reports>
-                            </reportSet>
-                        </reportSets>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>taglist-maven-plugin</artifactId>
-                        <configuration>
-                            <tags>
-                                <tag>TODO</tag>
-                                <tag>FIXME</tag>
-                                <tag>XXX</tag>
-                                <tag>TEST</tag>
-                                <tag>PENDING</tag>
-                                <tag>PERFORMANCE</tag>
-                                <tag>@Override</tag>
-                                <tag>@Deprecated</tag>
-                                <tag>@SupressWarnings</tag>
-                                <tag>@Ignore</tag>
-                                <tag>@Unused</tag>
-                                <tag>@note</tag>
-                            </tags>
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-pmd-plugin</artifactId>
-                        <configuration>
-                            <linkXref>true</linkXref>
-                            <sourceEncoding>utf-8</sourceEncoding>
-                            <minimumTokens>100</minimumTokens>
-                            <targetJdk>${props.compile.jdk.target}</targetJdk>
-                            <excludes>
-                                <exclude>**/*Bean.java</exclude>
-                                <exclude>**/generated/*.java</exclude>
-                            </excludes>
-                            <rulesets>
-                                <ruleset>/rulesets/basic.xml</ruleset>
-                                <ruleset>/rulesets/braces.xml</ruleset>
-                                <ruleset>/rulesets/naming.xml</ruleset>
-                                <ruleset>/rulesets/finalizers.xml</ruleset>
-                                <ruleset>/rulesets/logging-java.xml</ruleset>
-                                <ruleset>/rulesets/migrating.xml</ruleset>
-                                <ruleset>/rulesets/controversial.xml</ruleset>
-                            </rulesets>
-                        </configuration>
-                        <reportSets>
-                            <reportSet>
-                                <reports>
-                                    <report>pmd</report>
-                                    <report>cpd</report>
-                                </reports>
-                            </reportSet>
-                        </reportSets>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>findbugs-maven-plugin</artifactId>
-                        <configuration>
-                            <report>maven-findbugs-plugin</report>
-                        </configuration>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>jdepend-maven-plugin</artifactId>
                     </plugin>
 
                 </plugins>

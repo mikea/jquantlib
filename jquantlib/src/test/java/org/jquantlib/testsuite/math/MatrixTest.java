@@ -50,7 +50,7 @@ public class MatrixTest {
 
 
     public MatrixTest() {
-        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 
         M1 = new Matrix(new double[][] {
                 { 1.0,  0.9,  0.7 },

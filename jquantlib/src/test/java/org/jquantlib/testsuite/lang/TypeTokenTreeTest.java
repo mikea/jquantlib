@@ -17,7 +17,7 @@ public class TypeTokenTreeTest {
     private final MyClass testClass;
 
     public TypeTokenTreeTest() {
-        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 
         // notice the usage of an anonymous class denoted by "{ }"
         this.testClass = new MyClass<HashMap<String, Double>, TreeMap<String, LinkedList<List<Double>>>, List<Integer>>() { };

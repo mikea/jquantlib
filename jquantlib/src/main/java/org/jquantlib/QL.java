@@ -1,13 +1,9 @@
 package org.jquantlib;
 
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 // TODO: OSGi :: remove statics
 public class QL {
-
-    private final static Logger logger = LoggerFactory.getLogger(QL.class);
 
     /**
      * Throws an error if a <b>pre-condition</b> is not verified
@@ -63,7 +59,11 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void error(final String message) {
-        logger.error(message);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.error(message);
+        } else {
+            System.err.printf("ERROR: %s\n", message);
+        }
     }
 
     /**
@@ -72,7 +72,12 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void error(final String message, final Throwable t) {
-        logger.error(message, t);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.error(message, t);
+        } else {
+            System.err.printf("ERROR: %s : %s\n", message, t.getMessage());
+            t.printStackTrace(System.err);
+        }
     }
 
     /**
@@ -81,7 +86,13 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void error(final Throwable t) {
-        logger.error(t.getMessage(), t);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.error(t.getMessage(), t);
+        } else {
+            System.err.printf("ERROR: %s\n", t.getMessage());
+            System.err.println(t.getMessage());
+            t.printStackTrace(System.err);
+        }
     }
 
 
@@ -93,7 +104,11 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void warn(final String message) {
-        logger.warn(message);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.warn(message);
+        } else {
+            System.err.printf("WARN: %s\n", message);
+        }
     }
 
     /**
@@ -102,7 +117,12 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void warn(final String message, final Throwable t) {
-        logger.warn(message, t);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.warn(message, t);
+        } else {
+            System.err.printf("WARN: %s : %s\n", message, t.getMessage());
+            t.printStackTrace(System.err);
+        }
     }
 
     /**
@@ -111,7 +131,13 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void warn(final Throwable t) {
-        logger.warn(t.getMessage(), t);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.warn(t.getMessage(), t);
+        } else {
+            System.err.printf("WARN: %s\n", t.getMessage());
+            System.err.println(t.getMessage());
+            t.printStackTrace(System.err);
+        }
     }
 
 
@@ -123,7 +149,11 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void info(final String message) {
-        logger.info(message);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.info(message);
+        } else {
+            System.err.printf("INFO: %s\n", message);
+        }
     }
 
     /**
@@ -132,7 +162,12 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void info(final String message, final Throwable t) {
-        logger.info(message, t);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.info(message, t);
+        } else {
+            System.err.printf("INFO: %s : %s\n", message, t.getMessage());
+            t.printStackTrace(System.err);
+        }
     }
 
     /**
@@ -141,7 +176,13 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void info(final Throwable t) {
-        logger.info(t.getMessage(), t);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.info(t.getMessage(), t);
+        } else {
+            System.err.printf("INFO: %s\n", t.getMessage());
+            System.err.println(t.getMessage());
+            t.printStackTrace(System.err);
+        }
     }
 
 
@@ -153,7 +194,11 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void debug(final String message) {
-        logger.debug(message);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.debug(message);
+        } else {
+            System.err.printf("DEBUG: %s\n", message);
+        }
     }
 
     /**
@@ -162,7 +207,12 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void debug(final String message, final Throwable t) {
-        logger.debug(message, t);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.debug(message, t);
+        } else {
+            System.err.printf("DEBUG: %s : %s\n", message, t.getMessage());
+            t.printStackTrace(System.err);
+        }
     }
 
     /**
@@ -171,7 +221,13 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void debug(final Throwable t) {
-        logger.debug(t.getMessage(), t);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.debug(t.getMessage(), t);
+        } else {
+            System.err.printf("DEBUG: %s\n", t.getMessage());
+            System.err.println(t.getMessage());
+            t.printStackTrace(System.err);
+        }
     }
 
 
@@ -183,7 +239,11 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void trace(final String message) {
-        logger.trace(message);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.trace(message);
+        } else {
+            System.err.printf("TRACE: %s\n", message);
+        }
     }
 
     /**
@@ -192,7 +252,12 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void trace(final String message, final Throwable t) {
-        logger.trace(message, t);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.trace(message, t);
+        } else {
+            System.err.printf("TRACE: %s : %s\n", message, t.getMessage());
+            t.printStackTrace(System.err);
+        }
     }
 
     /**
@@ -201,7 +266,13 @@ public class QL {
      * @param message is a message to be emitted
      */
     public static void trace(final Throwable t) {
-        logger.trace(t.getMessage(), t);
+        if (JQuantLib.logger!=null) {
+            JQuantLib.logger.trace(t.getMessage(), t);
+        } else {
+            System.err.printf("TRACE: %s\n", t.getMessage());
+            System.err.println(t.getMessage());
+            t.printStackTrace(System.err);
+        }
     }
 
 }

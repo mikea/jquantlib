@@ -41,7 +41,7 @@ import org.junit.Test;
 public class MonotonicCubicSplineInterpolationTest extends InterpolationTestBase{
 
 	public MonotonicCubicSplineInterpolationTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
     @Ignore

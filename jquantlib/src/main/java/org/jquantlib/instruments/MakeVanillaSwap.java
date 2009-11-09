@@ -73,8 +73,8 @@ public class MakeVanillaSwap {
         floatTenor_ = (index.tenor());
         fixedConvention_ = (BusinessDayConvention.ModifiedFollowing);
         fixedTerminationDateConvention_ = (BusinessDayConvention.ModifiedFollowing);
-        floatConvention_ = (index.getConvention());
-        floatTerminationDateConvention_ = (index.getConvention());
+        floatConvention_ = (index.businessDayConvention());
+        floatTerminationDateConvention_ = (index.businessDayConvention());
         fixedRule_ = (DateGeneration.Rule.Backward);
         floatRule_ = (DateGeneration.Rule.Backward);
         fixedEndOfMonth_ = (false);

@@ -57,6 +57,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
             final BusinessDayConvention convention,
             final boolean endOfMonth,
             final DayCounter dayCounter) {
+        super(rate);
         QL.require(monthsToEnd > monthsToStart , "monthsToEnd must be greater than monthsToStart"); // QA:[RG]::verified // TODO: message
         this.quote = rate;
         this.monthsToStart = monthsToStart;
@@ -95,13 +96,13 @@ public class FraRateHelper extends RelativeDateRateHelper {
     }
 
     public FraRateHelper(final Handle<Quote> rate, final int monthsToStart, final IborIndex i) {
+        super(rate);
         this.quote = rate;
         this.monthsToStart = monthsToStart;
         iborIndex = new IborIndex(
                 "no-fix", // never take fixing into account
-                i.tenor(), i.fixingDays(), null, i.fixingCalendar(), i
-                .getConvention(), i.isEndOfMonth(), i.dayCounter(),
-                termStructureHandle);
+                i.tenor(), i.fixingDays(), null, i.fixingCalendar(), i.businessDayConvention(),
+                i.endOfMonth(), i.dayCounter(), termStructureHandle);
         initializeDates();
 
     }
@@ -111,9 +112,8 @@ public class FraRateHelper extends RelativeDateRateHelper {
         this.monthsToStart = monthsToStart;
         iborIndex = new IborIndex(
                 "no-fix", // never take fixing into account
-                i.tenor(), i.fixingDays(), null, i.fixingCalendar(), i
-                .getConvention(), i.isEndOfMonth(), i.dayCounter(),
-                termStructureHandle);
+                i.tenor(), i.fixingDays(), null, i.fixingCalendar(), i.businessDayConvention(),
+                i.endOfMonth(), i.dayCounter(), termStructureHandle);
         initializeDates();
     }
 
@@ -136,8 +136,8 @@ public class FraRateHelper extends RelativeDateRateHelper {
         earliestDate = iborIndex.fixingCalendar().advance(
                 settlement,
                 new Period(monthsToStart,TimeUnit.Months),
-                iborIndex.getConvention(),
-                iborIndex.isEndOfMonth());
+                iborIndex.businessDayConvention(),
+                iborIndex.endOfMonth());
         latestDate = iborIndex.maturityDate(earliestDate);
         fixingDate = iborIndex.fixingDate(earliestDate);
     }

@@ -20,7 +20,7 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,10 +75,19 @@ import org.jquantlib.util.StopClock;
  * @author Daniel Kong
  */
 //TODO: Work in progress ---- PLEASE INDICATE WHEN WORKING ON THIS EXAMPLE - Ueli
-public class ConvertibleBonds {
+public class ConvertibleBonds implements Runnable {
 
-    public static void main (final String [] args) {
-        QL.info("\n\n::::: "+ConvertibleBonds.class.getSimpleName()+" :::::");
+    public static void main(final String[] args) {
+        new ConvertibleBonds().run();
+    }
+
+    public void run() {
+
+        if (System.getProperty("EXPERIMENTAL") == null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();

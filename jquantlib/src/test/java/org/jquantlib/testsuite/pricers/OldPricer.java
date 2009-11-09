@@ -33,14 +33,13 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Option.Type;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Date;
-import org.jquantlib.util.StopClock;
 
 //TODO:  Import all the testcase when MC is available
 //FIXME: Rename to OldPricerTest
 public class OldPricer {
 
     public OldPricer() {
-        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
     private static class BatchData {
@@ -74,16 +73,11 @@ public class OldPricer {
         }
     };
 
-    private final StopClock clock = new StopClock();
-
     /* @Test public*/ void testMcSingleFactorPricers() {
 
         QL.info("Testing old-style Monte Carlo single-factor pricers...");
 
-        clock.startClock();
-
         final DayCounter dc = new Actual360();
-
         final long seed = 3456789;
 
         // cannot be too low, or one cannot compare numbers when
@@ -146,8 +140,6 @@ public class OldPricer {
             // TODO: Complete the test case when we have MonteCarlo
 
         }
-        clock.stopClock();
-        clock.log();
     }
 
 }

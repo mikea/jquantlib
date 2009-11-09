@@ -20,7 +20,7 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
 import static org.jquantlib.time.Month.February;
 
@@ -39,19 +39,19 @@ import org.jquantlib.util.StopClock;
  * @author Daniel Kong
  */
 // TODO: Work in progress
-public class BermudanSwaption {
+public class BermudanSwaption implements Runnable {
 
-    public BermudanSwaption() {
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-        QL.info("\n\n::::: " + BermudanSwaption.class.getSimpleName() + " :::::");
+    public static void main(final String[] args) {
+        new BermudanSwaption().run();
     }
 
-    public void run() throws Exception {
+    public void run() {
+
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();
@@ -64,6 +64,7 @@ public class BermudanSwaption {
                 return "";
             }
 
+            @Override
             public boolean isWeekend(final Weekday w) {
                 throw new UnsupportedOperationException();
             }
@@ -76,14 +77,6 @@ public class BermudanSwaption {
 
         clock.stopClock();
         clock.log();
-    }
-
-    public static void main(final String[] args) {
-        try {
-            new BermudanSwaption().run();
-        } catch (final Exception e) {
-            QL.error(e.getMessage());
-        }
     }
 
 }

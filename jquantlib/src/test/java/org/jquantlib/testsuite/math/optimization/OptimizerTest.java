@@ -53,7 +53,7 @@ public class OptimizerTest {
     public void testOptimizers() {
 
         //System.setProperty("EXPERIMENTAL", "true");
-        System.out.println("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        System.out.println("::::: " + this.getClass().getSimpleName() + " :::::");
         System.out.println("Testing optimizers... ");
 
         // following block moved inside this method body

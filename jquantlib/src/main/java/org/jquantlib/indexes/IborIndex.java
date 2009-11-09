@@ -177,11 +177,11 @@ public class IborIndex extends InterestRateIndex {
         return fixingCalendar().advance(valueDate, tenor(), convention, endOfMonth);
     }
 
-    public BusinessDayConvention getConvention() {
+    public BusinessDayConvention businessDayConvention() {
         return convention;
     }
 
-    public boolean isEndOfMonth() {
+    public boolean endOfMonth() {
         return endOfMonth;
     }
 

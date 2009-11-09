@@ -45,7 +45,7 @@ import org.junit.Test;
 public class SegmentIntegralTest {
 
 	public SegmentIntegralTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 	@Test

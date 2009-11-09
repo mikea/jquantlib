@@ -26,7 +26,6 @@ import org.jquantlib.Settings;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.RateHelper;
-import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.time.Date;
 import org.jquantlib.util.Observable;
 
@@ -41,7 +40,7 @@ import org.jquantlib.util.Observable;
  */
 // TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-public abstract class RelativeDateRateHelper<T extends TermStructure> extends RateHelper<T> {
+public abstract class RelativeDateRateHelper extends RateHelper {
 
     //
     // protected fields
@@ -50,19 +49,19 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
     protected Date evaluationDate;
 
 
-    //
-    // protected constructors
-    //
-
-    protected RelativeDateRateHelper() {
-        super();
-
-        // TODO: code review :: please verify against QL/C++ code
-        this.evaluationDate = new Settings().evaluationDate();
-        this.evaluationDate.addObserver(this);
-        // XXX:registerWith
-        //registerWith(this.evaluationDate);
-    }
+//    //
+//    // protected constructors
+//    //
+//
+//    protected RelativeDateRateHelper() {
+//        super();
+//
+//        // TODO: code review :: please verify against QL/C++ code
+//        this.evaluationDate = new Settings().evaluationDate();
+//        this.evaluationDate.addObserver(this);
+//        // XXX:registerWith
+//        //registerWith(this.evaluationDate);
+//    }
 
 
     //
@@ -85,14 +84,14 @@ public abstract class RelativeDateRateHelper<T extends TermStructure> extends Ra
         //registerWith(this.evaluationDate);
     }
 
-
-    public RelativeDateRateHelper(final Handle<Quote> quote, final T termStructure, final Date earliestDate, final Date latestDate) {
-        super(quote, termStructure, earliestDate, latestDate);
-        this.evaluationDate = new Settings().evaluationDate();
-        this.evaluationDate.addObserver(this);
-        // XXX:registerWith
-        //registerWith(this.evaluationDate);
-    }
+//XXX
+//    public RelativeDateRateHelper(final Handle<Quote> quote, final T termStructure, final Date earliestDate, final Date latestDate) {
+//        super(quote, termStructure, earliestDate, latestDate);
+//        this.evaluationDate = new Settings().evaluationDate();
+//        this.evaluationDate.addObserver(this);
+//        // XXX:registerWith
+//        //registerWith(this.evaluationDate);
+//    }
 
 
     //

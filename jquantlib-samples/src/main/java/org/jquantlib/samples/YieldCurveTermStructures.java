@@ -1,5 +1,6 @@
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
@@ -32,11 +33,19 @@ import org.jquantlib.util.StopClock;
  * @author Apratim Rajendra
  *
  */
-public class YieldCurveTermStructures {
+public class YieldCurveTermStructures implements Runnable {
 
-    public static void main(final String args[]){
+    public static void main(final String[] args) {
+        new YieldCurveTermStructures().run();
+    }
 
-        System.out.println("\n\n::::: "+YieldCurveTermStructures.class.getSimpleName()+" :::::");
+    public void run() {
+
+        if (System.getProperty("EXPERIMENTAL") == null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();

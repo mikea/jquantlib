@@ -51,7 +51,7 @@ public class BarrierOptionTest {
 
 
     public BarrierOptionTest() {
-        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
 

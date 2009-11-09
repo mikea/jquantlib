@@ -50,7 +50,7 @@ import org.junit.Test;
 public class SlovakiaCalendarTest {
 
 	public SlovakiaCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 

@@ -1,4 +1,4 @@
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
 
 
@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.ActualActual;
@@ -37,14 +38,15 @@ import org.jquantlib.time.calendars.Target;
 import org.jquantlib.time.calendars.UnitedStates;
 import org.jquantlib.util.StopClock;
 
-public class Bonds {
+public class Bonds implements Runnable {
 
     public static void main(final String[] args) {
-        final Bonds bonds = new Bonds();
-        bonds.runBondExample();
+        new Bonds().run();
     }
 
-    private void runBondExample() {
+    public void run() {
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();

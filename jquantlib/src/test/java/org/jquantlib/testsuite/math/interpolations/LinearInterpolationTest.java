@@ -48,12 +48,12 @@ public class LinearInterpolationTest {
 	private static double tolerance;
 
 	public LinearInterpolationTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 	@BeforeClass
 	public static void setUpLinearInterpolation(){
-		QL.info("\n\n::::: Testing use of interpolations as functors... :::::");
+		QL.info("::::: Testing use of interpolations as functors... :::::");
 
 		interpolation = new Linear().interpolate(x.constIterator(), y.constIterator());
 		interpolation.update();

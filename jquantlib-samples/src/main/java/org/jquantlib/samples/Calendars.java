@@ -18,11 +18,12 @@ FOR A PARTICULAR PURPOSE. See the license for more details.
 JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
@@ -36,16 +37,25 @@ import org.jquantlib.util.StopClock;
 
 /**
  * This class explores the functionalities provided by Calendar interface.
- * 
+ *
  * @author Apratim Rajendra
- * 
+ *
  */
 
-public class Calendars {
+public class Calendars implements Runnable {
 
-    public static void main(final String args[]) {
+    public static void main(final String[] args) {
+        new Calendars().run();
+    }
 
-        System.out.println("\n\n::::: " + Calendars.class.getSimpleName() + " :::::");
+    public void run() {
+
+        if (System.getProperty("EXPERIMENTAL") == null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+
         final StopClock clock = new StopClock();
         clock.startClock();
 

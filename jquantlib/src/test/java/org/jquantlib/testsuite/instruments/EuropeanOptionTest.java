@@ -85,7 +85,6 @@ import org.jquantlib.testsuite.util.Flag;
 import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
-import org.jquantlib.util.StopClock;
 import org.junit.Test;
 
 
@@ -99,7 +98,7 @@ public class EuropeanOptionTest {
     // private final Date today;
 
     public EuropeanOptionTest() {
-        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
 
@@ -348,10 +347,6 @@ public class EuropeanOptionTest {
         final SimpleQuote           vol   = new SimpleQuote(0.0);
         final BlackVolTermStructure volTS = Utilities.flatVol(today, vol, dc);
 
-        final StopClock clock = new StopClock();
-        clock.reset();
-        clock.startClock();
-
         for (int i=0; i<values.length-1; i++) {
 
             QL.debug(values[i].toString());
@@ -411,8 +406,6 @@ public class EuropeanOptionTest {
                         + "    tolerance:        " + tolerance);
             }
         }
-        clock.stopClock();
-        clock.log();
     }
 
     @Test

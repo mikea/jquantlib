@@ -49,7 +49,7 @@ public class UnitedKingdomCalendarTest {
 
     
     public UnitedKingdomCalendarTest() {
-        System.out.println("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        System.out.println("::::: " + this.getClass().getSimpleName() + " :::::");
         this.metals = new UnitedKingdom(UnitedKingdom.Market.Metals);
         this.settlement = new UnitedKingdom(UnitedKingdom.Market.Settlement);
         this.exchange = new UnitedKingdom(UnitedKingdom.Market.Exchange);

@@ -50,22 +50,30 @@
     We examine the range of possibilities, computing the replication error.
  */
 
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
-import org.jquantlib.examples.utils.ReplicationError;
+import org.jquantlib.QL;
 import org.jquantlib.instruments.Option;
+import org.jquantlib.samples.util.ReplicationError;
 import org.jquantlib.util.StopClock;
+
 
 // FIXME :: This class needs code review ::
 // http://bugs.jquantlib.org/view.php?id=221
-public class DiscreteHedging {
+public class DiscreteHedging implements Runnable {
 
-	public static void main(final String args[]) {
+    public static void main(final String[] args) {
+        new DiscreteHedging().run();
+    }
 
-		//System.setProperty("EXPERIMENTAL", "false");
-		if (System.getProperty("EXPERIMENTAL") == null) {
-			throw new UnsupportedOperationException("Work in progress");
-		}
+    public void run() {
+
+        if (System.getProperty("EXPERIMENTAL") == null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+
 		try {
 
 		    final StopClock clock = new StopClock();

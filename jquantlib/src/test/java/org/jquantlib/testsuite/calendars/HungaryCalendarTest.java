@@ -49,7 +49,7 @@ public class HungaryCalendarTest {
     private final Calendar c;
 
     public HungaryCalendarTest() {
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 		c	= new Hungary();
     }
 

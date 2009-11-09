@@ -47,7 +47,7 @@ public class NorwayCalendarTest {
     private final Calendar exchange;
 
 	public NorwayCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	    //TODO: this.settlement = Norway.getCalendar(Poland.Market.Settlement);
 	    this.exchange   = new Norway();
 	}

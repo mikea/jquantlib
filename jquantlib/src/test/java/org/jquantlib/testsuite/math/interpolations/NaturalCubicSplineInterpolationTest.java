@@ -38,7 +38,7 @@ import org.junit.Test;
 public class NaturalCubicSplineInterpolationTest extends InterpolationTestBase {
 
 	public NaturalCubicSplineInterpolationTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 	@Test

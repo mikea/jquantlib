@@ -22,8 +22,9 @@
     reader.
  */
 
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
+import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
@@ -45,15 +46,21 @@ import org.jquantlib.time.Period;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.util.StopClock;
 
-public class Replication {
-
-    public static String fmt = "%-45s %-15s %-15s\n";
+public class Replication implements Runnable {
 
     public static void main(final String[] args) {
+        new Replication().run();
+    }
+
+    public void run() {
+
         if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
-        System.out.println("\n\n::::: "+Replication.class.getSimpleName()+" :::::");
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+
+        final String fmt = "%-45s %-15s %-15s\n";
 
         try{
             final StopClock clock = new StopClock();

@@ -55,7 +55,7 @@ public class IndonesiaCalendarTest {
     private Calendar c = null;
 
     public IndonesiaCalendarTest() {
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
     @Before

@@ -49,7 +49,7 @@ public class DenmarkCalendarTest {
 	private final Calendar exchange;
 
 	public DenmarkCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 		exchange = new Denmark();
 	}
 

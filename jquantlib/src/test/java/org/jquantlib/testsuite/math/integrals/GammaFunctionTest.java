@@ -34,7 +34,7 @@ import org.junit.Test;
 public class GammaFunctionTest {
 
 	public GammaFunctionTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
 	@Test

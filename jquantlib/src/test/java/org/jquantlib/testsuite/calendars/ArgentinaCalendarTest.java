@@ -55,7 +55,7 @@ public class ArgentinaCalendarTest {
 //	private final Calendar settlement;
 
 	public ArgentinaCalendarTest() {
-		QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+		QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 
 //		settlement = new Argentina(Argentina.Market.SETTLEMENT);
 		merval = new Argentina(Argentina.Market.MERVAL);

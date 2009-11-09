@@ -53,7 +53,7 @@ import org.junit.Test;
 public class InstrumentsTest {
 
     public InstrumentsTest() {
-        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
     @Test

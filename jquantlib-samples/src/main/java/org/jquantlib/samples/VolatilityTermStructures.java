@@ -20,8 +20,9 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
@@ -59,10 +60,15 @@ import org.jquantlib.util.StopClock;
  * @author Apratim Rajendra
  *
  */
-public class VolatilityTermStructures {
+public class VolatilityTermStructures implements Runnable {
 
-    public static void main(final String args[]){
-        System.out.println("\n\n::::: "+VolatilityTermStructures.class.getSimpleName()+" :::::");
+    public static void main(final String[] args) {
+        new VolatilityTermStructures().run();
+    }
+
+    public void run() {
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();

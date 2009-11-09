@@ -51,7 +51,7 @@ public class PolandCalendarTest {
 //    private final Calendar exchange;
 
 	public PolandCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	    this.settlement = new Poland();
 //	    this.exchange   = new Poland();
 	}

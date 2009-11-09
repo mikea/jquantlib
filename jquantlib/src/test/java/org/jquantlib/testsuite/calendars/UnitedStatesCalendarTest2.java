@@ -54,7 +54,7 @@ public class UnitedStatesCalendarTest2 {
     private List<Date> expectedHol = null;
 
     public UnitedStatesCalendarTest2() {
-        System.out.println("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        System.out.println("::::: " + this.getClass().getSimpleName() + " :::::");
         nyse = new UnitedStates(UnitedStates.Market.NYSE);
         settlement = new UnitedStates(UnitedStates.Market.SETTLEMENT);
         govtBond = new UnitedStates(UnitedStates.Market.GOVERNMENTBOND);

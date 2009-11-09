@@ -52,7 +52,7 @@ public class TurkeyCalendarTest {
     private final Calendar exchange;
 
 	public TurkeyCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
         this.exchange = new Turkey();
 	}
 

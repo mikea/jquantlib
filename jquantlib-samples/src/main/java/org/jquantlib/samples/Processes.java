@@ -20,8 +20,9 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.math.distributions.NormalDistribution;
 import org.jquantlib.math.matrixutilities.Array;
@@ -50,11 +51,19 @@ import org.jquantlib.util.StopClock;
  * @author Apratim Rajendra
  *
  */
-public class Processes {
+public class Processes implements Runnable {
 
-    public static void main(final String args[]){
+    public static void main(final String[] args) {
+        new Processes().run();
+    }
 
-        System.out.println("\n\n::::: "+Processes.class.getSimpleName()+" :::::");
+    public void run() {
+
+        if (System.getProperty("EXPERIMENTAL") == null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();

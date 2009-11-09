@@ -31,6 +31,10 @@ import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
+ * Predetermined cash flow
+ * <p>
+ * This cash flow pays a predetermined amount at a given date.
+ *
  * @author Daniel Kong
  */
 @SuppressWarnings("PMD.AbstractNaming")
@@ -38,7 +42,7 @@ public abstract class Dividend extends CashFlow {
 
 	protected Date date;
 
-	public Dividend (final Date date){
+	public Dividend (final Date date) {
 		super();
 		this.date = date;
 	}
@@ -68,8 +72,9 @@ public abstract class Dividend extends CashFlow {
 	public static List<? extends Dividend> DividendVector(final List<Date> dividendDates, final List<Double> dividends) {
 	    QL.require(dividendDates.size() == dividends.size() , "size mismatch between dividend dates and amounts");  // QA:[RG]::verified // TODO: message
         final List<Dividend> items = new ArrayList<Dividend>(dividendDates.size());
-        for (int i=0;i<dividendDates.size();i++)
+        for (int i=0; i<dividendDates.size(); i++) {
             items.add(new FixedDividend(dividends.get(i), dividendDates.get(i)));
+        }
         return items;
     }
 
@@ -81,10 +86,11 @@ public abstract class Dividend extends CashFlow {
     @Override
     public void accept(final TypedVisitor<Object> v) {
         final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null)
+        if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             super.accept(v);
+        }
     }
 
 }

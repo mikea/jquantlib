@@ -22,15 +22,20 @@
 
 package org.jquantlib.util;
 
-
-// FIXME: Move StopClock out from main library
-// This class is mainly intended to performance tests. So, it must be located in src/test tree.
-// Also, examples which depend on this class must be moved out of main library
+import org.jquantlib.QL;
 
 public class StopClock {
 
     public static enum Unit {
-        ms, ns;
+        /**
+         * milliseconds
+         */
+        ms,
+
+        /**
+         * nonoseconds
+         */
+        ns;
     }
 
     private final Unit units;
@@ -82,9 +87,8 @@ public class StopClock {
         return ("Time taken: " + getElapsedTime() + units);
     }
 
-    //FIXME: Avoid logging using System out
     public void log() {
-        System.out.println(toString());
+        QL.info(toString());
     }
 
 }

@@ -26,20 +26,23 @@ import org.jquantlib.QL;
 import org.jquantlib.time.Date;
 
 /**
+ * Predetermined cash flow
+ * <p>
+ * This cash flow pays a predetermined amount at a given date.
+ *
  * @author Daniel Kong
  */
-
 public class FractionalDividend extends Dividend {
 
 	protected double rate;
 	protected double nominal;
 
-	public FractionalDividend(final double rate, final Date date){
+	public FractionalDividend(final double rate, final Date date) {
 		super(date);
 		this.rate=rate;
 	}
 
-	public FractionalDividend(final double rate, final double nominal, final Date date){
+	public FractionalDividend(final double rate, final double nominal, final Date date) {
 		super(date);
 		this.rate=rate;
 		this.nominal=nominal;

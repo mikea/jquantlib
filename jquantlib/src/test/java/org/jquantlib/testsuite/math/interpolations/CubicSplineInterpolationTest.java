@@ -47,8 +47,8 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	private static double x35[]= new double[3];
 
 	public CubicSplineInterpolationTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
-		QL.info("\n\n::::: Testing cubic spline interpolation on: "
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: Testing cubic spline interpolation on: "
 					+"Error On Gaussian Values, Gaussian Values, RPN15A Values, Generic Values, "
 					+"Simmetric End Conditions, Derivative End Conditions, Non Restrictive HymanFilter, "
 					+"MultiSpline ... :::::");

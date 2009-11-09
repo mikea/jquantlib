@@ -74,7 +74,7 @@ public class TermStructuresTest {
 
 
     public TermStructuresTest() {
-        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 
         this.calendar = new Target();
         this.settlementDays = 2;

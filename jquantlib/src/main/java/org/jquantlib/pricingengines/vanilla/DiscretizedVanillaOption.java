@@ -30,6 +30,8 @@ import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.time.TimeGrid;
 
 /**
+ * Discretized vanilla option
+ *
  * @author Srinivas Hasti
  */
 public class DiscretizedVanillaOption extends DiscretizedAsset {

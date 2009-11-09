@@ -49,7 +49,7 @@ public class UkraineCalendarTest {
     private final Calendar exchange;
 
 	public UkraineCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
         this.exchange = new Ukraine(Ukraine.Market.USE);
 	}
 

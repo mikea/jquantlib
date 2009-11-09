@@ -92,7 +92,7 @@ import org.junit.Test;
 public class AmericanOptionTest {
 
     public AmericanOptionTest() {
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
     @Test

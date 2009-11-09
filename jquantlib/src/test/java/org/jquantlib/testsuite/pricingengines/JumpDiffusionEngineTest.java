@@ -34,7 +34,7 @@ import org.junit.Test;
 public class JumpDiffusionEngineTest {
 
     public JumpDiffusionEngineTest() {
-        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
 

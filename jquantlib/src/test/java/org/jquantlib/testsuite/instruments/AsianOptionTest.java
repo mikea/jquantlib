@@ -82,7 +82,7 @@ import org.junit.Test;
 public class AsianOptionTest {
 
     public AsianOptionTest() {
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
     }
 
 

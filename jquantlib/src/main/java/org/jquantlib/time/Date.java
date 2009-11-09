@@ -35,9 +35,9 @@ import org.jquantlib.util.Observer;
 
 /**
  * Date class to represent time in days.
- * 
+ *
  * @author Richard Gomes
- * 
+ *
  */
 public class Date implements Observable, Comparable<Date>, Cloneable {
 
@@ -170,7 +170,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  Constructor taking a serial number as given by Applix or Excel.
-     * 
+     *
      * @param serialNumber
      * @return
      */
@@ -180,7 +180,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  More traditional constructor.
-     * 
+     *
      * @param d
      * @param moreGreeks
      * @param y
@@ -191,7 +191,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  More traditional constructor.
-     * 
+     *
      * @param d
      * @param moreGreeks
      * @param y
@@ -216,7 +216,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * One-based (Jan 1st = 1)
-     * 
+     *
      * @return
      */
     public int dayOfYear() /* @ReadOnly */ {
@@ -255,7 +255,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  increments <code>this</code> date by the given number of days
-     * 
+     *
      *  @return this
      */
     //-- Date& operator+=(BigInteger days);
@@ -268,7 +268,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  increments <code>this</code> date by the given period
-     * 
+     *
      *  @return this
      */
     //-- Date& operator+=(const Period&);
@@ -281,7 +281,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  decrement <code>this</code> date by the given number of days
-     * 
+     *
      *  @return this
      */
     //-- Date& operator-=(BigInteger days);
@@ -294,7 +294,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  decrements <code>this</code> date by the given period
-     * 
+     *
      *  @return this
      */
     //-- Date& operator-=(const Period&);
@@ -316,7 +316,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  1-day post-increment
-     * 
+     *
      *  @return this
      */
     //-- Date operator++(int );
@@ -336,7 +336,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  1-day post-decrement
-     * 
+     *
      *  @return this
      */
     //-- Date operator--(int );
@@ -350,7 +350,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  returns a new date incremented by the given number of days
-     * 
+     *
      *  @return a new instance
      */
     //-- Date operator+(BigInteger days) const;
@@ -361,7 +361,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  returns a new date incremented by the given period
-     * 
+     *
      *  @return a new instance
      */
     //-- Date operator+(const Period&) const;
@@ -371,7 +371,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  returns a new date decremented by the given number of days
-     * 
+     *
      *  @return a new instance
      */
     //-- Date operator-(BigInteger days) const;
@@ -381,7 +381,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      *  returns a new date decremented by the given period
-     * 
+     *
      *  @return a new instance
      */
     //-- Date operator-(const Period&) const;
@@ -392,7 +392,6 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     /**
      * Difference in days between dates
      */
-    //-- BigInteger operator-(const Date&, const Date&);
     public int sub(final Date another) {
         return another.serialNumber - serialNumber;
     }
@@ -461,7 +460,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * Provides access to a long date formatter.
      * <p>
      * The only useful method is <code>toString()</code> which returns a date formated as Mon, dd yyyy
-     * 
+     *
      * @return
      */
     public Object longDate() {
@@ -472,7 +471,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * Provides access to a long date formatter.
      * <p>
      * The only useful method is <code>toString()</code> which returns a date formated as mm/dd/yyyy
-     * 
+     *
      * @return
      */
     public Object shortDate() {
@@ -483,7 +482,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * Provides access to a ISO date formatter.
      * <p>
      * The only useful method is <code>toString()</code> which returns a date formated as yyyy-mm-dd
-     * 
+     *
      * @return
      */
     public Object isoDate() {
@@ -591,11 +590,11 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * Assigns the today's date to <code>this</code> instance
-     * 
+     *
      * @note Does not trigger notifications
-     * 
+     *
      * @return this instance
-     * 
+     *
      * @see
      */
     //TODO: consider @PackagePrivate
@@ -610,11 +609,11 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * Assigns a new serialNumber to <code>this</code> instance.
-     * 
+     *
      * @note Does not trigger notifications
-     * 
+     *
      * @return this instance
-     * 
+     *
      * @see inner class DateProxy in {@link Settings}
      */
     //TODO: consider @PackagePrivate
@@ -702,7 +701,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * Earliest allowed date
-     * 
+     *
      * @return a new instance
      */
     public static final Date minDate() {
@@ -711,7 +710,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * Latest allowed date
-     * 
+     *
      * @return a new instance
      */
     public static final Date maxDate() {
@@ -720,7 +719,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * Whether the given year is a leap one
-     * 
+     *
      * @param y
      * @return
      */
@@ -730,7 +729,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * Last day of the month to which the given date belongs
-     * 
+     *
      * @return a new instance
      */
     public static final Date endOfMonth(final Date d) {
@@ -741,7 +740,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * Whether a date is the last day of its month
-     * 
+     *
      * @return
      */
     public static final boolean isEndOfMonth(final Date d) {
@@ -752,9 +751,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * Next given weekday following or equal to the given date
      * <p>
      * E.g., the Friday following Tuesday, JANUARY 15th, 2002 was JANUARY 18th, 2002.
-     * 
+     *
      * @see http://www.cpearson.com/excel/DateTimeWS.htm
-     * 
+     *
      * @return a new instance
      */
     public static final Date nextWeekday(final Date d, final Weekday w) {
@@ -767,14 +766,14 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * n-th given weekday in the given month and year
      * <p>
      * E.g., the 4th Thursday of March, 1998 was March 26th, 1998.
-     * 
+     *
      * @see http://www.cpearson.com/excel/DateTimeWS.htm
-     * 
+     *
      * @param n
      * @param w
      * @param m
      * @param y
-     * 
+     *
      * @return a new instance
      */
     public static final Date nthWeekday(final int n, final Weekday w, final Month m, final int y) {
@@ -783,12 +782,12 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * Returns a new Date which is the n-th week day of a certain month/year
-     * 
+     *
      * @param nth is the desired week
      * @param dayOfWeek is the desired week day
      * @param month is the desired month
      * @param year is the desired year
-     * 
+     *
      * @return a new instance
      */
     public static final Date nthWeekday(final int nth, final Weekday dayOfWeek, final int month, final int year) {
@@ -848,7 +847,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * This method is intended to calculate the integer value of a (day, month, year)
-     * 
+     *
      * @param d is the day as a number
      * @param m is the month as a number
      * @param y is the year as a number
@@ -867,7 +866,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * Returns the length of a certain month
-     * 
+     *
      * @param m is the desired month, as a number
      * @param leapYear if <code>true</code> means a leap year
      * @return the length of a certain month
@@ -878,7 +877,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * Returns the offset of a certain month
-     * 
+     *
      * @param m is the desired month, as a number. If you specify 13, you will get the number of days of a year
      * @param leapYear if <code>true</code> means a leap year
      * @return the offset of a certain month or the length of an year
@@ -898,11 +897,11 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     private static final int yearOffset(final int y) {
         return yearOffset[y - 1900];
     }
-    
+
 	/**
 	 * This method is equivalent to std:lower_bound function
 	 * Returns an index pointing to the first element in the ordered collection is equal or greater than passed value
-	 * 
+	 *
 	 * @param dates order collection in ascending order
 	 * @param value Date to be compared
 	 * @return index to element which is >= passed value
@@ -922,8 +921,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
                 from = middle;
                 from++;
                 len = len - half - 1;
-            } else
+            } else {
                 len = half;
+            }
         }
         return from;
      }
@@ -937,7 +937,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 	 * @return index to element which is > passed value
 	 */
 	public static int upperBound(final List<Date> dates, final Date value) {
-		
+
         int len = dates.size();
         int from = 0;
         int half;
@@ -947,9 +947,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             half = len >> 1;
             middle = from;
             middle = middle + half;
-            if (value.compareTo(dates.get(middle)) == -1) // value < 
+            if (value.compareTo(dates.get(middle)) == -1) {
                 len = half;
-            else {
+            } else {
                 from = middle;
                 from++;
                 len = len - half - 1;

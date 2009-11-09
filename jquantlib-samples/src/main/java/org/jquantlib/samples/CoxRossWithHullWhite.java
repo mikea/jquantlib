@@ -75,9 +75,10 @@
 
  **/
 
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
 
+import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
@@ -114,14 +115,19 @@ import org.jquantlib.util.StopClock;
  *
  * @author Richard Gomes
  */
-public class CoxRossWithHullWhite {
+public class CoxRossWithHullWhite implements Runnable {
 
-    /**
-     * @param args
-     */
     public static void main(final String[] args) {
+        new CoxRossWithHullWhite().run();
+    }
 
-        System.out.println("\n\n::::: "+CoxRossWithHullWhite.class.getSimpleName()+" :::::");
+    public void run() {
+
+        if (System.getProperty("EXPERIMENTAL") == null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();

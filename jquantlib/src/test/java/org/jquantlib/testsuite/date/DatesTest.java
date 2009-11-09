@@ -36,7 +36,6 @@ import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.util.StopClock;
 import org.junit.Test;
 
 
@@ -57,7 +56,7 @@ public class DatesTest {
         "N8", "Q8", "U8", "V8", "X8", "Z8", "F9", "G9", "H9", "J9", "K9", "M9", "N9", "Q9", "U9", "V9", "X9", "Z9" };
 
     public DatesTest() {
-        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
     @Test
@@ -73,8 +72,6 @@ public class DatesTest {
         final Period period = new Period(-10, TimeUnit.Years);
         final Date last = maxDate.clone().addAssign(period);
 
-        final StopClock clock = new StopClock();
-        clock.startClock();
         while (counter.le(last)) {
 
             final Date immDate = IMM.nextDate(counter, false);
@@ -118,8 +115,6 @@ public class DatesTest {
 
             counter.inc();
         }
-        clock.stopClock();
-        clock.log();
     }
 
     @Test
@@ -139,8 +134,6 @@ public class DatesTest {
         final Date minDate = minD.clone().inc();
         final Date maxDate = maxD.clone().dec();
 
-        final StopClock clock = new StopClock();
-        clock.startClock();
         for (final Date t = minDate; t.le(maxDate); t.inc()) {
             final int dy = t.dayOfYear();
             final int d  = t.dayOfMonth();
@@ -198,16 +191,11 @@ public class DatesTest {
             }
             wdold = wd;
         }
-        clock.stopClock();
-        clock.log();
-
     }
 
     @Test
     public void isoDates() {
         QL.info("Testing ISO dates...");
-        final StopClock clock = new StopClock();
-        clock.startClock();
         final String input_date = "2006-01-15";
         final Date d = DateParser.parseISO(input_date);
         if ((d.dayOfMonth() != 15) || (d.month() != Month.January) || (d.year() != 2006)) {
@@ -217,8 +205,6 @@ public class DatesTest {
                     + " month:         " + d.month() + "\n"
                     + " year:          " + d.year());
         }
-        clock.stopClock();
-        clock.log();
     }
 
     @Test

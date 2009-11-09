@@ -10,7 +10,7 @@
     <menu ref="parent"/>
     <menu ref="modules"/>
     <menu name="Documentation" inherit="top">
-      <item name="Equity Options"         href="equity_options.html"/>
+      <item name="Samples"         href="xref/index.html"/>
     </menu>
     <menu ref="reports" />
   </body>

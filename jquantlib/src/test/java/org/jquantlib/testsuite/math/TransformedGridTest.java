@@ -12,7 +12,7 @@ import org.junit.Test;
 public class TransformedGridTest {
 
     public TransformedGridTest() {
-        QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+        QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
     }
 
     @Test

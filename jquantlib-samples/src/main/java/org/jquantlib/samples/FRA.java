@@ -43,9 +43,10 @@
  */
 
 
-package org.jquantlib.examples;
+package org.jquantlib.samples;
 
 
+import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.DayCounter;
@@ -63,14 +64,19 @@ import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.TimeUnit;
 
-public class FRA {
+public class FRA implements Runnable {
 
-    /**
-     * @param args
-     */
     public static void main(final String[] args) {
+        new FRA().run();
+    }
 
-        System.out.println("\n\n::::: "+FRA.class.getSimpleName()+" :::::");
+    public void run() {
+
+        if (System.getProperty("EXPERIMENTAL") == null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+
+        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
 
         /*********************
          ***  MARKET DATA  ***
@@ -129,8 +135,8 @@ public class FRA {
         // data source later.
 
         final DayCounter fraDayCounter = euribor3m.currentLink().dayCounter();
-        final BusinessDayConvention convention = euribor3m.currentLink().getConvention();
-        final boolean endOfMonth = euribor3m.currentLink().isEndOfMonth();
+        final BusinessDayConvention convention = euribor3m.currentLink().businessDayConvention();
+        final boolean endOfMonth = euribor3m.currentLink().endOfMonth();
 
         /*RateHelper fra1x4 = new FraRateHelper(h1x4, 1, 4, fixingDays, calendar, convention,endOfMonth,);/*(h1x4, 1, 4,
                                   fixingDays, calendar, convention,

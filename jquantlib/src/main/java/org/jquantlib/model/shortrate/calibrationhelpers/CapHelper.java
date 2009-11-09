@@ -64,8 +64,8 @@ public class CapHelper extends CalibrationHelper {
                 index.fixingDays(),
                 index.currency(),
                 index.fixingCalendar(),
-                index.getConvention(),
-                index.isEndOfMonth(),
+                index.businessDayConvention(),
+                index.endOfMonth(),
                 termStructure.currentLink().dayCounter(),
                 termStructure);
 

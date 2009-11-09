@@ -52,7 +52,7 @@ public class CzechRepublicCalendarTest {
     private final Calendar c;
 
     public CzechRepublicCalendarTest() {
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
         c = new CzechRepublic(CzechRepublic.Market.PSE);
     }
 

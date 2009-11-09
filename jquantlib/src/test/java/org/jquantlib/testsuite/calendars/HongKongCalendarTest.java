@@ -48,7 +48,7 @@ import org.junit.Test;
 public class HongKongCalendarTest {
 
     public HongKongCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 	}
 
     // 2009 -- taken from Exchange website http://www.hkex.com.hk

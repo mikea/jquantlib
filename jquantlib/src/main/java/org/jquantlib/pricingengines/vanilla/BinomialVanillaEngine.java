@@ -177,7 +177,7 @@ public abstract class BinomialVanillaEngine<T extends Tree> extends VanillaOptio
 
         // Rollback to third-last step, and get underlying price (s2) & option values (p2) at this point
         option.rollback(grid.at(2));
-        // TODO: code review :: verifuy use of clone()
+        // TODO: code review :: verify use of clone()
         final Array va2 = option.values().clone();
         QL.require(va2.size() == 3 , "expect 3 nodes in grid at second step"); // QA:[RG]::verified // TODO: message
         final double p2h = va2.get(2); // high-price

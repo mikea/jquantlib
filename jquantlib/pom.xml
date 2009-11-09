@@ -56,12 +56,6 @@
         </site>
     </distributionManagement>
 
-
-    <properties>
-        <props.jar.manifest.dummy.class>org.jquantlib.examples.Dummy</props.jar.manifest.dummy.class>
-        <props.jar.manifest.samples.class>org.jquantlib.examples.EquityOptions</props.jar.manifest.samples.class>
-    </properties>
-
     <dependencies>
         <!-- 'compile' scope dependencies -->
         <dependency>
@@ -71,20 +65,8 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>net.jcip</groupId>
-            <artifactId>jcip-annotations</artifactId>
-            <version>1.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.5.5</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
             <version>1.5.5</version>
             <scope>compile</scope>
         </dependency>
@@ -98,58 +80,4 @@
         </dependency>
     </dependencies>
     
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <!-- version>2.2-beta-2</version -->
-                <configuration>
-                    <descriptorSourceDirectory>src/main/assembly</descriptorSourceDirectory>
-                    <archive>
-                        <index>${props.jar.index}</index>
-                        <manifest>
-                            <mainClass>${props.jar.manifest.samples.class}</mainClass>
-                        </manifest>
-                        <manifestEntries>
-                            <Specification-Title>QuantLib</Specification-Title>           <!-- hardcoded :: never changes  -->
-                            <Specification-Vendor>QuantLib</Specification-Vendor>         <!-- hardcoded :: never changes  -->
-                            <Specification-Version>0.9.7</Specification-Version>          <!-- hardcoded :: changes rarely -->
-                            <Implementation-Title>${project.name}</Implementation-Title>
-                            <Implementation-Vendor>JQuantLib</Implementation-Vendor>      <!-- hardcoded :: never changes  -->
-                            <Implementation-Version>${project.version}</Implementation-Version>
-                            <Implementation-Build>${buildNumber}</Implementation-Build>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>ubber</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>attached</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
-    <reporting>
-        <plugins>
-            <plugin>
-                <inherited/>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <!-- version>2.4</version -->
-                <configuration>
-                    <rulesets>
-                        <!--  TODO: only project 'jquantlib' needs it -->
-                        <ruleset>${basedir}/src/main/pmd/architectural.xml</ruleset> 
-                    </rulesets>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
-
 </project>

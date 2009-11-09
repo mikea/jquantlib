@@ -28,7 +28,7 @@ public class GermanyCalendarTest {
 	private final Calendar cSettlement;
 
 	public GermanyCalendarTest() {
-		QL.info("\n\n::::: "+this.getClass().getSimpleName()+" :::::");
+		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 		cSettlement	= new Germany(Germany.Market.Settlement);
 		cFrankfurt 	= new Germany(Germany.Market.FrankfurtStockExchange);
 		cXetra 		= new Germany(Germany.Market.Xetra);
