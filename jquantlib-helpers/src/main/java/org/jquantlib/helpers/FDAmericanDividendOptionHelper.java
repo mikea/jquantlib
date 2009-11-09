@@ -8,10 +8,17 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.pricingengines.vanilla.finitedifferences.FDDividendAmericanEngine;
 import org.jquantlib.time.Date;
 
-public class FDAmericanDividendOptionCalculator extends FDDividendOptionCalculator<FDDividendAmericanEngine> {
+/**
+ * Helper class for American Dividend Options using the finite differences engine
+ *
+ * @see FDDividendOptionHelper
+ *
+ * @author Richard Gomes
+ */
+public class FDAmericanDividendOptionHelper extends FDDividendOptionHelper<FDDividendAmericanEngine> {
 
     /**
-     * Helper class for American Dividend Options using the finite differences engine
+     * Constructor for American Dividend Options helper class using the finite differences engine
      *
      * @param type is the option call type (Call/Put)
      * @param underlying is the price of the underlying asset
@@ -22,7 +29,7 @@ public class FDAmericanDividendOptionCalculator extends FDDividendOptionCalculat
      * @param dividendDates is a list of dates when dividends are expected to be paid
      * @param dividends is a list of dividends amounts (as a pure value) expected to be paid
      */
-    public FDAmericanDividendOptionCalculator(
+    public FDAmericanDividendOptionHelper(
             final Option.Type type,
             final /*@Real*/ double underlying,
             final /*@Real*/ double strike,
@@ -39,7 +46,7 @@ public class FDAmericanDividendOptionCalculator extends FDDividendOptionCalculat
     }
 
     /**
-     * Helper class for American Dividend Options using the finite differences engine
+     * Constructor for American Dividend Options helper class using the finite differences engine
      *
      * @param type is the option call type (Call/Put)
      * @param underlying is the price of the underlying asset
@@ -51,7 +58,7 @@ public class FDAmericanDividendOptionCalculator extends FDDividendOptionCalculat
      * @param dividends is a list of dividends amounts (as a pure value) expected to be paid
      * @param q is the yield rate
      */
-    public FDAmericanDividendOptionCalculator(
+    public FDAmericanDividendOptionHelper(
             final Option.Type type,
             final /*@Real*/ double underlying,
             final /*@Real*/ double strike,

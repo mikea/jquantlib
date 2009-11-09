@@ -7,10 +7,17 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.pricingengines.vanilla.finitedifferences.FDDividendEuropeanEngine;
 import org.jquantlib.time.Date;
 
-public class FDEuropeanDividendOptionCalculator extends FDDividendOptionCalculator<FDDividendEuropeanEngine> {
+/**
+ * Helper class for European Dividend Options using the finite differences engine
+ *
+ * @see FDDividendOptionHelper
+ *
+ * @author Richard Gomes
+ */
+public class FDEuropeanDividendOptionHelper extends FDDividendOptionHelper<FDDividendEuropeanEngine> {
 
     /**
-     * Helper class for European Dividend Options using the finite differences engine
+     * Constructor for European Dividend Options helper class using the finite differences engine
      *
      * @param type is the option call type (Call/Put)
      * @param underlying is the price of the underlying asset
@@ -21,7 +28,7 @@ public class FDEuropeanDividendOptionCalculator extends FDDividendOptionCalculat
      * @param dividendDates is a list of dates when dividends are expected to be paid
      * @param dividends is a list of dividends amounts (as a pure value) expected to be paid
      */
-    public FDEuropeanDividendOptionCalculator(
+    public FDEuropeanDividendOptionHelper(
             final Option.Type type,
             final /*@Real*/ double underlying,
             final /*@Real*/ double strike,
@@ -38,7 +45,7 @@ public class FDEuropeanDividendOptionCalculator extends FDDividendOptionCalculat
     }
 
     /**
-     * Helper class for European Dividend Options using the finite differences engine
+     * Constructor for European Dividend Options helper class using the finite differences engine
      *
      * @param type is the option call type (Call/Put)
      * @param underlying is the price of the underlying asset
@@ -50,7 +57,7 @@ public class FDEuropeanDividendOptionCalculator extends FDDividendOptionCalculat
      * @param dividends is a list of dividends amounts (as a pure value) expected to be paid
      * @param q is the yield rate
      */
-    public FDEuropeanDividendOptionCalculator(
+    public FDEuropeanDividendOptionHelper(
             final Option.Type type,
             final /*@Real*/ double underlying,
             final /*@Real*/ double strike,

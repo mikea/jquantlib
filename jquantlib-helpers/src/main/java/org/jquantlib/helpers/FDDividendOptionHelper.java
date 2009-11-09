@@ -19,13 +19,42 @@ import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.testsuite.util.Utilities;
+import org.jquantlib.termstructures.volatilities.BlackConstantVol;
+import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.Date;
+import org.jquantlib.time.calendars.NullCalendar;
 
 
-public abstract class FDDividendOptionCalculator<T extends FDEngineAdapter> extends DividendVanillaOption {
+/**
+ * Base helper class for European and American dividend options using the finite difference engines.
+ * <p>
+ * Beware that this helper class implies that {@link Actual360} day counter and a {@link NullCalendar} calendar
+ * will be used, among other assumptions.
+ *
+ * @see <a href="http://www.jquantlib.org/sites/jquantlib-helpers/xref/org/jquantlib/helpers/FDDividendOptionHelper.html">Source code</a>
+ *
+ * @author Richard Gomes
+ */
+public abstract class FDDividendOptionHelper<T extends FDEngineAdapter> extends DividendVanillaOption {
 
-    public FDDividendOptionCalculator(
+    /**
+     * Constructor for both European and American dividend options helper class using the finite differences engine
+     * <p>
+     * Beware that this helper class implies that {@link Actual360} day counter and a {@link NullCalendar} calendar
+     * will be used, among other assumptions.
+     *
+     * @param type is the option call type (Call/Put)
+     * @param underlying is the price of the underlying asset
+     * @param strike is the strike price at expiration
+     * @param r is the risk free rate
+     * @param vol is the volatility
+     * @param expiry is the expiration date
+     * @param dividendDates is a list of dates when dividends are expected to be paid
+     * @param dividends is a list of dividends amounts (as a pure value) expected to be paid
+     *
+     * @see <a href="http://www.jquantlib.org/sites/jquantlib-helpers/xref/org/jquantlib/helpers/FDDividendOptionHelper.html">Source code</a>
+     */
+    public FDDividendOptionHelper(
             final Class<T> engineClass,                 // option style
             final Option.Type type,                     // option type (call/put)
             final /*@Real*/ double underlying,          // underlying
@@ -38,7 +67,25 @@ public abstract class FDDividendOptionCalculator<T extends FDEngineAdapter> exte
         this(engineClass, type, underlying, strike, r, volatility, exercise, dividendDates, dividends, 0.0);
     }
 
-    public FDDividendOptionCalculator(
+    /**
+     * Constructor for both European and American dividend options helper class using the finite differences engine
+     * <p>
+     * Beware that this helper class implies that {@link Actual360} day counter and a {@link NullCalendar} calendar
+     * will be used, among other assumptions.
+     *
+     * @param type is the option call type (Call/Put)
+     * @param underlying is the price of the underlying asset
+     * @param strike is the strike price at expiration
+     * @param r is the risk free rate
+     * @param vol is the volatility
+     * @param expiry is the expiration date
+     * @param dividendDates is a list of dates when dividends are expected to be paid
+     * @param dividends is a list of dividends amounts (as a pure value) expected to be paid
+     * @param q is the yield rate
+     *
+     * @see <a href="http://www.jquantlib.org/sites/jquantlib-helpers/xref/org/jquantlib/helpers/FDDividendOptionHelper.html">Source code</a>
+     */
+    public FDDividendOptionHelper(
             final Class<T> engineClass,                 // option style
             final Option.Type type,                     // option type (call/put)
             final /*@Real*/ double underlying,          // underlying
@@ -54,12 +101,18 @@ public abstract class FDDividendOptionCalculator<T extends FDEngineAdapter> exte
 
         final DayCounter dc = new Actual360();
         final SimpleQuote spot = new SimpleQuote(underlying);
+
         final SimpleQuote qRate = new SimpleQuote(q);
-        final Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(Utilities.flatRate(qRate, dc));
+        final YieldTermStructure qFlatRate = new FlatForward(0, new NullCalendar(), new Handle<Quote>(qRate), dc);
+        final Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(qFlatRate);
+
         final SimpleQuote rRate = new SimpleQuote(r);
-        final Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(Utilities.flatRate(rRate, dc));
+        final YieldTermStructure rFlatRate = new FlatForward(0, new NullCalendar(), new Handle<Quote>(rRate), dc);
+        final Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(rFlatRate);
+
         final SimpleQuote vol = new SimpleQuote(volatility);
-        final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(Utilities.flatVol(vol, dc));
+        final BlackVolTermStructure flatVol = new BlackConstantVol(0, new NullCalendar(), new Handle<Quote>(vol), dc);
+        final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(flatVol);
 
         final BlackScholesMertonProcess stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot), qTS, rTS, volTS);
         final PricingEngine engine;
