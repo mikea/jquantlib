@@ -540,11 +540,11 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
         QL.require(cols == array.size ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
         final Array result = new Array(cols, style);
         for (int col=0; col<cols; col++) {
-            int addrJ = addrJ(0, col);
+            int addrJ = addrJ(col,0);
             double sum = 0.0;
             for (int row=0; row<rows; row++) {
-                sum  += data[addrJ] * array.data[col];
-                addrJ += cols;
+                sum  += data[addrJ] * array.data[row];
+                addrJ += 1;
             }
             result.data[col] = sum;
         }

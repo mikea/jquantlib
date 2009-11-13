@@ -88,6 +88,9 @@ public class SymmetricSchurDecomposition {
             diag.data[diag.addr(q)] = s.data[s.addr(q, q)];
             A.data[A.addr(q, q)] = 1.0;
         }
+        for (int j = 0; j < size; j++) {
+        	tmpDiag[j] = diag.data[diag.addr(j)];
+        }
 
         boolean keeplooping = true;
         int ite = 1;
@@ -159,7 +162,7 @@ public class SymmetricSchurDecomposition {
         } while (++ite <= maxIterations && keeplooping);
 
         QL.ensure(ite <= maxIterations, "Too many iterations reached");
-
+        /*
         // sort (eigenvalues, eigenvectors)
         final SortedMap<Double, ConstColumnIterator> map = new TreeMap<Double, ConstColumnIterator>();
         for (int col = 0; col < size; col++) {
@@ -179,7 +182,7 @@ public class SymmetricSchurDecomposition {
                 A.data[A.addr(row, col)] = sign * eigenVector.get(row);
             }
         }
-
+        */
     }
 
     //
