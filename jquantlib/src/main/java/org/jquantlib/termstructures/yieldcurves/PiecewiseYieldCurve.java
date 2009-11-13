@@ -96,7 +96,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
      * <p>
      * In order to provide a virtual base class in Java, we do not extend directly
      * but we implement the interface that the base class needs to implement and
-     * we use a delegator pattern in order to forward calls to the base class.
+     * we use a Delegate Pattern in order to forward calls to the base class.
      * <p>
      * The actual concrete implementation of <code>super</code> is chosen based
      * on class parameter <code>C</code>. The other class parameter <code>I</code>
@@ -141,9 +141,9 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         final Class<?> cparam = root.get(0).getElement();
         final Class<?> iparam = root.get(1).getElement();
 
-        QL.require(cparam!=null && iparam!=null , "class parameter(s) not specified"); // QA:[RG]::verified // TODO: message
-        QL.require(interpolator!=null , "interpolation is null"); // QA:[RG]::verified // TODO: message
-        QL.require(interpolator.getClass().isAssignableFrom(iparam) , "interpolator does not match parameterized type"); // QA:[RG]::verified // TODO: message
+        QL.require(cparam!=null && iparam!=null , "class parameter(s) not specified"); // TODO: message
+        QL.require(interpolator!=null , "interpolation is null"); // TODO: message
+        QL.require(interpolator.getClass().isAssignableFrom(iparam) , "interpolator does not match parameterized type"); // TODO: message
 
         if (Discount.class.isAssignableFrom(cparam)) {
             this.baseCurve = new InterpolatedDiscountCurve(referenceDate, dayCounter, interpolator);
@@ -155,7 +155,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             this.baseCurve = new InterpolatedZeroCurve(referenceDate, dayCounter, interpolator);
             this.traits = new ZeroYield();
         } else {
-            throw new LibraryException("only Discount, ForwardRate and ZeroYield are supported"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("only Discount, ForwardRate and ZeroYield are supported"); // TODO: message
         }
 
         this.instruments = instruments;
@@ -221,8 +221,6 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         }
         for (final RateHelper instrument : instruments) {
             instrument.addObserver(this);
-            // XXX:registerWith
-            //registerWith(instrument);
         }
     }
 
@@ -587,16 +585,16 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
                 final I interpolator) {
             super(dates[0], cal, dayCounter);
 
-            QL.require(dates.length > 1 , "too few dates"); // QA:[RG]::verified // TODO: message
-            QL.require(dates.length == discounts.size() , "dates/discount factors count mismatch"); // QA:[RG]::verified // TODO: message
-            QL.require(discounts.first() == 1.0 , "the first discount must be == 1.0 to flag the corrsponding date as settlement date"); // QA:[RG]::verified // TODO: message
+            QL.require(dates.length > 1 , "too few dates"); // TODO: message
+            QL.require(dates.length == discounts.size() , "dates/discount factors count mismatch"); // TODO: message
+            QL.require(discounts.first() == 1.0 , "the first discount must be == 1.0 to flag the corrsponding date as settlement date"); // TODO: message
 
             isNegativeRates = new Settings().isNegativeRates();
 
             container.times = new Array(dates.length);
             for (int i = 1; i < dates.length; i++) {
-                QL.require(dates[i].gt(dates[i-1]) , "dates must be in ascending order"); // QA:[RG]::verified // TODO: message
-                QL.require(isNegativeRates || discounts.get(i) >= 0.0 , "negative discount"); // QA:[RG]::verified // TODO: message
+                QL.require(dates[i].gt(dates[i-1]) , "dates must be in ascending order"); // TODO: message
+                QL.require(isNegativeRates || discounts.get(i) >= 0.0 , "negative discount"); // TODO: message
                 final double value = dayCounter.yearFraction(dates[0], dates[i]);
                 times.set(i, value);
             }
@@ -706,14 +704,14 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
         private InterpolatedForwardCurve(final Date[] dates, final /* @Rate */ Array forwards, final DayCounter dayCounter, final I interpolator) {
             // FIXME: code review: calendar
             super(dates[0], new Target(), dayCounter);
-            QL.require(dates.length > 1 , "too few dates"); // QA:[RG]::verified // TODO: message
-            QL.require(dates.length == forwards.size() , "dates/yields count mismatch"); // QA:[RG]::verified // TODO: message
+            QL.require(dates.length > 1 , "too few dates"); // TODO: message
+            QL.require(dates.length == forwards.size() , "dates/yields count mismatch"); // TODO: message
 
             isNegativeRates = new Settings().isNegativeRates();
             container.times = new Array(dates.length);
             for (int i = 1; i < dates.length; i++) {
-                QL.require(dates[i].gt(dates[i-1]) , "dates must be in ascending order"); // QA:[RG]::verified// TODO: message
-                QL.require(isNegativeRates || forwards.get(i) >= 0.0 , "negative forward"); // QA:[RG]::verified // TODO: message
+                QL.require(dates[i].gt(dates[i-1]) , "dates must be in ascending order"); // TODO: message
+                QL.require(isNegativeRates || forwards.get(i) >= 0.0 , "negative forward"); // TODO: message
                 final double value = dayCounter.yearFraction(dates[0], dates[i]);
                 times.set(i, value);
             }

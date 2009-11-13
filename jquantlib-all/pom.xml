@@ -354,10 +354,23 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        
         <repository>
             <id>mojo</id>
             <name>Mojo</name>
             <url>http://repository.codehaus.org/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        
+        <repository>
+            <id>net-java-dev</id>
+            <name>Sun</name>
+            <url>http://download.java.net/maven/2/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>

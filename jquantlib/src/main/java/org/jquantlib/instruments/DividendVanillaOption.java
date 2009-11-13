@@ -80,6 +80,9 @@ public class DividendVanillaOption extends VanillaOption {
     //
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public /*@Volatility*/ double impliedVolatility(
             final double price,
@@ -87,6 +90,9 @@ public class DividendVanillaOption extends VanillaOption {
         return impliedVolatility(price, process, 1.0e-4, 100, 1.0e-7, 4.0);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public /*@Volatility*/ double impliedVolatility(
             final double price,
@@ -95,6 +101,9 @@ public class DividendVanillaOption extends VanillaOption {
         return impliedVolatility(price, process, accuracy, 100, 1.0e-7, 4.0);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public /*@Volatility*/ double impliedVolatility(
             final double price,
@@ -104,6 +113,9 @@ public class DividendVanillaOption extends VanillaOption {
         return impliedVolatility(price, process, accuracy, maxEvaluations, 1.0e-7, 4.0);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public /*@Volatility*/ double impliedVolatility(
             final double price,
@@ -116,7 +128,7 @@ public class DividendVanillaOption extends VanillaOption {
 
 
     /**
-     * see VanillaOption for notes on implied-volatility calculation.
+     * {@inheritDoc}
      */
     @Override
     public /*@Volatility*/ double impliedVolatility(
@@ -128,9 +140,7 @@ public class DividendVanillaOption extends VanillaOption {
             /*@Volatility*/ final double maxVol) /* @ReadOnly */ {
 
         QL.require(!isExpired(), "option expired");
-
         final SimpleQuote volQuote = new SimpleQuote();
-
         final GeneralizedBlackScholesProcess newProcess = ImpliedVolatilityHelper.clone(process, volQuote);
 
         // engines are built-in for the time being

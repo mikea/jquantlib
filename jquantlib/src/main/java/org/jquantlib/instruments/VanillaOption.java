@@ -66,12 +66,32 @@ public class VanillaOption extends OneAssetOption {
     	super(/*process,*/ payoff, exercise/*, engine*/);
     }
 
+    /**
+     * Currently, this method returns the Black-Scholes implied volatility using analytic formulas for European options and
+     * a finite-difference method for American and Bermudan options. It will give inconsistent results if the pricing was
+     * performed with any other methods (such as jump-diffusion models.)
+     * <p>
+     * Options with a gamma that changes sign (e.g., binary options) have values that are <b>not</b> monotonic in the
+     * volatility. In these cases, the calculation can fail and the result (if any) is almost meaningless. Another possible
+     * source of failure is to have a target value that is not attainable with any volatility, e.g., a target value lower
+     * than the intrinsic value in the case of American options.
+     */
     public /*@Volatility*/ double impliedVolatility(
             final /*@Real*/ double price,
             final GeneralizedBlackScholesProcess process) /* @ReadOnly */ {
         return impliedVolatility(price, process, 1.0e-4, 100, 1.0e-7, 4.0);
     }
 
+    /**
+     * Currently, this method returns the Black-Scholes implied volatility using analytic formulas for European options and
+     * a finite-difference method for American and Bermudan options. It will give inconsistent results if the pricing was
+     * performed with any other methods (such as jump-diffusion models.)
+     * <p>
+     * Options with a gamma that changes sign (e.g., binary options) have values that are <b>not</b> monotonic in the
+     * volatility. In these cases, the calculation can fail and the result (if any) is almost meaningless. Another possible
+     * source of failure is to have a target value that is not attainable with any volatility, e.g., a target value lower
+     * than the intrinsic value in the case of American options.
+     */
     public /*@Volatility*/ double impliedVolatility(
             final /*@Real*/ double price,
             final GeneralizedBlackScholesProcess process,
@@ -79,6 +99,16 @@ public class VanillaOption extends OneAssetOption {
         return impliedVolatility(price, process, accuracy, 100, 1.0e-7, 4.0);
     }
 
+    /**
+     * Currently, this method returns the Black-Scholes implied volatility using analytic formulas for European options and
+     * a finite-difference method for American and Bermudan options. It will give inconsistent results if the pricing was
+     * performed with any other methods (such as jump-diffusion models.)
+     * <p>
+     * Options with a gamma that changes sign (e.g., binary options) have values that are <b>not</b> monotonic in the
+     * volatility. In these cases, the calculation can fail and the result (if any) is almost meaningless. Another possible
+     * source of failure is to have a target value that is not attainable with any volatility, e.g., a target value lower
+     * than the intrinsic value in the case of American options.
+     */
     public /*@Volatility*/ double impliedVolatility(
             final /*@Real*/ double price,
             final GeneralizedBlackScholesProcess process,
@@ -87,6 +117,16 @@ public class VanillaOption extends OneAssetOption {
         return impliedVolatility(price, process, accuracy, maxEvaluations, 1.0e-7, 4.0);
     }
 
+    /**
+     * Currently, this method returns the Black-Scholes implied volatility using analytic formulas for European options and
+     * a finite-difference method for American and Bermudan options. It will give inconsistent results if the pricing was
+     * performed with any other methods (such as jump-diffusion models.)
+     * <p>
+     * Options with a gamma that changes sign (e.g., binary options) have values that are <b>not</b> monotonic in the
+     * volatility. In these cases, the calculation can fail and the result (if any) is almost meaningless. Another possible
+     * source of failure is to have a target value that is not attainable with any volatility, e.g., a target value lower
+     * than the intrinsic value in the case of American options.
+     */
     public /*@Volatility*/ double impliedVolatility(
             final /*@Real*/ double price,
             final GeneralizedBlackScholesProcess process,
@@ -97,14 +137,14 @@ public class VanillaOption extends OneAssetOption {
     }
 
     /**
-     * @warning currently, this method returns the Black-Scholes implied volatility using analytic formulas for European options and
-     *          a finite-difference method for American and Bermudan options. It will give unconsistent results if the pricing was
-     *          performed with any other methods (such as jump-diffusion models.)
-     *          <p>
-     * @warning options with a gamma that changes sign (e.g., binary options) have values that are <b>not</b> monotonic in the
-     *          volatility. In these cases, the calculation can fail and the result (if any) is almost meaningless. Another possible
-     *          source of failure is to have a target value that is not attainable with any volatility, e.g., a target value lower
-     *          than the intrinsic value in the case of American options.
+     * Currently, this method returns the Black-Scholes implied volatility using analytic formulas for European options and
+     * a finite-difference method for American and Bermudan options. It will give inconsistent results if the pricing was
+     * performed with any other methods (such as jump-diffusion models.)
+     * <p>
+     * Options with a gamma that changes sign (e.g., binary options) have values that are <b>not</b> monotonic in the
+     * volatility. In these cases, the calculation can fail and the result (if any) is almost meaningless. Another possible
+     * source of failure is to have a target value that is not attainable with any volatility, e.g., a target value lower
+     * than the intrinsic value in the case of American options.
      */
     public /*@Volatility*/ double impliedVolatility(
             final /*@Real*/ double price,

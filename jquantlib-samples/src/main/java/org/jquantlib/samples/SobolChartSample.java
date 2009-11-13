@@ -24,7 +24,7 @@ public class SobolChartSample implements Runnable {
     }
 
     public void run() {
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 
         final SobolChartFrame frame = new SobolChartFrame("Sobol Chart Sample");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

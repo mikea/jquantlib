@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
+import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.DayCounter;
@@ -46,7 +47,7 @@ public class Bonds implements Runnable {
 
     public void run() {
 
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();
@@ -269,7 +270,7 @@ public class Bonds implements Runnable {
         // data source later.
 
         // deposits
-        final DayCounter depositDayCounter = null;// Actual360();
+        final DayCounter depositDayCounter = new Actual360();
 
         final RateHelper d1w = (new DepositRateHelper(new Handle<Quote>(d1wRate), new Period(1, TimeUnit.Weeks), fixingDays, calendar,
                 BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));

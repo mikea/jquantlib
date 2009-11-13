@@ -73,7 +73,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
         this.currency = currency;
         this.dayCounter = dayCounter;
 
-        QL.require(fixingDays <= 2 , "wrong number of fixing days");  // QA:[RG]::verified // TODO: message
+        QL.require(fixingDays >= 2 , "wrong number of fixing days");  // QA:[RG]::verified // TODO: message
 
         // TODO: code review :: please verify against QL/C++ code
         tenor.normalize();

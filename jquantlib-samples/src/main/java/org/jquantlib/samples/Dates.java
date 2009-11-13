@@ -46,7 +46,7 @@ public class Dates implements Runnable {
 
     public void run() {
 
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();

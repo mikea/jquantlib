@@ -187,7 +187,7 @@ public abstract class BinomialVanillaEngine<T extends Tree> extends VanillaOptio
         option.rollback(grid.at(1));
         // TODO: code review :: verify use of clone()
         final Array va = option.values().clone();
-        QL.require(va.size() == 2 , "expect 2 nodes in grid at first step"); // QA:[RG]::verified // TODO: message
+        QL.require(va.size() == 2, "expect 2 nodes in grid at first step"); // QA:[RG]::verified // TODO: message
         final double p1 = va.get(1);
 
         // Finally, rollback to t=0

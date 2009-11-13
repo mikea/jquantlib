@@ -76,7 +76,7 @@ public class FRA implements Runnable {
             throw new UnsupportedOperationException("Work in progress");
         }
 
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 
         /*********************
          ***  MARKET DATA  ***

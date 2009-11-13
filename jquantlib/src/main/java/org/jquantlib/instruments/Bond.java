@@ -205,30 +205,21 @@ public class Bond extends Instrument {
         this.redemptions_ = new Leg();
 
         if (!cashflows.isEmpty()) {
-            //notionals_ = new double[2];
-            notionalSchedule_.add(0, new Date());
+            notionalSchedule_.add(new Date());
+            notionals_.add(faceAmount);
 
-            //notionals_[0] = faceAmount;
-            notionals_.add(0, faceAmount);
+            notionalSchedule_.add(maturityDate);
+            notionals_.add(0.0);
 
-            notionalSchedule_.add(1,maturityDate);
-
-            //notionals_[1] = 0.0;
-            notionals_.add(1, 0.0);
-
-            redemptions_.add(cashflows.last());
-
-            //TODO: code review
-            //Attention pleaze: -- Operator on iterator!!!!!!!
-            //The last shoudldn't be sorted --> keep a reference
             final CashFlow last = cashflows.last();
+            redemptions_.add(last);
 
+            // sort cashflows, except last one
+            cashflows.remove(last);
             Collections.sort(cashflows, new EarlierThanCashFlowComparator());
 
-            //now add this cashflow to the last position
-            this.cashflows_.remove(last);
-            this.cashflows_.add(last);
-
+            //now add last cashflow back to the last position
+            cashflows.add(last);
         }
 
         final Date evaluationDate = new Settings().evaluationDate();

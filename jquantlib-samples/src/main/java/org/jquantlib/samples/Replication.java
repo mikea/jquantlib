@@ -58,7 +58,7 @@ public class Replication implements Runnable {
             throw new UnsupportedOperationException("Work in progress");
         }
 
-        QL.info("\n\n::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 
         final String fmt = "%-45s %-15s %-15s\n";
 
