@@ -22,8 +22,10 @@
 
 package org.jquantlib.testsuite.termstructures.yieldcurves;
 
+
+import static org.junit.Assert.fail;
+
 import org.jquantlib.QL;
-import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.TimeUnit;
 import org.junit.Ignore;
@@ -137,8 +139,7 @@ public class PiecewiseYieldCurveTest {
     public void fakeTestCase() {
         // This is not a test case.
         // Obtain real test cases from QuantLib-0.8.1 sources
-        QL.error("***** TEST FAILED :: waiting for implementation of PiecewiseYieldCurve *****");
-        throw new LibraryException();
+        fail("***** TEST FAILED :: waiting for implementation of PiecewiseYieldCurve *****");
     }
 
 

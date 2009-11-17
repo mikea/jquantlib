@@ -30,7 +30,7 @@ import org.jquantlib.QL;
  *
  * @author Srinivas Hasti
  * @author Zahid Hussain
- * 
+ *
  * @Changes: Sep 2009: Used correct method to parse date and format strings in parse method.
  *
  */
@@ -51,7 +51,7 @@ public class DateParser {
         final int day = Integer.parseInt(str.substring(8, 10));
 
         final Date date = new Date(day, Month.valueOf(month), year);
-        QL.debug(date.isoDate().toString());
+        // QL.debug(date.isoDate().toString());
         return date;
     }
 
@@ -93,7 +93,7 @@ public class DateParser {
             date = new Date(d, m, y);
         }
 
-        QL.debug(date.isoDate().toString());
+        // QL.debug(date.isoDate().toString());
         return date;
     }
 

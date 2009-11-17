@@ -44,7 +44,6 @@ import static org.junit.Assert.fail;
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
-import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
@@ -188,8 +187,7 @@ public class TermStructuresTest {
     @Test
     public void testImplied() {
         QL.info("Testing consistency of implied term structure...");
-        QL.error("***** TEST FAILED :: waiting for implementation of PiecewiseYieldTermStructure *****");
-        throw new LibraryException();
+        fail("***** TEST FAILED :: waiting for implementation of PiecewiseYieldTermStructure *****");
 
         //	    final double tolerance = 1.0e-10;
         //	    final Date today = settings.getEvaluationDate();
@@ -268,8 +266,7 @@ public class TermStructuresTest {
     @Test
     public void testFSpreaded() {
         QL.info("Testing consistency of forward-spreaded term structure...");
-        QL.error("***** TEST FAILED :: waiting for translation of ForwardSpreadedTermStructure *****");
-        throw new LibraryException();
+        fail("***** TEST FAILED :: waiting for translation of ForwardSpreadedTermStructure *****");
 
         //	    final double tolerance = 1.0e-10;
         //	    final Quote me = new SimpleQuote(0.01);
@@ -299,8 +296,7 @@ public class TermStructuresTest {
     @Test
     public void testFSpreadedObs() {
         QL.info("Testing observability of forward-spreaded term structure...");
-        QL.error("***** TEST FAILED :: waiting for translation of ForwardSpreadedTermStructure *****");
-        throw new LibraryException();
+        fail("***** TEST FAILED :: waiting for translation of ForwardSpreadedTermStructure *****");
 
         //	    SimpleQuote me = new SimpleQuote(0.01);
         //	    Handle<Quote> mh = new Handle<Quote>(me);
@@ -326,8 +322,7 @@ public class TermStructuresTest {
     @Test
     public void testZSpreaded() {
         QL.info("Testing consistency of zero-spreaded term structure...");
-        QL.error("***** TEST FAILED :: waiting for translation of ZeroSpreadedTermStructure *****");
-        throw new LibraryException();
+        fail("***** TEST FAILED :: waiting for translation of ZeroSpreadedTermStructure *****");
 
         //	    double tolerance = 1.0e-10;
         //	    Quote me = new SimpleQuote(0.01);
@@ -355,8 +350,7 @@ public class TermStructuresTest {
     @Test
     public void testZSpreadedObs() {
         QL.info("Testing observability of zero-spreaded term structure...");
-        QL.error("***** TEST FAILED :: waiting for translation of ZeroSpreadedTermStructure *****");
-        throw new LibraryException();
+        fail("***** TEST FAILED :: waiting for translation of ZeroSpreadedTermStructure *****");
 
         //	    SimpleQuote me = new SimpleQuote(0.01);
         //	    Handle<Quote> mh = new Handle<Quote>(me);

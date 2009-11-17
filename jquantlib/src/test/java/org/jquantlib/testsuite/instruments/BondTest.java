@@ -53,6 +53,8 @@
 
 package org.jquantlib.testsuite.instruments;
 
+import static org.junit.Assert.fail;
+
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.Actual360;
@@ -160,7 +162,8 @@ public class BondTest {
 									final double price2 = bond.cleanPrice(calculated, bondDayCount, compounding[n],
 											frequencies[l]);
 									if (Math.abs(price - price2) / price > tolerance) {
-										QL.error("yield recalculation failed:\n" + "    issue:     " + issue + "\n"
+			                            fail(
+										        "yield recalculation failed:\n" + "    issue:     " + issue + "\n"
 												+ "    maturity:  " + maturity + "\n" + "    coupon:    " + coupons[k] + "\n"
 												+ "    frequency: " + frequencies[l] + "\n\n" + "    yield:  " + yields[m] + " "
 												+ (compounding[n] == Compounding.Continuous ? "compounded" : "continuous") + "\n"
@@ -230,7 +233,7 @@ public class BondTest {
 						final double calculatedPrice = bond.getCleanPrice();
 
 						if (Math.abs(price-calculatedPrice) > tolerance) {
-							QL.error(
+							fail(
 									"price calculation failed:"
 									+ "\n    issue:     " + issue
 									+ "\n    maturity:  " + maturity
@@ -246,7 +249,7 @@ public class BondTest {
 								bondDayCount, Compounding.Continuous, frequency,
 								tolerance, maxEvaluations);
 						if (Math.abs(yield-calculatedYield) > tolerance) {
-							QL.error(
+                            fail(
 									"yield calculation failed:"
 									+ "\n    issue:     " + issue
 									+ "\n    maturity:  " + maturity

@@ -1,6 +1,16 @@
 package org.jquantlib.testsuite.calendars;
 
-import static org.jquantlib.time.Month.*;
+import static org.jquantlib.time.Month.April;
+import static org.jquantlib.time.Month.December;
+import static org.jquantlib.time.Month.February;
+import static org.jquantlib.time.Month.January;
+import static org.jquantlib.time.Month.July;
+import static org.jquantlib.time.Month.June;
+import static org.jquantlib.time.Month.March;
+import static org.jquantlib.time.Month.May;
+import static org.jquantlib.time.Month.November;
+import static org.jquantlib.time.Month.October;
+import static org.jquantlib.time.Month.September;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +26,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * 
+ *
  * Added QL097 UnitestStates test cases
  * Fixed old tested cases to work work with QL097 UnitedStates calendar class.
- * 
+ *
  * @author Sangaran Sampanthan
  * @author Zahid Hussain
  *
@@ -45,9 +55,9 @@ public class UnitedStatesCalendarTest {
 	public void testUSSettlement() {
 		QL.info("Testing US settlement holiday list...");
 		final CalendarUtil cbt = new CalendarUtil();
-	    List<Date> expectedHol = new ArrayList<Date>();
+	    final List<Date> expectedHol = new ArrayList<Date>();
 	    int year = 2004;
-	    
+
 	    expectedHol.add(new Date(1, January,year));
 	    expectedHol.add(new Date(19,January,year));
 	    expectedHol.add(new Date(16,February,year));
@@ -60,12 +70,12 @@ public class UnitedStatesCalendarTest {
 	    expectedHol.add(new Date(25,November,year));
 	    expectedHol.add(new Date(24,December,year));
 //	    expectedHol.add(new Date(31,DECEMBER,year));
-	    
-	    Calendar c = new UnitedStates(UnitedStates.Market.SETTLEMENT);
+
+	    final Calendar c = new UnitedStates(UnitedStates.Market.SETTLEMENT);
 		cbt.checkHolidayList(expectedHol, c, year);
-		
+
 		expectedHol.clear();
-		
+
 		year = 2005;
 	    expectedHol.add(new Date(17,January,year));
 	    expectedHol.add(new Date(21,February,year));
@@ -77,18 +87,18 @@ public class UnitedStatesCalendarTest {
 	    expectedHol.add(new Date(11,November,year));
 	    expectedHol.add(new Date(24,November,2005));
 	    expectedHol.add(new Date(26,December,year));
-	    
+
 		cbt.checkHolidayList(expectedHol, c, year);
 
 	}
-	
+
 	@Test
 	public void testUSGovernmentBondMarket() {
-		
+
 	    QL.info("Testing US government bond market holiday list...");
 	    final CalendarUtil cbt = new CalendarUtil();
-	    int year = 2004;
-	    List<Date> expectedHol = new ArrayList<Date>();
+	    final int year = 2004;
+	    final List<Date> expectedHol = new ArrayList<Date>();
 	    expectedHol.add(new Date(1,January,year));
 	    expectedHol.add(new Date(19,January,year));
 	    expectedHol.add(new Date(16,February,year));
@@ -101,19 +111,19 @@ public class UnitedStatesCalendarTest {
 	    expectedHol.add(new Date(25,November,year));
 	    expectedHol.add(new Date(24,December,year));
 
-	    Calendar c = new UnitedStates(UnitedStates.Market.GOVERNMENTBOND);
+	    final Calendar c = new UnitedStates(UnitedStates.Market.GOVERNMENTBOND);
 	    cbt.checkHolidayList(expectedHol, c, year);
 	}
 
-	
+
 	@Test
 	public void testUSNewYorkStockExchange() {
 	    QL.info("Testing New York Stock Exchange holiday list...");
 
 	    final CalendarUtil cbt = new CalendarUtil();
-	    Calendar c = new UnitedStates(UnitedStates.Market.NYSE);
-	    List<Date> expectedHol = new ArrayList<Date>();
-	    
+	    final Calendar c = new UnitedStates(UnitedStates.Market.NYSE);
+	    final List<Date> expectedHol = new ArrayList<Date>();
+
 	    int year = 2004;
 	    expectedHol.add(new Date(1,January,year));
 	    expectedHol.add(new Date(19,January,year));
@@ -125,9 +135,9 @@ public class UnitedStatesCalendarTest {
 	    expectedHol.add(new Date(6,September,year));
 	    expectedHol.add(new Date(25,November,year));
 	    expectedHol.add(new Date(24,December,year));
-	    
+
 	    cbt.checkHolidayList(expectedHol, c, year);
-	    
+
 	    expectedHol.clear();
 	    year = 2005;
 	    expectedHol.add(new Date(17,January,year));
@@ -138,9 +148,9 @@ public class UnitedStatesCalendarTest {
 	    expectedHol.add(new Date(5,September,year));
 	    expectedHol.add(new Date(24,November,year));
 	    expectedHol.add(new Date(26,December,year));
-	    
+
 	    cbt.checkHolidayList(expectedHol, c, year);
-	    
+
 	    expectedHol.clear();
 	    year = 2006;
 	    expectedHol.add(new Date(2,January,year));
@@ -153,11 +163,11 @@ public class UnitedStatesCalendarTest {
 	    expectedHol.add(new Date(23,November,year));
 	    expectedHol.add(new Date(25,December,year));
 	    cbt.checkHolidayList(expectedHol, c, year);
-	    
-	    cbt.checkHolidayList(expectedHol, c, year);
-	    
 
-	    List<Date> histClose = new ArrayList<Date>();
+	    cbt.checkHolidayList(expectedHol, c, year);
+
+
+	    final List<Date> histClose = new ArrayList<Date>();
 	    histClose.add(new Date(11,June,2004));     // Reagan's funeral
 	    histClose.add(new Date(14,September,2001));// September 11, 2001
 	    histClose.add(new Date(13,September,2001));// September 11, 2001
@@ -190,21 +200,20 @@ public class UnitedStatesCalendarTest {
 	    histClose.add(new Date(5,November,1968));
 	    histClose.add(new Date(3,November,1964));
 
-	    for (Date d: histClose) {
+	    for (final Date d: histClose) {
 	        if (!c.isHoliday(d)) {
-	        	QL.error(d.toString() + " should be holiday (historical close)", new Exception());
 	        	Assert.fail(d.toString() + " should be holiday (historical close)");
 	        }
 	    }
-	    
+
 
 	}
-	
+
 	@Test
 	public void testUnitedStatesYear2004() {
 		final int year = 2004;
 		QL.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
-        
+
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
@@ -260,7 +269,7 @@ public class UnitedStatesCalendarTest {
 	public void testUnitedStatesYear2005() {
 		final int year = 2005;
 		QL.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
-        
+
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day (following monday)
@@ -307,7 +316,7 @@ public class UnitedStatesCalendarTest {
 	public void testUnitedStatesYear2006() {
 		final int year = 2006;
 		QL.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
-        
+
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day (following monday)
@@ -354,7 +363,7 @@ public class UnitedStatesCalendarTest {
 	public void testUnitedStatesYear2007() {
 		final int year = 2007;
 		QL.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
-        
+
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
@@ -408,7 +417,7 @@ public class UnitedStatesCalendarTest {
 	public void testUnitedStatesYear2008() {
 		final int year = 2008;
 		QL.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
-        
+
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
@@ -455,7 +464,7 @@ public class UnitedStatesCalendarTest {
 	public void testUnitedStatesYear2009() {
 		final int year = 2009;
 		QL.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
-        
+
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
@@ -501,7 +510,7 @@ public class UnitedStatesCalendarTest {
 	public void testUnitedStatesYear2010() {
 		final int year = 2010;
 		QL.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
-        
+
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
@@ -551,7 +560,7 @@ public class UnitedStatesCalendarTest {
 	public void testUnitedStatesYear2011() {
 		final int year = 2011;
 		QL.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
-        
+
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day
@@ -596,7 +605,7 @@ public class UnitedStatesCalendarTest {
 	public void testUnitedStatesYear2012() {
 		final int year = 2012;
 		QL.info("Testing United States holiday list for the year " + year + " as recognized by markets Frankfurt Stock Exchange, Xetra, Eurex ...");
-        
+
         final List<Date> expectedHol = new ArrayList<Date>();
 
 		//new years day (following monday)

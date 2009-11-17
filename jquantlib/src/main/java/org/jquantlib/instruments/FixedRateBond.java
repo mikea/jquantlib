@@ -3,6 +3,7 @@ package org.jquantlib.instruments;
 import org.jquantlib.QL;
 import org.jquantlib.cashflow.FixedRateLeg;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
@@ -109,19 +110,12 @@ public class FixedRateBond extends Bond {
             nextToLastDate = new Date();
             break;
         case Zero:
-            reportFalseDateGenerationRule(stubDate, rule);
-            break;
         case ThirdWednesday:
-            reportFalseDateGenerationRule(stubDate, rule);
-            break;
         case  Twentieth:
-            reportFalseDateGenerationRule(stubDate, rule);
-            break;
         case  TwentiethIMM:
-            reportFalseDateGenerationRule(stubDate, rule);
-            break;
+            throw new LibraryException(reportFalseDateGenerationRule(stubDate, rule));
         default:
-            QL.error("unknown DateGeneration::Rule (" + rule + ")");
+            throw new LibraryException("unknown DateGeneration.Rule"); // TODO: message
         }
 
         final Schedule schedule = new Schedule(startDate, maturityDate_, tenor,
@@ -158,6 +152,10 @@ public class FixedRateBond extends Bond {
     // private methods
     //
 
-    private void reportFalseDateGenerationRule(final Date stubDate, final DateGeneration.Rule rule){
-        QL.error("stub date ("+ stubDate + ") not allowed with " + rule + " DateGeneration::Rule");    }
+    private String reportFalseDateGenerationRule(final Date stubDate, final DateGeneration.Rule rule) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("stub date (").append(stubDate).append(") not allowed with DateGeneration.Rule (").append(rule).append(")");
+        return sb.toString();
+    }
+
 }

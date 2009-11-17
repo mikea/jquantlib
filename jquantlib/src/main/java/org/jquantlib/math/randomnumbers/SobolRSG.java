@@ -1402,7 +1402,9 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
 
     public SobolRSG(final int dimensionality, final long seed, final DirectionIntegers direction) {
 
-        if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
+        if (System.getProperty("EXPERIMENTAL")==null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
 
         QL.require(dimensionality > 0 , "dimensionality must be greater than 0"); // QA:[RG]::verified // TODO: message
 
@@ -1448,8 +1450,9 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
         // that the l-th leftmost bit must be set
 
         // degenerate (no free direction integers) first dimension
-        for (int j=0; j < BITS; j++)
+        for (int j=0; j < BITS; j++) {
             directionIntegers[0][j] = (1 << (BITS-j-1));
+        }
 
         int maxTabulated = 0;
         // dimensions from 2 (k=1) to maxTabulated (k=maxTabulated-1) included
@@ -1457,13 +1460,14 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
         switch (direction) {
         case Unit:
             maxTabulated = this.dimensionality;
-            for (int k = 1; k < maxTabulated; k++)
+            for (int k = 1; k < maxTabulated; k++) {
                 for (int l = 1; l <= degree[k]; l++) {
                     // FIXME: Translate these two lines
                     // TODO: Code Review is this correct.
                     directionIntegers[k][l-1] = 1L;
                     directionIntegers[k][l-1] <<= (BITS-l);
                 }
+            }
             break;
         case Jaeckel:
             // maxTabulated = 32;
@@ -1517,7 +1521,7 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
         // FIXME: Check maxTabulated below: How is it initialized?
         if (this.dimensionality > maxTabulated) {
             final MersenneTwisterUniformRng uniformRng = new MersenneTwisterUniformRng(seed);
-            for (int k = maxTabulated; k < this.dimensionality; k++)
+            for (int k = maxTabulated; k < this.dimensionality; k++) {
                 for (int l = 1; l <= degree[k]; l++) {
 
                     do {
@@ -1541,6 +1545,7 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
                     // FIXME: Translate this line
                     directionIntegers[k][l - 1] <<= (BITS - l);
                 }
+            }
         }
 
         // computation of directionIntegers_[k][l] for l>=degree_[k]
@@ -1559,11 +1564,13 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
                 // the polynomial ppmt[k] are not included in its encoding,
                 // provided that its degree is known.
                 // That is: a[k][j] = ppmt[k] >> (gk-j-1)
-                for (int j = 1; j < gk; j++)
+                for (int j = 1; j < gk; j++) {
                     // FIXME: Correct this line if ((ppmt.get(k) >>> (gk-j-1)) & 1 != 0)
                     // TODO: REVIEW THIS.
-                    if (((ppmt[k] >> (gk - j - 1)) & 1L) != 0)
+                    if (((ppmt[k] >> (gk - j - 1)) & 1L) != 0) {
                         n ^= directionIntegers[k][l - j];
+                    }
+                }
 
                 // a[k][gk] is always set, so directionIntegers_[k][l-gk]
                 // will always enter
@@ -1598,20 +1605,23 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
         //				pw.flush();
         //				pw.close();
         //			} catch (FileNotFoundException ex) {
-        //				QL.error(SobolRsg.class.getName()).log(Level.SEVERE, null, ex);
+        //              throw new LibraryException(ex);
+        //				// QL.error(SobolRsg.class.getName()).log(Level.SEVERE, null, ex);
         //			} finally {
         //				try {
         //					fos.close();
         //				} catch (IOException ex) {
-        //					QL.error(SobolRsg.class.getName()).log(Level.SEVERE, null, ex);
+        //                  throw new LibraryException(ex);
+        //					// QL.error(SobolRsg.class.getName()).log(Level.SEVERE, null, ex);
         //				}
         //			}
         //		}
 
         // initialize Sobol integer/double vectors
         // first draw
-        for (int k=0; k<this.dimensionality; k++)
+        for (int k=0; k<this.dimensionality; k++) {
             integerSequence[k] = directionIntegers[k][0];
+        }
     }
 
 
@@ -1626,9 +1636,11 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
         // FIXME: Correct the following for loop regarding directionIntegers_ .
         for (int k = 0; k < this.dimensionality; k++) {
             integerSequence[k] = 0;
-            for (int index = 0; index < ops; index++)
-                if (((gray >> index) & 1) != 0)
+            for (int index = 0; index < ops; index++) {
+                if (((gray >> index) & 1) != 0) {
                     integerSequence[k] = directionIntegers[k][index];
+                }
+            }
         }
         sequenceCounter = skip;
     }
@@ -1653,7 +1665,9 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
         // increment the counter
         sequenceCounter++;
         // did we overflow?
-        if (sequenceCounter == 0) throw new ArithmeticException("period exceeded"); // TODO: message
+        if (sequenceCounter == 0) {
+            throw new ArithmeticException("period exceeded"); // TODO: message
+        }
 
         // Instead of using the counter n as new unique generating integer
         // for the n-th draw use the Gray code G(n) as proposed
@@ -1662,11 +1676,12 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
         // Find rightmost zero bit of n
         int j = 0;
         while ((n & 1) != 0) { n >>= 1; j++; }
-        for (int k = 0; k < this.dimensionality; k++)
+        for (int k = 0; k < this.dimensionality; k++) {
             // XOR the appropriate direction number into each component of
             // the integer sequence to obtain a new Sobol integer for that
             // component
             integerSequence[k] ^= directionIntegers[k][j];
+        }
         return integerSequence;
     }
 
@@ -1676,8 +1691,9 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
         final double[] d = new double[this.dimensionality];
 
         // normalize to get a double in (0,1)
-        for (int k = 0; k < this.dimensionality; ++k)
+        for (int k = 0; k < this.dimensionality; ++k) {
             d[k] = v[k] * NORMALIZATION_FACTOR;
+        }
 
         this.sequence = new Sample<double[]>(d, 1.0);
         return sequence;

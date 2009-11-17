@@ -24,7 +24,6 @@ package org.jquantlib.testsuite.calendars;
 
 import java.util.List;
 
-import org.jquantlib.QL;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
@@ -65,7 +64,6 @@ public class CalendarUtil {
         }
 
         if (error>0) {
-            QL.error(sb.toString(), new Exception());
             Assert.fail(sb.toString());
         }
 

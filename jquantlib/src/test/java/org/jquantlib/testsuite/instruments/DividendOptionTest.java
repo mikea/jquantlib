@@ -39,6 +39,9 @@
 
 package org.jquantlib.testsuite.instruments;
 
+
+import static org.junit.Assert.fail;
+
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -819,7 +822,7 @@ private <T extends FDEngineAdapter> void testFdDegenerate(final Class<T> engineC
             sb.append("    previous value: ").append(value).append('\n');
             sb.append("    current value:  ").append(refValue).append('\n');
             sb.append("    change:         ").append(value-refValue);
-            throw new LibraryException(sb.toString());
+            fail(sb.toString());
         }
     }
 }
