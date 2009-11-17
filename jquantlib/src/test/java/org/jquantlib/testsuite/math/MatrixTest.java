@@ -507,12 +507,12 @@ public class MatrixTest {
         final Array aD = new Array(new double[] { 1.0, 1.0, 1.0, 1.0 }, styleB);
 
         final Array a = mD.mul(aD);
-        if (a.size() != mD.columns()) {
+        if (a.size() != mD.rows()) {
             fail("'add' failed");
         }
 
         for (int col=a.base(); col<a.columns()+a.base(); col++) {
-            if (a.get(col) != (col-a.base()+1)*5) {
+            if (a.get(col) != 10.0) {
                 fail("'mul' failed");
             }
         }
@@ -1075,47 +1075,50 @@ public class MatrixTest {
 
     @Test
     public void testEigenvectors() {
-    	
+
     	QL.info("Testing eigenvalues and eigenvectors calculation...");
-    	
+
     	final Matrix testMatrices[] = { M1, M2 };
-    	
+
     	for (final Matrix M : testMatrices) {
-    		
+
     		final SymmetricSchurDecomposition schur = M.schur();
     		final Array eigenValues = schur.eigenvalues();
     		final Matrix eigenVectors = schur.eigenvectors();
-    		double minHolder = Constants.QL_MAX_REAL;
+    		final double minHolder = Constants.QL_MAX_REAL;
 
     		final int N = M.columns();
-    		
+
     		for (int i=0; i<N; i++) {
     			final Array v = new Array(N);
-    			for (int j=0; j<N; j++)
-    				v.set( j, eigenVectors.get(j,i) );
+    			for (int j=0; j<N; j++) {
+                    v.set( j, eigenVectors.get(j,i) );
+                }
     			// check definition
     			final Array a = M.mul(v);
     			final Array b = v.mul(eigenValues.get(i));
     			final double tol = norm(a.sub(b));
-    			if (tol > 1.0e-15)
-    				fail("Eigenvector definition not satisfied");
+    			if (tol > 1.0e-15) {
+                    fail("Eigenvector definition not satisfied");
     			// check decreasing ordering
     			//if (eigenValues.get(i) >= minHolder) {
     			//	fail("Eigenvalues not ordered");
     			//} else
     			//	minHolder = eigenValues.get(i);
+                }
     		}
-    		
+
     		// check normalization
     		final Matrix m = eigenVectors.mul(eigenVectors.transpose());
     		final Identity ID = new Identity(N);
     		final double tol = norm(m.sub(ID));
-    		if (tol > 1.0e-15)
-    			fail("Eigenvector not normalized");
+    		if (tol > 1.0e-15) {
+                fail("Eigenvector not normalized");
+            }
     	}
     }
-    
-    
+
+
     //    @Test
     //    public void testSqrt() {
     //

@@ -114,20 +114,6 @@ public class TimeSeries<T> {
     //
 
     /**
-     * @return the first date for which a historical datum exists
-     */
-    public Date firstDate() /*@ReadOnly*/ {
-        return delegate.firstDate();
-    }
-
-    /**
-     * @return the last date for which a historical datum exists
-     */
-    public Date lastDate() /*@ReadOnly*/ {
-        return delegate.lastDate();
-    }
-
-    /**
      * @return the number of historical data including null ones
      */
     public int size() /*@ReadOnly*/ {
@@ -150,7 +136,7 @@ public class TimeSeries<T> {
     }
 
     public void add(final Date date, final IntervalPrice dt) {
-        ((TimeSeriesIntervalPrice)delegate).addIntervalPrice(date, dt) ;
+        ((TimeSeriesIntervalPrice)delegate).add(date, dt) ;
     }
 
     public double find(final Date d) /*@ReadOnly*/ {
@@ -158,7 +144,7 @@ public class TimeSeries<T> {
     }
 
     public IntervalPrice findIntervalPrice(final Date d) /*@ReadOnly*/ {
-        return ((TimeSeriesIntervalPrice)delegate).findIntervalPrice(d);
+        return ((TimeSeriesIntervalPrice)delegate).find(d);
     }
 
     public double[] values() {
@@ -166,7 +152,7 @@ public class TimeSeries<T> {
     }
 
     public Collection<IntervalPrice> valuesIntervalPrice() {
-        return ((TimeSeriesIntervalPrice)delegate).valuesIntervalPrice();
+        return ((TimeSeriesIntervalPrice)delegate).values();
     }
 
 
@@ -175,16 +161,6 @@ public class TimeSeries<T> {
     //
 
     private interface Series {
-
-        /**
-         * @return the first date for which a historical datum exists
-         */
-        public Date firstDate() /*@ReadOnly*/;
-
-        /**
-         * @return the last date for which a historical datum exists
-         */
-        public Date lastDate() /*@ReadOnly*/;
 
         /**
          * @return the number of historical data including null ones
@@ -228,18 +204,18 @@ public class TimeSeries<T> {
         /**
          * Adds a single data to this series
          */
-        public void addIntervalPrice(final Date date, final IntervalPrice dt);
+        public void add(final Date date, final IntervalPrice dt);
 
         /**
          * @param d is a {@link Date} we are interested on
          * @return the value associated to a {@link Date} informed
          */
-        public IntervalPrice findIntervalPrice(final Date d) /*@ReadOnly*/;
+        public IntervalPrice find(final Date d) /*@ReadOnly*/;
 
         /**
          * @return the full {@link Collection} of values stored
          */
-        public Collection<IntervalPrice> valuesIntervalPrice();
+        public Collection<IntervalPrice> values();
 
     }
 
@@ -264,7 +240,7 @@ public class TimeSeries<T> {
             this();
             QL.require(dates.length == values.length , "sizes mismatch"); // QA:[RG]::verified // TODO: message
             for (int i = 0; i < dates.length; i++) {
-                this.addIntervalPrice(dates[i], values[i]) ;
+                this.add(dates[i], values[i]) ;
             }
         }
 
@@ -272,19 +248,9 @@ public class TimeSeries<T> {
             this();
             Date tmp = startingDate;
             for (int i = 0; i < values.size();) {
-                this.addIntervalPrice(tmp, values.get(i++)) ;
+                this.add(tmp, values.get(i++)) ;
                 tmp = startingDate.add(i);
             }
-        }
-
-        @Override
-        public Date firstDate() /*@ReadOnly*/ {
-            return map.firstKey();
-        }
-
-        @Override
-        public Date lastDate() /*@ReadOnly*/ {
-            return map.lastKey();
         }
 
         @Override
@@ -303,17 +269,17 @@ public class TimeSeries<T> {
         }
 
         @Override
-        public void addIntervalPrice(final Date date, final IntervalPrice dt) {
+        public void add(final Date date, final IntervalPrice dt) {
             map.put(date, dt) ;
         }
 
         @Override
-        public IntervalPrice findIntervalPrice(final Date d) /*@ReadOnly*/ {
+        public IntervalPrice find(final Date d) /*@ReadOnly*/ {
             return map.get(d);
         }
 
         @Override
-        public Collection<IntervalPrice> valuesIntervalPrice() {
+        public Collection<IntervalPrice> values() {
             return map.values();
         }
 
@@ -362,18 +328,6 @@ public class TimeSeries<T> {
                 add(tmp, values.get(i++)) ;
                 tmp = startingDate.add(i);
             }
-        }
-
-        @Override
-        public Date firstDate() /*@ReadOnly*/ {
-            //XXX: return map.firstKey();
-            return dates.get(0);
-        }
-
-        @Override
-        public Date lastDate() /*@ReadOnly*/ {
-            //XXX: return map.lastKey();
-            return dates.get(dates.size()-1);
         }
 
         @Override

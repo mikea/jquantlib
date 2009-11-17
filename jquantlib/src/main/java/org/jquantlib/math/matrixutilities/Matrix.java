@@ -250,9 +250,13 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
 
     @Override
     public boolean equals(final Object o) {
-        if (o == null || !(o instanceof Matrix)) return false;
+        if (o == null || !(o instanceof Matrix)) {
+            return false;
+        }
         final Matrix another = (Matrix) o;
-        if (rows != another.rows || cols != another.cols) return false;
+        if (rows != another.rows || cols != another.cols) {
+            return false;
+        }
         return Arrays.equals(data, another.data);
     }
 
@@ -304,9 +308,9 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      */
     public void fillCol(final int col, final Array array) {
         QL.require(rows == array.size ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        if (cols == 1)
+        if (cols == 1) {
             System.arraycopy(array.data, 0, data, 0, size);
-        else {
+        } else {
             int addr = addr(style.base, col);
             for (int row = style.base; row < rows+style.base; row++) {
                 data[addr] = array.data[array.addr(row)];
@@ -537,16 +541,15 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new Array which contains the result
      */
     public Array mul(final Array array) {
-        QL.require(cols == array.size ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(cols, style);
-        for (int col=0; col<cols; col++) {
-            int addrJ = addrJ(col,0);
+        QL.require(cols == array.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Array result = new Array(rows, style);
+        for (int i = 0; i < result.size; i++) {
+            final int addrJ = addrJ(i, 0);
             double sum = 0.0;
-            for (int row=0; row<rows; row++) {
-                sum  += data[addrJ] * array.data[row];
-                addrJ += 1;
+            for (int col = 0; col < this.cols; col++) {
+                sum += array.data[col] * this.data[addrJ + col];
             }
-            result.data[col] = sum;
+            result.data[i] = sum;
         }
         return result;
     }
@@ -757,10 +760,11 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
 
         final Matrix result = new Matrix(row1-row0, col1-col0, style);
         if (col1-col0 == cols) {
-            if (row1-row0 == rows)
+            if (row1-row0 == rows) {
                 System.arraycopy(data, style.base, result.data, style.base, size);
-            else
+            } else {
                 System.arraycopy(data, addr(row0, style.base), result.data, style.base, result.size);
+            }
         } else {
             final int ncols = col1-col0;
             int addr = style.base;
