@@ -51,38 +51,33 @@ public class BilinearInterpolationTest {
 
         // fill zz using f(x,y) = x + y;
         zz = new Matrix(x.size(), y.size());
-        for (int i = 0; i < x.size(); i++) {
+        for (int i = 0; i < x.size(); i++)
             for (int ii = 0; ii < y.size(); ii++) {
                 final double value = x.get(i) + y.get(ii);
                 zz.set(i, ii, value);
             }
-        }
         interpolation2d = new Bilinear().interpolate(x, y, zz);
-        interpolation2d.reload();
+        interpolation2d.update();
         tolerance = 1.0e-12;
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionWithoutEnableExtrapolation() {
-        for (int i_x = 0; i_x < x_test.size(); i_x++) {
-            for (int i_y = 0; i_y < y_test.size(); i_y++) {
+        for (int i_x = 0; i_x < x_test.size(); i_x++)
+            for (int i_y = 0; i_y < y_test.size(); i_y++)
                 interpolation2d.op(x_test.get(i_x), y_test.get(i_y));
-            }
-        }
     }
 
     @Test
     public void testEnableExtrapolation() {
         interpolation2d.enableExtrapolation();
-        for (int i_x = 0; i_x < x_test.size(); i_x++) {
+        for (int i_x = 0; i_x < x_test.size(); i_x++)
             for (int i_y = 0; i_y < y_test.size(); i_y++) {
                 final double interpolated = interpolation2d.op(x_test.get(i_x), y_test.get(i_y));
                 final double expected = x_test.get(i_x) + y_test.get(i_y);
-                if (abs(interpolated - expected) > tolerance) {
+                if (abs(interpolated - expected) > tolerance)
                     fail("failed to interpolate value at x = " + x_test.get(i_x) + ", y = " + y_test.get(i_y));
-                }
             }
-        }
     }
 
 }

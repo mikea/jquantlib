@@ -52,7 +52,7 @@ import org.jquantlib.lang.exceptions.LibraryException;
  * WEEKDAY Excel function is the same except for Sunday = 7.
  */
 public enum Weekday {
-    SUNDAY(1), MONDAY(2), TUESDAY(3), WEDNESDAY(4), THURSDAY(5), FRIDAY(6), SATURDAY(7);
+    Sunday(1), Monday(2), Tuesday(3), Wednesday(4), Thursday(5), Friday(6), Saturday(7);
 
     private final int enumValue;
 
@@ -70,19 +70,19 @@ public enum Weekday {
     static public Weekday valueOf(final int value) {
         switch (value) {
         case 1:
-            return Weekday.SUNDAY;
+            return Weekday.Sunday;
         case 2:
-            return Weekday.MONDAY;
+            return Weekday.Monday;
         case 3:
-            return Weekday.TUESDAY;
+            return Weekday.Tuesday;
         case 4:
-            return Weekday.WEDNESDAY;
+            return Weekday.Wednesday;
         case 5:
-            return Weekday.THURSDAY;
+            return Weekday.Thursday;
         case 6:
-            return Weekday.FRIDAY;
+            return Weekday.Friday;
         case 7:
-            return Weekday.SATURDAY;
+            return Weekday.Saturday;
         default:
             throw new LibraryException("value must be [1,7]"); // QA:[RG]::verified // TODO: message
         }

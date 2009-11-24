@@ -26,8 +26,8 @@ import static org.jquantlib.time.Month.February;
 import static org.jquantlib.time.Month.January;
 import static org.jquantlib.time.Month.November;
 import static org.jquantlib.time.Month.September;
-import static org.jquantlib.time.Weekday.FRIDAY;
-import static org.jquantlib.time.Weekday.THURSDAY;
+import static org.jquantlib.time.Weekday.Friday;
+import static org.jquantlib.time.Weekday.Thursday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -95,7 +95,7 @@ public class SaudiArabia extends Calendar{
 
 		@Override
 		public boolean isWeekend(final Weekday w) {
-		   return w == THURSDAY || w == FRIDAY;
+		   return w == Thursday || w == Friday;
 		}
 
 		@Override

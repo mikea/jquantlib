@@ -37,12 +37,8 @@
 
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
-import java.util.List;
-
 import org.jquantlib.instruments.DividendVanillaOption;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.jquantlib.util.Observable;
-import org.jquantlib.util.Observer;
 
 /**
  * Finite-differences pricing engine for dividend European options
@@ -74,7 +70,6 @@ public class FDDividendEuropeanEngine
 
     public FDDividendEuropeanEngine(final GeneralizedBlackScholesProcess process) {
         this(process, 100, 100, false);
-        super.impl = new Impl();
     }
 
     public FDDividendEuropeanEngine(
@@ -82,7 +77,6 @@ public class FDDividendEuropeanEngine
             final int timeSteps,
             final int gridPoints) {
         this(process, timeSteps, gridPoints, false);
-        super.impl = new Impl();
     }
 
     public FDDividendEuropeanEngine(
@@ -94,10 +88,10 @@ public class FDDividendEuropeanEngine
         super.impl = new Impl();
     }
 
+
     //
     // private inner classes
     //
-
 
     private class Impl extends DividendVanillaOption.EngineImpl {
         @Override
@@ -127,49 +121,63 @@ public class FDDividendEuropeanEngine
         super.impl.reset();
     }
 
-    @Override
-    public void update() {
-        super.impl.update();
-    }
 
-    @Override
-    public void addObserver(final Observer observer) {
-        super.impl.addObserver(observer);
-    }
+//    @Override
+//XXX::OBS    public void update(final Observable o, final Object arg) {
+//        super.impl.update(o, arg);
+//    }
 
-    @Override
-    public int countObservers() {
-        return super.impl.countObservers();
-    }
 
-    @Override
-    public void deleteObserver(final Observer observer) {
-        super.impl.deleteObserver(observer);
-    }
-
-    @Override
-    public void deleteObservers() {
-        super.impl.deleteObservers();
-    }
-
-    @Override
-    public List<Observer> getObservers() {
-        return super.impl.getObservers();
-    }
-
-    @Override
-    public void notifyObservers() {
-        super.impl.notifyObservers();
-    }
-
-    @Override
-    public void notifyObservers(final Object arg) {
-        super.impl.notifyObservers(arg);
-    }
-
-    @Override
-    public void update(final Observable o, final Object arg) {
-        super.impl.update(o, arg);
-    }
+//    //
+//    // implements Observer
+//    //
+//
+//    @Override
+//    public void update() {
+//      if (impl==null)
+//          throw new LibraryException(PRICING_ENGINE_NOT_SET);
+//      impl.update();
+//      //XXX  super.impl.update();
+//    }
+//
+//
+//    //
+//    // implements Observable
+//    //
+//
+//    @Override
+//    public void addObserver(final Observer observer) {
+//        super.impl.addObserver(observer);
+//    }
+//
+//    @Override
+//    public int countObservers() {
+//        return super.impl.countObservers();
+//    }
+//
+//    @Override
+//    public void deleteObserver(final Observer observer) {
+//        super.impl.deleteObserver(observer);
+//    }
+//
+//    @Override
+//    public void deleteObservers() {
+//        super.impl.deleteObservers();
+//    }
+//
+//    @Override
+//    public List<Observer> getObservers() {
+//        return super.impl.getObservers();
+//    }
+//
+//    @Override
+//    public void notifyObservers() {
+//        super.impl.notifyObservers();
+//    }
+//
+//    @Override
+//    public void notifyObservers(final Object arg) {
+//        super.impl.notifyObservers(arg);
+//    }
 
 }

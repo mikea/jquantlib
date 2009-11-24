@@ -42,7 +42,6 @@ import java.util.List;
 
 import org.jquantlib.instruments.OneAssetOption;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
-import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
 /**
@@ -127,10 +126,24 @@ public class FDAmericanEngine
         super.impl.reset();
     }
 
+
+    //
+    // implements Observer
+    //
+
+//    @Override
+//XXX::OBS    public void update(final Observable o, final Object arg) {
+//        super.impl.update(o, arg);
+//    }
     @Override
     public void update() {
         super.impl.update();
     }
+
+
+    //
+    // implements Observable
+    //
 
     @Override
     public void addObserver(final Observer observer) {
@@ -165,11 +178,6 @@ public class FDAmericanEngine
     @Override
     public void notifyObservers(final Object arg) {
         super.impl.notifyObservers(arg);
-    }
-
-    @Override
-    public void update(final Observable o, final Object arg) {
-        super.impl.update(o, arg);
     }
 
 }

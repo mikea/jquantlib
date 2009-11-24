@@ -37,9 +37,10 @@ import org.junit.Assert;
 
 public class CalendarUtil {
 
-    protected void checkHolidayList(final List<Date> expected, final Calendar c, final int year) {
+    protected void checkHolidayList(final List<Date> expected, final Calendar calendar, final int year) {
 
-        final List<Date> calculated = Calendar.holidayList(c,
+        final List<Date> calculated = Calendar.holidayList(
+                calendar,
                 new Date(1, Month.January, year),
                 new Date(31, Month.December, year),
                 false);
@@ -49,24 +50,20 @@ public class CalendarUtil {
         final StringBuilder sb = new StringBuilder();
         sb.append("Holidays do not match\n");
 
-        for (final Date date : expected) {
+        for (final Date date : expected)
             if (!calculated.contains(date)) {
                 sb.append("  >> Holiday expected but not calculated: ").append(date.weekday()).append(", ").append(date).append('\n');
                 error++;
             }
-        }
 
-        for (final Date date : calculated) {
+        for (final Date date : calculated)
             if (!expected.contains(date)) {
                 sb.append("  >> Holiday calculated but not expected: ").append(date.weekday()).append(", ").append(date).append('\n');
                 error++;
             }
-        }
 
-        if (error>0) {
+        if (error>0)
             Assert.fail(sb.toString());
-        }
-
     }
 
 }

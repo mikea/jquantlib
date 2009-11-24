@@ -119,15 +119,9 @@ public class FlatExtrapolator2D extends AbstractInterpolation2D {
         return decorated.isInRange(x, y);
     }
 
-    @Deprecated
     @Override
     public void update() {
         decorated.update();
-    }
-
-    @Override
-    public void reload() {
-        decorated.reload();
     }
 
 

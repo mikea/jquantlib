@@ -27,8 +27,8 @@ import static org.jquantlib.time.Month.December;
 import static org.jquantlib.time.Month.January;
 import static org.jquantlib.time.Month.June;
 import static org.jquantlib.time.Month.May;
-import static org.jquantlib.time.Weekday.MONDAY;
-import static org.jquantlib.time.Weekday.THURSDAY;
+import static org.jquantlib.time.Weekday.Monday;
+import static org.jquantlib.time.Weekday.Thursday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -116,7 +116,7 @@ public class Iceland extends Calendar {
               final int em = easterMonday(y);
               if (isWeekend(w)
                   // New Year's Day (possibly moved to Monday)
-                  || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY))
+                  || ((d == 1 || ((d == 2 || d == 3) && w == Monday))
                       && m == January)
                   // Holy Thursday
                   || (dd == em-4)
@@ -125,7 +125,7 @@ public class Iceland extends Calendar {
                   // Easter MONDAY
                   || (dd == em)
                   // First day of Summer
-                  || (d >= 19 && d <= 25 && w == THURSDAY && m == April)
+                  || (d >= 19 && d <= 25 && w == Thursday && m == April)
                   // Ascension THURSDAY
                   || (dd == em+38)
                   // Pentecost MONDAY
@@ -135,7 +135,7 @@ public class Iceland extends Calendar {
                   // Independence Day
                   || (d == 17 && m == June)
                   // Commerce Day
-                  || (d <= 7 && w == MONDAY && m == August)
+                  || (d <= 7 && w == Monday && m == August)
                   // Christmas
                   || (d == 25 && m == December)
                   // Boxing Day

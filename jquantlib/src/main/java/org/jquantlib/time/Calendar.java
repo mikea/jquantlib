@@ -472,7 +472,7 @@ public class Calendar {
 
         @Override
         public boolean isWeekend(final Weekday w) {
-            return w == Weekday.SATURDAY || w == Weekday.SUNDAY;
+            return w == Weekday.Saturday || w == Weekday.Sunday;
         }
 
         /**
@@ -523,7 +523,7 @@ public class Calendar {
 
         @Override
         public boolean isWeekend(final Weekday w) {
-            return w == Weekday.SATURDAY || w == Weekday.SUNDAY;
+            return w == Weekday.Saturday || w == Weekday.Sunday;
         }
 
         /**

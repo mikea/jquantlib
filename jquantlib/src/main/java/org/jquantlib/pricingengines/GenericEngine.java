@@ -78,14 +78,6 @@ public abstract class GenericEngine
     }
 
     //
-    // public methods
-    //
-
-    public void update() {
-        notifyObservers();
-    }
-
-    //
     // implements PricingEngine
     //
 
@@ -109,8 +101,10 @@ public abstract class GenericEngine
     //
 
     @Override
-    public void update(final Observable o, final Object arg) {
-        update();
+    //XXX::OBS public void update(final Observable o, final Object arg) {
+    public void update() {
+        //XXX:OBS update();
+        notifyObservers();
     }
 
     //

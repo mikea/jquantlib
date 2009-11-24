@@ -32,7 +32,6 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.TimeUnit;
-import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
@@ -107,9 +106,8 @@ public class FloatingRateCoupon extends Coupon implements Observer {
             final boolean isInArrears) {
         super(nominal, paymentDate, startDate, endDate, refPeriodStart, refPeriodEnd);
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         // TODO: code review :: please verify against QL/C++ code
         QL.require(gearing > 0 , null_gearing); // QA:[RG]::verified
@@ -120,11 +118,10 @@ public class FloatingRateCoupon extends Coupon implements Observer {
         this.spread = spread;
         this.isInArrears = isInArrears;
 
-        if (dayCounter != null) {
+        if (dayCounter != null)
             this.dayCounter = dayCounter;
-        } else {
+        else
             this.dayCounter = index_.dayCounter();
-        }
 
         final Date evaluationDate = new Settings().evaluationDate();
 
@@ -147,11 +144,10 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     public void setPricer(final FloatingRateCouponPricer pricer){
         QL.require(pricer != null , no_adequate_pricer_given);
 
-        if (this.pricer != null) {
+        if (this.pricer != null)
             this.pricer.deleteObserver(this);
             //XXX:registerWith
             //unregisterWith(this.pricer);
-        }
         this.pricer = pricer;
         this.pricer.addObserver(this);
         //XXX:registerWith
@@ -208,11 +204,6 @@ public class FloatingRateCoupon extends Coupon implements Observer {
         return convexityAdjustmentImpl(indexFixing());
     }
 
-    //TODO: verify where this method is called and if it can be replaced by update(Observable o, Object arg)
-    public  void update() {
-        notifyObservers();
-    }
-
     public boolean isInArrears(){
         return isInArrears;
     }
@@ -258,7 +249,8 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     //    }
 
     @Override
-    public void update(final Observable o, final Object arg) {
+    //XX::OBS public void update(final Observable o, final Object arg) {
+    public void update() {
         notifyObservers();
     }
 
@@ -270,11 +262,10 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     @Override
     public void accept(final TypedVisitor<Object> v) {
         final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
+        if (v1 != null)
             v1.visit(this);
-        } else {
+        else
             super.accept(v);
-        }
     }
 
 }

@@ -163,15 +163,18 @@ public abstract class LazyObject implements Observer, Observable {
     //        o.deleteObserver(this);
     //    }
 
-    public void update(final Observable o, final Object arg) {
+    @Override
+    //XXX::OBS public void update(final Observable o, final Object arg) {
+    public void update() {
         // observers don't expect notifications from frozen objects
         // LazyObject forwards notifications only once until it has been
         // recalculated
-        if (!frozen && calculated) {
-            notifyObservers(arg);
-        }
+        if (!frozen && calculated)
+            //XXX::OBS notifyObservers(arg);
+            notifyObservers();
         calculated = false;
     }
+
 
     //
     // implements Observable
@@ -185,30 +188,37 @@ public abstract class LazyObject implements Observer, Observable {
      */
     private final Observable delegatedObservable = new DefaultObservable(this);
 
+    @Override
     public final void addObserver(final Observer observer) {
         delegatedObservable.addObserver(observer);
     }
 
+    @Override
     public final int countObservers() {
         return delegatedObservable.countObservers();
     }
 
+    @Override
     public final void deleteObserver(final Observer observer) {
         delegatedObservable.deleteObserver(observer);
     }
 
+    @Override
     public final void notifyObservers() {
         delegatedObservable.notifyObservers();
     }
 
+    @Override
     public final void notifyObservers(final Object arg) {
         delegatedObservable.notifyObservers(arg);
     }
 
+    @Override
     public final void deleteObservers() {
         delegatedObservable.deleteObservers();
     }
 
+    @Override
     public final List<Observer> getObservers() {
         return delegatedObservable.getObservers();
     }

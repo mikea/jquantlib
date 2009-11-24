@@ -56,7 +56,6 @@ import org.jquantlib.termstructures.volatilities.LocalVolCurve;
 import org.jquantlib.termstructures.volatilities.LocalVolSurface;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
-import org.jquantlib.util.Observable;
 
 /**
  * Generalized Black-Scholes stochastic process
@@ -139,55 +138,6 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
         this.blackVolatility.addObserver(this);
     }
 
-    @Override
-    public/* @Price */double x0() {
-        return x0.currentLink().value();
-    }
-
-    @Override
-    public /* @Drift */ double drift(final/* @Time */double t, final/* @Price */double x) {
-        /* @Diffusion */final double sigma = diffusion(t, x);
-        // we could be more anticipatory if we know the right dt
-        // for which the drift will be used
-        /* @Time */final double t1 = t + 0.0001;
-        final YieldTermStructure yts = riskFreeRate.currentLink();
-        /* @Rate */final double r = yts.forwardRate(t, t1, Compounding.Continuous,
-                Frequency.NoFrequency, true).rate();
-
-        final YieldTermStructure divTs = dividendYield.currentLink();
-        final double d = divTs.forwardRate(t, t1, Compounding.Continuous,
-                Frequency.NoFrequency, true).rate();
-        return r - d - 0.5 * sigma * sigma;
-    }
-
-    @Override
-    public/* @Diffusion */double diffusion(final/* @Time */double t,
-            final/* @Price */double x) {
-        /* @Volatility */final double vol = localVolatility().currentLink().localVol(t,
-                x, true);
-        return vol;
-    }
-
-    @Override
-    public final/* @Price */double apply(final/* @Price */double x0,
-            final/* @Time */double dx) {
-        // result = x0 * e^dx
-        final double result = x0 * Math.exp(dx);
-        return result;
-    }
-
-    @Override
-    public final/* @Time */double time(final Date d) {
-        final YieldTermStructure yts = riskFreeRate.currentLink();
-        return yts.dayCounter().yearFraction(yts.referenceDate(), d);
-    }
-
-    // FIXME: code review
-    @Override
-    public final void update(final Observable o, final Object arg) {
-        updated = false;
-        super.update(o, arg);
-    }
 
     public final Handle<? extends Quote> stateVariable() {
         return x0;
@@ -242,9 +192,68 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
             // exception if we are not able
             // to identify the correct interface to be used.
             throw new LibraryException("unrecognized volatility curve"); // QA:[RG]::verified // FIXME: message
-        } else {
+        } else
             return localVolatility;
-        }
+    }
+
+
+    //
+    // implements StochasticProcess1D
+    //
+
+    @Override
+    public/* @Price */double x0() {
+        return x0.currentLink().value();
+    }
+
+    @Override
+    public /* @Drift */ double drift(final/* @Time */double t, final/* @Price */double x) {
+        /* @Diffusion */final double sigma = diffusion(t, x);
+        // we could be more anticipatory if we know the right dt
+        // for which the drift will be used
+        /* @Time */final double t1 = t + 0.0001;
+        final YieldTermStructure yts = riskFreeRate.currentLink();
+        /* @Rate */final double r = yts.forwardRate(t, t1, Compounding.Continuous,
+                Frequency.NoFrequency, true).rate();
+
+        final YieldTermStructure divTs = dividendYield.currentLink();
+        final double d = divTs.forwardRate(t, t1, Compounding.Continuous,
+                Frequency.NoFrequency, true).rate();
+        return r - d - 0.5 * sigma * sigma;
+    }
+
+    @Override
+    public/* @Diffusion */double diffusion(final/* @Time */double t,
+            final/* @Price */double x) {
+        /* @Volatility */final double vol = localVolatility().currentLink().localVol(t,
+                x, true);
+        return vol;
+    }
+
+    @Override
+    public final/* @Price */double apply(final/* @Price */double x0,
+            final/* @Time */double dx) {
+        // result = x0 * e^dx
+        final double result = x0 * Math.exp(dx);
+        return result;
+    }
+
+    @Override
+    public final/* @Time */double time(final Date d) {
+        final YieldTermStructure yts = riskFreeRate.currentLink();
+        return yts.dayCounter().yearFraction(yts.referenceDate(), d);
+    }
+
+    //
+    // implements Observer
+    //
+
+    @Override
+    //XXX::OBSpublic final void update(final Observable o, final Object arg) {
+    public final void update() {
+        updated = false;
+        //XXX::OBS super.update(o, arg);
+        super.update();
     }
 
 }

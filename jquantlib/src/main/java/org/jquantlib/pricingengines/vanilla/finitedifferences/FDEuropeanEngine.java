@@ -83,12 +83,12 @@ public class FDEuropeanEngine extends OneAssetOption.EngineImpl {
         prices.setValues( model.rollback(prices.values(), fdVanillaEngine.getResidualTime(), 0, fdVanillaEngine.timeSteps) );
 
         final OneAssetOption.ResultsImpl r = (OneAssetOption.ResultsImpl)results;
-        final Option.GreeksImpl greeks = r.greeks();
-        // final Option.MoreGreeksImpl moreGreeks = r.moreGreeks();
         r.value = prices.valueAtCenter();
+        final Option.GreeksImpl greeks = r.greeks();
         greeks.delta = prices.firstDerivativeAtCenter();
         greeks.gamma = prices.secondDerivativeAtCenter();
         greeks.theta = greeks.blackScholesTheta(fdVanillaEngine.process, r.value, greeks.delta, greeks.gamma);
+        // final Option.MoreGreeksImpl moreGreeks = r.moreGreeks();
         r.additionalResults().put("priceCurve", prices);
     }
 

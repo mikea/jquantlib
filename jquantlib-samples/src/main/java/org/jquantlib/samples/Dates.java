@@ -78,11 +78,11 @@ public class Dates implements Runnable {
         }
 
         //Get the next nextWeekdayDate of this date's month having weekday as TUESDAY
-        final Date nextWeekdayDate = Date.nextWeekday(today,Weekday.TUESDAY);
+        final Date nextWeekdayDate = Date.nextWeekday(today,Weekday.Tuesday);
         System.out.println("The date of the next weekday is = "+nextWeekdayDate);
 
         //Get the 4th weekdayDate of this date's month having weekday as TUESDAY
-        final Date fourthWeekdayDate = Date.nthWeekday(4, Weekday.TUESDAY, today.month(), today.year());
+        final Date fourthWeekdayDate = Date.nthWeekday(4, Weekday.Tuesday, today.month(), today.year());
         System.out.println("The fourthWeekdayDate which is TUESDAY is = "+fourthWeekdayDate);
 
         //Let's try getting the first date of the month to which today's date belong to

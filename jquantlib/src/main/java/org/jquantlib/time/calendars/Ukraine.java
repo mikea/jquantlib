@@ -36,7 +36,7 @@ import static org.jquantlib.time.Month.January;
 import static org.jquantlib.time.Month.June;
 import static org.jquantlib.time.Month.March;
 import static org.jquantlib.time.Month.May;
-import static org.jquantlib.time.Weekday.MONDAY;
+import static org.jquantlib.time.Weekday.Monday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -107,19 +107,19 @@ public class Ukraine extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day (possibly moved to Monday)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == January)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == Monday)) && m == January)
                     // Orthodox Christmas
-                    || ((d == 7 || ((d == 8 || d == 9) && w == MONDAY)) && m == January)
+                    || ((d == 7 || ((d == 8 || d == 9) && w == Monday)) && m == January)
                     // Women's Day
-                    || ((d == 8 || ((d == 9 || d == 10) && w == MONDAY)) && m == March)
+                    || ((d == 8 || ((d == 9 || d == 10) && w == Monday)) && m == March)
                     // Orthodox Easter MONDAY
                     || (dd == em)
                     // Holy Trinity Day
                     || (dd == em + 49)
                     // Workers' Solidarity Days
-                    || ((d == 1 || d == 2 || (d == 3 && w == MONDAY)) && m == May)
+                    || ((d == 1 || d == 2 || (d == 3 && w == Monday)) && m == May)
                     // Victory Day
-                    || ((d == 9 || ((d == 10 || d == 11) && w == MONDAY)) && m == May)
+                    || ((d == 9 || ((d == 10 || d == 11) && w == Monday)) && m == May)
                     // Constitution Day
                     || (d == 28 && m == June)
                     // Independence Day

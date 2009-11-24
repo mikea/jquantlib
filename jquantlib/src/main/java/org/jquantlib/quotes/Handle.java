@@ -149,17 +149,14 @@ public class Handle<T extends Observable> implements Observable {
 
     final protected void internalLinkTo(final T observable, final boolean registerAsObserver) {
         if ((this.observable!=observable) || (this.isObserver!=registerAsObserver)) {
-            if (this.observable!=null && this.isObserver) {
+            if (this.observable!=null && this.isObserver)
                 this.observable.deleteObserver(link);
-            }
             this.observable = observable;
             this.isObserver = registerAsObserver;
-            if (this.observable!=null && this.isObserver) {
+            if (this.observable!=null && this.isObserver)
                 this.observable.addObserver(link);
-            }
-            if (this.observable!=null) {
+            if (this.observable!=null)
                 this.observable.notifyObservers();
-            }
         }
     }
 
@@ -240,8 +237,10 @@ public class Handle<T extends Observable> implements Observable {
         }
 
         @Override
-        public void update(final Observable o, final Object arg) {
-            this.notifyObservers(arg);
+        //XXX:OBS public void update(final Observable o, final Object arg) {
+        public void update() {
+            //XXX::OBS this.notifyObservers(arg);
+            this.notifyObservers();
         }
     }
 

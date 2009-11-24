@@ -210,7 +210,8 @@ public abstract class StochasticProcess implements Observable, Observer {
     //    }
 
     @Override
-    public void update(final Observable o, final Object arg) {
+    //XXX::OBS public void update(final Observable o, final Object arg) {
+    public void update() {
         notifyObservers();
     }
 

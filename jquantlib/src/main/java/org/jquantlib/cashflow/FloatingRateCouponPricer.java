@@ -56,8 +56,8 @@ public abstract class FloatingRateCouponPricer implements Observer, Observable {
     //    }
 
     @Override
-    public void update(final Observable o, final Object arg) {
-        notifyObservers(o);
+    public void update() {
+        notifyObservers();
     }
 
 

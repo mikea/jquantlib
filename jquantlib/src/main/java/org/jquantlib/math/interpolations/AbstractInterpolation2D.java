@@ -111,24 +111,8 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     // implements Interpolation
     //
 
-    /**
-     * {@inheritDoc}
-     *
-     * @deprecated
-     */
-    @Deprecated
     @Override
     public void update() {
-        reload();
-    }
-
-
-    //
-    // Overrides AbstractInterpolation
-    //
-
-    @Override
-    public void reload() {
         QL.require(vx.size() >= 2 && vy.size() >= 2 , "not enough points to interpolate"); // QA:[RG]::verified // TODO: message
         for (int i = 0; i < vx.size()-1; i++) {
             QL.require(vx.get(i) <= vx.get(i+1) , "unsorted values on array X"); // QA:[RG]::verified // TODO: message
@@ -218,25 +202,23 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     @Override
     // FIXME: code review here: compare against original C++ code
     public int locateX(final double x) /* @ReadOnly */ {
-        if (x <= vx.first()) {
+        if (x <= vx.first())
             return 0;
-        } else if (x > vx.last()) {
+        else if (x > vx.last())
             return vx.size()-2;
-        } else {
+        else
             return vx.upperBound(x) - 1;
-        }
     }
 
     @Override
     // FIXME: code review here: compare against original C++ code
     public int locateY(final double y) /* @ReadOnly */ {
-        if (y <= vy.first()) {
+        if (y <= vy.first())
             return 0;
-        } else if (y > vy.last()) {
+        else if (y > vy.last())
             return vy.size()-2;
-        } else {
+        else
             return vy.upperBound(y) - 1;
-        }
     }
 
     @Override
@@ -244,9 +226,8 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
         QL.require(extraSafetyChecksX(), "unsorted values on array X"); // QA:[RG]::verified // TODO: message
         final double x1 = xMin(), x2 = xMax();
         final boolean xIsInrange = (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
-        if (!xIsInrange) {
+        if (!xIsInrange)
             return false;
-        }
 
         QL.require(extraSafetyChecksY(), "unsorted values on array Y"); // QA:[RG]::verified // TODO: message
         final double y1 = yMin(), y2 = yMax();
@@ -258,24 +239,18 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
     //
 
     private boolean extraSafetyChecksX() {
-        if (new Settings().isExtraSafetyChecks()) {
-            for (int i=0; i<vx.size()-1; i++) {
-                if (vx.get(i) > vx.get(i+1)) {
+        if (new Settings().isExtraSafetyChecks())
+            for (int i=0; i<vx.size()-1; i++)
+                if (vx.get(i) > vx.get(i+1))
                     return false;
-                }
-            }
-        }
         return true;
     }
 
     private boolean extraSafetyChecksY() {
-        if (new Settings().isExtraSafetyChecks()) {
-            for (int i=0; i<vy.size()-1; i++) {
-                if (vy.get(i) > vy.get(i+1)) {
+        if (new Settings().isExtraSafetyChecks())
+            for (int i=0; i<vy.size()-1; i++)
+                if (vy.get(i) > vy.get(i+1))
                     return false;
-                }
-            }
-        }
         return true;
     }
 

@@ -76,17 +76,6 @@ public abstract class CalibratedModel implements Observer, Observable {
     }
 
     /**
-     * This method must be implemented in derived classes.
-     * <p>
-     * An instance of Observer does not call this method directly: instead, it will be called by
-     * the observables the instance registered with when they need to notify any changes.
-     */
-    public void update(){
-        generateArguments();
-        notifyObservers();
-    }
-
-    /**
      * <p>Calibrate to a set of market instruments (caps/swaptions). </p>
      * <p>An additional constraint can be passed which must be satisfied in addition to the constraints of the model. </p>
      */
@@ -101,18 +90,16 @@ public abstract class CalibratedModel implements Observer, Observable {
         "mismatch between number of instruments and weights"); // TODO: message
 
         Constraint c;
-        if (additionalConstraint.empty()) {
+        if (additionalConstraint.empty())
             c = constraint_;
-        } else {
+        else
             c = new CompositeConstraint(constraint_, additionalConstraint);
-        }
 
         final double[] w = new double[instruments.size()];
-        if (weights==null) {
+        if (weights==null)
             Arrays.fill(w, 1.0);
-        } else {
+        else
             System.arraycopy(weights, 0, w, 0, w.length);
-        }
 
         final CalibrationFunction f = new CalibrationFunction(this, instruments, w);
 
@@ -148,17 +135,15 @@ public abstract class CalibratedModel implements Observer, Observable {
      */
     public Array params() /* @ReadOnly */ {
         int size = 0;
-        for (int i=0; i<arguments_.size(); i++) {
+        for (int i=0; i<arguments_.size(); i++)
             size += arguments_.get(i).size();
-        }
         final Array params = new Array(size);
         int k = 0;
-        for (int i=0; i<arguments_.size(); i++) {
+        for (int i=0; i<arguments_.size(); i++)
             for (int j=0; j<arguments_.get(i).size(); j++, k++) {
                 final double value = arguments_.get(i).params().get(j);
                 params.set(k, value);
             }
-        }
         return params;
     }
 
@@ -187,11 +172,24 @@ public abstract class CalibratedModel implements Observer, Observable {
     //
 
 
+//    @Override
+//XXX::OBS    public void update(final Observable o, final Object arg) {
+//        generateArguments();
+//        notifyObservers();
+//    }
+
+    /**
+     * This method must be implemented in derived classes.
+     * <p>
+     * An instance of Observer does not call this method directly: instead, it will be called by
+     * the observables the instance registered with when they need to notify any changes.
+     */
     @Override
-    public void update(final Observable o, final Object arg) {
+    public void update(){
         generateArguments();
         notifyObservers();
     }
+
 
 
     //
@@ -345,12 +343,10 @@ public abstract class CalibratedModel implements Observer, Observable {
                 for (int i = 0; i < arguments_.size(); i++) {
                     final int size = arguments_.get(i).size();
                     final Array testParams = new Array(size);
-                    for (int j = 0; j < size; j++, k++) {
+                    for (int j = 0; j < size; j++, k++)
                         testParams.set(j, params.get(k));
-                    }
-                    if (!arguments_.get(i).testParams(testParams)) {
+                    if (!arguments_.get(i).testParams(testParams))
                         return false;
-                    }
                 }
                 return true;
             }

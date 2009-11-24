@@ -55,9 +55,8 @@ public abstract class CalibrationHelper implements Observer, Observable {
             final Handle<YieldTermStructure> termStructure,
             final boolean calibrateVolatility) {
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         this.volatility_ = volatility;
         this.termStructure_ = termStructure;
@@ -70,12 +69,8 @@ public abstract class CalibrationHelper implements Observer, Observable {
         //registerWith(volatility_);
     }
 
+    //TODO: code review
     // abstract double blackPrice (double /*@Volatility*/ volatility);
-
-    public void update() {
-        marketValue = blackPrice(volatility_.currentLink().value());
-        notifyObservers();
-    }
 
     // ! returns the actual price of the instrument (from volatility)
     double/* @Real */marketValue() {
@@ -93,22 +88,15 @@ public abstract class CalibrationHelper implements Observer, Observable {
             final double modelPrice = modelValue();
 
             double implied;
-            if(modelPrice <= lowerPrice){
+            if(modelPrice <= lowerPrice)
                 implied = 0.001;
-            }
-            else{
-                if(modelPrice >= upperPrice){
-                    implied = 10.0;
-                }
-                else{
-                    implied = impliedVolatility(modelPrice, 1e-12, 5000, 0.001, 10);
-                }
-            }
+            else if(modelPrice >= upperPrice)
+                implied = 10.0;
+            else
+                implied = impliedVolatility(modelPrice, 1e-12, 5000, 0.001, 10);
             return implied - volatility_.currentLink().value();
-        }
-        else{
+        } else
             return Math.abs(marketValue() - modelValue())/marketValue();
-        }
 
     }
 
@@ -154,10 +142,11 @@ public abstract class CalibrationHelper implements Observer, Observable {
     //    }
 
     @Override
-    public void update(final Observable o, final Object arg) {
-        // TODO Auto-generated method stub
-
+    public void update() {
+        marketValue = blackPrice(volatility_.currentLink().value());
+        notifyObservers();
     }
+
 
 
     //

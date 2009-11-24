@@ -31,8 +31,8 @@ import static org.jquantlib.time.Month.May;
 import static org.jquantlib.time.Month.November;
 import static org.jquantlib.time.Month.October;
 import static org.jquantlib.time.Month.September;
-import static org.jquantlib.time.Weekday.MONDAY;
-import static org.jquantlib.time.Weekday.TUESDAY;
+import static org.jquantlib.time.Weekday.Monday;
+import static org.jquantlib.time.Weekday.Tuesday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -145,32 +145,32 @@ public class Canada extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
                 // New Year's Day (possibly moved to Monday)
-                || ((d == 1 || (d == 2 && w == MONDAY)) && m == January)
+                || ((d == 1 || (d == 2 && w == Monday)) && m == January)
                 // Family Day (third MONDAY in February, since 2008)
-                || ((d >= 15 && d <= 21) && w == MONDAY && m == February
+                || ((d >= 15 && d <= 21) && w == Monday && m == February
                     && y >= 2008)
                 // Good Friday
                 || (dd == em-3)
                 // Easter MONDAY
                 || (dd == em)
                 // The MONDAY on or preceding 24 MAY (Victoria Day)
-                || (d > 17 && d <= 24 && w == MONDAY && m == May)
+                || (d > 17 && d <= 24 && w == Monday && m == May)
                 // JULY 1st, possibly moved to MONDAY (Canada Day)
-                || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m==July)
+                || ((d == 1 || ((d == 2 || d == 3) && w == Monday)) && m==July)
                 // first MONDAY of AUGUST (Provincial Holiday)
-                || (d <= 7 && w == MONDAY && m == August)
+                || (d <= 7 && w == Monday && m == August)
                 // first MONDAY of September (Labor Day)
-                || (d <= 7 && w == MONDAY && m == September)
+                || (d <= 7 && w == Monday && m == September)
                 // second MONDAY of October (Thanksgiving Day)
-                || (d > 7 && d <= 14 && w == MONDAY && m == October)
+                || (d > 7 && d <= 14 && w == Monday && m == October)
                 // November 11th (possibly moved to MONDAY)
-                || ((d == 11 || ((d == 12 || d == 13) && w == MONDAY))
+                || ((d == 11 || ((d == 12 || d == 13) && w == Monday))
                     && m == November)
                 // Christmas (possibly moved to MONDAY or Tuesday)
-                || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY)))
+                || ((d == 25 || (d == 27 && (w == Monday || w == Tuesday)))
                     && m == December)
                 // Boxing Day (possibly moved to MONDAY or TUESDAY)
-                || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY)))
+                || ((d == 26 || (d == 28 && (w == Monday || w == Tuesday)))
                     && m == December)
                 ) {
                 return false;
@@ -193,29 +193,29 @@ public class Canada extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
                 // New Year's Day (possibly moved to MONDAY)
-                || ((d == 1 || (d == 2 && w == MONDAY)) && m == January)
+                || ((d == 1 || (d == 2 && w == Monday)) && m == January)
                 // Family Day (third MONDAY in FEBRUARY, since 2008)
-                || ((d >= 15 && d <= 21) && w == MONDAY && m == February
+                || ((d >= 15 && d <= 21) && w == Monday && m == February
                     && y >= 2008)
                 // Good Friday
                 || (dd == em-3)
                 // Easter MONDAY
                 || (dd == em)
                 // The MONDAY on or preceding 24 MAY (Victoria Day)
-                || (d > 17 && d <= 24 && w == MONDAY && m == May)
+                || (d > 17 && d <= 24 && w == Monday && m == May)
                 // JULY 1st, possibly moved to MONDAY (Canada Day)
-                || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m==July)
+                || ((d == 1 || ((d == 2 || d == 3) && w == Monday)) && m==July)
                 // first MONDAY of AUGUST (Provincial Holiday)
-                || (d <= 7 && w == MONDAY && m == August)
+                || (d <= 7 && w == Monday && m == August)
                 // first MONDAY of SEPTEMBER (Labor Day)
-                || (d <= 7 && w == MONDAY && m == September)
+                || (d <= 7 && w == Monday && m == September)
                 // second MONDAY of OCTOBER (Thanksgiving Day)
-                || (d > 7 && d <= 14 && w == MONDAY && m == October)
+                || (d > 7 && d <= 14 && w == Monday && m == October)
                 // Christmas (possibly moved to MONDAY or TUESDAY)
-                || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY)))
+                || ((d == 25 || (d == 27 && (w == Monday || w == Tuesday)))
                     && m == December)
                 // Boxing Day (possibly moved to MONDAY or TUESDAY)
-                || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY)))
+                || ((d == 26 || (d == 28 && (w == Monday || w == Tuesday)))
                     && m == December)
                 ) {
                 return false;

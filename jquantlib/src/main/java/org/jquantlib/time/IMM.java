@@ -75,7 +75,7 @@ public class IMM {
      * @return
      */
     public static boolean isIMMdate(final Date date, final boolean mainCycle) {
-        if (date.weekday()!=Weekday.WEDNESDAY) {
+        if (date.weekday()!=Weekday.Wednesday) {
             return false;
         }
 
@@ -238,7 +238,7 @@ public class IMM {
             }
         }
 
-        Date result = Date.nthWeekday(3, Weekday.WEDNESDAY, Month.valueOf(m), y);
+        Date result = Date.nthWeekday(3, Weekday.Wednesday, Month.valueOf(m), y);
         if (result.le(refDate)) {
             result = nextDate(new Date(22, Month.valueOf(m), y), mainCycle);
         }

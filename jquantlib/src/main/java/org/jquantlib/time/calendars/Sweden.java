@@ -36,7 +36,7 @@ import static org.jquantlib.time.Month.December;
 import static org.jquantlib.time.Month.January;
 import static org.jquantlib.time.Month.June;
 import static org.jquantlib.time.Month.May;
-import static org.jquantlib.time.Weekday.FRIDAY;
+import static org.jquantlib.time.Weekday.Friday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -115,7 +115,7 @@ public class Sweden extends Calendar {
 	                // As of 2002 the Stockholmborsen is open that day
 	                // || (d == 6  && m == June)
 	                // Midsummer Eve (Friday between June 18-24)
-	                || (w == FRIDAY && (d >= 18 && d <= 24) && m == June)
+	                || (w == Friday && (d >= 18 && d <= 24) && m == June)
 	                // Christmas Eve
 	                || (d == 24 && m == December)
 	                // Christmas Day

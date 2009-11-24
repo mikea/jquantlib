@@ -28,8 +28,8 @@ import static org.jquantlib.time.Month.December;
 import static org.jquantlib.time.Month.January;
 import static org.jquantlib.time.Month.June;
 import static org.jquantlib.time.Month.May;
-import static org.jquantlib.time.Weekday.MONDAY;
-import static org.jquantlib.time.Weekday.TUESDAY;
+import static org.jquantlib.time.Weekday.Monday;
+import static org.jquantlib.time.Weekday.Tuesday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -159,21 +159,21 @@ public class UnitedKingdom extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day (possibly moved to Monday)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == January)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == Monday)) && m == January)
                     // Good Friday
                     || (dd == em - 3)
                     // Easter MONDAY
                     || (dd == em)
                     // first MONDAY of May (Early May Bank Holiday)
-                    || (d <= 7 && w == MONDAY && m == May)
+                    || (d <= 7 && w == Monday && m == May)
                     // last MONDAY of MAY (Spring Bank Holiday)
-                    || (d >= 25 && w == MONDAY && m == May && y != 2002)
+                    || (d >= 25 && w == Monday && m == May && y != 2002)
                     // last MONDAY of August (Summer Bank Holiday)
-                    || (d >= 25 && w == MONDAY && m == August)
+                    || (d >= 25 && w == Monday && m == August)
                     // Christmas (possibly moved to MONDAY or Tuesday)
-                    || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == December)
+                    || ((d == 25 || (d == 27 && (w == Monday || w == Tuesday))) && m == December)
                     // Boxing Day (possibly moved to MONDAY or TUESDAY)
-                    || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == December)
+                    || ((d == 26 || (d == 28 && (w == Monday || w == Tuesday))) && m == December)
                     // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
                     // June 4rd, 2002 only (special Spring Bank Holiday)
                     || ((d == 3 || d == 4) && m == June && y == 2002)
@@ -200,21 +200,21 @@ public class UnitedKingdom extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day (possibly moved to MONDAY)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == January)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == Monday)) && m == January)
                     // Good Friday
                     || (dd == em - 3)
                     // Easter MONDAY
                     || (dd == em)
                     // first MONDAY of MAY (Early MAY Bank Holiday)
-                    || (d <= 7 && w == MONDAY && m == May)
+                    || (d <= 7 && w == Monday && m == May)
                     // last MONDAY of MAY (Spring Bank Holiday)
-                    || (d >= 25 && w == MONDAY && m == May && y != 2002)
+                    || (d >= 25 && w == Monday && m == May && y != 2002)
                     // last MONDAY of AUGUST (Summer Bank Holiday)
-                    || (d >= 25 && w == MONDAY && m == August)
+                    || (d >= 25 && w == Monday && m == August)
                     // Christmas (possibly moved to MONDAY or TUESDAY)
-                    || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == December)
+                    || ((d == 25 || (d == 27 && (w == Monday || w == Tuesday))) && m == December)
                     // Boxing Day (possibly moved to MONDAY or TUESDAY)
-                    || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == December)
+                    || ((d == 26 || (d == 28 && (w == Monday || w == Tuesday))) && m == December)
                     // JUNE 3rd, 2002 only (Golden Jubilee Bank Holiday)
                     // JUNE 4rd, 2002 only (special Spring Bank Holiday)
                     || ((d == 3 || d == 4) && m == June && y == 2002)
@@ -241,21 +241,21 @@ public class UnitedKingdom extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
             // New Year's Day (possibly moved to MONDAY)
-                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == January)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == Monday)) && m == January)
                     // Good Friday
                     || (dd == em - 3)
                     // Easter MONDAY
                     || (dd == em)
                     // first MONDAY of MAY (Early MAY Bank Holiday)
-                    || (d <= 7 && w == MONDAY && m == May)
+                    || (d <= 7 && w == Monday && m == May)
                     // last MONDAY of MAY (Spring Bank Holiday)
-                    || (d >= 25 && w == MONDAY && m == May && y != 2002)
+                    || (d >= 25 && w == Monday && m == May && y != 2002)
                     // last MONDAY of AUGUST (Summer Bank Holiday)
-                    || (d >= 25 && w == MONDAY && m == August)
+                    || (d >= 25 && w == Monday && m == August)
                     // Christmas (possibly moved to MONDAY or TUESDAY)
-                    || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY))) && m == December)
+                    || ((d == 25 || (d == 27 && (w == Monday || w == Tuesday))) && m == December)
                     // Boxing Day (possibly moved to MONDAY or TUESDAY)
-                    || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY))) && m == December)
+                    || ((d == 26 || (d == 28 && (w == Monday || w == Tuesday))) && m == December)
                     // JUNE 3rd, 2002 only (Golden Jubilee Bank Holiday)
                     // JUNE 4rd, 2002 only (special Spring Bank Holiday)
                     || ((d == 3 || d == 4) && m == June && y == 2002)

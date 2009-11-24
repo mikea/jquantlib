@@ -61,7 +61,14 @@ public abstract class CmsCouponPricer extends FloatingRateCouponPricer {
         update();
     }
 
-    private void update() {
+
+    //
+    // implements Observer
+    //
+
+    @Override
+    //TODO: code review
+    public void update() {
         notifyObservers();
     }
 

@@ -34,10 +34,10 @@ import static org.jquantlib.time.Month.May;
 import static org.jquantlib.time.Month.November;
 import static org.jquantlib.time.Month.October;
 import static org.jquantlib.time.Month.September;
-import static org.jquantlib.time.Weekday.MONDAY;
-import static org.jquantlib.time.Weekday.SATURDAY;
-import static org.jquantlib.time.Weekday.SUNDAY;
-import static org.jquantlib.time.Weekday.TUESDAY;
+import static org.jquantlib.time.Weekday.Monday;
+import static org.jquantlib.time.Weekday.Saturday;
+import static org.jquantlib.time.Weekday.Sunday;
+import static org.jquantlib.time.Weekday.Tuesday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -107,7 +107,7 @@ public class Japan extends Calendar {
 
 		@Override
 		public boolean isWeekend(final Weekday w) {
-			 return w == SATURDAY || w == SUNDAY;
+			 return w == Saturday || w == Sunday;
 		}
 
 		@Override
@@ -138,52 +138,52 @@ public class Japan extends Calendar {
 	            || (d == 3  && m == January)
 	            // Coming of Age Day (2nd Monday in JANUARY),
 	            // was JANUARY 15th until 2000
-	            || (w == MONDAY && (d >= 8 && d <= 14) && m == January
+	            || (w == Monday && (d >= 8 && d <= 14) && m == January
 	                && y >= 2000)
-	            || ((d == 15 || (d == 16 && w == MONDAY)) && m == January
+	            || ((d == 15 || (d == 16 && w == Monday)) && m == January
 	                && y < 2000)
 	            // National Foundation Day
-	            || ((d == 11 || (d == 12 && w == MONDAY)) && m == February)
+	            || ((d == 11 || (d == 12 && w == Monday)) && m == February)
 	            // Vernal Equinox
-	            || ((d == ve || (d == ve+1 && w == MONDAY)) && m == March)
+	            || ((d == ve || (d == ve+1 && w == Monday)) && m == March)
 	            // Greenery Day
-	            || ((d == 29 || (d == 30 && w == MONDAY)) && m == April)
+	            || ((d == 29 || (d == 30 && w == Monday)) && m == April)
 	            // Constitution Memorial Day
 	            || (d == 3  && m == May)
 	            // Holiday for a Nation
 	            || (d == 4  && m == May)
 	            // Children's Day
-	            || ((d == 5  || (d == 6 && w == MONDAY)) && m == May)
+	            || ((d == 5  || (d == 6 && w == Monday)) && m == May)
 	            // Marine Day (3rd MONDAY in July),
 	            // was July 20th until 2003, not a holiday before 1996
-	            || (w == MONDAY && (d >= 15 && d <= 21) && m == July
+	            || (w == Monday && (d >= 15 && d <= 21) && m == July
 	                && y >= 2003)
-	            || ((d == 20 || (d == 21 && w == MONDAY)) && m == July
+	            || ((d == 20 || (d == 21 && w == Monday)) && m == July
 	                && y >= 1996 && y < 2003)
 	            // Respect for the Aged Day (3rd MONDAY in September),
 	            // was September 15th until 2003
-	            || (w == MONDAY && (d >= 15 && d <= 21) && m == September
+	            || (w == Monday && (d >= 15 && d <= 21) && m == September
 	                && y >= 2003)
-	            || ((d == 15 || (d == 16 && w == MONDAY)) && m == September
+	            || ((d == 15 || (d == 16 && w == Monday)) && m == September
 	                && y < 2003)
 	            // If a single day falls between Respect for the Aged Day
 	            // and the Autumnal Equinox, it is holiday
-	            || (w == TUESDAY && d+1 == ae && d >= 16 && d <= 22
+	            || (w == Tuesday && d+1 == ae && d >= 16 && d <= 22
 	                && m == September && y >= 2003)
 	            // Autumnal Equinox
-	            || ((d == ae || (d == ae+1 && w == MONDAY)) && m == September)
+	            || ((d == ae || (d == ae+1 && w == Monday)) && m == September)
 	            // Health and Sports Day (2nd MONDAY in October),
 	            // was October 10th until 2000
-	            || (w == MONDAY && (d >= 8 && d <= 14) && m == October
+	            || (w == Monday && (d >= 8 && d <= 14) && m == October
 	                && y >= 2000)
-	            || ((d == 10 || (d == 11 && w == MONDAY)) && m == October
+	            || ((d == 10 || (d == 11 && w == Monday)) && m == October
 	                && y < 2000)
 	            // National Culture Day
-	            || ((d == 3  || (d == 4 && w == MONDAY)) && m == November)
+	            || ((d == 3  || (d == 4 && w == Monday)) && m == November)
 	            // Labor Thanksgiving Day
-	            || ((d == 23 || (d == 24 && w == MONDAY)) && m == November)
+	            || ((d == 23 || (d == 24 && w == Monday)) && m == November)
 	            // Emperor's Birthday
-	            || ((d == 23 || (d == 24 && w == MONDAY)) && m == December
+	            || ((d == 23 || (d == 24 && w == Monday)) && m == December
 	                && y >= 1989)
 	            // Bank Holiday
 	            || (d == 31 && m == December)

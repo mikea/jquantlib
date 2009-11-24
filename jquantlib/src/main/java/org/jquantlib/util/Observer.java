@@ -42,17 +42,13 @@ package org.jquantlib.util;
  */
 public interface Observer {
 
-    // XXX:registerWith
-    //    public void registerWith(ObservableValue o);
-    //
-    //    public void unregisterWith(ObservableValue o);
-
     /**
      * This method is called whenever the observed object is changed.
      *
      * @param o
      * @param arg
      */
-    public void update(Observable o, Object arg);
+    //XXX::OBS public void update(Observable o, Object arg);
+    public void update();
 
 }

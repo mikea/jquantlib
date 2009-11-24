@@ -36,7 +36,6 @@ import org.jquantlib.time.Date;
 import org.jquantlib.time.IMM;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
-import org.jquantlib.util.Observable;
 
 /**
  * @author Srinivas Hasti
@@ -58,6 +57,8 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
             final DayCounter dayCounter,
             final Handle<Quote> convAdj) {
         super(price, null, null, null);
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
         QL.require(new IMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
         earliestDate = immDate;
         latestDate = calendar.advance(
@@ -80,6 +81,8 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
             final DayCounter dayCounter,
             final double conv) {
         super(price);
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
         QL.require(new IMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
         convAdj = new Handle<Quote>(new SimpleQuote(conv));
         earliestDate = immDate;
@@ -97,6 +100,8 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
             final IborIndex i,
             final double conv) {
         super(price);
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
         QL.require(new IMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
         convAdj = new Handle<Quote>(new SimpleQuote(conv));
         earliestDate = immDate;
@@ -117,19 +122,6 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
 
     public double getConvexityAdjustment() {
         return convAdj.empty() ? 0.0 : convAdj.currentLink().value();
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.jquantlib.util.Observer#update(org.jquantlib.util.Observable,
-     *      java.lang.Object)
-     */
-    @Override
-    //TODO: MOVE TO BASE CLASS
-    public void update(final Observable o, final Object arg) {
-        // TODO Auto-generated method stub
-
     }
 
 }

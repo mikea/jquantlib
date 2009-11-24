@@ -30,8 +30,8 @@ import static org.jquantlib.time.Month.July;
 import static org.jquantlib.time.Month.June;
 import static org.jquantlib.time.Month.May;
 import static org.jquantlib.time.Month.October;
-import static org.jquantlib.time.Weekday.FRIDAY;
-import static org.jquantlib.time.Weekday.MONDAY;
+import static org.jquantlib.time.Weekday.Friday;
+import static org.jquantlib.time.Weekday.Monday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -124,20 +124,20 @@ public class Argentina extends Calendar {
 					// May Revolution
 					|| (d == 25 && m == May)
 					// Death of General Manuel Belgrano
-					|| (d >= 15 && d <= 21 && w == MONDAY && m == June)
+					|| (d >= 15 && d <= 21 && w == Monday && m == June)
 					// Independence Day
 					|| (d == 9 && m == July)
 					// Death of General Jos� de San Mart�n
-					|| (d >= 15 && d <= 21 && w == MONDAY && m == August)
+					|| (d >= 15 && d <= 21 && w == Monday && m == August)
 					// Columbus Day
 					|| ((d == 10 || d == 11 || d == 12 || d == 15 || d == 16)
-							&& w == MONDAY && m == October)
+							&& w == Monday && m == October)
 					// Immaculate Conception
 					|| (d == 8 && m == December)
 					// Christmas Eve
 					|| (d == 24 && m == December)
 					// New Year's Eve
-					|| ((d == 31 || (d == 30 && w == FRIDAY)) && m == December)) {
+					|| ((d == 31 || (d == 30 && w == Friday)) && m == December)) {
                 return false;
             }
 			return true;

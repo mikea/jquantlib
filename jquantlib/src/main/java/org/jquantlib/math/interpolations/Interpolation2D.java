@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -43,38 +43,26 @@ package org.jquantlib.math.interpolations;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
+import org.jquantlib.util.Observer;
 
 /**
  * Interface for 2-D interpolations.
  * <p>
- * Classes which implement this interface will provide interpolated values from two sequences 
- * of length {@latex$ N } and {@latex$ M }, representing the discretized values of 
+ * Classes which implement this interface will provide interpolated values from two sequences
+ * of length {@latex$ N } and {@latex$ M }, representing the discretized values of
  * the {@latex$ x }and {@latex$ y } variables, and a {@latex$ N \times M } matrix representing the
  * tabulated function values.
- * 
+ *
  * @author Richard Gomes
  */
 public interface Interpolation2D extends Extrapolator, Ops.BinaryDoubleOp {
-	
+
     /**
      * This method performs the interpolation itself.
-     * 
-     * @note This method is deprecated as it causes confusion with
-     * Observer.update. Concrete implementations must use {@link Interpolation2D#reload()} instead.
-     * 
-     * @see reload
-     * 
-     * @deprecated
+     *
+     * @note Do not confuse this method with {@link Observer#update()}
      */
 	public void update();
-	
-    /**
-     * This method performs the interpolation itself and should be called
-     * just after the construction of a interpolation class.
-     * 
-     * @see update
-     */
-	public void reload();
 
     public double xMin();
     public double xMax();

@@ -336,7 +336,7 @@ public class Schedule {
         // adjustments
         if (rule_== DateGeneration.Rule.ThirdWednesday) {
             for (int i=1; i<dates_.size()-1; ++i) {
-                dates_.set(i, Date.nthWeekday(3, Weekday.WEDNESDAY,
+                dates_.set(i, Date.nthWeekday(3, Weekday.Wednesday,
                                              dates_.get(i).month(),
                                              dates_.get(i).year()));
             }

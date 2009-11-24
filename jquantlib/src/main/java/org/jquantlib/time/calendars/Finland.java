@@ -26,7 +26,7 @@ import static org.jquantlib.time.Month.December;
 import static org.jquantlib.time.Month.January;
 import static org.jquantlib.time.Month.June;
 import static org.jquantlib.time.Month.May;
-import static org.jquantlib.time.Weekday.FRIDAY;
+import static org.jquantlib.time.Weekday.Friday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -104,7 +104,7 @@ public class Finland extends Calendar {
 	            // Labour Day
 	            || (d == 1 && m == May)
 	            // Midsummer Eve (Friday between June 18-24)
-	            || (w == FRIDAY && (d >= 18 && d <= 24) && m == June)
+	            || (w == Friday && (d >= 18 && d <= 24) && m == June)
 	            // Independence Day
 	            || (d == 6 && m == December)
 	            // Christmas Eve

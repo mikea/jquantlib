@@ -29,7 +29,7 @@ import static org.jquantlib.time.Month.January;
 import static org.jquantlib.time.Month.July;
 import static org.jquantlib.time.Month.May;
 import static org.jquantlib.time.Month.November;
-import static org.jquantlib.time.Weekday.FRIDAY;
+import static org.jquantlib.time.Weekday.Friday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -223,7 +223,7 @@ public class Brazil extends Calendar {
                     // Corpus Christi
                     || (dd == em + 59)
                     // last business day of the year
-                    || (m == December && (d == 31 || (d >= 29 && w == FRIDAY)))) {
+                    || (m == December && (d == 31 || (d >= 29 && w == Friday)))) {
                 return false;
             }
             return true;

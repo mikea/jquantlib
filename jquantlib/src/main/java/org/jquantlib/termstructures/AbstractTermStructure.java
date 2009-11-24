@@ -354,12 +354,11 @@ public abstract class AbstractTermStructure implements TermStructure {
      */
     @Override
     public Date referenceDate() {
-        if (moving) {
+        if (moving)
             if (!updated) {
                 referenceDate = calendar().advance(today, settlementDays, TimeUnit.Days);
                 updated = true;
             }
-        }
 
         // i.e: Case 3
         QL.require(referenceDate!=null , THIS_METHOD_MUST_BE_OVERRIDDEN); // QA:[RG]::verified // TODO: message
@@ -413,10 +412,10 @@ public abstract class AbstractTermStructure implements TermStructure {
     //    }
 
     @Override
-    public void update(final Observable o, final Object arg) {
-        if (moving) {
+    //XXX::OBS public void update(final Observable o, final Object arg) {
+    public void update() {
+        if (moving)
             updated = false;
-        }
         notifyObservers();
     }
 

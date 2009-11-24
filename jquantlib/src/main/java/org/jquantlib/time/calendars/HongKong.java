@@ -31,7 +31,7 @@ import static org.jquantlib.time.Month.June;
 import static org.jquantlib.time.Month.May;
 import static org.jquantlib.time.Month.October;
 import static org.jquantlib.time.Month.September;
-import static org.jquantlib.time.Weekday.MONDAY;
+import static org.jquantlib.time.Weekday.Monday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -126,7 +126,7 @@ public class HongKong extends Calendar {
 
             if (isWeekend(w)
             // New Year's Day
-                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == January)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == Monday)) && m == January)
                     // Ching Ming Festival
                     || (d == 5 && m == April)
                     // Good Friday
@@ -136,13 +136,13 @@ public class HongKong extends Calendar {
                     // Labor Day
                     || (d == 1 && m == May)
                     // SAR Establishment Day
-                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == July)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == Monday)) && m == July)
                     // National Day
-                    || ((d == 1 || ((d == 2 || d == 3) && w == MONDAY)) && m == October)
+                    || ((d == 1 || ((d == 2 || d == 3) && w == Monday)) && m == October)
                     // Christmas Day
                     || (d == 25 && m == December)
                     // Boxing Day
-                    || ((d == 26 || ((d == 27 || d == 28) && w == MONDAY)) && m == December)) {
+                    || ((d == 26 || ((d == 27 || d == 28) && w == Monday)) && m == December)) {
                 return false;
             }
 

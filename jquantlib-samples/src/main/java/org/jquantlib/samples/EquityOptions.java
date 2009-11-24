@@ -144,9 +144,8 @@ public class EquityOptions implements Runnable {
         // Define exercise for Bermudan Options
 		final int bermudanForwards = 4;
 		final Date[] exerciseDates = new Date[bermudanForwards];
-		for (int i = 1; i <= bermudanForwards; i++) {
-		    exerciseDates[i-1] = settlementDate.add(new Period(3*i, TimeUnit.Months));
-		}
+		for (int i = 1; i <= bermudanForwards; i++)
+            exerciseDates[i-1] = settlementDate.add(new Period(3*i, TimeUnit.Months));
 	    final Exercise bermudanExercise = new BermudanExercise(exerciseDates);
 
         // Define exercise for American Options
@@ -164,7 +163,7 @@ public class EquityOptions implements Runnable {
         // European Options
         final VanillaOption europeanOption = new EuropeanOption(payoff, europeanExercise);
 
-        // Bermundan options (can be thought as a collection of European Options)
+        // Bermudan options (can be thought as a collection of European Options)
         final VanillaOption bermudanOption = new VanillaOption(payoff, bermudanExercise);
 
         // American Options
@@ -207,63 +206,56 @@ public class EquityOptions implements Runnable {
         bermudanOption.setPricingEngine(new BinomialVanillaEngine<JarrowRudd>(bsmProcess, timeSteps){} );
         americanOption.setPricingEngine(new BinomialVanillaEngine<JarrowRudd>(bsmProcess, timeSteps){} );
         double bNPV = Double.NaN;
-        if (System.getProperty("EXPERIMENTAL") != null) {
+        if (System.getProperty("EXPERIMENTAL") != null)
             bNPV = bermudanOption.NPV();
-        }
         System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bNPV, americanOption.NPV() } );
 
         method = "Binomial Cox-Ross-Rubinstein";
         europeanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(bsmProcess, timeSteps){} );
         bermudanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(bsmProcess, timeSteps){} );
         americanOption.setPricingEngine(new BinomialVanillaEngine<CoxRossRubinstein>(bsmProcess, timeSteps){} );
-        if (System.getProperty("EXPERIMENTAL") != null) {
+        if (System.getProperty("EXPERIMENTAL") != null)
             bNPV = bermudanOption.NPV();
-        }
         System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bNPV, americanOption.NPV() } );
 
         method = "Additive equiprobabilities";
         europeanOption.setPricingEngine(new BinomialVanillaEngine<AdditiveEQPBinomialTree>(bsmProcess, timeSteps){} );
         bermudanOption.setPricingEngine(new BinomialVanillaEngine<AdditiveEQPBinomialTree>(bsmProcess, timeSteps){} );
         americanOption.setPricingEngine(new BinomialVanillaEngine<AdditiveEQPBinomialTree>(bsmProcess, timeSteps){} );
-        if (System.getProperty("EXPERIMENTAL") != null) {
+        if (System.getProperty("EXPERIMENTAL") != null)
             bNPV = bermudanOption.NPV();
-        }
         System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bNPV, americanOption.NPV() } );
 
         method = "Binomial Trigeorgis";
         europeanOption.setPricingEngine(new BinomialVanillaEngine<Trigeorgis>(bsmProcess, timeSteps){} );
         bermudanOption.setPricingEngine(new BinomialVanillaEngine<Trigeorgis>(bsmProcess, timeSteps){} );
         americanOption.setPricingEngine(new BinomialVanillaEngine<Trigeorgis>(bsmProcess, timeSteps){} );
-        if (System.getProperty("EXPERIMENTAL") != null) {
+        if (System.getProperty("EXPERIMENTAL") != null)
             bNPV = bermudanOption.NPV();
-        }
         System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bNPV, americanOption.NPV() } );
 
         method = "Binomial Tian";
         europeanOption.setPricingEngine(new BinomialVanillaEngine<Tian>(bsmProcess, timeSteps){} );
         bermudanOption.setPricingEngine(new BinomialVanillaEngine<Tian>(bsmProcess, timeSteps){} );
         americanOption.setPricingEngine(new BinomialVanillaEngine<Tian>(bsmProcess, timeSteps){} );
-        if (System.getProperty("EXPERIMENTAL") != null) {
+        if (System.getProperty("EXPERIMENTAL") != null)
             bNPV = bermudanOption.NPV();
-        }
         System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bNPV, americanOption.NPV() } );
 
         method = "Binomial Leisen-Reimer";
         europeanOption.setPricingEngine(new BinomialVanillaEngine<LeisenReimer>(bsmProcess, timeSteps){} );
         bermudanOption.setPricingEngine(new BinomialVanillaEngine<LeisenReimer>(bsmProcess, timeSteps){} );
         americanOption.setPricingEngine(new BinomialVanillaEngine<LeisenReimer>(bsmProcess, timeSteps){} );
-        if (System.getProperty("EXPERIMENTAL") != null) {
+        if (System.getProperty("EXPERIMENTAL") != null)
             bNPV = bermudanOption.NPV();
-        }
         System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bNPV, americanOption.NPV() } );
 
         method = "Binomial Joshi";
         europeanOption.setPricingEngine(new BinomialVanillaEngine<Joshi4>(bsmProcess, timeSteps){} );
         bermudanOption.setPricingEngine(new BinomialVanillaEngine<Joshi4>(bsmProcess, timeSteps){} );
         americanOption.setPricingEngine(new BinomialVanillaEngine<Joshi4>(bsmProcess, timeSteps){} );
-        if (System.getProperty("EXPERIMENTAL") != null) {
+        if (System.getProperty("EXPERIMENTAL") != null)
             bNPV = bermudanOption.NPV();
-        }
         System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bNPV, americanOption.NPV() } );
 
 
@@ -276,9 +268,8 @@ public class EquityOptions implements Runnable {
         europeanOption.setPricingEngine(new FDEuropeanEngine(bsmProcess, timeSteps, timeSteps-1, false));
         bermudanOption.setPricingEngine(new FDBermudanEngine(bsmProcess, timeSteps, timeSteps-1));
         americanOption.setPricingEngine(new FDAmericanEngine(bsmProcess, timeSteps, timeSteps-1, false));
-        if (System.getProperty("EXPERIMENTAL") != null) {
+        if (System.getProperty("EXPERIMENTAL") != null)
             bNPV = bermudanOption.NPV();
-        }
         System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bNPV, americanOption.NPV() } );
 
         //

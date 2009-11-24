@@ -179,32 +179,57 @@ public class UnitedStates extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
                 // New Year's Day (possibly moved to Monday if on Sunday)
-                || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.January)
-                // Martin Luther King's birthday (third Monday in JANUARY)
-                || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.January)
-                // Washington's birthday (third Monday in Month.FEBRUARY)
-                || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.February)
-                // Good Weekday.FRIDAY
-                || (dd == em-3)
-                // Memorial Day (last Monday in Month.MAY)
-                || (d >= 25 && w == Weekday.MONDAY && m == Month.May)
-                // Independence Day (Monday if Sunday or Weekday.FRIDAY if Saturday)
-                || ((d == 4 || (d == 5 && w == Weekday.MONDAY) ||
-                     (d == 3 && w == Weekday.FRIDAY)) && m == Month.July)
-                // Labor Day (first Monday in Month.SEPTEMBER)
-                || (d <= 7 && w == Weekday.MONDAY && m == Month.September)
+                || ((d == 1 || (d == 2 && w == Weekday.Monday)) && m == Month.January)
+                // (or to Friday if on Saturday)
+                || (d == 31 && w == Weekday.Friday && m == Month.December)
+                // Martin Luther King's birthday (third Monday in January)
+                || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.January)
+                // Washington's birthday (third Monday in February)
+                || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.February)
+                // Memorial Day (last Monday in May)
+                || (d >= 25 && w == Weekday.Monday && m == Month.May)
+                // Independence Day (Monday if Sunday or Friday if Saturday)
+                || ((d == 4 || (d == 5 && w == Weekday.Monday) ||
+                     (d == 3 && w == Weekday.Friday)) && m == Month.July)
+                // Labor Day (first Monday in September)
+                || (d <= 7 && w == Weekday.Monday && m == Month.September)
                 // Columbus Day (second Monday in October)
-                || ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.October)
-                // Veteran's Day (Monday if Sunday or Weekday.FRIDAY if Saturday)
-                || ((d == 11 || (d == 12 && w == Weekday.MONDAY) ||
-                     (d == 10 && w == Weekday.FRIDAY)) && m == Month.November)
-                // Thanksgiving Day (fourth Weekday.THURSDAY in Month.NOVEMBER)
-                || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.November)
-                // Christmas (Monday if Sunday or Weekday.FRIDAY if Saturday)
-                || ((d == 25 || (d == 26 && w == Weekday.MONDAY) ||
-                     (d == 24 && w == Weekday.FRIDAY)) && m == Month.December)) {
+                || ((d >= 8 && d <= 14) && w == Weekday.Monday && m == Month.October)
+                // Veteran's Day (Monday if Sunday or Friday if Saturday)
+                || ((d == 11 || (d == 12 && w == Weekday.Monday) ||
+                     (d == 10 && w == Weekday.Friday)) && m == Month.November)
+                // Thanksgiving Day (fourth Thursday in November)
+                || ((d >= 22 && d <= 28) && w == Weekday.Thursday && m == Month.November)
+                // Christmas (Monday if Sunday or Friday if Saturday)
+                || ((d == 25 || (d == 26 && w == Weekday.Monday) ||
+                     (d == 24 && w == Weekday.Friday)) && m == Month.December))
+
+//                // New Year's Day (possibly moved to Monday if on Sunday)
+//                || ((d == 1 || (d == 2 && w == Weekday.Monday)) && m == Month.January)
+//                // Martin Luther King's birthday (third Monday in JANUARY)
+//                || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.January)
+//                // Washington's birthday (third Monday in Month.FEBRUARY)
+//                || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.February)
+//                // Good Weekday.FRIDAY
+//                || (dd == em-3)
+//                // Memorial Day (last Monday in Month.MAY)
+//                || (d >= 25 && w == Weekday.Monday && m == Month.May)
+//                // Independence Day (Monday if Sunday or Weekday.FRIDAY if Saturday)
+//                || ((d == 4 || (d == 5 && w == Weekday.Monday) ||
+//                     (d == 3 && w == Weekday.Friday)) && m == Month.July)
+//                // Labor Day (first Monday in Month.SEPTEMBER)
+//                || (d <= 7 && w == Weekday.Monday && m == Month.September)
+//                // Columbus Day (second Monday in October)
+//                || ((d >= 8 && d <= 14) && w == Weekday.Monday && m == Month.October)
+//                // Veteran's Day (Monday if Sunday or Weekday.FRIDAY if Saturday)
+//                || ((d == 11 || (d == 12 && w == Weekday.Monday) ||
+//                     (d == 10 && w == Weekday.Friday)) && m == Month.November)
+//                // Thanksgiving Day (fourth Weekday.THURSDAY in Month.NOVEMBER)
+//                || ((d >= 22 && d <= 28) && w == Weekday.Thursday && m == Month.November)
+//                // Christmas (Monday if Sunday or Weekday.FRIDAY if Saturday)
+//                || ((d == 25 || (d == 26 && w == Weekday.Monday) ||
+//                     (d == 24 && w == Weekday.Friday)) && m == Month.December))
                 return false;
-            }
             return true;
         }
     }
@@ -223,42 +248,40 @@ public class UnitedStates extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
                 // New Year's Day (possibly moved to Monday if on Sunday)
-                || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.January)
+                || ((d == 1 || (d == 2 && w == Weekday.Monday)) && m == Month.January)
                 // Washington's birthday (third Monday in Month.FEBRUARY)
-                || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.February)
+                || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.February)
                 // Good Weekday.FRIDAY
                 || (dd == em-3)
                 // Memorial Day (last Weekday.MONDAY in Month.MAY)
-                || (d >= 25 && w == Weekday.MONDAY && m == Month.May)
+                || (d >= 25 && w == Weekday.Monday && m == Month.May)
                 // Independence Day (Weekday.MONDAY if Sunday or Weekday.FRIDAY if Saturday)
-                || ((d == 4 || (d == 5 && w == Weekday.MONDAY) ||
-                     (d == 3 && w == Weekday.FRIDAY)) && m == Month.July)
+                || ((d == 4 || (d == 5 && w == Weekday.Monday) ||
+                     (d == 3 && w == Weekday.Friday)) && m == Month.July)
                 // Labor Day (first Weekday.MONDAY in Month.SEPTEMBER)
-                || (d <= 7 && w == Weekday.MONDAY && m == Month.September)
+                || (d <= 7 && w == Weekday.Monday && m == Month.September)
                 // Thanksgiving Day (fourth Weekday.THURSDAY in Month.NOVEMBER)
-                || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.November)
+                || ((d >= 22 && d <= 28) && w == Weekday.Thursday && m == Month.November)
                 // Christmas (Weekday.MONDAY if Sunday or Weekday.FRIDAY if Saturday)
-                || ((d == 25 || (d == 26 && w == Weekday.MONDAY) ||
-                     (d == 24 && w == Weekday.FRIDAY)) && m == Month.December)
-                ) {
+                || ((d == 25 || (d == 26 && w == Weekday.Monday) ||
+                     (d == 24 && w == Weekday.Friday)) && m == Month.December)
+                )
                 return false;
-            }
 
             if (y >= 1998) {
                 if (// Martin Luther King's birthday (third Weekday.MONDAY in JANUARY)
-                    ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.January)
+                    ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.January)
                     // President Reagan's funeral
                     || (y == 2004 && m == Month.June && d == 11)
                     // Month.SEPTEMBER 11, 2001
                     || (y == 2001 && m == Month.September && (11 <= d && d <= 14))
                     // President Ford's funeral
                     || (y == 2007 && m == Month.January && d == 2)
-                    ) {
+                    )
                     return false;
-                }
             } else if (y <= 1980) {
                 if (// Presidential election days
-                    ((y % 4 == 0) && m == Month.November && d <= 7 && w == Weekday.TUESDAY)
+                    ((y % 4 == 0) && m == Month.November && d <= 7 && w == Weekday.Tuesday)
                     // 1977 Blackout
                     || (y == 1977 && m == Month.July && d == 14)
                     // Funeral of former President Lyndon B. Johnson.
@@ -275,17 +298,13 @@ public class UnitedStates extends Calendar {
                     || (y == 1968 && m == Month.July && d == 5)
                     // Month.JUNE 12-Dec. 31, 1968
                     // Four day week (closed on Wednesdays) - Paperwork Crisis
-                    || (y == 1968 && dd >= 163 && w == Weekday.WEDNESDAY)
-                    ) {
+                    || (y == 1968 && dd >= 163 && w == Weekday.Wednesday)
+                    )
                     return false;
-                }
-            } else {
-                if (// Nixon's funeral
-                    (y == 1994 && m == Month.April && d == 27)
-                    ) {
-                    return false;
-                }
-            }
+            } else if (// Nixon's funeral
+                (y == 1994 && m == Month.April && d == 27)
+                )
+                return false;
             return true;
         }
     }
@@ -304,32 +323,31 @@ public class UnitedStates extends Calendar {
             final int em = easterMonday(y);
             if (isWeekend(w)
                 // New Year's Day (possibly moved to Weekday.MONDAY if on Sunday)
-                || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.January)
+                || ((d == 1 || (d == 2 && w == Weekday.Monday)) && m == Month.January)
                 // Martin Luther King's birthday (third Weekday.MONDAY in Month.JANUARY)
-                || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.January)
+                || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.January)
                 // Washington's birthday (third Weekday.MONDAY in Month.FEBRUARY)
-                || ((d >= 15 && d <= 21) && w == Weekday.MONDAY && m == Month.February)
+                || ((d >= 15 && d <= 21) && w == Weekday.Monday && m == Month.February)
                 // Good Weekday.FRIDAY
                 || (dd == em-3)
                 // Memorial Day (last Monday in Month.MAY)
-                || (d >= 25 && w == Weekday.MONDAY && m == Month.May)
+                || (d >= 25 && w == Weekday.Monday && m == Month.May)
                 // Independence Day (Monday if Sunday or Weekday.FRIDAY if Saturday)
-                || ((d == 4 || (d == 5 && w == Weekday.MONDAY) ||
-                     (d == 3 && w == Weekday.FRIDAY)) && m == Month.July)
+                || ((d == 4 || (d == 5 && w == Weekday.Monday) ||
+                     (d == 3 && w == Weekday.Friday)) && m == Month.July)
                 // Labor Day (first Monday in Month.SEPTEMBER)
-                || (d <= 7 && w == Weekday.MONDAY && m == Month.September)
+                || (d <= 7 && w == Weekday.Monday && m == Month.September)
                 // Columbus Day (second Monday in October)
-                || ((d >= 8 && d <= 14) && w == Weekday.MONDAY && m == Month.October)
+                || ((d >= 8 && d <= 14) && w == Weekday.Monday && m == Month.October)
                 // Veteran's Day (Monday if Sunday or Weekday.FRIDAY if Saturday)
-                || ((d == 11 || (d == 12 && w == Weekday.MONDAY) ||
-                     (d == 10 && w == Weekday.FRIDAY)) && m == Month.November)
+                || ((d == 11 || (d == 12 && w == Weekday.Monday) ||
+                     (d == 10 && w == Weekday.Friday)) && m == Month.November)
                 // Thanksgiving Day (fourth Weekday.THURSDAY in Month.NOVEMBER)
-                || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.November)
+                || ((d >= 22 && d <= 28) && w == Weekday.Thursday && m == Month.November)
                 // Christmas (Monday if Sunday or Weekday.FRIDAY if Saturday)
-                || ((d == 25 || (d == 26 && w == Weekday.MONDAY) ||
-                     (d == 24 && w == Weekday.FRIDAY)) && m == Month.December)) {
+                || ((d == 25 || (d == 26 && w == Weekday.Monday) ||
+                     (d == 24 && w == Weekday.Friday)) && m == Month.December))
                 return false;
-            }
             return true;
         }
     }
@@ -346,19 +364,18 @@ public class UnitedStates extends Calendar {
             final Month m = date.month();
             if (isWeekend(w)
                 // New Year's Day (possibly moved to Monday if on Sunday)
-                || ((d == 1 || (d == 2 && w == Weekday.MONDAY)) && m == Month.January)
+                || ((d == 1 || (d == 2 && w == Weekday.Monday)) && m == Month.January)
                 // Memorial Day (last Monday in Month.MAY)
-                || (d >= 25 && w == Weekday.MONDAY && m == Month.May)
+                || (d >= 25 && w == Weekday.Monday && m == Month.May)
                 // Independence Day (Monday if Sunday)
-                || ((d == 4 || (d == 5 && w == Weekday.MONDAY)) && m == Month.July)
+                || ((d == 4 || (d == 5 && w == Weekday.Monday)) && m == Month.July)
                 // Labor Day (first Monday in Month.SEPTEMBER)
-                || (d <= 7 && w == Weekday.MONDAY && m == Month.September)
+                || (d <= 7 && w == Weekday.Monday && m == Month.September)
                 // Thanksgiving Day (fourth Weekday.THURSDAY in Month.NOVEMBER)
-                || ((d >= 22 && d <= 28) && w == Weekday.THURSDAY && m == Month.November)
+                || ((d >= 22 && d <= 28) && w == Weekday.Thursday && m == Month.November)
                 // Christmas (Monday if Sunday)
-                || ((d == 25 || (d == 26 && w == Weekday.MONDAY)) && m == Month.December)) {
+                || ((d == 25 || (d == 26 && w == Weekday.Monday)) && m == Month.December))
                 return false;
-            }
             return true;
         }
      }

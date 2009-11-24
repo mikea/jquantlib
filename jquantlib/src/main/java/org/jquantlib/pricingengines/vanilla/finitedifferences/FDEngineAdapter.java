@@ -38,12 +38,14 @@
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
 import java.lang.reflect.Constructor;
+import java.util.List;
 
 import org.jquantlib.instruments.OneAssetOption;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.ReflectConstants;
 import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
+import org.jquantlib.util.Observer;
 
 /**
  * Finite-differences pricing engine for American-style vanilla options
@@ -67,13 +69,14 @@ public abstract class FDEngineAdapter
     // THESE ARE COMMENTS REGARDING THE USE OF THE 2nd TYPE PARAMETER
     //
     // Whilst in C++ the template engine at compile time allocates the second type parameter as one of the base classes
-    // of "this" class, in Java we decided by employ the p-impl idiom to allocate the second parameter because the
+    // of "this" class, in Java we decided employing the p-impl idiom to allocate the second parameter because the
     // type of this parameter is known at compile time anyway.
     // In order to keep resemblance with original QuantLib/C++ code, we define the second parameter but we never use it
     // because extended classes are responsible for initialize the p-impl reference, which also implies that it belongs
     // to the expect type, i.e.: the type the extend class expects for it.
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private final Class<Engine> engineClass;
+
     protected OneAssetOption.Engine impl;
 
 
@@ -109,15 +112,79 @@ public abstract class FDEngineAdapter
 
     @Override
     public void calculate() /* @ReadOnly */ {
-        // minimum sanity check on the p-impl idiom
-        if (impl==null) {
+        // minimum sanity check on p-impl idiom
+        if (impl==null)
             throw new LibraryException(PRICING_ENGINE_NOT_SET);
-        }
-        if (!engineClass.isAssignableFrom(impl.getClass())) {
+        if (!engineClass.isAssignableFrom(impl.getClass()))
             throw new LibraryException(ReflectConstants.ILLEGAL_TYPE_PARAMETER);
-        }
         baseInstance.setupArguments(impl.getArguments());
         baseInstance.calculate(impl.getResults());
+    }
+
+
+    //
+    // implements Observer
+    //
+
+    @Override
+    public void update() {
+        if (impl==null)
+            throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        impl.update();
+    }
+
+
+    //
+    // implements Observable
+    //
+
+    @Override
+    public void addObserver(final Observer observer) {
+        if (impl==null)
+            throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        impl.addObserver(observer);
+    }
+
+    @Override
+    public int countObservers() {
+        if (impl==null)
+            throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        return impl.countObservers();
+    }
+
+    @Override
+    public void deleteObserver(final Observer observer) {
+        if (impl==null)
+            throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        impl.deleteObserver(observer);
+    }
+
+    @Override
+    public void deleteObservers() {
+        if (impl==null)
+            throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        impl.deleteObservers();
+    }
+
+    @Override
+    public List<Observer> getObservers() {
+        if (impl==null)
+            throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        return impl.getObservers();
+    }
+
+    @Override
+    public void notifyObservers() {
+        if (impl==null)
+            throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        impl.notifyObservers();
+    }
+
+    @Override
+    public void notifyObservers(final Object arg) {
+        if (impl==null)
+            throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        impl.notifyObservers(arg);
     }
 
 }

@@ -40,8 +40,8 @@ import static org.jquantlib.time.Month.May;
 import static org.jquantlib.time.Month.November;
 import static org.jquantlib.time.Month.October;
 import static org.jquantlib.time.Month.September;
-import static org.jquantlib.time.Weekday.SATURDAY;
-import static org.jquantlib.time.Weekday.SUNDAY;
+import static org.jquantlib.time.Weekday.Saturday;
+import static org.jquantlib.time.Weekday.Sunday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -90,7 +90,7 @@ public class Turkey extends Calendar {
 
         @Override
         public boolean isWeekend(final Weekday w) {
-            return w == SATURDAY || w == SUNDAY;
+            return w == Saturday || w == Sunday;
         }
 
         @Override

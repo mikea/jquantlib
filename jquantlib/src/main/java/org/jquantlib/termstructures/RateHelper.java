@@ -63,9 +63,8 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
     public RateHelper(final Handle<Quote> quote, final T termStructure, final Date earliestDate, final Date latestDate) {
         super();
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         this.termStructure = termStructure; // FIXME: code review : do we need a dummy non-null TermStructure ???
         this.earliestDate = earliestDate;
@@ -75,9 +74,8 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
     }
 
     public RateHelper(final Handle<Quote> quote) {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         this.termStructure = null; // FIXME: code review : do we need a dummy non-null TermStructure ???
         this.earliestDate = null;
@@ -89,9 +87,8 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
     }
 
     public RateHelper(final double quote) {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         this.termStructure = null; // FIXME: code review : do we need a dummy non-null TermStructure ???
         this.earliestDate = null;
@@ -106,9 +103,8 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
 
     protected RateHelper() {
         // default constructor only available to descendent classes
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
     }
 
 
@@ -197,8 +193,10 @@ public abstract class RateHelper<T extends TermStructure> implements Observer, O
     //    }
 
     @Override
-    public void update(final Observable o, final Object arg) {
-        this.notifyObservers(arg); // FIXME: maybe all calls to notifyObservers should forward "arg" in entire JQuantLib ???
+    //XXX::OBS public void update(final Observable o, final Object arg) {
+    public void update() {
+        //XXX::OBS this.notifyObservers(arg);
+        this.notifyObservers();
     }
 
 

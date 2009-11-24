@@ -51,7 +51,11 @@ import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.calendars.NullCalendar;
 
-// TODO: class comments
+/**
+ * This class contains utility methods
+ *
+ * @author Richard Gomes
+ */
 public class Utilities {
 
     //
@@ -91,9 +95,8 @@ public class Utilities {
         //I believe this code is adding together the values in f2 (initialized to 0.0)
         //then subtracting 0.5 * front() and also subtracting 0.5 * back()
         double I = 0;
-        for(int i = 0; i < f2.size(); i++) {
+        for(int i = 0; i < f2.size(); i++)
             I += f2.get(i);
-        }
 
         //not sure about this...
         I -= 0.5 * f2.first();
@@ -104,12 +107,11 @@ public class Utilities {
     }
 
     static public double relativeError(final double x1, final double x2, final double reference) {
-        if (reference != 0.0) {
+        if (reference != 0.0)
             return Math.abs(x1 - x2) / reference;
-        } else {
+        else
             // fall back to absolute error
             return Math.abs(x1 - x2);
-        }
     }
 
     static public YieldTermStructure flatRate(final Date today, final Quote forward, final DayCounter dc) {

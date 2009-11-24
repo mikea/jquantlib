@@ -6,7 +6,6 @@ import org.jquantlib.instruments.Swap;
 import org.jquantlib.math.Constants;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
 // TODO: code review :: please verify against QL/C++ code
@@ -16,6 +15,8 @@ public class DiscountingSwapEngine extends Swap.EngineImpl implements /* Swap.En
     private final Handle<YieldTermStructure> discountCurve;
 
     public DiscountingSwapEngine(final Handle<YieldTermStructure> discountCurve) /* @ReadOnly */ {
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
         this.discountCurve = discountCurve;
         this.discountCurve.addObserver(this);
     }
@@ -35,18 +36,6 @@ public class DiscountingSwapEngine extends Swap.EngineImpl implements /* Swap.En
             r.legBPS[i] = a.payer[i] * CashFlows.getInstance().bps(a.legs.get(i), discountCurve);
             r.value += r.legNPV[i];
         }
-    }
-
-
-    //
-    // implements Observer
-    //
-
-    @Override
-    // TODO: code review :: please verify against QL/C++ code
-    public void update(final Observable o, final Object arg) {
-        // TODO: Code review :: incomplete code
-        throw new UnsupportedOperationException("Work in progress");
     }
 
 }

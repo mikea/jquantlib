@@ -22,7 +22,6 @@
 
 package org.jquantlib.testsuite.util;
 
-import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
 /**
@@ -64,7 +63,8 @@ public class Flag implements Observer {
     //    }
 
     @Override
-    public void update(final Observable observable, final Object o) {
+    //XXX::OBS public void update(final Observable observable, final Object o) {
+    public void update() {
         raise();
     }
 

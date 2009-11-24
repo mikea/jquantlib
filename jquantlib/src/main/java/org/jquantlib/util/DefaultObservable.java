@@ -105,7 +105,7 @@ public class DefaultObservable implements Observable {
 
     public void notifyObservers(final Object arg) {
         boolean successful = true;
-        for (final Observer observer : observers) {
+        for (final Observer observer : observers)
             try {
                 wrappedNotify(observer, observable, arg);
             } catch (final Exception e) {
@@ -118,7 +118,6 @@ public class DefaultObservable implements Observable {
                 // exception if something bad happened.
                 successful = false;
             }
-        }
         QL.ensure(successful, CANNOT_NOTIFY_OBSERVERS);
     }
 
@@ -145,7 +144,8 @@ public class DefaultObservable implements Observable {
      * @param arg
      */
     protected void wrappedNotify(final Observer observer, final Observable observable, final Object arg) {
-        observer.update(observable, arg);
+        //XXX::OBS observer.update(observable, arg);
+        observer.update();
     }
 
 }

@@ -119,9 +119,8 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
     @Override
     public double evaluateImpl(final double x, final double y) /* @ReadOnly */{
         final double[] section = new double[splines.size()];
-        for (int i=0; i<splines.size(); i++) {
+        for (int i=0; i<splines.size(); i++)
             section[i]=splines.get(i).evaluate(x, true);
-        }
 
 // TODO : [Richard needs to complete implementation]
 //        NaturalCubicSpline spline = new Spline(this->yBegin_, this->yEnd_, section.begin());
@@ -152,7 +151,7 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
             delegate.vx = x;
             delegate.vy = y;
             delegate.mz = z;
-            delegate.reload();
+            delegate.update();
             return delegate;
         }
 

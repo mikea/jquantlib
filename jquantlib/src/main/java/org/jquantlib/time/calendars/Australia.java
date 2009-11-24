@@ -28,8 +28,8 @@ import static org.jquantlib.time.Month.December;
 import static org.jquantlib.time.Month.January;
 import static org.jquantlib.time.Month.June;
 import static org.jquantlib.time.Month.October;
-import static org.jquantlib.time.Weekday.MONDAY;
-import static org.jquantlib.time.Weekday.TUESDAY;
+import static org.jquantlib.time.Weekday.Monday;
+import static org.jquantlib.time.Weekday.Tuesday;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -94,25 +94,25 @@ public class Australia extends Calendar {
             // New Year's Day (possibly moved to Monday)
             || (d == 1  && m == January)
             // Australia Day, JANUARY 26th (possibly moved to Monday)
-            || ((d == 26 || ((d == 27 || d == 28) && w == MONDAY)) &&
+            || ((d == 26 || ((d == 27 || d == 28) && w == Monday)) &&
                 m == January)
             // Good Friday
             || (dd == em-3)
             // Easter Monday
             || (dd == em)
             // ANZAC Day, April 25th (possibly moved to Monday)
-            || ((d == 25 || (d == 26 && w == MONDAY)) && m == April)
+            || ((d == 25 || (d == 26 && w == Monday)) && m == April)
             // Queen's Birthday, second Monday in June
-            || ((d > 7 && d <= 14) && w == MONDAY && m == June)
+            || ((d > 7 && d <= 14) && w == Monday && m == June)
             // Bank Holiday, first Monday in August
-            || (d <= 7 && w == MONDAY && m == August)
+            || (d <= 7 && w == Monday && m == August)
             // Labour Day, first Monday in October
-            || (d <= 7 && w == MONDAY && m == October)
+            || (d <= 7 && w == Monday && m == October)
             // Christmas, December 25th (possibly Monday or Tuesday)
-            || ((d == 25 || (d == 27 && (w == MONDAY || w == TUESDAY)))
+            || ((d == 25 || (d == 27 && (w == Monday || w == Tuesday)))
                 && m == December)
             // Boxing Day, DECEMBER 26th (possibly MONDAY or TUESDAY)
-            || ((d == 26 || (d == 28 && (w == MONDAY || w == TUESDAY)))
+            || ((d == 26 || (d == 28 && (w == Monday || w == Tuesday)))
                 && m == December)) {
             return false;
         }

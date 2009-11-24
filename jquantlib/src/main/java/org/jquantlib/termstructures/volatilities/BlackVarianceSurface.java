@@ -150,7 +150,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
     public void setInterpolation(final Interpolator i) {
         varianceSurface = factory.interpolate(times, strikes, variances);
         varianceSurface.enableExtrapolation();
-        varianceSurface.reload();
+        varianceSurface.update();
         notifyObservers();
     }
 

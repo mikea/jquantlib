@@ -141,14 +141,13 @@ public abstract class Instrument extends LazyObject {
      * @see PricingEngine
      */
     public final void setPricingEngine(final PricingEngine engine) {
-        if (this.engine != null) {
+        if (this.engine != null)
             this.engine.deleteObserver(this);
-        }
         this.engine = engine;
-        if (this.engine != null) {
+        if (this.engine != null)
             this.engine.addObserver(this);
-        }
-        update(this, null);
+        //XXX:OBS update(this, null);
+        update();
     }
 
     /**
@@ -225,9 +224,8 @@ public abstract class Instrument extends LazyObject {
         if (isExpired()) {
             setupExpired();
             calculated = true;
-        } else {
+        } else
             super.calculate();
-        }
     }
 
 

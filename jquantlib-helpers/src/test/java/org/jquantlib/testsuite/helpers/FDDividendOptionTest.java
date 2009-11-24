@@ -6,7 +6,6 @@ import java.util.List;
 import org.jquantlib.QL;
 import org.jquantlib.helpers.FDAmericanDividendOptionHelper;
 import org.jquantlib.helpers.FDEuropeanDividendOptionHelper;
-import org.jquantlib.instruments.DividendVanillaOption;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
@@ -37,9 +36,8 @@ public class FDDividendOptionTest implements Runnable {
 
     @Test
     public void testEuropeanFDDividendOption() {
-        if (!quiet) {
+        if (!quiet)
             QL.info("::::: " + this.getClass().getSimpleName() + " ::::: European Dividend Option :::::");
-        }
 
         final StopClock clock = new StopClock();
         clock.startClock();
@@ -49,28 +47,33 @@ public class FDDividendOptionTest implements Runnable {
         final Date divDate = today.add(new Period(3, TimeUnit.Months)).add(new Period(15, TimeUnit.Days));
 
         final List<Date> divDates = new ArrayList<Date>();
-        divDates.add(divDate);
         final List<Double> divAmounts = new ArrayList<Double>();
+        divDates.add(divDate);
         divAmounts.add(2.06);
-        final DividendVanillaOption option = new FDEuropeanDividendOptionHelper(
+        final FDEuropeanDividendOptionHelper option = new FDEuropeanDividendOptionHelper(
                 Option.Type.Call, 50.0, 50.0, 0.1, 0.394,
                 expiry, divDates, divAmounts);
 
-        final double value = option.NPV();
-        final double delta = option.delta();
-        final double gamma = option.gamma();
-        //double theta = option.theta(); // requires a dT
-        //double vega  = option.vega();  // requires a dT
-        //double rho   = option.rho();   // requires a dT
+        final double value  = option.NPV();
+        final double delta  = option.delta();
+        final double gamma  = option.gamma();
+        final double theta  = option.theta();
+        final double vega   = option.vega();
+        final double rho    = option.rho();
+
+        // market price: simply guess something 10% higher than theoretical
+        final double ivol = option.impliedVolatility(value*1.10);
+
         clock.stopClock();
 
         if (!quiet) {
-            QL.info(String.format("value = %f", value));
-            QL.info(String.format("delta = %f", delta));
-            QL.info(String.format("gamma = %f", gamma));
-            // QL.info(String.format("theta = %f", theta));
-            // QL.info(String.format("vega  = %f", vega));
-            // QL.info(String.format("rho   = %f", rho));
+            QL.info(String.format("value       = %f", value));
+            QL.info(String.format("delta       = %f", delta));
+            QL.info(String.format("gamma       = %f", gamma));
+            QL.info(String.format("theta       = %f", theta));
+            QL.info(String.format("vega        = %f", vega));
+            QL.info(String.format("rho         = %f", rho));
+            QL.info(String.format("implied vol = %f", ivol));
             clock.log();
         }
 
@@ -78,9 +81,8 @@ public class FDDividendOptionTest implements Runnable {
 
     @Test
     public void testAmericanFDDividendOption() {
-        if (!quiet) {
+        if (!quiet)
             QL.info("::::: " + this.getClass().getSimpleName() + " ::::: American Dividend Option :::::");
-        }
 
         final StopClock clock = new StopClock();
         clock.startClock();
@@ -90,28 +92,33 @@ public class FDDividendOptionTest implements Runnable {
         final Date divDate = today.add(new Period(3, TimeUnit.Months)).add(new Period(15, TimeUnit.Days));
 
         final List<Date> divDates = new ArrayList<Date>();
-        divDates.add(divDate);
         final List<Double> divAmounts = new ArrayList<Double>();
+        divDates.add(divDate);
         divAmounts.add(2.06);
-        final DividendVanillaOption option = new FDAmericanDividendOptionHelper(
+        final FDAmericanDividendOptionHelper option = new FDAmericanDividendOptionHelper(
                 Option.Type.Call, 50.0, 50.0, 0.1, 0.394,
                 expiry, divDates, divAmounts);
 
         final double value = option.NPV();
         final double delta = option.delta();
         final double gamma = option.gamma();
-        //double theta = option.theta(); // requires a dT
-        //double vega  = option.vega();  // requires a dT
-        //double rho   = option.rho();   // requires a dT
+        final double theta = option.theta();
+        final double vega  = option.vega();
+        final double rho   = option.rho();
+
+        // market price: simply guess something 10% higher than theoretical
+        final double ivol = option.impliedVolatility(value*1.10);
+
         clock.stopClock();
 
         if (!quiet) {
-            QL.info(String.format("value = %f", value));
-            QL.info(String.format("delta = %f", delta));
-            QL.info(String.format("gamma = %f", gamma));
-            // QL.info(String.format("theta = %f", theta));
-            // QL.info(String.format("vega  = %f", vega));
-            // QL.info(String.format("rho   = %f", rho));
+            QL.info(String.format("value       = %f", value));
+            QL.info(String.format("delta       = %f", delta));
+            QL.info(String.format("gamma       = %f", gamma));
+            QL.info(String.format("theta       = %f", theta));
+            QL.info(String.format("vega        = %f", vega));
+            QL.info(String.format("rho         = %f", rho));
+            QL.info(String.format("implied vol = %f", ivol));
             clock.log();
         }
     }

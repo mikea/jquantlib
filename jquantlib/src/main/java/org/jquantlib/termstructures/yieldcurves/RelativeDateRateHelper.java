@@ -27,7 +27,6 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.time.Date;
-import org.jquantlib.util.Observable;
 
 /**
  * Rate helper with date schedule relative to the global evaluation date
@@ -106,13 +105,15 @@ public abstract class RelativeDateRateHelper extends RateHelper {
     //
 
     @Override
-    public void update(final Observable o, final Object arg) {
+  //XXX::OBS public void update(final Observable o, final Object arg) {
+    public void update() {
         final Date newEvaluationDate = new Settings().evaluationDate();
         if (!evaluationDate.equals(newEvaluationDate)) {
             evaluationDate = newEvaluationDate;
             initializeDates();
         }
-        super.update(o, arg);
+        //XXX::OBS super.update(o, arg);
+        super.update();
     }
 
 }

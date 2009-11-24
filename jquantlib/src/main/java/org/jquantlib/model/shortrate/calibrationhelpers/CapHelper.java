@@ -80,9 +80,8 @@ public class CapHelper extends CalibrationHelper {
                 DateGeneration.Rule.Forward, false);
 
         //TODO: Code review :: incomplete code
-        if (true) {
+        if (true)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
 
         /*
@@ -124,6 +123,22 @@ public class CapHelper extends CalibrationHelper {
         return 0;
     }
 
+
+    //
+    // implements Observer
+    //
+    @Override
+    public void update() {
+        throw new UnsupportedOperationException("work in progress");
+    }
+
+
+    //
+    // implements Observable
+    //
+
+    private final Observable delegatedObservable = new DefaultObservable(this);
+
     @Override
     public void addObserver(final Observer observer) {
         delegatedObservable.addObserver(observer);
@@ -163,14 +178,5 @@ public class CapHelper extends CalibrationHelper {
         delegatedObservable.notifyObservers(arg);
 
     }
-
-    @Override
-    public void update(final Observable o, final Object arg) {
-
-
-    }
-    private final Observable delegatedObservable = new DefaultObservable(this);
-
-
 
 }

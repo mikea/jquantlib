@@ -68,9 +68,8 @@ public class WeakReferenceObservable extends DefaultObservable {
         for (final Observer weakObserver : getObservers()) {
             final WeakReferenceObserver weakReference = (WeakReferenceObserver) weakObserver;
             final Observer referent = weakReference.get();
-            if (referent == null || referent.equals(observer)) {
+            if (referent == null || referent.equals(observer))
                 deleteWeakReference(weakReference);
-            }
         }
     }
 
@@ -90,13 +89,14 @@ public class WeakReferenceObservable extends DefaultObservable {
         }
 
         @Override
-        public void update(final Observable o, final Object arg) {
+        //XXX::OBS public void update(final Observable o, final Object arg) {
+        public void update() {
             final Observer referent = get();
-            if (referent != null) {
-                referent.update(o, arg);
-            } else {
+            if (referent != null)
+                //XXX::OBS referent.update(o, arg);
+                referent.update();
+            else
                 deleteWeakReference(this);
-            }
         }
     }
 

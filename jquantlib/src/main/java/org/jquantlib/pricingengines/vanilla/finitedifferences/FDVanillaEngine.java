@@ -103,9 +103,8 @@ public class FDVanillaEngine {
         QL.require(center > 0.0 , "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         this.center = center;
         /* Size */final int newGridPoints = safeGridPoints(gridPoints, t);
-        if (newGridPoints > intrinsicValues.size()) {
+        if (newGridPoints > intrinsicValues.size())
             intrinsicValues = new SampledCurve(newGridPoints);
-        }
 
         /* Real */final double volSqrtTime = Math.sqrt(process.blackVolatility().currentLink().blackVariance(t, center));
 
@@ -119,9 +118,8 @@ public class FDVanillaEngine {
     protected void ensureStrikeInGrid() {
         // ensure strike is included in the grid
         final StrikedTypePayoff striked_payoff = (StrikedTypePayoff) (payoff);
-        if (striked_payoff == null) {
+        if (striked_payoff == null)
             return;
-        }
         /* Real */final double requiredGridValue = striked_payoff.strike();
 
         if (sMin > requiredGridValue / safetyZoneFactor) {
@@ -148,11 +146,12 @@ public class FDVanillaEngine {
 
     protected void initializeBoundaryConditions() {
 
-        bcS.add(new NeumannBC(intrinsicValues.value(1)
-                - intrinsicValues.value(0), NeumannBC.Side.Lower));
+        bcS.add(new NeumannBC(
+                intrinsicValues.value(1)- intrinsicValues.value(0),
+                NeumannBC.Side.Lower));
 
-        bcS.add(new NeumannBC(intrinsicValues.value(intrinsicValues.size() - 1)
-                - intrinsicValues.value(intrinsicValues.size() - 2),
+        bcS.add(new NeumannBC(
+                intrinsicValues.value(intrinsicValues.size() - 1)- intrinsicValues.value(intrinsicValues.size() - 2),
                 NeumannBC.Side.Upper));
     }
 
@@ -172,6 +171,8 @@ public class FDVanillaEngine {
                         : minGridPoints);
     }
 
-    protected void calculate(final Results r) { }
+    protected void calculate(final Results r) {
+        throw new UnsupportedOperationException();
+    }
 
 }
