@@ -41,15 +41,16 @@ import org.jquantlib.math.functions.TruePredicate;
 import org.jquantlib.util.Pair;
 
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-public class GenericRiskStatistics /*mimic inheritence using delgate*/ {
+//FIXME: the class hierarchy is wrong :: mimic inheritence using delegate pattern (similar to TimeSeries?)
+public class GenericRiskStatistics {
 
     private static final String no_data_below_the_target = "no data below the target";
     private static final String empty_sample_set = "empty sample set";
     private static final String unsufficient_samples_under_target = "samples under target <=1, unsufficient";
 
-    IStatistics statistics = null;
+    private Statistics statistics = null;
 
-    public GenericRiskStatistics(final IStatistics statistics){
+    public GenericRiskStatistics(final Statistics statistics){
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
         this.statistics = statistics;

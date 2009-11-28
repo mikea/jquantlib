@@ -32,8 +32,7 @@ import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.methods.lattices.TrinomialTree;
 import org.jquantlib.model.ConstantParameter;
 import org.jquantlib.model.Parameter;
-import org.jquantlib.model.shortrate.OneFactorModel;
-import org.jquantlib.model.shortrate.TermStructureFittingParameter;
+import org.jquantlib.model.TermStructureFittingParameter;
 import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -67,9 +66,8 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
     public BlackKarasinski(final Handle<YieldTermStructure> termStructure, final double a, final double sigma){
         super(2);
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         termstructureConsistentModel = new TermStructureConsistentModelClass(termStructure);
         this.a_ = arguments_.get(0);
@@ -175,7 +173,7 @@ public class BlackKarasinski extends OneFactorModel implements TermStructureCons
      */
     private class Dynamics extends ShortRateDynamics {
 
-        public Dynamics(final Parameter fitting, final Double /* @Real */alpha, final Double /* @Real */sigma) {
+        public Dynamics(final Parameter fitting, final double /* @Real */alpha, final double /* @Real */sigma) {
             super(new OrnsteinUhlenbeckProcess(alpha, sigma, /* default */0.0, /* default */0.0));
             fitting_ = (fitting);
         }

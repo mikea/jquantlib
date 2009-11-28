@@ -32,8 +32,7 @@ import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.methods.lattices.TrinomialTree;
 import org.jquantlib.model.Parameter;
-import org.jquantlib.model.shortrate.OneFactorModel;
-import org.jquantlib.model.shortrate.TermStructureFittingParameter;
+import org.jquantlib.model.TermStructureFittingParameter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -45,18 +44,17 @@ import org.jquantlib.time.TimeGrid;
  * <p>
  * This class implements the extended Cox-Ingersoll-Ross model defined by
  * <p>{@latex[ dr_t = (\theta(t) - \alpha r_t)dt + \sqrt{r_t}\sigma dW_t }
- * 
+ *
  * @bug this class was not tested enough to guarantee its functionality.
- * 
+ *
  * @category shortrate
- * 
+ *
  * @author Praneet Tiwari
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
 
-    private static final String strike_must_be_positive = "strike must be positive";
-    private static final String unsupported_option_type = "unsupported option type";
+    private static final String STRIKE_MUST_BE_POSITIVE = "strike must be positive";
 
 
     private final TermStructureConsistentModelClass termstructureConsistentModel;
@@ -94,20 +92,19 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
             final Option.Type type,
             final double strike,
             final double t,
-            final double s){
-        QL.require(strike > 0.0 , strike_must_be_positive); // QA:[RG]::verified // TODO: message
+            final double s) {
+        QL.require(strike > 0.0 , STRIKE_MUST_BE_POSITIVE); // QA:[RG]::verified // TODO: message
         final double discountT = termstructureConsistentModel.termStructure().currentLink().discount(t);
         final double discountS = termstructureConsistentModel.termStructure().currentLink().discount(s);
-        if(t<Constants.QL_EPSILON) {
+        if (t<Constants.QL_EPSILON)
             switch (type) {
                 case Call:
                     return Math.max(discountS - strike, 0);
                 case Put:
                     return Math.max(strike - discountS, 0);
                 default:
-                    throw new LibraryException(unsupported_option_type);
+                    throw new LibraryException(Option.Type.UNKNOWN_OPTION_TYPE);
             }
-        }
         final double sigma2 = sigma() * sigma();
         final double h = Math.sqrt(k() * k() + 2 * sigma2);
         final double r0 = termstructureConsistentModel.termStructure().currentLink().forwardRate(0.0, 0.0, Compounding.Continuous,
@@ -127,11 +124,10 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         final double z = Math.log(super.A(t, s) / strike) / b;
         final double call = discountS * chis.op(2.0 * z * (rho + psi + b)) - strike * discountT
         * chit.op(2.0 * z * (rho + psi));
-        if (type.equals(Option.Type.Call)) {
+        if (type.equals(Option.Type.Call))
             return call;
-        } else {
+        else
             return call - discountS + strike * discountT;
-        }
 
     }
 
@@ -157,12 +153,12 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
      * where \f$ \varphi(t) \f$ is the deterministic time-dependent
      * parameter used for term-structure fitting and {@latex$ y_t } is the
      * state variable, the square-root of a standard CIR process.
-     * 
+     *
      * @author Praneet Tiwari
      */
     private class Dynamics extends CoxIngersollRoss.Dynamics{
 
-        private final Parameter phi_;
+        private final Parameter phi;
 
         public Dynamics(final Parameter phi,
                 final double theta,
@@ -170,17 +166,17 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
                 final double sigma,
                 final double x0){
             super(theta, k, sigma, x0);
-            this.phi_ = phi;
+            this.phi = phi;
         }
 
         @Override
         public double variable(final double t, final double r){
-            return Math.sqrt(r - phi_.get(t));
+            return Math.sqrt(r - phi.get(t));
         }
 
         @Override
         public double shortRate(final double t, final double y){
-            return y*y + phi_.get(t);
+            return y*y + phi.get(t);
         }
     }
 
@@ -193,7 +189,7 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
      *                    \frac{4 x_0 h^2 e^{th}}{(2h+(k+h)(e^{th}-1))^1} }
      * where {@latex$ f(t) } is the instantaneous forward rate at {@latex$ t }
      * and {@latex$ h = \sqrt{k^2 + 2\sigma^2} }.
-     * 
+     *
      * @author Praneet Tiwari
      */
     private static class FittingParameter extends TermStructureFittingParameter {
@@ -215,9 +211,12 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
         // private inner classes
         //
 
-        private static class Impl extends Parameter.Impl {
-            private final Handle<YieldTermStructure> termStructure_;
-            private final double theta_, k_, sigma_, x0_;
+        private static class Impl implements Parameter.Impl {
+            private final Handle<YieldTermStructure> termStructure;
+            private final double theta;
+            private final double k;
+            private final double sigma;
+            private final double x0;
 
             public Impl(
                     final Handle<YieldTermStructure> termStructure,
@@ -225,21 +224,21 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
                     final double k,
                     final double sigma,
                     final double x0) {
-                this.termStructure_ = termStructure;
-                this.theta_ = theta;
-                this.k_ = k;
-                this.sigma_ = sigma;
-                this.x0_ = x0;
+                this.termStructure = termStructure;
+                this.theta = theta;
+                this.k = k;
+                this.sigma = sigma;
+                this.x0 = x0;
             }
 
             @Override
             public double value(final Array params, final double t) {
-                final double forwardRate = termStructure_.currentLink().forwardRate(
+                final double forwardRate = termStructure.currentLink().forwardRate(
                         t, t, Compounding.Continuous, Frequency.NoFrequency).rate();
-                final double h = Math.sqrt(k_*k_ + 2.0 * sigma_ * sigma_);
+                final double h = Math.sqrt(k*k + 2.0 * sigma * sigma);
                 final double expth = Math.exp(t*h);
-                final double temp = 2.0*h + (k_+h)*(expth - 1.0);
-                final double phi = forwardRate - 2.0*k_*theta_*(expth - 1.0)/temp - x0_*4.0*h*h*expth/(temp*temp);
+                final double temp = 2.0*h + (k+h)*(expth - 1.0);
+                final double phi = forwardRate - 2.0*k*theta*(expth - 1.0)/temp - x0*4.0*h*h*expth/(temp*temp);
                 return phi;
             }
 

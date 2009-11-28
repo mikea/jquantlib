@@ -38,14 +38,10 @@
  */
 package org.jquantlib.math.matrixutilities;
 
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
-import org.jquantlib.math.matrixutilities.Cells.ConstColumnIterator;
 
 /**
  * Symmetric threshold Jacobi algorithm
@@ -88,9 +84,8 @@ public class SymmetricSchurDecomposition {
             diag.data[diag.addr(q)] = s.data[s.addr(q, q)];
             A.data[A.addr(q, q)] = 1.0;
         }
-        for (int j = 0; j < size; j++) {
-        	tmpDiag[j] = diag.data[diag.addr(j)];
-        }
+        for (int j = 0; j < size; j++)
+            tmpDiag[j] = diag.data[diag.addr(j)];
 
         boolean keeplooping = true;
         int ite = 1;
@@ -98,15 +93,13 @@ public class SymmetricSchurDecomposition {
         do {
             // main loop
             double sum = 0;
-            for (int a = 0; a < size - 1; a++) {
-                for (int b = a + 1; b < size; b++) {
+            for (int a = 0; a < size - 1; a++)
+                for (int b = a + 1; b < size; b++)
                     sum += Math.abs(s.data[s.addr(a, b)]);
-                }
-            }
 
-            if (sum == 0) {
+            if (sum == 0)
                 keeplooping = false;
-            } else {
+            else {
                 /*
                  * To speed up computation a threshold is introduced to make sure it is worthy to perform the Jacobi rotation
                  */
@@ -116,18 +109,18 @@ public class SymmetricSchurDecomposition {
                     threshold = 0.0;
 
                 int j, k, l;
-                for (j = 0; j < size - 1; j++) {
+                for (j = 0; j < size - 1; j++)
                     for (k = j + 1; k < size; k++) {
                         double sine, rho, cosin, heig, tang, beta;
                         final double smll = Math.abs(s.data[s.addr(j, k)]);
                         if (ite > 5 && smll < epsPrec * Math.abs(diag.data[diag.addr(j)])
-                                && smll < epsPrec * Math.abs(diag.data[diag.addr(k)])) {
+                                && smll < epsPrec * Math.abs(diag.data[diag.addr(k)]))
                             s.data[s.addr(j, k)] = 0;
-                        } else if (Math.abs(s.data[s.addr(j, k)]) > threshold) {
+                        else if (Math.abs(s.data[s.addr(j, k)]) > threshold) {
                             heig = diag.data[diag.addr(k)] - diag.data[diag.addr(j)];
-                            if (smll < epsPrec * Math.abs(heig)) {
+                            if (smll < epsPrec * Math.abs(heig))
                                 tang = s.data[s.addr(j, k)] / heig;
-                            } else {
+                            else {
                                 beta = 0.5 * heig / s.data[s.addr(j, k)];
                                 tang = 1.0 / (Math.abs(beta) + Math.sqrt(1 + beta * beta));
                                 if (beta < 0)
@@ -152,7 +145,6 @@ public class SymmetricSchurDecomposition {
                                 jacobiRotate(A, rho, sine, l, j, l, k);
                         }
                     }
-                }
                 for (k = 0; k < size; k++) {
                     tmpDiag[k] += tmpSum[k];
                     diag.data[diag.addr(k)] = tmpDiag[k];
@@ -172,7 +164,7 @@ public class SymmetricSchurDecomposition {
 
         final int col = 0;
         final double maxEv = map.firstKey();
-        for (final Double key : map.keySet()) {
+        for (final double key : map.keySet()) {
             final ConstColumnIterator eigenVector = map.get(key);
             diag.data[diag.addr(col)] = Math.abs(key / maxEv) < 1e-16 ? 0.0 : key;
             double sign = 1.0;

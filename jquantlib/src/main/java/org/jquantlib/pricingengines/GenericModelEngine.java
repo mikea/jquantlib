@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Richard Gomes
+ Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
 
@@ -21,9 +21,7 @@
  */
 
 /*
- Copyright (C) 2003 Ferdinando Ametrano
- Copyright (C) 2001, 2002, 2003 Sadruddin Rejeb
- Copyright (C) 2004, 2005 StatPro Italia srl
+ Copyright (C) 2002, 2003 Ferdinando Ametrano
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -39,14 +37,52 @@
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
 
-package org.jquantlib.processes;
+package org.jquantlib.pricingengines;
+
+import org.jquantlib.instruments.Instrument;
+import org.jquantlib.model.CalibratedModel;
 
 /**
- * This interface extends Discretization and Discretization1D interfaces
+ * Base class for some pricing engine on a particular model.
+ * <p>
+ * Derived engines only need to implement the <code>{@link calculate()}</code> method.
  *
  * @author Richard Gomes
  */
-//TODO: code review :: http://bugs.jquantlib.org/view.php?id=394
-public interface LinearDiscretization extends Discretization, Discretization1D {
+public abstract class GenericModelEngine<M extends CalibratedModel,
+                                         A extends Instrument.Arguments,
+                                         R extends Instrument.Results>
+        extends GenericEngine<A, R> {
+
+
+    //
+    // protected fields
+    //
+
+    protected M model;
+
+
+    //
+    // public methods
+    //
+
+    public GenericModelEngine(final A arguments, final R results) {
+        super(arguments, results);
+    }
+
+    public GenericModelEngine(final M model, final A arguments, final R results) {
+        super(arguments, results);
+        this.model = model;
+        this.model.addObserver(this);
+    }
+
+    public void setModel(final M model) {
+        if (this.model!=null)
+            this.model.deleteObserver(this);
+        this.model = model;
+        if (this.model!=null)
+            this.model.addObserver(this);
+        update();
+    }
 
 }

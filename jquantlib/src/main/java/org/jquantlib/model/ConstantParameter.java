@@ -27,29 +27,36 @@ import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.Constraint;
 
 /**
- * 
+ * Standard constant parameter {@latex$ a(t) = a }
+ *
  * @author Praneet Tiwari
  */
 public class ConstantParameter extends Parameter {
 
-    private static class Impl extends Parameter.Impl {
+    public ConstantParameter(final Constraint constraint) {
+        super(1, new Impl(), constraint);
+    }
+
+    public ConstantParameter(final double /* @Real */value, final Constraint constraint) {
+        super(1, new Impl(), constraint);
+        super.params.set(0, value);
+        if (!testParams(params))
+            throw new IllegalArgumentException(value + ": invalid value");
+
+    }
+
+
+    //
+    // private inner classes
+    //
+
+    private static class Impl implements Parameter.Impl {
 
         @Override
-        public double /* @Real */value(final Array params, double /* @Time */t) {
+        public double /* @Real */value(final Array params, final double /* @Time */t) {
             return params.first();
         }
     }
 
-    public ConstantParameter(final Constraint constraint) {
-        super(1, new ConstantParameter.Impl(), constraint);
-    }
 
-    public ConstantParameter(double /* @Real */value, final Constraint constraint) {
-        super(1, new ConstantParameter.Impl(), constraint);
-        params.set(0, value);
-        if (!testParams(params)) {
-            throw new IllegalArgumentException(value + ": invalid value");
-        }
-
-    }
 }

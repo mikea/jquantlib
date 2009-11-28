@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -44,20 +44,20 @@ import org.jquantlib.math.statistics.Statistics;
 import org.jquantlib.methods.montecarlo.Variate;
 
 /**
- * 
+ *
  * Base class for Monte Carlo engines
  * <p>
  * Eventually this class might offer greeks methods. Deriving a class from McSimulation gives an easy way to write a Monte Carlo
  * engine.
- * 
+ *
  * @ee McVanillaEngine
- * 
+ *
  * @author Richard Gomes
  */
 public class MCSimulation<MC extends Variate, RNG extends RandomNumberGenerator, S extends Statistics> {
 
-    
-    
+
+
 }
 
 
@@ -113,7 +113,7 @@ public class MCSimulation<MC extends Variate, RNG extends RandomNumberGenerator,
 //    static Real maxError(Real error) {
 //        return error;
 //    }
-//    
+//
 //    mutable boost::shared_ptr<MonteCarloModel<MC,RNG,S> > mcModel_;
 //    bool antitheticVariate_, controlVariate_;
 //};

@@ -26,7 +26,12 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.util.Observable;
 
 /**
- * 
+ * Term-structure consistent model class
+ * <p>
+ * This is a base class for models that can reprice exactly any discount bond.
+ *
+ * @category shortrate
+ *
  * @author Praneet Tiwari
  */
 public interface TermStructureConsistentModel extends Observable {

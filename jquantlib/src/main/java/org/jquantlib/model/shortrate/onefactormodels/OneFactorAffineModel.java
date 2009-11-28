@@ -19,7 +19,7 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.model.shortrate;
+package org.jquantlib.model.shortrate.onefactormodels;
 
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.model.AffineModel;

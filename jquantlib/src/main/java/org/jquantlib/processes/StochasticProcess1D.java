@@ -54,7 +54,6 @@ import org.jquantlib.math.matrixutilities.Matrix;
  *
  * @author Richard Gomes
  */
-//TODO: code review :: http://bugs.jquantlib.org/view.php?id=394
 public abstract class StochasticProcess1D extends StochasticProcess {
 
     static private final String ARRAY_1D_REQUIRED = "1-D array required";
@@ -75,8 +74,8 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     /**
      * @param discretization is an Object that <b>must</b> implement {@link Discretization} <b>and</b> {@link Discretization1D}.
      */
-    protected StochasticProcess1D(final LinearDiscretization discretization) {
-        super(discretization);
+    protected StochasticProcess1D(final Discretization1D discretization) {
+        super();
         this.discretization1D = discretization;
     }
 
@@ -215,6 +214,43 @@ public abstract class StochasticProcess1D extends StochasticProcess {
         QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         QL.require(dx.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         return new Array().fill( apply(x0.first(), dx.first()) );
+    }
+
+
+    //
+    // inner interfaces
+    //
+
+    /**
+     * Discretization of a stochastic process over a given time interval
+     *
+     * @author Richard Gomes
+     */
+    public interface Discretization1D {
+
+        /**
+         * Returns the drift part of the equation, i.e. {@latex$ \mu(t, x_t) }
+         */
+        public /* @Drift */double driftDiscretization(
+                    final StochasticProcess1D sp,
+                    final/* @Time */double t0, final/* @Price */double x0, final/* @Time */double dt); // XXX
+
+        /**
+         * Returns the diffusion part of the equation, i.e. {@latex$ \sigma(t, x_t) }
+         */
+        public /* @Diffusion */double diffusionDiscretization(
+                    final StochasticProcess1D sp,
+                    final/* @Time */double t0, final/* @Price */double x0, final/* @Time */double dt); // XXX
+
+        /**
+         * Returns the variance {@latex$ V(x_{t_0 + \Delta t} | x_{t_0} = x_0) } of the process after a time interval
+         * {@latex$ \Delta t } according to the given discretization. This method can be overridden in derived classes which want to
+         * hard-code a particular discretization.
+         */
+        public /* @Variance */double varianceDiscretization(
+                    final StochasticProcess1D sp,
+                    final/* @Time */double t0, final/* @Price */double x0, final/* @Time */double dt); // XXX
+
     }
 
 }

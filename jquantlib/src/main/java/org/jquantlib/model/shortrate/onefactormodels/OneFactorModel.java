@@ -21,7 +21,7 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.model.shortrate;
+package org.jquantlib.model.shortrate.onefactormodels;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -33,6 +33,9 @@ import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.methods.lattices.Tree;
 import org.jquantlib.methods.lattices.TreeLattice1D;
 import org.jquantlib.methods.lattices.TrinomialTree;
+import org.jquantlib.model.TermStructureFittingParameter;
+import org.jquantlib.model.TermStructureFittingParameter.NumericalImpl;
+import org.jquantlib.model.shortrate.ShortRateModel;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
 

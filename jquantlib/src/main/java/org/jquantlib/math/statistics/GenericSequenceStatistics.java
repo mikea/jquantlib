@@ -26,8 +26,9 @@ import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 
-//TODO: code review: license, class comments, compare against C++ sources
-public class GenericSequenceStatistics /* TODO: implements ISequenceStatistics */ {
+//TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+//FIXME: the class hierarchy is wrong :: mimic inheritence using delegate pattern (similar to TimeSeries?)
+public class GenericSequenceStatistics /* TODO: implements SequenceStatistics */ {
 
     private static final String unsufficient_sample_weight = "sampleWeight=0, unsufficient";
     private static final String unsufficient_sample_number = "sample number <=1, unsufficient";
@@ -36,17 +37,21 @@ public class GenericSequenceStatistics /* TODO: implements ISequenceStatistics *
 
     protected int dimension_;
 
-    protected IStatistics[] stats_;
+    protected Statistics[] stats_;
     private double[] results_;
     private Matrix quadraticSum_;
 
     public GenericSequenceStatistics() {
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
         dimension_ = 0;
     };
 
     public GenericSequenceStatistics(final int dimension) {
-        dimension_ = 0;
         reset(dimension_);
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+        dimension_ = 0;
     }
 
     public void add(final double [] data){
@@ -279,7 +284,7 @@ public class GenericSequenceStatistics /* TODO: implements ISequenceStatistics *
                 stats_[i].reset();
         else {
             dimension_ = dimension;
-            stats_ = new IStatistics[dimension];
+            stats_ = new Statistics[dimension];
             results_ = new double[dimension];
         }
         quadraticSum_ = new Matrix(dimension_, dimension_);

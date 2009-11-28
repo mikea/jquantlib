@@ -29,7 +29,6 @@ import org.jquantlib.math.optimization.NoConstraint;
 import org.jquantlib.math.optimization.PositiveConstraint;
 import org.jquantlib.model.ConstantParameter;
 import org.jquantlib.model.Parameter;
-import org.jquantlib.model.shortrate.OneFactorAffineModel;
 import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
 
 /**
@@ -37,9 +36,9 @@ import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
  * <p>
  * This class implements the Vasicek model defined by \f[ dr_t = a(b - r_t)dt + \sigma dW_t , \f] where \f$ a \f$, \f$ b \f$ and
  * \f$ \sigma \f$ are constants; a risk premium \f$ \lambda \f$ can also be specified.
- * 
+ *
  * @category shortrate
- * 
+ *
  * @author Praneet Tiwari
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
@@ -62,9 +61,8 @@ public class Vasicek extends OneFactorAffineModel {
 
     public Vasicek(/* @Rate */ final double r0, final double a, final double b, final double sigma, final double lambda) {
         super(4);
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         this.r0_ = r0;
 
 
@@ -117,13 +115,12 @@ public class Vasicek extends OneFactorAffineModel {
             /* @Time */ final double bondMaturity) /* @ReadOnly */ {
         double v;
         final double _a = a();
-        if (Math.abs(maturity) < Constants.QL_EPSILON) {
+        if (Math.abs(maturity) < Constants.QL_EPSILON)
             v = 0.0;
-        } else if (_a < Math.sqrt(Constants.QL_EPSILON)) {
+        else if (_a < Math.sqrt(Constants.QL_EPSILON))
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(maturity);
-        } else {
+        else
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(0.5 * (1.0 - Math.exp(-2.0 * _a * maturity)) / _a);
-        }
 
         final double /* @Real */f = discountBond(0.0, bondMaturity, r0_);
         final double /* @Real */k = discountBond(0.0, maturity, r0_) * strike;
@@ -141,12 +138,13 @@ public class Vasicek extends OneFactorAffineModel {
         return new Dynamics(a(), b(), sigma(), r0_);
     }
 
+
     @Override
     protected double A(/* @Time */ final double t, /* @Time */ final double T) /* @ReadOnly */ {
         final double /* @Real */_a = a();
-        if (_a < Math.sqrt(Constants.QL_EPSILON)) {
+        if (_a < Math.sqrt(Constants.QL_EPSILON))
             return 0.0;
-        } else {
+        else {
             final double /* @Real */sigma2 = sigma() * sigma();
             final double /* @Real */bt = B(t, T);
             return Math.exp((b() + lambda() * sigma() / _a - 0.5 * sigma2 / (_a * _a)) * (bt - (T - t)) - 0.25 * sigma2 * bt * bt
@@ -157,11 +155,10 @@ public class Vasicek extends OneFactorAffineModel {
     @Override
     protected double B(/* @Time */ final double t, /* @Time */ final double T) /* @ReadOnly */ {
         final double /* @Real */_a = a();
-        if (_a < Math.sqrt(Constants.QL_EPSILON)) {
+        if (_a < Math.sqrt(Constants.QL_EPSILON))
             return (T - t);
-        } else {
+        else
             return (1.0 - Math.exp(-_a * (T - t))) / _a;
-        }
     }
 
 

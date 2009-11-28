@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -33,9 +33,9 @@ import org.jquantlib.termstructures.YieldTermStructure;
  * This class describes the stochastic process for a stock or
  * stock index paying a continuous dividend yield given by
  * {@latex[ dS(t, S) = (r(t) - q(t) - \frac{\sigma(t, S)^2}{2}) dt }
- * 
+ *
  * @author Richard Gomes
- */ 
+ */
 public class BlackScholesMertonProcess extends GeneralizedBlackScholesProcess {
 
     public BlackScholesMertonProcess(
@@ -51,7 +51,7 @@ public class BlackScholesMertonProcess extends GeneralizedBlackScholesProcess {
             final Handle<YieldTermStructure> dividendTS,
             final Handle<YieldTermStructure> riskFreeTS,
             final Handle<BlackVolTermStructure> blackVolTS,
-            final LinearDiscretization discretization) {
+            final StochasticProcess1D.Discretization1D discretization) {
     	super(x0, dividendTS, riskFreeTS, blackVolTS, discretization);
     }
 

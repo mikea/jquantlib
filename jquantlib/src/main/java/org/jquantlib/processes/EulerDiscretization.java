@@ -41,17 +41,22 @@
 
 package org.jquantlib.processes;
 
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 
 
 /**
+ * Euler discretization for stochastic processes
+ *
+ * @category processes
  *
  * @author Richard Gomes
  */
-// TODO: class comments
-//TODO: code review :: http://bugs.jquantlib.org/view.php?id=394
-public class EulerDiscretization implements LinearDiscretization {
+@QualityAssurance(quality=Quality.Q2_RESEMBLANCE, version=Version.V097, reviewers="Richard Gomes")
+public class EulerDiscretization implements StochasticProcess.Discretization, StochasticProcess1D.Discretization1D {
 
     //
     // Implements Discretization

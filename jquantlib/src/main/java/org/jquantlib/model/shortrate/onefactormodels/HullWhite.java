@@ -32,9 +32,9 @@ import org.jquantlib.math.Constants;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.methods.lattices.TrinomialTree;
+import org.jquantlib.model.NullParameter;
 import org.jquantlib.model.Parameter;
-import org.jquantlib.model.shortrate.NullParameter;
-import org.jquantlib.model.shortrate.TermStructureFittingParameter;
+import org.jquantlib.model.TermStructureFittingParameter;
 import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.Compounding;
@@ -58,9 +58,13 @@ import org.jquantlib.time.TimeGrid;
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class HullWhite extends Vasicek implements TermStructureConsistentModel {
 
-    // need permanent solution for this one
     private final TermStructureConsistentModelClass termStructureConsistentModelClass;
+
     private Parameter phi_;
+
+    //
+    // public constructors
+    //
 
     public HullWhite(final Handle<YieldTermStructure> termStructure) {
         this(termStructure, 0.1, 0.01);
@@ -80,64 +84,16 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         super(termStructure.currentLink().forwardRate(0.0, 0.0, Compounding.Continuous, Frequency.NoFrequency).rate(),
                 a, 0.0, sigma, 0.0);
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         termStructureConsistentModelClass = new TermStructureConsistentModelClass(termStructure);
         b_ = new NullParameter();
         lambda_ = new NullParameter();
         generateArguments();
 
-        // TODO: code review :: please verify against QL/C++ code
-        // seems like we should have this.termStructure
-
-        termStructure.addObserver(this);
-        //XXX:registerWith
-        //registerWith(termStructure);
+        termStructureConsistentModelClass.termStructure().addObserver(this);
     }
-
-    @Override
-    public Lattice tree(final TimeGrid grid) {
-        final TermStructureFittingParameter phi = new TermStructureFittingParameter(termStructureConsistentModelClass.termStructure());
-        // needed to activate the above constructor
-        final ShortRateDynamics numericDynamics = (new Dynamics(phi, a(), sigma()));
-        final TrinomialTree trinomial = new TrinomialTree(numericDynamics.process(), grid, true);
-        final ShortRateTree numericTree = null;// new ShortRateTree(trinomial, numericDynamics, grid);
-
-        // typedef TermStructureFittingParameter::NumericalImpl NumericalImpl;
-        final TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl) phi.implementation();
-        impl.reset();
-        for (int /* @Size */i = 0; i < (grid.size() - 1); i++) {
-            final double /* @Real */discountBond = termStructureConsistentModelClass.termStructure().currentLink().discount(grid.at(i + 1));
-            final Array statePrices = numericTree.statePrices(i);
-            final int /* @Size */size = numericTree.size(i);
-            final double /* @Time */dt = numericTree.timeGrid().dt(i);
-            final double /* @Real */dx = trinomial.dx(i);
-            double /* @Real */x = trinomial.underlying(i, 0);
-            double /* @Real */value = 0.0;
-            for (int /* @Size */j = 0; j < size; j++) {
-                value += statePrices.get(j) * Math.exp(-x * dt);
-                x += dx;
-            }
-            value = Math.log(value / discountBond) / dt;
-            // impl->set(grid[i], value);
-            impl.set(grid.index(i), value); // ???????????????
-        }
-        return numericTree;
-    }
-
-    @Override
-    protected double A(/* @Time */ final double t, /* @Time */ final double T) /* @ReadOnly */ {
-        final double /* @DiscountFactor */discount1 = termStructureConsistentModelClass.termStructure().currentLink().discount(t);
-        final double /* @DiscountFactor */discount2 = termStructureConsistentModelClass.termStructure().currentLink().discount(T);
-        final double /* @Rate */forward = termStructureConsistentModelClass.termStructure().currentLink().forwardRate(t, t,
-                Compounding.Continuous, Frequency.NoFrequency).rate();
-        final double /* @Real */temp = sigma() * B(t, T);
-        final double /* @Real */value = B(t, T) * forward - 0.25 * temp * temp * B(0.0, 2.0 * t);
-        return Math.exp(value) * discount2 / discount1;
-    }
-
 
     //
     // protected methods
@@ -148,6 +104,10 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         phi_ = new FittingParameter(termStructureConsistentModelClass.termStructure(), a(), sigma());
     }
 
+    //
+    // public methods
+    //
+
     @Override
     public double discountBondOption(
             final Option.Type type,
@@ -157,11 +117,10 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
 
         final double /* @Real */_a = a();
         double /* @Real */v;
-        if (_a < Math.sqrt(Constants.QL_EPSILON)) {
+        if (_a < Math.sqrt(Constants.QL_EPSILON))
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(maturity);
-        } else {
+        else
             v = sigma() * B(maturity, bondMaturity) * Math.sqrt(0.5 * (1.0 - Math.exp(-2.0 * _a * maturity)) / _a);
-        }
         final double /* @Real */f = termStructureConsistentModelClass.termStructure().currentLink().discount(bondMaturity);
         final double /* @Real */k = termStructureConsistentModelClass.termStructure().currentLink().discount(maturity) * strike;
 
@@ -174,12 +133,12 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
      *  <p>
      *  G. Kirikos, D. Novak, "Convexity Conundrums", Risk Magazine, March 1997.
      *
-     *  @notr t and T should be expressed in yearfraction using deposit day counter, F_quoted is futures' market price.
+     *  @note t and T should be expressed in yearfraction using deposit day counter, F_quoted is futures' market price.
      */
-    public static /* @Rate */ double convexityBias(
+    public /* @Rate */ double convexityBias(
             final double futurePrice,
-            /* @Time */ final double t,
-            /* @Time */ final double T,
+            final /* @Time */ double t,
+            final /* @Time */ double T,
             final double sigma,
             final double a) {
 
@@ -207,6 +166,77 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
         return (1.0 - Math.exp(-z)) * (futureRate + 1.0 / (T - t));
     }
 
+
+    //
+    // overrides OneFactorModel
+    //
+
+    @Override
+    public Lattice tree(final TimeGrid grid) {
+        final TermStructureFittingParameter phi = new TermStructureFittingParameter(termStructureConsistentModelClass.termStructure());
+        // needed to activate the above constructor
+        final ShortRateDynamics numericDynamics = (new Dynamics(phi, a(), sigma()));
+        final TrinomialTree trinomial = new TrinomialTree(numericDynamics.process(), grid, true);
+        final ShortRateTree numericTree = new OneFactorModel.ShortRateTree(trinomial, numericDynamics, grid);
+
+        // typedef TermStructureFittingParameter::NumericalImpl NumericalImpl;
+        final TermStructureFittingParameter.NumericalImpl impl = (TermStructureFittingParameter.NumericalImpl) phi.implementation();
+        impl.reset();
+        for (int /* @Size */i = 0; i < (grid.size() - 1); i++) {
+            final double /* @Real */discountBond = termStructureConsistentModelClass.termStructure().currentLink().discount(grid.at(i + 1));
+            final Array statePrices = numericTree.statePrices(i);
+            final int /* @Size */size = numericTree.size(i);
+            final double /* @Time */dt = numericTree.timeGrid().dt(i);
+            final double /* @Real */dx = trinomial.dx(i);
+            double /* @Real */x = trinomial.underlying(i, 0);
+            double /* @Real */value = 0.0;
+            for (int /* @Size */j = 0; j < size; j++) {
+                value += statePrices.get(j) * Math.exp(-x * dt);
+                x += dx;
+            }
+            value = Math.log(value / discountBond) / dt;
+            // impl->set(grid[i], value);
+            impl.set(grid.index(i), value); // ???????????????
+        }
+        return numericTree;
+    }
+
+
+    //
+    // overrides Vasicek
+    //
+
+    @Override
+    protected double A(/* @Time */ final double t, /* @Time */ final double T) /* @ReadOnly */ {
+        final double /* @DiscountFactor */discount1 = termStructureConsistentModelClass.termStructure().currentLink().discount(t);
+        final double /* @DiscountFactor */discount2 = termStructureConsistentModelClass.termStructure().currentLink().discount(T);
+        final double /* @Rate */forward = termStructureConsistentModelClass.termStructure().currentLink().forwardRate(t, t,
+                Compounding.Continuous, Frequency.NoFrequency).rate();
+        final double /* @Real */temp = sigma() * B(t, T);
+        final double /* @Real */value = B(t, T) * forward - 0.25 * temp * temp * B(0.0, 2.0 * t);
+        return Math.exp(value) * discount2 / discount1;
+    }
+
+
+    @Override
+    public ShortRateDynamics dynamics() {
+        return (new Dynamics(phi_, a(), sigma()));
+    }
+
+    //
+    // implements TermStructureConsistentModel
+    //
+
+    @Override
+    public Handle<YieldTermStructure> termStructure() {
+        return termStructureConsistentModelClass.termStructure();
+    }
+
+
+    //
+    // static inner classes
+    //
+
     /**
      * Analytical term-structure fitting parameter \f$ \varphi(t) \f$.
      *
@@ -216,37 +246,39 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
      * <p>
      * where {@latex$ f(t) } is the instantaneous forward rate at {@latex$ t }.
      */
-    public class FittingParameter extends TermStructureFittingParameter {
+    static private class FittingParameter extends TermStructureFittingParameter {
 
-        private class Impl extends Parameter.Impl {
+        public FittingParameter(final Handle<YieldTermStructure> termStructure, final double a, final double sigma) {
+            super(new Impl(termStructure, a, sigma));
+        }
 
-            public Impl(final Handle<YieldTermStructure> termStructure, final double a, final double sigma) {
-                this.termStructure_ = termStructure;
-                this.a_ = a;
-                this.sigma_ = sigma;
+
+        //
+        // private inner classes
+        //
+
+        static private class Impl implements Parameter.Impl {
+
+            private final Handle<YieldTermStructure> termStructure;
+            private final double a;
+            private final double sigma;
+
+            public Impl(
+                    final Handle<YieldTermStructure> termStructure,
+                    final double a,
+                    final double sigma) {
+                this.termStructure = termStructure;
+                this.a = a;
+                this.sigma = sigma;
             }
-
-            private final Handle<YieldTermStructure> termStructure_;
-            private final double a_, sigma_;
 
             @Override
             public double value(final Array params, final double t) {
-                final double forwardRate =
-                    termStructure_.currentLink().forwardRate(t, t, Compounding.Continuous, Frequency.NoFrequency).rate();
-                final double temp = sigma_*(1.0 - Math.exp(-a_*t))/a_;
+                final double forwardRate = termStructure.currentLink().forwardRate(
+                        t, t, Compounding.Continuous, Frequency.NoFrequency).rate();
+                final double temp = sigma*(1.0 - Math.exp(-a*t))/a;
                 return (forwardRate + 0.5*temp*temp);
             }
-        }
-
-        public FittingParameter(final Handle<YieldTermStructure> termStructure, final double a, final double sigma) {
-            super(termStructure);
-
-
-
-            throw new UnsupportedOperationException("work in progress");
-            //FIXME: change class hierarchy -> use static inner classes ?
-            //super(new Impl(termStructure, a, sigma));
-
         }
 
     }
@@ -281,18 +313,6 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
             return x + fitting_.get(t);
         }
 
-    }
-
-
-    @Override
-    public ShortRateDynamics dynamics() {
-        return (new Dynamics(phi_, a(), sigma()));
-    }
-
-    @Override
-    public Handle<YieldTermStructure> termStructure() {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

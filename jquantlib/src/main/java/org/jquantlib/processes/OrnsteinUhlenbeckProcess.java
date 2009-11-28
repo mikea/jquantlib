@@ -115,30 +115,32 @@ public class OrnsteinUhlenbeckProcess extends StochasticProcess1D {
         return volatility_;
     }
 
+    @Override
     public double /* @Real */expectation(
-            final Double /* @Time */t0,
-            final Double /* @Real */x0,
-            final Double /* @Time */dt) {
+            final double /* @Time */t0,
+            final double /* @Real */x0,
+            final double /* @Time */dt) {
         return level_ + (x0 - level_) * Math.exp(-speed_ * dt);
     }
 
+    @Override
     public double /* @Real */stdDeviation(
-            final Double /* @Time */t0,
-            final Double /* @Real */x0,
-            final Double /* @Time */dt) {
+            final double /* @Time */t0,
+            final double /* @Real */x0,
+            final double /* @Time */dt) {
         return Math.sqrt(variance(t0, x0, dt));
     }
 
+    @Override
     public double /* @Real */variance(
-            final Double /* @Time */t0,
-            final Double /* @Real */x0,
-            final Double /* @Time */dt) {
-        if (speed_ < Math.sqrt(Constants.QL_EPSILON)) {
+            final double /* @Time */t0,
+            final double /* @Real */x0,
+            final double /* @Time */dt) {
+        if (speed_ < Math.sqrt(Constants.QL_EPSILON))
             // algebraic limit for small speed
             return volatility_ * volatility_ * dt;
-        } else {
+        else
             return 0.5 * volatility_ * volatility_ / speed_ * (1.0 - Math.exp(-2.0 * speed_ * dt));
-        }
     }
 
 }

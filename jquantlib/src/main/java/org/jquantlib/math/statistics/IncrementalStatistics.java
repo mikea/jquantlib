@@ -19,7 +19,23 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+/*
+ Copyright (C) 2003 Ferdinando Ametrano
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
 
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
 
 package org.jquantlib.math.statistics;
 
@@ -27,7 +43,18 @@ import java.util.List;
 
 import org.jquantlib.QL;
 
-public class IncrementalStatistics /*implements IStatistics*/ {
+
+/**
+ * Statistics tool based on incremental accumulation
+ * <p>
+ * It can accumulate a set of data and return statistics
+ * (e.g: mean, variance, skewness, kurtosis, error estimation, etc.)
+ *
+ * @warning high moments are numerically unstable for high average/standardDeviation ratios.
+ *
+ * @author Ueli Hofstetter
+ */
+public class IncrementalStatistics {
 
     private static final String unsufficient_sample_weight = "sampleWeight_=0, unsufficient";
     private static final String unsufficient_sample_number = "sample number <=1, unsufficient";
@@ -45,24 +72,33 @@ public class IncrementalStatistics /*implements IStatistics*/ {
 
 
 
-    public IncrementalStatistics(){
+    public IncrementalStatistics() {
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
         reset();
     }
 
-    public void addSequence(final List<Double> data, final int beginData, final List<Double> weight, final int beginWeight, final int lenght){
-        for(int i = 0; i<lenght; i++)
-            add(data.get(beginData+i), weight.get(beginWeight+i));
+    public void addSequence(
+            final List<Double> data,
+            final int beginData,
+            final List<Double> weight,
+            final int beginWeight,
+            final int lenght) {
+        for (int i = 0; i < lenght; i++)
+            add(data.get(beginData + i), weight.get(beginWeight + i));
     }
 
-    public void addSequence(final List<Double> data, final int beginData, final int lenght){
-        for(int i=0; i<lenght; i++)
+    public void addSequence(
+            final List<Double> data,
+            final int beginData,
+            final int lenght) {
+        for (int i = 0; i < lenght; i++)
             add(data.get(beginData + i));
     }
 
-
-    public void add(final double value, final double weight) {
+    public void add(
+            final double value,
+            final double weight) {
         QL.require(weight >= 0.0, unsufficient_sample_weight); // QA:[RG]::verified
 
         final int oldSamples = sampleNumber_;
@@ -93,7 +129,7 @@ public class IncrementalStatistics /*implements IStatistics*/ {
         }
     }
 
-    public void add(final double data){
+    public void add(final double data) {
         add(data, 1.0);
     }
 
@@ -118,26 +154,23 @@ public class IncrementalStatistics /*implements IStatistics*/ {
         result *= sampleNumber_ / (sampleNumber_ - 1.0);
         result *= sampleNumber_ / (sampleNumber_ - 2.0);
         result *= (sampleNumber_ + 1.0) / (sampleNumber_ - 3.0);
-        return result-c;
+        return result - c;
     }
 
-
     public double max() {
-        if(samples()<=0)
+        if (samples() <= 0)
             throw new IllegalArgumentException(empty_sample_set);
         return max_;
     }
 
-
     public double mean() {
-        if(sampleWeight_<=0.0)
+        if (sampleWeight_ <= 0.0)
             throw new IllegalArgumentException(unsufficient_sample_weight);
-        return sum_/sampleWeight_;
+        return sum_ / sampleWeight_;
     }
 
-
     public double min() {
-        if(samples()<=0)
+        if (samples() <= 0)
             throw new IllegalArgumentException(empty_sample_set);
         return min_;
     }
@@ -156,78 +189,74 @@ public class IncrementalStatistics /*implements IStatistics*/ {
         fourthPowerSum_ = 0.0;
     }
 
-
     public int samples() {
         return sampleNumber_;
     }
 
-
     public double skewness() {
-        if(sampleNumber_ <= 2)
+        if (sampleNumber_ <= 2)
             throw new IllegalArgumentException(unsufficient_sample_number_2);
         final double s = standardDeviation();
 
-        if(s==0.0)
+        if (s == 0.0)
             return 0.0;
 
         final double m = mean();
-        double result = cubicSum_/sampleWeight_;
-        result -= 3.0*m*(quadraticSum_/sampleWeight_);
-        result += 2.0*m*m*m;
-        result /= s*s*s;
-        result *= sampleNumber_/(sampleNumber_-1.0);
-        result *= sampleNumber_/(sampleNumber_-2.0);
+        double result = cubicSum_ / sampleWeight_;
+        result -= 3.0 * m * (quadraticSum_ / sampleWeight_);
+        result += 2.0 * m * m * m;
+        result /= s * s * s;
+        result *= sampleNumber_ / (sampleNumber_ - 1.0);
+        result *= sampleNumber_ / (sampleNumber_ - 2.0);
         return result;
     }
-
 
     public double standardDeviation() {
         return Math.sqrt(variance());
     }
 
     public double variance() {
-        if(sampleWeight_<=0.0)
+        if (sampleWeight_ <= 0.0)
             throw new IllegalArgumentException(unsufficient_sample_weight);
-        if(sampleNumber_<=1)
+        if (sampleNumber_ <= 1)
             throw new IllegalArgumentException(unsufficient_sample_number);
         final double m = mean();
-        double v = quadraticSum_/sampleWeight_;
-        v -=m*m;
+        double v = quadraticSum_ / sampleWeight_;
+        v -= m * m;
         v *= sampleNumber_ / (sampleNumber_ - 1.0);
 
-        if(v<0.0)
+        if (v < 0.0)
             throw new IllegalArgumentException(negative_variance + v);
 
         return v;
 
     }
 
-
     public double weightSum() {
         return sampleWeight_;
     }
 
-    public double downsideVariance(){
-        if(downsideSampleWeight_ == 0.0){
-            if(sampleWeight_<= 0.0)
+    public double downsideVariance() {
+        if (downsideSampleWeight_ == 0.0) {
+            if (sampleWeight_ <= 0.0)
                 throw new IllegalArgumentException(unsufficient_sample_weight);
             return 0.0;
         }
-        if(downsideSampleNumber_ <= 1)
+        if (downsideSampleNumber_ <= 1)
             throw new IllegalArgumentException(unsufficient_sample_number);
 
-        return (downsideSampleNumber_/(downsideSampleNumber_-1.0))*
-        (downsideQuadraticSum_ /downsideSampleWeight_);
+        return (downsideSampleNumber_ / (downsideSampleNumber_ - 1.0)) * (downsideQuadraticSum_ / downsideSampleWeight_);
     }
 
-    public double downsideDeviation(){
+    public double downsideDeviation() {
         return Math.sqrt(downsideVariance());
     }
 
-    public double errorEstimate(){
+    public double errorEstimate() {
         final double var = variance();
-        if(samples() <= 0)
+        if (samples() <= 0)
             throw new IllegalArgumentException(empty_sample_set);
-        return Math.sqrt(var/samples());
+        return Math.sqrt(var / samples());
     }
+
 }

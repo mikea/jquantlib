@@ -175,7 +175,7 @@ public class VisitorTest {
 		private static class DoubleVisitor implements Visitor<Number> {
 			@Override
 			public void visit(final Number o) {
-				final Double obj = (Double)o;
+				final double obj = (Double)o;
 				QL.info("Double :: "+obj);
 			}
 		}

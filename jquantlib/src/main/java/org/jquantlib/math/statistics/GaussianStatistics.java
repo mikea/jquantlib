@@ -30,9 +30,9 @@ import org.jquantlib.math.distributions.NormalDistribution;
 // TODO: code review :: please verify against QL/C++ code
 public class GaussianStatistics /*implements IStatistics*/ /*aka genericgaussianStatistics*/ {
 
-    private final IStatistics statistics;
+    private final Statistics statistics;
 
-    public GaussianStatistics(final IStatistics statistics) {
+    public GaussianStatistics(final Statistics statistics) {
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
         this.statistics = statistics;

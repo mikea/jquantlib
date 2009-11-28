@@ -99,7 +99,7 @@ public abstract class Option extends Instrument {
             this.value = type;
         }
 
-        private final String UNKNOWN_OPTION_TYPE = "unknown option type";
+        static public final String UNKNOWN_OPTION_TYPE = "unknown option type";
 
         /**
          * This method returns the <i>mathematical signal</i> associated to an option type.
@@ -112,13 +112,12 @@ public abstract class Option extends Instrument {
 
         @Override
         public String toString() {
-            if (value==1) {
+            if (value==1)
                 return "Call";
-            } else if (value==-1) {
+            else if (value==-1)
                 return "Put";
-            } else {
+            else
                 throw new LibraryException(UNKNOWN_OPTION_TYPE);
-            }
         }
     }
 

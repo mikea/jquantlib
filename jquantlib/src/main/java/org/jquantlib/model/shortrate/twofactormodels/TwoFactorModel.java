@@ -19,7 +19,7 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.model.shortrate;
+package org.jquantlib.model.shortrate.twofactormodels;
 
 import java.util.ArrayList;
 
@@ -27,6 +27,8 @@ import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.methods.lattices.TreeLattice2D;
 import org.jquantlib.methods.lattices.TrinomialTree;
+import org.jquantlib.model.shortrate.ShortRateModel;
+import org.jquantlib.model.shortrate.StochasticProcessArray;
 import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;

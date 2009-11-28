@@ -20,7 +20,7 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.model.shortrate;
+package org.jquantlib.model;
 
 import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.QL;
@@ -29,13 +29,12 @@ import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.NoConstraint;
-import org.jquantlib.model.Parameter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 
 /**
  * Deterministic time-dependent parameter used for yield-curve fitting.
- * 
+ *
  * @author Praneet Tiwari
  */
 @QualityAssurance(quality=Quality.Q3_DOCUMENTATION, version=Version.V097, reviewers="Richard Gomes")
@@ -50,8 +49,7 @@ public class TermStructureFittingParameter extends Parameter {
     }
 
     public TermStructureFittingParameter(final Handle <YieldTermStructure> term) {
-        super(0, null, new NoConstraint());
-        super.impl = new NumericalImpl(term);
+        super(0, new NumericalImpl(term), new NoConstraint());
     }
 
 
@@ -59,15 +57,15 @@ public class TermStructureFittingParameter extends Parameter {
     // protected inner classes
     //
 
-    public class NumericalImpl extends Parameter.Impl {
+    static public class NumericalImpl implements Parameter.Impl {
 
         //
         // private fields
         //
 
-        private final ArrayDoubleList times_;
-        private final ArrayDoubleList values_;
-        private final Handle<YieldTermStructure> termStructure_;
+        private final ArrayDoubleList times;
+        private final ArrayDoubleList values;
+        private final Handle<YieldTermStructure> termStructure;
 
 
         //
@@ -75,35 +73,35 @@ public class TermStructureFittingParameter extends Parameter {
         //
 
         public NumericalImpl(final Handle<YieldTermStructure> termStructure) {
-            this.times_  = new ArrayDoubleList();
-            this.values_ = new ArrayDoubleList();
-            this.termStructure_ = termStructure;
+            this.times  = new ArrayDoubleList();
+            this.values = new ArrayDoubleList();
+            this.termStructure = termStructure;
         }
 
-        public void set(/* @Time */ final double t, final double x) {
-            times_.add(t);
-            values_.add(x);
+        public void set(final /* @Time */ double t, final double x) {
+            times.add(t);
+            values.add(x);
         }
 
         public void change(final double x) {
-            final int last = values_.size()-1;
-            values_.set(last, x);
+            final int last = values.size()-1;
+            values.set(last, x);
         }
 
         public void reset() {
-            times_.clear();
-            values_.clear();
+            times.clear();
+            values.clear();
         }
 
         @Override
         public double value(final Array  ref, /* @Time */ final double t) /* @ReadOnly */ {
-            final int index = times_.indexOf(t);
+            final int index = times.indexOf(t);
             QL.require(index > -1, "fitting parameter not set!"); // TODO: message
-            return values_.getDouble(index);
+            return values.getDouble(index);
         }
 
         public final Handle<YieldTermStructure> termStructure() /* @ReadOnly */ {
-            return termStructure_;
+            return termStructure;
         }
     }
 }

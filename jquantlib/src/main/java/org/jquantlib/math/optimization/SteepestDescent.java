@@ -63,7 +63,7 @@ public class SteepestDescent extends LineSearchBasedMethod {
             t = lineSearch_.evaluate(P, ecType, endCriteria, t);
             if (lineSearch_.succeed_ == false) throw new ArithmeticException("line search failed");
             // End
-            end = endCriteria.bracket_operator(iterationNumber,
+            end = endCriteria.get(iterationNumber,
                     stationaryStateIterationNumber_,
                     true, //FIXME: it should be in the problem
                     P.functionValue(),

@@ -58,7 +58,6 @@ import org.jquantlib.util.Observer;
  *
  * @author Richard Gomes
  */
-//TODO: code review :: http://bugs.jquantlib.org/view.php?id=394
 public abstract class StochasticProcess implements Observable, Observer {
 
     //
@@ -77,8 +76,7 @@ public abstract class StochasticProcess implements Observable, Observer {
     /**
      * @param discretization is an Object that <b>must</b> implement {@link Discretization}.
      */
-    protected StochasticProcess(final /*LinearDiscretization*/ Discretization discretization) {
-        super();
+    protected StochasticProcess(final Discretization discretization) {
         QL.require(discretization!=null , "null discretization"); // QA:[RG]::verified // FIXME: message
         this.discretization = discretization;
     }
@@ -261,6 +259,43 @@ public abstract class StochasticProcess implements Observable, Observer {
     @Override
     public List<Observer> getObservers() {
         return delegatedObservable.getObservers();
+    }
+
+
+    //
+    // inner interfaces
+    //
+
+    /**
+     * Discretization of a stochastic process over a given time interval
+     *
+     * @author Richard Gomes
+     */
+    public interface Discretization {
+
+        /**
+         * Returns the drift part of the equation, i.e., {@latex$ \mu(t, \mathrm{x}_t) }
+         */
+        public Array driftDiscretization(
+                    final StochasticProcess sp,
+                    final/* @Time */double t0, final Array x0, final/* @Time */double dt);
+
+        /**
+         * Returns the diffusion part of the equation, i.e. {@latex$ \sigma(t, \mathrm{x}_t) }
+         */
+        public Matrix diffusionDiscretization(
+                    final StochasticProcess sp,
+                    final/* @Time */double t0, final Array x0, final/* @Time */double dt);
+
+        /**
+         * Returns the covariance {@latex$ V(\mathrm{x}_{t_0 + \Delta t} | \mathrm{x}_{t_0} = \mathrm{x}_0) } of the process after a
+         * time interval {@latex$ \Delta t } according to the given discretization. This method can be overridden in derived classes
+         * which want to hard-code a particular discretization.
+         */
+        public Matrix covarianceDiscretization(
+                    final StochasticProcess sp,
+                    final/* @Time */double t0, final Array x0, final/* @Time */double dt);
+
     }
 
 }

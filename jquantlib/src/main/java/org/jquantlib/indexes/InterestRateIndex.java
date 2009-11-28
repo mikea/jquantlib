@@ -26,6 +26,7 @@ import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.currencies.Currency;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Calendar;
@@ -128,20 +129,19 @@ public abstract class InterestRateIndex extends Index implements Observer {
         QL.require(isValidFixingDate(fixingDate) , "Fixing date is not valid"); // QA:[RG]::verified // TODO: message
         final Date today = new Settings().evaluationDate();
         final boolean enforceTodaysHistoricFixings = new Settings().isEnforcesTodaysHistoricFixings();
-        if (fixingDate.le(today) || (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing)) {
+
+        if (fixingDate.le(today) || (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing))
             // must have been fixed
-            final Double pastFixing = IndexManager.getInstance().get(name()).find(fixingDate);
-            QL.require(pastFixing != null , "Missing fixing for " + fixingDate); // QA:[RG]::verified // TODO: message
-            return pastFixing;
-        }
+            try {
+                return IndexManager.getInstance().get(name()).find(fixingDate);
+            } catch (final Exception e) {
+                throw new LibraryException("Missing fixing for " + fixingDate, e);
+            }
+
         if ((fixingDate.equals(today)) && !forecastTodaysFixing)
             // might have been fixed
             try {
-                final Double pastFixing = IndexManager.getInstance().get(name()).find(fixingDate);
-                if (pastFixing != null)
-                    return pastFixing;
-                else
-                    ; // fall through and forecast
+                return IndexManager.getInstance().get(name()).find(fixingDate);
             } catch (final Exception e) {
                 ; // fall through and forecast
             }

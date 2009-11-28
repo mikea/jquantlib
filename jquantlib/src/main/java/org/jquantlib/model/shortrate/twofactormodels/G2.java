@@ -1,7 +1,7 @@
 /*
-Copyright (C)
-2008 Praneet Tiwari
-2009 Ueli Hofstetter
+Copyright (C) 2008 Praneet Tiwari
+Copyright (C) 2009 Ueli Hofstetter
+Copyright (C) 2009 Richard Gomes
 
 This source code is release under the BSD License.
 
@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.instruments.Option;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
@@ -36,8 +39,7 @@ import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.model.AffineModel;
 import org.jquantlib.model.Parameter;
-import org.jquantlib.model.shortrate.TermStructureFittingParameter;
-import org.jquantlib.model.shortrate.TwoFactorModel;
+import org.jquantlib.model.TermStructureFittingParameter;
 import org.jquantlib.model.shortrate.onefactormodels.TermStructureConsistentModel;
 import org.jquantlib.model.shortrate.onefactormodels.TermStructureConsistentModelClass;
 import org.jquantlib.processes.OrnsteinUhlenbeckProcess;
@@ -59,7 +61,9 @@ import org.jquantlib.time.Frequency;
  * @category shortrate
  *
  * @author Praneet Tiwari
+ * @author Richard Gomes
  */
+@QualityAssurance(quality=Quality.Q0_UNFINISHED, version=Version.V097, reviewers="Richard Gomes")
 public class G2 extends TwoFactorModel implements AffineModel, TermStructureConsistentModel {
 
     private static final String g2_model_needs_two_factors = "g2 model needs two factors to compute discount bond";
@@ -74,15 +78,52 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
     private final Parameter rho_;
     private Parameter phi_;
 
-    public G2(final Handle<YieldTermStructure> termStructure, final double /* @Real */a /* = 0.1 */,
-            final double /* @Real */sigma /* = 0.01 */, final double /* @Real */b/* = 0.1 */, final double /* @Real */eta/* = 0.01 */,
-            final double /* @Real */rho/* = -0.75 */) {
+    public G2(final Handle<YieldTermStructure> termStructure) {
+        this(termStructure, 0.1, 0.01, 0.1, 0.01, -0.75);
+    }
+
+    public G2(
+            final Handle<YieldTermStructure> termStructure,
+            final double /* @Real */ a) {
+        this(termStructure, a, 0.01, 0.1, 0.01, -0.75);
+    }
+
+    public G2(
+            final Handle<YieldTermStructure> termStructure,
+            final double /* @Real */ a,
+            final double /* @Real */ sigma) {
+        this(termStructure, a, sigma, 0.1, 0.01, -0.75);
+    }
+
+    public G2(
+            final Handle<YieldTermStructure> termStructure,
+            final double /* @Real */ a,
+            final double /* @Real */ sigma,
+            final double /* @Real */ b) {
+        this(termStructure, a, sigma, b, 0.01, -0.75);
+    }
+
+    public G2(
+            final Handle<YieldTermStructure> termStructure,
+            final double /* @Real */ a,
+            final double /* @Real */ sigma,
+            final double /* @Real */ b,
+            final double /* @Real */ eta) {
+        this(termStructure, a, sigma, b, eta, -0.75);
+    }
+
+    public G2(
+            final Handle<YieldTermStructure> termStructure,
+            final double /* @Real */ a,
+            final double /* @Real */ sigma,
+            final double /* @Real */ b,
+            final double /* @Real */ eta,
+            final double /* @Real */ rho) {
         super(5);
 
         //TODO: Code review :: incomplete code
-        if (true) {
+        if (true)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         termStructureConsistentModelClass = new TermStructureConsistentModelClass(termStructure);
         a_ = (arguments_.get(0) /* [0] */);
@@ -100,10 +141,6 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
         termStructure.addObserver(this);
         //XXX:registerWith
         //registerWith(termStructure);
-    }
-
-    public G2(final Handle<YieldTermStructure> termStructure) {
-        this(termStructure, 0.1, 0.01, 0.1, 0.01, -0.75);
     }
 
     public double discountBond(final double t, final double T, final double x, final double y) {
@@ -127,8 +164,7 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
     }
 
     public double swaption(final Object object, final double range, final int intervals) {
-        throw new UnsupportedOperationException(
-                "Work in progress - need to implement swaption first. don't know whether somebody is " + " working on currently?");
+        throw new UnsupportedOperationException("work in progress");
         /*
          * Real G2::swaption(const Swaption::arguments& arguments, Real range, Size intervals) const {
          *
@@ -149,7 +185,7 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
 
     @Override
     public void generateArguments() {
-        phi_ = new TwoFactorFittingParameter(termStructureConsistentModelClass.termStructure(), a(), sigma(), b(), eta(), rho());
+        phi_ = new FittingParameter(termStructureConsistentModelClass.termStructure(), a(), sigma(), b(), eta(), rho());
     }
 
     protected double /* @Real */A(final double /* @Time */t, final double /* @Time */T) {
@@ -208,8 +244,24 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
         return Math.sqrt(value);
     }
 
-    // /////////////////////////////INNER CLASSES//////////////////////////////////
-    class Dynamics extends TwoFactorModel.ShortRateDynamics {
+
+    @Override
+    public Handle<YieldTermStructure> termStructure() {
+        return termStructureConsistentModelClass.termStructure();
+    }
+
+    @Override
+    public double discountBond(final double now, final double maturity, final Array factors) {
+        throw new UnsupportedOperationException(
+        "not sure whether this is a quantlib error - looks like they forgot to overwrite a virtual method");
+    }
+
+
+    //
+    // private inner classes
+    //
+
+    private class Dynamics extends TwoFactorModel.ShortRateDynamics {
         public Dynamics(final Parameter fitting, final double /* @Real */a, final double /* @Real */sigma, final double /* @Real */b,
                 final double /* @Real */eta, final double /* @Real */rho) {
             super(new OrnsteinUhlenbeckProcess(a, sigma, 0.0, 0.0), new OrnsteinUhlenbeckProcess(b, eta, 0.0, 0.0), rho);
@@ -224,52 +276,10 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
         private final Parameter fitting_;
     } // dynamics
 
-    // ! Analytical term-structure fitting parameter \f$ \varphi(t) \f$.
-    /*
-     * ! \f$ \varphi(t) \f$ is analytically defined by \f[ \varphi(t) = f(t) + \frac{1}{2}(\frac{\sigma(1-e^{-at})}{a})^2 +
-     * \frac{1}{2}(\frac{\eta(1-e^{-bt})}{b})^2 + \rho\frac{\sigma(1-e^{-at})}{a}\frac{\eta(1-e^{-bt})}{b}, \f] where \f$ f(t) \f$
-     * is the instantaneous forward rate at \f$ t \f$.
-     */
 
-    static class FittingParameter extends TermStructureFittingParameter {
 
-        static class Impl extends Parameter.Impl {
-
-            public Impl(final Handle<YieldTermStructure> termStructure, final double /* @Real */a, final double /* @Real */sigma, final double /*
-             * @Real
-             */b,
-             final double /* @Real */eta, final double /* @Real */rho) {
-                termStructure_ = (termStructure);
-                a_ = (a);
-                sigma_ = (sigma);
-                b_ = (b);
-                eta_ = (eta);
-                rho_ = (rho);
-            }
-
-            @Override
-            public double /* @Real */value(final Array a, final double /* @Time */t) {
-                final double /* @Rate */forward = termStructure_.currentLink().forwardRate(t, t, Compounding.Continuous,
-                        Frequency.NoFrequency).rate();
-
-                final double /* @Real */temp1 = sigma_ * (1.0 - Math.exp(-a_ * t)) / a_;
-                final double /* @Real */temp2 = eta_ * (1.0 - Math.exp(-b_ * t)) / b_;
-                final double /* @Real */value = 0.5 * temp1 * temp1 + 0.5 * temp2 * temp2 + rho_ * temp1 * temp2 + forward;
-                return value;
-            }
-
-            private final Handle<YieldTermStructure> termStructure_;
-            double /* @Real */a_, sigma_, b_, eta_, rho_;
-        }
-
-        public FittingParameter(final Handle<YieldTermStructure> termStructure, final double /* @Real */a, final double /* @Real */sigma,
-                final double /* @Real */b, final double /* @Real */eta, final double /* @Real */rho) {
-            super(new FittingParameter.Impl(termStructure, a, sigma, b, eta, rho));
-        }
-    }
-
-    // inner class
-    class SwaptionPricingFunction {
+    //TODO: code review
+    private class SwaptionPricingFunction {
 
         public SwaptionPricingFunction(final double /* @Real */a, final double /* @Real */sigma, final double /* @Real */b, final double /* @Real */eta,
                 final double /* @Real */rho, final double /* @Real */w, final double /* @Real */start,
@@ -364,9 +374,8 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
 
             public double /* @Real */op(final double /* @Real */y) {
                 double /* @Real */value = 1.0;
-                for (int /* @Size */i = 0; i < lambda_.size(); i++) {
+                for (int /* @Size */i = 0; i < lambda_.size(); i++)
                     value -= lambda_.get(i) * Math.exp(-Bb_.get(i) * y);
-                }
                 return value;
             }
 
@@ -383,14 +392,78 @@ public class G2 extends TwoFactorModel implements AffineModel, TermStructureCons
         double /* @Real */mux_, muy_, sigmax_, sigmay_, rhoxy_;
     }
 
-    @Override
-    public Handle<YieldTermStructure> termStructure() {
-        return termStructureConsistentModelClass.termStructure();
+
+
+    //
+    // static private inner classes
+    //
+
+    /**
+     * Analytical term-structure fitting parameter {@latex$ \varphi(t) }.
+     * <p>
+     * {@latex$ \varphi(t) } is analytically defined by
+     * <p>
+     * {@latex[ \varphi(t) =
+     *          f(t)
+     *          + \frac{1}{2}(\frac{\sigma(1-e^{-at})}{a})^2
+     *          + \frac{1}{2}(\frac{\eta(1-e^{-bt})}{b})^2 + \rho\frac{\sigma(1-e^{-at})}{a}\frac{\eta(1-e^{-bt})}{b} },
+     * <p>
+     * where {@latex$ f(t)} is the instantaneous forward rate at {@latex$ t}.
+     */
+    static class FittingParameter extends TermStructureFittingParameter {
+
+        public FittingParameter(
+                final Handle<YieldTermStructure> termStructure,
+                final double /* @Real */a,
+                final double /* @Real */sigma,
+                final double /* @Real */b,
+                final double /* @Real */eta,
+                final double /* @Real */rho) {
+            super(new Impl(termStructure, a, sigma, b, eta, rho));
+        }
+
+
+        //
+        // static private inner classes
+        //
+
+        static private class Impl implements Parameter.Impl {
+
+            private final Handle<YieldTermStructure> termStructure_;
+            double /* @Real */ a_;
+            double /* @Real */ sigma_;
+            double /* @Real */ b_;
+            double /* @Real */ eta_;
+            double /* @Real */ rho_;
+
+            public Impl(
+                    final Handle<YieldTermStructure> termStructure,
+                    final double /* @Real */ a,
+                    final double /* @Real */ sigma,
+                    final double /* @Real */ b,
+                    final double /* @Real */ eta,
+                    final double /* @Real */ rho) {
+                this.termStructure_ = (termStructure);
+                this.a_ = (a);
+                this.sigma_ = (sigma);
+                this.b_ = (b);
+                this.eta_ = (eta);
+                this.rho_ = (rho);
+            }
+
+            @Override
+            public double /* @Real */value(final Array a, final double /* @Time */t) {
+                final double /* @Rate */forward =
+                    termStructure_.currentLink().forwardRate(t, t, Compounding.Continuous, Frequency.NoFrequency).rate();
+
+                final double /* @Real */temp1 = sigma_ * (1.0 - Math.exp(-a_ * t)) / a_;
+                final double /* @Real */temp2 = eta_ * (1.0 - Math.exp(-b_ * t)) / b_;
+                final double /* @Real */value = 0.5 * temp1 * temp1 + 0.5 * temp2 * temp2 + rho_ * temp1 * temp2 + forward;
+                return value;
+            }
+
+        }
+
     }
 
-    @Override
-    public double discountBond(final double now, final double maturity, final Array factors) {
-        throw new UnsupportedOperationException(
-        "not sure whether this is a quantlib error - looks like they forgot to overwrite a virtual method");
-    }
 }

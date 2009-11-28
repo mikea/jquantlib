@@ -64,9 +64,8 @@ public class ReplicationError {
             final/* @Price */Number strike, final/* @Price */Number s0,
             final/* @Volatility */Number sigma, final/* @Rate */Number r)
     {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
 
         this.maturity_ = maturity;
@@ -92,9 +91,8 @@ public class ReplicationError {
 
     public void compute(final int nTimeSteps, final int nSamples) {
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         final Calendar calendar = new Target();
         final Date today = Date.todaysDate();

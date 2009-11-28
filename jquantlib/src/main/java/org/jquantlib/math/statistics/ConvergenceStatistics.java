@@ -46,79 +46,75 @@ as well as a copy constructor.
 \test results are tested against known good values.
 */
 public class ConvergenceStatistics {
-    
-    private IStatistics statistics;
-    private /*samplingRule*/ DoublingConvergenceSteps samplingRule_; 
+
+    private Statistics statistics;
+    private final /*samplingRule*/ DoublingConvergenceSteps samplingRule_;
     private List<Pair<Integer,Double>> table_;
     private int nextSampleSize_;
     private int sampleSize;
-    
-    public ConvergenceStatistics(IStatistics T, DoublingConvergenceSteps rule){
-        if (System.getProperty("EXPERIMENTAL") == null) {
+
+    public ConvergenceStatistics(final Statistics T, final DoublingConvergenceSteps rule){
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         this.statistics = T;
         this.samplingRule_ = rule;
         reset();
     }
-    
-    public ConvergenceStatistics(DoublingConvergenceSteps rule){
-        if (System.getProperty("EXPERIMENTAL") == null) {
+
+    public ConvergenceStatistics(final DoublingConvergenceSteps rule){
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         this.samplingRule_ = rule;
         reset();
     }
-    
+
     public int initialSamples(){
         return 1;
     }
-    
-    public int nextSamples(int current){
+
+    public int nextSamples(final int current){
         return 2*current + 1;
     }
-    
 
-    public void add(double value){
+
+    public void add(final double value){
         add(value, 1.0);
     }
-    
-    public void add(double value, double weight){
+
+    public void add(final double value, final double weight){
         this.statistics.add(value, weight);
         if(this.statistics.samples() == nextSampleSize_){
             table_.add(new Pair<Integer, Double>(statistics.samples(), statistics.mean()));
             nextSampleSize_ = samplingRule_.nextSamples(nextSampleSize_);
         }
     }
-    
-    void addSequence(double data [], int begin, int length) {
-        for (int i = 0; i<length; ++i){
+
+    void addSequence(final double data [], final int begin, final int length) {
+        for (int i = 0; i<length; ++i)
             add(data[begin + i]);
-        }
     }
-    
-    
-    public void addSequence(double [] data, int beginData, double [] weight, int beginWeight, int lenght){
-        for (int i= 0;i<lenght; ++beginData, ++beginWeight){
+
+
+    public void addSequence(final double [] data, int beginData, final double [] weight, int beginWeight, final int lenght){
+        for (final int i= 0;i<lenght; ++beginData, ++beginWeight)
             add(data[beginData+i],weight[beginWeight + i]);
-        }
     }
-    
+
     public void reset(){
         statistics.reset();
         nextSampleSize_ = samplingRule_.initialSamples();
         table_.clear();
     }
-    
+
     public List<Pair<Integer,Double>> convergenceTable(){
         return table_;
     }
-    
+
     class DoublingConvergenceSteps {
          public int initialSamples() { return 1; }
-         public int nextSamples(int current) { return 2 * current + 1; }
+         public int nextSamples(final int current) { return 2 * current + 1; }
       };
-    
+
 
 
 }

@@ -258,19 +258,17 @@ public class JumpDiffusionEngineTest {
             final double totalVol = Math.sqrt(value.jumpIntensity * jVol * jVol + diffusionVol * diffusionVol);
             final double volError = Math.abs(totalVol - value.v);
 
-            if (volError >= 1.0e-13) {
+            if (volError >= 1.0e-13)
                 throw new ArithmeticException(" mismatch");
-            }
 
             final EuropeanOption option = new EuropeanOption(payoff, exercise);
             option.setPricingEngine(engine);
 
             final double /* @Real */calculated = option.NPV();
             final double /* @Real */error = Math.abs(calculated - value.result);
-            if (error > value.tol) {
+            if (error > value.tol)
                 REPORT_FAILURE_2("value", payoff, exercise, value.s, value.q, value.r, today, value.v,
                         value.jumpIntensity, value.gamma, value.result, calculated, error, value.tol);
-            }
         }
     }
 
@@ -349,8 +347,8 @@ public class JumpDiffusionEngineTest {
 
         final Date today = new Settings().evaluationDate();
 
-        for (final Type type : types) {
-            for (final double strike : strikes) {
+        for (final Type type : types)
+            for (final double strike : strikes)
                 for (final double element : jInt) {
                     jumpIntensity.setValue(element);
                     for (final double element2 : mLJ) {
@@ -363,21 +361,20 @@ public class JumpDiffusionEngineTest {
 
                                 for (int kk = 0; kk < 1; kk++) {
                                     // option to check
-                                    if (kk == 0) {
+                                    if (kk == 0)
                                         payoff = new PlainVanillaPayoff(type, strike);
-                                    } else if (kk == 1) {
+                                    else if (kk == 1)
                                         payoff = new CashOrNothingPayoff(type, strike, 100.0);
-                                    } else if (kk == 2) {
+                                    else if (kk == 2)
                                         payoff = new AssetOrNothingPayoff(type, strike);
-                                    } else if (kk == 3) {
+                                    else if (kk == 3)
                                         payoff = new GapPayoff(type, strike, 100.0);
-                                    }
                                     final EuropeanOption option = new EuropeanOption(payoff, exercise);
                                     option.setPricingEngine(engine);
 
-                                    for (final double u : underlyings) {
-                                        for (final double q : qRates) {
-                                            for (final double r : rRates) {
+                                    for (final double u : underlyings)
+                                        for (final double q : qRates)
+                                            for (final double r : rRates)
                                                 for (final double v : vols) {
                                                     spot.setValue(u);
                                                     qRate.setValue(q);
@@ -447,30 +444,24 @@ public class JumpDiffusionEngineTest {
                                                         for (final Entry<String, Double> it : calculated.entrySet()) {
 
                                                             final String greek = it.getKey();
-                                                            final Double expct = expected.get(greek);
-                                                            final Double calcl = calculated.get(greek);
-                                                            final Double tol = tolerance.get(greek);
+                                                            final double expct = expected.get(greek);
+                                                            final double calcl = calculated.get(greek);
+                                                            final double tol = tolerance.get(greek);
 
                                                             final double error = Utilities.relativeError(expct, calcl, u);
-                                                            if (error > tol) {
+                                                            if (error > tol)
                                                                 // TODO improve error message
                                                                 // REPORT_FAILURE(greek, payoff, exercise, u, q, r, today, v, expct,
                                                                 // calcl, error, tol);
                                                                 Assert.fail("Failed on greek: " + greek);
-                                                            }
                                                         }
                                                     }
                                                 }
-                                            }
-                                        }
-                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-        }
     }
 
 

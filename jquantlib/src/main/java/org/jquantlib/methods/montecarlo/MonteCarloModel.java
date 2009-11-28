@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -42,28 +42,27 @@ import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
 import org.jquantlib.math.statistics.Statistics;
 
 /**
- * 
+ *
  * General-purpose Monte Carlo model for path samples
  * <p>
  * The template arguments of this class correspond to available policies for the particular model to be instantiated---i.e., whether
  * it is single- or multi-asset, or whether it should use pseudo-random or low-discrepancy numbers for path generation. Such
  * decisions are grouped in trait classes so as to be orthogonal---see mctraits.hpp for examples.
  * <p>
- * 
+ *
  * The constructor accepts two safe references, i.e. two smart pointers, one to a path generator and the other to a path pricer. In
  * case of control variate technique the user should provide the additional control option, namely the option path pricer and the
  * option value.
- * 
+ *
  * @category mcarlo
- * 
+ *
  * @author Richard Gomes
  */
 public class MonteCarloModel<MC extends Variate, RNG extends RandomNumberGenerator, S extends Statistics> {
-	
+
 	public MonteCarloModel() {
-        if (System.getProperty("EXPERIMENTAL")==null) {
+        if (System.getProperty("EXPERIMENTAL")==null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 	}
 
 //    private PathGeneratorType pathGenerator_;
@@ -74,17 +73,17 @@ public class MonteCarloModel<MC extends Variate, RNG extends RandomNumberGenerat
 //    private PathPricerType cvPathPricer_;
 //    private ResultType cvOptionValue_;
 //    private boolean isControlVariate_;
-    
-	public void addSamples(int size){
+
+	public void addSamples(final int size){
 		//  TODO... we have to work on this a bit.
 
 	}
-	
+
 	public S sampleAccumulator(){
 		return sampleAccumulator_;
 	}
-    
-    
+
+
 }
 
 

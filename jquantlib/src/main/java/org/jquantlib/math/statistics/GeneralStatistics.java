@@ -43,15 +43,15 @@ import org.jquantlib.util.Pair;
  * This class accumulates a set of data and returns their statistics (e.g: mean, variance, skewness, kurtosis, error estimation,
  * percentile, etc.) based on the empirical distribution (no gaussian assumption)
  * <p>
- * It doesn't suffer the numerical instability problem of IncrementalStatistics. The downside is that it stores all samples, thus
- * increasing the memory requirements.
+ * It doesn't suffer the numerical instability problem of IncrementalStatistics.
+ * The downside is that it stores all samples, thus increasing the memory requirements.
  *
  * @author Praneet Tiwari
  */
 //FIXME: changed to extending base class rather then implementing interface
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 // TODO: code review :: please verify against QL/C++ code
-public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
+public class GeneralStatistics implements Statistics {
 
     private final static String empty_sample_set =  "empty sample set";
     private final static String unsufficient_sample_size = "sample number <=1, unsufficient";
@@ -124,22 +124,17 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     public final Pair<Double, Integer> expectationValue(final Ops.DoubleOp f, final Ops.DoublePredicate inRange) {
         double num = 0.0;
         double den = 0.0;
-        int N = 0;
+        int n = 0;
         for (final Pair<Double, Double> element : samples) {
-            final double w = element.getSecond();
             final double x = element.getFirst();
-            Double evaluated = f.op(x);
-
-            // TODO: code review :: please verify against QL/C++ code
-            if(evaluated == null)
-                evaluated = 0.0;
+            final double w = element.getSecond();
             if (inRange.op(x)) {
-                num += evaluated * w;
+                num += f.op(x) * w;
                 den += w;
-                N++;
+                n++;
             }
         }
-        if (N == 0)
+        if (n == 0)
             return new Pair<Double, Integer>(0.0, 0);
         else
             return new Pair<Double, Integer>(0.0, 0);
@@ -273,8 +268,8 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
      */
     //reviewed
     public double kurtosis() {
-        final int N = getSampleSize();
-        if (N <= 3)
+        final int n = getSampleSize();
+        if (n <= 3)
             throw new IllegalArgumentException(unsufficient_sample_size_3);
 
         final List<DoubleOp> functions = new ArrayList<DoubleOp>();
@@ -284,9 +279,9 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
 
         final double x = expectationValue(comp, new TruePredicate()).getFirst();
 
-        final double _N = N;
+        final double _N = n;
         final double sigma2 = standardDeviation();
-        final double c1 = (_N/(_N-1.0)) * (_N/(_N-2.0)) * ((N+1.0)/(_N-3.0));
+        final double c1 = (_N/(_N-1.0)) * (_N/(_N-2.0)) * ((n+1.0)/(_N-3.0));
         final double c2 = 3.0 * ((_N-1.0)/(_N-2.0)) * ((_N-1.0)/(_N-3.0));
 
         return c1*(x/(sigma2*sigma2))-c2;
@@ -363,7 +358,7 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     \pre \f$ y \f$ must be in the range \f$ (0-1]. \f$
      */
     //reviewed
-    public double topPercentile(final Double percent) {
+    public double topPercentile(final double percent) {
         if (percent < 0.0 || percent > 1.0)
             throw new IllegalArgumentException("percentile (" + percent + ") must be in (0.0, 1.0]");
         final double sampleWeight = weightSum();
@@ -564,9 +559,9 @@ public class GeneralStatistics /*extends Statistics*/ implements IStatistics {
     // from class MathUtil below:
     //
 
-    
-    private static Comparator cmp = new Comparator(); 
-    
+
+    private static Comparator cmp = new Comparator();
+
     private static class Comparator {
 
         public double min(final List<Pair<Double, Double>> values) {

@@ -826,9 +826,9 @@ public class EuropeanOptionTest {
                                             for (final Entry<String, Double> it: calculated.entrySet()){
 
                                                 final String greek = it.getKey();
-                                                final Double expct = expected.get(greek);
-                                                final Double calcl = calculated.get(greek);
-                                                final Double tol   = tolerance.get(greek);
+                                                final double expct = expected.get(greek);
+                                                final double calcl = calculated.get(greek);
+                                                final double tol   = tolerance.get(greek);
 
                                                 final double error = Utilities.relativeError(expct,calcl,u);
                                                 if (error>tol)

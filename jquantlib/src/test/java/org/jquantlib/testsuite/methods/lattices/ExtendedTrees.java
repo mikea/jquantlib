@@ -94,7 +94,7 @@ public class ExtendedTrees {
         final EngineType engine = EngineType.JR;
         /* @Size */final int steps = 251;
         /* @Size */final int samples = Constants.NULL_INTEGER;
-        final Map<String, /* @Real */Double> relativeTol = new HashMap();
+        final Map<String, /* @Real */Double> relativeTol = new HashMap<String, Double>();
         relativeTol.put("value", 0.002);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
@@ -110,7 +110,7 @@ public class ExtendedTrees {
         final EngineType engine = EngineType.CRR;
         /* @Size */final int steps = 501;
         /* @Size */final int samples = Constants.NULL_INTEGER;
-        final Map<String, /* @Real */Double> relativeTol = new HashMap();
+        final Map<String, /* @Real */Double> relativeTol = new HashMap<String, Double>();
         relativeTol.put("value", 0.02);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
@@ -126,7 +126,7 @@ public class ExtendedTrees {
         final EngineType engine = EngineType.EQP;
         /* @Size */final int steps = 501;
         /* @Size */final int samples = Constants.NULL_INTEGER;
-        final Map<String, /* @Real */Double> relativeTol = new HashMap();
+        final Map<String, /* @Real */Double> relativeTol = new HashMap<String, Double>();
         relativeTol.put("value", 0.02);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
@@ -142,7 +142,7 @@ public class ExtendedTrees {
         final EngineType engine = EngineType.TGEO;
         /* @Size */final int steps = 251;
         /* @Size */final int samples = Constants.NULL_INTEGER;
-        final Map<String, /* @Real */Double> relativeTol = new HashMap();
+        final Map<String, /* @Real */Double> relativeTol = new HashMap<String, Double>();
         relativeTol.put("value", 0.002);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
@@ -158,7 +158,7 @@ public class ExtendedTrees {
         final EngineType engine = EngineType.TIAN;
         /* @Size */final int steps = 251;
         /* @Size */final int samples = Constants.NULL_INTEGER;
-        final Map<String, /* @Real */Double> relativeTol = new HashMap();
+        final Map<String, /* @Real */Double> relativeTol = new HashMap<String, Double>();
         relativeTol.put("value", 0.002);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
@@ -174,7 +174,7 @@ public class ExtendedTrees {
         final EngineType engine = EngineType.LR;
         /* @Size */final int steps = 251;
         /* @Size */final int samples = Constants.NULL_INTEGER;
-        final Map<String, /* @Real */Double> relativeTol = new HashMap();
+        final Map<String, /* @Real */Double> relativeTol = new HashMap<String, Double>();
         relativeTol.put("value", 1.0e-6);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
@@ -190,7 +190,7 @@ public class ExtendedTrees {
         final EngineType engine = EngineType.JOSHI;
         /* @Size */final int steps = 251;
         /* @Size */final int samples = Constants.NULL_INTEGER;
-        final Map<String, /* @Real */Double> relativeTol = new HashMap();
+        final Map<String, /* @Real */Double> relativeTol = new HashMap<String, Double>();
         relativeTol.put("value", 1.0e-7);
         relativeTol.put("delta", 1.0e-3);
         relativeTol.put("gamma", 1.0e-4);
@@ -201,8 +201,8 @@ public class ExtendedTrees {
     private void testEngineConsistency(final EngineType engine, final/* @Size */int binomialSteps, final/* @Size */int samples,
             final Map<String, /* @Real */Double> tolerance) {
 
-        final Map<String, /* @Real */Double> calculated = new HashMap();
-        final Map<String, /* @Real */Double> expected = new HashMap();
+        final Map<String, /* @Real */Double> calculated = new HashMap<String, Double>();
+        final Map<String, /* @Real */Double> expected = new HashMap<String, Double>();
 
         // test options
         final Option.Type types[] = { Option.Type.Call, Option.Type.Put };
@@ -226,8 +226,8 @@ public class ExtendedTrees {
         final SimpleQuote rRate = new SimpleQuote(0.0);
         final YieldTermStructure rTS = Utilities.flatRate(today, rRate, dc);
 
-        for (final Type type : types) {
-            for (final double strike : strikes) {
+        for (final Type type : types)
+            for (final double strike : strikes)
                 for (final int length : lengths) {
                     final Date exDate = today.add(length * 360);
                     final Exercise exercise = new EuropeanExercise(exDate);
@@ -240,9 +240,9 @@ public class ExtendedTrees {
                     // option to check
                     final VanillaOption option = makeOption(payoff, exercise, spot, qTS, rTS, volTS, engine, binomialSteps, samples);
 
-                    for (final double u : underlyings) {
-                        for (final double q : qRates) {
-                            for (final double r : rRates) {
+                    for (final double u : underlyings)
+                        for (final double q : qRates)
+                            for (final double r : rRates)
                                 for (final double v : vols) {
                                     spot.setValue(u);
                                     qRate.setValue(q);
@@ -271,17 +271,11 @@ public class ExtendedTrees {
                                         /* @Real */final double calcl = it.getValue();
                                         /* @Real */final double tol = tolerance.get(greek);
                                         /* @Real */final double error = Utilities.relativeError(expct, calcl, u);
-                                        if (error > tol) {
+                                        if (error > tol)
                                             REPORT_FAILURE(greek, payoff, exercise, u, q, r, today, v, expct, calcl, error, tol);
-                                        }
                                     }
                                 }
-                            }
-                        }
-                    }
                 }
-            }
-        }
     }
 
     private GeneralizedBlackScholesProcess makeProcess(final Quote u, final YieldTermStructure q, final YieldTermStructure r,

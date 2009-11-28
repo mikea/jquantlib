@@ -99,7 +99,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
             final Handle<YieldTermStructure> dividendTS,
             final Handle<YieldTermStructure> riskFreeTS,
             final Handle<BlackVolTermStructure> blackVolTS,
-            final LinearDiscretization discretization) {
+            final StochasticProcess1D.Discretization1D discretization) {
         super(discretization);
         this.x0 = x0;
         this.riskFreeRate = riskFreeTS;
