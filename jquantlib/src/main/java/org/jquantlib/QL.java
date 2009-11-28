@@ -8,7 +8,7 @@ public class QL {
     /**
      * Throws an error if a <b>pre-condition</b> is not verified
      * <p>
-     * @Note: this method should <b>never</b> be removed from bytecode by AspectJ.
+     * @note  this method should <b>never</b> be removed from bytecode by AspectJ.
      *        If you do so, you must be plenty sure of effects and risks of this decision.
      * <p>
      * @param condition is a condition to be verified
@@ -24,7 +24,7 @@ public class QL {
     /**
      * Throws an error if a <b>post-condition</b> is not verified
      * <p>
-     * @Note: this method should <b>never</b> be removed from bytecode by AspectJ.
+     * @note  this method should <b>never</b> be removed from bytecode by AspectJ.
      *        If you do so, you must be plenty sure of effects and risks of this decision.
      * <p>
      * @param condition is a condition to be verified

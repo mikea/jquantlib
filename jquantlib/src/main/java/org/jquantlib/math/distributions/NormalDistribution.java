@@ -96,8 +96,8 @@ public class NormalDistribution implements Derivative {
     //
 
 	/**
-	 * @InheritDoc
-	 *
+     * {@inheritDoc}
+     * <p>
 	 * Computes the Normal distribution at point {@latex$ x }
 	 *
 	 * @param x
@@ -115,8 +115,8 @@ public class NormalDistribution implements Derivative {
     //
 
 	/**
-	 * @InheritDoc
-	 *
+     * {@inheritDoc}
+     * <p>
 	 * Calculates the first derivative of a Normal distribution at point {@latex$ x }
 	 *
 	 * @param x

@@ -43,10 +43,12 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.time.TimeGrid;
 
 /**
- * Single-factor Hull-White (extended %Vasicek) model class.
+ * Single-factor Hull-White (extended Vasicek) model class.
  * <p>
  * This class implements the standard single-factor Hull-White model defined by
- * at <p>{@latex[ dr_t = (\theta(t) - \alpha r_t)dt + \sigma dW_t }
+ * <p>
+ * {@latex[ dr_t = (\theta(t) - \alpha r_t)dt + \sigma dW_t }
+ * <p>
  * where {@latex$ \alpha } and {@latex$ \sigma } are constants.
  *
  * @note When the term structure is relinked, the r0 parameter of the underlying Vasicek model is not updated.

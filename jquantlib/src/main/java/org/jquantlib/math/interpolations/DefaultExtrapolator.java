@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -24,7 +24,7 @@ package org.jquantlib.math.interpolations;
 
 /**
  * This class is intended to implement the default behavior of an Extrapolator.
- * 
+ *
  * @author Richard Gomes
  */
 public class DefaultExtrapolator implements Extrapolator {
@@ -32,14 +32,14 @@ public class DefaultExtrapolator implements Extrapolator {
 	//
     // private fields
     //
-    
+
     private boolean extrapolate;
 
-	
+
     //
     // public constructors
     //
-    
+
     /**
      * @category constructors
      */
@@ -47,33 +47,24 @@ public class DefaultExtrapolator implements Extrapolator {
 		this.extrapolate = false;
 	}
 
-	
+
 	//
 	// implements Extrapolator
 	//
-	
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void enableExtrapolation() {
 		extrapolate = true;
 	}
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
 	public void disableExtrapolation() {
 		extrapolate = false;
 	}
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
 	public final boolean allowsExtrapolation() {
 		return extrapolate;
 	}
-	
+
 }

@@ -35,7 +35,7 @@ import org.jquantlib.lang.exceptions.LibraryException;
  * If the matrix is not symmetric or positive definite, the constructor returns a partial decomposition and sets an internal flag
  * that may be queried by the isSPD() method.
  *
- * @Note: This class is adapted from JAMA
+ * @note  This class is adapted from JAMA
  * @see <a href="http://math.nist.gov/javanumerics/jama/">JAMA</a>
  */
 @QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.OTHER, reviewers = { "Richard Gomes" })

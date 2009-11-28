@@ -69,7 +69,7 @@ public class BlackFormula {
     /**
      * Black 1976 formula
      *
-     * @Note instead of volatility it uses standard deviation, i.e.
+     * @note instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
     public static /*@Price*/ double blackFormula(
@@ -84,7 +84,7 @@ public class BlackFormula {
     /**
      * Black 1976 formula
      *
-     * @Note: Instead of volatility it uses standard deviation, i.e.
+     * @note  Instead of volatility it uses standard deviation, i.e.
      *        volatility*sqrt(timeToMaturity)
      */
     public static /*@Price*/ double blackFormula(
@@ -101,7 +101,7 @@ public class BlackFormula {
      *
      * Black 1976 formula
      *
-     * @Note: Instead of volatility it uses standard deviation, i.e.
+     * @note  Instead of volatility it uses standard deviation, i.e.
      *        volatility*sqrt(timeToMaturity)
      */
     public static /*@Price*/ double blackFormula(
@@ -145,7 +145,7 @@ public class BlackFormula {
     /**
      * Black 1976 formula
      *
-     * @Note instead of volatility it uses standard deviation, i.e.
+     * @note instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
     public static /*@Price*/ double blackFormula(
@@ -160,7 +160,7 @@ public class BlackFormula {
     /**
      * Black 1976 formula
      *
-     * @Note: Instead of volatility it uses standard deviation, i.e.
+     * @note  Instead of volatility it uses standard deviation, i.e.
      *        volatility*sqrt(timeToMaturity)
      */
     public static /*@Price*/ double blackFormula(
@@ -177,7 +177,7 @@ public class BlackFormula {
      *
      * Black 1976 formula
      *
-     * @Note: Instead of volatility it uses standard deviation, i.e.
+     * @note  Instead of volatility it uses standard deviation, i.e.
      *        volatility*sqrt(timeToMaturity)
      */
     public static /*@Price*/ double blackFormula(
@@ -563,7 +563,7 @@ public class BlackFormula {
      * measure), i.e. N(d2). It is a risk-neutral probability, not the real
      * world one.
      *
-     * @Note Instead of volatility it uses standard deviation, i.e.
+     * @note Instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
     public static /*@Price*/ double blackFormulaCashItmProbability(
@@ -580,7 +580,7 @@ public class BlackFormula {
      * measure), i.e. N(d2). It is a risk-neutral probability, not the real
      * world one.
      *
-     * @Note Instead of volatility it uses standard deviation, i.e.
+     * @note Instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
     public static /*@Price*/ double blackFormulaCashItmProbability(
@@ -609,7 +609,7 @@ public class BlackFormula {
      * measure), i.e. N(d2). It is a risk-neutral probability, not the real
      * world one.
      *
-     * @Note Instead of volatility it uses standard deviation, i.e.
+     * @note Instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
     public static /*@Price*/ double blackFormulaCashItmProbability(
@@ -631,7 +631,7 @@ public class BlackFormula {
      * Black 1976 formula for standard deviation derivative
      * <p>
      *
-     * @Note Instead of volatility it uses standard deviation, i.e.
+     * @note Instead of volatility it uses standard deviation, i.e.
      *       volatilitysqrt(timeToMaturity), and it returns the derivative with
      *       respect to the standard deviation. If T is the time to maturity
      *       Black vega would be blackstddevDerivative(strike, forward,
@@ -649,7 +649,7 @@ public class BlackFormula {
      * Black 1976 formula for standard deviation derivative
      * <p>
      *
-     * @Note Instead of volatility it uses standard deviation, i.e.
+     * @note Instead of volatility it uses standard deviation, i.e.
      *       volatilitysqrt(timeToMaturity), and it returns the derivative with
      *       respect to the standard deviation. If T is the time to maturity
      *       Black vega would be blackstddevDerivative(strike, forward,
@@ -668,7 +668,7 @@ public class BlackFormula {
      * Black 1976 formula for standard deviation derivative
      * <p>
      *
-     * @Note Instead of volatility it uses standard deviation, i.e.
+     * @note Instead of volatility it uses standard deviation, i.e.
      *       volatilitysqrt(timeToMaturity), and it returns the derivative with
      *       respect to the standard deviation. If T is the time to maturity
      *       Black vega would be blackstddevDerivative(strike, forward,
@@ -704,7 +704,7 @@ public class BlackFormula {
      * Black 1976 formula for standard deviation derivative
      * <p>
      *
-     * @Note Instead of volatility it uses standard deviation, i.e.
+     * @note Instead of volatility it uses standard deviation, i.e.
      *       volatilitysqrt(timeToMaturity), and it returns the derivative with
      *       respect to the standard deviation. If T is the time to maturity
      *       Black vega would be blackstddevDerivative(strike, forward,
@@ -722,7 +722,7 @@ public class BlackFormula {
      * Black 1976 formula for standard deviation derivative
      * <p>
      *
-     * @Note Instead of volatility it uses standard deviation, i.e.
+     * @note Instead of volatility it uses standard deviation, i.e.
      *       volatilitysqrt(timeToMaturity), and it returns the derivative with
      *       respect to the standard deviation. If T is the time to maturity
      *       Black vega would be blackstddevDerivative(strike, forward,
@@ -741,7 +741,7 @@ public class BlackFormula {
      * Black 1976 formula for standard deviation derivative
      * <p>
      *
-     * @Note Instead of volatility it uses standard deviation, i.e.
+     * @note Instead of volatility it uses standard deviation, i.e.
      *       volatilitysqrt(timeToMaturity), and it returns the derivative with
      *       respect to the standard deviation. If T is the time to maturity
      *       Black vega would be blackstddevDerivative(strike, forward,
@@ -765,7 +765,7 @@ public class BlackFormula {
      * Black style formula when forward is normal rather than log-normal. This
      * is essentially the model of Bachelier.
      *
-     * @Note Bachelier model needs absolute volatility, not percentage
+     * @note Bachelier model needs absolute volatility, not percentage
      *       volatility. Standard deviation is
      *       absoluteVolatility*sqrt(timeToMaturity)
      */
@@ -782,7 +782,7 @@ public class BlackFormula {
      * Black style formula when forward is normal rather than log-normal. This
      * is essentially the model of Bachelier.
      *
-     * @Note Bachelier model needs absolute volatility, not percentage
+     * @note Bachelier model needs absolute volatility, not percentage
      *       volatility. Standard deviation is
      *       absoluteVolatility*sqrt(timeToMaturity)
      */
@@ -815,7 +815,7 @@ public class BlackFormula {
      * Black style formula when forward is normal rather than log-normal. This
      * is essentially the model of Bachelier.
      *
-     * @Note Bachelier model needs absolute volatility, not percentage
+     * @note Bachelier model needs absolute volatility, not percentage
      *       volatility. Standard deviation is
      *       absoluteVolatility*sqrt(timeToMaturity)
      */
@@ -832,7 +832,7 @@ public class BlackFormula {
      * Black style formula when forward is normal rather than log-normal. This
      * is essentially the model of Bachelier.
      *
-     * @Note Bachelier model needs absolute volatility, not percentage
+     * @note Bachelier model needs absolute volatility, not percentage
      *       volatility. Standard deviation is
      *       absoluteVolatility*sqrt(timeToMaturity)
      */

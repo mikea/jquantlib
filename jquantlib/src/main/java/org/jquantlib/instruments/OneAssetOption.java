@@ -166,7 +166,7 @@ public class OneAssetOption extends Option {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Obtains {@link Greeks} and {@link MoreGreeks} calculated by a {@link PricingEngine}
      *
      * @see Greeks

@@ -55,8 +55,8 @@ import org.jquantlib.util.Visitor;
 
 /**
  * Constant Black volatility, no time-strike dependence
- *
- * <p>This class implements the BlackVolatilityTermStructure
+ * <p>
+ * This class implements the BlackVolatilityTermStructure
  * interface for a constant Black volatility (no time/strike
  * dependence).
  */
@@ -140,11 +140,10 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     @Override
     public void accept(final TypedVisitor<TermStructure> v) {
         final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
+        if (v1 != null)
             v1.visit(this);
-        } else {
+        else
             super.accept(v);
-        }
     }
 
 }

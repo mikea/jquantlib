@@ -108,7 +108,7 @@ public class LinearInterpolation extends AbstractInterpolation {
 
 	/**
      * {@inheritDoc}
-     *
+     * <p>
 	 * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
 	 */
 	@Override

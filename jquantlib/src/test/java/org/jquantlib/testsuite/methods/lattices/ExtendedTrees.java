@@ -284,8 +284,14 @@ public class ExtendedTrees {
                 new Handle<YieldTermStructure>(r), new Handle<BlackVolTermStructure>(vol));
     }
 
-    private VanillaOption makeOption(final StrikedTypePayoff payoff, final Exercise exercise, final Quote u,
-            final YieldTermStructure q, final YieldTermStructure r, final BlackVolTermStructure vol, final EngineType engineType,
+    private VanillaOption makeOption(
+            final StrikedTypePayoff payoff,
+            final Exercise exercise,
+            final Quote u,
+            final YieldTermStructure q,
+            final YieldTermStructure r,
+            final BlackVolTermStructure vol,
+            final EngineType engineType,
             /* @Size */final int binomialSteps,
             /* @Size */final int samples) {
 

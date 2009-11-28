@@ -44,7 +44,7 @@ import org.jquantlib.math.optimization.NoConstraint;
 /**
  * Piecewise-constant parameter.
  * <p>
- * {@latex$ a(t) = a_i if t_{i-1} \geq t &lt; t_i }.
+ * {@latex$ a(t) = a_i} if {@latex$ t_{i-1} \geq t < t_i }.
  * <p>
  * This kind of parameter is usually used to enhance the fitting of a model.
  *

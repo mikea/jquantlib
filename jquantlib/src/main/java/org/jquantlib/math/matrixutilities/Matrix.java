@@ -134,7 +134,7 @@ import org.jquantlib.lang.iterators.BulkStorage;
  * (2): Unary + is equivalent to: array.clone()<br/>
  * (3): Unary ? is equivalent to: array.clone().mulAssign(-1)
  * <p>
- * @Note This class is not thread-safe
+ * @note This class is not thread-safe
  *
  * @author Richard Gomes
  */

@@ -65,8 +65,8 @@ public class PoissonDistribution implements Ops.IntToDouble {
     //
 
     /**
-     * @InheritDoc
-     *
+     * {@inheritDoc}
+     * <p>
      * PoissonDistribution evaluation
      * <p>
      * Compute the Poisson Distribution with input {@latex$ \mu} and {@latex$ k}.

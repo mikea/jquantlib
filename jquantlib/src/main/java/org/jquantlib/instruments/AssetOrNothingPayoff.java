@@ -95,13 +95,12 @@ public class AssetOrNothingPayoff extends StrikedTypePayoff {
      */
     @Override
     public final double get(final double price) /* @ReadOnly */ {
-		if (type == Option.Type.Call) {
+		if (type == Option.Type.Call)
             return (price - strike > 0.0) ? price : 0.0;
-        } else if (type == Option.Type.Put) {
+        else if (type == Option.Type.Put)
             return (strike - price > 0.0) ? price : 0.0;
-        } else {
+        else
             throw new LibraryException("unknown/illegal option type"); // QA:[RG]::verified // TODO: message
-        }
 	}
 
 
@@ -112,11 +111,10 @@ public class AssetOrNothingPayoff extends StrikedTypePayoff {
 	@Override
 	public void accept(final TypedVisitor<Payoff> v) {
 		final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
+		if (v1 != null)
             v1.visit(this);
-        } else {
+        else
             super.accept(v);
-        }
 	}
 
 }

@@ -55,7 +55,7 @@ import org.jquantlib.math.functions.Sqrt;
  * <pre>
  *     for (i = 0; i < n; i++)
  * </pre>
- * 
+ *
  * @author Richard Gomes
  */
 public class Cells {
@@ -434,11 +434,10 @@ public class Cells {
             sb.append(" style=").append(style).append('\n');
             final int addr = addr(dim, cursor);
             double curr;
-            if (addr>=0 && addr < size) {
+            if (addr>=0 && addr < size)
                 curr = data[addr];
-            } else {
+            else
                 curr = Double.NaN;
-            }
             sb.append(" cursor position=").append(cursor-pos0+style.base).append(" value=").append(curr).append('\n');
             return sb.toString();
         }
@@ -451,12 +450,8 @@ public class Cells {
          * <li>Does not matter which kind of data structures are backing Iterators being compared;</li>
          * <li>This operation is O(n)</li>
          * <li>This operation keeps cursor positions intact at end</li>
-         * <p>
-         * <p>
-         * This is the formal description of <code>equals</code>:
-         * <p>
-         * <p>
-         * {@inheritDoc}
+         *
+         * @see Object#equals(Object)
          */
         @Override
         public boolean equals(final Object obj) {
@@ -469,9 +464,8 @@ public class Cells {
                     // compare
                     this.begin(); another.begin();
                     boolean result = true;
-                    while (this.hasNext() && result) {
+                    while (this.hasNext() && result)
                         result = this.nextDouble() == another.nextDouble();
-                    }
                     // double check if both Iterators have been completely compared
                     result &= !(this.hasNext() || another.hasNext());
                     // restore cursor positions
@@ -563,11 +557,10 @@ public class Cells {
 
         @Override
         public void seek(final int pos) {
-            if (pos-pos0 >= 0 && pos-pos0 < size) {
+            if (pos-pos0 >= 0 && pos-pos0 < size)
                 cursor = pos0+pos-style.base;
-            } else {
+            else
                 throw new NoSuchElementException();
-            }
         }
 
         @Override
@@ -585,20 +578,18 @@ public class Cells {
 
         @Override
         public void forward() {
-            if (cursor < pos1) {
+            if (cursor < pos1)
                 lastRet = cursor++;
-            } else {
+            else
                 throw new NoSuchElementException();
-            }
         }
 
         @Override
         public void backward() {
-            if (cursor >= pos0) {
+            if (cursor >= pos0)
                 lastRet = --cursor;
-            } else {
+            else
                 throw new NoSuchElementException();
-            }
         }
 
 
@@ -618,8 +609,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator fill(final double scalar) {
@@ -634,8 +625,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method changes cursors of <code>this</code> and <code>another</code> of {@link Iterator}(s)
+         * <p>
+         * @note This method changes cursors of <code>this</code> and <code>another</code> of {@link Iterator}(s)
          */
         @Override
         public Iterator fill(final Iterator another) {
@@ -645,8 +636,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method changes cursors of <code>this</code> and <code>another</code> of {@link Iterator}(s)
+         * <p>
+         * @note This method changes cursors of <code>this</code> and <code>another</code> of {@link Iterator}(s)
          */
         @Override
         public Iterator fill(final Iterator another, final int size) {
@@ -663,8 +654,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator swap(final Iterator another) {
@@ -686,133 +677,125 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator addAssign(final double scalar) {
             begin();
-            while (hasNext()) {
+            while (hasNext())
                 setDouble(nextDouble() + scalar);
-            }
             begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator addAssign(final Iterator another) {
             QL.require(this.size==another.size(), ITERATOR_IS_INCOMPATIBLE);
             this.begin(); another.begin();
-            while (hasNext()) {
+            while (hasNext())
                 setDouble(nextDouble() + another.nextDouble());
-            }
             this.begin(); another.begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator subAssign(final double scalar) {
             begin();
-            while (hasNext()) {
+            while (hasNext())
                 setDouble(nextDouble() - scalar);
-            }
             begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator subAssign(final Iterator another) {
             QL.require(this.size==another.size(), ITERATOR_IS_INCOMPATIBLE);
             this.begin(); another.begin();
-            while (hasNext()) {
+            while (hasNext())
                 setDouble(nextDouble() - another.nextDouble());
-            }
             this.begin(); another.begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator mulAssign(final double scalar) {
             begin();
-            while (hasNext()) {
+            while (hasNext())
                 setDouble(nextDouble() * scalar);
-            }
             begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator mulAssign(final Iterator another) {
             QL.require(this.size==another.size(), ITERATOR_IS_INCOMPATIBLE);
             begin();
             another.begin();
-            while (hasNext()) {
+            while (hasNext())
                 setDouble(nextDouble() * another.nextDouble());
-            }
             begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator divAssign(final double scalar) {
             begin();
-            while (hasNext()) {
+            while (hasNext())
                 setDouble(nextDouble() / scalar);
-            }
             begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator divAssign(final Iterator another) {
             QL.require(this.size==another.size(), ITERATOR_IS_INCOMPATIBLE);
             this.begin(); another.begin();
-            while (hasNext()) {
+            while (hasNext())
                 setDouble(nextDouble() / another.nextDouble());
-            }
             this.begin(); another.begin();
             return this;
         }
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator add(final double scalar) {
@@ -822,8 +805,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator add(final Iterator another) {
@@ -833,8 +816,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator sub(final double scalar) {
@@ -844,8 +827,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator sub(final Iterator another) {
@@ -855,8 +838,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator mul(final double scalar) {
@@ -866,8 +849,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator mul(final Iterator another) {
@@ -877,8 +860,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator mul(final Matrix matrix) {
@@ -901,8 +884,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator div(final double scalar) {
@@ -912,8 +895,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator div(final Iterator another) {
@@ -923,8 +906,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator negative() {
@@ -934,25 +917,24 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double dotProduct(final Iterator another) {
             QL.require(size() == another.size(), ITERATOR_IS_INCOMPATIBLE);
             this.begin(); another.begin();
             double sum = 0.0;
-            while (this.hasNext()) {
+            while (this.hasNext())
                 sum += this.nextDouble() * another.nextDouble();
-            }
             this.begin(); another.begin();
             return sum;
         }
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double dotProduct(final Iterator another, final int from, final int to) {
@@ -961,8 +943,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double innerProduct(final Iterator another) {
@@ -972,8 +954,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double innerProduct(final Iterator another, final int from, final int to) {
@@ -983,8 +965,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Matrix outerProduct(final Iterator another) {
@@ -1008,8 +990,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Matrix outerProduct(final Iterator another, final int from, final int to) {
@@ -1019,8 +1001,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator adjacentDifference() {
@@ -1029,8 +1011,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator adjacentDifference(final int from, final int to) {
@@ -1039,8 +1021,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator adjacentDifference(final BinaryDoubleOp f) {
@@ -1063,8 +1045,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator adjacentDifference(final int from, final int to, final BinaryDoubleOp f) {
@@ -1073,8 +1055,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double min() {
@@ -1082,9 +1064,8 @@ public class Cells {
             double result = Double.MAX_VALUE;
             while (hasNext()) {
                 final double d = nextDouble();
-                if (d < result) {
+                if (d < result)
                     result = d;
-                }
             }
             begin();
             return result;
@@ -1092,8 +1073,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double min(final int from, final int to) {
@@ -1102,8 +1083,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double max() {
@@ -1111,9 +1092,8 @@ public class Cells {
             double result = Double.MIN_VALUE;
             while (hasNext()) {
                 final double d = nextDouble();
-                if (d > result) {
+                if (d > result)
                     result = d;
-                }
             }
             begin();
             return result;
@@ -1121,8 +1101,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double max(final int from, final int to) {
@@ -1131,8 +1111,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator abs() {
@@ -1141,8 +1121,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator exp() {
@@ -1151,8 +1131,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator log() {
@@ -1161,8 +1141,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator sqr() {
@@ -1171,8 +1151,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator sqrt() {
@@ -1181,8 +1161,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double accumulate() {
@@ -1191,8 +1171,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double accumulate(final double init) {
@@ -1201,8 +1181,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public double accumulate(final int from, final int to, final double init) {
@@ -1220,8 +1200,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator transform(final DoubleOp func) {
@@ -1230,8 +1210,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public Iterator transform(final int from, final int to, final DoubleOp func) {
@@ -1249,8 +1229,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public int lowerBound(final double val) {
@@ -1259,8 +1239,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public int lowerBound(int from, final int to, final double val) {
@@ -1278,17 +1258,16 @@ public class Cells {
                     from = middle;
                     from++;
                     len = len - half - 1;
-                } else {
+                } else
                     len = half;
-                }
             }
             return from;
         }
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public int upperBound(final double val) {
@@ -1297,8 +1276,8 @@ public class Cells {
 
         /**
          * {@inheritDoc}
-         *
-         * @Note This method resets cursor to the start position of {@link Iterator}(s) involved
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
          */
         @Override
         public int upperBound(int from, final int to, final double val) {
@@ -1312,9 +1291,9 @@ public class Cells {
                 middle = from;
                 middle = middle + half;
 
-                if (val < this.get(middle+pos0)) {
+                if (val < this.get(middle+pos0))
                     len = half;
-                } else {
+                else {
                     from = middle;
                     from++;
                     len = len - half - 1;
@@ -1382,9 +1361,8 @@ public class Cells {
                 final double next = data[addr(dim, cursor)];
                 lastRet = cursor++;
                 return next;
-            } else {
+            } else
                 throw new NoSuchElementException();
-            }
         }
 
         @Override
@@ -1392,18 +1370,16 @@ public class Cells {
             if (cursor > pos0) {
                 lastRet = --cursor;
                 return data[addr(dim, cursor)];
-            } else {
+            } else
                 throw new NoSuchElementException();
-            }
         }
 
         @Override
         public void setDouble(final double e) {
-            if (lastRet!=-1) {
+            if (lastRet!=-1)
                 data[addr(dim, lastRet)] = e;
-            } else {
+            else
                 throw new NoSuchElementException();
-            }
         }
 
         @Override
@@ -1542,9 +1518,8 @@ public class Cells {
                 final double next = data[addr(cursor, dim)];
                 lastRet = cursor++;
                 return next;
-            } else {
+            } else
                 throw new NoSuchElementException();
-            }
         }
 
         @Override
@@ -1552,18 +1527,16 @@ public class Cells {
             if (cursor > pos0) {
                 lastRet = --cursor;
                 return data[addr(cursor, dim)];
-            } else {
+            } else
                 throw new NoSuchElementException();
-            }
         }
 
         @Override
         public void setDouble(final double e) {
-            if (lastRet!=-1) {
+            if (lastRet!=-1)
                 data[addr(lastRet, dim)] = e;
-            } else {
+            else
                 throw new NoSuchElementException();
-            }
         }
 
         @Override

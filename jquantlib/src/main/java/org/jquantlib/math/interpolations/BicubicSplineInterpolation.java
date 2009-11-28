@@ -103,11 +103,9 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
     // overrides AbstractInterpolation2D
     //
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void calculate() {
+        throw new UnsupportedOperationException("work in progress");
 // TODO : [Richard needs to complete implementation]
 //        // splines.reserve(this.mz.length); // TODO: verify what .length returns
 //        for (int i=0; i<(this.mz.length); i++) {
@@ -117,7 +115,9 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
 
 
     @Override
-    public double evaluateImpl(final double x, final double y) /* @ReadOnly */{
+    public double evaluateImpl(final double x, final double y) /* @ReadOnly */ {
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
         final double[] section = new double[splines.size()];
         for (int i=0; i<splines.size(); i++)
             section[i]=splines.get(i).evaluate(x, true);

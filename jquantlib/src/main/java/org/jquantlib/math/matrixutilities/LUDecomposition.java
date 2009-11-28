@@ -37,7 +37,7 @@ import org.jquantlib.lang.exceptions.LibraryException;
  * use of the LU decomposition is in the solution of square systems of simultaneous linear equations. This will fail if
  * isNonsingular() returns false.
  *
- * @Note: This class is adapted from JAMA
+ * @note  This class is adapted from JAMA
  * @see <a href="http://math.nist.gov/javanumerics/jama/">JAMA</a>
  *
  * @author Richard Gomes

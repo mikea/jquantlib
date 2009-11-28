@@ -37,7 +37,7 @@ import org.jquantlib.lang.annotation.QualityAssurance.Version;
  * that A*V = V*D, i.e. A.times(V) equals V.times(D). The matrix V may be badly conditioned, or even singular, so the validity of
  * the equation A = V*D*inverse(V) depends upon V.cond().
  *
- * @Note: This class is adapted from JAMA
+ * @note  This class is adapted from JAMA
  * @see <a href="http://math.nist.gov/javanumerics/jama/">JAMA</a>
  *
  * @author Richard Gomes

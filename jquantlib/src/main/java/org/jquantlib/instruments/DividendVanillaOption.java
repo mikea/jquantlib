@@ -80,9 +80,6 @@ public class DividendVanillaOption extends VanillaOption {
     //
 
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public /*@Volatility*/ double impliedVolatility(
             final double price,
@@ -90,9 +87,6 @@ public class DividendVanillaOption extends VanillaOption {
         return impliedVolatility(price, process, 1.0e-4, 100, 1.0e-7, 4.0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public /*@Volatility*/ double impliedVolatility(
             final double price,
@@ -101,9 +95,6 @@ public class DividendVanillaOption extends VanillaOption {
         return impliedVolatility(price, process, accuracy, 100, 1.0e-7, 4.0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public /*@Volatility*/ double impliedVolatility(
             final double price,
@@ -113,9 +104,6 @@ public class DividendVanillaOption extends VanillaOption {
         return impliedVolatility(price, process, accuracy, maxEvaluations, 1.0e-7, 4.0);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public /*@Volatility*/ double impliedVolatility(
             final double price,
@@ -127,9 +115,6 @@ public class DividendVanillaOption extends VanillaOption {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public /*@Volatility*/ double impliedVolatility(
             final double targetValue,

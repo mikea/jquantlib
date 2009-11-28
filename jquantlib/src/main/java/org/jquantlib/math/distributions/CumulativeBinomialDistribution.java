@@ -79,8 +79,8 @@ public class CumulativeBinomialDistribution implements Ops.IntToDouble {
     //
 
     /**
-     * @InheritDoc
-     *
+     * {@inheritDoc}
+     * <p>
      * Computes the Cumulative Binomial Distribution.
      *
      * @param k

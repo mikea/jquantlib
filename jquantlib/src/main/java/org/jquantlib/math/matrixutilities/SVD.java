@@ -36,7 +36,7 @@ import org.jquantlib.lang.annotation.QualityAssurance.Version;
  * The singular value decompostion always exists, so the constructor will never fail. The matrix condition number and the effective
  * numerical rank can be computed from this decomposition.
  *
- * @Note: This class was adapted from JAMA
+ * @note  This class was adapted from JAMA
  * @see <a href="http://math.nist.gov/javanumerics/jama/">JAMA</a>
  *
  * @author Richard Gomes

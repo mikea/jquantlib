@@ -148,24 +148,21 @@ public class QRDecomposition {
                     //-- final double[] qrtCol = qrt[col];
                     final int caddr = mT.addr(col, 0); // "col" means row, in fact, because mT is a transpose matrix
                     double alpha = 0;
-                    for (int row = minor; row < m; row++) {
+                    for (int row = minor; row < m; row++)
                         //-- alpha -= qrtCol[row] * qrtMinor[row];
                         alpha -= mT.data[caddr+row] * mT.data[mbase+row];
-                    }
                     //-- alpha /= a * qrtMinor[minor];
                     alpha /= a * mT.data[mbase+minor];
 
                     // Subtract the column vector alpha*v from x.
-                    for (int row = minor; row < m; row++) {
+                    for (int row = minor; row < m; row++)
                         //-- qrtCol[row] -= alpha * qrtMinor[row];
                         mT.data[caddr+row] -= alpha * mT.data[mbase+row];
-                    }
                 }
             }
         }
     }
 
-    /** {@inheritDoc} */
     public Matrix R() {
 
         if (cachedR == null) {
@@ -180,9 +177,8 @@ public class QRDecomposition {
             // copy the diagonal from rDiag and the upper triangle of qr
             for (int row = Math.min(m, n) - 1; row >= 0; row--) {
                 cachedR.set(row, row, rDiag[row]);
-                for (int col = row + 1; col < n; col++) {
+                for (int col = row + 1; col < n; col++)
                     cachedR.set(row, col, mT.data[mT.addr(col,row)]);
-                }
             }
 
         }
@@ -192,15 +188,12 @@ public class QRDecomposition {
 
     }
 
-    /** {@inheritDoc} */
     public Matrix Q() {
-        if (cachedQ == null) {
+        if (cachedQ == null)
             cachedQ = QT().transpose();
-        }
         return cachedQ;
     }
 
-    /** {@inheritDoc} */
     public Matrix QT() {
         if (cachedQT == null) {
             // QT is supposed to be m x m
@@ -215,20 +208,18 @@ public class QRDecomposition {
              * applying the Householder transformations Q_(m-1),Q_(m-2),...,Q1 in
              * succession to the result
              */
-            for (int minor = m - 1; minor >= Math.min(m, n); minor--) {
+            for (int minor = m - 1; minor >= Math.min(m, n); minor--)
                 cachedQT.set(minor, minor, 1.0);
-            }
 
             for (int minor = Math.min(m, n)-1; minor >= 0; minor--){
                 //-- final double[] qrtMinor = qrt[minor];
                 final int mbase = mT.addr(minor, 0); // "minor" means row, in fact, because mT is a transpose matrix
                 cachedQT.set(minor, minor, 1.0);
-                if (mT.data[mbase+minor] != 0.0) {
+                if (mT.data[mbase+minor] != 0.0)
                     for (int col = minor; col < m; col++) {
                         double alpha = 0;
-                        for (int row = minor; row < m; row++) {
+                        for (int row = minor; row < m; row++)
                             alpha -= cachedQT.get(col, row) * mT.data[mbase+row];
-                        }
                         alpha /= rDiag[minor] * mT.data[mbase+minor];
 
                         for (int row = minor; row < m; row++) {
@@ -236,7 +227,6 @@ public class QRDecomposition {
                             cachedQT.set(col, row, value);
                         }
                     }
-                }
             }
 
         }
@@ -245,7 +235,6 @@ public class QRDecomposition {
         return cachedQT;
     }
 
-    /** {@inheritDoc} */
     public Matrix H() {
         if (cachedH == null) {
             //-- final int n = qrt.length;
@@ -253,11 +242,9 @@ public class QRDecomposition {
             final int n = mT.rows();
             final int m = mT.columns();
             cachedH = new Matrix(m, n);
-            for (int i = 0; i < m; ++i) {
-                for (int j = 0; j < Math.min(i + 1, n); ++j) {
+            for (int i = 0; i < m; ++i)
+                for (int j = 0; j < Math.min(i + 1, n); ++j)
                     cachedH.set(i, j, mT.data[mT.addr(j,i)] / -rDiag[j]);
-                }
-            }
         }
         // return the cached matrix
         return cachedH;
@@ -265,7 +252,7 @@ public class QRDecomposition {
 
 
     /**
-     * @Note At the moment column pivoting is not implemented so this method returns an {@link Identity} matrix instead
+     * @note At the moment column pivoting is not implemented so this method returns an {@link Identity} matrix instead
      *
      * @return the permutation Matrix
      */
@@ -274,18 +261,14 @@ public class QRDecomposition {
     }
 
 
-    /** {@inheritDoc} */
     public boolean isNonSingular() {
-        for (final double diag : rDiag) {
-            if (diag == 0) {
+        for (final double diag : rDiag)
+            if (diag == 0)
                 return false;
-            }
-        }
         return true;
     }
 
 
-    /** {@inheritDoc} */
     public Array solve(final Array B) {
 
         //-- final int n = qrt.length;
@@ -307,16 +290,14 @@ public class QRDecomposition {
             final int maddr = qrt.addr(minor,0);
 
             double dotProduct = 0;
-            for (int row = minor; row < m; row++) {
+            for (int row = minor; row < m; row++)
                 //-- dotProduct += y[row] * qrtMinor[row];
                 dotProduct += y[row] * qrt.data[maddr+row];
-            }
             //-- dotProduct /= rDiag[minor] * qrtMinor[minor];
             dotProduct /= rDiag[minor] * qrt.data[maddr+minor];
 
-            for (int row = minor; row < m; row++) {
+            for (int row = minor; row < m; row++)
                 y[row] += dotProduct * qrt.data[maddr+row];
-            }
         }
 
         // solve triangular system R.x = y
@@ -326,17 +307,16 @@ public class QRDecomposition {
             //-- final double[] qrtRow = qrt[row];
             final int raddr = qrt.addr(row,0);
             x[row] = yRow;
-            for (int i = 0; i < row; i++) {
+            for (int i = 0; i < row; i++)
                 y[i] -= yRow * qrt.data[raddr+i];
-            }
         }
 
         return new Array(x);
     }
 
 
-    /** {@inheritDoc} */
     public Matrix solve (final Matrix b) {
+        throw new UnsupportedOperationException("work in progress");
 //        //-- final int n = qrt.length;
 //        //-- final int m = qrt[0].length;
 //        final Matrix qrt = mT;
@@ -416,8 +396,6 @@ public class QRDecomposition {
 //        }
 //
 //        return new BlockRealMatrix(n, columns, xBlocks, false);
-
-    return null;
     }
 
 }

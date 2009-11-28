@@ -74,8 +74,8 @@ public class CumulativePoissonDistribution implements Ops.IntToDouble {
     //
 
     /**
-     * @InheritDoc
-     *
+     * {@inheritDoc}
+     * <p>
      * Computes the cumulative Poisson distribution by using the incomplete gamma function
      * .
      * @param k is the number of occurrences of an event

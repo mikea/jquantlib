@@ -201,7 +201,7 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
      */
     @Override
@@ -280,23 +280,21 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
         if (constrained) {
             double correction;
             double pm, pu, pd, M;
-            for (i=0; i<n; i++) {
+            for (i=0; i<n; i++)
                 if (i==0) {
-                    if (tmp.get(i)*S.get(0)>0.0) {
+                    if (tmp.get(i)*S.get(0)>0.0)
                         correction = tmp.get(i)/Math.abs(tmp.get(i)) * Math.min(Math.abs(tmp.get(i)), Math.abs(3.0*S.get(0)));
-                    } else {
+                    else
                         correction = 0.0;
-                    }
                     if (!Closeness.isClose(correction, tmp.get(i))) {
                         tmp.set(i, correction);
                         monotone = true;
                     }
                 } else if (i==n-1) {
-                    if (tmp.get(i)*S.get(n-2)>0.0) {
+                    if (tmp.get(i)*S.get(n-2)>0.0)
                         correction = tmp.get(i)/Math.abs(tmp.get(i)) * Math.min(Math.abs(tmp.get(i)), Math.abs(3.0*S.get(n-2)));
-                    } else {
+                    else
                         correction = 0.0;
-                    }
                     if (!Closeness.isClose(correction, tmp.get(i))) {
                         tmp.set(i, correction);
                         monotone = true;
@@ -304,36 +302,30 @@ public class CubicSplineInterpolation extends AbstractInterpolation {
                 } else {
                     pm=(S.get(i-1)*dx.get(i)+S.get(i)*dx.get(i-1))/ (dx.get(i-1)+dx.get(i));
                     M = 3.0 * Math.min(Math.min(Math.abs(S.get(i-1)), Math.abs(S.get(i))), Math.abs(pm));
-                    if (i>1) {
+                    if (i>1)
                         if ((S.get(i-1)-S.get(i-2))*(S.get(i)-S.get(i-1))>0.0) {
                             pd=(S.get(i-1)*(2.0*dx.get(i-1)+dx.get(i-2))
                                     -S.get(i-2)*dx.get(i-1))/
                                     (dx.get(i-2)+dx.get(i-1));
-                            if (pm*pd>0.0 && pm*(S.get(i-1)-S.get(i-2))>0.0) {
+                            if (pm*pd>0.0 && pm*(S.get(i-1)-S.get(i-2))>0.0)
                                 M = Math.max(M, 1.5*Math.min(Math.abs(pm), Math.abs(pd)));
-                            }
                         }
-                    }
-                    if (i<n-2) {
+                    if (i<n-2)
                         if ((S.get(i)-S.get(i-1))*(S.get(i+1)-S.get(i))>0.0) {
                             pu=(S.get(i)*(2.0*dx.get(i)+dx.get(i+1))-S.get(i+1)*dx.get(i))/
                             (dx.get(i)+dx.get(i+1));
-                            if (pm*pu>0.0 && -pm*(S.get(i)-S.get(i-1))>0.0) {
+                            if (pm*pu>0.0 && -pm*(S.get(i)-S.get(i-1))>0.0)
                                 M = Math.max(M, 1.5*Math.min(Math.abs(pm), Math.abs(pu)));
-                            }
                         }
-                    }
-                    if (tmp.get(i)*pm>0.0) {
+                    if (tmp.get(i)*pm>0.0)
                         correction = tmp.get(i)/Math.abs(tmp.get(i)) * Math.min(Math.abs(tmp.get(i)), M);
-                    } else {
+                    else
                         correction = 0.0;
-                    }
                     if (! Closeness.isClose(correction, tmp.get(i)) ) {
                         tmp.set(i, correction);
                         monotone = true;
                     }
                 }
-            }
         }
 
         for (i=0; i<n-1; i++) {

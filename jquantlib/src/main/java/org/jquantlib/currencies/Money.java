@@ -257,7 +257,7 @@ public class Money {
 
     /**
      * Returns the the value of this instance divided by another instance.
-     * @Note: This instance remains unchanged!
+     * @note  This instance remains unchanged!
      * @param money The amount this instance should be divided to.
      * @return The amount of this divided by money.
      */
