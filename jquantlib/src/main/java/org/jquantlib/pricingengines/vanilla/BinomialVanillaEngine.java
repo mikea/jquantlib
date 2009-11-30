@@ -79,8 +79,8 @@ public abstract class BinomialVanillaEngine<T extends Tree> extends VanillaOptio
     final private int timeSteps_;
     final private VanillaOption.ArgumentsImpl a;
     final private VanillaOption.ResultsImpl   r;
-    private final Option.GreeksImpl greeks;
-    private final Option.MoreGreeksImpl moreGreeks;
+    final private Option.GreeksImpl greeks;
+    final private Option.MoreGreeksImpl moreGreeks;
 
     //
     // private fields
@@ -135,40 +135,34 @@ public abstract class BinomialVanillaEngine<T extends Tree> extends VanillaOptio
 
     @Override
     public void calculate() /*@ReadOnly*/ {
-        final DayCounter rfdc = process.riskFreeRate().currentLink().dayCounter();
+        final DayCounter rfdc  = process.riskFreeRate().currentLink().dayCounter();
         final DayCounter divdc = process.dividendYield().currentLink().dayCounter();
         final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
-        final Calendar volcal = process.blackVolatility().currentLink().calendar();
+        final Calendar volcal  = process.blackVolatility().currentLink().calendar();
 
         final double s0 = process.stateVariable().currentLink().value();
         QL.require(s0 > 0.0 , "negative or null underlying given"); // QA:[RG]::verified // TODO: message
         final double v = process.blackVolatility().currentLink().blackVol(a.exercise.lastDate(), s0);
         final Date maturityDate = a.exercise.lastDate();
 
-        //FIXME: rename R to r
-
-        final double R = process.riskFreeRate().currentLink().zeroRate(maturityDate, rfdc, Compounding.Continuous, Frequency.NoFrequency).rate();
-        final double q = process.dividendYield().currentLink().zeroRate(maturityDate, divdc, Compounding.Continuous, Frequency.NoFrequency).rate();
+        final double rRate = process.riskFreeRate().currentLink().zeroRate(maturityDate, rfdc, Compounding.Continuous, Frequency.NoFrequency).rate();
+        final double qRate = process.dividendYield().currentLink().zeroRate(maturityDate, divdc, Compounding.Continuous, Frequency.NoFrequency).rate();
         final Date referenceDate = process.riskFreeRate().currentLink().referenceDate();
 
         // binomial trees with constant coefficient
-        final Handle<YieldTermStructure> flatRiskFree = new Handle<YieldTermStructure>(new FlatForward(referenceDate, R, rfdc));
-        final Handle<YieldTermStructure> flatDividends = new Handle<YieldTermStructure>(new FlatForward(referenceDate, q, divdc));
+        final Handle<YieldTermStructure> flatRiskFree = new Handle<YieldTermStructure>(new FlatForward(referenceDate, rRate, rfdc));
+        final Handle<YieldTermStructure> flatDividends = new Handle<YieldTermStructure>(new FlatForward(referenceDate, qRate, divdc));
         final Handle<BlackVolTermStructure> flatVol = new Handle<BlackVolTermStructure>(new BlackConstantVol(referenceDate, volcal, v, voldc));
         final PlainVanillaPayoff payoff = (PlainVanillaPayoff) a.payoff;
         QL.require(payoff!=null , "non-plain payoff given"); // QA:[RG]::verified // TODO: message
 
         final double maturity = rfdc.yearFraction(referenceDate, maturityDate);
 
-
-
         final StochasticProcess1D bs = new GeneralizedBlackScholesProcess(process.stateVariable(), flatDividends, flatRiskFree, flatVol);
         final TimeGrid grid = new TimeGrid(maturity, timeSteps_);
         final Tree tree = (Tree)getTreeInstance(bs, maturity, timeSteps_, payoff.strike());
 
-
-
-        final BlackScholesLattice<Tree> lattice = new BlackScholesLattice<Tree>(tree, R, maturity, timeSteps_);
+        final BlackScholesLattice<Tree> lattice = new BlackScholesLattice<Tree>(tree, rRate, maturity, timeSteps_);
         final DiscretizedVanillaOption option = new DiscretizedVanillaOption(a, process, grid);
 
         option.initialize(lattice, maturity);
@@ -177,16 +171,14 @@ public abstract class BinomialVanillaEngine<T extends Tree> extends VanillaOptio
 
         // Rollback to third-last step, and get underlying price (s2) & option values (p2) at this point
         option.rollback(grid.at(2));
-        // TODO: code review :: verify use of clone()
-        final Array va2 = option.values().clone();
+        final Array va2 = option.values();
         QL.require(va2.size() == 3 , "expect 3 nodes in grid at second step"); // QA:[RG]::verified // TODO: message
         final double p2h = va2.get(2); // high-price
         final double s2 = lattice.underlying(2, 2); // high price
 
         // Rollback to second-last step, and get option value (p1) at this point
         option.rollback(grid.at(1));
-        // TODO: code review :: verify use of clone()
-        final Array va = option.values().clone();
+        final Array va = option.values();
         QL.require(va.size() == 2, "expect 2 nodes in grid at first step"); // QA:[RG]::verified // TODO: message
         final double p1 = va.get(1);
 

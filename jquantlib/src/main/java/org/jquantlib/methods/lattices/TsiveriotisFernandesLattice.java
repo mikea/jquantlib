@@ -19,48 +19,75 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+/*
+ Copyright (C) 2005, 2006 Theo Boafo
+ Copyright (C) 2006 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.methods.lattices;
 
-import org.jquantlib.assets.DiscretizedAsset;
+import org.jquantlib.instruments.DiscretizedAsset;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.pricingengines.hybrid.DiscretizedConvertible;
 
 /**
- * @author Srinivas Hasti
+ * Binomial lattice approximating the Tsiveriotis-Fernandes model
  *
+ * @category lattices
+ *
+ * @author Srinivas Hasti
  */
-public class TsiveriotisFernandesLattice<T extends Tree> extends
-		BlackScholesLattice<T> {
+public class TsiveriotisFernandesLattice<T extends Tree> extends BlackScholesLattice<T> {
+
 	private final double pd;
 	private final double pu;
 	private final double creditSpread;
 	private final double dt;
 	private final double riskFreeRate;
 
-	public TsiveriotisFernandesLattice(final T tree, final double riskFreeRate, final double end,
-			final int steps, final double creditSpread, final double sigma, final double divYield) {
+	public TsiveriotisFernandesLattice(
+	        final T tree,
+	        final double riskFreeRate,
+	        final /*@Time*/ double end,
+			final int steps,
+			final double creditSpread,
+			final double sigma,
+			final double divYield) {
 		super(tree, riskFreeRate, end, steps);
-
-		dt = end / steps;
-
-		pd = tree.probability(0, 0, 0);
-		pu = tree.probability(0, 0, 1);
-
+		this.dt = end / steps;
+		this.pd = tree.probability(0, 0, 0);
+		this.pu = tree.probability(0, 0, 1);
 		this.riskFreeRate = riskFreeRate;
 		this.creditSpread = creditSpread;
 
-		if (pu > 1.0) {
+		if (pu > 1.0)
             throw new IllegalStateException("negative probability");
-        }
-		if (pu < 0.0) {
+		if (pu < 0.0)
             throw new IllegalStateException("negative probability");
-        }
 	}
 
-	public void stepback(final int i, final Array values, final Array conversionProbability,
-			final Array spreadAdjustedRate, final Array newValues,
-			final Array newConversionProbability, final Array newSpreadAdjustedRate) {
+	public void stepback(
+	        final int i,
+	        final Array values,
+	        final Array conversionProbability,
+			final Array spreadAdjustedRate,
+			final Array newValues,
+			final Array newConversionProbability,
+			final Array newSpreadAdjustedRate) {
 
 		for (int j = 0; j < size(i); j++) {
 
@@ -92,14 +119,12 @@ public class TsiveriotisFernandesLattice<T extends Tree> extends
 
 		final double from = asset.time();
 
-		if (Closeness.isClose(from, to)) {
+		if (Closeness.isClose(from, to))
             return;
-        }
 
-		if (from <= to) {
+		if (from <= to)
             throw new IllegalStateException("cannot roll the asset back to "
 					+ to + " (it is already at t = " + from + ")");
-        }
 
 		final DiscretizedConvertible convertible = (DiscretizedConvertible) (asset);
 
@@ -122,9 +147,8 @@ public class TsiveriotisFernandesLattice<T extends Tree> extends
 			convertible.setConversionProbability(newConversionProbability);
 
 			// skip the very last adjustment
-			if (i != iTo) {
+			if (i != iTo)
                 convertible.adjustValues();
-            }
 		}
 	}
 

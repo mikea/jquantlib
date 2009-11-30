@@ -22,6 +22,9 @@
 package org.jquantlib.math.functions;
 
 import org.jquantlib.math.Ops;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Cells.ConstRowIterator;
+import org.jquantlib.math.matrixutilities.Cells.RowIterator;
 
 /**
  * This class verifies a condition and if true, returns the evaluation of
@@ -29,14 +32,14 @@ import org.jquantlib.math.Ops;
  *
  * @author Richard Gomes
  */
-public final class Clipped implements Ops.DoubleOp {
+public final class FindIf implements org.jquantlib.lang.iterators.Iterable {
 
-    private final Ops.DoublePredicate checker;
-    private final Ops.DoubleOp function;
+    private final ConstRowIterator iterator;
+    private final Ops.DoublePredicate predicate;
 
-    public Clipped(final Ops.DoublePredicate checker, final Ops.DoubleOp function){
-        this.checker = checker;
-        this.function = function;
+    public FindIf(final Array array, final Ops.DoublePredicate predicate) {
+        this.iterator = array.constIterator();
+        this.predicate = predicate;
     }
 
 
@@ -44,10 +47,26 @@ public final class Clipped implements Ops.DoubleOp {
     // implements Ops.DoubleOp
     //
 
-	@Override
-	public double op(final double a) {
-        return checker.op(a) ? function.op(a) : Double.NaN;
-	}
+    @Override
+    public org.jquantlib.lang.iterators.Iterator iterator() {
+        // find first element which satisfies predicate and insert it, if found
+        final Array array = new Array(iterator.size());
+        final RowIterator it = array.iterator();
+        while (iterator.hasNext()) {
+            final double a = iterator.nextDouble();
+            if ( predicate.op(a) ) {
+                it.setDouble( iterator.nextDouble() );
+                break;
+            }
+        }
+        // copy remaining elements
+        while (iterator.hasNext()) {
+            it.setDouble( iterator.nextDouble() );
+            it.forward();
+        }
+        it.begin();
+        return it;
+    }
 
 }
 

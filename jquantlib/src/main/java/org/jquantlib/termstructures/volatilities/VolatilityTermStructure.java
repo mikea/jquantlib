@@ -109,13 +109,17 @@ public abstract class VolatilityTermStructure extends AbstractTermStructure {
     // public methods
     //
 
-    //! the business day convention used in tenor to date conversion
+    /**
+     * The business day convention used in tenor to date conversion
+     */
     public BusinessDayConvention businessDayConvention() /* @ReadOnly */ {
         return bdc;
     }
 
-    //! period/date conversion
-    final Date optionDateFromTenor(final Period p) /* @ReadOnly */ {
+    /**
+     * Period/date conversion
+     */
+    public Date optionDateFromTenor(final Period p) /* @ReadOnly */ {
         // swaption style
         return calendar().advance(referenceDate(), p, businessDayConvention());
     }
@@ -126,12 +130,12 @@ public abstract class VolatilityTermStructure extends AbstractTermStructure {
     //
 
     /**
-     * the minimum strike for which the term structure can return vols
+     * The minimum strike for which the term structure can return vols
      */
     public abstract /*@Rate*/ double minStrike();
 
     /**
-     * the maximum strike for which the term structure can return vols
+     * The maximum strike for which the term structure can return vols
      */
     public abstract /*@Rate*/ double maxStrike();
 
@@ -140,8 +144,10 @@ public abstract class VolatilityTermStructure extends AbstractTermStructure {
     // protected methods
     //
 
-    //! strike-range check
-    void checkStrike(final /*@Rate*/ double  strike, final boolean extrapolate) /* @ReadOnly */ {
+    /**
+     * Strike-range check
+     */
+    protected void checkStrike(final /*@Rate*/ double  strike, final boolean extrapolate) /* @ReadOnly */ {
         QL.require(extrapolate || allowsExtrapolation() || (strike >= minStrike() && strike <= maxStrike()),
                 "strike is outside the curve domain");
     }

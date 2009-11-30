@@ -15,6 +15,8 @@ import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.vanilla.finitedifferences.FDEngineAdapter;
 import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
+import org.jquantlib.processes.HullWhiteProcess;
+import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
@@ -136,6 +138,9 @@ public abstract class FDDividendOptionHelper<T extends FDEngineAdapter> extends 
         final Handle<YieldTermStructure> qTS = new Handle<YieldTermStructure>(flatRate(qRate, cal, dc));
         final Handle<YieldTermStructure> rTS = new Handle<YieldTermStructure>(flatRate(rRate, cal, dc));
         final Handle<BlackVolTermStructure> volTS = new Handle<BlackVolTermStructure>(flatVol(vol, cal, dc));
+
+        final StochasticProcess1D hw = new HullWhiteProcess(qTS, 0.0, 0.0);
+
 
         // obtain stochastic process
         this.stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot), qTS, rTS, volTS);

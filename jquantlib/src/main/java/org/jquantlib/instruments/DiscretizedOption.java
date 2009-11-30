@@ -19,32 +19,54 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.assets;
+/*
+ Copyright (C) 2001, 2002, 2003 Sadruddin Rejeb
+ Copyright (C) 2004, 2005, 2006 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+package org.jquantlib.instruments;
 
 import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.iterators.Iterator;
+import org.jquantlib.math.functions.Bind2ndPredicate;
+import org.jquantlib.math.functions.FindIf;
+import org.jquantlib.math.functions.GreaterEqualPredicate;
 import org.jquantlib.math.matrixutilities.Array;
 
 /**
- * //! Discretized option on a given asset /*! \warning it is advised that
- * derived classes take care of creating and initializing themselves an instance
- * of the underlying.
+ * Discretized option on a given asset
+ * <p>
+ * @warning it is advised that derived classes take care of creating and
+ * initializing themselves an instance of the underlying.
  *
  * @author Srinivas Hasti
- *
  */
-// TODO: complete mandatoryTimes
 public class DiscretizedOption extends DiscretizedAsset {
 
     protected Exercise.Type exerciseType;
-    protected List<Double> exerciseTimes;
+    protected Array exerciseTimes;
     protected DiscretizedAsset underlying;
 
-    public DiscretizedOption(final DiscretizedAsset underlying,
-            final Exercise.Type exerciseType, final List<Double> exerciseTimes) {
+    public DiscretizedOption(
+            final DiscretizedAsset underlying,
+            final Exercise.Type exerciseType,
+            final Array exerciseTimes) {
         this.underlying = underlying;
         this.exerciseType = exerciseType;
         this.exerciseTimes = exerciseTimes;
@@ -52,29 +74,34 @@ public class DiscretizedOption extends DiscretizedAsset {
 
     @Override
     public void reset(final int size) {
-        QL.require(method() == underlying.method() , "option and underlying were initialized on different methods");
+        QL.require(method().equals(underlying.method()) , "option and underlying were initialized on different methods");
         values = new Array(size);
         adjustValues();
     }
 
     @Override
-    public List</* Time */Double> mandatoryTimes() {
-        final List</* Time */Double> times = underlying.mandatoryTimes();
-        // discard negative times...
-        /** TODO: ** */
-        /*
-         * List<Double>::const_iterator i =
-         * std::find_if(exerciseTimes_.begin(),exerciseTimes_.end(),
-         * std::bind2nd(std::greater_equal<Time>(),0.0)); // and add the
-         * positive ones times.insert(times.end(), i, exerciseTimes_.end());
-         */
+    public List</* @Time */Double> mandatoryTimes() {
+        final List</* @Time */Double> times = underlying.mandatoryTimes();
+//
+//        // discard negative times...
+//        std::vector<Time>::const_iterator i =
+//            std::find_if(exerciseTimes_.begin(),exerciseTimes_.end(),
+//                         std::bind2nd(std::greater_equal<Time>(),0.0));
+//        // and add the positive ones
+//        times.insert(times.end(), i, exerciseTimes_.end());
+//        return times;
+//
+        final Iterator it = new FindIf(exerciseTimes, new Bind2ndPredicate(new GreaterEqualPredicate(), 0.0)).iterator();
+        while ( it.hasNext() ) {
+            final double d = it.nextDouble();
+            times.add(d);
+        }
         return times;
     }
 
     protected void applyExerciseCondition() {
-        for (int i = 0; i < values.size(); i++) {
+        for (int i = 0; i < values.size(); i++)
             values.set(i, Math.max(underlying.values().get(i), values.get(i)));
-        }
     }
 
     @Override
@@ -90,17 +117,15 @@ public class DiscretizedOption extends DiscretizedAsset {
         int i;
         switch (exerciseType) {
         case American:
-            if (time >= exerciseTimes.get(0) && time <= exerciseTimes.get(1)) {
+            if (time >= exerciseTimes.get(0) && time <= exerciseTimes.get(1))
                 applyExerciseCondition();
-            }
             break;
         case Bermudan:
         case European:
             for (i = 0; i < exerciseTimes.size(); i++) {
-                /* Time */final double t = exerciseTimes.get(i);
-                if (t >= 0.0 && isOnTime(t)) {
+                final /* @Time */ double t = exerciseTimes.get(i);
+                if (t >= 0.0 && isOnTime(t))
                     applyExerciseCondition();
-                }
             }
             break;
         default:

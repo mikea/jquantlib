@@ -34,7 +34,7 @@ import org.jquantlib.math.functions.Clipped;
 import org.jquantlib.math.functions.Constant;
 import org.jquantlib.math.functions.Expression;
 import org.jquantlib.math.functions.Identity;
-import org.jquantlib.math.functions.LessThan;
+import org.jquantlib.math.functions.LessThanPredicate;
 import org.jquantlib.math.functions.Minus;
 import org.jquantlib.math.functions.Sqr;
 import org.jquantlib.math.functions.TruePredicate;
@@ -103,7 +103,7 @@ public class GenericRiskStatistics {
         functions.add(new Sqr());
         functions.add(new Bind2nd(new Minus(), target));
         final Expression comp = new Expression(functions);
-        final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
+        final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);
 
         final Pair<Double, Integer> result = statistics.expectationValue(comp, less);
         final double x = result.getFirst();
@@ -152,7 +152,7 @@ public class GenericRiskStatistics {
         }
         final double target = -valueAtRisk(centile);
 
-        final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
+        final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);
         final Pair<Double, Integer> result = statistics.expectationValue(new Identity(), less);
 
         final double x = result.getFirst();
@@ -179,7 +179,7 @@ public class GenericRiskStatistics {
         if (statistics.getSampleSize()==0)
             throw new IllegalArgumentException(empty_sample_set);
 
-        final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThan(), target);
+        final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);
         return statistics.expectationValue(new Clipped(less, new Constant(1.0)), new TruePredicate()).getFirst();
     }
 
@@ -189,7 +189,7 @@ public class GenericRiskStatistics {
     public double averageShortfall(final double target) {
 
         final Ops.DoubleOp minus = new Bind1st(target, new Minus());
-        final Ops.DoublePredicate less = new Bind1stPredicate(target, new LessThan());
+        final Ops.DoublePredicate less = new Bind1stPredicate(target, new LessThanPredicate());
         final Pair<Double, Integer> result = statistics.expectationValue(minus, less);
 
         final double x = result.getFirst();

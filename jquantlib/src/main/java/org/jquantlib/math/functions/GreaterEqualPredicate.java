@@ -24,19 +24,19 @@ package org.jquantlib.math.functions;
 import org.jquantlib.math.Ops;
 
 /**
- * Always true
+ * A <i>greater equal</i> function
  *
  * @author Richard Gomes
  */
-public final class TruePredicate implements Ops.DoublePredicate {
+public final class GreaterEqualPredicate implements Ops.BinaryDoublePredicate {
 
 	//
-    // implements DoublePredicate
+    // implements BinaryDoublePredicate
     //
 
 	@Override
-	public boolean op(final double a) {
-		return true;
+	public boolean op(final double a, final double b) {
+		return a >= b;
 	}
 
 }

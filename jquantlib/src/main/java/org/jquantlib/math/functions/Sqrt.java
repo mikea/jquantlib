@@ -1,5 +1,4 @@
 /*
- Copyright (C) 2009 Ueli Hofstetter
  Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.

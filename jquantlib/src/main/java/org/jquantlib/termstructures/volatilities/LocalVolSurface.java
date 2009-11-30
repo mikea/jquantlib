@@ -57,9 +57,7 @@ import org.jquantlib.util.Visitor;
  * Local Volatility," in "Case Studies and Financial Modelling Course Notes," by
  * Jim Gatheral, Fall Term, 2003
  *
- * @see <a
- *      href="http://www.math.nyu.edu/fellows_fin_math/gatheral/Lecture1_Fall02.pdf">This
- *      article</a>
+ * @see <a href="http://www.math.nyu.edu/fellows_fin_math/gatheral/Lecture1_Fall02.pdf">This article</a>
  */
 // TODO: this class is untested, probably unreliable.
 public class LocalVolSurface extends LocalVolTermStructure {
@@ -186,9 +184,9 @@ public class LocalVolSurface extends LocalVolTermStructure {
             dwdt = (wpt - wmt) / (2.0 * dt);
         }
 
-        if (dwdy == 0.0 && d2wdy2 == 0.0) {
+        if (dwdy == 0.0 && d2wdy2 == 0.0)
             return Math.sqrt(dwdt);
-        } else {
+        else {
             final double den1 = 1.0 - y / w * dwdy;
             final double den2 = 0.25 * (-0.25 - 1.0 / w + y * y / w / w) * dwdy * dwdy;
             final double den3 = 0.5 * d2wdy2;
@@ -213,11 +211,10 @@ public class LocalVolSurface extends LocalVolTermStructure {
     @Override
     public void accept(final TypedVisitor<TermStructure> v) {
         final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
+        if (v1 != null)
             v1.visit(this);
-        } else {
+        else
             super.accept(v);
-        }
     }
 
 }

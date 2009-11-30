@@ -1716,7 +1716,7 @@ public class Cells {
      *
      * @author Richard Gomes
      */
-    public class ConstRowIterator extends AbstractRowIterator implements ConstIterator, Cloneable {
+    public class ConstRowIterator extends RowIterator implements ConstIterator {
 
         /**
          * Creates a constant, non-modifiable ConstRowIterator for the entire row <code>row</code>
@@ -1868,7 +1868,7 @@ public class Cells {
      *
      * @author Richard Gomes
      */
-    public class ConstColumnIterator extends AbstractColumnIterator implements ConstIterator, Cloneable {
+    public class ConstColumnIterator extends ColumnIterator implements ConstIterator {
 
         /**
          * Creates a constant, non-modifiable ConstColumnIterator for an entire column <code>col</code>

@@ -19,8 +19,25 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+/*
+ Copyright (C) 2001, 2002, 2003 Sadruddin Rejeb
+ Copyright (C) 2004, 2005, 2006 StatPro Italia srl
 
-package org.jquantlib.assets;
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
+package org.jquantlib.instruments;
 
 import java.util.List;
 
@@ -35,11 +52,18 @@ import org.jquantlib.time.TimeGrid;
  * @author Srinivas Hasti
  */
 public abstract class DiscretizedAsset {
-	protected double /* @Time */time;
-	protected double /* @Time */latestPreAdjustment;
-	protected double /* @Time */latestPostAdjustment;
-	protected Array values;
+
+    protected double /* @Time */latestPreAdjustment;
+    protected double /* @Time */latestPostAdjustment;
+    protected double /* @Time */time;
+    protected Array values;
+
 	private Lattice method;
+
+
+	//
+	// public constructors
+	//
 
 	public DiscretizedAsset() {
 		this.latestPostAdjustment = Double.MAX_VALUE;
@@ -67,6 +91,8 @@ public abstract class DiscretizedAsset {
 		return method;
 	}
 
+
+    //////////////////////////////////////////////////////////////////////////////
 	//
 	// High-level interface
 	//
@@ -74,6 +100,11 @@ public abstract class DiscretizedAsset {
 	// initialize, evolve and take the present value of the assets. They call
 	// the corresponding methods in the Lattice interface, to which we refer for
 	// documentation.
+	//
+    //////////////////////////////////////////////////////////////////////////////
+
+	//
+	// public methods
 	//
 
 	public void initialize(final Lattice method, final /* @Time */ double t) {
@@ -93,6 +124,8 @@ public abstract class DiscretizedAsset {
 		return method.presentValue(this);
 	}
 
+
+	//////////////////////////////////////////////////////////////////////////////
 	//
 	// Low-level interface
 	//
@@ -101,12 +134,32 @@ public abstract class DiscretizedAsset {
 	// users, with the exception of adjustValues(), preAdjustValues() and
 	// postAdjustValues() that can be used together with partialRollback().
 	//
+    //////////////////////////////////////////////////////////////////////////////
+
+
+	//
+	// abstract methods
+	//
 
 	/**
 	 * This method should initialize the asset values to an Array of the given
 	 * size and with values depending on the particular asset.
 	 */
 	public abstract void reset(/* Size */int size);
+
+    /**
+     * This method returns the times at which the numerical method should stop
+     * while rolling back the asset. Typical examples include payment times,
+     * exercise times and such.
+     *
+     * @note The returned values are not guaranteed to be sorted.
+     */
+    public abstract List</* Time */Double> mandatoryTimes();
+
+
+	//
+	// public methods
+	//
 
 	/**
 	 * This method will be invoked after rollback and before any other asset
@@ -148,31 +201,28 @@ public abstract class DiscretizedAsset {
 		postAdjustValues();
 	}
 
-	/**
-	 * This method returns the times at which the numerical method should stop
-	 * while rolling back the asset. Typical examples include payment times,
-	 * exercise times and such.
-	 *
-	 * @note The returned values are not guaranteed to be sorted.
-	 */
-	public abstract List</* Time */Double> mandatoryTimes();
-
-	protected boolean isOnTime(final /* @Time */ double t) {
-		final TimeGrid grid = method().timeGrid();
-		return Closeness.isCloseEnough(grid.at(grid.index(t)), time());
-	}
-
 	public void setValues(final Array newValues) {
 		this.values = newValues;
 	}
 
+
+	//
+	// protected methods
+	//
+
+    protected boolean isOnTime(final /* @Time */ double t) {
+        final TimeGrid grid = method().timeGrid();
+        return Closeness.isCloseEnough(grid.at(grid.index(t)), time());
+    }
 
     /**
      * This method performs the actual pre-adjustment
      * <p>
      * This method is left to be overridden by extended classes
      */
-    protected void preAdjustValuesImpl() { }
+    protected void preAdjustValuesImpl() {
+        // nothing
+    }
 
 
     /**
@@ -180,6 +230,8 @@ public abstract class DiscretizedAsset {
      * <p>
      * This method is left to be overridden by extended classes
      */
-    protected void postAdjustValuesImpl() { }
+    protected void postAdjustValuesImpl() {
+        // nothing
+    }
 
 }

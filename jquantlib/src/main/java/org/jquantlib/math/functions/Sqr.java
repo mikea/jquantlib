@@ -1,9 +1,8 @@
 /*
- Copyright (C) 2009 Ueli Hofstetter
  Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -16,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -26,8 +25,7 @@ import org.jquantlib.math.Ops;
 
 /**
  * A square function
- * 
- * @author Ueli Hofstetter
+ *
  * @author Richard Gomes
  */
 public final class Sqr implements Ops.DoubleOp {
@@ -35,7 +33,7 @@ public final class Sqr implements Ops.DoubleOp {
 	//
     // implements Ops.DoubleOp
     //
-    
+
 	@Override
 	public double op(final double a) {
 		return a*a;
