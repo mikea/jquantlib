@@ -55,13 +55,13 @@ public class ReplicationError {
 
     private final /* @Time */Number maturity_;
     private final PlainVanillaPayoff payoff_;
-    private final /* @Price */Number s0_;
+    private final /* @Real */Number s0_;
     private final /* @Volatility */Number sigma_;
     private final /* @Rate */Number r_;
     private final /* @Real */Number vega_;
 
     public ReplicationError(final Option.Type type, final/* @Time */Number maturity,
-            final/* @Price */Number strike, final/* @Price */Number s0,
+            final/* @Real */Number strike, final/* @Real */Number s0,
             final/* @Volatility */Number sigma, final/* @Rate */Number r)
     {
         if (System.getProperty("EXPERIMENTAL") == null)

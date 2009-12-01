@@ -179,17 +179,17 @@ public abstract class LocalVolTermStructure extends VolatilityTermStructure impl
 
     //! \name Local Volatility
 
-    public final /*@Volatility*/ double localVol(final Date d, final /*@Price*/ double underlyingLevel, final boolean extrapolate) {
+    public final /*@Volatility*/ double localVol(final Date d, final /*@Real*/ double underlyingLevel, final boolean extrapolate) {
         /*@Time*/ final double t = timeFromReference(d);
         checkRange(t, underlyingLevel, extrapolate);
         return localVolImpl(t, underlyingLevel);
     }
 
-    public final /*@Volatility*/ double localVol(final /*@Time*/ double t, final /*@Price*/ double underlyingLevel) {
+    public final /*@Volatility*/ double localVol(final /*@Time*/ double t, final /*@Real*/ double underlyingLevel) {
         return localVol(t, underlyingLevel, false);
     }
 
-    public final /*@Volatility*/ double localVol(final /*@Time*/ double t, final /*@Price*/ double underlyingLevel, final boolean extrapolate) {
+    public final /*@Volatility*/ double localVol(final /*@Time*/ double t, final /*@Real*/ double underlyingLevel, final boolean extrapolate) {
         checkRange(t, underlyingLevel, extrapolate);
         return localVolImpl(t, underlyingLevel);
     }
@@ -199,13 +199,13 @@ public abstract class LocalVolTermStructure extends VolatilityTermStructure impl
      * @return the minimum strike for which the term structure can return vols
      */
     @Override
-    public abstract /*@Price*/ double minStrike();
+    public abstract /*@Real*/ double minStrike();
 
     /**
      * @return the maximum strike for which the term structure can return vols
      */
     @Override
-    public abstract /*@Price*/ double maxStrike();
+    public abstract /*@Real*/ double maxStrike();
 
 
 
@@ -219,14 +219,14 @@ public abstract class LocalVolTermStructure extends VolatilityTermStructure impl
             assume that extrapolation is required.
      */
     //! local vol calculation
-    protected abstract /*@Volatility*/ double localVolImpl(final /*@Time*/ double t, final /*@Price*/ double strike);
+    protected abstract /*@Volatility*/ double localVolImpl(final /*@Time*/ double t, final /*@Real*/ double strike);
 
 
 
-    private final void checkRange(final /*@Time*/ double t, final /*@Price*/ double strike, final boolean extrapolate) {
+    private final void checkRange(final /*@Time*/ double t, final /*@Real*/ double strike, final boolean extrapolate) {
         super.checkRange(t, extrapolate);
-        /*@Price*/ final double minStrike = minStrike();
-        /*@Price*/ final double maxStrike = maxStrike();
+        /*@Real*/ final double minStrike = minStrike();
+        /*@Real*/ final double maxStrike = maxStrike();
         QL.require(extrapolate||allowsExtrapolation()||(strike>=minStrike&&strike<=maxStrike) , "strike is outside curve domain"); // QA:[RG]::verified // TODO: message
     }
 

@@ -104,23 +104,23 @@ public class EuropeanOptionTest {
 
     private static class EuropeanOptionData {
         private final Option.Type type;            // option type
-        private final /*@Price*/ double strike;    // option strike price
+        private final /*@Real*/ double strike;    // option strike price
         private final double s;                    // spot // FIXME: any specific @annotation?
-        private final /*@Price*/ double  q;        // dividend
+        private final /*@Real*/ double  q;        // dividend
         private final /*@Rate*/ double  r;         // risk-free rate
         private final /*@Time*/ double  t;         // time to maturity
         private final /*@Volatility*/ double v;    // volatility
-        private final /*@Price*/ double result;    // expected result
+        private final /*@Real*/ double result;    // expected result
         private final double tol;                  // tolerance // FIXME: any specific @annotation?
 
         public EuropeanOptionData(
                 final Option.Type type,
-                /*@Price*/ final double strike,
-                final double s, /*@Price*/ final double  q,
+                /*@Real*/ final double strike,
+                final double s, /*@Real*/ final double  q,
                 /*@Rate*/ final double  r,
                 /*@Time*/ final double  t,
                 /*@Volatility*/ final double v,
-                /*@Price*/ final double result,
+                /*@Real*/ final double result,
                 final double tol) {
             this.type = type;
             this.strike = strike;

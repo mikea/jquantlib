@@ -80,8 +80,8 @@ public class DiscreteHedging implements Runnable {
             clock.startClock();
 
 			/* @Time */			final Number maturity = new Double(1.0 / 12.0); // 1 month
-			/* @Price */	 	final Number strike = new Double(100);
-			/* @Price */	 	final Number underlying = new Double(100);
+			/* @Real */	 	final Number strike = new Double(100);
+			/* @Real */	 	final Number underlying = new Double(100);
 			/* @Volatility */	final Number volatility = new Double(0.20); // 20%
 			/* @Rate */    		final Number riskFreeRate = new Double(0.05); // 5%
 			final Option.Type Call = Option.Type.Call;

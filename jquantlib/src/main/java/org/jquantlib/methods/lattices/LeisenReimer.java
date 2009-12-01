@@ -23,7 +23,7 @@
 package org.jquantlib.methods.lattices;
 
 import org.jquantlib.lang.annotation.NonNegative;
-import org.jquantlib.lang.annotation.Price;
+import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.processes.StochasticProcess1D;
 
@@ -40,14 +40,13 @@ public class LeisenReimer extends BinomialTree {
 	protected double up, down, pu, pd;
 
 	public LeisenReimer(
-	        final StochasticProcess1D process,
-	        @Time final double end,
-	        @NonNegative final int steps,
-	        @Price final double strike) {
+            final StochasticProcess1D process,
+            final @Time double end,
+            final @NonNegative int steps,
+            final @Real double strike) {
 	    super(process, end, steps);
-        if (strike <= 0.0) {
+        if (strike <= 0.0)
             throw new IllegalArgumentException("strike must be positive");
-        }
 
         final int oddSteps = (steps % 2 > 0 ? steps : steps + 1);
         final double variance = process.variance(0.0, x0, end);
@@ -83,9 +82,8 @@ public class LeisenReimer extends BinomialTree {
 	// Possibly create a math-utilities class and move into there.
 	private double PeizerPrattMethod2Inversion(final double z, final int n) {
 
-		if (! (n % 2 != 0) ) {
+		if (! (n % 2 != 0) )
             throw new IllegalArgumentException("n must be an odd number");
-        }
 
 		double result = (z / (n + 1.0 / 3.0 + 0.1 / (n + 1.0)));
 		result *= result;

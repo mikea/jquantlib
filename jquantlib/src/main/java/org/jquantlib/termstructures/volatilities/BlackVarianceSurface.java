@@ -79,7 +79,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
     private final DayCounter dayCounter;
     private final Date maxDate;
     private final /* @Time */ Array times;
-    private /* @Price */ Array strikes;
+    private /* @Real */ Array strikes;
     private final /* @Variance */ Matrix variances;
     private Interpolation2D varianceSurface;
     private final Extrapolation lowerExtrapolation;
@@ -92,7 +92,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
     //
 
     public BlackVarianceSurface(final Date referenceDate, final Date[] dates,
-            final/* @Price */ Array strikes, final/* @Volatility */ Matrix blackVolMatrix, final DayCounter dayCounter) {
+            final/* @Real */ Array strikes, final/* @Volatility */ Matrix blackVolMatrix, final DayCounter dayCounter) {
 
         this(referenceDate, dates, strikes, blackVolMatrix, dayCounter,
                 Extrapolation.InterpolatorDefaultExtrapolation,
@@ -102,7 +102,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
     public BlackVarianceSurface(
             final Date referenceDate,
             final Date[] dates,
-            final/* @Price */ Array strikes,
+            final/* @Real */ Array strikes,
             final/* @Volatility */ Matrix blackVolMatrix,
             final DayCounter dayCounter,
             final Extrapolation lowerExtrapolation,
@@ -175,17 +175,17 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
     //
 
     @Override
-    public final /* @Price */ double minStrike() {
+    public final /* @Real */ double minStrike() {
         return strikes.first();
     }
 
     @Override
-    public final /* @Price */ double maxStrike() {
+    public final /* @Real */ double maxStrike() {
         return strikes.last();
     }
 
     @Override
-    protected final/* @Variance */double blackVarianceImpl(/* @Time */final double t, /* @Price */double strike) /* @ReadOnly */{
+    protected final/* @Variance */double blackVarianceImpl(/* @Time */final double t, /* @Real */double strike) /* @ReadOnly */{
 
         if (t == 0.0)
             return 0.0;

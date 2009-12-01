@@ -67,13 +67,13 @@ public class GapPayoff extends StrikedTypePayoff {
     // protected fields
     //
 
-    protected /*@Price*/ double secondStrike;
+    protected /*@Real*/ double secondStrike;
 
 	//
 	// public constructors
 	//
 
-	public GapPayoff(final Option.Type type, final /*@Price*/ double strike, final /*@Price*/ double secondStrike) {
+	public GapPayoff(final Option.Type type, final /*@Real*/ double strike, final /*@Real*/ double secondStrike) {
 		super(type, strike);
 		this.secondStrike = secondStrike;
 	}
@@ -81,7 +81,7 @@ public class GapPayoff extends StrikedTypePayoff {
     /**
      * @return the second strike value
      */
-	public /*@Price*/ double getSecondStrike() /* @ReadOnly */ {
+	public /*@Real*/ double getSecondStrike() /* @ReadOnly */ {
 		return secondStrike;
 	}
 

@@ -54,7 +54,7 @@ public abstract class StrikedTypePayoff extends TypePayoff {
     /**
      * This field represents the {@link Option}'s strike price
      */
-    protected /*@Price*/ double strike;
+    protected /*@Real*/ double strike;
 
     //
     // public constructors
@@ -66,7 +66,7 @@ public abstract class StrikedTypePayoff extends TypePayoff {
 	 * @param type is an {@link Option.Type}
 	 * @param strike is the strike price
 	 */
-    public StrikedTypePayoff(final Option.Type type, final /*@Price*/ double strike) {
+    public StrikedTypePayoff(final Option.Type type, final /*@Real*/ double strike) {
 		super(type);
 		this.strike = strike;
 	}
@@ -78,7 +78,7 @@ public abstract class StrikedTypePayoff extends TypePayoff {
     /**
      * @return the strike value
      */
-    public final /*@Price*/ double strike() {
+    public final /*@Real*/ double strike() {
 		return strike;
 	}
 

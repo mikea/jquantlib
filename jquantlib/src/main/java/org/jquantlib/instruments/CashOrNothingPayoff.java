@@ -81,7 +81,7 @@ public class CashOrNothingPayoff extends StrikedTypePayoff {
      * @param strike is the strike price
      * @param cashPayoff is the cash payoff value
      */
-	public CashOrNothingPayoff(final Option.Type type, final/* @Price */double strike, final /*@Payoff*/ double cashPayoff) {
+	public CashOrNothingPayoff(final Option.Type type, final/* @Real */double strike, final /*@Payoff*/ double cashPayoff) {
 		super(type, strike);
 		this.cashPayoff = cashPayoff;
 	}

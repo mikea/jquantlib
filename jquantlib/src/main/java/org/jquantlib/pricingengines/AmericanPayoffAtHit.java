@@ -60,10 +60,10 @@ public class AmericanPayoffAtHit {
     // private final fields
     //
 
-    private final /* @Price */ double spot;
+    private final /* @Real */ double spot;
     private final /* @Variance */ double variance;
     private final /* @Volatility */ double  stdDev;
-    private final /* @Price */ double  strike, forward;
+    private final /* @Real */ double  strike, forward;
     private final double mu, lambda, muPlusLambda, muMinusLambda, log_H_S;
     private final double alpha, beta, DalphaDd1, DbetaDd2;
     private final double cum_d1, cum_d2, n_d1, n_d2;
@@ -209,8 +209,8 @@ public class AmericanPayoffAtHit {
     // public methods
     //
 
-    public /* @Price */ double value() /* @ReadOnly */ {
-        /* @Price */ final double result = K * (forward * alpha + X * beta);
+    public /* @Real */ double value() /* @ReadOnly */ {
+        /* @Real */ final double result = K * (forward * alpha + X * beta);
         return result;
     }
 

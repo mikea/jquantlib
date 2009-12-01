@@ -118,17 +118,17 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     //
 
     @Override
-    public final /*@Price*/ double minStrike() {
+    public final /*@Real*/ double minStrike() {
         return Double.NEGATIVE_INFINITY;
     }
 
     @Override
-    public final /*@Price*/ double maxStrike() {
+    public final /*@Real*/ double maxStrike() {
         return Double.POSITIVE_INFINITY;
     }
 
     @Override
-    protected final /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
+    protected final /*@Volatility*/ double blackVolImpl(final /*@Time*/ double maturity, final /*@Real*/ double strike) {
         return volatility.currentLink().value();
     }
 

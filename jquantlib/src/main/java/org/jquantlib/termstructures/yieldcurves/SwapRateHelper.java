@@ -222,18 +222,18 @@ public class SwapRateHelper extends RelativeDateRateHelper {
      * @see org.jquantlib.termstructures.BootstrapHelper#getImpliedQuote()
      */
     @Override
-    public /*@Price*/ double impliedQuote() /* @ReadOnly */ {
+    public /*@Real*/ double impliedQuote() /* @ReadOnly */ {
         QL.require(termStructure != null , "term structure not set"); // QA:[RG]::verified // TODO: message
 
         // we didn't register as observers - force calculation
         swap.recalculate();
 
         // weak implementation... to be improved
-        /*@Price*/ final double floatingLegNPV = swap.floatingLegNPV();
+        /*@Real*/ final double floatingLegNPV = swap.floatingLegNPV();
         /*@Spread*/ final double spread = this.spread.empty() ? 0.0 : this.spread.currentLink().value();
-        /*@Price*/ final double spreadNPV = swap.floatingLegBPS()/basisPoint*spread;
-        /*@Price*/ final double totNPV = - (floatingLegNPV+spreadNPV);
-        /*@Price*/ final double result = totNPV/(swap.fixedLegBPS()/basisPoint);
+        /*@Real*/ final double spreadNPV = swap.floatingLegBPS()/basisPoint*spread;
+        /*@Real*/ final double totNPV = - (floatingLegNPV+spreadNPV);
+        /*@Real*/ final double result = totNPV/(swap.fixedLegBPS()/basisPoint);
         return result;
     }
 

@@ -161,18 +161,18 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
     //
 
     @Override
-    public final /*@Price*/ double minStrike() {
+    public final /*@Real*/ double minStrike() {
         return Double.NEGATIVE_INFINITY;
     }
 
     @Override
-    public final /*@Price*/ double maxStrike() {
+    public final /*@Real*/ double maxStrike() {
         return Double.POSITIVE_INFINITY;
     }
 
     @Override
     // TODO :: compare against C++ sources
-    protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, final /*@Price*/ double maturity) {
+    protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, final /*@Real*/ double maturity) {
         if (t <= times.last())
             return varianceCurve.op(t);
         else {

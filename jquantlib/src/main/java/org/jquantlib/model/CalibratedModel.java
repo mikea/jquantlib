@@ -70,6 +70,8 @@ public abstract class CalibratedModel implements Observer, Observable {
     //
 
     public CalibratedModel(final int nArguments) {
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
         this.arguments_ = new ArrayList<Parameter>(nArguments);
         this.constraint_ = new PrivateConstraint(arguments_);
         this.shortRateEndCriteria_ = EndCriteria.Type.None;

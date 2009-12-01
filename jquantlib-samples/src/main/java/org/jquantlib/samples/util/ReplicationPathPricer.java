@@ -28,7 +28,7 @@ import org.jquantlib.methods.montecarlo.PathPricer;
 public class ReplicationPathPricer extends PathPricer<Path> {
 
 	ReplicationPathPricer(final Option.Type type,
-			double /* @Price @NonNegative */strike, double /*
+			double /* @Real @NonNegative */strike, double /*
 															 * @Rate
 															 * @NonNegative
 															 */r,
@@ -61,7 +61,7 @@ public class ReplicationPathPricer extends PathPricer<Path> {
 	}
 
 	private Option.Type type_;
-	private/* @Price */double strike_;
+	private/* @Real */double strike_;
 	private/* @Rate */double r_;
 	private/* @Time */double maturity_;
 	private/* @Volatility */double sigma_;

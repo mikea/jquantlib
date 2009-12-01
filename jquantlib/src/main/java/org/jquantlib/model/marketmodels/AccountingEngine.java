@@ -13,7 +13,7 @@ public class AccountingEngine {
     public AccountingEngine(
             final MarketModelEvolver evolver,
             final Object /* const Clone<MarketModelMultiProduct>& product*/ Mark,
-            final /*@Price*/ double initialNumeraireValue) {
+            final /*@Real*/ double initialNumeraireValue) {
         
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");

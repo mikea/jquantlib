@@ -62,7 +62,7 @@ public class PlainVanillaPayoff extends StrikedTypePayoff {
     // public constructors
     //
 
-	public PlainVanillaPayoff(final Option.Type type, final /*@Price*/ double strike) {
+	public PlainVanillaPayoff(final Option.Type type, final /*@Real*/ double strike) {
 		super(type, strike);
 	}
 

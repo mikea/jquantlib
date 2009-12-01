@@ -22,7 +22,7 @@
 package org.jquantlib.methods.lattices;
 
 import org.jquantlib.lang.annotation.NonNegative;
-import org.jquantlib.lang.annotation.Price;
+import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.lang.annotation.Unused;
 import org.jquantlib.processes.StochasticProcess1D;
@@ -42,10 +42,10 @@ public class Tian extends BinomialTree {
 	protected double pd;
 
 	public Tian(
-	        final StochasticProcess1D process,
-	        @Time final double end,
-	        @NonNegative final int steps,
-	        @Unused @Price final double strike) {
+            final StochasticProcess1D process,
+            final @Time double end,
+            final @NonNegative int steps,
+            final @Unused @Real double strike) {
 		super(process, end, steps);
 
 		final double q = Math.exp(process.variance(0.0, x0, dt));
@@ -61,9 +61,8 @@ public class Tian extends BinomialTree {
 		// treeCentering_ = (up_+down_)/2.0;
 		// up_ = up_-treeCentering_;
 
-		if (pu < 0.0 || pu > 1.0) {
+		if (pu < 0.0 || pu > 1.0)
             throw new IllegalStateException("negative probablity");
-        }
 	}
 
 	@Override

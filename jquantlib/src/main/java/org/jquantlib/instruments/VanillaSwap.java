@@ -41,7 +41,7 @@ public class VanillaSwap extends Swap {
 
 
     private final Type type;
-    private final /*@Price*/ double nominal;
+    private final /*@Real*/ double nominal;
     private final Schedule fixedSchedule;
     private final /*@Rate*/ double  fixedRate;
     private final DayCounter fixedDayCount;
@@ -58,7 +58,7 @@ public class VanillaSwap extends Swap {
 
     public VanillaSwap(
             final Type type,
-            final /*@Price*/ double nominal,
+            final /*@Real*/ double nominal,
             final Schedule fixedSchedule,
             final /*@Rate*/ double fixedRate,
             final DayCounter fixedDayCount,
@@ -129,25 +129,25 @@ public class VanillaSwap extends Swap {
     }
 
 
-    public /*@Price*/ double fixedLegBPS() /* @ReadOnly */ {
+    public /*@Real*/ double fixedLegBPS() /* @ReadOnly */ {
         calculate();
         QL.require(!Double.isNaN(legBPS[0]) , "result not available"); // QA:[RG]::verified // TODO: message
         return legBPS[0];
     }
 
-    public /*@Price*/ double floatingLegBPS() /* @ReadOnly */ {
+    public /*@Real*/ double floatingLegBPS() /* @ReadOnly */ {
         calculate();
         QL.require(!Double.isNaN(legBPS[1]) , "result not available");
         return legBPS[1];
     }
 
-    public /*@Price*/ double fixedLegNPV() /* @ReadOnly */ {
+    public /*@Real*/ double fixedLegNPV() /* @ReadOnly */ {
         calculate();
         QL.require(!Double.isNaN(legNPV[0]) , "result not available"); // QA:[RG]::verified // TODO: message
         return legNPV[0];
     }
 
-    public /*@Price*/ double floatingLegNPV() /* @ReadOnly */ {
+    public /*@Real*/ double floatingLegNPV() /* @ReadOnly */ {
         calculate();
         QL.require(!Double.isNaN(legNPV[1]) , "result not available"); // QA:[RG]::verified // TODO: message
         return legNPV[1];
@@ -175,7 +175,7 @@ public class VanillaSwap extends Swap {
 
             a.fixedResetDates = new ArrayList<Date>(fixedCoupons.size());
             a.fixedPayDates = new ArrayList<Date>(fixedCoupons.size());
-            a.fixedCoupons = new ArrayList</*@Price*/ Double>(fixedCoupons.size());
+            a.fixedCoupons = new ArrayList</*@Real*/ Double>(fixedCoupons.size());
 
             for (int i=0; i<fixedCoupons.size(); i++) {
                 final FixedRateCoupon coupon = (FixedRateCoupon) fixedCoupons.get(i);
@@ -192,7 +192,7 @@ public class VanillaSwap extends Swap {
 
             a.floatingAccrualTimes = new ArrayList</*@Time*/ Double>(floatingCoupons.size());
             a.floatingSpreads = new ArrayList</*@Spread*/ Double>(floatingCoupons.size());
-            a.floatingCoupons = new ArrayList</*@Price*/ Double>(floatingCoupons.size());
+            a.floatingCoupons = new ArrayList</*@Real*/ Double>(floatingCoupons.size());
             for (int i=0; i<floatingCoupons.size(); ++i) {
                 final IborCoupon coupon = (IborCoupon) floatingCoupons.get(i);
 
@@ -305,7 +305,7 @@ public class VanillaSwap extends Swap {
     public class ArgumentsImpl extends Swap.ArgumentsImpl implements VanillaSwap.Arguments {
 
         public Type type;
-        public /*@Price*/ double nominal;
+        public /*@Real*/ double nominal;
 
         public List<Date> fixedResetDates;
         public List<Date> fixedPayDates;
@@ -314,9 +314,9 @@ public class VanillaSwap extends Swap {
         public List<Date> floatingFixingDates;
         public List<Date> floatingPayDates;
 
-        public List</*@Price*/ Double> fixedCoupons;
+        public List</*@Real*/ Double> fixedCoupons;
         public List</*@Spread*/ Double> floatingSpreads;
-        public List</*@Price*/ Double> floatingCoupons;
+        public List</*@Real*/ Double> floatingCoupons;
 
 
         @Override

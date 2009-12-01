@@ -92,7 +92,7 @@ public class LocalVolSurface extends LocalVolTermStructure {
             final Handle<BlackVolTermStructure> blackTS,
             final Handle<YieldTermStructure> riskFreeTS,
             final Handle<YieldTermStructure> dividendTS,
-            final /*@Price*/ double underlying) {
+            final /*@Real*/ double underlying) {
 
         super(blackTS.currentLink().calendar(),
               blackTS.currentLink().businessDayConvention(),
@@ -129,17 +129,17 @@ public class LocalVolSurface extends LocalVolTermStructure {
     }
 
     @Override
-    public final /*@Price*/ double minStrike() {
+    public final /*@Real*/ double minStrike() {
         return blackTS_.currentLink().minStrike();
     }
 
     @Override
-    public final /*@Price*/ double maxStrike() {
+    public final /*@Real*/ double maxStrike() {
         return blackTS_.currentLink().maxStrike();
     }
 
     @Override
-    protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double time, final /*@Price*/ double underlyingLevel) {
+    protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double time, final /*@Real*/ double underlyingLevel) {
 
         // obtain local copies of objects
         final Quote u = underlying_.currentLink();
@@ -150,9 +150,9 @@ public class LocalVolSurface extends LocalVolTermStructure {
         final double forwardValue = u.value() * ( dTS.discount(time, true) / rTS.discount(time, true) );
 
         // strike derivatives
-        /*@Price*/ double strike;
-        /*@Price*/ double strikem;
-        /*@Price*/ double strikep;
+        /*@Real*/ double strike;
+        /*@Real*/ double strikem;
+        /*@Real*/ double strikep;
         double y, dy;
         double w, wp, wm, dwdy, d2wdy2;
         strike = underlyingLevel;

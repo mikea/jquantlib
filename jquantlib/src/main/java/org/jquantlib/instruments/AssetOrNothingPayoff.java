@@ -70,7 +70,7 @@ public class AssetOrNothingPayoff extends StrikedTypePayoff {
      * @param type is an {@link Option.Type}
      * @param strike is the strike price
      */
-    public AssetOrNothingPayoff(final Option.Type type, final/* @Price */double strike) {
+    public AssetOrNothingPayoff(final Option.Type type, final/* @Real */double strike) {
 		super(type, strike);
 	}
 

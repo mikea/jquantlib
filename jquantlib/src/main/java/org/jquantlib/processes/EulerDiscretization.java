@@ -70,7 +70,7 @@ public class EulerDiscretization implements StochasticProcess.Discretization, St
     @Override
     public Array driftDiscretization(
                 final StochasticProcess sp,
-                /* @Time */final double t0, /* @Price */ final Array x0, /* @Time */ final double dt) {
+                /* @Time */final double t0, /* @Real */ final Array x0, /* @Time */ final double dt) {
         return sp.drift(t0, x0).mulAssign(dt);
     }
 
@@ -82,7 +82,7 @@ public class EulerDiscretization implements StochasticProcess.Discretization, St
     @Override
     public Matrix diffusionDiscretization(
                 final StochasticProcess sp,
-                /* @Time */final double t0, /* @Price */ final Array x0, /* @Time */final double dt) {
+                /* @Time */final double t0, /* @Real */ final Array x0, /* @Time */final double dt) {
         return sp.diffusion(t0, x0).mulAssign(Math.sqrt(dt));
     }
 
@@ -94,7 +94,7 @@ public class EulerDiscretization implements StochasticProcess.Discretization, St
     @Override
     public Matrix covarianceDiscretization(
                 final StochasticProcess sp,
-                /* @Time */final double t0, /* @Price */ final Array x0, /* @Time */final double dt) {
+                /* @Time */final double t0, /* @Real */ final Array x0, /* @Time */final double dt) {
         final Matrix sigma = sp.diffusion(t0, x0);
         return sigma.mul(sigma.transpose()).mulAssign(dt);
     }
@@ -112,7 +112,7 @@ public class EulerDiscretization implements StochasticProcess.Discretization, St
     @Override
     public /* @Drift */ double driftDiscretization(
                 final StochasticProcess1D sp,
-                /* @Time */final double t0, /* @Price */ final double x0, /* @Time */final double dt) {
+                /* @Time */final double t0, /* @Real */ final double x0, /* @Time */final double dt) {
         return sp.drift(t0, x0) * dt;
     }
 
@@ -124,7 +124,7 @@ public class EulerDiscretization implements StochasticProcess.Discretization, St
     @Override
     public /* @Diffusion */ double diffusionDiscretization(
                 final StochasticProcess1D sp,
-                /* @Time */final double t0, /* @Price */ final double x0, /* @Time */final double dt) {
+                /* @Time */final double t0, /* @Real */ final double x0, /* @Time */final double dt) {
         return sp.diffusion(t0, x0) * Math.sqrt(dt);
     }
 
@@ -136,7 +136,7 @@ public class EulerDiscretization implements StochasticProcess.Discretization, St
     @Override
     public /* @Variance */ double varianceDiscretization(
                 final StochasticProcess1D sp,
-                /* @Time */final double t0, /* @Price */ final double x0, /* @Time */final double dt) {
+                /* @Time */final double t0, /* @Real */ final double x0, /* @Time */final double dt) {
         /* @Diffusion */final double sigma = sp.diffusion(t0, x0);
         return sigma * sigma * dt;
     }

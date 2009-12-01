@@ -73,10 +73,10 @@ public class IncompleteGamma {
     private double incompleteGammaFunctionSeriesRepr(final double a, final double x, final double accuracy, final int maxIteration) {
         if (x==0.0) return 0.0;
 
-        /*@Price*/ final double gln = new GammaFunction().logValue(a);
-        /*@Price*/ double ap=a;
-        /*@Price*/ double del=1.0/a;
-        /*@Price*/ double sum=del;
+        /*@Real*/ final double gln = new GammaFunction().logValue(a);
+        /*@Real*/ double ap=a;
+        /*@Real*/ double del=1.0/a;
+        /*@Real*/ double sum=del;
         for (int n=1; n<=maxIteration; n++) {
             ++ap;
             del *= x/ap;

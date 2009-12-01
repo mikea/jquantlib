@@ -195,7 +195,7 @@ public abstract class BlackVarianceTermStructure extends BlackVolTermStructure {
      * Returns the volatility for the given strike and date calculating it from the variance.
      */
     @Override
-    protected final/* @Volatility */double blackVolImpl(final/* @Time */double maturity, final/* @Price */double strike) {
+    protected final/* @Volatility */double blackVolImpl(final/* @Time */double maturity, final/* @Real */double strike) {
         /* @Time */double nonZeroMaturity;
         /* @Time */final double m = maturity;
         if (m == 0.0) {

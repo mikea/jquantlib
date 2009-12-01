@@ -113,7 +113,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
 
 
     private final RateHelper[] instruments; // FIXME: class parameter
-    private final /*@Price*/ double accuracy;
+    private final /*@Real*/ double accuracy;
 
 
     // common :: SHOULD GO INTO A DEFAULT DELEGATOR WHICH IMPLEMENTS YieldTraits
@@ -129,7 +129,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             final Date referenceDate,
             final RateHelper[] instruments,
             final DayCounter dayCounter,
-            final/* @Price */double accuracy,
+            final/* @Real */double accuracy,
             final I interpolator) {
 
         if (System.getProperty("EXPERIMENTAL") == null)
@@ -166,7 +166,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
             final Calendar calendar,
             final RateHelper[] instruments,
             final DayCounter dayCounter,
-            final/* @Price */double accuracy,
+            final/* @Real */double accuracy,
             final I interpolator) {
 
         if (System.getProperty("EXPERIMENTAL") == null)
@@ -264,7 +264,7 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
                         this.interpolation = this.interpolator.interpolate(times.constIterator(), data.constIterator());
                 this.interpolation.update();
                 final RateHelper instrument = instruments[i - 1];
-                /* @Price */double guess;
+                /* @Real */double guess;
                 if (iteration > 0)
                     // use perturbed value from previous loop
                     guess = 0.99 * this.data.get(i);
@@ -274,8 +274,8 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
                 else
                     guess = traits.initialGuess();
                 // bracket
-                /* @Price */final double min = traits.minValueAfter(i, this.data);
-                /* @Price */final double max = traits.maxValueAfter(i, this.data);
+                /* @Real */final double min = traits.minValueAfter(i, this.data);
+                /* @Real */final double max = traits.maxValueAfter(i, this.data);
                 if (guess <= min || guess >= max)
                     guess = (min + max) / 2.0;
                 try {

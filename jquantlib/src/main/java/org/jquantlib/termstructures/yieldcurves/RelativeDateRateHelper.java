@@ -67,7 +67,7 @@ public abstract class RelativeDateRateHelper extends RateHelper {
     // public constructors
     //
 
-    public RelativeDateRateHelper(/*@Price*/ final double d) {
+    public RelativeDateRateHelper(/*@Real*/ final double d) {
         super(d);
         this.evaluationDate = new Settings().evaluationDate();
         this.evaluationDate.addObserver(this);

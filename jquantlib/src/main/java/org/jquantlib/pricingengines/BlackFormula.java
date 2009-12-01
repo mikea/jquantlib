@@ -49,7 +49,7 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.lang.annotation.DiscountFactor;
 import org.jquantlib.lang.annotation.NonNegative;
-import org.jquantlib.lang.annotation.Price;
+import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.lang.annotation.StdDev;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
@@ -72,10 +72,10 @@ public class BlackFormula {
      * @note instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormula(
+    public static /*@Real*/ double blackFormula(
             final Option.Type optionType,
-            @Price final double strike,
-            @Price final double forward,
+            @Real final double strike,
+            @Real final double forward,
             @StdDev final double stddev) {
 
         return blackFormula(optionType, strike, forward, stddev, 1.0, 0.0);
@@ -87,10 +87,10 @@ public class BlackFormula {
      * @note  Instead of volatility it uses standard deviation, i.e.
      *        volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormula(
+    public static /*@Real*/ double blackFormula(
             final Option.Type optionType,
-            @Price final double strike,
-            @Price final double forward,
+            @Real final double strike,
+            @Real final double forward,
             @StdDev final double stddev,
             @DiscountFactor final double discount) {
 
@@ -104,13 +104,13 @@ public class BlackFormula {
      * @note  Instead of volatility it uses standard deviation, i.e.
      *        volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormula(
+    public static /*@Real*/ double blackFormula(
             final Option.Type optionType,
-            @Price double strike,
-            @Price double forward,
+            @Real double strike,
+            @Real double forward,
             @StdDev final double stddev,
             @DiscountFactor final double discount,
-            @Price final double displacement) {
+            @Real final double displacement) {
 
         QL.require(strike >= 0.0       , "strike must be non-negative"); // QA:[RG]::verified // TODO: message
         QL.require(forward > 0.0       , "forward must be positive"); // QA:[RG]::verified // TODO: message
@@ -126,12 +126,12 @@ public class BlackFormula {
         if (strike == 0.0) // strike=0 iff displacement=0
             return (optionType == Option.Type.Call ? forward * discount : 0.0);
 
-        @Price final double d1 = Math.log(forward / strike) / stddev + 0.5 * stddev;
-        @Price final double d2 = d1 - stddev;
+        @Real final double d1 = Math.log(forward / strike) / stddev + 0.5 * stddev;
+        @Real final double d2 = d1 - stddev;
 
         // TODO: code review
         final CumulativeNormalDistribution phi = new CumulativeNormalDistribution();
-        @Price final double result = discount * optionType.toInteger()
+        @Real final double result = discount * optionType.toInteger()
         * (forward * phi.op(optionType.toInteger() * d1) - strike * phi.op(optionType.toInteger() * d2));
 
         if (result >= 0.0) return result;
@@ -148,10 +148,10 @@ public class BlackFormula {
      * @note instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormula(
+    public static /*@Real*/ double blackFormula(
             final PlainVanillaPayoff payoff,
-            @Price final double strike,
-            @Price final double forward,
+            @Real final double strike,
+            @Real final double forward,
             @StdDev final double stddev) {
 
         return blackFormula(payoff, strike, forward, stddev, 1.0, 0.0);
@@ -163,10 +163,10 @@ public class BlackFormula {
      * @note  Instead of volatility it uses standard deviation, i.e.
      *        volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormula(
+    public static /*@Real*/ double blackFormula(
             final PlainVanillaPayoff payoff,
-            @Price final double strike,
-            @Price final double forward,
+            @Real final double strike,
+            @Real final double forward,
             @StdDev final double stddev,
             @DiscountFactor final double discount) {
 
@@ -180,13 +180,13 @@ public class BlackFormula {
      * @note  Instead of volatility it uses standard deviation, i.e.
      *        volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormula(
+    public static /*@Real*/ double blackFormula(
             final PlainVanillaPayoff payoff,
-            @Price final double strike,
-            @Price final double forward,
+            @Real final double strike,
+            @Real final double forward,
             @StdDev final double stddev,
             @DiscountFactor final double discount,
-            @Price final double displacement) {
+            @Real final double displacement) {
 
         return blackFormula(payoff.optionType(), payoff.strike(), forward, stddev, discount, displacement);
     }
@@ -204,11 +204,11 @@ public class BlackFormula {
      * moneyness approximation by Corrado and Miller (1996)
      */
 
-    public static /*@Price*/ double blackFormulaImpliedStdDevApproximation(
+    public static /*@Real*/ double blackFormulaImpliedStdDevApproximation(
             final Option.Type optionType,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice) {
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice) {
 
         return blackFormulaImpliedStdDevApproximation(optionType, strike, forward, blackPrice, 1.0, 0.0);
     }
@@ -222,11 +222,11 @@ public class BlackFormula {
      * moneyness approximation by Corrado and Miller (1996)
      */
 
-    public static /*@Price*/ double blackFormulaImpliedStdDevApproximation(
+    public static /*@Real*/ double blackFormulaImpliedStdDevApproximation(
             final Option.Type optionType,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice,
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice,
             @DiscountFactor final double discount) {
 
         return blackFormulaImpliedStdDevApproximation(optionType, strike, forward, blackPrice, discount, 0.0);
@@ -240,13 +240,13 @@ public class BlackFormula {
      * (1988) approximation for at-the-money forward option, with the extended
      * moneyness approximation by Corrado and Miller (1996)
      */
-    public static /*@Price*/ double blackFormulaImpliedStdDevApproximation(
+    public static /*@Real*/ double blackFormulaImpliedStdDevApproximation(
             final Option.Type optionType,
-            @Price double strike,
-            @Price double forward,
-            @Price final double blackPrice,
+            @Real double strike,
+            @Real double forward,
+            @Real final double blackPrice,
             @DiscountFactor final double discount,
-            @Price final double displacement) {
+            @Real final double displacement) {
 
         QL.require(strike >= 0.0       , "strike must be non-negative"); // TODO: message
         QL.require(forward > 0.0       , "forward must be positive"); // TODO: message
@@ -296,11 +296,11 @@ public class BlackFormula {
      * moneyness approximation by Corrado and Miller (1996)
      */
 
-    public static /*@Price*/ double blackFormulaImpliedStdDevApproximation(
+    public static /*@Real*/ double blackFormulaImpliedStdDevApproximation(
             final PlainVanillaPayoff payoff,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice) {
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice) {
 
         // TODO : complete
         return blackFormulaImpliedStdDevApproximation(payoff, strike, forward, blackPrice, 1.0, 0.0);
@@ -315,11 +315,11 @@ public class BlackFormula {
      * moneyness approximation by Corrado and Miller (1996)
      */
 
-    public static /*@Price*/ double blackFormulaImpliedStdDevApproximation(
+    public static /*@Real*/ double blackFormulaImpliedStdDevApproximation(
             final PlainVanillaPayoff payoff,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice,
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice,
             @DiscountFactor final double discount) {
 
         // TODO : complete
@@ -335,13 +335,13 @@ public class BlackFormula {
      * moneyness approximation by Corrado and Miller (1996)
      */
 
-    public static /*@Price*/ double blackFormulaImpliedStdDevApproximation(
+    public static /*@Real*/ double blackFormulaImpliedStdDevApproximation(
             final PlainVanillaPayoff payoff,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice,
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice,
             @DiscountFactor final double discount,
-            @Price final double displacement) {
+            @Real final double displacement) {
 
         return blackFormulaImpliedStdDevApproximation(payoff.optionType(), payoff.strike(), forward, blackPrice, discount, displacement);
     }
@@ -354,11 +354,11 @@ public class BlackFormula {
      * Black 1976 implied standard deviation, i.e.
      * volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaImpliedStdDev(
+    public static /*@Real*/ double blackFormulaImpliedStdDev(
             final Option.Type optionType,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice) {
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice) {
 
         return blackFormulaImpliedStdDev(optionType, strike, forward, blackPrice, 1.0, Double.NaN, 1.0e-6, 0.0);
 
@@ -368,11 +368,11 @@ public class BlackFormula {
      * Black 1976 implied standard deviation, i.e.
      * volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaImpliedStdDev(
+    public static /*@Real*/ double blackFormulaImpliedStdDev(
             final Option.Type optionType,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice,
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice,
             @DiscountFactor final double discount) {
 
         return blackFormulaImpliedStdDev(optionType, strike, forward, blackPrice, discount, Double.NaN, 1.0e-6, 0.0);
@@ -383,11 +383,11 @@ public class BlackFormula {
      * Black 1976 implied standard deviation, i.e.
      * volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaImpliedStdDev(
-            final Option.Type optionType, @Price final double strike,
-            @Price final double forward, @Price final double blackPrice,
+    public static /*@Real*/ double blackFormulaImpliedStdDev(
+            final Option.Type optionType, @Real final double strike,
+            @Real final double forward, @Real final double blackPrice,
             @DiscountFactor final double discount,
-            @Price final double guess) {
+            @Real final double guess) {
 
         return blackFormulaImpliedStdDev(optionType, strike, forward, blackPrice, discount, guess, 1.0e-6, 0.0);
 
@@ -397,14 +397,14 @@ public class BlackFormula {
      * Black 1976 implied standard deviation, i.e.
      * volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaImpliedStdDev(
+    public static /*@Real*/ double blackFormulaImpliedStdDev(
             final Option.Type optionType,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice,
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice,
             @DiscountFactor final double discount,
-            @Price final double guess,
-            @Price final double accuracy) {
+            @Real final double guess,
+            @Real final double accuracy) {
 
         return blackFormulaImpliedStdDev(optionType, strike, forward, blackPrice, discount, guess, accuracy, 0.0);
 
@@ -414,15 +414,15 @@ public class BlackFormula {
      * Black 1976 implied standard deviation, i.e.
      * volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaImpliedStdDev(
+    public static /*@Real*/ double blackFormulaImpliedStdDev(
             final Option.Type optionType,
-            @Price double strike,
-            @Price double forward,
-            @Price final double blackPrice,
+            @Real double strike,
+            @Real double forward,
+            @Real final double blackPrice,
             @DiscountFactor final double discount,
-            @Price double guess,
-            @Price final double accuracy,
-            @Price final double displacement) {
+            @Real double guess,
+            @Real final double accuracy,
+            @Real final double displacement) {
 
         //---
         // TODO: This block of code was removed because there's no option to pass maxIterations in the original C++ code
@@ -435,15 +435,15 @@ public class BlackFormula {
         //	 * volatility*sqrt(timeToMaturity)
         //	 */
         //	// TODO: Move the code
-        //	public static /*@Price*/ double blackFormulaImpliedStdDev(
+        //	public static /*@Real*/ double blackFormulaImpliedStdDev(
         //			final Option.Type optionType,
-        //			@Price double strike,
-        //			@Price double forward,
-        //			@Price final double blackPrice,
+        //			@Real double strike,
+        //			@Real double forward,
+        //			@Real final double blackPrice,
         //			@DiscountFactor final doublediscount,
-        //			@Price double guess,
-        //			@Price final double accuracy,
-        //			@Price final double displacement,
+        //			@Real double guess,
+        //			@Real final double accuracy,
+        //			@Real final double displacement,
         //			final int maxIterations) {
         //---
         //TODO: The original C++ code does not have this line and calls to solver.setMaxIterations(100)
@@ -483,11 +483,11 @@ public class BlackFormula {
      * Black 1976 implied standard deviation, i.e.
      * volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaImpliedStdDev(
+    public static /*@Real*/ double blackFormulaImpliedStdDev(
             final PlainVanillaPayoff payoff,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice) {
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice) {
 
         return blackFormulaImpliedStdDev(payoff, strike, forward, blackPrice, 1.0, Double.NaN, 1.0e-6, 0.0);
     }
@@ -496,11 +496,11 @@ public class BlackFormula {
      * Black 1976 implied standard deviation, i.e.
      * volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaImpliedStdDev(
+    public static /*@Real*/ double blackFormulaImpliedStdDev(
             final PlainVanillaPayoff payoff,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice,
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice,
             @DiscountFactor final double discount) {
 
         return blackFormulaImpliedStdDev(payoff, strike, forward, blackPrice, discount, Double.NaN, 1.0e-6, 0.0);
@@ -510,13 +510,13 @@ public class BlackFormula {
      * Black 1976 implied standard deviation, i.e.
      * volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaImpliedStdDev(
+    public static /*@Real*/ double blackFormulaImpliedStdDev(
             final PlainVanillaPayoff payoff,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice,
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice,
             @DiscountFactor final double discount,
-            @Price final double guess) {
+            @Real final double guess) {
 
         return blackFormulaImpliedStdDev(payoff, strike, forward, blackPrice, discount, guess, 1.0e-6, 0.0);
     }
@@ -525,14 +525,14 @@ public class BlackFormula {
      * Black 1976 implied standard deviation, i.e.
      * volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaImpliedStdDev(
+    public static /*@Real*/ double blackFormulaImpliedStdDev(
             final PlainVanillaPayoff payoff,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice,
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice,
             @DiscountFactor final double discount,
-            @Price final double guess,
-            @Price final double accuracy) {
+            @Real final double guess,
+            @Real final double accuracy) {
 
         return blackFormulaImpliedStdDev(payoff.optionType(), strike, forward, blackPrice, discount, guess, accuracy, 0.0);
     }
@@ -541,15 +541,15 @@ public class BlackFormula {
      * Black 1976 implied standard deviation, i.e.
      * volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaImpliedStdDev(
+    public static /*@Real*/ double blackFormulaImpliedStdDev(
             final PlainVanillaPayoff payoff,
-            @Price final double strike,
-            @Price final double forward,
-            @Price final double blackPrice,
+            @Real final double strike,
+            @Real final double forward,
+            @Real final double blackPrice,
             @DiscountFactor final double discount,
-            @Price final double guess,
-            @Price final double accuracy,
-            @Price final double displacement) {
+            @Real final double guess,
+            @Real final double accuracy,
+            @Real final double displacement) {
 
         return blackFormulaImpliedStdDev(payoff.optionType(), strike, forward, blackPrice, discount, guess, accuracy, displacement);
     }
@@ -566,10 +566,10 @@ public class BlackFormula {
      * @note Instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaCashItmProbability(
+    public static /*@Real*/ double blackFormulaCashItmProbability(
             final Option.Type optionType,
-            @Price final double strike,
-            @Price final double forward,
+            @Real final double strike,
+            @Real final double forward,
             @StdDev final double stddev) {
 
         return blackFormulaCashItmProbability(optionType, strike, forward, stddev, 0.0);
@@ -583,12 +583,12 @@ public class BlackFormula {
      * @note Instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaCashItmProbability(
+    public static /*@Real*/ double blackFormulaCashItmProbability(
             final Option.Type optionType,
-            @Price final double strike,
-            @Price final double forward,
+            @Real final double strike,
+            @Real final double forward,
             @StdDev final double stddev,
-            @Price final double displacement) {
+            @Real final double displacement) {
 
         if (stddev==0.0) return (forward * optionType.toInteger() > strike *optionType.toInteger() ? 1.0 : 0.0);
         if (strike==0.0) return (optionType==Option.Type.Call ? 1.0 : 0.0);
@@ -612,12 +612,12 @@ public class BlackFormula {
      * @note Instead of volatility it uses standard deviation, i.e.
      *       volatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double blackFormulaCashItmProbability(
+    public static /*@Real*/ double blackFormulaCashItmProbability(
             final PlainVanillaPayoff payoff,
-            @Price final double strike,
-            @Price final double forward,
+            @Real final double strike,
+            @Real final double forward,
             @StdDev final double stddev,
-            @Price final double displacement) {
+            @Real final double displacement) {
 
         return blackFormulaCashItmProbability(payoff.optionType(), strike, forward, stddev, displacement);
     }
@@ -637,9 +637,9 @@ public class BlackFormula {
      *       Black vega would be blackstddevDerivative(strike, forward,
      *       stddev)sqrt(T)
      */
-    public static /*@Price*/ double blackFormulaStdDevDerivative(
-            @Price final double strike,
-            @Price final double forward,
+    public static /*@Real*/ double blackFormulaStdDevDerivative(
+            @Real final double strike,
+            @Real final double forward,
             @StdDev final double stddev) {
 
         return blackFormulaStdDevDerivative(strike, forward, stddev, 1.0, 0.0);
@@ -655,9 +655,9 @@ public class BlackFormula {
      *       Black vega would be blackstddevDerivative(strike, forward,
      *       stddev)sqrt(T)
      */
-    public static /*@Price*/ double blackFormulaStdDevDerivative(
-            @Price final double strike,
-            @Price final double forward,
+    public static /*@Real*/ double blackFormulaStdDevDerivative(
+            @Real final double strike,
+            @Real final double forward,
             @StdDev final double stddev,
             @DiscountFactor final double discount) {
 
@@ -674,12 +674,12 @@ public class BlackFormula {
      *       Black vega would be blackstddevDerivative(strike, forward,
      *       stddev)sqrt(T)
      */
-    public static /*@Price*/ double blackFormulaStdDevDerivative(
-            @Price double strike,
-            @Price double forward,
+    public static /*@Real*/ double blackFormulaStdDevDerivative(
+            @Real double strike,
+            @Real double forward,
             @StdDev final double stddev,
             @DiscountFactor final double discount,
-            @Price final double displacement) {
+            @Real final double displacement) {
 
         QL.require(strike >= 0.0       , "strike must be non-negative"); // QA:[RG]::verified // TODO: message
         QL.require(forward > 0.0       , "forward must be positive"); // QA:[RG]::verified // TODO: message
@@ -710,9 +710,9 @@ public class BlackFormula {
      *       Black vega would be blackstddevDerivative(strike, forward,
      *       stddev)sqrt(T)
      */
-    public static /*@Price*/ double blackFormulastddevDerivative(
+    public static /*@Real*/ double blackFormulastddevDerivative(
             final PlainVanillaPayoff payoff,
-            @Price final double forward,
+            @Real final double forward,
             @StdDev final double stddev) {
 
         return blackFormulaStdDevDerivative(payoff, forward, stddev, 1.0, 0.0);
@@ -728,9 +728,9 @@ public class BlackFormula {
      *       Black vega would be blackstddevDerivative(strike, forward,
      *       stddev)sqrt(T)
      */
-    public static /*@Price*/ double blackFormulastddevDerivative(
+    public static /*@Real*/ double blackFormulastddevDerivative(
             final PlainVanillaPayoff payoff,
-            @Price final double forward,
+            @Real final double forward,
             @StdDev final double stddev,
             @DiscountFactor final double discount) {
 
@@ -747,12 +747,12 @@ public class BlackFormula {
      *       Black vega would be blackstddevDerivative(strike, forward,
      *       stddev)sqrt(T)
      */
-    public static /*@Price*/ double blackFormulaStdDevDerivative(
+    public static /*@Real*/ double blackFormulaStdDevDerivative(
             final PlainVanillaPayoff payoff,
-            @Price final double forward,
+            @Real final double forward,
             @StdDev final double stddev,
             @DiscountFactor final double discount,
-            @Price final double displacement) {
+            @Real final double displacement) {
 
         return blackFormulaStdDevDerivative(payoff.strike(), forward, stddev, discount, displacement);
     }
@@ -769,11 +769,11 @@ public class BlackFormula {
      *       volatility. Standard deviation is
      *       absoluteVolatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double bachelierBlackFormula(
+    public static /*@Real*/ double bachelierBlackFormula(
             final PlainVanillaPayoff payoff,
-            @Price final  double forward,
+            @Real final  double forward,
             @StdDev final double stddev,
-            @Price final  double discount) {
+            @Real final  double discount) {
 
         return bachelierBlackFormula(payoff.optionType(), payoff.strike(), forward, stddev, discount);
     }
@@ -786,10 +786,10 @@ public class BlackFormula {
      *       volatility. Standard deviation is
      *       absoluteVolatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double bachelierBlackFormula(
+    public static /*@Real*/ double bachelierBlackFormula(
             final Option.Type optionType,
-            @Price final   double strike,
-            @Price final   double forward,
+            @Real final   double strike,
+            @Real final   double forward,
             @StdDev final double stddev,
             final @DiscountFactor double discount) {
 
@@ -819,10 +819,10 @@ public class BlackFormula {
      *       volatility. Standard deviation is
      *       absoluteVolatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double bachelierBlackFormula(
+    public static /*@Real*/ double bachelierBlackFormula(
             final Option.Type optionType,
-            @Price final  double strike,
-            @Price final  double forward,
+            @Real final  double strike,
+            @Real final  double forward,
             @StdDev final double stddev) {
 
         return bachelierBlackFormula(optionType, strike, forward, stddev, 1.0);
@@ -836,9 +836,9 @@ public class BlackFormula {
      *       volatility. Standard deviation is
      *       absoluteVolatility*sqrt(timeToMaturity)
      */
-    public static /*@Price*/ double bachelierBlackFormula(
+    public static /*@Real*/ double bachelierBlackFormula(
             final PlainVanillaPayoff payoff,
-            @Price final  double forward,
+            @Real final  double forward,
             @StdDev final double stddev) {
 
         return bachelierBlackFormula(payoff, forward, stddev, 1.0);

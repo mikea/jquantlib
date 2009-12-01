@@ -1,4 +1,5 @@
 /*
+
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
@@ -22,7 +23,7 @@
 package org.jquantlib.methods.lattices;
 
 import org.jquantlib.lang.annotation.NonNegative;
-import org.jquantlib.lang.annotation.Price;
+import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.processes.StochasticProcess1D;
 
@@ -39,11 +40,14 @@ public abstract class BinomialTree extends Tree {
 
     public static final Branches branches = Branches.BINOMIAL;
 
-	protected @Price final double x0;
-    protected @Price final double driftPerStep;
-    protected @Time  final double dt;
+	protected @Real final double x0;
+    protected @Real final double driftPerStep;
+    protected @Time final double dt;
 
-	protected BinomialTree(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps) {
+	protected BinomialTree(
+	        final StochasticProcess1D process,
+	        final @Time double end,
+	        final @NonNegative int steps) {
         super(steps + 1);
 
         x0 = process.x0();

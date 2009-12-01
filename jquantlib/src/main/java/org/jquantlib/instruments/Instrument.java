@@ -87,12 +87,12 @@ public abstract class Instrument extends LazyObject {
     /**
      * Represents the net present value of the instrument.
      */
-    protected /*@Price*/ double NPV;
+    protected /*@Real*/ double NPV;
 
     /**
      * Represents the error estimate on the NPV when available.
      */
-    protected /*@Price*/ double errorEstimate;
+    protected /*@Real*/ double errorEstimate;
 
 
     //
@@ -153,7 +153,7 @@ public abstract class Instrument extends LazyObject {
     /**
      * returns the net present value of the instrument.
      */
-    public final/*@Price*/double NPV() /*@ReadOnly*/{
+    public final/*@Real*/double NPV() /*@ReadOnly*/{
         calculate();
         QL.require(!Double.isNaN(this.NPV) , "NPV not provided");  // QA:[RG]::verified // TODO: message
         return NPV;
@@ -162,7 +162,7 @@ public abstract class Instrument extends LazyObject {
     /**
      * returns the error estimate on the NPV when available.
      */
-    public final/*@Price*/double errorEstimate() /*@ReadOnly*/{
+    public final/*@Real*/double errorEstimate() /*@ReadOnly*/{
         calculate();
         QL.require(!Double.isNaN(this.errorEstimate) , "error estimate not provided"); // QA:[RG]::verified // TODO: message
         return errorEstimate;
@@ -277,7 +277,7 @@ public abstract class Instrument extends LazyObject {
          *
          * @see Instrument
          */
-        public /*@Price*/ double value;
+        public /*@Real*/ double value;
 
         /**
          * Contains the estimated error due to floating point error

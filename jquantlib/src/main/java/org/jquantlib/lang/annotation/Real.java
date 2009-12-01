@@ -36,16 +36,12 @@ import java.lang.annotation.Target;
  * <code>int</code> variable which represents an amount of pears. In spite the two variables are <code>int</code> and we
  * surely are able to perform mathematical operations with them, <i>semantically</i> they represent different <i>concepts</i> in
  * the real world and we should never mix them.
- * 
+ *
  * @see <a href="http://groups.csail.mit.edu/pag/jsr308/">JSR 308: Annotations on Java Types</a>
  * @see <a href="http://www.jquantlib.org/index.php/Strong_Type_Checking">Strong Type Checking</a>
- * 
+ *
  * @author Richard Gomes
  */
-
-//TODO: code review :: get rid of this annotation ???
-// Makes sense to tell a double is @Volatility, or @Rate, etc but it does not make sense to tell it is a @Real because
-// no additional, useful information is being added to it.
 
 @Typedef
 @Retention(RetentionPolicy.RUNTIME)

@@ -82,20 +82,20 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     /**
      * Returns the initial value of the state variable
      */
-    public abstract /*@Price*/ double x0();
+    public abstract /*@Real*/ double x0();
 
     /**
      *
      * Returns the drift part of the equation
      * {@latex$ \mu(t, x_t) }
      */
-    public abstract /*@Drift*/ double drift(final /*@Time*/ double t, final /*@Price*/ double x);
+    public abstract /*@Drift*/ double drift(final /*@Time*/ double t, final /*@Real*/ double x);
 
     /**
      * Returns the diffusion part of the equation, i.e.
      * {@latex$ \sigma(t, x_t) }
      */
-    public abstract /*@Diffusion*/ double diffusion(final /*@Time*/ double t, final /*@Price*/ double x);
+    public abstract /*@Diffusion*/ double diffusion(final /*@Time*/ double t, final /*@Real*/ double x);
 
     /**
      * Returns the expectation
@@ -105,7 +105,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
      * overridden in derived classes which want to hard-code a
      * particular discretization.
      */
-    public /*@Expectation*/ double expectation(final /*@Time*/ double t0, final /*@Price*/ double x0, final /*@Time*/ double dt) {
+    public /*@Expectation*/ double expectation(final /*@Time*/ double t0, final /*@Real*/ double x0, final /*@Time*/ double dt) {
         return apply(x0, discretization1D.driftDiscretization(this, t0, x0, dt)); // XXX
     }
 
@@ -142,7 +142,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
      * where {@latex$ E } is the expectation and {@latex$ S } the
      * standard deviation.
      */
-    public final /*@Price*/ double evolve(final /*@Time*/ double t0, final /*@Price*/ double x0, final /*@Time*/ double dt, final double dw) {
+    public final /*@Real*/ double evolve(final /*@Time*/ double t0, final /*@Real*/ double x0, final /*@Time*/ double dt, final double dw) {
         return apply(expectation(t0,x0,dt), stdDeviation(t0,x0,dt) * dw);
     }
 
@@ -150,7 +150,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
      * Applies a change to the asset value. By default, it
      * returns {@latex$ x + \Delta x }.
      */
-    public /*@Price*/ double apply(final /*@Price*/ double x0, final /*@Price*/ double dx) {
+    public /*@Real*/ double apply(final /*@Real*/ double x0, final /*@Real*/ double dx) {
         return x0 + dx;
     }
 
@@ -165,52 +165,52 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     }
 
     @Override
-    public final /*@Price*/ Array initialValues() {
+    public final /*@Real*/ Array initialValues() {
         return new Array().fill( x0() );
     }
 
     @Override
-    public final /*@Price*/ Array drift(final /*@Time*/ double t, /*@Price*/ final Array x) {
+    public final /*@Real*/ Array drift(final /*@Time*/ double t, /*@Real*/ final Array x) {
         QL.require(x.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         return new Array().fill( drift(t, x.first()) );
     }
 
     @Override
-    public final /*@Diffusion*/ Matrix diffusion(final /*@Time*/ double t, /*@Price*/ final Array x) {
+    public final /*@Diffusion*/ Matrix diffusion(final /*@Time*/ double t, /*@Real*/ final Array x) {
         QL.require(x.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         final double v = diffusion(t, x.first());
         return new Matrix(1, 1).fill(v);
     }
 
     @Override
-    public final /*@Expectation*/ Array expectation(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
+    public final /*@Expectation*/ Array expectation(final /*@Time*/ double t0, final /*@Real*/ Array x0, final /*@Time*/ double dt) {
         QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         return new Array().fill( expectation(t0, x0.first(), dt) );
     }
 
     @Override
-    public final /*@StdDev*/ Matrix stdDeviation(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
+    public final /*@StdDev*/ Matrix stdDeviation(final /*@Time*/ double t0, final /*@Real*/ Array x0, final /*@Time*/ double dt) {
         QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         final double v = stdDeviation(t0, x0.first(), dt);
         return new Matrix(1, 1).fill(v);
     }
 
     @Override
-    public final /*@Covariance*/ Matrix covariance(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt) {
+    public final /*@Covariance*/ Matrix covariance(final /*@Time*/ double t0, final /*@Real*/ Array x0, final /*@Time*/ double dt) {
         QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         final double v = discretization1D.varianceDiscretization(this, t0, x0.first(), dt);
         return new Matrix(1, 1).fill(v);
     }
 
     @Override
-    public final Array evolve(final /*@Time*/ double t0, final /*@Price*/ Array x0, final /*@Time*/ double dt, final Array dw) {
+    public final Array evolve(final /*@Time*/ double t0, final /*@Real*/ Array x0, final /*@Time*/ double dt, final Array dw) {
         QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         QL.require(dw.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         return new Array().fill( evolve(t0, x0.first(), dt, dw.first()) );
     }
 
     @Override
-    public final /*@Price*/ Array apply(final /*@Price*/ Array x0, final Array dx) {
+    public final /*@Real*/ Array apply(final /*@Real*/ Array x0, final Array dx) {
         QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         QL.require(dx.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         return new Array().fill( apply(x0.first(), dx.first()) );
@@ -233,14 +233,14 @@ public abstract class StochasticProcess1D extends StochasticProcess {
          */
         public /* @Drift */double driftDiscretization(
                     final StochasticProcess1D sp,
-                    final/* @Time */double t0, final/* @Price */double x0, final/* @Time */double dt); // XXX
+                    final/* @Time */double t0, final/* @Real */double x0, final/* @Time */double dt); // XXX
 
         /**
          * Returns the diffusion part of the equation, i.e. {@latex$ \sigma(t, x_t) }
          */
         public /* @Diffusion */double diffusionDiscretization(
                     final StochasticProcess1D sp,
-                    final/* @Time */double t0, final/* @Price */double x0, final/* @Time */double dt); // XXX
+                    final/* @Time */double t0, final/* @Real */double x0, final/* @Time */double dt); // XXX
 
         /**
          * Returns the variance {@latex$ V(x_{t_0 + \Delta t} | x_{t_0} = x_0) } of the process after a time interval
@@ -249,7 +249,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
          */
         public /* @Variance */double varianceDiscretization(
                     final StochasticProcess1D sp,
-                    final/* @Time */double t0, final/* @Price */double x0, final/* @Time */double dt); // XXX
+                    final/* @Time */double t0, final/* @Real */double x0, final/* @Time */double dt); // XXX
 
     }
 

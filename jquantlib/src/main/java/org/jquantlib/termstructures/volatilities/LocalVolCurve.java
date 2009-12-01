@@ -90,12 +90,12 @@ public class LocalVolCurve extends LocalVolTermStructure {
     //
 
     @Override
-    public final /*@Price*/ double minStrike() {
+    public final /*@Real*/ double minStrike() {
         return Double.NEGATIVE_INFINITY;
     }
 
     @Override
-    public final /*@Price*/ double maxStrike() {
+    public final /*@Real*/ double maxStrike() {
         return Double.POSITIVE_INFINITY;
     }
 
@@ -112,7 +112,7 @@ public class LocalVolCurve extends LocalVolTermStructure {
      * can be deduced which is here implemented.
      */
     @Override
-    protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
+    protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Real*/ double strike) {
         /*@Time*/ final double m = maturity;
         /*@Time*/ final double dt = 1.0 / 365.0;
         /*@Variance*/ final double var1 = blackVarianceCurve.blackVariance(/*@Time*/ maturity, strike, true);

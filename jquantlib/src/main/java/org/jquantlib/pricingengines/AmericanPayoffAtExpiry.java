@@ -59,9 +59,9 @@ import org.jquantlib.math.distributions.CumulativeNormalDistribution;
 public class AmericanPayoffAtExpiry {
 
     private final /*@DiscountFactor*/ double discount;
-    private final /*@Price*/ double forward;
+    private final /*@Real*/ double forward;
     private final /*@Volatility*/ double stdDev;
-    private final /*@Price*/ double strike;
+    private final /*@Real*/ double strike;
     private final double log_H_S;
     private final double cum_d1, cum_d2;
     private final double n_d1, n_d2;
@@ -171,8 +171,8 @@ public class AmericanPayoffAtExpiry {
 
     }
 
-    public /* @Price */ double value() /* @ReadOnly */ {
-        /* @Price */ final double result = discount * K * (y * alpha + x * beta);
+    public /* @Real */ double value() /* @ReadOnly */ {
+        /* @Real */ final double result = discount * K * (y * alpha + x * beta);
         return result;
     }
 

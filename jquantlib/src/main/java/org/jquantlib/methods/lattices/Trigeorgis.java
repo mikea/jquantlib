@@ -23,7 +23,7 @@
 package org.jquantlib.methods.lattices;
 
 import org.jquantlib.lang.annotation.NonNegative;
-import org.jquantlib.lang.annotation.Price;
+import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.lang.annotation.Unused;
 import org.jquantlib.processes.StochasticProcess1D;
@@ -40,18 +40,17 @@ public class Trigeorgis extends EqualJumpsBinomialTree {
 
 	public Trigeorgis(
 	        final StochasticProcess1D process,
-	        @Time final double end,
-	        @NonNegative final int steps,
-	        @Unused @Price final double strike) {
+	        final @Time double end,
+	        final @NonNegative int steps,
+	        final @Unused @Real double strike) {
         super(process, end, steps);
 
         dx = Math.sqrt(process.variance(0.0, x0, dt) + driftPerStep * driftPerStep);
         pu = 0.5 + 0.5 * driftPerStep / dx;
         pd = 1.0 - pu;
 
-        if (pu < 0.0 || pu > 1.0) {
+        if (pu < 0.0 || pu > 1.0)
             throw new IllegalStateException("negative probability");
-        }
     }
 
 }

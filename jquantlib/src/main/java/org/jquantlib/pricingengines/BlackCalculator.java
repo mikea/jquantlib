@@ -71,8 +71,8 @@ public class BlackCalculator {
     // private final fields
     //
 
-    private final /* @Price */ double strike;
-    private final /* @Price */ double forward;
+    private final /* @Real */ double strike;
+    private final /* @Real */ double forward;
     private final /* @StdDev */ double stdDev;
     private final /* @DiscountFactor */ double discount;
     private final /* @Variance */ double variance;
@@ -173,15 +173,15 @@ public class BlackCalculator {
     // public methods
     //
 
-    public/* @Price */double value() /* @ReadOnly */{
-        /* @Price */final double result = discount * (forward * alpha + x * beta);
+    public/* @Real */double value() /* @ReadOnly */{
+        /* @Real */final double result = discount * (forward * alpha + x * beta);
         return result;
     }
 
     /**
      * Sensitivity to change in the underlying spot price.
      */
-    public/* @Price */double delta(final double spot) /* @ReadOnly */{
+    public/* @Real */double delta(final double spot) /* @ReadOnly */{
 
         QL.require(spot > 0.0 , "positive spot value required");
         final double DforwardDs = forward / spot;
@@ -196,7 +196,7 @@ public class BlackCalculator {
     /**
      * Sensitivity to change in the underlying forward price.
      */
-    public/* @Price */double deltaForward() /* @ReadOnly */{
+    public/* @Real */double deltaForward() /* @ReadOnly */{
 
         final double temp = stdDev * forward;
         final double DalphaDforward = dAlpha_dD1 / temp;

@@ -190,7 +190,7 @@ abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure
 	 * the volatility.
 	 */
 	@Override
-	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double maturity, final /*@Price*/ double strike) {
+	protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double maturity, final /*@Real*/ double strike) {
 		/*@Volatility*/ final double vol = blackVolImpl(maturity, strike);
 		/*@Variance*/ final double variance = vol*vol*maturity;
 		return variance;

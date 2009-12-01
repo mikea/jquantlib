@@ -165,7 +165,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
                 final BlackConstantVol constVol = (BlackConstantVol) blackVolatility.currentLink();
                 localVolatility.linkTo(new LocalConstantVol(
                         constVol.referenceDate(),
-                        constVol.blackVol(/*@Time*/0.0, /*@Price*/x0.currentLink().value()), constVol.dayCounter()));
+                        constVol.blackVol(/*@Time*/0.0, /*@Real*/x0.currentLink().value()), constVol.dayCounter()));
                 updated = true;
                 return localVolatility;
             }
@@ -202,12 +202,12 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     //
 
     @Override
-    public/* @Price */double x0() {
+    public/* @Real */double x0() {
         return x0.currentLink().value();
     }
 
     @Override
-    public /* @Drift */ double drift(final/* @Time */double t, final/* @Price */double x) {
+    public /* @Drift */ double drift(final/* @Time */double t, final/* @Real */double x) {
         /* @Diffusion */final double sigma = diffusion(t, x);
         // we could be more anticipatory if we know the right dt
         // for which the drift will be used
@@ -224,14 +224,14 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
 
     @Override
     public/* @Diffusion */double diffusion(final/* @Time */double t,
-            final/* @Price */double x) {
+            final/* @Real */double x) {
         /* @Volatility */final double vol = localVolatility().currentLink().localVol(t,
                 x, true);
         return vol;
     }
 
     @Override
-    public final/* @Price */double apply(final/* @Price */double x0,
+    public final/* @Real */double apply(final/* @Real */double x0,
             final/* @Time */double dx) {
         // result = x0 * e^dx
         final double result = x0 * Math.exp(dx);

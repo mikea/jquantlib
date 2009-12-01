@@ -114,7 +114,7 @@ public abstract class BinomialVanillaEngine<T extends Tree> extends VanillaOptio
             final StochasticProcess1D bs,
             final /*@Date*/ double maturity,
             final int timeSteps,
-            final /*@Price*/ double strike) {
+            final /*@Real*/ double strike) {
         try {
             if (this.clazz == ExtendedTian.class) {
                 final Constructor<T> c = clazz.getConstructor(StochasticProcess1D.class, double.class, int.class);

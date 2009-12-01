@@ -23,7 +23,7 @@
 package org.jquantlib.methods.lattices;
 
 import org.jquantlib.lang.annotation.NonNegative;
-import org.jquantlib.lang.annotation.Price;
+import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.lang.annotation.Time;
 import org.jquantlib.lang.annotation.Unused;
 import org.jquantlib.processes.StochasticProcess1D;
@@ -40,9 +40,9 @@ public class JarrowRudd extends EqualProbabilitiesBinomialTree {
 
     public JarrowRudd(
             final StochasticProcess1D process,
-            @Time final double end,
-            @NonNegative final int steps,
-            @Unused @Price final double strike) {
+            final @Time double end,
+            final @NonNegative int steps,
+            final @Unused @Real double strike) {
         super(process, end, steps);
         // drift removed
         up = process.stdDeviation(0.0, x0, dt);
