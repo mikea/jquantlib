@@ -187,7 +187,7 @@ public class Bond extends Instrument {
      * @param issueDate
      * @param cashflows
      */
-    protected Bond(
+    public Bond(
             final /* @Natural */int settlementDays,
             final Calendar calendar,
             final /* @Real */double faceAmount,
