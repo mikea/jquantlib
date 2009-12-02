@@ -354,14 +354,11 @@ public abstract class AbstractTermStructure implements TermStructure {
      */
     @Override
     public Date referenceDate() {
-        if (moving)
-            if (!updated) {
-                referenceDate = calendar().advance(today, settlementDays, TimeUnit.Days);
-                updated = true;
-            }
-
-        // i.e: Case 3
-        QL.require(referenceDate!=null , THIS_METHOD_MUST_BE_OVERRIDDEN); // QA:[RG]::verified // TODO: message
+        if (!updated) {
+        	Date today = new Settings().evaluationDate();
+        	referenceDate = calendar().advance(today, settlementDays, TimeUnit.Days);
+            updated = true;
+        }
         return referenceDate;
     }
 

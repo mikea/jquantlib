@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2009 Ueli Hofstetter
+ Copyright (C) 2009 John Nichol
 
  This source code is release under the BSD License.
 
@@ -19,27 +20,55 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+/*
+ Copyright (C) 2007 Ferdinando Ametrano
+ Copyright (C) 2007 Fran�ois du Vignaud
+ Copyright (C) 2007 Giorgio Facchinetti
 
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
 package org.jquantlib.termstructures.volatilities;
 
 
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.Constants;
 import org.jquantlib.time.Date;
 
-public abstract class FlatSmileSection extends SmileSection {
+public class FlatSmileSection extends SmileSection {
 
     private final double vol_;
+    private double atmLevel_;
 
     public FlatSmileSection(final Date d, final double vol, final DayCounter dc, final Date referenceDate) {
+    	this(d, vol, dc, referenceDate, Constants.NULL_REAL);
+    }
+    
+    public FlatSmileSection(final Date d, final double vol, final DayCounter dc, final Date referenceDate, final /* @Real */ double atmLevel) {
 
         super(d, dc, referenceDate);
         this.vol_ = vol;
+        this.atmLevel_ = atmLevel;
     }
 
-    public FlatSmileSection(final Date d, final double vol, final DayCounter dc) {
+    public FlatSmileSection(/* @Time */ double exerciseTime, final double vol, final DayCounter dc, final /* @Real */ double atmLevel) {
+    	super(exerciseTime, dc);
+    	vol_ = vol;
+    	atmLevel_ = atmLevel;
+    }
 
-        super(d, dc, Date.todaysDate());
-        this.vol_ = vol;
+    public FlatSmileSection(/* @Time */ double exerciseTime, final double vol, final DayCounter dc) {
+    	this(exerciseTime, vol, dc, Constants.NULL_REAL);
     }
 
     public double variance() {
@@ -53,12 +82,20 @@ public abstract class FlatSmileSection extends SmileSection {
 
     @Override
     public double minStrike() {
-        return 0.0;
+        return Constants.DBL_MIN;
     };
 
     @Override
     public double maxStrike() {
-        return Double.MAX_VALUE;
+        return Constants.DBL_MAX;
     };
+
+    public /* @Real */ double atmLevel() {
+        return atmLevel_;
+    }
+
+    public /* @Volatility */ double volatilityImpl(/* @Rate */double strike) {
+        return vol_;
+    }
 
 }

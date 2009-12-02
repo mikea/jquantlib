@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Richard Gomes
+ Copyright (C) 2009 John Nichol
 
  This source code is release under the BSD License.
 
@@ -58,6 +59,18 @@ public class InterestRate {
      */
     public InterestRate() {
         this.rate = 0.0;
+    }
+
+    /**
+     * Standard constructor. Assumes a {@link Frequency}.Annual
+     *
+     * @param r represents the rate
+     * @param dc is a {@link DayCounter}
+     *
+     * @category constructors
+     */
+    public InterestRate(final/* @Rate */double r, final DayCounter dc) {
+        this(r, dc, Compounding.Continuous);
     }
 
     /**
@@ -138,6 +151,16 @@ public class InterestRate {
             throw new LibraryException("unknown compounding convention"); // QA:[RG]::verified // TODO: message
         }
     }
+
+    public final double compoundFactor(final Date d1, final Date d2) {
+    	return compoundFactor(d1, d2, new Date(), new Date());
+    }
+    
+    public final double compoundFactor(final Date d1, final Date d2, 
+    		final Date refStart, final Date refEnd) {
+    	/* @Time */double t = dc.yearFraction(d1, d2, refStart, refEnd);
+    	return compoundFactor(t);
+}
 
     // --- inspectors
 

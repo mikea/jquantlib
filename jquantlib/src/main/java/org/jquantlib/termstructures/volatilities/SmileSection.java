@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2009 Ueli Hofstetter
+ Copyright (C) 2009 John Nichol
 
  This source code is release under the BSD License.
 
@@ -26,32 +27,87 @@ import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
-import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.Constants;
 import org.jquantlib.time.Date;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
-public abstract class SmileSection implements Observable {
+public abstract class SmileSection implements Observer, Observable {
 
     private Date exerciseDate_;
+    private Date reference_;
     private DayCounter dc_;
     protected double exerciseTime_;
+    private boolean isFloating_;
+    
+    public SmileSection(final Date d, final DayCounter dc, final Date referenceDate) {
+    	exerciseDate_ = d;
+    	dc_ = dc;
+    	isFloating_ = referenceDate.isNull();
+    	if (isFloating_) {
+    		Settings settings = new Settings();
+    		settings.evaluationDate().addObserver(this);
+    		reference_ = settings.evaluationDate();
+    	} 
+    	else { 
+    		reference_ = referenceDate;
+    	}
+    	initializeExerciseTime();
+    }
 
-    // ! interest rate volatility smile section
-    /* ! This abstract class provides volatility smile section interface */
+    public SmileSection(/* @Time */ double exerciseTime, final DayCounter dc) {
+    	isFloating_ = false;
+    	dc_ = dc;
+    	exerciseTime_ = exerciseTime;
+    	QL.require(exerciseTime_>=0.0,
+    			"expiry time must be positive: " +
+    			exerciseTime_ + " not allowed");
+    }
 
-    public SmileSection(final Date d) {
-        // this(d,Actual365Fixed.getDayCounter(), DateFactory.getFactory().getTodaysDate());
+    public void update() {
+        if (isFloating_) {
+    		Settings settings = new Settings();
+            reference_ = settings.evaluationDate();
+            initializeExerciseTime();
+        }
+
     }
 
     public abstract double minStrike();
 
     public abstract double maxStrike();
 
-    public abstract double variance(double strike);
+    public abstract double atmLevel();
 
-    public abstract double volatility();
+    public double variance() {
+    	return variance(Constants.NULL_REAL);
+    }
+
+    public double volatility() {
+    	return volatility(Constants.NULL_REAL);
+    }
+
+    public void initializeExerciseTime() {
+        QL.require(exerciseDate_.ge(reference_),
+                "expiry date (" + exerciseDate_ +
+                ") must be greater than reference date (" +
+                reference_ + ")");
+     exerciseTime_ = dc_.yearFraction(reference_, exerciseDate_);
+
+    }
+
+    public double variance(double strike) {
+        if (Double.isNaN(strike))
+            strike = atmLevel();
+        return varianceImpl(strike);
+    }
+
+    public double volatility(double strike) {
+        if (Double.isNaN(strike))
+            strike = atmLevel();
+        return volatilityImpl(strike);
+    }
 
     public Date exerciseDate() {
         return exerciseDate_;
@@ -65,25 +121,12 @@ public abstract class SmileSection implements Observable {
         return dc_;
     }
 
-    public SmileSection(final Date d, final DayCounter dc, final Date referenceDate) {
-        exerciseDate_ = d;
-        dc_ = dc;
-        // FIXME: should be compared to new Date()...
-        final Date refDate = (!referenceDate.isToday()) ? referenceDate : new Settings().evaluationDate();
-        QL.ensure(d.gt(refDate) , "expiry date must be greater than reference date"); // QA:[RG]::verified // TODO: message
-        exerciseTime_ = dc_.yearFraction(refDate, d);
-    }
+    protected /* @Real */ double varianceImpl(/* @Rate */ double strike) {
+    	/* @Volatility */ double v = volatilityImpl(strike);
+        return v*v*exerciseTime();
 
-    public SmileSection(final double exerciseTime, final DayCounter dc) {
-        QL.require(dc!=null , "day counter must be informed"); // QA:[RG]::verified // TODO: message
-        QL.require(exerciseTime >= 0.0 , "expiry time must be positive"); // QA:[RG]::verified // TODO: message
-        this.dc_ = dc;
-        this.exerciseTime_ = exerciseTime;
     }
-
-    public SmileSection(final double timeToExpiry) {
-        this(timeToExpiry, new Actual365Fixed());
-    }
+    protected abstract /* @Real */ double volatilityImpl(/* @Rate */ double strike);
 
     @Override
     public void addObserver(final Observer observer) {
