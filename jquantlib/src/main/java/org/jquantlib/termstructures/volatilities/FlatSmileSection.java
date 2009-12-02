@@ -114,12 +114,12 @@ public class FlatSmileSection extends SmileSection {
     @Override
     public double minStrike() {
         return Constants.DBL_MIN;
-    };
+    }
 
     @Override
     public double maxStrike() {
         return Constants.DBL_MAX;
-    };
+    }
 
     @Override
     public /* @Real */ double atmLevel() {

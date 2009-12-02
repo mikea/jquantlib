@@ -24,27 +24,27 @@ package org.jquantlib.cashflow;
 
 import org.jquantlib.QL;
 import org.jquantlib.quotes.Handle;
-import org.jquantlib.termstructures.CapletVolatilityStructure;
+import org.jquantlib.termstructures.volatilities.optionlet.OptionletVolatilityStructure;
 
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class IborCouponPricer extends FloatingRateCouponPricer {
 
     public static final String no_adequate_capletVol_given = "no adequate capletVol given";
 
-    private Handle<CapletVolatilityStructure> capletVol_;
+    private Handle<OptionletVolatilityStructure> capletVol_;
 
-    public IborCouponPricer(final Handle<CapletVolatilityStructure> capletVol){
+    public IborCouponPricer(final Handle<OptionletVolatilityStructure> capletVol){
         this.capletVol_ = capletVol;
         this.capletVol_.addObserver(this);
         //XXX:registerWith
         //registerWith(this.capletVol_);
     }
 
-    public Handle<CapletVolatilityStructure> capletVolatility(){
+    public Handle<OptionletVolatilityStructure> capletVolatility(){
         return capletVol_;
     }
 
-    public void setCapletVolatility(final Handle<CapletVolatilityStructure> capletVol){
+    public void setCapletVolatility(final Handle<OptionletVolatilityStructure> capletVol){
         capletVol.currentLink().deleteObserver(this);
         //XXX:registerWith
         //unregisterWith(capletVol);
@@ -58,6 +58,7 @@ public abstract class IborCouponPricer extends FloatingRateCouponPricer {
         update();
     }
 
+    @Override
     public void update(){
         notifyObservers();
     }

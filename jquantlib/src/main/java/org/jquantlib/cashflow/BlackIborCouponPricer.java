@@ -27,8 +27,8 @@ import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.pricingengines.BlackFormula;
 import org.jquantlib.quotes.Handle;
-import org.jquantlib.termstructures.CapletVolatilityStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.volatilities.optionlet.OptionletVolatilityStructure;
 import org.jquantlib.time.Date;
 
 /*
@@ -40,7 +40,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
 
     private final static String missing_caplet_volatility = "missing caplet volatility";
 
-    public BlackIborCouponPricer(final Handle<CapletVolatilityStructure> capletVol) {
+    public BlackIborCouponPricer(final Handle<OptionletVolatilityStructure> capletVol) {
         super(capletVol);
     }
 
@@ -62,11 +62,10 @@ public class BlackIborCouponPricer extends IborCouponPricer {
 
         final Date today = new Settings().evaluationDate();
 
-        if(paymentDate.gt(today)) {
+        if(paymentDate.gt(today))
             discount_ = rateCurve.currentLink().discount(paymentDate);
-        } else {
+        else
             discount_ = 1.0;
-        }
         spreadLegValue_ = spread_ * coupon_.accrualPeriod()* discount_;
     }
 
@@ -138,16 +137,16 @@ public class BlackIborCouponPricer extends IborCouponPricer {
 
         final double fixing = coupon_.indexFixing();
 
-        if (!coupon_.isInArrears()) {
+        if (!coupon_.isInArrears())
             adjustement = 0.0;
-        } else {
+        else {
             // see Hull, 4th ed., page 550
             QL.require(capletVolatility() != null , missing_caplet_volatility); // QA:[RG]::verified // TODO: message
             final Date d1 = coupon_.fixingDate();
             final Date referenceDate = capletVolatility().currentLink().referenceDate();
-            if (d1.le(referenceDate)) {
+            if (d1.le(referenceDate))
                 adjustement = 0.0;
-            } else {
+            else {
                 final Date d2 = coupon_.index().maturityDate(d1);
                 final double tau = coupon_.index().dayCounter().yearFraction(d1, d2);
                 final double variance = capletVolatility().currentLink().blackVariance(d1, fixing);
