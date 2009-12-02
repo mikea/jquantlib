@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Daniel Kong
  Copyright (C) 2008 Richard Gomes
+ Copyright (C) 2009 John Nichol
 
  This source code is release under the BSD License.
 
@@ -37,6 +38,7 @@ import org.jquantlib.time.calendars.Brazil;
  *
  * @author Daniel Kong
  * @author Richard Gomes
+ * @author John Nichol
  */
 @QualityAssurance(quality=Quality.Q4_UNIT, version=Version.V097, reviewers="Richard Gomes")
 public class Business252 extends DayCounter {
@@ -70,6 +72,11 @@ public class Business252 extends DayCounter {
         @Override
         public final String name() /* @ReadOnly */{
             return "Business/252(" + calendar.name() + ")";
+        }
+
+        public int dayCount(final Date d1,
+        		final Date d2) {
+        	return calendar.businessDaysBetween(d1, d2);
         }
 
         @Override
