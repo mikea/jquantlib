@@ -101,6 +101,13 @@ public class Handle<T extends Observable> implements Observable {
     // public constructors
     //
 
+
+    public Handle() {
+        this.link = new Link(this);
+        this.observable = null; // just for verbosity
+        this.isObserver = true;
+    }
+
     public Handle(final T observable) {
         this.link = new Link(this);
         internalLinkTo(observable, true);

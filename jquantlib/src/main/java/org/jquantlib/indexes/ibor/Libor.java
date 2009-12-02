@@ -56,53 +56,35 @@ import org.jquantlib.time.calendars.JointCalendar;
 import org.jquantlib.time.calendars.UnitedKingdom;
 import org.jquantlib.time.calendars.JointCalendar.JointCalendarRule;
 
-//! base class for all BBA LIBOR indexes but the EUR, O/N, and S/N ones
-/*! LIBOR fixed by BBA.
-
-    See <http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414>.
+/**
+ * base class for all BBA LIBOR indexes but the EUR, O/N, and S/N ones
+ *
+ * LIBOR fixed by BBA.
+ *
+ * @see <a href="http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414">http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414</a>
  */
 public class Libor extends IborIndex {
 
-	private static BusinessDayConvention liborConvention(final Period p) {
-		switch (p.units()) {
-		case Days:
-		case Weeks:
-			return BusinessDayConvention.Following;
-		case Months:
-		case Years:
-			return BusinessDayConvention.ModifiedFollowing;
-		default:
-			QL.error("invalid time units");
-		}
-		// Keep the compiler happy, can not reach here
-		return null;
-	}
+    //
+    // private final fields
+    //
 
-	private static boolean liborEOM(final Period p) {
-		switch (p.units()) {
-		case Days:
-		case Weeks:
-			return false;
-		case Months:
-		case Years:
-			return true;
-		default:
-			QL.error("invalid time units");
-		}
-		// Keep the compiler happy, can not reach here
-		return false;
-	}
+    private final Calendar financialCenterCalendar_;
+    private final Calendar jointCalendar_;
 
-	private Calendar financialCenterCalendar_;
-	private Calendar jointCalendar_;
 
-	public Libor(final String familyName,
+    //
+    // public constructors
+    //
+
+    public Libor(
+            final String familyName,
 			final Period tenor,
-			int settlementDays,
+			final int settlementDays,
 			final Currency currency,
 			final Calendar financialCenterCalendar,
 			final DayCounter dayCounter) {
-		this(familyName, tenor, settlementDays, 
+		this(familyName, tenor, settlementDays,
 				currency, financialCenterCalendar, dayCounter,
 				new Handle<YieldTermStructure>(
 						new AbstractYieldTermStructure() {
@@ -118,9 +100,10 @@ public class Libor extends IborIndex {
 				));
 	}
 
-	public Libor(final String familyName,
+	public Libor(
+	        final String familyName,
 			final Period tenor,
-			int settlementDays,
+			final int settlementDays,
 			final Currency currency,
 			final Calendar financialCenterCalendar,
 			final DayCounter dayCounter,
@@ -129,8 +112,8 @@ public class Libor extends IborIndex {
 		// UnitedKingdom::Exchange is the fixing calendar for
 		// a) all currencies but EUR
 		// b) all indexes but o/n and s/n
-		super(familyName, tenor, settlementDays, 
-				currency, new UnitedKingdom(UnitedKingdom.Market.Exchange), 
+		super(familyName, tenor, settlementDays,
+				currency, new UnitedKingdom(UnitedKingdom.Market.Exchange),
 				liborConvention(tenor), liborEOM(tenor), dayCounter, h);
 		financialCenterCalendar_ = financialCenterCalendar;
 		jointCalendar_ = new JointCalendar(new UnitedKingdom(UnitedKingdom.Market.Exchange),
@@ -145,12 +128,18 @@ public class Libor extends IborIndex {
 
 	}
 
-	/*! \name Date calculations
 
-            see http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1412
-            @{
+	//
+	// overrides InterestRateIndex
+	//
+
+	/**
+     * Date calculations
+     *
+     * @see <a href="http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1412">http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1412</a>
 	 */
-	public Date valueDate(final Date fixingDate) {
+	@Override
+    public Date valueDate(final Date fixingDate) {
 
 		QL.require(isValidFixingDate(fixingDate),
 				"Fixing date " + fixingDate + " is not valid");
@@ -162,11 +151,12 @@ public class Libor extends IborIndex {
 		// business day and a business day in the principal financial centre
 		// of the currency concerned, the next following day which is a
 		// business day in both centres shall be the Value Date.
-		Date d = fixingCalendar().advance(fixingDate, fixingDays(), TimeUnit.Days);
+		final Date d = fixingCalendar().advance(fixingDate, fixingDays(), TimeUnit.Days);
 		return jointCalendar_.adjust(d);
 	}
 
-	public Date maturityDate(final Date valueDate) {
+	@Override
+    public Date maturityDate(final Date valueDate) {
 		// Where a deposit is made on the final business day of a
 		// particular calendar month, the maturity of the deposit shall
 		// be on the final business day of the month in which it matures
@@ -178,18 +168,55 @@ public class Libor extends IborIndex {
 		return jointCalendar_.advance(valueDate, tenor(), businessDayConvention(),
 				endOfMonth());
 	}
-	// TODO: Am I needed
-	//	// @}
-	//	//! \name Other methods
-	//	//@{
-	//	public Handle<IborIndex> clone(final Handle<YieldTermStructure> h) {
-	//		return new Handle<IborIndex>(new Libor(familyName(),
-	//				tenor(),
-	//				fixingDays(),
-	//				currency(),
-	//				financialCenterCalendar_,
-	//				dayCounter(),
-	//				h));
+
+//TODO: code review :: InterestRateIndex#clone returns IborIndex whilst this class returns Handle<IborIndex>
+//
+//	@Override
+//    public Handle<IborIndex> clone(final Handle<YieldTermStructure> h) {
+//		return new Handle<IborIndex>(
+//		        new Libor(familyName(),
+//				tenor(),
+//				fixingDays(),
+//				currency(),
+//				financialCenterCalendar_,
+//				dayCounter(),
+//				h));
+//
+//	}
+
+
 	//
-	//	}
+	// private static methods
+	//
+
+    private static BusinessDayConvention liborConvention(final Period p) {
+        switch (p.units()) {
+        case Days:
+        case Weeks:
+            return BusinessDayConvention.Following;
+        case Months:
+        case Years:
+            return BusinessDayConvention.ModifiedFollowing;
+        default:
+            QL.error("invalid time units");
+        }
+        // Keep the compiler happy, can not reach here
+        return null;
+    }
+
+    private static boolean liborEOM(final Period p) {
+        switch (p.units()) {
+        case Days:
+        case Weeks:
+            return false;
+        case Months:
+        case Years:
+            return true;
+        default:
+            QL.error("invalid time units");
+        }
+        // Keep the compiler happy, can not reach here
+        return false;
+    }
+
 }

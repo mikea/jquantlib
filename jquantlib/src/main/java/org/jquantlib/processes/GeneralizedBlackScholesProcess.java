@@ -186,10 +186,8 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
                 return localVolatility;
             }
 
-            // Note: The previous LocalVolSurface case was a catch-all
-            // condition.
-            // We decided to explicitly test the interface and throw an
-            // exception if we are not able
+            // Note: The previous LocalVolSurface case was a catch-all condition.
+            // We decided to explicitly test the interface and throw an exception if we are not able
             // to identify the correct interface to be used.
             throw new LibraryException("unrecognized volatility curve"); // QA:[RG]::verified // FIXME: message
         } else
@@ -207,31 +205,32 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     }
 
     @Override
-    public /* @Drift */ double drift(final/* @Time */double t, final/* @Real */double x) {
+    public /* @Drift */ double drift(
+            final/* @Time */double t,
+            final/* @Real */double x) {
         /* @Diffusion */final double sigma = diffusion(t, x);
         // we could be more anticipatory if we know the right dt
         // for which the drift will be used
         /* @Time */final double t1 = t + 0.0001;
         final YieldTermStructure yts = riskFreeRate.currentLink();
-        /* @Rate */final double r = yts.forwardRate(t, t1, Compounding.Continuous,
-                Frequency.NoFrequency, true).rate();
+        /* @Rate */final double r = yts.forwardRate(t, t1, Compounding.Continuous, Frequency.NoFrequency, true).rate();
 
         final YieldTermStructure divTs = dividendYield.currentLink();
-        final double d = divTs.forwardRate(t, t1, Compounding.Continuous,
-                Frequency.NoFrequency, true).rate();
+        final double d = divTs.forwardRate(t, t1, Compounding.Continuous, Frequency.NoFrequency, true).rate();
         return r - d - 0.5 * sigma * sigma;
     }
 
     @Override
-    public/* @Diffusion */double diffusion(final/* @Time */double t,
+    public/* @Diffusion */double diffusion(
+            final/* @Time */double t,
             final/* @Real */double x) {
-        /* @Volatility */final double vol = localVolatility().currentLink().localVol(t,
-                x, true);
+        /* @Volatility */final double vol = localVolatility().currentLink().localVol(t, x, true);
         return vol;
     }
 
     @Override
-    public final/* @Real */double apply(final/* @Real */double x0,
+    public final/* @Real */double apply(
+            final/* @Real */double x0,
             final/* @Time */double dx) {
         // result = x0 * e^dx
         final double result = x0 * Math.exp(dx);
@@ -249,7 +248,7 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
     //
 
     @Override
-    //XXX::OBSpublic final void update(final Observable o, final Object arg) {
+    //XXX::OBS public final void update(final Observable o, final Object arg) {
     public final void update() {
         updated = false;
         //XXX::OBS super.update(o, arg);

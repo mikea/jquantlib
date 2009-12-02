@@ -112,7 +112,9 @@ public class LocalVolCurve extends LocalVolTermStructure {
      * can be deduced which is here implemented.
      */
     @Override
-    protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Real*/ double strike) {
+    protected final /*@Volatility*/ double localVolImpl(
+            final /*@Time*/ double maturity,
+            final /*@Real*/ double strike) {
         /*@Time*/ final double m = maturity;
         /*@Time*/ final double dt = 1.0 / 365.0;
         /*@Variance*/ final double var1 = blackVarianceCurve.blackVariance(/*@Time*/ maturity, strike, true);

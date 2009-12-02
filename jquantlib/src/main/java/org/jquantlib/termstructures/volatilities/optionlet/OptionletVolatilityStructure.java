@@ -47,165 +47,229 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
 
-//! Optionlet (caplet/floorlet) volatility structure
-/*! This class is purely abstract and defines the interface of
-    concrete structures which will be derived from this one.
+/**
+ * Optionlet (caplet/floorlet) volatility structure
+ * <p>
+ * This class is purely abstract and defines the interface of
+ * concrete structures which will be derived from this one.
  */
 public abstract class OptionletVolatilityStructure extends VolatilityTermStructure {
-	public OptionletVolatilityStructure(final Calendar cal,
-			BusinessDayConvention bdc) {
+
+
+    //
+    // public constructors
+    //
+
+	public OptionletVolatilityStructure(
+	        final Calendar cal,
+			final BusinessDayConvention bdc) {
 		this(cal, bdc, new DayCounter());
 	}
-	public OptionletVolatilityStructure(final Calendar cal,
-			BusinessDayConvention bdc,
+
+	public OptionletVolatilityStructure(
+	        final Calendar cal,
+			final BusinessDayConvention bdc,
 			final DayCounter dc) {
 		super(cal, bdc, dc);
 	}
 
-	//! initialize with a fixed reference date
-	public OptionletVolatilityStructure(final Date referenceDate,
+	/**
+	 * initialize with a fixed reference date
+	 */
+	public OptionletVolatilityStructure(
+	        final Date referenceDate,
 			final Calendar cal,
-			BusinessDayConvention bdc) {
+			final BusinessDayConvention bdc) {
 		super(referenceDate, cal, bdc, new DayCounter());
 	}
 
-	//! initialize with a fixed reference date
-	public OptionletVolatilityStructure(final Date referenceDate,
+	/**
+	 * initialize with a fixed reference date
+	 */
+	public OptionletVolatilityStructure(
+	        final Date referenceDate,
 			final Calendar cal,
-			BusinessDayConvention bdc,
+			final BusinessDayConvention bdc,
 			final DayCounter dc) {
 		super(referenceDate, cal, bdc, dc);
 	}
 
-	//! calculate the reference date based on the global evaluation date
-	public OptionletVolatilityStructure(int settlementDays,
+	/**
+	 * calculate the reference date based on the global evaluation date
+	 */
+	public OptionletVolatilityStructure(
+	        final int settlementDays,
 			final Calendar cal,
-			BusinessDayConvention bdc,
+			final BusinessDayConvention bdc,
 			final DayCounter dc) {
 		super(settlementDays, cal, bdc, dc);
 	}
 
-	//! calculate the reference date based on the global evaluation date
-	public OptionletVolatilityStructure(int settlementDays,
+	/**
+	 * calculate the reference date based on the global evaluation date
+	 */
+	public OptionletVolatilityStructure(
+	        final int settlementDays,
 			final Calendar cal,
-			BusinessDayConvention bdc) {
+			final BusinessDayConvention bdc) {
 		this(settlementDays, cal, bdc, new DayCounter());
 	}
 
-	//! returns the volatility for a given option tenor and strike rate
-	public double volatility(final Period optionTenor, double strike) {
+
+	//
+	// public methods
+	//
+
+	/**
+	 * returns the volatility for a given option tenor and strike rate
+	 */
+	public double volatility(final Period optionTenor, final double strike) {
 		return volatility(optionTenor, strike, false);
 	}
 
-	//! returns the volatility for a given option date and strike rate
-	public double volatility(final Date optionDate, double strike) {
+	/**
+	 * returns the volatility for a given option date and strike rate
+	 */
+	public double volatility(final Date optionDate, final double strike) {
 		return volatility(optionDate, strike, false);
 	}
 
-	//! returns the volatility for a given option time and strike rate
-	public double volatility(@Time double optionTime, double strike) {
+	/**
+	 * returns the volatility for a given option time and strike rate
+	 */
+	public double volatility(@Time final double optionTime, final double strike) {
 		return volatility(optionTime, strike, false);
 	}
 
-	//! returns the Black variance for a given option tenor and strike rate
-	public double blackVariance(final Period optionTenor, double strike) {
+	/**
+	 * returns the Black variance for a given option tenor and strike rate
+	 */
+	public double blackVariance(final Period optionTenor, final double strike) {
 		return blackVariance(optionTenor, strike, false);
 	}
 
-	//! returns the Black variance for a given option date and strike rate
-	public double blackVariance(final Date optionDate, double strike) {
+	/**
+	 * returns the Black variance for a given option date and strike rate
+	 */
+	public double blackVariance(final Date optionDate, final double strike) {
 		return blackVariance(optionDate, strike, false);
 	}
 
-	//! returns the Black variance for a given option time and strike rate
-	public double blackVariance(final @Time double optionTime, double strike) {
+	/**
+	 * returns the Black variance for a given option time and strike rate
+	 */
+	public double blackVariance(final @Time double optionTime, final double strike) {
 		return blackVariance(optionTime, strike, false);
 	}
 
 
-	//! returns the smile for a given option tenor
+	/**
+	 * returns the smile for a given option tenor
+	 */
 	public SmileSection smileSection(final Period optionTenor) {
 		return smileSection(optionTenor, false);
 	}
 
-	//! returns the smile for a given option date
+	/**
+	 * returns the smile for a given option date
+	 */
 	public SmileSection smileSection(final Date optionDate) {
 		return smileSection(optionDate, false);
 	}
 
-	//! returns the smile for a given option time
+	/**
+	 * returns the smile for a given option time
+	 */
 	public SmileSection smileSection(final @Time double optionTime) {
 		return smileSection(optionTime, false);
 	}
 
+
+	//
+	// protected abstract methods
+	//
+
 	protected abstract SmileSection smileSectionImpl(final @Time double optionTime);
 
-	//! implements the actual volatility calculation in derived classes
+	/**
+	 * implements the actual volatility calculation in derived classes
+	 */
 	protected abstract double volatilityImpl(/* @Time */double optionTime, double strike);
 
-	// inline definitions
 
-	// 1. Period-based methods convert Period to Date and then
-	//   use the equivalent Date-based methods
-	public double volatility(final Period optionTenor, double strike, boolean extrapolate) {
-		Date optionDate = optionDateFromTenor(optionTenor);
+
+	//
+	// 1. Period-based methods convert Period to Date and then use the equivalent Date-based methods
+	//
+
+	public double volatility(final Period optionTenor, final double strike, final boolean extrapolate) {
+		final Date optionDate = optionDateFromTenor(optionTenor);
 		return volatility(optionDate, strike, extrapolate);
 	}
 
 	public double blackVariance(final Period optionTenor,
-		double strike,
-		boolean extrapolate) {
-		Date optionDate = optionDateFromTenor(optionTenor);
+		final double strike,
+		final boolean extrapolate) {
+		final Date optionDate = optionDateFromTenor(optionTenor);
 		return blackVariance(optionDate, strike, extrapolate);
 	}
 
-	public SmileSection smileSection(final Period optionTenor, boolean extrapolate) {
-		Date optionDate = optionDateFromTenor(optionTenor);
+	public SmileSection smileSection(final Period optionTenor, final boolean extrapolate) {
+		final Date optionDate = optionDateFromTenor(optionTenor);
 		return smileSection(optionDate, extrapolate);
 	}
 
+
+	//
 	// 2. blackVariance methods rely on volatility methods
-	public double blackVariance(final Date optionDate, double strike, boolean extrapolate) {
-		double v = volatility(optionDate, strike, extrapolate);
-		/* @Time */double t = timeFromReference(optionDate);
+	//
+
+	public double blackVariance(final Date optionDate, final double strike, final boolean extrapolate) {
+		final double v = volatility(optionDate, strike, extrapolate);
+		/* @Time */final double t = timeFromReference(optionDate);
 		return v*v*t;
 	}
 
-	public double blackVariance(/* @Time */final double optionTime, double strike, boolean extrapolate) {
-		double v = volatility(optionTime, strike, extrapolate);
+	public double blackVariance(/* @Time */final double optionTime, final double strike, final boolean extrapolate) {
+		final double v = volatility(optionTime, strike, extrapolate);
 		return v*v*optionTime;
 	}
 
+	//
 	// 3. relying on xxxImpl methods
-	public double volatility(final Date optionDate, double strike, boolean extrapolate) {
+	//
+
+	public double volatility(final Date optionDate, final double strike, final boolean extrapolate) {
 		checkRange(optionDate, extrapolate);
 		checkStrike(strike, extrapolate);
 		return volatilityImpl(optionDate, strike);
 	}
 
-	public double volatility(@Time double optionTime, double strike, boolean extrapolate) {
+	public double volatility(@Time final double optionTime, final double strike, final boolean extrapolate) {
 		checkRange(optionTime, extrapolate);
 		checkStrike(strike, extrapolate);
 		return volatilityImpl(optionTime, strike);
 	}
 
-	public SmileSection smileSection(final Date optionDate, boolean extr) {
+	public SmileSection smileSection(final Date optionDate, final boolean extr) {
 		checkRange(optionDate, extr);
 		return smileSectionImpl(optionDate);
 	}
 
-	public SmileSection smileSection(final @Time double optionTime, boolean extrapolate) {
+	public SmileSection smileSection(final @Time double optionTime, final boolean extrapolate) {
 		checkRange(optionTime, extrapolate);
 		return smileSectionImpl(optionTime);
 	}
 
-	// 4. default implementation of Date-based xxxImpl methods
-	//    relying on the equivalent Time-based methods
+	//
+	// 4. default implementation of Date-based xxxImpl methods relying on the equivalent Time-based methods
+	//
+
 	protected SmileSection smileSectionImpl(final Date optionDate) {
 		return smileSectionImpl(timeFromReference(optionDate));
 	}
 
-	public double volatilityImpl(final Date optionDate, double strike) {
+	public double volatilityImpl(final Date optionDate, final double strike) {
 		return volatilityImpl(timeFromReference(optionDate), strike);
 	}
 

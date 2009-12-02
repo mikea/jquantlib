@@ -48,13 +48,14 @@ import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.calendars.UnitedStates;
 
-//! base class for all BBA LIBOR indexes but the EUR, O/N, and S/N ones
-/*! LIBOR fixed by BBA.
-
-    See <http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414>.
+/**
+ * base class for all BBA LIBOR indexes but the EUR, O/N, and S/N ones
+ * <p>
+ * LIBOR fixed by BBA.
+ *
+ * @see <a href="http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414">http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414</a>
  */
 public class USDLibor extends Libor {
-
 
 	public USDLibor(final Period tenor) {
 		this(tenor, new Handle<YieldTermStructure>(
@@ -73,9 +74,9 @@ public class USDLibor extends Libor {
 
 	public USDLibor(final Period tenor,
 			final Handle<YieldTermStructure> h) {
-		super("USDLibor", tenor, 2, 
-				new USDCurrency(), 
-				new UnitedStates(UnitedStates.Market.SETTLEMENT), 
+		super("USDLibor", tenor, 2,
+				new USDCurrency(),
+				new UnitedStates(UnitedStates.Market.SETTLEMENT),
 				new Actual360(), h);
 	}
 

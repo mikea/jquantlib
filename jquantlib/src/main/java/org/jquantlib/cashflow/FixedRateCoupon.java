@@ -37,6 +37,11 @@ public class FixedRateCoupon extends Coupon {
 	private InterestRate rate;
 	private DayCounter dayCounter;
 
+	
+	//
+	// constructors
+	//
+	
 	public FixedRateCoupon(double nominal, 
 			final Date paymentDate, 
 			final double rate,
@@ -82,6 +87,14 @@ public class FixedRateCoupon extends Coupon {
 		this.dayCounter = dayCounter;
 	}
 
+	//
+	// public methods
+	//
+	
+    public InterestRate interestRate() {
+        return interestRate();
+    }
+    
 
 	//
 	// Overrides Coupon
@@ -97,10 +110,6 @@ public class FixedRateCoupon extends Coupon {
 		return rate.rate();
 	}
 
-	public InterestRate interestRate() {
-		return interestRate();
-	}
-	
 	@Override
 	public double accruedAmount(Date d){
 		if(d.le(accrualStartDate) || d.gt(paymentDate)){

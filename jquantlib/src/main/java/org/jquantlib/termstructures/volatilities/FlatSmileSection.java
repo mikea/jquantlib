@@ -45,32 +45,63 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Constants;
 import org.jquantlib.time.Date;
 
+/**
+ * Flat SmileSection
+ *
+ * @author Ueli Hofstetter
+ * @author John Nichol
+ */
 public class FlatSmileSection extends SmileSection {
 
     private final double vol_;
-    private double atmLevel_;
+    private final double atmLevel_;
 
-    public FlatSmileSection(final Date d, final double vol, final DayCounter dc, final Date referenceDate) {
+    //
+    // public constructors
+    //
+
+    public FlatSmileSection(
+            final Date d,
+            final double vol,
+            final DayCounter dc,
+            final Date referenceDate) {
     	this(d, vol, dc, referenceDate, Constants.NULL_REAL);
     }
-    
-    public FlatSmileSection(final Date d, final double vol, final DayCounter dc, final Date referenceDate, final /* @Real */ double atmLevel) {
+
+    public FlatSmileSection(
+            final Date d,
+            final double vol,
+            final DayCounter dc,
+            final Date referenceDate,
+            final /* @Real */ double atmLevel) {
 
         super(d, dc, referenceDate);
         this.vol_ = vol;
         this.atmLevel_ = atmLevel;
     }
 
-    public FlatSmileSection(/* @Time */ double exerciseTime, final double vol, final DayCounter dc, final /* @Real */ double atmLevel) {
+    public FlatSmileSection(
+            final /* @Time */ double exerciseTime,
+            final double vol,
+            final DayCounter dc,
+            final /* @Real */ double atmLevel) {
     	super(exerciseTime, dc);
     	vol_ = vol;
     	atmLevel_ = atmLevel;
     }
 
-    public FlatSmileSection(/* @Time */ double exerciseTime, final double vol, final DayCounter dc) {
+    public FlatSmileSection(
+            final /* @Time */ double exerciseTime,
+            final double vol, final DayCounter dc) {
     	this(exerciseTime, vol, dc, Constants.NULL_REAL);
     }
 
+
+    //
+    // overrides SmileSection
+    //
+
+    @Override
     public double variance() {
         return vol_ * vol_ * exerciseTime_;
     }
@@ -90,11 +121,13 @@ public class FlatSmileSection extends SmileSection {
         return Constants.DBL_MAX;
     };
 
+    @Override
     public /* @Real */ double atmLevel() {
         return atmLevel_;
     }
 
-    public /* @Volatility */ double volatilityImpl(/* @Rate */double strike) {
+    @Override
+    public /* @Volatility */ double volatilityImpl(/* @Rate */final double strike) {
         return vol_;
     }
 

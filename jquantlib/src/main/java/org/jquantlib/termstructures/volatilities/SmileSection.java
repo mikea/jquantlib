@@ -21,6 +21,23 @@
  When applicable, the original copyright notice follows this notice.
  */
 
+/*
+ Copyright (C) 2006 Mario Pucci
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.termstructures.volatilities;
 
 import java.util.List;
@@ -30,33 +47,50 @@ import org.jquantlib.Settings;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Constants;
 import org.jquantlib.time.Date;
+import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
+/**
+ * Smile section base class
+ *
+ * @author Ueli Hofstetter
+ * @author John Nichol
+ */
 public abstract class SmileSection implements Observer, Observable {
 
     private Date exerciseDate_;
     private Date reference_;
-    private DayCounter dc_;
+
+    private final DayCounter dc_;
+    private final boolean isFloating_;
+
     protected double exerciseTime_;
-    private boolean isFloating_;
-    
-    public SmileSection(final Date d, final DayCounter dc, final Date referenceDate) {
+
+
+    //
+    // public constructors
+    //
+
+    public SmileSection(
+            final Date d,
+            final DayCounter dc,
+            final Date referenceDate) {
     	exerciseDate_ = d;
     	dc_ = dc;
     	isFloating_ = referenceDate.isNull();
     	if (isFloating_) {
-    		Settings settings = new Settings();
+    		final Settings settings = new Settings();
     		settings.evaluationDate().addObserver(this);
     		reference_ = settings.evaluationDate();
-    	} 
-    	else { 
-    		reference_ = referenceDate;
-    	}
+    	} else
+            reference_ = referenceDate;
     	initializeExerciseTime();
     }
 
-    public SmileSection(/* @Time */ double exerciseTime, final DayCounter dc) {
+    public SmileSection(
+            final /* @Time */ double exerciseTime,
+            final DayCounter dc) {
     	isFloating_ = false;
     	dc_ = dc;
     	exerciseTime_ = exerciseTime;
@@ -65,20 +99,23 @@ public abstract class SmileSection implements Observer, Observable {
     			exerciseTime_ + " not allowed");
     }
 
-    public void update() {
-        if (isFloating_) {
-    		Settings settings = new Settings();
-            reference_ = settings.evaluationDate();
-            initializeExerciseTime();
-        }
 
-    }
+    //
+    // abstract methods
+    //
 
     public abstract double minStrike();
 
     public abstract double maxStrike();
 
     public abstract double atmLevel();
+
+    protected abstract /* @Real */ double volatilityImpl(/* @Rate */ double strike);
+
+
+    //
+    // public methods
+    //
 
     public double variance() {
     	return variance(Constants.NULL_REAL);
@@ -121,53 +158,76 @@ public abstract class SmileSection implements Observer, Observable {
         return dc_;
     }
 
-    protected /* @Real */ double varianceImpl(/* @Rate */ double strike) {
-    	/* @Volatility */ double v = volatilityImpl(strike);
+    //
+    // protected methods
+    //
+
+    protected /* @Real */ double varianceImpl(/* @Rate */ final double strike) {
+    	/* @Volatility */ final double v = volatilityImpl(strike);
         return v*v*exerciseTime();
 
     }
-    protected abstract /* @Real */ double volatilityImpl(/* @Rate */ double strike);
+
+
+    //
+    // implements Observer
+    //
+
+    @Override
+    public void update() {
+        if (isFloating_) {
+            final Settings settings = new Settings();
+            reference_ = settings.evaluationDate();
+            initializeExerciseTime();
+        }
+
+    }
+
+    //
+    // implements Observable
+    //
+
+    /**
+     * Implements multiple inheritance via delegate pattern to an inner class
+     *
+     * @see Observable
+     * @see DefaultObservable
+     */
+    private final DefaultObservable delegatedObservable = new DefaultObservable(this);
 
     @Override
     public void addObserver(final Observer observer) {
-        // TODO Auto-generated method stub
-
+        delegatedObservable.addObserver(observer);
     }
 
     @Override
     public int countObservers() {
-        // TODO Auto-generated method stub
-        return 0;
+        return delegatedObservable.countObservers();
     }
 
     @Override
     public void deleteObserver(final Observer observer) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void deleteObservers() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public List<Observer> getObservers() {
-        // TODO Auto-generated method stub
-        return null;
+        delegatedObservable.deleteObserver(observer);
     }
 
     @Override
     public void notifyObservers() {
-        // TODO Auto-generated method stub
-
+        delegatedObservable.notifyObservers();
     }
 
     @Override
     public void notifyObservers(final Object arg) {
-        // TODO Auto-generated method stub
+        delegatedObservable.notifyObservers(arg);
+    }
 
+    @Override
+    public void deleteObservers() {
+        delegatedObservable.deleteObservers();
+    }
+
+    @Override
+    public List<Observer> getObservers() {
+        return delegatedObservable.getObservers();
     }
 
 }

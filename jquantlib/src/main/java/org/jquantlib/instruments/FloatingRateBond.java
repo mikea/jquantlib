@@ -54,20 +54,31 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 
+
+/**
+ * floating-rate bond (possibly capped and/or floored)
+ *
+ * @category instruments
+ *
+ * @author John Nichol
+ */
+//TEST: calculations are tested by checking results against cached values.
 public class FloatingRateBond extends Bond {
-	public FloatingRateBond(int settlementDays,
-			double faceAmount,
+
+	public FloatingRateBond(
+	        final int settlementDays,
+			final double faceAmount,
 			final Schedule schedule,
-			IborIndex index,
+			final IborIndex index,
 			final DayCounter accrualDayCounter,
-			BusinessDayConvention paymentConvention,
-			int fixingDays,
-			Array gearings,
-			Array spreads,
-			Array caps,
-			Array floors,
-			boolean inArrears,
-			double redemption,
+			final BusinessDayConvention paymentConvention,
+			final int fixingDays,
+			final Array gearings,
+			final Array spreads,
+			final Array caps,
+			final Array floors,
+			final boolean inArrears,
+			final double redemption,
 			final Date issueDate) {
 		super(settlementDays, schedule.calendar(), issueDate);
 		maturityDate_ = schedule.endDate();
@@ -90,12 +101,13 @@ public class FloatingRateBond extends Bond {
 		index.addObserver(this);
 	}
 
-	public FloatingRateBond(int settlementDays,
-			double faceAmount,
+	public FloatingRateBond(
+	        final int settlementDays,
+			final double faceAmount,
 			final Schedule schedule,
-			IborIndex index,
+			final IborIndex index,
 			final DayCounter accrualDayCounter) {
-		this(settlementDays, faceAmount, schedule, 
+		this(settlementDays, faceAmount, schedule,
 				index, accrualDayCounter, BusinessDayConvention.Following,
 				Constants.NULL_INTEGER, new Array(new double[] { 1.0 }),
 				new Array(new double[] { 0.0 }), new Array(), new Array(),
@@ -103,27 +115,28 @@ public class FloatingRateBond extends Bond {
 
 	}
 
-	public FloatingRateBond(int settlementDays,
-			double faceAmount,
+	public FloatingRateBond(
+	        final int settlementDays,
+			final double faceAmount,
 			final Date startDate,
 			final Date maturityDate,
-			Frequency couponFrequency,
+			final Frequency couponFrequency,
 			final Calendar calendar,
 			final Handle<IborIndex> index,
 			final DayCounter accrualDayCounter,
-			BusinessDayConvention accrualConvention,
-			BusinessDayConvention paymentConvention,
-			int fixingDays,
+			final BusinessDayConvention accrualConvention,
+			final BusinessDayConvention paymentConvention,
+			final int fixingDays,
 			final Array gearings,
 			final Array spreads,
 			final Array caps,
 			final Array floors,
-			boolean inArrears,
-			double redemption,
+			final boolean inArrears,
+			final double redemption,
 			final Date issueDate,
 			final Date stubDate,
-			DateGeneration.Rule rule,
-			boolean endOfMonth) {
+			final DateGeneration.Rule rule,
+			final boolean endOfMonth) {
 		super(settlementDays, calendar, issueDate);
 
 		maturityDate_ = maturityDate;
@@ -148,7 +161,7 @@ public class FloatingRateBond extends Bond {
 			QL.error("unknown DateGeneration::Rule (" + rule + ")");
 		}
 
-		Schedule schedule = new Schedule(startDate, maturityDate_, new Period(couponFrequency),
+		final Schedule schedule = new Schedule(startDate, maturityDate_, new Period(couponFrequency),
 				calendar_, accrualConvention, accrualConvention,
 				rule, endOfMonth,
 				firstDate, nextToLastDate);
@@ -172,11 +185,12 @@ public class FloatingRateBond extends Bond {
 		index.addObserver(this);
 	}
 
-	public FloatingRateBond(int settlementDays,
-			double faceAmount,
+	public FloatingRateBond(
+	        final int settlementDays,
+			final double faceAmount,
 			final Date startDate,
 			final Date maturityDate,
-			Frequency couponFrequency,
+			final Frequency couponFrequency,
 			final Calendar calendar,
 			final Handle<IborIndex> index,
 			final DayCounter accrualDayCounter) {

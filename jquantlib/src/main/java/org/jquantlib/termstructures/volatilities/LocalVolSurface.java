@@ -53,8 +53,10 @@ import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
+ * Local volatility surface derived from a Black vol surface
+ * <p>
  * For details about this implementation refer to "Stochastic Volatility and
- * Local Volatility," in "Case Studies and Financial Modelling Course Notes," by
+ * Local Volatility" in "Case Studies and Financial Modelling Course Notes," by
  * Jim Gatheral, Fall Term, 2003
  *
  * @see <a href="http://www.math.nyu.edu/fellows_fin_math/gatheral/Lecture1_Fall02.pdf">This article</a>
@@ -139,7 +141,9 @@ public class LocalVolSurface extends LocalVolTermStructure {
     }
 
     @Override
-    protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double time, final /*@Real*/ double underlyingLevel) {
+    protected final /*@Volatility*/ double localVolImpl(
+            final /*@Time*/ double time,
+            final /*@Real*/ double underlyingLevel) {
 
         // obtain local copies of objects
         final Quote u = underlying_.currentLink();

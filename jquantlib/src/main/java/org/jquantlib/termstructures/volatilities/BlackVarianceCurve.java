@@ -86,7 +86,11 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
     // public constructors
     //
 
-    public BlackVarianceCurve(final Date referenceDate, final Date[] dates, /*@Volatility*/ final double[] blackVolCurve, final DayCounter dayCounter) {
+    public BlackVarianceCurve(
+            final Date referenceDate,
+            final Date[] dates,
+            final /*@Volatility*/ double[] blackVolCurve,
+            final DayCounter dayCounter) {
         this(referenceDate, dates, blackVolCurve, dayCounter, true);
     }
 

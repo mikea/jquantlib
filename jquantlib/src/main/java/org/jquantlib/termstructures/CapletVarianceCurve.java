@@ -46,42 +46,74 @@ import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 
+/**
+ * caplet variance curve
+ * <p>
+ * @deprecated use the StrippedOptionletAdapter of a StrippedOptionlet instance
+*/
+@Deprecated
 public class CapletVarianceCurve extends OptionletVolatilityStructure {
-	private BlackVarianceCurve blackCurve;
-	
-	public CapletVarianceCurve(final Date referenceDate,
-            Date [] dates,
-            double [] capletVolCurve,
+
+	private final BlackVarianceCurve blackCurve;
+
+	//
+	// public constructor
+	//
+
+	public CapletVarianceCurve(
+	        final Date referenceDate,
+            final Date [] dates,
+            final double [] capletVolCurve,
             final DayCounter dayCounter) {
 		super(referenceDate, new Calendar(), BusinessDayConvention.Following);
 		blackCurve = new BlackVarianceCurve(referenceDate, dates, capletVolCurve, dayCounter, false);
 	}
-	
 
 
-	public DayCounter dayCounter() {
+    //
+    // overrides TermStructure
+    //
+
+    public Date maxDate() {
+        return blackCurve.maxDate();
+    }
+
+	//
+	// overrides AbstractTermStructure
+	//
+
+	@Override
+    public DayCounter dayCounter() {
 		return blackCurve.dayCounter();
 	}
 
-	public Date maxDate() {
-		return blackCurve.maxDate();
-	}
+	//
+	// overrides VolatilityTermStructure
+	//
 
-	public /* @Real */ double minStrike() {
+	@Override
+    public /* @Real */ double minStrike() {
 		return blackCurve.minStrike();
 	}
 
-	public /* @Real */ double maxStrike() {
+	@Override
+    public /* @Real */ double maxStrike() {
 		return blackCurve.maxStrike();
 	}
 
-	protected SmileSection smileSectionImpl(/* @Time */double t) {
+	//
+	// override OptionletVolatilityStructure
+	//
+
+	@Override
+    protected SmileSection smileSectionImpl(/* @Time */final double t) {
 		// dummy strike
-		double atmVol = blackCurve.blackVol(t, 0.05, true);
+		final double atmVol = blackCurve.blackVol(t, 0.05, true);
 		return new FlatSmileSection(t, atmVol, dayCounter());
 	}
 
-	protected /* @Volatility */ double volatilityImpl(/* @Time */ double t, /* @Rate */ double r) {
+	@Override
+    protected /* @Volatility */ double volatilityImpl(/* @Time */ final double t, /* @Rate */ final double r) {
 		return blackCurve.blackVol(t, r, true);
 	}
 

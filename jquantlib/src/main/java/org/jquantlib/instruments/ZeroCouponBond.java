@@ -52,41 +52,46 @@ import org.jquantlib.time.Date;
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class ZeroCouponBond extends Bond {
-	public ZeroCouponBond(int settlementDays,
+
+	public ZeroCouponBond(
+	        final int settlementDays,
             final Calendar calendar,
-            double faceAmount,
+            final double faceAmount,
             final Date maturityDate,
-            BusinessDayConvention paymentConvention,
-            double redemption,
+            final BusinessDayConvention paymentConvention,
+            final double redemption,
             final Date issueDate) {
 		super(settlementDays, calendar, issueDate);
         maturityDate_ = maturityDate;
-        Date redemptionDate = calendar_.adjust(maturityDate,
+        final Date redemptionDate = calendar_.adjust(maturityDate,
                                                paymentConvention);
         setSingleRedemption(faceAmount, redemption, redemptionDate);
 	}
-	
-	public ZeroCouponBond(int settlementDays,
+
+	public ZeroCouponBond(
+	        final int settlementDays,
             final Calendar calendar,
-            double faceAmount,
+            final double faceAmount,
             final Date maturityDate) {
 		this(settlementDays, calendar, faceAmount, maturityDate, BusinessDayConvention.Following, 100.0, new Date());
 	}
 
-	public ZeroCouponBond(int settlementDays,
+	public ZeroCouponBond(
+	        final int settlementDays,
             final Calendar calendar,
-            double faceAmount,
+            final double faceAmount,
             final Date maturityDate,
-            BusinessDayConvention paymentConvention,
-            double redemption) {
+            final BusinessDayConvention paymentConvention,
+            final double redemption) {
 		this(settlementDays, calendar, faceAmount, maturityDate, paymentConvention, redemption, new Date());
 	}
 
-	public ZeroCouponBond(int settlementDays,
+	public ZeroCouponBond(
+	        final int settlementDays,
             final Calendar calendar,
-            double faceAmount,
+            final double faceAmount,
             final Date maturityDate,
-            BusinessDayConvention paymentConvention) {
+            final BusinessDayConvention paymentConvention) {
 		this(settlementDays, calendar, faceAmount, maturityDate, paymentConvention, 100.0, new Date());
 	}
 }

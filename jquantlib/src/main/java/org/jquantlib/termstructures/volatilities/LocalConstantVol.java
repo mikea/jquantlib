@@ -48,9 +48,9 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.calendars.NullCalendar;
 
-// Local constant volatility, no time dependence, no asset dependence
-
 /**
+ * Local constant volatility, no time dependence, no asset dependence
+ * <p>
  * This class implements the LocalVolatilityTermStructure interface for a
  * constant local volatility (no time/asset dependence). Local volatility and
  * Black volatility are the same when volatility is at most time dependent, so
@@ -58,16 +58,16 @@ import org.jquantlib.time.calendars.NullCalendar;
  */
 public class LocalConstantVol extends LocalVolTermStructure {
 
-    private final Handle<Quote> volatility_;
-    private final DayCounter dayCounter_;
+    private final Handle<Quote> volatility;
+    private final DayCounter dayCounter;
 
     public LocalConstantVol(
             final Date referenceDate,
             final /*@Volatility*/ double volatility,
             final DayCounter dayCounter) {
         super(referenceDate);
-        this.volatility_ = new Handle<Quote>(new SimpleQuote(volatility));
-        this.dayCounter_ = dayCounter;
+        this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
+        this.dayCounter = dayCounter;
     }
 
     public LocalConstantVol(
@@ -75,12 +75,10 @@ public class LocalConstantVol extends LocalVolTermStructure {
             final Handle<Quote> volatility,
             final DayCounter dayCounter) {
         super(referenceDate);
-        this.volatility_ = volatility;
-        this.dayCounter_ = dayCounter;
+        this.volatility = volatility;
+        this.dayCounter = dayCounter;
 
-        this.volatility_.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.volatility_);
+        this.volatility.addObserver(this);
     }
 
     public LocalConstantVol(
@@ -89,8 +87,8 @@ public class LocalConstantVol extends LocalVolTermStructure {
             final /*@Volatility*/ double volatility,
             final DayCounter dayCounter) {
         super(settlementDays, new NullCalendar());
-        this.volatility_ = new Handle<Quote>(new SimpleQuote(volatility));
-        this.dayCounter_ = dayCounter;
+        this.volatility = new Handle<Quote>(new SimpleQuote(volatility));
+        this.dayCounter = dayCounter;
     }
 
     public LocalConstantVol(
@@ -99,17 +97,14 @@ public class LocalConstantVol extends LocalVolTermStructure {
             final Handle<Quote> volatility,
             final DayCounter dayCounter) {
         super(settlementDays, new NullCalendar());
-        this.volatility_ = volatility;
-        this.dayCounter_ = dayCounter;
-
-        this.volatility_.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.volatility_);
+        this.volatility = volatility;
+        this.dayCounter = dayCounter;
+        this.volatility.addObserver(this);
     }
 
     @Override
     public final DayCounter dayCounter() {
-        return dayCounter_;
+        return dayCounter;
     }
 
     public final Date maxDate() {
@@ -127,8 +122,10 @@ public class LocalConstantVol extends LocalVolTermStructure {
     }
 
     @Override
-    protected final /*@Volatility*/ double localVolImpl(final /*@Time*/ double maturity, final /*@Real*/ double strike) {
-        return this.volatility_.currentLink().value();
+    protected final /*@Volatility*/ double localVolImpl(
+            final /*@Time*/ double maturity,
+            final /*@Real*/ double strike) {
+        return this.volatility.currentLink().value();
     }
 
 }
