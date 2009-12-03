@@ -42,7 +42,6 @@ package org.jquantlib.quotes;
 
 import java.util.List;
 
-import org.jquantlib.QL;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 import org.jquantlib.util.WeakReferenceObservable;
@@ -184,43 +183,43 @@ public class Handle<T extends Observable> implements Observable {
 
     @Override
     public final void addObserver(final Observer observer) {
-        QL.require(observable!=null, EMPTY_HANDLE);
+        //XXX QL.require(observable!=null, EMPTY_HANDLE);
         link.addObserver(observer);
     }
 
     @Override
     public final int countObservers() {
-        QL.require(observable!=null, EMPTY_HANDLE);
+        //XXX QL.require(observable!=null, EMPTY_HANDLE);
         return link.countObservers();
     }
 
     @Override
     public final void deleteObserver(final Observer observer) {
-        QL.require(observable!=null, EMPTY_HANDLE);
+        //XXX QL.require(observable!=null, EMPTY_HANDLE);
         link.deleteObserver(observer);
     }
 
     @Override
     public final void notifyObservers() {
-        QL.require(observable!=null, EMPTY_HANDLE);
+        //XXX QL.require(observable!=null, EMPTY_HANDLE);
         link.notifyObservers();
     }
 
     @Override
     public final void notifyObservers(final Object arg) {
-        QL.require(observable!=null, EMPTY_HANDLE);
+        //XXX QL.require(observable!=null, EMPTY_HANDLE);
         link.notifyObservers(arg);
     }
 
     @Override
     public final void deleteObservers() {
-        QL.require(observable!=null, EMPTY_HANDLE);
+        //XXX QL.require(observable!=null, EMPTY_HANDLE);
         link.deleteObservers();
     }
 
     @Override
     public final List<Observer> getObservers() {
-        QL.require(observable!=null, EMPTY_HANDLE);
+        //XXX QL.require(observable!=null, EMPTY_HANDLE);
         return link.getObservers();
     }
 
@@ -236,7 +235,6 @@ public class Handle<T extends Observable> implements Observable {
      * So, the ditto Observable notifies its Observers, a Link instance is notified, which ultimately
      * is responsible for forwarding this notification to a list of external Observers.
      */
-    // see: http://bugs.jquantlib.org/view.php?id=58
     final private class Link extends WeakReferenceObservable implements Observer {
 
         private Link(final Observable observable) {
@@ -244,10 +242,8 @@ public class Handle<T extends Observable> implements Observable {
         }
 
         @Override
-        //XXX:OBS public void update(final Observable o, final Object arg) {
         public void update() {
-            //XXX::OBS this.notifyObservers(arg);
-            this.notifyObservers();
+            if (observable!=null) this.notifyObservers();
         }
     }
 
