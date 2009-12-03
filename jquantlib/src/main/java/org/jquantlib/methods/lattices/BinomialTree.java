@@ -25,6 +25,7 @@ package org.jquantlib.methods.lattices;
 import org.jquantlib.lang.annotation.NonNegative;
 import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.lang.annotation.Time;
+import org.jquantlib.lang.annotation.Unused;
 import org.jquantlib.processes.StochasticProcess1D;
 
 /**
@@ -61,7 +62,7 @@ public abstract class BinomialTree extends Tree {
 	}
 
 	@Override
-    public final int descendant(final int unused, final int index, final int branch) {
+    public final int descendant(final @Unused int unused, final int index, final int branch) {
 		return index + branch;
 	}
 

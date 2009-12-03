@@ -407,9 +407,18 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
     }
 
     @Override
+    public /*@Natural*/ int settlementDays() {
+        return baseCurve.settlementDays();
+    }
+
+    @Override
     public double timeFromReference(final Date date) {
         return baseCurve.timeFromReference(date);
     }
+
+    //
+    // implements YieldTermStructure
+    //
 
     @Override
     public double discount(final Date d, final boolean extrapolate) {
@@ -430,11 +439,6 @@ public class PiecewiseYieldCurve<C extends CurveTraits, I extends Interpolator> 
     public double discount(final double t) {
         return baseCurve.discount(t);
     }
-
-
-    //
-    // implements YieldTermStructure
-    //
 
     @Override
     public InterestRate forwardRate(final Date d1, final Date d2, final DayCounter dayCounter, final Compounding comp, final Frequency freq, final boolean extrapolate) {

@@ -156,21 +156,18 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOption.EngineIm
             case Call:
                 Q = (-(n-1.0) + Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
                 a =  (Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.op(d1));
-                if (spot<Sk) {
+                if (spot<Sk)
                     r.value = black.value() + a * Math.pow((spot/Sk), Q);
-                } else {
+                else
                     r.value = spot - payoff.strike();
-                }
                 break;
             case Put:
                 Q = (-(n-1.0) - Math.sqrt(((n-1.0)*(n-1.0))+4.0*K))/2.0;
                 a = -(Sk/Q) * (1.0 - dividendDiscount * cumNormalDist.op(-d1));
-                if (spot>Sk) {
-                    r.value = black.value() +
-                    a * Math.pow((spot/Sk), Q);
-                } else {
+                if (spot>Sk)
+                    r.value = black.value() + a * Math.pow((spot/Sk), Q);
+                else
                     r.value = payoff.strike() - spot;
-                }
                 break;
             default:
                 throw new LibraryException(UNKNOWN_OPTION_TYPE); // QA:[RG]::verified
@@ -185,7 +182,8 @@ public class BaroneAdesiWhaleyApproximationEngine extends VanillaOption.EngineIm
     //
 
     //TODO: code review :: unused method?
-    private double  criticalPrice(
+    @Deprecated
+    private /* @Usused */ double  criticalPrice(
             final StrikedTypePayoff payoff,
             final double /*@DiscountFactor*/ riskFreeDiscount,
             final double /*@DiscountFactor*/ dividendDiscount,

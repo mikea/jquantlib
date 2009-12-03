@@ -325,10 +325,17 @@ public abstract class AbstractTermStructure implements TermStructure {
     }
 
     /* (non-Javadoc)
+     * @see org.jquantlib.termstructures.TermStructure#settlementDays()
+     */
+    public /*@Natural*/ int settlementDays() /* @ReadOnly */ {
+        return settlementDays;
+    }
+
+    /* (non-Javadoc)
      * @see org.jquantlib.termstructures.TermStructure#timeFromReference(org.jquantlib.util.Date)
      */
     @Override
-    public final /*@Time*/ double timeFromReference(final Date date) {
+    public final /*@Time*/ double timeFromReference(final Date date) /* @ReadOnly */ {
         return dayCounter().yearFraction(referenceDate(), date);
     }
 
@@ -336,7 +343,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      * @see org.jquantlib.termstructures.TermStructure#dayCounter()
      */
     @Override
-    public DayCounter dayCounter() {
+    public DayCounter dayCounter() /* @ReadOnly */ {
         QL.require(this.dayCounter != null , THIS_METHOD_MUST_BE_OVERRIDDEN); // QA:[RG]::verified // TODO: message
         return dayCounter;
     }
@@ -345,7 +352,7 @@ public abstract class AbstractTermStructure implements TermStructure {
      * @see org.jquantlib.termstructures.TermStructure#maxTime()
      */
     @Override
-    public /*@Time*/ double maxTime(){
+    public /*@Time*/ double maxTime() /* @ReadOnly */ {
         return timeFromReference(maxDate());
     }
 
@@ -353,9 +360,9 @@ public abstract class AbstractTermStructure implements TermStructure {
      * @see org.jquantlib.termstructures.TermStructure#referenceDate()
      */
     @Override
-    public Date referenceDate() {
+    public Date referenceDate() /* @ReadOnly */ {
         if (!updated) {
-        	Date today = new Settings().evaluationDate();
+        	final Date today = new Settings().evaluationDate();
         	referenceDate = calendar().advance(today, settlementDays, TimeUnit.Days);
             updated = true;
         }
