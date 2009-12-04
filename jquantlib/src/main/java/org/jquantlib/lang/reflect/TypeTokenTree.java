@@ -84,22 +84,22 @@ public class TypeTokenTree {
 
     private TypeNode retrieve(final Class<?> klass) {
         final Type superclass = klass.getGenericSuperclass();
+        QL.debug(super.toString());
         QL.require(!(superclass instanceof Class) , ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED); // QA:[RG]::verified
         final TypeNode node = new TypeNode(klass);
-        for (final Type t : ((ParameterizedType) superclass).getActualTypeArguments() ) {
+        for (final Type t : ((ParameterizedType) superclass).getActualTypeArguments() )
             node.add(retrieve(t));
-        }
         return node;
     }
 
     private TypeNode retrieve(final Type type) {
         final TypeNode node;
-        if (type instanceof Class<?>) {
+        if (type instanceof Class<?>)
             node = new TypeNode((Class<?>)type);
-        } else if (type instanceof ParameterizedType) {
+        else if (type instanceof ParameterizedType) {
             final Type rawType = ((ParameterizedType) type).getRawType();
             node = retrieve(rawType);
-            for (final Type arg : ((ParameterizedType) type).getActualTypeArguments()) {
+            for (final Type arg : ((ParameterizedType) type).getActualTypeArguments())
                 node.add(retrieve(arg));
 //
 //TODO: code review
@@ -113,10 +113,8 @@ public class TypeTokenTree {
 //                node.add(retrieve(arg));
 //            }
 //
-            }
-        } else {
+        } else
             throw new IllegalArgumentException(ReflectConstants.ILLEGAL_TYPE_PARAMETER);
-        }
         return node;
     }
 
