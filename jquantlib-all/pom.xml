@@ -272,171 +272,31 @@
 
     <repositories>
         <repository>
-            <id>jquantlib</id>
-            <name>JQuantLib repository</name>
-            <url>http://artifactory.jquantlib.org:8080/artifactory/repo</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-<!--
-        <repository>
-            <id>artifactory-releases</id>
-            <name>artifactory-releases</name>
-            <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-releases</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>artifactory-snapshots</id>
-            <name>artifactory-snapshots</name>
-            <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>artifactory-releases</id>
-            <name>artifactory-releases</name>
-            <url>http://artifactory.jquantlib.org:8080/artifactory/external-free</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>artifactory-snapshots</id>
-            <name>artifactory-snapshots</name>
-            <url>http://artifactory.jquantlib.org:8080/artifactory/external-free</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
--->
-        <repository>
-            <id>central</id>
-            <name>Central Maven2 repository</name>
-            <url>http://repo1.maven.org/maven2</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
-            <id>maven2-snapshots</id>
-            <name>Maven2 Snapshots</name>
-            <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        
-        <repository>
-            <id>mojo</id>
-            <name>Mojo</name>
-            <url>http://repository.codehaus.org/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        
-        <repository>
-            <id>net-java-dev</id>
-            <name>Sun</name>
-            <url>http://download.java.net/maven/2/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-
-        <repository>
             <id>JBOSS</id>
             <name>JBoss Repository</name>
             <url>http://repository.jboss.org/maven2/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <releases>  <enabled>true</enabled>  </releases>
+            <snapshots> <enabled>true</enabled>  </snapshots>
         </repository>
         
-        <!--  TODO: evaluate it should remain here -->
-        <!--  TODO: copy artifacts to JQL repository-->
         <repository>
             <id>joda</id>
             <name>Joda</name>
             <url>http://joda-primitives.sourceforge.net/repo/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <releases>  <enabled>true</enabled>  </releases>
+            <snapshots> <enabled>true</enabled>  </snapshots>
         </repository>
-    </repositories>
-    
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <name>Maven Plugin Repository</name>
-            <url>http://repo1.maven.org/maven2</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>never</updatePolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-
-        <pluginRepository>
-            <id>maven2-snapshots</id>
-            <name>Maven2 Snapshots</name>
-            <url>http://people.apache.org/repo/m2-snapshot-repository/</url>
-            <releases>  <enabled>false</enabled> </releases>
-            <snapshots> <enabled>true</enabled>  </snapshots>
-        </pluginRepository>
         
-        <pluginRepository>
-            <id>mojo</id>
-            <name>Mojo</name>
-            <url>http://repository.codehaus.org/</url>
-            <releases>  <enabled>true</enabled> </releases>
+        <repository>
+            <id>jquantlib</id>
+            <name>JQuantLib repository</name>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/repo</url>
+            <releases>  <enabled>true</enabled>  </releases>
             <snapshots> <enabled>true</enabled>  </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
+        </repository>
 
+    </repositories>
+ 
     <build>
         <pluginManagement>
             <plugins>
@@ -492,32 +352,6 @@
         </pluginManagement>
 
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-plugin</artifactId>
-                <configuration>
-                    <goals>install</goals>
-                    <startDate>YYYY-MM-DD</startDate>
-                    <endDate>YYYY-MM-DD</endDate>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <doCheck>${props.buildNumber.doCheck}</doCheck>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -753,6 +587,42 @@
     
     <profiles>
 
+		<profile>
+			<id>with-scm</id>
+			<build>
+			    <plugins>
+		            <plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-scm-plugin</artifactId>
+		                <configuration>
+		                    <goals>install</goals>
+		                    <startDate>YYYY-MM-DD</startDate>
+		                    <endDate>YYYY-MM-DD</endDate>
+		                </configuration>
+		            </plugin>
+		
+		            <plugin>
+		                <groupId>org.codehaus.mojo</groupId>
+		                <artifactId>buildnumber-maven-plugin</artifactId>
+		                <executions>
+		                    <execution>
+		                        <phase>validate</phase>
+		                        <goals>
+		                            <goal>create</goal>
+		                        </goals>
+		                    </execution>
+		                </executions>
+		                <configuration>
+		                    <doCheck>${props.buildNumber.doCheck}</doCheck>
+		                </configuration>
+		            </plugin>
+			    </plugins>
+			</build>
+			<properties>
+			    <props.buildNumber.doCheck>true</props.buildNumber.doCheck>
+			</properties>
+		</profile>
+        
         <profile>
             <id>with-javadoc</id>
             <reporting>
