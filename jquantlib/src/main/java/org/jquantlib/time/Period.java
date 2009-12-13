@@ -216,7 +216,7 @@ public class Period implements Cloneable {
                             break;
                         case Weeks:
                         case Days:
-                            throw new LibraryException(INCOMPATIBLE_TIME_UNIT);
+                            throw new IllegalArgumentException(INCOMPATIBLE_TIME_UNIT);
                         default:
                             throw new LibraryException(UNKNOWN_TIME_UNIT);
                     }
@@ -228,7 +228,7 @@ public class Period implements Cloneable {
                             break;
                         case Weeks:
                         case Days:
-                            throw new LibraryException(INCOMPATIBLE_TIME_UNIT);
+                            throw new IllegalArgumentException(INCOMPATIBLE_TIME_UNIT);
                         default:
                             throw new LibraryException(UNKNOWN_TIME_UNIT);
                     }
@@ -241,7 +241,7 @@ public class Period implements Cloneable {
                             break;
                         case Years:
                         case Months:
-                            throw new LibraryException(INCOMPATIBLE_TIME_UNIT);
+                            throw new IllegalArgumentException(INCOMPATIBLE_TIME_UNIT);
                         default:
                             throw new LibraryException(UNKNOWN_TIME_UNIT);
                     }
@@ -253,7 +253,7 @@ public class Period implements Cloneable {
                             break;
                         case Years:
                         case Months:
-                            throw new LibraryException(INCOMPATIBLE_TIME_UNIT);
+                            throw new IllegalArgumentException(INCOMPATIBLE_TIME_UNIT);
                         default:
                             throw new LibraryException(UNKNOWN_TIME_UNIT);
                     }
@@ -508,7 +508,7 @@ public class Period implements Cloneable {
     	switch (p.units()) {
 	    	case Days:
 	    	case Weeks:
-	    		throw new LibraryException(UNDECIDABLE_COMPARISON);
+	    		throw new IllegalArgumentException(UNDECIDABLE_COMPARISON);
 	    	case Months:
 	    		return p.length()/12.0;
 	    	case Years:
@@ -524,7 +524,7 @@ public class Period implements Cloneable {
     	switch(p.units()) {
 	    	case Days:
 	    	case Weeks:
-	    		throw new LibraryException(UNDECIDABLE_COMPARISON);
+	    		throw new IllegalArgumentException(UNDECIDABLE_COMPARISON);
 	    	case Months:
 	    		return p.length();
 	    	case Years:
@@ -544,7 +544,7 @@ public class Period implements Cloneable {
 	    		return p.length();
 	    	case Months:
 	    	case Years:
-	    		throw new LibraryException(UNDECIDABLE_COMPARISON);
+	    		throw new IllegalArgumentException(UNDECIDABLE_COMPARISON);
 	    	default:
 	    		throw new LibraryException(UNKNOWN_TIME_UNIT);
     	}
@@ -560,7 +560,7 @@ public class Period implements Cloneable {
 	    		return p.length()*7.0;
 	    	case Months:
 	    	case Years:
-	    		throw new LibraryException(UNDECIDABLE_COMPARISON);
+	    		throw new IllegalArgumentException(UNDECIDABLE_COMPARISON);
 	    	default:
 	    		throw new LibraryException(UNKNOWN_TIME_UNIT);
     	}
