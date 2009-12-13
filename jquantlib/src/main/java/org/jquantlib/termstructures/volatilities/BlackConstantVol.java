@@ -76,7 +76,7 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     public BlackConstantVol(
                 final Date referenceDate,
                 final Calendar cal,
-                final Handle<Quote> volatility,
+                final Handle<? extends Quote> volatility,
                 final DayCounter dc) {
         super(referenceDate, cal, BusinessDayConvention.Following, dc);
         this.volatility = volatility;
@@ -95,7 +95,7 @@ public class BlackConstantVol extends BlackVolatilityTermStructure {
     public BlackConstantVol(
                 /*@Natural*/ final int settlementDays,
                 final Calendar cal,
-                final Handle<Quote> volatility,
+                final Handle<? extends Quote> volatility,
                 final DayCounter dc) {
         super(settlementDays, cal, BusinessDayConvention.Following, dc);
         this.volatility = volatility;

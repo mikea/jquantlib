@@ -22,15 +22,33 @@
 -->
 
 <!--
-	**
-	** Profiles available:
-    **      * with-javadoc
-    **      * with-clirr
-    **      * with-cobertura
-    **      * without-surefire
+	** ===== Profiles defined by this parent pom.xml =====
     **
-    **  There profiles can be combined, selecting the desired features.
-    **  In the following example we generate all reports except Surefire and Cobertura reports:
+    ** with-scm          :: allows validation of local copy against SVN repository
+    ** with-javadoc      :: allows generation of mathematical equations and fancy UML documentation
+    ** with-clirr        :: turns on comparison of binaries or sources for compatibility
+    ** with-cobertura    :: turns on complete code coverage and Cobertura test reports
+    ** without-surefire  :: turns off system tests provided by Surefire
+    **
+    **
+    ** ===== Profiles expected to exist in your settings.xml (optional) =====
+    **
+    ** Full documentation can be generated locally or onto a staging server.
+    ** The snippet below (must be defined in your ~/.m2/settings.xml) affects the location where Maven2 
+    ** deploys the generated site when "mvn site-deploy" is requested.
+    ** 
+    ** <profiles>
+    **   <profile>
+    **     <id>staging</id>
+    **     <properties>
+    **       <props.site.deploy.url>file:///srv/jquantlib.org/sites</props.site.deploy.url>
+    **     </properties>
+    **   </profile>
+    ** </profiles>
+    **
+    **
+    ** These profiles can be combined, selecting the desired features.
+    ** In the following example we generate all reports except Surefire and Cobertura reports:
     **
     **      mvn clean site -P with-javadoc,with-clirr,without-surefire
     **
@@ -61,6 +79,10 @@
 		several mathematical and statistical tools needed for financial instrument valuation, calculation
 		of VaR, portfolio valuation, etc.
 	</description>
+
+    <prerequisites>
+        <maven>2.2.1</maven>
+    </prerequisites>
 
     <modules>
         <module>../jquantlib</module>
@@ -94,37 +116,21 @@
         </snapshotRepository>
 
         <!-- NOTES:
-          *  * maven-site-plugin gets confused by flat project model employed by Eclipse :(
-          *
-          *  * It's also confused to configure an staging URL because maven-site-plugin takes
-          *    the staging URL from <configuration> and not from <distributionManagement>.
-          *
-          *  * We circumvented these difficulties by tweaking siteURL depending on a profile.
-          *    So, in order to 'deploy' to a staging server, please define a profile called 
-          *    'staging' in your settings.xml file like shown below:
-          * 
-          *        <settings>
-          *           ...
-          *           <profiles>
-          *               <profile>
-          *                   <id>staging</id>
-          *                   <properties>
-          *                       <props.site.deploy.url>scp://localhost:/srv/jquantlib.org/sites</props.site.deploy.url>
-          *                   </properties>
-          *               </profile>
-          *           </profiles>
-          *           ...
-          *        </settings>
-          * 
-          *    You can deploy to a staging server like this:
-          * 
-          *         mvn clean site-deploy -P staging
-          * 
-          *    The big drawback is that we have only one <site> for 2 purposes, which is not very good :(
-          *    One way to circumvent this problem is deploying via file: protocol to your local web server.
-          *
-          *  * Every project MUST REDEFINE the <site> section as it is (no modification are needed!) in order
-          *    to override the way Maven promoves inheritance which supposes a hierarchical model.
+          **
+          **  * maven-site-plugin gets confused by flat project model employed by Eclipse :(
+          **
+          **  * It's also confused to configure an staging URL because maven-site-plugin takes
+          **    the staging URL from <configuration> and not from <distributionManagement>.
+          **
+          **  * We circumvented these difficulties by tweaking siteURL depending on a profile.
+          **    So, in order to 'deploy' to a staging server, please define a profile called 
+          **    'staging' in your settings.xml, like explained on the top of this file.
+          **
+          **  * Every project *** MUST REDEFINE *** the <site> section as it is shown below.
+          **    Notice that no modifications are needed! You only need to copy/paste the <site> 
+          **    section below to all your subprojects.
+          **    Note that this procedure is needed due to the way Maven promotes inheritance supposing 
+          **    a hierarchical model whilst we are employing the flat project model.
         -->
         <site>
             <id>site</id>
@@ -133,10 +139,6 @@
         </site>
 
     </distributionManagement>
-
-    <prerequisites>
-        <maven>2.2.1</maven>
-    </prerequisites>
 
     <organization>
         <name>JQuantLib</name>

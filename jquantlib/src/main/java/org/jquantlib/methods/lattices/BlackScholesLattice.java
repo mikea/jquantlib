@@ -96,7 +96,6 @@ public class BlackScholesLattice<T extends Tree> extends TreeLattice1D {
 	@Override
     public void stepback(final int i, final Array values, final Array newValues) {
 		for (int j = 0; j < size(i); j++)
-			newValues.set(j, (pd * values.get(j) + pu * values.get(j + 1))
-					* discount);
+			newValues.set(j, (pd * values.get(j) + pu * values.get(j + 1)) * discount);
 	}
 }

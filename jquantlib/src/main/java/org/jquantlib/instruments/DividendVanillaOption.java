@@ -66,19 +66,24 @@ public class DividendVanillaOption extends VanillaOption {
 
     private final List<? extends Dividend> cashFlow;
 
+
+    //
+    // public constructors
+    //
+
     public DividendVanillaOption(
             final Payoff payoff,
             final Exercise exercise,
-            final List<Date> dividendDates,
+            final List<Date> dates,
             final List<Double> dividends) {
         super(payoff, exercise);
-        cashFlow = Dividend.DividendVector(dividendDates, dividends);
+        cashFlow = Dividend.DividendVector(dates, dividends);
     }
+
 
     //
     // public methods
     //
-
 
     @Override
     public /*@Volatility*/ double impliedVolatility(
@@ -113,7 +118,6 @@ public class DividendVanillaOption extends VanillaOption {
             /*@Volatility*/ final double minVol) /* @ReadOnly */ {
         return impliedVolatility(price, process, accuracy, maxEvaluations, minVol, 4.0);
     }
-
 
     @Override
     public /*@Volatility*/ double impliedVolatility(
@@ -165,6 +169,7 @@ public class DividendVanillaOption extends VanillaOption {
         final DividendVanillaOption.ArgumentsImpl arguments = (DividendVanillaOption.ArgumentsImpl)args;
         arguments.cashFlow = cashFlow;
     }
+
 
     //
     // public inner classes

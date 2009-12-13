@@ -173,13 +173,11 @@ public class TermStructuresTest {
             calculated[i] = localTermStructure.discount(anotherDay);
         }
 
-        for (int i=0; i<days.length; i++) {
-            if (!Closeness.isClose(expected[i],calculated[i])) {
+        for (int i=0; i<days.length; i++)
+            if (!Closeness.isClose(expected[i],calculated[i]))
                 fail("\n  Discount at " + days[i] + " days:\n"
                         + "    before date change: " + expected[i] + "\n"
                         + "    after date change:  " + calculated[i]);
-            }
-        }
     }
 
 
@@ -219,7 +217,7 @@ public class TermStructuresTest {
 
         //        final Date today = calendar.advance(Date.todaysDate());
         final Date today = new Settings().evaluationDate();
-        final Date newToday = today.add(Period.ONE_YEAR_FORWARD.times(3));
+        final Date newToday = today.add(Period.ONE_YEAR_FORWARD.mul(3));
         final Date newSettlement = new Target().advance(newToday, settlementDays, TimeUnit.Days);
 
         // final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(YieldTermStructure.class); //FIXME::RG::Handle
@@ -250,15 +248,11 @@ public class TermStructuresTest {
         final Flag anotherFlag = new Flag();
         quote.addObserver(anotherFlag);
         h.linkTo(new FlatForward(today, new Handle<Quote>(quote), new Actual360()));
-        if (!anotherFlag.isUp()) {
+        if (!anotherFlag.isUp())
             fail("Observer was not notified of term structure change");
-        }
-        //
-        // -------------------------------------------------------------------------------------------------------------
 
-        if (!flag.isUp()) {
+        if (!flag.isUp())
             fail("Observer was not notified of term structure change");
-        }
     }
 
 

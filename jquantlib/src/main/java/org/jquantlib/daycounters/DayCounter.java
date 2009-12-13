@@ -166,20 +166,16 @@ public class DayCounter {
 
     @Override
     public boolean equals(final Object obj) {
-        if (this == obj) {
+        if (this == obj)
             return true;
-        }
-        if (obj == null || !(obj instanceof DayCounter)) {
+        if (obj == null || !(obj instanceof DayCounter))
             return false;
-        }
 
         final DayCounter other = (DayCounter) obj;
-        if (this.empty() && other.empty()) {
+        if (this.empty() && other.empty())
             return true;
-        }
-        if (this.name().equals(other.name())) {
+        if (this.name().equals(other.name()))
             return true;
-        }
         return false;
     }
 
@@ -218,7 +214,7 @@ public class DayCounter {
 	     * @return the period between two dates as a fraction of year
 	     */
 	    protected int dayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
-	        return dateStart.sub(dateEnd);
+	        return dateEnd.sub(dateStart);
 	    }
 
     }

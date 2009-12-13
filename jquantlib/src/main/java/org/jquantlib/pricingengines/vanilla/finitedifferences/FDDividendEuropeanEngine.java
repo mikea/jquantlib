@@ -74,6 +74,12 @@ public class FDDividendEuropeanEngine
 
     public FDDividendEuropeanEngine(
             final GeneralizedBlackScholesProcess process,
+            final int timeSteps) {
+        this(process, timeSteps, 100, false);
+    }
+
+    public FDDividendEuropeanEngine(
+            final GeneralizedBlackScholesProcess process,
             final int timeSteps,
             final int gridPoints) {
         this(process, timeSteps, gridPoints, false);

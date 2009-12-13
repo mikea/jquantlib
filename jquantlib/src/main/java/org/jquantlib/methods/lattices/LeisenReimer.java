@@ -61,7 +61,7 @@ public class LeisenReimer extends BinomialTree {
 
 	@Override
     public double underlying(final int i, final int index) {
-        final long j = (long) i - (long) index;
+        final int j =  i - index;
         final double d = j;
         return x0 * Math.pow(down, d) * Math.pow(up, (index));
     }

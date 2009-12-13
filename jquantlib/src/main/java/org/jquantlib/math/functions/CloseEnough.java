@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Srinivas Hasti
+ Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
 
@@ -19,39 +19,27 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.methods.lattices;
+package org.jquantlib.math.functions;
 
-import org.jquantlib.lang.annotation.NonNegative;
-import org.jquantlib.lang.annotation.Time;
-import org.jquantlib.processes.StochasticProcess1D;
+import org.jquantlib.math.Closeness;
+import org.jquantlib.math.Ops;
 
 /**
- * Base class for equal probabilities binomial tree
+ * Verifies if 2 double numbers are close enough
  *
- * @category lattices
+ * @see Closeness#isCloseEnough(double, double)
  *
- * @author Srinivas Hasti
- * @author Tim Swetonic
+ * @author Richard Gomes
  */
-public abstract class EqualProbabilitiesBinomialTree extends BinomialTree {
+public final class CloseEnough implements Ops.BinaryDoublePredicate {
 
-	protected double up;
-
-	public EqualProbabilitiesBinomialTree(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps) {
-		super(process, end, steps);
-	}
+	//
+    // implements BinaryDoublePredicate
+    //
 
 	@Override
-	public double probability(final int i, final int index, final int branch) {
-		return 0.5;
-	}
-
-	@Override
-	public double underlying(final int i, final int index) {
-		final int j = index * 2 - i;
-
-		// exploiting the forward value tree centering
-		return this.x0 * Math.exp(i * this.driftPerStep + j * this.up);
+	public boolean op(final double a, final double b) {
+		return Closeness.isCloseEnough(a, b);
 	}
 
 }

@@ -86,6 +86,13 @@ public class FDDividendAmericanEngine
 
     public FDDividendAmericanEngine(
             final GeneralizedBlackScholesProcess process,
+            final int timeSteps) {
+        this(process, timeSteps, 100, false);
+        super.impl = new Impl();
+    }
+
+    public FDDividendAmericanEngine(
+            final GeneralizedBlackScholesProcess process,
             final int timeSteps,
             final int gridPoints) {
         this(process, timeSteps, gridPoints, false);

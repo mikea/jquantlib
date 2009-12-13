@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -27,9 +27,9 @@ import org.jquantlib.processes.StochasticProcess1D;
 
 /**
  * Base class for equal jumps binomial tree
- * 
+ *
  * @category lattices
- * 
+ *
  * @author Srinivas Hasti
  * @author Tim Swetonic
  */
@@ -37,18 +37,21 @@ public abstract class EqualJumpsBinomialTree extends BinomialTree {
 
 	protected double dx, pu, pd;
 
-	protected EqualJumpsBinomialTree(final StochasticProcess1D process, @Time final double end, @NonNegative final int steps) {
+	protected EqualJumpsBinomialTree(
+	        final StochasticProcess1D process,
+	        final @Time double end,
+	        final @NonNegative int steps) {
         super(process, end, steps);
     }
 
 	@Override
-	public double probability(int i, int index, int branch) {
+	public double probability(final int i, final int index, final int branch) {
 		return branch == 1 ? pu : pd;
 	}
 
 	@Override
-	public double underlying(int i, int index) {
-		long j = (long)index *2 - (long)i;
+	public double underlying(final int i, final int index) {
+		final int j = index * 2 - i;
 		return this.x0 * Math.exp(j * this.dx);
 	}
 

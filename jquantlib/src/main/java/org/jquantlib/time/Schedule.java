@@ -140,14 +140,13 @@ public class Schedule {
                    + ") later than or equal to termination date ("
                    + terminationDate + ")"); // TODO: message
 
-        if (tenor.length()==0) {
+        if (tenor.length()==0)
             rule_ = DateGeneration.Rule.Zero;
-        } else {
+        else
             QL.require(tenor.length() > 0,
                        "non positive tenor (" + tenor + ") not allowed"); // TODO: message
-        }
 
-        if ( firstDate != null && !firstDate.isNull() ) {
+        if ( firstDate != null && !firstDate.isNull() )
             switch (rule_) {
               case Backward:
               case Forward:
@@ -173,8 +172,7 @@ public class Schedule {
             	errMsg = "unknown Rule (" + rule_ + ")";
                 throw new LibraryException(errMsg); // TODO: message
             }
-        }
-        if ( nextToLastDate != null && !nextToLastDate.isNull() ) {
+        if ( nextToLastDate != null && !nextToLastDate.isNull() )
             switch (rule_) {
               case Backward:
               case Forward:
@@ -199,7 +197,6 @@ public class Schedule {
             	errMsg = "unknown Rule (" + rule_ + ")";
                 throw new LibraryException(errMsg); // TODO: message
             }
-        }
 
 
         // calendar needed for endOfMonth adjustment
@@ -222,36 +219,31 @@ public class Schedule {
             seed = terminationDate.clone();
             if ( nextToLastDate != null && !nextToLastDate.isNull() ) {
                 dates_.add(0, nextToLastDate);
-                final Date temp = nullCalendar.advance(seed,
-                    tenor_.times(periods).minus(), convention, endOfMonth); //-periods*tenor_
-                if (temp.ne(nextToLastDate)) {
+                final Date temp = nullCalendar.advance(seed, tenor_.mul(periods).negative(), convention, endOfMonth);
+                if (temp.ne(nextToLastDate))
                     isRegular_.add(0, new Boolean(false));
-                } else {
+                else
                     isRegular_.add(0, new Boolean(true));
-                }
                 seed = nextToLastDate.clone();
             }
 
             exitDate = effectiveDate.clone();
-            if ( firstDate != null && !firstDate.isNull() ) {
+            if ( firstDate != null && !firstDate.isNull() )
                 exitDate = firstDate.clone();
-            }
 
             while (true) {
-                final Date temp = nullCalendar.advance(seed,
-                    tenor_.times(periods).minus(), convention, endOfMonth);////-periods*tenor_
-                if (temp .lt(exitDate)) {
+                final Date temp = nullCalendar.advance(seed, tenor_.mul(periods).negative(), convention, endOfMonth);
+                if (temp .lt(exitDate))
                     break;
-                } else {
+                else {
                     dates_.add(0, temp);
                     isRegular_.add(0, new Boolean(true));
                     ++periods;
                 }
             }
 
-            if (endOfMonth && calendar.isEndOfMonth(seed)) {
+            if (endOfMonth && calendar.isEndOfMonth(seed))
                 convention = BusinessDayConvention.Preceding;
-            }
 
             if (calendar.adjust(dates_.get(0),convention).ne(
                 calendar.adjust(effectiveDate, convention))) {
@@ -275,13 +267,11 @@ public class Schedule {
 
             if (firstDate != null && !firstDate.isNull() ) {
                 dates_.add(firstDate);
-                final Date temp = nullCalendar.advance(seed, tenor_.times(periods),
-                                                 convention, endOfMonth);
-                if (temp.ne(firstDate) ) {
+                final Date temp = nullCalendar.advance(seed, tenor_.mul(periods), convention, endOfMonth);
+                if (temp.ne(firstDate) )
                     isRegular_.add(new Boolean(false));
-                } else {
+                else
                     isRegular_.add(new Boolean(true));
-                }
                 seed = firstDate.clone();
             } else if (rule_ == DateGeneration.Rule.Twentieth ||
                        rule_ == DateGeneration.Rule.TwentiethIMM) {
@@ -294,28 +284,25 @@ public class Schedule {
             }
 
             exitDate = terminationDate.clone();
-            if ( nextToLastDate != null && !nextToLastDate.isNull() ) {
+            if ( nextToLastDate != null && !nextToLastDate.isNull() )
                 exitDate = nextToLastDate.clone();
-            }
 
             while (true) {
-                final Date temp = nullCalendar.advance(seed, tenor_.times(periods),
-                                                 convention, endOfMonth);
-                if ( temp.gt(exitDate) ) {
+                final Date temp = nullCalendar.advance(seed, tenor_.mul(periods), convention, endOfMonth);
+                if ( temp.gt(exitDate) )
                     break;
-                } else {
+                else {
                     dates_.add(temp);
                     isRegular_.add(new Boolean(true));
                     ++periods;
                 }
             }
 
-            if (endOfMonth && calendar.isEndOfMonth(seed)) {
+            if (endOfMonth && calendar.isEndOfMonth(seed))
                 convention = BusinessDayConvention.Preceding;
-            }
 
             if (calendar.adjust(dates_.get(dates_.size()-1),terminationDateConvention).ne(
-                calendar.adjust(terminationDate, terminationDateConvention))) {
+                calendar.adjust(terminationDate, terminationDateConvention)))
                 if (rule_ == DateGeneration.Rule.Twentieth ||
                     rule_ == DateGeneration.Rule.TwentiethIMM) {
                     dates_.add(nextTwentieth(terminationDate, rule_));
@@ -324,7 +311,6 @@ public class Schedule {
                     dates_.add(terminationDate);
                     isRegular_.add(new Boolean(false));
                 }
-            }
 
             break;
 
@@ -334,17 +320,14 @@ public class Schedule {
         }
 
         // adjustments
-        if (rule_== DateGeneration.Rule.ThirdWednesday) {
-            for (int i=1; i<dates_.size()-1; ++i) {
+        if (rule_== DateGeneration.Rule.ThirdWednesday)
+            for (int i=1; i<dates_.size()-1; ++i)
                 dates_.set(i, Date.nthWeekday(3, Weekday.Wednesday,
                                              dates_.get(i).month(),
                                              dates_.get(i).year()));
-            }
-        }
 
-        for (int i=0; i<dates_.size()-1; ++i) {
+        for (int i=0; i<dates_.size()-1; ++i)
             dates_.set(i, calendar.adjust(dates_.get(i), convention));
-        }
 
         // termination date is NOT adjusted as per ISDA
         // specifications, unless otherwise specified in the
@@ -352,10 +335,9 @@ public class Schedule {
         // schedule
         if (terminationDateConvention != BusinessDayConvention.Unadjusted
             || rule_ == DateGeneration.Rule.Twentieth
-            || rule_ == DateGeneration.Rule.TwentiethIMM) {
+            || rule_ == DateGeneration.Rule.TwentiethIMM)
             dates_.set(dates_.size()-1, calendar.adjust(dates_.get(dates_.size()-1),
                                                     terminationDateConvention));
-        }
     }
 
     // Date access
@@ -374,20 +356,18 @@ public class Schedule {
 
     public Date previousDate(final Date  refDate) /* @ReadOnly */ {
         final int index = Date.lowerBound(dates_, refDate);
-    	if ( index > 0 ) {
-    		return dates_.get(index-1).clone();
-    	} else {
-    		return new Date();
-    	}
+    	if ( index > 0 )
+            return dates_.get(index-1).clone();
+        else
+            return new Date();
     }
 
     public Date nextDate(final Date  refDate) /* @ReadOnly */ {
     	final int index = Date.lowerBound(dates_, refDate);
-    	if ( index < dates_.size() ) {
-    		return dates_.get(index).clone();
-    	} else {
-    		return new Date();
-    	}
+    	if ( index < dates_.size() )
+            return dates_.get(index).clone();
+        else
+            return new Date();
     }
 
     public List<Date> dates() /* @ReadOnly */ {
@@ -593,9 +573,8 @@ public class Schedule {
 
     private Date nextTwentieth(final Date d, final DateGeneration.Rule rule) {
         final Date result = new Date(20, d.month(), d.year());
-        if (result.lt(d) ) {
+        if (result.lt(d) )
             result.addAssign(new Period(1, TimeUnit.Months)); //result +=1*Months
-        }
         if (rule == DateGeneration.Rule.TwentiethIMM) {
             final Month m = result.month();
             final int mVal = m.value();
@@ -636,9 +615,8 @@ public class Schedule {
                 }
             }
             if (index > 0) {
-                for (int i = index; i < dates_.size(); i++) {
+                for (int i = index; i < dates_.size(); i++)
                     ldates.add(dates_.get(i));
-                }
                 return ldates.iterator();
             }
         }

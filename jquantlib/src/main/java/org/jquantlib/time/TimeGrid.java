@@ -37,7 +37,6 @@ import org.jquantlib.math.matrixutilities.Array;
  * TimeGrid class.
  *
  * @author Dominik Holenstein
- * @author Richard Gomes
  */
 // TODO: Taken over from QuantLib: What was the rationale for limiting the grid to positive times?
 // Investigate and see whether we can use it for negative ones as well.
@@ -57,9 +56,9 @@ public class TimeGrid {
     //
 
     public TimeGrid() {
-        this.times = new Array();
-        this.dt = new Array();
-        this.mandatoryTimes = new Array();
+        this.times = null; //XXX  new Array();
+        this.dt = null; //XXX: new Array();
+        this.mandatoryTimes = null; //XXX: new Array();
     }
 
     /**
@@ -79,9 +78,8 @@ public class TimeGrid {
 
         /*@Time*/ final double dt = end/steps;
         this.times = new Array(steps+1);
-        for (int i=0; i<=steps; i++) {
+        for (int i=0; i<=steps; i++)
             times.set(i, dt*i);
-        }
         this.mandatoryTimes = new Array(1).fill(end);
         this.dt = new Array(steps).fill(dt);
     }
@@ -97,15 +95,10 @@ public class TimeGrid {
      *
      * @param list
      */
-    //TODO: needs code review when integrated to callers. Fix adjacent_difference before using
-    public TimeGrid(@Time @NonNegative final Array array) {
+    public TimeGrid(@Time @NonNegative final Array mandatoryTimes) {
 
-        if (System.getProperty("EXPERIMENTAL")==null) {
+        if (System.getProperty("EXPERIMENTAL")==null)
             throw new UnsupportedOperationException("This constructor is not available yet");
-        }
-
-        this.mandatoryTimes = array.clone();
-        mandatoryTimes.sort();
 
         // THIS COMMENT COMES FROM QuantLib/C++ code
         //
@@ -114,24 +107,25 @@ public class TimeGrid {
         // (even though I'm not sure that I agree.)
         QL.require(mandatoryTimes.first() < 0.0 , "negative times not allowed"); // QA:[RG]::verified // TODO: message
 
-        final List<Double> e = new ArrayDoubleList(mandatoryTimes.size());
-        double prev = mandatoryTimes.get(0);
+        this.mandatoryTimes = mandatoryTimes.clone();
+        this.mandatoryTimes.sort();
+
+        final List<Double> e = new ArrayDoubleList(this.mandatoryTimes.size());
+        double prev = this.mandatoryTimes.get(0);
         e.add(prev);
-        for (int i=1; i<mandatoryTimes.size(); i++) {
-            final double curr = mandatoryTimes.get(i);
-            if (! Closeness.isCloseEnough(prev, curr)) {
+        for (int i=1; i<this.mandatoryTimes.size(); i++) {
+            final double curr = this.mandatoryTimes.get(i);
+            if (! Closeness.isCloseEnough(prev, curr))
                 e.add(curr);
-            }
             prev = curr;
         }
 
         final ArrayDoubleList tmp = new ArrayDoubleList();
-        if (mandatoryTimes.first() > 0.00) {
+        if (this.mandatoryTimes.first() > 0.00) {
             tmp.add(0.0);
-            tmp.addAll(1, (double[])mandatoryTimes.toArray());
-        } else {
-            tmp.addAll(0, (double[])mandatoryTimes.toArray());
-        }
+            tmp.addAll(1, (double[])this.mandatoryTimes.toArray());
+        } else
+            tmp.addAll(0, (double[])this.mandatoryTimes.toArray());
         times = new Array(tmp.toDoubleArray());
         //FIXME: Review when adjacent_difference is fixed. null is wrong.
         //dt = Std.getInstance().adjacent_difference(times, 1, null);
@@ -150,15 +144,10 @@ public class TimeGrid {
      * @note This constructor is not available yet - fix adjacent_difference before using
      */
     //TODO: needs code review when integrated to callers.
-    public TimeGrid(@Time final Array array, final int steps) {
+    public TimeGrid(@Time final Array mandatoryTimes, final int steps) {
 
-        if (System.getProperty("EXPERIMENTAL")==null) {
+        if (System.getProperty("EXPERIMENTAL")==null)
             throw new UnsupportedOperationException("This constructor is not available yet");
-        }
-
-        // TODO: code review :: use of clone()
-        mandatoryTimes = array.clone();
-        mandatoryTimes.sort();
 
         // THIS COMMENT COMES FROM QuantLib/C++ code
         //
@@ -167,48 +156,48 @@ public class TimeGrid {
         // (even though I'm not sure that I agree.)
         QL.require(mandatoryTimes.first() >= 0.0 , "negative times not allowed"); // QA:[RG]::verified // TODO: message
 
-        double dtMax;
+        this.mandatoryTimes = mandatoryTimes.clone();
+        this.mandatoryTimes.sort();
+
         // The resulting timegrid have points at times listed in the input
         // list. Between these points, there are inner-points which are
         // regularly spaced.
 
-        if (steps == 0){
-            final Array diff = mandatoryTimes.adjacentDifference(1, mandatoryTimes.size());
+        double dtMax;
+        if (steps == 0) {
+            final Array diff = this.mandatoryTimes.adjacentDifference(1, this.mandatoryTimes.size());
 
             int idx_min = 0;
             final int idx_max = diff.size()-1;
 
-            if (diff.first()==0.0) {
+            if (diff.first()==0.0)
                 idx_min++;
-            }
             dtMax = diff.min(idx_min, idx_max);
-        } else {
-            dtMax = mandatoryTimes.last() / steps;
-        }
+        } else
+            dtMax = this.mandatoryTimes.last() / steps;
 
         double periodBegin = 0.0;
-
         final ArrayDoubleList tempTimes = new ArrayDoubleList();
         tempTimes.add(periodBegin);
-        final int m_length = mandatoryTimes.size();
+        final int m_length = this.mandatoryTimes.size();
+
         for(int i = 0; i<m_length; i++){
-            final double periodEnd = mandatoryTimes.get(i);
+            final double periodEnd = this.mandatoryTimes.get(i);
             if(periodEnd != 0){
                 //the nearest integer
                 int nSteps = (int) Math.round((periodBegin - periodEnd)/dtMax + 0.5);
                 // at least one time step!
                 nSteps = (nSteps!=0 ? nSteps : 1);
                 final double dt = (periodEnd - periodBegin)/nSteps;
-                for (int n=1; n<=nSteps; ++n) {
+                for (int n=1; n<=nSteps; ++n)
                     tempTimes.add(periodBegin + n*dt);
-                }
             }
             periodBegin = periodEnd;
         }
         times = new Array(tempTimes.toDoubleArray());
 
         //FIXME: Review when adjacent_difference is fixed. null is wrong
-        //dt = Std.getInstance().adjacent_difference(times, 1, null);
+        //dt = times.adjacent_difference(1, null);
         dt = null; /* Added to remove compile error - final fields must be initialised */
     }
 
@@ -300,17 +289,17 @@ public class TimeGrid {
 
     public @NonNegative int index(@Time @NonNegative final double t) /* @ReadOnly */ {
         final @NonNegative int i = closestIndex(t);
-        if (Closeness.isCloseEnough(t, times.get(i))) {
+        if (Closeness.isCloseEnough(t, times.get(i)))
             return i;
-        } else if (t < front()) {
+        else if (t < front())
             throw new IllegalArgumentException(
                     "using inadequate time grid: all nodes are later than the required time t = "
                     + t + " (earliest node is t1 = " + times.first() + ")" );
-        } else if (t > back()) {
+        else if (t > back())
             throw new IllegalArgumentException(
                     "using inadequate time grid: all nodes are earlier than the required time t = "
                     + t + " (latest node is t1 = " + back() + ")" );
-        } else {
+        else {
             /*@NonNegative*/ int j, k;
             if (t > times.get(i)) {
                 j = i;
@@ -330,20 +319,17 @@ public class TimeGrid {
         final int size = times.size();
         final int result = times.lowerBound(t);
 
-        if (result == 0) {
+        if (result == 0)
             return 0;
-        } else if (result == size) {
+        else if (result == size)
             return size-1;
-        } else {
-            @Time
-            final double dt1 = times.get(result) - t;
-            @Time
-            final double dt2 = t - times.get(result-1);
-            if (dt1 < dt2) {
+        else {
+            final @Time double dt1 = times.get(result) - t;
+            final @Time double dt2 = t - times.get(result-1);
+            if (dt1 < dt2)
                 return result;
-            } else {
-                return (result)-1;
-            }
+            else
+                return result-1;
         }
     }
 

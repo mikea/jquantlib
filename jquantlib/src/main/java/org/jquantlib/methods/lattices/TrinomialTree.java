@@ -68,11 +68,9 @@ public class TrinomialTree extends Tree {
 				final double m = process.expectation(t, x, dt);
 				int temp = (int) Math.floor((m - x0_) / dx_.get(i + 1) + 0.5);
 
-				if (isPositive) {
-					while (x0_ + (temp - 1) * dx_.get(i + 1) <= 0) {
-						temp++;
-					}
-				}
+				if (isPositive)
+                    while (x0_ + (temp - 1) * dx_.get(i + 1) <= 0)
+                        temp++;
 
 				final double e = m - (x0_ + temp * dx_.get(i + 1));
 				final double e2 = e * e;
@@ -107,12 +105,10 @@ public class TrinomialTree extends Tree {
 
 	@Override
 	public double underlying(final int i, final int index) {
-		if (i == 0) {
+		if (i == 0)
             return x0_;
-        } else {
-            return x0_ + (branchings_.get(i - 1).jMin() + (double) (index))
-					* dx(i);
-        }
+        else
+            return x0_ + (branchings_.get(i - 1).jMin() + (double) (index)) * dx(i);
 	}
 
 	@Override

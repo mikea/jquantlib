@@ -105,8 +105,8 @@ public abstract class TreeLattice extends Lattice {
             for (int j = 0; j < size(i); j++) {
                 final double disc = discount(i, j);
                 final double statePrice = statePrices.get(i).get(j);
+                final Array array = statePrices.get(i + 1);
                 for (int l = 0; l < n; l++) {
-                    final Array array = statePrices.get(i + 1);
                     final int index = descendant(i, j, l);
                     final double oldValue = array.get(index);
                     array.set(index, oldValue + (statePrice * disc * probability(i, j, l)));

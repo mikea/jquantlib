@@ -429,7 +429,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * Difference in days between dates
      */
     public int sub(final Date another) {
-        return another.serialNumber - serialNumber;
+        return serialNumber - another.serialNumber;
     }
 
 
