@@ -84,7 +84,6 @@ public class TypeTokenTree {
 
     private TypeNode retrieve(final Class<?> klass) {
         final Type superclass = klass.getGenericSuperclass();
-        QL.debug(super.toString());
         QL.require(!(superclass instanceof Class) , ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED); // QA:[RG]::verified
         final TypeNode node = new TypeNode(klass);
         for (final Type t : ((ParameterizedType) superclass).getActualTypeArguments() )
