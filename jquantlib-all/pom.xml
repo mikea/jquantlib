@@ -316,11 +316,6 @@
                     <!-- version>2.3</version -->
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-changelog-plugin</artifactId>
-                    <!-- version>2.1</version -->
-                </plugin>
-                <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>clirr-maven-plugin</artifactId>
                     <!-- version>2.2.1</version -->
@@ -487,24 +482,6 @@
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changelog-plugin</artifactId>
-                <reportSets>
-                    <reportSet>
-                        <id>dual-report</id>
-                        <configuration>
-                            <type>range</type>
-                            <range>30</range>
-                        </configuration>
-                        <reports>
-                            <report>changelog</report>
-                            <report>file-activity</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>taglist-maven-plugin</artifactId>
                 <configuration>
@@ -582,6 +559,15 @@
 		<profile>
 			<id>with-scm</id>
 			<build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-changelog-plugin</artifactId>
+                            <!-- version>2.1</version -->
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
 			    <plugins>
 		            <plugin>
 		                <groupId>org.apache.maven.plugins</groupId>
@@ -610,6 +596,27 @@
 		            </plugin>
 			    </plugins>
 			</build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-changelog-plugin</artifactId>
+                        <reportSets>
+                            <reportSet>
+                                <id>dual-report</id>
+                                <configuration>
+                                    <type>range</type>
+                                    <range>30</range>
+                                </configuration>
+                                <reports>
+                                    <report>changelog</report>
+                                    <report>file-activity</report>
+                                </reports>
+                            </reportSet>
+                        </reportSets>
+                    </plugin>
+                </plugins>
+            </reporting>
 			<properties>
 			    <props.buildNumber.doCheck>true</props.buildNumber.doCheck>
 			</properties>
