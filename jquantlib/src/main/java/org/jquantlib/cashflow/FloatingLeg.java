@@ -2,6 +2,7 @@ package org.jquantlib.cashflow;
 
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeTokenTree;
@@ -11,9 +12,11 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Schedule;
 
+
+
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 // TODO: code review :: Please complete this class and perform another code review.
-public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, FloatingCouponType, CappedFlooredCouponType> extends Leg {
+public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, FloatingCouponType extends FloatingRateCoupon, CappedFlooredCouponType> extends Leg {
 
     public FloatingLeg(
             final Array nominals,
@@ -34,21 +37,20 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
             throw new UnsupportedOperationException("Work in progress");
         }
 
-        //
-        //FIXME: This class is generic but we are not handling generic parameters properly.
-        // Reason: Imagine that the class paremeter is a fixed coupon class type.
-        // Imagine now that the call "Detail.get(gearings, i, 1.0)" returns non-zero.
-        // It means that we will be dynamically instantiating a floating coupon type whilst a fixed coupon type was
-        // passed as class parameter, which is obviously a programmer error. This situation should be detected.
-        // Please let me know if you need help on it. [Richard]
-        //
 
         final int n = schedule.size() - 1;
         QL.require(nominals.size() <= n , "too many nominals"); // QA:[RG]::verified // TODO: message
-        QL.require(gearings.size() <= n , "too many gearings"); // QA:[RG]::verified // TODO: message
         QL.require(spreads.size() <= n  , "too many spreads"); // QA:[RG]::verified // TODO: message
-        QL.require(caps.size() <= n     , "too many caps"); // QA:[RG]::verified // TODO: message
-        QL.require(floors.size() <= n   , "too many floors"); // QA:[RG]::verified // TODO: message
+        QL.require(gearings.size() <= n , "too many gearings"); // QA:[RG]::verified // TODO: message
+        
+        if (caps != null)
+        {
+            QL.require(caps.size() <= n     , "too many caps"); // QA:[RG]::verified // TODO: message
+        }
+        if (floors != null)
+        {
+            QL.require(floors.size() <= n   , "too many floors"); // QA:[RG]::verified // TODO: message
+        }
         QL.require(!isZero || !isInArrears , "features in-arrears and zero are not compatible"); // QA:[RG]::verified // TODO: message
 
         // the following is not always correct (orignial c++ comment)
@@ -75,38 +77,42 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
                         paymentDayCounter,
                         start, end, refStart, refEnd));
             } else if (Detail.noOption(caps, floors, i)){
-                //try{
-                    //get the generic type
+
+                //get the generic type
                 final Class<?> fctklass = new TypeTokenTree(this.getClass()).getRoot().get(1).getElement();
+                
                 //construct a new instance using reflection. first get the constructor ...
                 FloatingCouponType frc;
                 try {
                     frc = (FloatingCouponType) fctklass.getConstructor(
-                            Date.class,
-                            int.class,
-                            Date.class,
-                            Date.class,
-                            int.class,
-                            InterestRateIndex.class,
-                            double.class,
-                            double.class,
-                            Date.class,
-                            Date.class,
-                            DayCounter.class,
-                            boolean.class)
+                    		Date.class, //paymentdate
+                            double.class, //nominal
+                            Date.class, //start date
+                            Date.class, //enddate
+                            int.class, //fixing days
+                            index.getClass(), //ii
+                            double.class, //gearing
+                            double.class, //spread
+                            Date.class,   //refperiodstart
+                            Date.class, //refperiodend
+                            DayCounter.class,//daycounter
+                            boolean.class) //inarrears
                             //then create a new instance
                             .newInstance(paymentDate,
-                                    Detail.get(nominals, i, new Double(1.0)),
+                                    Detail.get(nominals, i, (double) 1.0),
                                     start, end,
-                                    Detail.get(fixingDays, i, index.fixingDays()),
-                                    index,
+                                    (int) Detail.get(fixingDays, i, index.fixingDays()),
+                                    (IborIndex) index,
                                     Detail.get(gearings, i, 1.0),
                                     Detail.get(spreads, i, 0.0),
                                     refStart, refEnd,
                                     paymentDayCounter, isInArrears);
-                } catch (final Exception e) {
+                }
+                catch (final Exception e) {
                     throw new LibraryException("Couldn't construct new instance from generic type"); // QA:[RG]::verified // TODO: message
                 }
+                
+                // append coupon cashflow
                 add((CashFlow)frc);
             }
             else {
@@ -115,22 +121,21 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
                 try {
                     //FIXME: not finished yet!!!!!!!!!!!!!!
                     cfctc = (CappedFlooredCouponType) cfcklass.getConstructor(
-                            Date.class,
-                            int.class,
-                            Date.class,
-                            Date.class,
-                            int.class,
-                            InterestRateIndex.class,
-                            double.class,
-                            double.class,
-                            Date.class,
-                            Date.class,
-                            DayCounter.class,
-                            boolean.class)
+                            Date.class, //paymentdate
+                            int.class, //nominal
+                            Date.class, //start date
+                            Date.class, //enddate
+                            int.class, //fixing days
+                            index.getClass(), //ii
+                            double.class, //gearing
+                            double.class, //spread
+                            Date.class,   //refperiodstart
+                            Date.class, //refperiodend
+                            DayCounter.class,//daycounter
+                            boolean.class) //inarrears
                             //then create a new instance
                             .newInstance(paymentDate,
-
-                                    Detail.get(nominals, i, new Double(1.0)),
+                                    Detail.get(nominals, i, new Integer (1)),
                                     start, end,
                                     Detail.get(fixingDays, i, index.fixingDays()),
                                     index,
@@ -147,5 +152,3 @@ public class FloatingLeg<InterestRateIndexType extends InterestRateIndex, Floati
     }
 }
 
-
-//}

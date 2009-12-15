@@ -39,11 +39,10 @@ public class FixedRateLeg extends Leg {
     public FixedRateLeg withCouponRates(/* @Rate */final double couponRate) {
         couponRates_ = new InterestRate[]{new InterestRate(couponRate, paymentDayCounter_, Compounding.Simple)};
 
-        //TODO: Code review :: incomplete code
-        if (true) {
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
-
+        
         //        couponRates_.clear();
         //        couponRates_.set(0, new InterestRate(couponRate, paymentDayCounter_, Compounding.SIMPLE));
         return this;

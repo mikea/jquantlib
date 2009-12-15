@@ -37,51 +37,41 @@ public class FixedRateCoupon extends Coupon {
 	private InterestRate rate;
 	private DayCounter dayCounter;
 
-	
 	//
 	// constructors
 	//
-	
-	public FixedRateCoupon(double nominal, 
-			final Date paymentDate, 
-			final double rate,
-			final DayCounter dayCounter,
-			final Date accrualStartDate, 
-			final Date accrualEndDate) {
-		this(nominal, paymentDate, rate, dayCounter, accrualStartDate, accrualEndDate, new Date(), new Date());
+
+	public FixedRateCoupon(double nominal, final Date paymentDate,
+			final double rate, final DayCounter dayCounter,
+			final Date accrualStartDate, final Date accrualEndDate) {
+		this(nominal, paymentDate, rate, dayCounter, accrualStartDate,
+				accrualEndDate, new Date(), new Date());
 	}
 
-	public FixedRateCoupon(double nominal, 
-			final Date paymentDate, 
-			final double rate,
-			final DayCounter dayCounter,
-			final Date accrualStartDate, 
-			final Date accrualEndDate, 
-			final Date refPeriodStart,
-			final Date refPeriodEnd) {
-		super(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd);
+	public FixedRateCoupon(double nominal, final Date paymentDate,
+			final double rate, final DayCounter dayCounter,
+			final Date accrualStartDate, final Date accrualEndDate,
+			final Date refPeriodStart, final Date refPeriodEnd) {
+		super(nominal, paymentDate, accrualStartDate, accrualEndDate,
+				refPeriodStart, refPeriodEnd);
 
 		this.rate = new InterestRate(rate, dayCounter, Compounding.Simple);
 		this.dayCounter = dayCounter;
 	}
 
-	public FixedRateCoupon(
-			final double nominal, 
-			final Date paymentDate, 
-			final InterestRate interestRate, 
-			final DayCounter dayCounter, 
-			final Date accrualStartDate,
-			final Date accrualEndDate, 
-			final Date refPeriodStart,
-			final Date refPeriodEnd) {
-		super(nominal, paymentDate, accrualStartDate, accrualEndDate, refPeriodStart, refPeriodEnd);
+	public FixedRateCoupon(final double nominal, final Date paymentDate,
+			final InterestRate interestRate, final DayCounter dayCounter,
+			final Date accrualStartDate, final Date accrualEndDate) {
+		this(nominal, paymentDate, interestRate, dayCounter, accrualStartDate,
+				accrualEndDate, new Date(), new Date());
+	}
 
-		if(refPeriodStart == null){
-			this.refPeriodStart = new Date();
-		}
-		if(refPeriodEnd == null){
-			this.refPeriodEnd = new Date();
-		}
+	public FixedRateCoupon(final double nominal, final Date paymentDate,
+			final InterestRate interestRate, final DayCounter dayCounter,
+			final Date accrualStartDate, final Date accrualEndDate,
+			final Date refPeriodStart, final Date refPeriodEnd) {
+		super(nominal, paymentDate, accrualStartDate, accrualEndDate,
+				refPeriodStart, refPeriodEnd);
 
 		this.rate = interestRate;
 		this.dayCounter = dayCounter;
@@ -90,11 +80,10 @@ public class FixedRateCoupon extends Coupon {
 	//
 	// public methods
 	//
-	
-    public InterestRate interestRate() {
-        return interestRate();
-    }
-    
+
+	public InterestRate interestRate() {
+		return interestRate();
+	}
 
 	//
 	// Overrides Coupon
@@ -111,19 +100,17 @@ public class FixedRateCoupon extends Coupon {
 	}
 
 	@Override
-	public double accruedAmount(Date d){
-		if(d.le(accrualStartDate) || d.gt(paymentDate)){
+	public double accruedAmount(Date d) {
+		if (d.le(accrualStartDate) || d.gt(paymentDate)) {
 			return 0.0;
 		}
-		else{
+		else {
 			Date minD = d.le(accrualEndDate) ? d : accrualEndDate;
-			return nominal()*(rate.compoundFactor(accrualStartDate,
-					minD,
-					refPeriodStart,
-					refPeriodEnd) - 1.0);
+			return nominal()
+					* (rate.compoundFactor(accrualStartDate, minD,
+							refPeriodStart, refPeriodEnd) - 1.0);
 		}
 	}
-
 
 	//
 	// Overrides CashFlow
@@ -131,12 +118,10 @@ public class FixedRateCoupon extends Coupon {
 
 	@Override
 	public double amount() {
-		return nominal()*(rate.compoundFactor(accrualStartDate,
-				accrualEndDate,
-				refPeriodStart,
-				refPeriodEnd) - 1.0);
+		return nominal()
+				* (rate.compoundFactor(accrualStartDate, accrualEndDate,
+						refPeriodStart, refPeriodEnd) - 1.0);
 	}
-
 
 	//
 	// implements TypedVisitable
@@ -144,12 +129,13 @@ public class FixedRateCoupon extends Coupon {
 
 	@Override
 	public void accept(final TypedVisitor<Object> v) {
-		Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+		Visitor<Object> v1 = (v != null) ? v.getVisitor(this.getClass()
+				.getSuperclass()) : null;
 		if (v1 != null) {
 			v1.visit(this);
-		} else {
+		}
+		else {
 			super.accept(v);
 		}
 	}
-
 }

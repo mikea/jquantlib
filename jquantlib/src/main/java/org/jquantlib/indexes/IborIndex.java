@@ -148,7 +148,7 @@ public class IborIndex extends InterestRateIndex {
     @Override
     protected double forecastFixing(final Date fixingDate) {
         // TODO: code review :: please verify against QL/C++ code
-        QL.require(handle.empty() , "no forecasting term structure set to " + name());  // QA:[RG]::verified // TODO: message
+        QL.require(! handle.empty() , "no forecasting term structure set to " + name());  // QA:[RG]::verified // TODO: message
         final Date fixingValueDate = valueDate(fixingDate);
         final Date endValueDate = maturityDate(fixingValueDate);
         final double fixingDiscount = handle.currentLink().discount(fixingValueDate);

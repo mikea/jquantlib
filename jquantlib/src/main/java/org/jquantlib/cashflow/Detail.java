@@ -55,10 +55,12 @@ public class Detail {
             return result;
         }
 
+        // this function is only called in one spot in jquantlib / quantlib 
+        // it doesn't seem necessary to be here. JM
         public static boolean noOption(final Array caps, final Array floors,
         /* Size */final int i) {
-            return (get(caps, i, Constants.NULL_REAL) == Constants.NULL_REAL)
-                    && (get(floors, i, /* Null<Rate>()) == Null<Rate>() */Constants.NULL_REAL) ==Constants.NULL_REAL);
+            return Double.isNaN (Detail.get (caps, i, Constants.NULL_REAL))
+            && Double.isNaN (Detail.get (floors, i, Constants.NULL_REAL));
         }
 
 }

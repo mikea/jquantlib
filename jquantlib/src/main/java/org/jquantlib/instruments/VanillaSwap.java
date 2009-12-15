@@ -83,14 +83,20 @@ public class VanillaSwap extends Swap {
         final Leg fixedLeg = new FixedRateLeg(fixedSchedule, fixedDayCount)
         .withNotionals(nominal)
         .withCouponRates(fixedRate)
-        .withPaymentAdjustment(paymentConvention).Leg();
+        .withPaymentAdjustment(paymentConvention)
+        .Leg();
 
+        // JM where are gearings set they cannot be null for the floating leg.  
         final Leg floatingLeg = new IborLeg(floatingSchedule, iborIndex)
         .withNotionals(nominal)
         .withPaymentDayCounter(floatingDayCount)
         .withPaymentAdjustment(paymentConvention)
-        .withFixingDays(iborIndex.fixingDays())   // TODO: code review :: please verify against QL/C++ code
-        .withSpreads(spread).Leg();
+        // TODO: code review :: please verify against QL/C++ code
+        //.withFixingDays(iborIndex.fixingDays())   
+        .withSpreads(spread)
+        // FIXME: JM quantlib does not assign this, it is currently required for construction
+        .withGearings(1.0)
+        .Leg();
 
         for (final CashFlow item : floatingLeg) {
             item.addObserver(this);

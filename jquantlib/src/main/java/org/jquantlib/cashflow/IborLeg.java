@@ -3,6 +3,9 @@ package org.jquantlib.cashflow;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.quotes.Handle;
+import org.jquantlib.termstructures.volatilities.VolatilityTermStructure;
+import org.jquantlib.termstructures.volatilities.optionlet.OptionletVolatilityStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Schedule;
 
@@ -113,14 +116,13 @@ public class IborLeg {
     public Leg Leg() /* @ReadOnly */{
 
         final Leg cashflows = new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(notionals_, schedule_, index_,
-                paymentDayCounter_, paymentAdjustment_, fixingDays_, gearings_, spreads_, caps_, floors_, inArrears_, zeroPayments_);
-
-        if (caps_.empty() && floors_.empty() && !inArrears_) {
-            // TODO: PricerSetter.setCouponPricer(cashflows, new BlackIborCouponPricer());
-            throw new UnsupportedOperationException("Work in progress");
+                paymentDayCounter_, paymentAdjustment_, fixingDays_, gearings_, spreads_, caps_, floors_, inArrears_, zeroPayments_){};
+        
+        if (caps_ == null && floors_ == null && !inArrears_)
+        {
+            PricerSetter.setCouponPricer (cashflows, new BlackIborCouponPricer (new Handle <OptionletVolatilityStructure> ()));
         }
 
         return cashflows;
     }
-
 }

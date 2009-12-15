@@ -115,7 +115,7 @@ public class CashFlows {
             }
         }
         // TODO: code review :: please verify against QL/C++ code
-        QL.ensure(d.le(Date.maxDate()) , not_enough_information_available); // QA:[RG]::verified
+        QL.ensure(d.lt(Date.maxDate()) , not_enough_information_available); // QA:[RG]::verified
         return d;
     }
 
@@ -125,9 +125,10 @@ public class CashFlows {
             d = Date.max(d, cashflows.get(i).date());
         }
         // TODO: code review :: please verify against QL/C++ code
-        QL.require(d.le(Date.minDate()) , no_cashflows);
+        QL.ensure (d.gt(Date.minDate()), no_cashflows);
         return d;
     }
+
 
     public double npv(
             final Leg cashflows,
@@ -204,17 +205,37 @@ public class CashFlows {
         return npv(leg, interestRate, new Date());
     }
 
-    /**
-     * Basis-point sensitivity of the cash flows.
-     * <p>
-     * The result is the change in NPV due to a uniform 1-basis-point change in
-     * the rate paid by the cash flows. The change for each coupon is discounted
-     * according to the given term structure.
+
+    /*
+     * BPS Functions implied from quantlib default variables
+     * since we cannot assign variables to defaults in the parameter lists of functions,
+     * we use function chaining to effectively assign a single default at each level.
      */
-    public double bps(final Leg cashflows, final Handle<YieldTermStructure> discountCurve, final Date settlementDate,
-            final Date npvDate) {
-        return bps(cashflows, discountCurve, settlementDate, npvDate, 0);
+
+    public double bps (final Leg cashflows, final Handle <YieldTermStructure> discountCurve)
+    {
+        // default variable of settlement date
+        return bps (cashflows, discountCurve, new Settings().evaluationDate());
     }
+
+    public double bps (final Leg cashflows, final Handle <YieldTermStructure> discountCurve,
+                       Date settlementDate)
+    {
+        // default variable of npv date
+        return bps (cashflows, discountCurve, settlementDate, settlementDate);
+    }
+
+    public double bps (final Leg cashflows, final Handle <YieldTermStructure> discountCurve,
+                       Date settlementDate, Date npvDate)
+    {
+        // default variable of ex-dividend days
+        return bps (cashflows, discountCurve, settlementDate, npvDate, 0);
+    }
+                           
+
+    /*
+     * Acutal BPS Functions ported from quantlib
+     */
 
     /**
      * Basis-point sensitivity of the cash flows.
@@ -223,8 +244,8 @@ public class CashFlows {
      * the rate paid by the cash flows. The change for each coupon is discounted
      * according to the given term structure.
      */
-    public double bps(final Leg cashflows, final Handle<YieldTermStructure> discountCurve, final Date settlementDate,
-            final Date npvDate, final int exDividendDays) {
+    public double bps(final Leg cashflows, final Handle<YieldTermStructure> discountCurve, 
+                      final Date settlementDate, final Date npvDate, final int exDividendDays) {
 
         Date date = settlementDate;
         if (date.isNull()) {
@@ -240,32 +261,22 @@ public class CashFlows {
         return basisPoint_ * calc.result();
     }
 
-    public double bps(final Leg leg, final Handle<YieldTermStructure> discountCurve) {
-        return bps(leg, discountCurve, new Date(), new Date(), 0);
-    }
-
     /**
      * Basis-point sensitivity of the cash flows.
      * <p>
      * The result is the change in NPV due to a uniform 1-basis-point change in
      * the rate paid by the cash flows. The change for each coupon is discounted
-     * according to the given constant interest rate. The result is affected by
-     * the choice of the interest-rate compounding and the relative frequency
-     * and day counter.
+     * according to the given term structure.
      */
-    public double bps(final Leg cashflows, final InterestRate irr, final Date settlementDate) {
-        Date date = settlementDate;
-        if (date.isNull()) {
-            date = new Settings().evaluationDate();
+    public double bps(final Leg cashflows, final InterestRate irr, Date settlementDate){
+        if (settlementDate.isNull())
+        {
+            settlementDate = new Settings().evaluationDate();
         }
-
-        final YieldTermStructure flatRate = new FlatForward(date, irr.rate(), irr.dayCounter(), irr.compounding(), irr.frequency());
-        return bps(cashflows, new Handle<YieldTermStructure>(flatRate), date, date);
-    }
-
-    public double bps(final Leg leg, final InterestRate interestRate) {
-        return bps(leg, interestRate, new Date());
-    }
+        final YieldTermStructure flatRate = new FlatForward(settlementDate, irr.rate(), 
+                    irr.dayCounter(), irr.compounding(), irr.frequency());
+        return bps(cashflows, new Handle<YieldTermStructure>(flatRate), settlementDate, settlementDate);
+     }
 
     /**
      * At-the-money rate of the cash flows.
@@ -796,16 +807,20 @@ public class CashFlows {
 
         @Override
         public Visitor<Object> getVisitor(final Class<? extends Object> klass) {
-            if (klass == CashFlow.class) {
-                return new CashFlowVisitor();
-            }
-            if (klass == Coupon.class) {
+
+            //FIXME 
+            //Coupon is a Cashflow, therfore any Coupon types will never get to the CashflowVisitor. 
+            //This may be fine for now, but could become problematic if other types are introduced.
+            
+            if (Coupon.class.isAssignableFrom (klass))
+            {
                 return new CouponVisitor();
             }
-
+            if (CashFlow.class.isAssignableFrom (klass))
+            {
+                return new CashFlowVisitor();
+            }
             throw new LibraryException(UNKNOWN_VISITABLE); // QA:[RG]::verified
         }
-
     }
-
 }

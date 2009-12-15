@@ -27,48 +27,30 @@ import org.jquantlib.QL;
 /**
  * To convert short and long format string representations
  * to period object.
- *
  * @author Srinivas Hasti
- *
  */
 // TODO: code review :: please verify against QL/C++ code
 public final class PeriodParser {
 
-    /**
-     * To convert the string to Period.
-     *
-     * @param str
-     * @return period derived from str
-     */
-    public static Period parse(final String str) {
-        TimeUnit units = null;
-        int index = -1;
-        if ((index = str.indexOf('d')) > 0 || (index = str.indexOf('D')) > 0) {
-            units = TimeUnit.Days;
-            enforceUnit(index, str, units);
-        } else if ((index = str.indexOf('w')) > 0 || (index = str.indexOf('W')) > 0) {
-            units = TimeUnit.Weeks;
-            enforceUnit(index, str, units);
-        } else if ((index = str.indexOf('m')) > 0 || (index = str.indexOf('M')) > 0) {
-            units = TimeUnit.Months;
-            enforceUnit(index, str, units);
-        } else if ((index = str.indexOf('y')) > 0 || (index = str.indexOf('Y')) > 0) {
-            units = TimeUnit.Years;
-            enforceUnit(index, str, units);
-        }
-
-        final String length = str.substring(0, index).trim();
-        return new Period(Integer.parseInt(length), units);
-    }
-
-    private static void enforceUnit(final int index, final String str, final TimeUnit units) {
-        final String unitStr = str.substring(index);
-        //If this is the last char in string, assume it is represented
-        //in short format.
-        if (unitStr.length()==0) return;
-
-        //Now enforce my unit
-        QL.require(unitStr.equalsIgnoreCase(units.toString()) , "unable to convert to period");
-    }
-
+	/**
+	 * To convert the string to Period.
+	 * @param str
+	 * @return period derived from str
+	 */
+	public static Period parse(final String str) {
+		TimeUnit units = null;
+		int index = -1;
+		if ((index = str.indexOf('d')) > 0 || (index = str.indexOf('D')) > 0) {
+			units = TimeUnit.Days;
+		} else if ((index = str.indexOf('w')) > 0 || (index = str.indexOf('W')) > 0) {
+			units = TimeUnit.Weeks;
+		} else if ((index = str.indexOf('m')) > 0 || (index = str.indexOf('M')) > 0) {
+			units = TimeUnit.Months;
+		} else if ((index = str.indexOf('y')) > 0 || (index = str.indexOf('Y')) > 0) {
+			units = TimeUnit.Years;
+		}
+		QL.require (index != -1, "Invalid string passed to period parser");
+		final String intstr = str.substring(0, index).trim();
+		return new Period(Integer.parseInt(intstr), units);
+	}
 }

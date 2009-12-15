@@ -1,5 +1,7 @@
 package org.jquantlib.instruments;
 
+import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.Thirty360;
 import org.jquantlib.indexes.IborIndex;
@@ -12,6 +14,7 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.DateGeneration;
 import org.jquantlib.time.Period;
+import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 
 // TODO: code review :: Please complete this class and perform another code review.
@@ -58,13 +61,13 @@ public class MakeVanillaSwap {
             final Period swapTenor,
             final IborIndex index,
             final /* @Rate */ double fixedRate,
-            final Period forwardStart) {
-        final Date today = Date.todaysDate();
+            final Period forwardStart) 
+    {
         this.swapTenor_ = (swapTenor);
         iborIndex_ = (index);
         fixedRate_ = (fixedRate);
         forwardStart_ = (forwardStart);
-        effectiveDate_ = today.clone();
+        //effectiveDate_ = Date.maxDate();
         fixedCalendar_ = (index.fixingCalendar());
         floatCalendar_ = (index.fixingCalendar());
         type_ = (VanillaSwap.Type.Payer);
@@ -79,10 +82,11 @@ public class MakeVanillaSwap {
         floatRule_ = (DateGeneration.Rule.Backward);
         fixedEndOfMonth_ = (false);
         floatEndOfMonth_ = (false);
-        fixedFirstDate_ = today.clone();
-        fixedNextToLastDate_ = today.clone();
-        floatFirstDate_ = today.clone();
-        floatNextToLastDate_ = today.clone();
+        //FIXME : JM port from quantlib
+        //fixedFirstDate_ = Date.maxDate();
+        //fixedNextToLastDate_ = Date.maxDate();
+        //floatFirstDate_ = Date.maxDate();
+        //floatNextToLastDate_ = Date.maxDate();
         floatSpread_ = (0.0);
         fixedDayCount_ = (new Thirty360());
         floatDayCount_ = (index.dayCounter());
@@ -92,80 +96,85 @@ public class MakeVanillaSwap {
 
     public VanillaSwap value() /* @ReadOnly */ {
 
-        //TODO: Code review :: incomplete code
-        if (true) {
+
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
         }
 
-        return null;
 
-        //
-        //Date startDate;
-        //if (effectiveDate_ != Date())
-        //startDate = effectiveDate_;
-        //else {
-        //Natural fixingDays = iborIndex_->fixingDays();
-        //Date referenceDate = Settings::instance().evaluationDate();
-        //Date spotDate = floatCalendar_.advance(referenceDate,
-        //                          fixingDays*Days);
-        //startDate = spotDate+forwardStart_;
-        //}
-        //
-        //Date endDate;
-        //if (terminationDate_ != Date())
-        //endDate = terminationDate_;
-        //else
-        //endDate = startDate+swapTenor_;
-        //
-        //Schedule fixedSchedule(startDate, endDate,
-        //      fixedTenor_, fixedCalendar_,
-        //      fixedConvention_,
-        //      fixedTerminationDateConvention_,
-        //      fixedRule_, fixedEndOfMonth_,
-        //      fixedFirstDate_, fixedNextToLastDate_);
-        //
-        //Schedule floatSchedule(startDate, endDate,
-        //      floatTenor_, floatCalendar_,
-        //      floatConvention_,
-        //      floatTerminationDateConvention_,
-        //      floatRule_ , floatEndOfMonth_,
-        //      floatFirstDate_, floatNextToLastDate_);
-        //
-        //Rate usedFixedRate = fixedRate_;
-        //if (fixedRate_ == Null<Rate>()) {
-        //QL_REQUIRE(!iborIndex_->termStructure().empty(),
-        //"no forecasting term structure set to " <<
-        //iborIndex_->name());
-        //VanillaSwap temp(type_, nominal_,
-        //    fixedSchedule, 0.0, fixedDayCount_,
-        //    floatSchedule, iborIndex_,
-        //    floatSpread_, floatDayCount_);
-        //// ATM on the forecasting curve
-        //temp.setPricingEngine(boost::shared_ptr<PricingEngine>(new
-        //DiscountingSwapEngine(iborIndex_->termStructure())));
-        //usedFixedRate = temp.fairRate();
+        Date startDate;
+        if (effectiveDate_ != null)
+        {
+            startDate = effectiveDate_;
+        }
+        else
+        {
+            int fixingDays = iborIndex_.fixingDays();
+            Date referenceDate = new Settings().evaluationDate();
+            Date spotDate = floatCalendar_.advance (referenceDate, fixingDays, TimeUnit.Days);
+            startDate = spotDate.add (forwardStart_);
+        }
+        
+        Date endDate;
+        if (terminationDate_ != null)
+        {
+            endDate = terminationDate_;
+        }
+        else
+        {
+            endDate = startDate.add (swapTenor_);
+        }   
+        
+        Schedule fixedSchedule = new Schedule(startDate, endDate,
+              fixedTenor_, fixedCalendar_,
+              fixedConvention_,
+              fixedTerminationDateConvention_,
+              fixedRule_, fixedEndOfMonth_,
+              fixedFirstDate_, fixedNextToLastDate_);
+        
+        Schedule floatSchedule = new Schedule(startDate, endDate,
+              floatTenor_, floatCalendar_,
+              floatConvention_,
+              floatTerminationDateConvention_,
+              floatRule_ , floatEndOfMonth_,
+              floatFirstDate_, floatNextToLastDate_);
+        
+        double usedFixedRate = fixedRate_;
+
+        if (Double.isNaN (fixedRate_))
+        {
+            QL.require(!iborIndex_.termStructure().empty(),  "no forecasting term structure set to " +
+                   iborIndex_.name());
+
+            VanillaSwap temp = new VanillaSwap(type_, nominal_,
+                                               fixedSchedule, 0.0, fixedDayCount_,
+                                               floatSchedule, iborIndex_,
+                                               floatSpread_, floatDayCount_,
+                                               BusinessDayConvention.Following);
+            
+            // ATM on the forecasting curve
+            temp.setPricingEngine(new DiscountingSwapEngine(iborIndex_.termStructure()));
+            usedFixedRate = temp.fairRate();
+        }
+        
+        VanillaSwap swap = new VanillaSwap (type_, 
+                                            nominal_,
+                                            fixedSchedule, 
+                                            usedFixedRate,
+                                            fixedDayCount_,
+                                            floatSchedule,
+                                            iborIndex_,
+                                            floatSpread_,
+                                            floatDayCount_,
+                                            BusinessDayConvention.Following);
+        swap.setPricingEngine (engine_);
+        return swap;
     }
-
-
-    //boost::shared_ptr<VanillaSwap> swap(new
-    //VanillaSwap(type_, nominal_,
-    //       fixedSchedule, usedFixedRate, fixedDayCount_,
-    //       floatSchedule, iborIndex_,
-    //       floatSpread_, floatDayCount_));
-    //swap->setPricingEngine(engine_);
-    //return swap;
-    //}
-
+    
 
 
     public MakeVanillaSwap receiveFixed(final boolean flag) {
-        // TODO: Code review :: incomplete code
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-        // TODO: code review :: please verify against QL/C++ code
-        // The line below is certainly wrong!
-        type_ = flag ? VanillaSwap.Type.Receiver : VanillaSwap.Type.Receiver;
+        type_ = flag ? VanillaSwap.Type.Receiver : VanillaSwap.Type.Payer;
         return this;
     }
 
