@@ -274,5 +274,15 @@ public class QL {
             t.printStackTrace(System.err);
         }
     }
+    
+    /**
+     * This method to validate whether code is being run in
+     * experimental mode or not
+     */
+    public static void validateExperimentalMode(){
+    	if (System.getProperty("EXPERIMENTAL") == null) {
+            throw new UnsupportedOperationException("Work in progress");
+        }
+    }
 
 }
