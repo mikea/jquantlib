@@ -167,7 +167,6 @@ public class EquityOptions implements Runnable {
         final VanillaOption bermudanOption = new VanillaOption(payoff, bermudanExercise);
 
         // American Options
-        // FIXME: see http://bugs.jquantlib.org/view.php?id=202
         final VanillaOption americanOption = new VanillaOption(payoff, americanExercise);
 
 

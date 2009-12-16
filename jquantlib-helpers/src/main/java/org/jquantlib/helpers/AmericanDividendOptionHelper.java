@@ -3,23 +3,22 @@ package org.jquantlib.helpers;
 import java.util.List;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.exercise.EuropeanExercise;
+import org.jquantlib.exercise.AmericanExercise;
 import org.jquantlib.instruments.Option;
-import org.jquantlib.pricingengines.vanilla.finitedifferences.FDDividendEuropeanEngine;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 
 /**
- * Helper class for European Dividend Options using the finite differences engine
+ * Helper class for American Dividend Options using Cox Ross Rubinstein method.
  *
- * @see FDDividendOptionHelper
+ * @see DividendOptionHelper
  *
  * @author Richard Gomes
  */
-public class FDEuropeanDividendOptionHelper extends FDDividendOptionHelper<FDDividendEuropeanEngine> {
+public class AmericanDividendOptionHelper extends DividendOptionHelper {
 
     /**
-     * Constructor for European Dividend Options helper class using the finite differences engine
+     * Constructor for American Dividend Options helper class using Cox Ross Rubinstein method.
      *
      * @param type is the option call type (Call/Put)
      * @param underlying is the price of the underlying asset
@@ -32,7 +31,7 @@ public class FDEuropeanDividendOptionHelper extends FDDividendOptionHelper<FDDiv
      * @param dates is a list of dates when dividends are expected to be paid
      * @param dividends is a list of dividends amounts (as a pure value) expected to be paid
      */
-    public FDEuropeanDividendOptionHelper(
+    public AmericanDividendOptionHelper(
             final Option.Type type,
             final /*@Real*/ double underlying,
             final /*@Real*/ double strike,
@@ -44,15 +43,14 @@ public class FDEuropeanDividendOptionHelper extends FDDividendOptionHelper<FDDiv
             final List<Date> dates,
             final List<Double> dividends) {
 
-        super(FDDividendEuropeanEngine.class,
-              type, underlying, strike, r, q, vol,
-              settlementDate, new EuropeanExercise(expirationDate),
+        super(type, underlying, strike, r, q, vol,
+              settlementDate, new AmericanExercise(settlementDate, expirationDate),
               dates, dividends);
     }
 
 
     /**
-     * Constructor for European Dividend Options helper class using the finite differences engine
+     * Constructor for American Dividend Options helper class using Cox Ross Rubinstein method.
      *
      * @param type is the option call type (Call/Put)
      * @param underlying is the price of the underlying asset
@@ -66,7 +64,7 @@ public class FDEuropeanDividendOptionHelper extends FDDividendOptionHelper<FDDiv
      * @param dividends is a list of dividends amounts (as a pure value) expected to be paid
      * @param cal is {@link Calendar} to be employed
      */
-    public FDEuropeanDividendOptionHelper(
+    public AmericanDividendOptionHelper(
             final Option.Type type,
             final /*@Real*/ double underlying,
             final /*@Real*/ double strike,
@@ -79,15 +77,14 @@ public class FDEuropeanDividendOptionHelper extends FDDividendOptionHelper<FDDiv
             final List<Double> dividends,
             final Calendar cal) {
 
-        super(FDDividendEuropeanEngine.class,
-              type, underlying, strike, r, q, vol,
-              settlementDate, new EuropeanExercise(expirationDate),
+        super(type, underlying, strike, r, q, vol,
+              settlementDate, new AmericanExercise(settlementDate, expirationDate),
               dates, dividends, cal);
     }
 
 
     /**
-     * Constructor for European Dividend Options helper class using the finite differences engine
+     * Constructor for American Dividend Options helper class using Cox Ross Rubinstein method.
      *
      * @param type is the option call type (Call/Put)
      * @param underlying is the price of the underlying asset
@@ -102,7 +99,7 @@ public class FDEuropeanDividendOptionHelper extends FDDividendOptionHelper<FDDiv
      * @param cal is {@link Calendar} to be employed
      * @param dc is a {@link DayCounter}
      */
-    public FDEuropeanDividendOptionHelper(
+    public AmericanDividendOptionHelper(
             final Option.Type type,
             final /*@Real*/ double underlying,
             final /*@Real*/ double strike,
@@ -116,9 +113,8 @@ public class FDEuropeanDividendOptionHelper extends FDDividendOptionHelper<FDDiv
             final Calendar cal,
             final DayCounter dc) {
 
-        super(FDDividendEuropeanEngine.class,
-              type, underlying, strike, r, q, vol,
-              settlementDate, new EuropeanExercise(expirationDate),
+        super(type, underlying, strike, r, q, vol,
+              settlementDate, new AmericanExercise(settlementDate, expirationDate),
               dates, dividends, cal, dc);
     }
 

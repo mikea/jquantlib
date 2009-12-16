@@ -62,10 +62,14 @@
     </properties>
 
     <dependencies>
-    
         <dependency>
             <groupId>org.jquantlib</groupId>
             <artifactId>jquantlib</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jquantlib</groupId>
+            <artifactId>jquantlib-helpers</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         
@@ -74,7 +78,6 @@
             <artifactId>jfreechart</artifactId>
             <version>1.0.0</version>
         </dependency>
-
         <!-- 'test' scope dependencies -->
         <dependency>
             <groupId>junit</groupId>
@@ -82,7 +85,6 @@
             <version>4.4</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
     
     <build>

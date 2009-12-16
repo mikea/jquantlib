@@ -302,6 +302,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jdepend-maven-plugin</artifactId>
+                    <!-- version>2.0-beta-1</version -->
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
                     <artifactId>findbugs-maven-plugin</artifactId>
                     <!-- version>1.2</version -->
                 </plugin>
@@ -309,11 +314,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
                     <!-- version>2.4</version -->
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>taglist-maven-plugin</artifactId>
-                    <!-- version>2.3</version -->
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
@@ -327,8 +327,8 @@
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jdepend-maven-plugin</artifactId>
-                    <!-- version>2.0-beta-1</version -->
+                    <artifactId>taglist-maven-plugin</artifactId>
+                    <!-- version>2.3</version -->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
