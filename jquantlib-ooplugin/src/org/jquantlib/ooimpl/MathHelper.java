@@ -38,66 +38,66 @@ import org.jquantlib.math.distributions.PoissonDistribution;
  */
 public class MathHelper {
 
-    public static double getFactorial(int n){
+    public static double getFactorial(final int n) {
 
-    Factorial f = new Factorial();
-     /*return*/ f.get(n);
-     return n;
+        final Factorial f = new Factorial();
+        /* return */f.get(n);
+        return n;
     }
 
-     public static double getlNFactorial(int n){
-    Factorial f = new Factorial();
-     return f.ln(n);
+    public static double getlNFactorial(final int n) {
+        final Factorial f = new Factorial();
+        return f.ln(n);
     }
 
-     public static long getPrimeNumberAt(int n){
-         PrimeNumbers pn = new PrimeNumbers();
-         return pn.get(n);
-     }
+    public static long getPrimeNumberAt(final int n) {
+        final PrimeNumbers pn = new PrimeNumbers();
+        return pn.get(n);
+    }
 
-
-     public static double  evaluateBinomialDistributionValue(double probability, int k) {
-         BinomialDistribution bs  = new BinomialDistribution(probability, 0);
-         return bs.evaluate(k);
-
-     }
-
-      public static  double evaluateCumulativeNormalDistribution(double mean, double sigma, double z){
-          CumulativeNormalDistribution cnd = new CumulativeNormalDistribution(mean, sigma);
-      return     cnd.evaluate(z);
-      }
-
-      public  static double evaluateCumulativePoissonDistribution(double mean, int k){
-          CumulativePoissonDistribution cpd = new CumulativePoissonDistribution(mean);
-          return cpd.evaluate(k);
-
-      }
-
-          public static double evaluateGammaDistribution(double a, double x) {
-              GammaDistribution gd = new GammaDistribution(a);
-              return gd.evaluate(x);
-          }
-           public static double evaluateInverseCumulativeNormal(double average, double sigma, double x){
-               InverseCumulativeNormal icn = new InverseCumulativeNormal(average,sigma);
-               return icn.evaluate(x);
-           }
-
-
-
- public static double evaluateNonCentralChiSquaredDistribution(double df, double x, double ncp) {
-     NonCentralChiSquaredDistribution ncd = new NonCentralChiSquaredDistribution(df,ncp);
-     return ncd.evaluate(x);
-
- }
-    public static double evaluateInverseCumulativePoisson(double lambda, double x) {
-        InverseCumulativePoisson icp = new InverseCumulativePoisson(lambda);
-        return icp.evaluate(x);
+    public static double evaluateBinomialDistributionValue(final double probability, final int k) {
+        final BinomialDistribution bs = new BinomialDistribution(probability, 0);
+        return bs.op(k);
 
     }
+
+    public static double evaluateCumulativeNormalDistribution(final double mean, final double sigma, final double z) {
+        final CumulativeNormalDistribution cnd = new CumulativeNormalDistribution(mean, sigma);
+        return cnd.op(z);
+    }
+
+    public static double evaluateCumulativePoissonDistribution(final double mean, final int k) {
+        final CumulativePoissonDistribution cpd = new CumulativePoissonDistribution(mean);
+        return cpd.op(k);
+
+    }
+
+    public static double evaluateGammaDistribution(final double a, final double x) {
+        final GammaDistribution gd = new GammaDistribution(a);
+        return gd.op(x);
+    }
+
+    public static double evaluateInverseCumulativeNormal(final double average, final double sigma, final double x) {
+        final InverseCumulativeNormal icn = new InverseCumulativeNormal(average, sigma);
+        return icn.op(x);
+    }
+
+    public static double evaluateNonCentralChiSquaredDistribution(final double df, final double x, final double ncp) {
+        final NonCentralChiSquaredDistribution ncd = new NonCentralChiSquaredDistribution(df, ncp);
+        return ncd.op(x);
+
+    }
+
+    public static double evaluateInverseCumulativePoisson(final double lambda, final double x) {
+        final InverseCumulativePoisson icp = new InverseCumulativePoisson(lambda);
+        return icp.op(x);
+
+    }
+
     // fix this return type and argument type got mixed up
-      public static double evaluatePoissonDistribution(double mu, double sigma){
-          PoissonDistribution pd = new PoissonDistribution(mu);
-          int k = (int) sigma;
-          return pd.evaluate(k);
-      }
+    public static double evaluatePoissonDistribution(final double mu, final double sigma) {
+        final PoissonDistribution pd = new PoissonDistribution(mu);
+        final int k = (int) sigma;
+        return pd.op(k);
+    }
 }

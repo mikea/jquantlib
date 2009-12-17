@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -25,16 +25,15 @@ package org.jquantlib;
 import java.util.prefs.Preferences;
 
 import org.jquantlib.lang.annotation.PackagePrivate;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
+import org.jquantlib.time.Date;
 
 /**
  * Settings for the application.
- * 
+ *
  * <p>
  * Settings are mutable values which have a life cycle of a certain operation of
  * sequence of operations defined by the application.
- * 
+ *
  */
 
 //
@@ -56,21 +55,21 @@ public class Settings {
     /**
      * This field determines whether payments expected to happen at the
      * <i>current evaluation date</i> are considered.
-     * 
+     *
      * @see #isTodaysPayments()
      */
     private boolean todaysPayments;
 
     /**
      * Define this if negative yield rates should be allowed. This might not be safe.
-     * 
+     *
      * @see #isNegativeRates
      */
     private boolean negativeRates;
 
     /**
      * This field keeps the current evaluation date.
-     * 
+     *
      * <p>
      * Notice that the current evaluation date <b>is not necessarily</b> the
      * current date or today's date in other words. In the specific situation
@@ -81,7 +80,7 @@ public class Settings {
 
     /**
      * Default constructor
-     * 
+     *
      * @see defaultExtraSafefyChecks
      * @see defaultEnforcesTodaysHistoricFixings
      * @see defaultTodaysPayments
@@ -93,27 +92,26 @@ public class Settings {
     /**
      * This constructor is provided so that application settings can be
      * initialized via implementation independent Preferences.
-     * 
+     *
      * @param prefs
      *            is a Preferences object
      */
     @PackagePrivate Settings(final Preferences prefs) {
         if (prefs != null) {
             this.todaysPayments = prefs.getBoolean("TodaysPayments", defaultTodaysPayments);
-            this.evaluationDate = DateFactory.getFactory().getTodaysDate();
-        } else {
+            this.evaluationDate = new Settings().getEvaluationDate();
+        } else
             setDefaults();
-        }
     }
 
     private void setDefaults() {
         this.todaysPayments = defaultTodaysPayments;
-        this.evaluationDate = DateFactory.getFactory().getTodaysDate();
+        this.evaluationDate = new Settings().getEvaluationDate();
     }
 
     /**
      * @return the value of field todaysPayments
-     * 
+     *
      * @see #todaysPayments
      */
     public boolean isTodaysPayments() {
@@ -122,7 +120,7 @@ public class Settings {
 
     /**
      * @return the value of field negativeRates
-     * 
+     *
      * @see #{@link #negativeRates}
      */
     public boolean isNegativeRates() {
@@ -131,7 +129,7 @@ public class Settings {
 
     /**
      * @return the value of field evaluationDate
-     * 
+     *
      * @see #evaluationDate
      */
     public Date getEvaluationDate() {
@@ -140,7 +138,7 @@ public class Settings {
 
     /**
      * Changes the value of field todaysPayments
-     * 
+     *
      * @see #todaysPayments
      */
     public void setTodaysPayments(final boolean todaysPayments) {
@@ -149,15 +147,15 @@ public class Settings {
 
     /**
      * Changes the value of field evaluationDate.
-     * 
+     *
      * <p>
      * Notice that a successful change of evaluationDate notifies all its
      * listeners.
-     * 
+     *
      * @see #evaluationDate
      */
     public void setEvaluationDate(final Date evaluationDate) {
-        this.evaluationDate.getUpdatable().update(evaluationDate);
+        new Settings().setEvaluationDate(evaluationDate);
     }
 
 }

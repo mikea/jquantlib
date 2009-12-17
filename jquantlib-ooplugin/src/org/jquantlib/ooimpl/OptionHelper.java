@@ -29,12 +29,10 @@ import org.jquantlib.exercise.Exercise;
 import org.jquantlib.instruments.EuropeanOption;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.Payoff;
-import org.jquantlib.instruments.Payoff;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
 import org.jquantlib.processes.BlackScholesMertonProcess;
-import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
@@ -42,8 +40,8 @@ import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
-import org.jquantlib.util.Date;
-import org.jquantlib.util.DateFactory;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.calendars.NullCalendar;
 
 /**
  *
@@ -51,44 +49,44 @@ import org.jquantlib.util.DateFactory;
  */
 public class OptionHelper {
 
- public static double europeanBlackScholes(double strike, double underlying, double riskFreeRate, double volatility, double dividendYield, String optionType, int settlementDay, int settlementMonth, int settlementYear, int maturityDay, int maturityMonth, int maturityYear) {
+ public static double europeanBlackScholes(final double strike, final double underlying, final double riskFreeRate, final double volatility, final double dividendYield, final String optionType, final int settlementDay, final int settlementMonth, final int settlementYear, final int maturityDay, final int maturityMonth, final int maturityYear) {
 
 
-       Date settlementDate = DateFactory.getFactory().getDate(settlementDay, settlementMonth, settlementYear);
-        Date maturityDate = DateFactory.getFactory().getDate(maturityDay, maturityMonth, maturityYear);
+       final Date settlementDate = new Date(settlementDay, settlementMonth, settlementYear);
+        final Date maturityDate = new Date(maturityDay, maturityMonth, maturityYear);
         Configuration.getSystemConfiguration(null).getGlobalSettings().setEvaluationDate(settlementDate);
-        DayCounter dayCounter = Actual365Fixed.getDayCounter();
+        final DayCounter dayCounter = new Actual365Fixed();
         //let's find the option type
         Option.Type type;
 
-        if(optionType.equalsIgnoreCase("call") || optionType.equalsIgnoreCase("c")){
-            type = Option.Type.CALL;
-        }
-        else   if(optionType.equalsIgnoreCase("put") || optionType.equalsIgnoreCase("p")){
-            type = Option.Type.PUT;
-        }
+        if(optionType.equalsIgnoreCase("call") || optionType.equalsIgnoreCase("c"))
+            type = Option.Type.Call;
+        else   if(optionType.equalsIgnoreCase("put") || optionType.equalsIgnoreCase("p"))
+            type = Option.Type.Put;
         else throw new IllegalArgumentException("Invalid option type");
 
 
      //   type = Option.Type.CALL;
-        Exercise europeanExercise = new EuropeanExercise(maturityDate);
-        Payoff payoff = new PlainVanillaPayoff(type, strike);
+        final Exercise europeanExercise = new EuropeanExercise(maturityDate);
+        final Payoff payoff = new PlainVanillaPayoff(type, strike);
 
-        Handle<Quote> underlyingH = new Handle<Quote>(new SimpleQuote(underlying));
-        Handle<YieldTermStructure> flatDividendTS = new Handle<YieldTermStructure>(new FlatForward(settlementDate, dividendYield, dayCounter));
-        Handle<YieldTermStructure> flatTermStructure = new Handle<YieldTermStructure>(new FlatForward(settlementDate, riskFreeRate, dayCounter));
-        Handle<BlackVolTermStructure> flatVolTS = new Handle<BlackVolTermStructure>(new BlackConstantVol(settlementDate, volatility, dayCounter));
+        final Handle<Quote> underlyingH = new Handle<Quote>(new SimpleQuote(underlying));
+        final Handle<YieldTermStructure> flatDividendTS = new Handle<YieldTermStructure>(new FlatForward(settlementDate, dividendYield, dayCounter));
+        final Handle<YieldTermStructure> flatTermStructure = new Handle<YieldTermStructure>(new FlatForward(settlementDate, riskFreeRate, dayCounter));
+        final Handle<BlackVolTermStructure> flatVolTS = new Handle<BlackVolTermStructure>(new BlackConstantVol(settlementDate, new NullCalendar(), volatility, dayCounter));
 
-        StochasticProcess stochasticProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
+        final BlackScholesMertonProcess bsmProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
 
-        VanillaOption europeanOption = new EuropeanOption(stochasticProcess, payoff, europeanExercise);
+        final VanillaOption europeanOption = new EuropeanOption(payoff, europeanExercise);
 
-        europeanOption.setPricingEngine(new AnalyticEuropeanEngine());
+        europeanOption.setPricingEngine(new AnalyticEuropeanEngine(bsmProcess));
 
-        return europeanOption.getNPV();
+        return europeanOption.NPV();
 
  }
- public static void main(String args[]){
-  System.out.println(europeanBlackScholes(30, 4030, 0.05, 0.2, 0.0, "put", 1, 1, 2011, 1, 2, 2011))   ;
- }
+
+// public static void main(final String args[]){
+//  System.out.println(europeanBlackScholes(30, 4030, 0.05, 0.2, 0.0, "put", 1, 1, 2011, 1, 2, 2011))   ;
+// }
+
 }
