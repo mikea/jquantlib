@@ -51,22 +51,18 @@ public class StopClock {
     }
 
     public void startClock() {
-        if (units == Unit.ms){
+        if (units == Unit.ms)
             startTime = System.currentTimeMillis();
-        }
-        else{
+        else
             startTime = System.nanoTime();
-        }
         stopTime = startTime;
     }
 
     public void stopClock() {
-        if (units == Unit.ms){
+        if (units == Unit.ms)
             stopTime = System.currentTimeMillis();
-        }
-        else{
+        else
             stopTime = System.nanoTime();
-        }
     }
 
     public long getElapsedTime() {
@@ -88,7 +84,7 @@ public class StopClock {
     }
 
     public void log() {
-        QL.trace(toString());
+        QL.info(toString());
     }
 
 }

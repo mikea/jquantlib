@@ -42,8 +42,8 @@ public abstract class FDDividendOptionHelper<T extends FDEngineAdapter> extends 
     final private BlackScholesMertonProcess stochProcess;
     final private Calendar      cal;
     final private DayCounter    dc;
-    final private Handle<SimpleQuote> qRate;
     final private Handle<SimpleQuote> rRate;
+    final private Handle<SimpleQuote> qRate;
     final private Handle<SimpleQuote> vol;
 
 
@@ -248,5 +248,14 @@ public abstract class FDDividendOptionHelper<T extends FDEngineAdapter> extends 
     private BlackVolTermStructure flatVol(final Date referenceDate, final Handle<SimpleQuote> vol, final Calendar cal, final DayCounter dc) {
         return new BlackConstantVol(referenceDate, cal, vol, dc);
     }
+
+//    private YieldTermStructure flatRate(final Date referenceDate, final double rate, final DayCounter dc) {
+//        return new FlatForward(referenceDate, rate, dc);
+//    }
+//
+//
+//    private BlackVolTermStructure flatVol(final Date referenceDate, final double vol, final Calendar cal, final DayCounter dc) {
+//        return new BlackConstantVol(referenceDate, cal, vol, dc);
+//    }
 
 }

@@ -31,8 +31,8 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.AmericanExercise;
 import org.jquantlib.exercise.EuropeanExercise;
 import org.jquantlib.exercise.Exercise;
-import org.jquantlib.helpers.AmericanDividendOptionHelper;
-import org.jquantlib.helpers.EuropeanDividendOptionHelper;
+import org.jquantlib.helpers.CRRAmericanDividendOptionHelper;
+import org.jquantlib.helpers.CRREuropeanDividendOptionHelper;
 import org.jquantlib.helpers.FDAmericanDividendOptionHelper;
 import org.jquantlib.helpers.FDEuropeanDividendOptionHelper;
 import org.jquantlib.instruments.Option;
@@ -174,7 +174,7 @@ public class HelloOptions implements Runnable {
 
         new Settings().setEvaluationDate(today);
 
-        final EuropeanDividendOptionHelper option = new EuropeanDividendOptionHelper(
+        final CRREuropeanDividendOptionHelper option = new CRREuropeanDividendOptionHelper(
                 type, underlying, strike, riskFreeRate, dividendYield, volatility,
                 settlementDate, maturityDate,
                 divDates, divAmounts,
@@ -184,15 +184,15 @@ public class HelloOptions implements Runnable {
         final double delta  = option.delta();
         final double gamma  = option.gamma();
         final double theta  = option.theta();
-        // final double vega   = option.vega(); // to be implemented
-        // final double rho    = option.rho();  // to be implemented
+        final double vega   = option.vega();
+        final double rho    = option.rho();
 
         System.out.println(String.format("value       = %13.9f", value));
         System.out.println(String.format("delta       = %13.9f", delta));
         System.out.println(String.format("gamma       = %13.9f", gamma));
         System.out.println(String.format("theta       = %13.9f", theta));
-        // System.out.println(String.format("vega        = %13.9f", vega));
-        // System.out.println(String.format("rho         = %13.9f", rho));
+        System.out.println(String.format("vega        = %13.9f", vega));
+        System.out.println(String.format("rho         = %13.9f", rho));
 
         // market price: simply guess something 10% higher than theoretical
         // final double ivol = option.impliedVolatility(value*1.10);
@@ -204,7 +204,7 @@ public class HelloOptions implements Runnable {
 
         new Settings().setEvaluationDate(today);
 
-        final AmericanDividendOptionHelper option = new AmericanDividendOptionHelper(
+        final CRRAmericanDividendOptionHelper option = new CRRAmericanDividendOptionHelper(
                 type, underlying, strike, riskFreeRate, dividendYield, volatility,
                 settlementDate, maturityDate,
                 divDates, divAmounts,
@@ -214,15 +214,15 @@ public class HelloOptions implements Runnable {
         final double delta  = option.delta();
         final double gamma  = option.gamma();
         final double theta  = option.theta();
-        // final double vega   = option.vega(); // to be implemented
-        // final double rho    = option.rho();  // to be implemented
+        final double vega   = option.vega();
+        final double rho    = option.rho();
 
         System.out.println(String.format("value       = %13.9f", value));
         System.out.println(String.format("delta       = %13.9f", delta));
         System.out.println(String.format("gamma       = %13.9f", gamma));
         System.out.println(String.format("theta       = %13.9f", theta));
-        // System.out.println(String.format("vega        = %13.9f", vega));
-        // System.out.println(String.format("rho         = %13.9f", rho));
+        System.out.println(String.format("vega        = %13.9f", vega));
+        System.out.println(String.format("rho         = %13.9f", rho));
 
         // market price: simply guess something 10% higher than theoretical
         // final double ivol = option.impliedVolatility(value*1.10);
@@ -276,7 +276,8 @@ public class HelloOptions implements Runnable {
         runAmericanFD();     System.out.println();
         runAmericanCRR();    System.out.println();
 
-        runByHand();         System.out.println();
+        // runByHand is not taking dividends into account at the moment. :(
+        // runByHand();         System.out.println();
     }
 
 

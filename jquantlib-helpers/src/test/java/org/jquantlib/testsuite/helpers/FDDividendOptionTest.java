@@ -82,7 +82,7 @@ public class FDDividendOptionTest implements Runnable {
     @Test
     public void testEuropeanFDDividendOption() {
         if (!quiet)
-            QL.trace("::::: " + this.getClass().getSimpleName() + " ::::: European Dividend Option :::::");
+            QL.info("::::: " + this.getClass().getSimpleName() + " ::::: European Dividend Option :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();
@@ -108,13 +108,13 @@ public class FDDividendOptionTest implements Runnable {
         clock.stopClock();
 
         if (!quiet) {
-            QL.trace(String.format("value       = %13.9f", value));
-            QL.trace(String.format("delta       = %13.9f", delta));
-            QL.trace(String.format("gamma       = %13.9f", gamma));
-            QL.trace(String.format("theta       = %13.9f", theta));
-            QL.trace(String.format("vega        = %13.9f", vega));
-            QL.trace(String.format("rho         = %13.9f", rho));
-            // QL.trace(String.format("implied vol = %13.9f", ivol));
+            QL.info(String.format("value       = %13.9f", value));
+            QL.info(String.format("delta       = %13.9f", delta));
+            QL.info(String.format("gamma       = %13.9f", gamma));
+            QL.info(String.format("theta       = %13.9f", theta));
+            QL.info(String.format("vega        = %13.9f", vega));
+            QL.info(String.format("rho         = %13.9f", rho));
+            // QL.info(String.format("implied vol = %13.9f", ivol));
             clock.log();
         }
 
@@ -123,7 +123,7 @@ public class FDDividendOptionTest implements Runnable {
     @Test
     public void testAmericanFDDividendOption() {
         if (!quiet)
-            QL.trace("::::: " + this.getClass().getSimpleName() + " ::::: American Dividend Option :::::");
+            QL.info("::::: " + this.getClass().getSimpleName() + " ::::: American Dividend Option :::::");
 
         final StopClock clock = new StopClock();
         clock.startClock();
@@ -149,13 +149,13 @@ public class FDDividendOptionTest implements Runnable {
         clock.stopClock();
 
         if (!quiet) {
-            QL.trace(String.format("value       = %13.9f", value));
-            QL.trace(String.format("delta       = %13.9f", delta));
-            QL.trace(String.format("gamma       = %13.9f", gamma));
-            QL.trace(String.format("theta       = %13.9f", theta));
-            QL.trace(String.format("vega        = %13.9f", vega));
-            QL.trace(String.format("rho         = %13.9f", rho));
-            // QL.trace(String.format("implied vol = %13.9f", ivol));
+            QL.info(String.format("value       = %13.9f", value));
+            QL.info(String.format("delta       = %13.9f", delta));
+            QL.info(String.format("gamma       = %13.9f", gamma));
+            QL.info(String.format("theta       = %13.9f", theta));
+            QL.info(String.format("vega        = %13.9f", vega));
+            QL.info(String.format("rho         = %13.9f", rho));
+            // QL.info(String.format("implied vol = %13.9f", ivol));
             clock.log();
         }
     }
