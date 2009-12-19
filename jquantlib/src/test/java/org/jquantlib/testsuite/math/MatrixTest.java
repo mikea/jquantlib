@@ -38,6 +38,7 @@ import org.jquantlib.math.matrixutilities.QRDecomposition;
 import org.jquantlib.math.matrixutilities.SymmetricSchurDecomposition;
 import org.jquantlib.math.matrixutilities.Cells.ColumnIterator;
 import org.jquantlib.math.matrixutilities.Cells.RowIterator;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -628,6 +629,7 @@ public class MatrixTest {
 
 
 
+    @Ignore
     @Test
     public void inverse() { // final Cells.Style style
         inverse(Cells.Style.JAVA,    Cells.Style.JAVA);
