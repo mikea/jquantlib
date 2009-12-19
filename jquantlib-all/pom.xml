@@ -344,9 +344,9 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <dependencies>
                     <dependency>
-                        <groupId>ant</groupId>
+                        <groupId>org.apache.ant</groupId>
                         <artifactId>ant-antlr</artifactId>
-                        <version>1.6.5</version>
+                        <version>1.7.1</version>
                     </dependency>
                     <dependency>
                         <groupId>antlr</groupId>
@@ -674,7 +674,7 @@
                             <header>&lt;b>JQuantLib &lt;/b>&lt;font size="-1">v${project.version} API Javadocs&lt;/font></header>
                             <bottom><![CDATA[
                                 <font size="-1">
-                                <a href="http://bugs.jquantlib.org/">Submit a bug or feature</a><br/><br/>
+                                <a href="http://bugs.jquantlib.org/">Submit a bug or feature request</a><br/><br/>
                                 JQuantLib is free software: you can redistribute it and/or modify it
                                 under the terms of the JQuantLib license. You should have received a
                                 copy of the license along with this program; if not, please email

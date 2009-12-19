@@ -125,9 +125,8 @@ public class MatrixTest {
                 { 1.0, 2.0, 3.0, 4.0 },
         }, styleB);
 
-        if (!mA.equals(mB)) {
+        if (!mA.equals(mB))
             fail("'equals' failed");
-        }
     }
 
 
@@ -154,15 +153,12 @@ public class MatrixTest {
         }, styleB);
 
         final Matrix m = mA.clone();
-        if (m == mA) {
+        if (m == mA)
             fail("'clone' must return a new instance");
-        }
-        if (m == mB) {
+        if (m == mB)
             fail("'clone' must return a new instance");
-        }
-        if (!m.equals(mB)) {
+        if (!m.equals(mB))
             fail("'clone' failed");
-        }
     }
 
 
@@ -187,22 +183,16 @@ public class MatrixTest {
         };
 
         double[][] result = (double[][]) mA.toArray();
-        for (int row=0; row<mA.rows(); row++) {
-            for (int col=0; col<mA.columns(); col++) {
-                if (result[row][col] != doubles[row][col]) {
+        for (int row=0; row<mA.rows(); row++)
+            for (int col=0; col<mA.columns(); col++)
+                if (result[row][col] != doubles[row][col])
                     fail("toArray failed");
-                }
-            }
-        }
 
         result = mA.toArray(new double[3][4]);
-        for (int row=0; row<mA.rows(); row++) {
-            for (int col=0; col<mA.columns(); col++) {
-                if (result[row][col] != doubles[row][col]) {
+        for (int row=0; row<mA.rows(); row++)
+            for (int col=0; col<mA.columns(); col++)
+                if (result[row][col] != doubles[row][col])
                     fail("toArray failed");
-                }
-            }
-        }
     }
 
     @Test
@@ -218,9 +208,8 @@ public class MatrixTest {
                 { 1.0, 2.0, 3.0, 4.0 },
         }, style);
 
-        if (mA.empty()) {
+        if (mA.empty())
             fail("'empty' failed");
-        }
     }
 
 
@@ -239,9 +228,8 @@ public class MatrixTest {
         }, style);
 
         final Matrix m = new Matrix(3, 4, style).fill(2.0);
-        if (!m.equals(mA)) {
+        if (!m.equals(mA))
             fail("'fill' failed");
-        }
     }
 
 
@@ -270,17 +258,13 @@ public class MatrixTest {
 
 
         final Matrix m = mA.addAssign(mB);
-        if (m != mA) {
+        if (m != mA)
             fail("addAssign must return <this>");
-        }
 
-        for (int row=m.base(); row<m.rows()+m.base(); row++) {
-            for (int col=m.base(); col<m.columns()+m.base(); col++) {
-                if (m.get(row, col) != row-m.base()+5) {
+        for (int row=m.base(); row<m.rows()+m.base(); row++)
+            for (int col=m.base(); col<m.columns()+m.base(); col++)
+                if (m.get(row, col) != row-m.base()+5)
                     fail("addAssign failed");
-                }
-            }
-        }
     }
 
 
@@ -309,17 +293,13 @@ public class MatrixTest {
 
 
         final Matrix m = mB.subAssign(mA);
-        if (m != mB) {
+        if (m != mB)
             fail("subAssign must return <this>");
-        }
 
-        for (int row=m.base(); row<m.rows()+m.base(); row++) {
-            for (int col=m.base(); col<m.columns()+m.base(); col++) {
-                if (m.get(row, col) != row-m.base()+3) {
+        for (int row=m.base(); row<m.rows()+m.base(); row++)
+            for (int col=m.base(); col<m.columns()+m.base(); col++)
+                if (m.get(row, col) != row-m.base()+3)
                     fail("subAssign failed");
-                }
-            }
-        }
     }
 
 
@@ -339,17 +319,13 @@ public class MatrixTest {
         }, style);
 
         final Matrix m = mA.mulAssign(2.5);
-        if (m != mA) {
+        if (m != mA)
             fail("mulAssign must return <this>");
-        }
 
-        for (int row=m.base(); row<m.rows()+m.base(); row++) {
-            for (int col=m.base(); col<m.columns()+m.base(); col++) {
-                if (m.get(row, col) != (col-m.base()+1)*2.5) {
+        for (int row=m.base(); row<m.rows()+m.base(); row++)
+            for (int col=m.base(); col<m.columns()+m.base(); col++)
+                if (m.get(row, col) != (col-m.base()+1)*2.5)
                     fail("mulAssign failed");
-                }
-            }
-        }
     }
 
 
@@ -368,17 +344,13 @@ public class MatrixTest {
         }, style);
 
         final Matrix m = mA.divAssign(2.5);
-        if (m != mA) {
+        if (m != mA)
             fail("divAssign must return <this>");
-        }
 
-        for (int row=m.base(); row<m.rows()+m.base(); row++) {
-            for (int col=m.base(); col<m.columns()+m.base(); col++) {
-                if (m.get(row, col) != (col-m.base()+1)/2.5) {
+        for (int row=m.base(); row<m.rows()+m.base(); row++)
+            for (int col=m.base(); col<m.columns()+m.base(); col++)
+                if (m.get(row, col) != (col-m.base()+1)/2.5)
                     fail("divAssign failed");
-                }
-            }
-        }
     }
 
 
@@ -407,20 +379,15 @@ public class MatrixTest {
 
 
         final Matrix m = mA.add(mB);
-        if (m == mA) {
+        if (m == mA)
             fail("'add' must return a new instance");
-        }
-        if (m.rows() != mA.rows() || m.columns() != mA.columns()) {
+        if (m.rows() != mA.rows() || m.columns() != mA.columns())
             fail("'add' failed");
-        }
 
-        for (int row=m.base(); row<m.rows()+m.base(); row++) {
-            for (int col=m.base(); col<m.columns()+m.base(); col++) {
-                if (m.get(row, col) != row-m.base()+5) {
+        for (int row=m.base(); row<m.rows()+m.base(); row++)
+            for (int col=m.base(); col<m.columns()+m.base(); col++)
+                if (m.get(row, col) != row-m.base()+5)
                     fail("'add' failed");
-                }
-            }
-        }
     }
 
 
@@ -452,20 +419,15 @@ public class MatrixTest {
 
 
         Matrix m = mB.sub(mA);
-        if (m == mB) {
+        if (m == mB)
             fail("'sub' must return a new instance");
-        }
-        if (m.rows() != mB.rows() || m.columns() != mB.columns()) {
+        if (m.rows() != mB.rows() || m.columns() != mB.columns())
             fail("'sub' failed");
-        }
 
-        for (int row=m.base(); row<m.rows()+m.base(); row++) {
-            for (int col=m.base(); col<m.columns()+m.base(); col++) {
-                if (m.get(row, col) != row-m.base()+3) {
+        for (int row=m.base(); row<m.rows()+m.base(); row++)
+            for (int col=m.base(); col<m.columns()+m.base(); col++)
+                if (m.get(row, col) != row-m.base()+3)
                     fail("'sub' failed");
-                }
-            }
-        }
 
 
         // scalar
@@ -478,20 +440,15 @@ public class MatrixTest {
         }, styleA);
 
         m = mC.mul(2.5);
-        if (m == mC) {
+        if (m == mC)
             fail("'mul' must return a new instance");
-        }
-        if (m.rows() != mC.rows() || m.columns() != mC.columns()) {
+        if (m.rows() != mC.rows() || m.columns() != mC.columns())
             fail("'mul' failed");
-        }
 
-        for (int row=m.base(); row<m.rows()+m.base(); row++) {
-            for (int col=m.base(); col<m.columns()+m.base(); col++) {
-                if (m.get(row, col) != (col-m.base()+1)*2.5) {
+        for (int row=m.base(); row<m.rows()+m.base(); row++)
+            for (int col=m.base(); col<m.columns()+m.base(); col++)
+                if (m.get(row, col) != (col-m.base()+1)*2.5)
                     fail("'mul' failed");
-                }
-            }
-        }
 
 
         // array
@@ -507,15 +464,12 @@ public class MatrixTest {
         final Array aD = new Array(new double[] { 1.0, 1.0, 1.0, 1.0 }, styleB);
 
         final Array a = mD.mul(aD);
-        if (a.size() != mD.rows()) {
+        if (a.size() != mD.rows())
             fail("'add' failed");
-        }
 
-        for (int col=a.base(); col<a.columns()+a.base(); col++) {
-            if (a.get(col) != 10.0) {
+        for (int col=a.base(); col<a.columns()+a.base(); col++)
+            if (a.get(col) != 10.0)
                 fail("'mul' failed");
-            }
-        }
 
     }
 
@@ -536,20 +490,15 @@ public class MatrixTest {
         }, style);
 
         final Matrix m = mA.div(2.5);
-        if (m == mA) {
+        if (m == mA)
             fail("'div' must return a new instance");
-        }
-        if (m.rows() != mA.rows() || m.columns() != mA.columns()) {
+        if (m.rows() != mA.rows() || m.columns() != mA.columns())
             fail("'add' failed");
-        }
 
-        for (int row=m.base(); row<m.rows()+m.base(); row++) {
-            for (int col=m.base(); col<m.columns()+m.base(); col++) {
-                if (m.get(row, col) != (col-m.base()+1)/2.5) {
+        for (int row=m.base(); row<m.rows()+m.base(); row++)
+            for (int col=m.base(); col<m.columns()+m.base(); col++)
+                if (m.get(row, col) != (col-m.base()+1)/2.5)
                     fail("'div' failed");
-                }
-            }
-        }
     }
 
 
@@ -578,15 +527,12 @@ public class MatrixTest {
         }, styleB);
 
         final Matrix m = mI.mul(mA);
-        if (m == mI) {
+        if (m == mI)
             fail("'mul' must return a new instance");
-        }
-        if (m == mA) {
+        if (m == mA)
             fail("'mul' must return a new instance");
-        }
-        if (!m.equals(mA)) {
+        if (!m.equals(mA))
             fail("'mul' failed");
-        }
     }
 
 
@@ -617,12 +563,10 @@ public class MatrixTest {
         final Matrix mBclone = mB.clone();
 
         mA.swap(mB);
-        if (!mA.equals(mBclone)) {
+        if (!mA.equals(mBclone))
             fail("'swap' failed");
-        }
-        if (!mB.equals(mAclone)) {
+        if (!mB.equals(mAclone))
             fail("'swap' failed");
-        }
     }
 
 
@@ -650,15 +594,12 @@ public class MatrixTest {
 
         final Matrix m = mA.transpose();
 
-        if (m == mA) {
+        if (m == mA)
             fail("'transpose' must return a new instance");
-        }
-        if (m == mB) {
+        if (m == mB)
             fail("'transpose' must return a new instance");
-        }
-        if (!m.equals(mB)) {
+        if (!m.equals(mB))
             fail("'transpose' failed");
-        }
     }
 
 
@@ -681,9 +622,8 @@ public class MatrixTest {
 
         final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleB);
 
-        if (!mA.diagonal().equals(aA)) {
+        if (!mA.diagonal().equals(aA))
             fail("'transpose' failed");
-        }
     }
 
 
@@ -701,7 +641,7 @@ public class MatrixTest {
         QL.info("Testing LU inverse calculation...");
 
         final double tol = 1.0e-12;
-        final Matrix testMatrices[] = { M1, M2, I, M5 };
+        final Matrix testMatrices[] = { M1, M2, M3, I, M4, M5 };
 
         for (final Matrix m : testMatrices) {
 
@@ -714,13 +654,11 @@ public class MatrixTest {
 
             final Matrix eins = new Identity(A.rows(), styleB);
 
-            if (norm(I1.sub(eins)) > tol) {
+            if (norm(I1.sub(eins)) > tol)
                 fail("inverse(A)*A does not recover unit matrix");
-            }
 
-            if (norm(I2.sub(eins)) > tol) {
+            if (norm(I2.sub(eins)) > tol)
                 fail("A*inverse(A) does not recover unit matrix");
-            }
         }
     }
 
@@ -756,9 +694,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==6 && Closeness.isCloseEnough(sum, 5.2))) {
+        if (!(cells==6 && Closeness.isCloseEnough(sum, 5.2)))
             fail("RowIterator failed");
-        }
 
         it = mA.rowIterator(1+base, 1+base);
         cells = 0; sum = 0.0;
@@ -770,9 +707,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==4 && Closeness.isCloseEnough(sum, 2.6))) {
+        if (!(cells==4 && Closeness.isCloseEnough(sum, 2.6)))
             fail("RowIterator failed");
-        }
 
         it = mA.rowIterator(2+base, 2+base);
         cells = 0; sum = 0.0;
@@ -784,9 +720,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==2 && Closeness.isCloseEnough(sum, 2.0))) {
+        if (!(cells==2 && Closeness.isCloseEnough(sum, 2.0)))
             fail("RowIterator failed");
-        }
 
         it = mA.rowIterator(2+base, 3+base);
         cells = 0; sum = 0.0;
@@ -798,9 +733,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==0)) {
+        if (!(cells==0))
             fail("RowIterator failed");
-        }
 
         it = mA.rowIterator(0+base, 0+base, 3+base);
         cells = 0; sum = 0.0;
@@ -812,9 +746,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==6 && Closeness.isCloseEnough(sum, 5.2))) {
+        if (!(cells==6 && Closeness.isCloseEnough(sum, 5.2)))
             fail("RowIterator failed");
-        }
 
         it = mA.rowIterator(0+base, 0+base, 2+base);
         cells = 0; sum = 0.0;
@@ -826,9 +759,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==4 && Closeness.isCloseEnough(sum, 3.8))) {
+        if (!(cells==4 && Closeness.isCloseEnough(sum, 3.8)))
             fail("RowIterator failed");
-        }
 
         it = mA.rowIterator(0+base, 0+base, 1+base);
         cells = 0; sum = 0.0;
@@ -840,9 +772,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==2 && Closeness.isCloseEnough(sum, 2.0))) {
+        if (!(cells==2 && Closeness.isCloseEnough(sum, 2.0)))
             fail("RowIterator failed");
-        }
 
         it = mA.rowIterator(0+base, 0+base, 0+base);
         cells = 0; sum = 0.0;
@@ -854,9 +785,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==0)) {
+        if (!(cells==0))
             fail("RowIterator failed");
-        }
 
         // test columns out of bounds
 
@@ -929,9 +859,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==6 && Closeness.isCloseEnough(sum, 5.2))) {
+        if (!(cells==6 && Closeness.isCloseEnough(sum, 5.2)))
             fail("ColumnIterator failed");
-        }
 
         it = mA.columnIterator(1+base, 1+base);
         cells = 0; sum = 0.0;
@@ -943,9 +872,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==4 && Closeness.isCloseEnough(sum, 2.6))) {
+        if (!(cells==4 && Closeness.isCloseEnough(sum, 2.6)))
             fail("ColumnIterator failed");
-        }
 
         it = mA.columnIterator(2+base, 2+base);
         cells = 0; sum = 0.0;
@@ -957,9 +885,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==2 && Closeness.isCloseEnough(sum, 2.0))) {
+        if (!(cells==2 && Closeness.isCloseEnough(sum, 2.0)))
             fail("ColumnIterator failed");
-        }
 
         it = mA.columnIterator(2+base, 3+base);
         cells = 0; sum = 0.0;
@@ -971,9 +898,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==0)) {
+        if (!(cells==0))
             fail("ColumnIterator failed");
-        }
 
         it = mA.columnIterator(0+base, 0+base, 3+base);
         cells = 0; sum = 0.0;
@@ -985,9 +911,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==6 && Closeness.isCloseEnough(sum, 5.2))) {
+        if (!(cells==6 && Closeness.isCloseEnough(sum, 5.2)))
             fail("ColumnIterator failed");
-        }
 
         it = mA.columnIterator(0+base, 0+base, 2+base);
         cells = 0; sum = 0.0;
@@ -999,9 +924,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==4 && Closeness.isCloseEnough(sum, 3.8))) {
+        if (!(cells==4 && Closeness.isCloseEnough(sum, 3.8)))
             fail("ColumnIterator failed");
-        }
 
         it = mA.columnIterator(0+base, 0+base, 1+base);
         cells = 0; sum = 0.0;
@@ -1013,9 +937,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==2 && Closeness.isCloseEnough(sum, 2.0))) {
+        if (!(cells==2 && Closeness.isCloseEnough(sum, 2.0)))
             fail("ColumnIterator failed");
-        }
 
         it = mA.columnIterator(0+base, 0+base, 0+base);
         cells = 0; sum = 0.0;
@@ -1027,9 +950,8 @@ public class MatrixTest {
             sum += it.previousDouble();
             cells++;
         }
-        if (!(cells==0)) {
+        if (!(cells==0))
             fail("ColumnIterator failed");
-        }
 
         // test columns out of bounds
 
@@ -1091,30 +1013,27 @@ public class MatrixTest {
 
     		for (int i=0; i<N; i++) {
     			final Array v = new Array(N);
-    			for (int j=0; j<N; j++) {
+    			for (int j=0; j<N; j++)
                     v.set( j, eigenVectors.get(j,i) );
-                }
     			// check definition
     			final Array a = M.mul(v);
     			final Array b = v.mul(eigenValues.get(i));
     			final double tol = norm(a.sub(b));
-    			if (tol > 1.0e-15) {
+    			if (tol > 1.0e-15)
                     fail("Eigenvector definition not satisfied");
     			// check decreasing ordering
     			//if (eigenValues.get(i) >= minHolder) {
     			//	fail("Eigenvalues not ordered");
     			//} else
     			//	minHolder = eigenValues.get(i);
-                }
     		}
 
     		// check normalization
     		final Matrix m = eigenVectors.mul(eigenVectors.transpose());
     		final Identity ID = new Identity(N);
     		final double tol = norm(m.sub(ID));
-    		if (tol > 1.0e-15) {
+    		if (tol > 1.0e-15)
                 fail("Eigenvector not normalized");
-            }
     	}
     }
 
@@ -1259,9 +1178,8 @@ public class MatrixTest {
             Q = qr.Q();
             mul1 = Q.mul(R);
             tol = norm(mul1.sub(A)); // norm(Q*R - A)
-            if (tol > tolerance) {
+            if (tol > tolerance)
                 fail("Q*R (pivot=false) does not match matrix A*P");
-            }
 
 
             //TODO: test QR with column pivoting
@@ -1274,9 +1192,8 @@ public class MatrixTest {
             mul1 = Q.mul(R);
             mul2 = A.mul(P);
             tol = norm( mul1.sub(mul2) ); // norm(Q*R - A*P)
-            if (tol > tolerance) {
+            if (tol > tolerance)
                 fail("Q*R (pivot=true) does not match matrix A*P");
-            }
         }
     }
 
@@ -1500,11 +1417,9 @@ public class MatrixTest {
 
     private double norm(final Matrix m) {
         double sum = 0.0;
-        for (int i=m.base(); i<m.rows()+m.base(); i++) {
-            for (int j=m.base(); j<m.columns()+m.base(); j++) {
+        for (int i=m.base(); i<m.rows()+m.base(); i++)
+            for (int j=m.base(); j<m.columns()+m.base(); j++)
                 sum += m.get(i, j) * m.get(i, j);
-            }
-        }
 
         final double result = Math.sqrt(sum);
         return result;

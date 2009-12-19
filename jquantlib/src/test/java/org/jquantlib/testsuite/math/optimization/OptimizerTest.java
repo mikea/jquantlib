@@ -39,20 +39,15 @@ import org.junit.Test;
 
 public class OptimizerTest {
 
-    enum OptimizationMethodType {
+    private enum OptimizationMethodType {
         simplex, levenbergMarquardt, conjugateGradient, steepestDescent
     };
 
-    public static void main (final String [] args){
-        final OptimizerTest opt = new OptimizerTest();
-        opt.testOptimizers();
-    }
 
     @Ignore
     @Test
     public void testOptimizers() {
 
-        //System.setProperty("EXPERIMENTAL", "true");
         System.out.println("::::: " + this.getClass().getSimpleName() + " :::::");
         System.out.println("Testing optimizers... ");
 
@@ -153,13 +148,12 @@ public class OptimizerTest {
             final double levenbergMarquardtXtol,
             final double levenbergMarquardtGtol){
         final List<OptimizationMethod> results = new ArrayList<OptimizationMethod>();
-        for(int i=0; i<optimizationMethodTypes.length; ++i){
+        for(int i=0; i<optimizationMethodTypes.length; ++i)
             results.add(makeOptimizationMethod(optimizationMethodTypes[i],
                     simplexLambda,
                     levenbergMarquardtEpsfcn,
                     levenbergMarquardtXtol,
                     levenbergMarquardtGtol));
-        }
         return results;
     }
 
@@ -182,13 +176,7 @@ public class OptimizerTest {
     }
 
 
-    // Set up, for each cost function, all the ingredients for optimization:
-    // constraint, initial guess, end criteria, optimization methods.
-    private void setup() {
-        // .... TODO: how to keep stuff set up here local? implemented inline as a workaround
-    }
-
-    class OneDimensionalPolynomDegreeN extends CostFunction {
+    private class OneDimensionalPolynomDegreeN extends CostFunction {
 
         private final List<Double> coefficients_;
         private final int polynominalDegree_;
@@ -200,21 +188,18 @@ public class OptimizerTest {
 
         @Override
         public double value(final Array x) {
-            if (x.size() != 1) {
+            if (x.size() != 1)
                 throw new IllegalArgumentException("Independent variable must be 1 dimensional");
-            }
             double y = 0;
-            for (int i = 0; i <= polynominalDegree_; ++i) {
+            for (int i = 0; i <= polynominalDegree_; ++i)
                 y += coefficients_.get(i) * Math.pow(x.first(), i);
-            }
             return y;
         }
 
         @Override
         public Array values(final Array x) {
-            if (x.size() != 1) {
+            if (x.size() != 1)
                 throw new IllegalArgumentException("Independent variable must be 1 dimensional");
-            }
             final Array y = new Array(1);
             y.set(0, value(x));
             return y;

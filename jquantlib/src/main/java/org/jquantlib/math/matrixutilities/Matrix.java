@@ -51,7 +51,7 @@ import org.jquantlib.lang.iterators.BulkStorage;
 /**
  * Bidimensional matrix operations
  * <p>
- * Performance of multidimensional arrays is a big concern in Java. This is because multidimensional arrays are stored as arrays to
+ * Performance of multidimensional arrays is a big concern in Java. This is because multidimensional arrays are stored as arrays of
  * arrays, spanning this concept to as many depths as necessary. In C++, a multidimensional array is stored internally as a
  * unidimensional array where depths are stacked together one after another. A very simple calculation is needed to map multiple
  * dimensional indexes to an unidimensional index.
@@ -86,7 +86,7 @@ import org.jquantlib.lang.iterators.BulkStorage;
  * </pre>
  * <p>
  * <p>
- * <b>Vetorial products</b>
+ * <b>Vectorial products</b>
  * <pre>
  *   method         this    right    result
  *   -------------- ------- -------- ------
@@ -209,9 +209,8 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
     public Matrix(final double[][] data, final Style style) {
         super(data.length, data[0].length, style);
 
-        for (int i=0; i<rows; i++) {
+        for (int i=0; i<rows; i++)
             System.arraycopy(data[i], 0, this.data, addrJ(i, 0), cols);
-        }
     }
 
     /**
@@ -250,13 +249,11 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
 
     @Override
     public boolean equals(final Object o) {
-        if (o == null || !(o instanceof Matrix)) {
+        if (o == null || !(o instanceof Matrix))
             return false;
-        }
         final Matrix another = (Matrix) o;
-        if (rows != another.rows || cols != another.cols) {
+        if (rows != another.rows || cols != another.cols)
             return false;
-        }
         return Arrays.equals(data, another.data);
     }
 
@@ -308,9 +305,9 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      */
     public void fillCol(final int col, final Array array) {
         QL.require(rows == array.size ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        if (cols == 1) {
+        if (cols == 1)
             System.arraycopy(array.data, 0, data, 0, size);
-        } else {
+        else {
             int addr = addr(style.base, col);
             for (int row = style.base; row < rows+style.base; row++) {
                 data[addr] = array.data[array.addr(row)];
@@ -526,7 +523,7 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
 
 
     //
-    //	Vetorial products
+    //	Vectorial products
     //
     //	opr   method     this    right    result
     //	----- ---------- ------- -------- ------
@@ -546,9 +543,8 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
         for (int i = 0; i < result.size; i++) {
             final int addrJ = addrJ(i, 0);
             double sum = 0.0;
-            for (int col = 0; col < this.cols; col++) {
+            for (int col = 0; col < this.cols; col++)
                 sum += array.data[col] * this.data[addrJ + col];
-            }
             result.data[i] = sum;
         }
         return result;
@@ -760,11 +756,10 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
 
         final Matrix result = new Matrix(row1-row0, col1-col0, style);
         if (col1-col0 == cols) {
-            if (row1-row0 == rows) {
+            if (row1-row0 == rows)
                 System.arraycopy(data, style.base, result.data, style.base, size);
-            } else {
+            else
                 System.arraycopy(data, addr(row0, style.base), result.data, style.base, result.size);
-            }
         } else {
             final int ncols = col1-col0;
             int addr = style.base;
@@ -797,16 +792,13 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      */
     public Matrix range(final int row0, final int row1, final int[] c) {
         QL.require(row0 >= style.base && row1 > row0 && row1 <= rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-        for (final int col : c) {
+        for (final int col : c)
             QL.require(col>=style.base && col<cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-        }
 
         final Matrix result = new Matrix(row1-row0, c.length, style);
-        for (int i = row0; i <= row1; i++) {
-            for (int j = style.base; j < c.length+style.base; j++) {
+        for (int i = row0; i <= row1; i++)
+            for (int j = style.base; j < c.length+style.base; j++)
                 result.set(i-row0, j, get(i, c[j]));
-            }
-        }
         return result;
     }
 
@@ -839,12 +831,10 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @exception IllegalArgumentException when indices are out of range
      */
     public Matrix range(final int[] r, final int[] c) {
-        for (final int row : r) {
+        for (final int row : r)
             QL.require(row>=style.base && row<rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-        }
-        for (final int col : c) {
+        for (final int col : c)
             QL.require(col>=style.base && col<cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-        }
 
         final Matrix result = new Matrix(r.length-style.base, c.length-style.base, style);
         for (int i=style.base; i<r.length+style.base; i++) {
@@ -877,9 +867,8 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @exception IllegalArgumentException when indices are out of range
      */
     public Matrix range(final int[] r, final int col0, final int col1) {
-        for (final int row : r) {
+        for (final int row : r)
             QL.require(row>=style.base && row<rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-        }
         QL.require(col0 >= style.base && col1 > col0 && col1 <= cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
 
         final Matrix result = new Matrix(r.length, col1-col0, style);
@@ -1099,9 +1088,8 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
         } else if (b != 0) {
             r = a / b;
             r = Math.abs(b) * Math.sqrt(1 + r * r);
-        } else {
+        } else
             r = 0.0;
-        }
         return r;
     }
 

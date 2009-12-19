@@ -413,8 +413,20 @@ public class GeneralStatistics implements Statistics {
      * TEMPRORARY FIX
      */
 
+
+    //
+    //FIXME: This code should not be here !!!!!!!!!!!
+    // Please notice that JQuantLib is a library, which means that
+    // it does not have entry for being called directly as an application!
+    // If you need test code, please add a test case to our test suite.
+    // Alternatively, you can create a sample application in
+    // project jquantlib-samples.
+    // I've changed main to private so that it cannot be called directly.
+    // [Richard Gomes]
+    //
+
     //use   rand() function to generate a sample
-    public static void main(final String args[]) {
+    private static void main(final String args[]) {
         final GeneralStatistics gs = new GeneralStatistics();
         System.out.println("******************************************************************************");
         System.out.println("A Small test case");

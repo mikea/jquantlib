@@ -31,7 +31,6 @@ import org.jquantlib.math.interpolations.CubicSplineInterpolation;
 import org.jquantlib.math.interpolations.factories.CubicSpline;
 import org.jquantlib.math.interpolations.factories.MonotonicCubicSpline;
 import org.jquantlib.math.matrixutilities.Array;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -54,7 +53,6 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 					+"MultiSpline ... :::::");
 	}
 
-    @Ignore
 	@Test
 	public void testSplineErrorOnGaussianValues(){
 	    //System.setProperty("EXPERIMENTAL", "true");

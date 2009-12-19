@@ -272,7 +272,18 @@ public class PairSortingAlgorithms<F extends Number, S extends Number> {
         }
     }
 
-    public static void main(final String args[]) {
+    //
+    //FIXME: This code should not be here !!!!!!!!!!!
+    // Please notice that JQuantLib is a library, which means that
+    // it does not have entry for being called directly as an application!
+    // If you need test code, please add a test case to our test suite.
+    // Alternatively, you can create a sample application in
+    // project jquantlib-samples.
+    // I've changed main to private so that it cannot be called directly.
+    // [Richard Gomes]
+    //
+
+    private static void main(final String args[]) {
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
         System.out.println("************************************ ");

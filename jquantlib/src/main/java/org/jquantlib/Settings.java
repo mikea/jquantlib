@@ -169,8 +169,21 @@ public class Settings {
     // private inner classes
     //
 
+
+
+
     private static final ThreadAttributes attrs = new ThreadAttributes();
 
+    //
+    // Settings employs a ThreadLocal object in order to keep thread dependent data.
+    // In spite <code>attrs</code> seems to be static and, for this reason, contain the same contents whatever
+    // thread employs it, actually what happens is that ThreadLocal internally organized data using a thread id
+    // or something like this as a key, in order to obtain thread dependent data.
+    // So, what we do below is the initialization of this map, which means to say we are assigning default
+    // values to these attributes. Every thread has freedom to change these attributes and can be sure that
+    // no other thread will be affected bythese changes.
+    // [Richard Gomes]
+    //
     private static class ThreadAttributes extends ThreadLocal<Map<String,Object>> {
         @Override
         public Map<String,Object> initialValue() {
@@ -199,9 +212,8 @@ public class Settings {
         }
 
         private DateProxy value() /* @ReadOnly */ {
-            if (isNull()) {
+            if (isNull())
                 super.assign(todaysSerialNumber());
-            }
             return this;
         }
 
