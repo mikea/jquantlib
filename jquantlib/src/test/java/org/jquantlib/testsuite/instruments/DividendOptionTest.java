@@ -80,7 +80,6 @@ import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
-import org.junit.Ignore;
 import org.junit.Test;
 
 //TODO: Figure out why tests for options with both continuous and discrete dividends fail.
@@ -608,7 +607,6 @@ public class DividendOptionTest {
     }
 
 
-    @Ignore
     @Test
     public void testFdEuropeanDegenerate() {
 
@@ -783,8 +781,8 @@ public class DividendOptionTest {
             if (Math.abs(refValue-value) > tolerance) {
                 final StringBuilder sb = new StringBuilder();
                 sb.append("NPV changed by null dividend :\n");
-                sb.append("    previous value: ").append(value).append('\n');
-                sb.append("    current value:  ").append(refValue).append('\n');
+                sb.append("    previous value: ").append(refValue).append('\n');
+                sb.append("    current value:  ").append(value).append('\n');
                 sb.append("    change:         ").append(value-refValue);
                 fail(sb.toString());
             }

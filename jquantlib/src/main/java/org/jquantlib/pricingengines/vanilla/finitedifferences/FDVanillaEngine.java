@@ -136,8 +136,7 @@ public class FDVanillaEngine {
 
     protected void initializeInitialCondition() {
         intrinsicValues.setLogGrid(sMin, sMax);
-        final PayoffFunction function = new PayoffFunction(payoff);
-        intrinsicValues.sample(function);
+        intrinsicValues.sample(new PayoffFunction(payoff));
     }
 
     protected void initializeOperator() {

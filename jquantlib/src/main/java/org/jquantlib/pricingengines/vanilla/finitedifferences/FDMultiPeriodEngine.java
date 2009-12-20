@@ -67,8 +67,8 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
         this(process, 100, 100, false);
     }
 
-    public FDMultiPeriodEngine(final GeneralizedBlackScholesProcess process, final int timeSteps, final int gridPoints, final boolean timeDependent) {
-        super(process, timeSteps, gridPoints, timeDependent);
+    public FDMultiPeriodEngine(final GeneralizedBlackScholesProcess process, final int gridPoints, final int timeSteps, final boolean timeDependent) {
+        super(process, gridPoints, timeSteps, timeDependent);
         this.stoppingTimes = new ArrayList<Double>();
         this.timeStepPerPeriod = timeSteps;
     }
@@ -83,7 +83,7 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
         events = schedule;
         stoppingTimes.clear();
         final int n = schedule.size();
-        for(int i = 0; i<n; i++) {
+        for (int i = 0; i<n; i++) {
             stoppingTimes.add(process.time(events.get(i).date()));
         }
     }
@@ -168,7 +168,7 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
             }
         }
 
-        double dt = getResidualTime() / timeStepPerPeriod*(dateNumber+1);
+        double dt = getResidualTime() / (timeStepPerPeriod*(dateNumber+1));
 
         // Ensure that dt is always smaller than the first non-zero date
         if (firstNonZeroDate <= dt) {
@@ -182,7 +182,7 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
         initializeModel();
         initializeStepCondition();
 
-        prices = intrinsicValues;
+        prices = intrinsicValues.clone();
         if (lastDateIsResTime) {
             executeIntermediateStep(dateNumber - 1);
         }
@@ -208,7 +208,7 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
             }
         } while (--j >= firstIndex);
 
-        prices.setValues(model.rollback(prices.values(),dt, 0, 1, stepCondition));
+        prices.setValues(model.rollback(prices.values(), dt, 0, 1, stepCondition));
 
         if (firstDateIsZero) {
             executeIntermediateStep(0);

@@ -82,8 +82,8 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
         if (from <= to)
             throw new IllegalStateException("trying to roll back from " + from + " to " + to);
 
-        /* @Time */final double dt = (from - to) / steps;
-        double t = from;
+        final /* @Time */ double dt = (from - to) / steps;
+        /* @Time */ double t = from;
         evolver.setStep(dt);
 
         for (int i = 0; i < steps; ++i, t -= dt) {
