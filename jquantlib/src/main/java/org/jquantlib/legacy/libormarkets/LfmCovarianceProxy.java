@@ -105,7 +105,7 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
 
           final GaussKronrodAdaptive integrator = new GaussKronrodAdaptive(1e-10, 10000);
           for (int k=0; k<64; ++k)
-            tmp+=integrator.evaluate(helper, k*t/64., (k+1)*t/64.);
+            tmp+=integrator.op(helper, k*t/64., (k+1)*t/64.);
           return tmp;
       }
 

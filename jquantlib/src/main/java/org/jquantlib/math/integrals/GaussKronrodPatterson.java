@@ -174,7 +174,7 @@ public class GaussKronrodPatterson extends Integrator {
 
         // test for convergence.
         // Change from QNG...
-        if (err < getAbsoluteAccuracy()
+        if (err < absoluteAccuracy()
                 || err < getRelativeAccuracy() * Math.abs(result)) {
             setAbsoluteError(err);
             setNumberOfEvaluations(21);
@@ -202,7 +202,7 @@ public class GaussKronrodPatterson extends Integrator {
         result = res43 * halfLength;
         err = rescaleError((res43 - res21) * halfLength, resAbs, resasc);
 
-        if (err < getAbsoluteAccuracy()
+        if (err < absoluteAccuracy()
                 || err < getRelativeAccuracy() * Math.abs(result)) {
             setAbsoluteError(err);
             setNumberOfEvaluations(43);

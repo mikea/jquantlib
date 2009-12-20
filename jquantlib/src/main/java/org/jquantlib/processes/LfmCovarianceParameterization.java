@@ -76,7 +76,7 @@ public abstract class LfmCovarianceParameterization {
                 final Var_Helper helper = new Var_Helper(this, i, j);
                 final GaussKronrodAdaptive integrator = new GaussKronrodAdaptive(1e-10, 10000);
                 for(int k = 0; k<64; ++k)
-                    tmp.set(i, j, tmp.get(i, j)+integrator.evaluate(helper, k*t/64.0,(k+1)*t/64.0));
+                    tmp.set(i, j, tmp.get(i, j)+integrator.op(helper, k*t/64.0,(k+1)*t/64.0));
                 tmp.set(j,i, tmp.get(i, j));
             }
 

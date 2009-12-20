@@ -1,8 +1,9 @@
 /*
- Copyright (C) 2008 Richard Gomes
+ Copyright (C) 2008 Dominik Holenstein
+ Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +16,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -44,71 +45,51 @@ import org.jquantlib.math.Ops;
 
 /**
  * Integral of a one-dimensional function using Simpson formula
- * 
+ *
  * @author Dominik Holenstein
+ * @author Richard Gomes
  */
-//TODO: Add test case.  
-//TEST the correctness of the result is tested by checking it against known good values.
-public class SimpsonIntegral extends TrapezoidIntegral {
-	
-	
+public class SimpsonIntegral extends TrapezoidIntegral<TrapezoidIntegral.Default> {
+
 	//
 	// public constructors
 	//
-	
-	public SimpsonIntegral(double accuracy) {
-		super(accuracy, 0); 
-		if (System.getProperty("EXPERIMENTAL")==null) {
-		    throw new UnsupportedOperationException("Work in progress");
-		 }
-	}
-	
-	public SimpsonIntegral (final double accuracy, final int maxIterations) {
-		super(accuracy, Method.Default, maxIterations);
-		if (System.getProperty("EXPERIMENTAL")==null) {
-		    throw new UnsupportedOperationException("Work in progress");
-		  }
 
+	public SimpsonIntegral (final double accuracy, final int maxIterations) {
+		super(TrapezoidIntegral.Default.class, accuracy, maxIterations);
 	}
-	
-	//
-	// private methods
-	//
-	
-	@Override
-	protected Method getMethod() {
-		// This method reduces visibility of an ancestor method
-		throw new UnsupportedOperationException(); // FIXME: message
-	}
-	
+
+
 	//
 	// protected virtual methods
 	//
-	
+
 	@Override
-    protected double integrate (final Ops.DoubleOp f, final double a, final double b) {
+    protected double integrate(final Ops.DoubleOp f, final double a, final double b) {
         // start from the coarsest trapezoid...
         int N = 1;
-        double I = (f.op(a)+f.op(b))*(b-a)/2.0, newI;
-        double adjI = I, newAdjI;
+        double I = (f.op(a) + f.op(b)) * (b - a) / 2.0;
+        double adjI = I;
+
         // ...and refine it
         int i = 1;
         do {
-           newI = defaultIteration(f,a,b,I,N);
-           N *= 2;
-           newAdjI = (4.0*newI-I)/3.0;
-           
-           // good enough? Also, don't run away immediately
-           if (Math.abs(adjI-newAdjI) <= getAbsoluteAccuracy() && i > 5)
-             // ok, exit
-             return newAdjI;
-           
-           // oh well. Another step.
-           I = newI;
-           adjI = newAdjI;
-           i++;
-         } while (i < getMaxEvaluations());
-         throw new ArithmeticException("max number of iterations reached");
+            final double newI = policy.integrate(f, a, b, I, N);
+            N *= 2;
+            final double newAdjI = (4.0 * newI - I) / 3.0;
+
+            // good enough? Also, don't run away immediately
+            if (Math.abs(adjI - newAdjI) <= absoluteAccuracy() && i > 5) {
+                // ok, exit
+                return newAdjI;
+            }
+
+            // oh well. Another step.
+            I = newI;
+            adjI = newAdjI;
+            i++;
+        } while (i < maxEvaluations());
+        throw new ArithmeticException("max number of iterations reached");
     }
-	
+
 }

@@ -26,7 +26,7 @@ import static org.junit.Assert.fail;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.iterators.Iterator;
-import org.jquantlib.math.functions.Sqr;
+import org.jquantlib.math.functions.Square;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Cells;
 import org.jquantlib.math.matrixutilities.Matrix;
@@ -585,7 +585,7 @@ public class ArrayTest {
         Array tmp;
 
         tmp = aA.clone();
-        final Array result = tmp.transform(new Sqr());
+        final Array result = tmp.transform(new Square());
         if (result != tmp) {
             fail("'transform' must return this");
         }
@@ -594,7 +594,7 @@ public class ArrayTest {
         }
 
         tmp = aA.clone();
-        final Iterator itA = tmp.iterator().transform(new Sqr());
+        final Iterator itA = tmp.iterator().transform(new Square());
         final Iterator itB = aB.constIterator();
         if (! itA.equals(itB) ) {
             fail("'transform' failed");
@@ -608,7 +608,7 @@ public class ArrayTest {
         Array tmp;
 
         tmp = aA.clone();
-        final Array result = tmp.transform(aA.base()+1, aA.base()+3, new Sqr());
+        final Array result = tmp.transform(aA.base()+1, aA.base()+3, new Square());
         if (result != tmp) {
             fail("'transform' must return this");
         }
@@ -617,7 +617,7 @@ public class ArrayTest {
         }
 
         tmp = aA.clone();
-        final Iterator itA = tmp.iterator().transform(aA.base()+1, aA.base()+3, new Sqr());
+        final Iterator itA = tmp.iterator().transform(aA.base()+1, aA.base()+3, new Square());
         final Iterator itB = aB.constIterator();
         if (! itA.equals(itB) ) {
             fail("'transform' failed");

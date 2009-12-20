@@ -32,7 +32,7 @@ import org.jquantlib.math.functions.Constant;
 import org.jquantlib.math.functions.Cube;
 import org.jquantlib.math.functions.Fourth;
 import org.jquantlib.math.functions.Identity;
-import org.jquantlib.math.functions.Sqr;
+import org.jquantlib.math.functions.Square;
 import org.jquantlib.math.integrals.GaussKronrodPatterson;
 import org.jquantlib.math.integrals.Integrator;
 import org.junit.Test;
@@ -51,7 +51,7 @@ public class GaussKonrodPattersonIntegratorTest {
 	public void testPolynomials() {
 		checkSingleTabulated(new Constant(1.0), "f(x)=1",   2.0,     1.0e-13);
 		checkSingleTabulated(new Identity(),    "f(x)=x",   0.0,     1.0e-13);
-		checkSingleTabulated(new Sqr(),         "f(x)=x^2", 2.0/3.0, 1.0e-13);
+		checkSingleTabulated(new Square(),         "f(x)=x^2", 2.0/3.0, 1.0e-13);
 		checkSingleTabulated(new Cube(),        "f(x)=x^3", 0.0,     1.0e-13);
 		checkSingleTabulated(new Fourth(),      "f(x)=x^4", 2.0/5.0, 1.0e-13);
 	}
@@ -59,7 +59,7 @@ public class GaussKonrodPattersonIntegratorTest {
 	private void checkSingleTabulated(final Ops.DoubleOp f, final String tag, final double expected, final double tolerance) {
 
 		final Integrator quad = new GaussKronrodPatterson();
-	    final double realised = quad.evaluate(f,-1,1);
+	    final double realised = quad.op(f,-1,1);
 
         if (Math.abs(realised-expected) > tolerance)
         	fail(" integrating " + tag + "\n"
@@ -78,7 +78,7 @@ public class GaussKonrodPattersonIntegratorTest {
 
 		final Integrator quad = new GaussKronrodPatterson(0, 1.1*Constants.QL_EPSILON);
 
-		final double realised = quad.evaluate(exp, 0, 6);
+		final double realised = quad.op(exp, 0, 6);
 		final double expected = Math.exp(6) - 1.0;
 		final double tolerance = 1.0e-10;
 

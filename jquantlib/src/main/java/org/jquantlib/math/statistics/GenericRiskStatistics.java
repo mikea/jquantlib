@@ -36,7 +36,7 @@ import org.jquantlib.math.functions.Expression;
 import org.jquantlib.math.functions.Identity;
 import org.jquantlib.math.functions.LessThanPredicate;
 import org.jquantlib.math.functions.Minus;
-import org.jquantlib.math.functions.Sqr;
+import org.jquantlib.math.functions.Square;
 import org.jquantlib.math.functions.TruePredicate;
 import org.jquantlib.util.Pair;
 
@@ -100,7 +100,7 @@ public class GenericRiskStatistics {
         // average over the range below the target
 
         final List<Ops.DoubleOp> functions = new ArrayList<Ops.DoubleOp>();
-        functions.add(new Sqr());
+        functions.add(new Square());
         functions.add(new Bind2nd(new Minus(), target));
         final Expression comp = new Expression(functions);
         final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);

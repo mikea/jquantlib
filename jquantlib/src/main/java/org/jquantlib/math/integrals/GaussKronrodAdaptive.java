@@ -76,7 +76,7 @@ public class GaussKronrodAdaptive extends KronrodIntegral {
 
     @Override
     protected double integrate(final Ops.DoubleOp f, final double a, final double b) {
-        return integrateRecursively(f, a, b, getAbsoluteAccuracy());
+        return integrateRecursively(f, a, b, absoluteAccuracy());
     }
 
     private double integrateRecursively(final Ops.DoubleOp f, final double a, final double b, final double tolerance) {
@@ -121,7 +121,7 @@ public class GaussKronrodAdaptive extends KronrodIntegral {
         if (Math.abs(k15 - g7) < tolerance)
             return k15;
         else {
-            QL.require(getNumberOfEvaluations() + 30 <= getMaxEvaluations() , "maximum number of function evaluations exceeded"); // QA:[RG]::verified // TODO: message
+            QL.require(numberOfEvaluations() + 30 <= maxEvaluations() , "maximum number of function evaluations exceeded"); // QA:[RG]::verified // TODO: message
             return integrateRecursively(f, a, center, tolerance / 2) + integrateRecursively(f, center, b, tolerance / 2);
         }
     }

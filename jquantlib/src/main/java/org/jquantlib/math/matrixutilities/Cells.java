@@ -35,7 +35,7 @@ import org.jquantlib.math.functions.Abs;
 import org.jquantlib.math.functions.Exp;
 import org.jquantlib.math.functions.Log;
 import org.jquantlib.math.functions.Minus;
-import org.jquantlib.math.functions.Sqr;
+import org.jquantlib.math.functions.Square;
 import org.jquantlib.math.functions.Sqrt;
 
 /**
@@ -1146,7 +1146,7 @@ public class Cells {
          */
         @Override
         public Iterator sqr() {
-            return this.iterator().transform(new Sqr());
+            return this.iterator().transform(new Square());
         }
 
         /**

@@ -30,7 +30,7 @@ import org.jquantlib.math.functions.Constant;
 import org.jquantlib.math.functions.Cube;
 import org.jquantlib.math.functions.Fourth;
 import org.jquantlib.math.functions.Identity;
-import org.jquantlib.math.functions.Sqr;
+import org.jquantlib.math.functions.Square;
 import org.jquantlib.math.integrals.TabulatedGaussLegendre;
 import org.junit.Test;
 
@@ -47,7 +47,7 @@ public class TabulatedGaussLegendreTest {
 	public void testPolynomials() {
 		checkSingleTabulated(new Constant(1.0), "f(x)=1", 2.0, 1.0e-13);
 		checkSingleTabulated(new Identity(), "f(x)=x", 0.0, 1.0e-13);
-		checkSingleTabulated(new Sqr(), "f(x)=x^2", 2.0/3.0, 1.0e-13);
+		checkSingleTabulated(new Square(), "f(x)=x^2", 2.0/3.0, 1.0e-13);
 		checkSingleTabulated(new Cube(), "f(x)=x^3", 0.0, 1.0e-13);
 		checkSingleTabulated(new Fourth(), "f(x)=x^4", 2.0/5.0, 1.0e-13);
 	}

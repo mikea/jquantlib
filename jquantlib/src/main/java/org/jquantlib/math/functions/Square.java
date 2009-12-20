@@ -28,7 +28,7 @@ import org.jquantlib.math.Ops;
  *
  * @author Richard Gomes
  */
-public final class Sqr implements Ops.DoubleOp {
+public final class Square implements Ops.DoubleOp {
 
 	//
     // implements Ops.DoubleOp

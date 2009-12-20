@@ -124,7 +124,7 @@ public class GaussKronrodNonAdaptive extends KronrodIntegral {
         resasc *= halfLength;
 
         // test for convergence.
-        if (err < getAbsoluteAccuracy() || err < relativeAccuracy() * Math.abs(result)) {
+        if (err < absoluteAccuracy() || err < relativeAccuracy() * Math.abs(result)) {
             setAbsoluteError(err);
             setNumberOfEvaluations(21);
             return result;
@@ -150,7 +150,7 @@ public class GaussKronrodNonAdaptive extends KronrodIntegral {
         result = res43 * halfLength;
         err = rescaleError((res43 - res21) * halfLength, resAbs, resasc);
 
-        if (err < getAbsoluteAccuracy() || err < relativeAccuracy() * Math.abs(result)) {
+        if (err < absoluteAccuracy() || err < relativeAccuracy() * Math.abs(result)) {
             setAbsoluteError(err);
             setNumberOfEvaluations(43);
             return result;

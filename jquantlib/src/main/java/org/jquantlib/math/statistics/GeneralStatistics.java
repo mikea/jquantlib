@@ -33,7 +33,7 @@ import org.jquantlib.math.functions.Expression;
 import org.jquantlib.math.functions.Fourth;
 import org.jquantlib.math.functions.Identity;
 import org.jquantlib.math.functions.Minus;
-import org.jquantlib.math.functions.Sqr;
+import org.jquantlib.math.functions.Square;
 import org.jquantlib.math.functions.TruePredicate;
 import org.jquantlib.util.Pair;
 
@@ -174,7 +174,7 @@ public class GeneralStatistics implements Statistics {
         QL.require(n >= 1 , unsufficient_sample_size);
 
         final List<Ops.DoubleOp> functions = new ArrayList<Ops.DoubleOp>();
-        functions.add(new Sqr());
+        functions.add(new Square());
         functions.add(new Bind2nd(new Minus(), mean()));
         final Expression comp = new Expression(functions);
 

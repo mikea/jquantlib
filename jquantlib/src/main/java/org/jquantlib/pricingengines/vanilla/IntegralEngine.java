@@ -109,7 +109,7 @@ public class IntegralEngine extends OneAssetOption.EngineImpl {
         final double infinity = 10.0*Math.sqrt(variance);
         r.value =
             process.riskFreeRate().currentLink().discount(a.exercise.lastDate()) /
-            Math.sqrt(2.0*Math.PI*variance) * integrator.evaluate(f, drift-infinity, drift+infinity);
+            Math.sqrt(2.0*Math.PI*variance) * integrator.op(f, drift-infinity, drift+infinity);
     }
 
 

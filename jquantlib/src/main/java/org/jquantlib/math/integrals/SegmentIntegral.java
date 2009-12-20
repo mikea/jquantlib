@@ -77,7 +77,7 @@ public class SegmentIntegral extends Integrator {
 
     @Override
     public final double integrate(final Ops.DoubleOp f, final double a, final double b) {
-        final double dx = (b-a)/getNumberOfEvaluations(); // getNumberOfEvaluations() returns intervals_
+        final double dx = (b-a)/numberOfEvaluations(); // getNumberOfEvaluations() returns intervals_
         double sum = 0.5*(f.op(a)+f.op(b));
         final double end = b - 0.5*dx;
         for (double x = a+dx; x < end; x += dx) {
@@ -87,7 +87,7 @@ public class SegmentIntegral extends Integrator {
     }
 
     @Override
-    public final int getNumberOfEvaluations() {
+    public final int numberOfEvaluations() {
         return intervals;
     }
 

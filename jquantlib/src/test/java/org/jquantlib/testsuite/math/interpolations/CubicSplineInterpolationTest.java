@@ -60,11 +60,11 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 	    //System.setProperty("EXPERIMENTAL", "true");
 		QL.info("Testing spline approximation on Gaussian data sets...");
 
-		final int[] points = {5, 9, 17, 33};
+	    final int points[]                = {      5,      9,     17,     33 };
 
 	    // complete spline data from the original 1983 Hyman paper
-	    final double[] tabulatedErrors = { 3.5e-2, 2.0e-3, 4.0e-5, 1.8e-6 };
-	    final double[] toleranceOnTabErr = { 0.1e-2, 0.1e-3, 0.1e-5, 0.1e-6 };
+	    final double tabulatedErrors[]     = { 3.5e-2, 2.0e-3, 4.0e-5, 1.8e-6 };
+	    final double toleranceOnTabErr[]   = { 0.1e-2, 0.1e-3, 0.1e-5, 0.1e-6 };
 
 	    // (complete) MC spline data from the original 1983 Hyman paper
 	    // NB: with the improved Hyman filter from the Dougherty, Edelman, and
@@ -75,7 +75,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 
 
 	    //TODO: check if SimpsonIntegral used correctly
-	    final SimpsonIntegral integral = new SimpsonIntegral(1e-12, 100);
+	    final SimpsonIntegral integral = new SimpsonIntegral(1e-12, 10000);
 
 	    // still unexplained scale factor needed to obtain the numerical
 	    // results from the paper
@@ -95,9 +95,17 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
 		    		false)
 		    		.interpolate(x.constIterator(), y.constIterator());
 
+
+	        //TODO: http://bugs.jquantlib.org/view.php?id=398
+//	        final CubicInterpolation f = new CubicInterpolation(
+//	                x, y,
+//                    CubicInterpolation.Spline, false,
+//                    CubicInterpolation.NotAKnot, Null<Real>(),
+//                    CubicInterpolation.NotAKnot, Null<Real>());
+
 	        interpolation.update();
 	        //TODO: how to use the integral.integrate method which is the protected method?
-	        double result = Math.sqrt(integral.evaluate(interpolation, -1.7, 1.9));//integrate (interpolation, -1.7, 1.9));
+	        double result = Math.sqrt(integral.op(interpolation, -1.7, 1.9));//integrate (interpolation, -1.7, 1.9));
 	        result /= scaleFactor;
 	        assertFalse("Not-a-knot spline interpolation "
 					+"\n    sample points:      "+n
@@ -112,7 +120,7 @@ public class CubicSplineInterpolationTest extends InterpolationTestBase{
                     0.0)
                     .interpolate(x.constIterator(), y.constIterator());
 	        interpolation.update();
-	        result = Math.sqrt(integral.evaluate(interpolation, -1.7, 1.9));
+	        result = Math.sqrt(integral.op(interpolation, -1.7, 1.9));
 	        result /= scaleFactor;
 	        assertFalse ("MC Not-a-knot spline interpolation "
                     + "\n    sample points:      "

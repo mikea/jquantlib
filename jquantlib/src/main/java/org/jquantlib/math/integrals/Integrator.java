@@ -31,7 +31,6 @@ import org.jquantlib.math.Ops;
  *
  * @author Richard Gomes
  */
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class Integrator {
 
     //
@@ -39,8 +38,8 @@ public abstract class Integrator {
     //
 
     private double absoluteAccuracy;
-    private double absoluteError;
     private int maxEvaluations;
+    private double absoluteError;
     private int numberOfEvaluations;
 
 
@@ -55,68 +54,20 @@ public abstract class Integrator {
         this.maxEvaluations = maxEvaluations;
     }
 
-    //
-    // protected abstract methods
-    //
-
-    protected abstract double integrate(final Ops.DoubleOp f, final double a, final double b) /* @ReadOnly */;
-
 
     //
-    // protected final methods
+    // final public methods
     //
 
-    protected final void setAbsoluteError(final double error) /* @ReadOnly */ {
-        absoluteError = error;
-    }
-
-    protected final void setNumberOfEvaluations(final int evaluations) /* @ReadOnly */ {
-        this.numberOfEvaluations = evaluations;
-    }
-
-    protected final void increaseNumberOfEvaluations(final int increase) /* @ReadOnly */ {
-        this.numberOfEvaluations += increase;
-    }
-
-
-    //
-    // protected virtual methods
-    //
-
-    protected int getNumberOfEvaluations() /* @ReadOnly */ {
-        return this.numberOfEvaluations;
-    }
-
-
-    //
-    // public final methods
-    //
-
-    public double evaluate(final Ops.DoubleOp f, final double a, final double b) /* @ReadOnly */{
-        if (a == b) return 0.0;
-        if (a > b) return -1 * evaluate(f, b, a);
+    final public double op(final Ops.DoubleOp f, final double a, final double b) /* @ReadOnly */{
+        if (a == b) {
+            return 0.0;
+        }
+        if (a > b) {
+            return -1 * op(f, b, a);
+        }
         this.numberOfEvaluations = 0;
         return integrate(f, a, b);
-    }
-
-    public final void setAbsoluteAccuracy(final double accuracy) {
-        absoluteAccuracy= accuracy;
-    }
-
-    public final void setMaxEvaluations(final int maxEvaluations) {
-        this.maxEvaluations = maxEvaluations;
-    }
-
-    public final double getAbsoluteAccuracy() /* @ReadOnly */ {
-        return absoluteAccuracy;
-    }
-
-    public final int getMaxEvaluations() /* @ReadOnly */ {
-        return this.maxEvaluations;
-    }
-
-    public final double getAbsoluteError() /* @ReadOnly */ {
-        return absoluteError;
     }
 
 
@@ -127,5 +78,58 @@ public abstract class Integrator {
     public boolean isIntegrationSuccess() /* @ReadOnly */ {
         return numberOfEvaluations <= maxEvaluations && absoluteError <= absoluteAccuracy;
     }
+
+    public final double absoluteAccuracy() /* @ReadOnly */ {
+        return absoluteAccuracy;
+    }
+
+    public final void setAbsoluteAccuracy(final double accuracy) {
+        absoluteAccuracy = accuracy;
+    }
+
+    public final int maxEvaluations() /* @ReadOnly */ {
+        return this.maxEvaluations;
+    }
+
+    public final void setMaxEvaluations(final int maxEvaluations) {
+        this.maxEvaluations = maxEvaluations;
+    }
+
+    public final double absoluteError() /* @ReadOnly */ {
+        return absoluteError;
+    }
+
+
+    //
+    // final protected methods
+    //
+
+    final protected void setAbsoluteError(final double error) /* @ReadOnly */ {
+        absoluteError = error;
+    }
+
+    final protected void setNumberOfEvaluations(final int evaluations) /* @ReadOnly */ {
+        this.numberOfEvaluations = evaluations;
+    }
+
+    final protected void increaseNumberOfEvaluations(final int increase) /* @ReadOnly */ {
+        this.numberOfEvaluations += increase;
+    }
+
+
+    //
+    // protected virtual methods
+    //
+
+    protected int numberOfEvaluations() /* @ReadOnly */ {
+        return this.numberOfEvaluations;
+    }
+
+
+    //
+    // protected abstract methods
+    //
+
+    protected abstract double integrate(final Ops.DoubleOp f, final double a, final double b) /* @ReadOnly */;
 
 }
