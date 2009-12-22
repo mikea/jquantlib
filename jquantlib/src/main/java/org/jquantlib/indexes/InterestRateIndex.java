@@ -130,7 +130,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
         final Date today = new Settings().evaluationDate();
         final boolean enforceTodaysHistoricFixings = new Settings().isEnforcesTodaysHistoricFixings();
 
-        if (fixingDate.le(today) || (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing))
+        if (fixingDate.lt(today) || (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing))
             // must have been fixed
             try {
                 return IndexManager.getInstance().get(name()).find(fixingDate);
