@@ -27,8 +27,7 @@ import org.jquantlib.Settings;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.cashflow.FloatingRateCoupon;
 import org.jquantlib.indexes.IborIndex;
-import org.jquantlib.indexes.InterestRateIndex;
-import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.indexes.IndexManager;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Date;
@@ -39,10 +38,6 @@ import org.jquantlib.util.Visitor;
 // TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class IborCoupon extends FloatingRateCoupon {
-
-    /**
-     * WORK IN PROGRESS
-     */
 
     private final static String null_term_structure = "null term structure set to par coupon";
 
@@ -157,41 +152,40 @@ public class IborCoupon extends FloatingRateCoupon {
 
     @Override
     public double indexFixing() {
-        // FIMXE: do this configuration using the settings object
-        // #ifdef QL_USE_INDEXED_COUPON
-        // return index_->fixing(fixingDate());
-        // #else
-        if (isInArrears()) {
+        Settings settings = new Settings();
+        if (settings.isUseIndexedCoupon())
+        {
             return index_.fixing(fixingDate());
-        } else {
+        }
+        if (isInArrears()) 
+        {
+            return index_.fixing(fixingDate());
+        } 
+        else 
+        {
             final Handle<YieldTermStructure> termStructure = index_.termStructure();
             QL.require(termStructure != null , null_term_structure);  // QA:[RG]::verified // TODO: message
-            final Date today = new Settings().evaluationDate();
+            final Date today = settings.evaluationDate();
             final Date fixing_date = fixingDate();
-            if (fixing_date.lt(today)) {
-                // must have been fixed
-                // FIXME ...
-
-                //TODO: Code review :: incomplete code
-                if (System.getProperty("EXPERIMENTAL") == null) {
-                    throw new UnsupportedOperationException("Work in progress");
-                }
-
-                final double pastFixing = 0;// IndexManager.getInstance().getHistory( index_.getName())[fixing_date.g];
+            IndexManager indexManager = IndexManager.getInstance();
+            if (fixing_date.lt(today)) 
+            {
+                final double pastFixing = indexManager.get (index_.name()).find(fixing_date);
                 QL.require(pastFixing > 0 , "Missing fixing");  // QA:[RG]::verified // TODO: message
                 return pastFixing;
             }
-            if (fixing_date == today) {
-                // might have been fixed
-                try {
-                    // FIXME....
-                    final double pastFixing = Double.NaN; //IndexManager.getInstance().getHistory(index_.name())[fixing_date];
-                    if (! Double.isNaN (pastFixing)) {
+            if (fixing_date.equals(today)) 
+            {
+                try 
+                {
+                    final double pastFixing = indexManager.get(index_.name()).find(fixing_date);
+                    if (! Double.isNaN (pastFixing)) 
+                    {
                         return pastFixing;
-                    } else {
-                        ; // fall through and forecast
                     }
-                } catch (final Exception e) {
+                } 
+                catch (final Exception e) 
+                {
                     ; // fall through and forecast
                 }
             }
