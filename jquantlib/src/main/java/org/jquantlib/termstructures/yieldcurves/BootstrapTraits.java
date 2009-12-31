@@ -22,6 +22,8 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Date;
@@ -30,13 +32,28 @@ import org.jquantlib.time.Date;
  * 
  * @author Richard Gomes
  */
-public interface CurveTraits {
+public interface BootstrapTraits {
 
     /**
      * value at reference
      */ 
     public double initialValue();
     
+    /**
+     * initial date
+     */
+    public Date initialDate (final YieldTermStructure curve);
+
+    /**
+     * max iterations
+     */
+    public int maxIterations();
+
+    /**
+     * dummy initial value
+     */
+    public boolean dummyInitialValue ();
+
     /**
      * initial guess
      */
@@ -62,4 +79,9 @@ public interface CurveTraits {
      */
     public void updateGuess(final Array data, double value, int i);
 
+    //FIXME, can instruments go somewhere else?
+    public YieldTermStructure buildCurve (int instruments, final Date referenceDate, final DayCounter dc, Interpolator interpolator);
+
+    public double getAccuracy ();
+    
 }

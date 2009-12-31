@@ -244,10 +244,15 @@ public class Swap extends Instrument {
         @Override
         public void reset() {
             super.reset();
-            Arrays.fill(legNPV, 0.0);
-            Arrays.fill(legBPS, 0.0);
+            if (legNPV != null)
+            {
+                Arrays.fill(legNPV, 0.0);
+            }
+            if (legBPS != null)
+            {
+                Arrays.fill(legBPS, 0.0);
+            }
         }
-
     }
 
     static public class EngineImpl extends GenericEngine<Swap.Arguments, Swap.Results> {

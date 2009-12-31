@@ -39,6 +39,10 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.Settings;
+import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.Constants;
+import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -50,16 +54,24 @@ import org.jquantlib.time.Frequency;
  * 
  * @author Richard Gomes
  */
-public class ZeroYield implements CurveTraits {
+public class ZeroYieldTraits implements BootstrapTraits {
+
+    private static final double avgRate = .05;
+
+    public ZeroYieldTraits ()
+    {
+        throw new UnsupportedOperationException ("work in progress...");
+    }
+
 
     @Override
     public double initialValue() {
-        return 0.02;
+        return avgRate;
     }
 
     @Override
     public double initialGuess() {
-        return 0.02;
+        return avgRate;
     }
 
     @Override
@@ -68,15 +80,12 @@ public class ZeroYield implements CurveTraits {
     }
 
     @Override
-    //TODO: solve macros
     public double minValueAfter(int i, Array data) {
-        //#if defined(QL_NEGATIVE_RATES)
-        // no constraints.
-        // We choose as min a value very unlikely to be exceeded.
-        return -3.0;
-        //#else
-        //return QL_EPSILON;
-        //#endif
+        if (new Settings().isNegativeRates())
+        {
+            return -3.0;
+        }
+        return Constants.QL_EPSILON;
     }
 
     @Override
@@ -93,4 +102,37 @@ public class ZeroYield implements CurveTraits {
             data.set(i, value); // first point is updated as well
     }
 
+    
+    @Override
+    public boolean dummyInitialValue ()
+    {
+        return true;
+    }
+
+    @Override
+    public Date initialDate (final YieldTermStructure curve)
+    {
+        return curve.referenceDate();
+    }
+
+    @Override
+    public int maxIterations()
+    {
+        return 30;
+    }
+
+    @Override
+    public YieldTermStructure buildCurve (int instruments, Date referenceDate, DayCounter dc,
+            Interpolator interpolator)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public double getAccuracy ()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

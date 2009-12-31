@@ -21,46 +21,48 @@ JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
 
+
 package org.jquantlib.cashflow;
 
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.indexes.IborIndex;
+import org.jquantlib.indexes.SwapIndex;
 import org.jquantlib.time.Date;
+import org.jquantlib.cashflow.CmsLeg;
 
-public class CappedFlooredIborCoupon extends CappedFlooredCoupon 
+public class CappedFlooredCmsCoupon extends CappedFlooredCoupon 
 {
-    public CappedFlooredIborCoupon(
+    public CappedFlooredCmsCoupon(
             final Date paymentDate,
             final /*Real*/double nominal,
             final Date startDate,
             final Date endDate,
             final /*Natural*/int fixingDays,
-            final IborIndex index)
+            final SwapIndex index)
     {
         // default gearing to 1.0
         this (paymentDate, nominal, startDate, endDate, fixingDays, index, 1.0);
     }
 
-    public CappedFlooredIborCoupon(
+    public CappedFlooredCmsCoupon(
             final Date paymentDate,
             final /*Real*/double nominal,
             final Date startDate,
             final Date endDate,
             final /*Natural*/int fixingDays,
-            final IborIndex index,
+            final SwapIndex index,
             final double gearing)
     {
         // default spread to 0.0
         this (paymentDate, nominal, startDate, endDate, fixingDays, index, gearing, 0.0);
     }
 
-    public CappedFlooredIborCoupon(
+    public CappedFlooredCmsCoupon(
             final Date paymentDate,
             final /*Real*/double nominal,
             final Date startDate,
             final Date endDate,
             final /*Natural*/int fixingDays,
-            final IborIndex index,
+            final SwapIndex index,
             final double gearing,
             final double spread)
     {
@@ -69,13 +71,13 @@ public class CappedFlooredIborCoupon extends CappedFlooredCoupon
               fixingDays, index, gearing, spread, Double.NaN, Double.NaN);
     }
 
-    public CappedFlooredIborCoupon(
+    public CappedFlooredCmsCoupon(
             final Date paymentDate,
             final /*Real*/double nominal,
             final Date startDate,
             final Date endDate,
             final /*Natural*/int fixingDays,
-            final IborIndex index,
+            final SwapIndex index,
             final double gearing,
             final double spread,
             final double cap,
@@ -87,13 +89,13 @@ public class CappedFlooredIborCoupon extends CappedFlooredCoupon
               cap, floor, new Date(), new Date()); 
     }
 
-    public CappedFlooredIborCoupon(
+    public CappedFlooredCmsCoupon(
             final Date paymentDate,
             final /*Real*/double nominal,
             final Date startDate,
             final Date endDate,
             final /*Natural*/int fixingDays,
-            final IborIndex index,
+            final SwapIndex index,
             final double gearing,
             final double spread,
             final double cap,
@@ -108,13 +110,13 @@ public class CappedFlooredIborCoupon extends CappedFlooredCoupon
     }
 
 
-    public CappedFlooredIborCoupon(
+    public CappedFlooredCmsCoupon(
             final Date paymentDate,
             final /*Real*/double nominal,
             final Date startDate,
             final Date endDate,
             final /*Natural*/int fixingDays,
-            final IborIndex index,
+            final SwapIndex index,
             final double gearing,
             final double spread,
             final double cap,
@@ -130,13 +132,13 @@ public class CappedFlooredIborCoupon extends CappedFlooredCoupon
               dayCounter, false);
     }
 
-    public CappedFlooredIborCoupon(
+    public CappedFlooredCmsCoupon(
             final Date paymentDate,
             final /*Real*/double nominal,
             final Date startDate,
             final Date endDate,
             final /*Natural*/int fixingDays,
-            final IborIndex index,
+            final SwapIndex index,
             final double gearing,
             final double spread,
             final double cap,
@@ -146,7 +148,7 @@ public class CappedFlooredIborCoupon extends CappedFlooredCoupon
             final DayCounter dayCounter,
             boolean isInArrears)
     {
-        super (new IborCoupon(paymentDate, nominal, startDate, endDate, fixingDays,
+        super (new CmsCoupon(paymentDate, nominal, startDate, endDate, fixingDays,
             index, gearing, spread, refPeriodStart, refPeriodEnd,
                 dayCounter, isInArrears), cap, floor);
         throw new UnsupportedOperationException ("work in progress...");

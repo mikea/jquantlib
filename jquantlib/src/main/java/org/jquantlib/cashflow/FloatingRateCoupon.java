@@ -55,7 +55,8 @@ public class FloatingRateCoupon extends Coupon implements Observer {
 
 
     private final DayCounter dayCounter;
-    private final int fixingDays;
+    // FIXME - JM should be final
+    private int fixingDays;
     private final double spread;
     private final boolean isInArrears;
 
@@ -70,7 +71,7 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     // TODO: what's the need of it?
     //XXX private double convexityAdjustmentImpl;
 
-    private FloatingRateCouponPricer pricer;
+    protected FloatingRateCouponPricer pricer;
 
     //TODO: code review :: please verify comment below against QL/C++ code
     //XXX (Rate fixing) const;
@@ -171,6 +172,8 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     public int fixingDays() {
         return fixingDays;
     }
+    
+    
 
     public Date fixingDate() {
         // if isInArrears_ fix at the end of period
@@ -208,6 +211,11 @@ public class FloatingRateCoupon extends Coupon implements Observer {
         return isInArrears;
     }
 
+    // FIXME move up the stack to specifiy fixing array
+    // for now use this function will refactor jan 2010
+    public void setFixingDays(int fixingDays) {
+        this.fixingDays = fixingDays;
+    }
 
     //
     // Overrides Coupon

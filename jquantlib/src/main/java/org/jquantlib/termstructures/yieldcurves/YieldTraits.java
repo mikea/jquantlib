@@ -22,7 +22,6 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Date;
@@ -32,7 +31,7 @@ import org.jquantlib.util.Pair;
  * 
  * @author Richard Gomes
  */
-public interface YieldTraits<I extends Interpolator> extends YieldTermStructure {
+public interface YieldTraits extends YieldTermStructure {
 
     //
     // common

@@ -1,3 +1,26 @@
+
+/*
+Copyright (C) 2009 John Martin
+
+This source code is release under the BSD License.
+
+This file is part of JQuantLib, a free-software/open-source library
+for financial quantitative analysts and developers - http://jquantlib.org/
+
+JQuantLib is free software: you can redistribute it and/or modify it
+under the terms of the JQuantLib license.  You should have received a
+copy of the license along with this program; if not, please email
+<jquant-devel@lists.sourceforge.net>. The license is also available online at
+<http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the license for more details.
+
+JQuantLib is based on QuantLib. http://quantlib.org/
+When applicable, the original copyright notice follows this notice.
+ */
+
 package org.jquantlib.cashflow;
 
 import org.jquantlib.daycounters.DayCounter;
@@ -29,6 +52,17 @@ public class IborLeg {
         schedule_ = (schedule);
         index_ = (index);
         paymentAdjustment_ = BusinessDayConvention.Following;
+
+        // TODO : review initialization
+        // these are vectors in quantlib, therfor they must be initalized to default
+        // values or nullable. since we have decided to write the code without null checks
+        // all over the place we are going to initialze them for now to be consistent with
+        // quantlib behavoir
+        fixingDays_ = new Array(0);
+        gearings_ = new Array(0);
+        spreads_ = new Array(0);
+        caps_ = new Array(0);
+        floors_ = new Array(0);
         inArrears_ = (false);
         zeroPayments_ = (false);
     }
@@ -118,7 +152,7 @@ public class IborLeg {
         final Leg cashflows = new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(notionals_, schedule_, index_,
                 paymentDayCounter_, paymentAdjustment_, fixingDays_, gearings_, spreads_, caps_, floors_, inArrears_, zeroPayments_){};
         
-        if (caps_ == null && floors_ == null && !inArrears_)
+        if (caps_.empty() && floors_.empty() && !inArrears_)
         {
             PricerSetter.setCouponPricer (cashflows, new BlackIborCouponPricer (new Handle <OptionletVolatilityStructure> ()));
         }

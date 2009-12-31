@@ -46,6 +46,7 @@ public class FixedRateBondHelper<YieldTermStructure> extends RateHelper {
             double redemption,
             Date issueDate)
  {
+     super (cleanPrice);
 	 //super(cleanPrice);
 	 /*
 bond_ = boost::shared_ptr<FixedRateBond>(new

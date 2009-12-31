@@ -1,3 +1,25 @@
+/*
+Copyright (C) 2008 John Martin
+
+This source code is release under the BSD License.
+
+This file is part of JQuantLib, a free-software/open-source library
+for financial quantitative analysts and developers - http://jquantlib.org/
+
+JQuantLib is free software: you can redistribute it and/or modify it
+under the terms of the JQuantLib license.  You should have received a
+copy of the license along with this program; if not, please email
+<jquant-devel@lists.sourceforge.net>. The license is also available online at
+<http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the license for more details.
+
+JQuantLib is based on QuantLib. http://quantlib.org/
+When applicable, the original copyright notice follows this notice.
+*/
+
 package org.jquantlib.instruments;
 
 import org.jquantlib.QL;
@@ -5,6 +27,7 @@ import org.jquantlib.Settings;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.Thirty360;
 import org.jquantlib.indexes.IborIndex;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.swap.DiscountingSwapEngine;
 import org.jquantlib.quotes.Handle;
@@ -43,6 +66,8 @@ public class MakeVanillaSwap {
     private /*Spread*/double floatSpread_;
     private DayCounter fixedDayCount_, floatDayCount_;
     private PricingEngine engine_;
+
+    private Array fixingDays;
 
     public MakeVanillaSwap (
             final Period swapTenor,
@@ -109,9 +134,19 @@ public class MakeVanillaSwap {
         }
         else
         {
-            int fixingDays = iborIndex_.fixingDays();
-            Date referenceDate = new Settings().evaluationDate();
-            Date spotDate = floatCalendar_.advance (referenceDate, fixingDays, TimeUnit.Days);
+            Date spotDate;
+            if (fixingDays == null)
+            {
+                int firstFixing = iborIndex_.fixingDays();
+                Date referenceDate = new Settings().evaluationDate();
+                spotDate = floatCalendar_.advance (referenceDate, firstFixing, TimeUnit.Days);
+            }
+            else
+            {
+                int firstFixing = (int) fixingDays.get(0);
+                Date referenceDate = new Settings().evaluationDate();
+                spotDate = floatCalendar_.advance (referenceDate, firstFixing, TimeUnit.Days);
+            }
             startDate = spotDate.add (forwardStart_);
         }
         
@@ -150,7 +185,8 @@ public class MakeVanillaSwap {
                                                fixedSchedule, 0.0, fixedDayCount_,
                                                floatSchedule, iborIndex_,
                                                floatSpread_, floatDayCount_,
-                                               BusinessDayConvention.Following);
+                                               BusinessDayConvention.Following,
+                                               fixingDays);
             
             // ATM on the forecasting curve
             temp.setPricingEngine(new DiscountingSwapEngine(iborIndex_.termStructure()));
@@ -166,7 +202,8 @@ public class MakeVanillaSwap {
                                             iborIndex_,
                                             floatSpread_,
                                             floatDayCount_,
-                                            BusinessDayConvention.Following);
+                                            BusinessDayConvention.Following,
+                                            fixingDays);
         swap.setPricingEngine (engine_);
         return swap;
     }
@@ -304,4 +341,17 @@ public class MakeVanillaSwap {
         return this;
     }
 
+    public MakeVanillaSwap withFixingDays (final int fixingDays)
+    {
+        this.fixingDays = new Array (1);
+        this.fixingDays.set(0, fixingDays);
+        return this;
+    }
+
+    public MakeVanillaSwap withFixingDays (final Array fixingDays)
+    {
+        this.fixingDays = fixingDays;
+        return this;
+    }
+    
 }

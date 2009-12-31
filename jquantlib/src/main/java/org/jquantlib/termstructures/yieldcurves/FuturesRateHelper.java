@@ -42,7 +42,7 @@ import org.jquantlib.time.TimeUnit;
  *
  */
 //TODO: Complete
-public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
+public class FuturesRateHelper extends RateHelper {
 
     private final double yearFraction;
     private Handle<Quote> convAdj;
@@ -56,7 +56,7 @@ public class FuturesRateHelper extends RateHelper<YieldTermStructure> {
             final boolean endOfMonth,
             final DayCounter dayCounter,
             final Handle<Quote> convAdj) {
-        super(price, null, null, null);
+        super(price);
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
         QL.require(new IMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message

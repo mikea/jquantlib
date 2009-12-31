@@ -168,10 +168,13 @@ public class IborCoupon extends FloatingRateCoupon {
             final Date today = settings.evaluationDate();
             final Date fixing_date = fixingDate();
             IndexManager indexManager = IndexManager.getInstance();
-            if (fixing_date.lt(today)) 
+            if (fixing_date.lt(today))
             {
+                QL.require (! indexManager.get(index_.name()).isEmpty(), "Missing Fixing");
                 final double pastFixing = indexManager.get (index_.name()).find(fixing_date);
-                QL.require(pastFixing > 0 , "Missing fixing");  // QA:[RG]::verified // TODO: message
+
+                // do this before above, otherwise we throw unclear index out of range error
+                // QL.require(pastFixing > 0 , "Missing fixing");  // QA:[RG]::verified // TODO: message
                 return pastFixing;
             }
             if (fixing_date.equals(today)) 
@@ -189,7 +192,7 @@ public class IborCoupon extends FloatingRateCoupon {
                     ; // fall through and forecast
                 }
             }
-            
+
             // start discount
             final Date fixingValueDate = index_.fixingCalendar()
                 .advance(fixing_date, index_.fixingDays(), TimeUnit.Days);

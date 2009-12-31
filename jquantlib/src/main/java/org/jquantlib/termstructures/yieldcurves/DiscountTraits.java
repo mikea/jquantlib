@@ -1,6 +1,9 @@
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.Settings;
+import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Constants;
+import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Date;
@@ -49,7 +52,9 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
  * 
  * @author Richard Gomes
  */
-public class Discount implements CurveTraits {
+public class DiscountTraits implements BootstrapTraits {
+
+    private static final double averageRate = .05;
 
     @Override
     public double initialValue() {
@@ -57,8 +62,20 @@ public class Discount implements CurveTraits {
     }
 
     @Override
+    public boolean dummyInitialValue ()
+    {
+        return false;
+    }
+
+    @Override
+    public Date initialDate (final YieldTermStructure curve)
+    {
+        return curve.referenceDate();
+    }
+
+    @Override
     public double initialGuess() {
-        return 0.9;
+        return 1.0 / (1.0 + averageRate * 0.25);
     }
 
     @Override
@@ -72,16 +89,16 @@ public class Discount implements CurveTraits {
     }
 
     @Override
-    //TODO: solve macros
-    public double maxValueAfter(int i, Array data) {
-//      #if defined(QL_NEGATIVE_RATES)
-      // discount are not required to be decreasing--all bets are off.
-      // We choose as max a value very unlikely to be exceeded.
-      return 3.0;
-//      #else
-//      // discounts cannot increase
-//      return data[i-1];
-//      #endif
+    public double maxValueAfter(int i, Array data) 
+    {
+        if (new Settings().isNegativeRates())
+        {
+            // discount are not required to be decreasing --all bets are off.
+            // We choose as max a value very unlikely to be exceeded.
+            return 3.0;
+        }
+        // discounts cannot decrease
+        return data.get (i-1);
     }
 
     @Override
@@ -89,4 +106,22 @@ public class Discount implements CurveTraits {
         data.set(i, value);
     }
 
+    @Override
+    public int maxIterations ()
+    {
+        return 50;
+    }
+
+    @Override
+    public YieldTermStructure buildCurve (int instruments, Date referenceDate, DayCounter dc,
+            Interpolator interpolator)
+    {
+        return new InterpolatedDiscountCurve (instruments, referenceDate, dc, interpolator);
+    }
+
+    @Override
+    public double getAccuracy ()
+    {
+        return 1.0E-15;
+    }
 }

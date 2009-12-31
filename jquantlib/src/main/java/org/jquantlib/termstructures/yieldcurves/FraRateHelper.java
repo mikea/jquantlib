@@ -28,12 +28,16 @@ import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
+import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.termstructures.BootstrapHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
+import org.jquantlib.util.Visitor;
+import org.jquantlib.util.TypedVisitor;
 
 /**
  * @author Srinivas Hasti
@@ -44,9 +48,13 @@ import org.jquantlib.time.TimeUnit;
 public class FraRateHelper extends RelativeDateRateHelper {
 
     private Date fixingDate;
+
+    // this is not a quantlib 0.9.7 variable
     private final int monthsToStart;
+
     private final IborIndex iborIndex;
-    private RelinkableHandle<YieldTermStructure> termStructureHandle;
+
+    private RelinkableHandle<YieldTermStructure> termStructureHandle = new RelinkableHandle <YieldTermStructure> (null);
 
     public FraRateHelper(
             final Handle<Quote> rate,
@@ -61,8 +69,8 @@ public class FraRateHelper extends RelativeDateRateHelper {
         QL.require(monthsToEnd > monthsToStart , "monthsToEnd must be greater than monthsToStart"); // QA:[RG]::verified // TODO: message
         this.quote = rate;
         this.monthsToStart = monthsToStart;
-        iborIndex = new IborIndex(
-                "no-fix",
+        //never take fixing into account
+        iborIndex = new IborIndex("no-fix", 
                 new Period(monthsToEnd - monthsToStart, TimeUnit.Months),
                 fixingDays,
                 null,
@@ -80,7 +88,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
             final BusinessDayConvention convention, final boolean endOfMonth,
             final DayCounter dayCounter) {
         super(rate);
-        QL.require(monthsToEnd > monthsToStart , "monthsToEnd must be greater than monthsToStart"); // QA:[RG]::verified // TODO: message
+        QL.require(monthsToEnd > monthsToStart , "monthsToEnd must be greater than monthsToStart");
         this.monthsToStart = monthsToStart;
         iborIndex = new IborIndex(
                 "no-fix", // never take fixing into account
@@ -108,31 +116,27 @@ public class FraRateHelper extends RelativeDateRateHelper {
     }
 
     public FraRateHelper(final double rate, final int monthsToStart, final IborIndex i) {
-        super(rate);
-        this.monthsToStart = monthsToStart;
-        iborIndex = new IborIndex(
-                "no-fix", // never take fixing into account
-                i.tenor(), i.fixingDays(), null, i.fixingCalendar(), i.businessDayConvention(),
-                i.endOfMonth(), i.dayCounter(), termStructureHandle);
-        initializeDates();
+        this (new Handle <Quote> (new SimpleQuote (rate)), monthsToStart, i);
     }
 
     @Override
     public double impliedQuote()  {
-        QL.require(termStructure != null , "term structure not set"); // QA:[RG]::verified // TODO: message
+        QL.require(termStructure != null , "term structure not set"); 
         return iborIndex.fixing(fixingDate, true);
     }
 
-    public void setTermStructure(final YieldTermStructure t) {
+    public void setTermStructure(final YieldTermStructure t) 
+    {
         // no need to register---the index is not lazy
-        termStructureHandle.linkTo(t);
+        termStructureHandle.linkTo(t, false);
         super.setTermStructure(t);
     }
 
     @Override
     protected void initializeDates() {
-        final Date settlement = iborIndex.fixingCalendar().advance(
-                evaluationDate, new Period(iborIndex.fixingDays(),TimeUnit.Days), BusinessDayConvention.Following, false);
+        
+        final Date settlement = iborIndex.fixingCalendar().advance(evaluationDate, 
+           new Period(iborIndex.fixingDays(),TimeUnit.Days), BusinessDayConvention.Following, false);
         earliestDate = iborIndex.fixingCalendar().advance(
                 settlement,
                 new Period(monthsToStart,TimeUnit.Months),
@@ -140,5 +144,18 @@ public class FraRateHelper extends RelativeDateRateHelper {
                 iborIndex.endOfMonth());
         latestDate = iborIndex.maturityDate(earliestDate);
         fixingDate = iborIndex.fixingDate(earliestDate);
+    }
+
+    public void accept (final TypedVisitor <FraRateHelper> v)
+    {
+       Visitor<FraRateHelper> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
+       if (v1 != null) 
+       {
+           v1.visit(this);
+       }
+       else 
+       {
+           super.accept((Visitor <BootstrapHelper <YieldTermStructure>>) v);
+       }
     }
 }

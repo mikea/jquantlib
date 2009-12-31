@@ -1,3 +1,25 @@
+/*
+Copyright (C) 2009 John Martin
+
+This source code is release under the BSD License.
+
+This file is part of JQuantLib, a free-software/open-source library
+for financial quantitative analysts and developers - http://jquantlib.org/
+
+JQuantLib is free software: you can redistribute it and/or modify it
+under the terms of the JQuantLib license.  You should have received a
+copy of the license along with this program; if not, please email
+<jquant-devel@lists.sourceforge.net>. The license is also available online at
+<http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the license for more details.
+
+JQuantLib is based on QuantLib. http://quantlib.org/
+When applicable, the original copyright notice follows this notice.
+ */
+
 package org.jquantlib.instruments;
 
 import java.util.ArrayList;
@@ -14,6 +36,7 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Date;
@@ -50,10 +73,28 @@ public class VanillaSwap extends Swap {
     private final /*@Spread*/ double spread;
     private final DayCounter floatingDayCount;
     private final BusinessDayConvention paymentConvention;
+    private final Array fixingDays;
 
     // results
     private /*@Rate*/ double fairRate;
     private /*@Spread*/ double fairSpread;
+
+    public VanillaSwap(
+            final Type type,
+            final /*@Real*/ double nominal,
+            final Schedule fixedSchedule,
+            final /*@Rate*/ double fixedRate,
+            final DayCounter fixedDayCount,
+            final Schedule floatSchedule,
+            final IborIndex iborIndex,
+            final /*@Spread*/ double spread,
+            final DayCounter floatingDayCount,
+            final BusinessDayConvention paymentConvention) 
+    {
+        this (type, nominal, fixedSchedule, fixedRate, fixedDayCount,
+              floatSchedule, iborIndex, spread, floatingDayCount, paymentConvention, null);
+              
+    }
 
 
     public VanillaSwap(
@@ -66,7 +107,9 @@ public class VanillaSwap extends Swap {
             final IborIndex iborIndex,
             final /*@Spread*/ double spread,
             final DayCounter floatingDayCount,
-            final BusinessDayConvention paymentConvention) {
+            final BusinessDayConvention paymentConvention,
+            final Array fixingDays)
+    {
 
         super(2);
         this.type = type;
@@ -79,6 +122,7 @@ public class VanillaSwap extends Swap {
         this.spread = spread;
         this.floatingDayCount = floatingDayCount;
         this.paymentConvention = paymentConvention;
+        this.fixingDays = fixingDays;
 
         final Leg fixedLeg = new FixedRateLeg(fixedSchedule, fixedDayCount)
         .withNotionals(nominal)
@@ -91,6 +135,8 @@ public class VanillaSwap extends Swap {
         .withNotionals(nominal)
         .withPaymentDayCounter(floatingDayCount)
         .withPaymentAdjustment(paymentConvention)
+        // slight deviation from quantlib, need to expose fixing days up the stack
+        .withFixingDays (fixingDays)
         // TODO: code review :: please verify against QL/C++ code
         //.withFixingDays(iborIndex.fixingDays())   
         .withSpreads(spread)

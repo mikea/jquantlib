@@ -39,6 +39,10 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.Settings;
+import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.math.Constants;
+import org.jquantlib.math.interpolations.Interpolator;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -50,16 +54,25 @@ import org.jquantlib.time.Frequency;
  * 
  * @author Richard Gomes
  */
-public class ForwardRate implements CurveTraits {
+public class ForwardTraits implements BootstrapTraits {
+
+    static private final double averageRate = .05;
+
+
+    public ForwardTraits ()
+    {
+        throw new UnsupportedOperationException ("work in progress...");
+    }
+
 
     @Override
     public double initialValue() {
-        return 0.02;
+        return averageRate;
     }
 
     @Override
     public double initialGuess() {
-        return 0.02;
+        return averageRate;
     }
 
     @Override
@@ -68,20 +81,20 @@ public class ForwardRate implements CurveTraits {
     }
 
     @Override
-    //TODO: solve macros
-    public double minValueAfter(int i, Array data) {
-        //#if defined(QL_NEGATIVE_RATES)
-        // no constraints.
-        // We choose as min a value very unlikely to be exceeded.
-        return -3.0;
-        //#else
-        //return QL_EPSILON;
-        //#endif
+    public double minValueAfter(int i, Array data) 
+    {
+        if (new Settings().isNegativeRates())
+        {
+            // no constraints.
+            // We choose as min a value very unlikely to be exceeded.
+            return -3.0;
+        }
+        return Constants.QL_EPSILON;
     }
 
     @Override
-    //TODO: solve macros
-    public double maxValueAfter(int i, Array data) {
+    public double maxValueAfter(int i, Array data) 
+    {
         // no constraints.
         // We choose as max a value very unlikely to be exceeded.
         return 3.0;
@@ -94,4 +107,36 @@ public class ForwardRate implements CurveTraits {
             data.set(i, value); // first point is updated as well
     }
 
+    @Override
+    public boolean dummyInitialValue ()
+    {
+        return true;
+    }
+
+    @Override
+    public Date initialDate (final YieldTermStructure curve)
+    {
+        return curve.referenceDate();
+    }
+
+    @Override
+    public int maxIterations()
+    {
+        return 30;
+    }
+
+    @Override
+    public YieldTermStructure buildCurve (int instruments, Date referenceDate, DayCounter dc,
+            Interpolator interpolator)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public double getAccuracy ()
+    {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

@@ -1,3 +1,26 @@
+
+/*
+Copyright (C) 2009 John Martin
+
+This source code is release under the BSD License.
+
+This file is part of JQuantLib, a free-software/open-source library
+for financial quantitative analysts and developers - http://jquantlib.org/
+
+JQuantLib is free software: you can redistribute it and/or modify it
+under the terms of the JQuantLib license.  You should have received a
+copy of the license along with this program; if not, please email
+<jquant-devel@lists.sourceforge.net>. The license is also available online at
+<http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the license for more details.
+
+JQuantLib is based on QuantLib. http://quantlib.org/
+When applicable, the original copyright notice follows this notice.
+ */
+
 package org.jquantlib.cashflow;
 
 import org.jquantlib.QL;
@@ -34,15 +57,23 @@ import org.jquantlib.util.Visitor;
 // TODO: code review :: please verify against QL/C++ code
 public class CappedFlooredCoupon extends FloatingRateCoupon {
 
+    // OK WAT?
     protected FloatingRateCoupon underlying_;
+
     protected boolean isCapped_, isFloored_;
     protected/* Rate */double cap_, floor_;
 
+    /*
+     * Implied constructor
+     */
+
     public CappedFlooredCoupon(final FloatingRateCoupon underlying) {
-        this(underlying, 0.0, 0.0);
+        this(underlying, Double.NaN, Double.NaN);
     }
 
-    // FIXME: why is FloatingRateCoupon wrapped in a handle ... looks suspicious
+    /*
+     * Standard Constructor
+     */
     public CappedFlooredCoupon(final FloatingRateCoupon underlying, final double cap, final double floor) {
         super(underlying.date(), underlying.nominal,
                 underlying.accrualStartDate(), underlying.accrualEndDate(),
@@ -62,7 +93,18 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
                 floor_ = floor;
                 isFloored_ = true;
             }
-        } else {
+        } 
+        
+        // FIXME
+        // note subtle difference, caps become floors and floors become caps
+        // if gearing is < 0.
+        // It maybe WRONG to do this, note how we access the floor() and cap() 
+        // functions defined below. if we swap the caps and floors at construction, for  
+        // a negative gearing, we will undo this change when we access the negative
+        // gearing again through the floor and cap functions.
+
+
+        else {
             if (!Double.isNaN(cap)) {
                 floor_ = cap;
                 isFloored_ = true;
@@ -73,9 +115,9 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
             }
         }
 
-
-        if (isCapped_ && isFloored_) {
-            QL.require(cap >= floor , "cap level less than floor level"); // QA:[RG]::verified // TODO: message
+        if (isCapped_ && isFloored_) 
+        {
+            QL.require(cap >= floor, "cap rate must be higher then floor rate"); 
         }
 
         this.underlying_.addObserver(this);
@@ -83,116 +125,86 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
         // registerWith(underlying);
     }
 
-
     // TODO: code review :: please verify against QL/C++ code
-    private void setPricer() {
+    public void setPricer(FloatingRateCouponPricer pricer) 
+    { 
+    	// if we let the bottom require first we don't have to check anything
+    	underlying_.setPricer (pricer);
 
-        throw new UnsupportedOperationException("Work in progress");
-
-        //            const boost::shared_ptr<FloatingRateCouponPricer>& pricer) {
-        //       if (pricer_)
-        //           unregisterWith(pricer_);
-        //       pricer_ = pricer;
-        //       if (pricer_)
-        //           registerWith(pricer_);
-        //       update();
-        //       underlying_->setPricer(pricer);
-    }
-
-
-    @Override
-    public /*@Rate*/ double  rate() /* @ReadOnly */ {
-        //TODO: Code review :: incomplete code
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
-            //   QL_REQUIRE(underlying_->pricer(), "pricer not set");
-            //   Rate swapletRate = underlying_->rate();
-            //   Rate floorletRate = 0.;
-            //   if(isFloored_)
-            //       floorletRate = underlying_->pricer()->floorletRate(effectiveFloor());
-            //   Rate capletRate = 0.;
-            //   if(isCapped_)
-            //       capletRate = underlying_->pricer()->capletRate(effectiveCap());
-            //   return swapletRate + floorletRate - capletRate;
+        if (this.pricer != null)
+        {
+            this.pricer.deleteObserver (this);
         }
-
-        return Double.NaN;
+        this.pricer = pricer;
+        this.pricer.addObserver (this);
+        update();
     }
 
     @Override
-    public /*@Rate*/ double convexityAdjustment() /* @ReadOnly */ {
-        //TODO: Code review :: incomplete code
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
-            //   return underlying_->convexityAdjustment();
+    public /*@Rate*/ double rate() /* @ReadOnly */ 
+    {
+        QL.require (underlying_.pricer != null, "pricer not set");
+        double swapletRate = underlying_.rate();
+        double floorRate = 0.0;
+        double capRate = 0.0;
+        if (isFloored_)
+        {
+            floorRate = underlying_.pricer.floorletRate(effectiveFloor());
         }
-
-        return Double.NaN;
-    }
-
-    private /*@Rate*/ double cap() /* @ReadOnly */ {
-        //TODO: Code review :: incomplete code
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-        //   if ( (gearing_ > 0) && isCapped_)
-        //           return cap_;
-        //   if ( (gearing_ < 0) && isFloored_)
-        //       return floor_;
-        return Constants.NULL_REAL;
-    }
-
-    private /*@Rate*/ double floor() /* @ReadOnly */ {
-        //TODO: Code review :: incomplete code
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-        //   if ( (gearing_ > 0) && isFloored_)
-        //       return floor_;
-        //   if ( (gearing_ < 0) && isCapped_)
-        //       return cap_;
-        return Constants.NULL_REAL;
-    }
-
-    private /*@Rate*/ double effectiveCap() /* @ReadOnly */ {
-        //TODO: Code review :: incomplete code
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-        //   return (cap_ - spread())/gearing();
-        return Constants.NULL_REAL;
-    }
-
-    private /*@Rate*/ double effectiveFloor() /* @ReadOnly */ {
-        //TODO: Code review :: incomplete code
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-        //   return (floor_ - spread())/gearing();
-        return Constants.NULL_REAL;
+        if (isCapped_)
+        {
+            capRate = underlying_.pricer.capletRate (effectiveCap());
+        }   
+        return swapletRate + floorRate - capRate;
     }
 
     @Override
-    public void update() {
-        //TODO: Code review :: incomplete code
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
-            //   notifyObservers();
+    public /*@Rate*/ double convexityAdjustment() /* @ReadOnly */ 
+    {
+        return underlying_.convexityAdjustment();
+    }    
+
+    private /*@Rate*/ double cap() /* @ReadOnly */ 
+    {
+        if (gearing_ > 0 && isCapped_)
+        {
+            return cap_;
         }
+        if (gearing_ < 0 && isFloored_)
+        {
+            return floor_;
+        }
+        return Constants.NULL_REAL;
     }
 
-    //FIXME ...
-    public CappedFlooredCoupon(final Date paymentDate, final double nominal, final Date startDate, final Date endDate, final int fixingDays,
-            final InterestRateIndex index, final double gearing, final double spread, final Date refPeriodStart, final Date refPeriodEnd, final DayCounter dayCounter,
-            final boolean isInArrears) {
-        super(paymentDate, nominal, startDate, endDate, fixingDays, index, gearing, spread, refPeriodStart, refPeriodEnd,
-                dayCounter, isInArrears);
-        //TODO: Code review :: incomplete code
-        if (true) {
-            throw new UnsupportedOperationException("Work in progress");
+    private /*@Rate*/ double floor() /* @ReadOnly */ 
+    {
+        if (gearing_ > 0 && isFloored_)
+        {
+            return floor_;
         }
+        if (gearing_ < 0 && isCapped_)
+        {
+            return cap_;
+        }
+        return Constants.NULL_REAL;
     }
 
+    private /*@Rate*/ double effectiveCap() /* @ReadOnly */ 
+    {
+        return (cap_ - spread()) / gearing();
+    }
+
+    private /*@Rate*/ double effectiveFloor() /* @ReadOnly */ 
+    {
+        return (floor_ - spread()) / gearing();
+    }
+
+    @Override
+    public void update() 
+    {
+        notifyObservers();
+    }
 
     //
     // implements TypedVisitable

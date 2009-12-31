@@ -47,7 +47,7 @@ public class DepositRateHelper extends RelativeDateRateHelper {
 
     private Date fixingDate;
     private final IborIndex iborIndex;
-    private RelinkableHandle<YieldTermStructure> termStructureHandle;
+    private RelinkableHandle<YieldTermStructure> termStructureHandle = new RelinkableHandle <YieldTermStructure> (null);
 
     public DepositRateHelper(
                 final Handle<Quote> rate,
@@ -133,7 +133,9 @@ public class DepositRateHelper extends RelativeDateRateHelper {
      *
      * @param termStructureHandle
      */
-    public void setTermStructureHandle(final YieldTermStructure term) {
-        termStructureHandle.linkTo(term);
+    public void setTermStructure (final YieldTermStructure term) {
+
+        termStructureHandle.linkTo(term, false);
+        super.setTermStructure (term);
     }
 }

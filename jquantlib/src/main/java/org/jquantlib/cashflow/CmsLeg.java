@@ -1,10 +1,13 @@
 package org.jquantlib.cashflow;
 
+import org.jquantlib.cashflow.CmsCoupon;
+import org.jquantlib.cashflow.CappedFlooredCmsCoupon;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.SwapIndex;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Schedule;
+import org.jquantlib.indexes.InterestRateIndex;
 
 public class CmsLeg {
 
@@ -109,12 +112,19 @@ public class CmsLeg {
         return this;
     }
 
-//    public CashFlowVectors.Leg Leg() {
-//        return new CashFlowVectors.FloatingLeg(null, schedule_, caps_, paymentDayCounter_, paymentAdjustment_, fixingDays_, caps_, caps_, caps_, caps_, inArrears_, inArrears_);
-//        // return FloatingLeg<SwapIndex, CmsCoupon, CappedFlooredCmsCoupon>(
-//        // notionals_, schedule_, swapIndex_, paymentDayCounter_,
-//        // paymentAdjustment_, fixingDays_, gearings_, spreads_,
-//        // caps_, floors_, inArrears_, zeroPayments_);
-//    }
+    public Leg Leg() 
+    {
+        throw new UnsupportedOperationException ("Work in progress");
+        /*
+    	final Leg cashflows = new FloatingLeg <SwapIndex, CmsCoupon, CappedFlooredCmsCoupon>
+          (notionals_, schedule_, swapIndex_, paymentDayCounter_, 
+           paymentAdjustment_, fixingDays_, gearings_, spreads_, 
+           caps_, floors_, inArrears_, zeroPayments_) {};
+      
+      PricerSetter.setCouponPricer (cashflows, new CmsCouponPricer 
+                                    (new Handle <OptionletVolatilityStructure ()));
+        */
+        //return new Leg();
+    }
 
 }

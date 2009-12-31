@@ -27,6 +27,7 @@ package org.jquantlib.termstructures.yieldcurves;
 
 
 import org.jquantlib.QL;
+import org.jquantlib.Settings;
 import org.jquantlib.cashflow.FloatingRateCoupon;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
@@ -36,12 +37,15 @@ import org.jquantlib.instruments.VanillaSwap;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
+import org.jquantlib.termstructures.BootstrapHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
+import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.Visitor;
 
 /**
  * Rate helper for bootstrapping over swap rates
@@ -60,7 +64,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     protected DayCounter fixedDayCount;
     protected IborIndex iborIndex;
     protected VanillaSwap swap;
-    protected RelinkableHandle<YieldTermStructure> termStructureHandle;
+    protected RelinkableHandle<YieldTermStructure> termStructureHandle = new RelinkableHandle <YieldTermStructure> (null);
     protected Handle<Quote> spread;
     protected Period fwdStart;
 
@@ -192,14 +196,13 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         this.latestDate = swap.maturityDate();
 
         // ...but due to adjustments, the last floating coupon might need a later date for fixing
-        // TODO: code review :: please verify against QL/C++ code
-        // Now we
-        // #ifdef QL_USE_INDEXED_COUPON
-        final FloatingRateCoupon lastFloating = (FloatingRateCoupon) swap.floatingLeg().last();
-        final Date fixingValueDate = iborIndex.valueDate(lastFloating.fixingDate());
-        final Date endValueDate = iborIndex.maturityDate(fixingValueDate);
-        latestDate = Date.max(latestDate, endValueDate);
-        // #endif
+        if (new Settings().isUseIndexedCoupon())
+        {
+            final FloatingRateCoupon lastFloating = (FloatingRateCoupon) swap.floatingLeg().last();
+            final Date fixingValueDate = iborIndex.valueDate(lastFloating.fixingDate());
+            final Date endValueDate = iborIndex.maturityDate(fixingValueDate);
+            latestDate = Date.max(latestDate, endValueDate);
+        }
     }
 
 
@@ -213,7 +216,6 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         // TODO: code review :: please verify against QL/C++ code
         // ---- termStructureHandle.linkTo( shared_ptr<YieldTermStructure>(t, no_deletion), false);
         termStructureHandle.linkTo(t, false);
-
         super.setTermStructure(t);
     }
 
@@ -229,11 +231,11 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         swap.recalculate();
 
         // weak implementation... to be improved
-        /*@Real*/ final double floatingLegNPV = swap.floatingLegNPV();
-        /*@Spread*/ final double spread = this.spread.empty() ? 0.0 : this.spread.currentLink().value();
-        /*@Real*/ final double spreadNPV = swap.floatingLegBPS()/basisPoint*spread;
-        /*@Real*/ final double totNPV = - (floatingLegNPV+spreadNPV);
-        /*@Real*/ final double result = totNPV/(swap.fixedLegBPS()/basisPoint);
+        final double floatingLegNPV = swap.floatingLegNPV();
+        final double spread = this.spread.empty() ? 0.0 : this.spread.currentLink().value();
+        final double spreadNPV = swap.floatingLegBPS() / basisPoint * spread;
+        final double totNPV = - (floatingLegNPV + spreadNPV);
+        final double result = totNPV / (swap.fixedLegBPS() / basisPoint);
         return result;
     }
 
@@ -256,13 +258,17 @@ public class SwapRateHelper extends RelativeDateRateHelper {
 
     // TODO: code review :: object model needs to be validated and eventually refactored
     // TODO: code review :: please verify against QL/C++ code
-    //     public void accept(final TypedVisitor<Event> v) {
-    //         Visitor<Event> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
-    //         if (v1 != null) {
-    //             v1.visit(this);
-    //         } else {
-    //             super.accept(v);
-    //         }
-    //     }
-
+    // FIXME
+    public void accept(final TypedVisitor<SwapRateHelper> v)
+    {
+       Visitor<SwapRateHelper> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
+       if (v1 != null) 
+       {
+           v1.visit(this);
+       }
+       else 
+       {
+           super.accept((Visitor <BootstrapHelper <YieldTermStructure>>) v);
+       }
+    }
 }
