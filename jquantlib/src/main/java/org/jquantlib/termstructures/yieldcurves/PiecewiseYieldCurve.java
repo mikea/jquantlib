@@ -89,6 +89,11 @@ public class PiecewiseYieldCurve extends LazyObject implements YieldTermStructur
         // curve trait and interpolator they would like to use. There is no need to do this
         // for them.
 
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
+
         this.instruments = Arrays.asList (instruments);
         this.interpolator = interpolator;
         this.bootstrapper = bootstrapper;
@@ -124,7 +129,7 @@ public class PiecewiseYieldCurve extends LazyObject implements YieldTermStructur
     {
         QL.require (instruments.size() > 0, "no instrument given");
                 
-        // check that there is no instruments with the same maturity
+        // check that there are no instruments with the same maturity
         for (int i = 1; i < instruments.size(); i ++)
         {
             final Date m1 = instruments.get (i - 1).latestDate ();

@@ -29,8 +29,8 @@ public class IterativeBootstrap implements Bootstrapper
         this.validCurve = false;
     }
 
-    public void setup (YieldTermStructure termStructure, Bootstrapable bootstrapable, RateHelper [] instruments,
-            BootstrapTraits traits)
+    public void setup (YieldTermStructure termStructure, Bootstrapable bootstrapable, 
+                       RateHelper [] instruments, BootstrapTraits traits)
     {
         QL.ensure (termStructure != null, "TermStructure cannot be null");
         this.termStructure = termStructure;
@@ -38,6 +38,10 @@ public class IterativeBootstrap implements Bootstrapper
         this.instruments = instruments;
         this.traits = traits;
         int n = instruments.length;
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         // FIXME
         QL.require (n >= 2, "Not enough instruments provided");
 
@@ -110,13 +114,6 @@ public class IterativeBootstrap implements Bootstrapper
                 bootstrapable.setInterpolation 
                 (bootstrapable.getInterpolator().interpolate (
                      times.constIterator (), data.constIterator ()));
-                
-                /*
-                termStructure.interpolation_ = termStructure.interpolator_.interpolate(
-                                                      termStructure.times_.begin(),
-                                                      termStructure.times_.end(),
-                                                      data.begin());
-                */
             }
             
             for (int i = 1; i < isize + 1; ++i) 
