@@ -43,8 +43,7 @@ package org.jquantlib.termstructures.volatilities;
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.interpolations.Interpolation;
-import org.jquantlib.math.interpolations.Interpolator;
-import org.jquantlib.math.interpolations.LinearInterpolation;
+import org.jquantlib.math.interpolations.factories.Linear;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.termstructures.TermStructure;
@@ -79,7 +78,7 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
     private final /*@Time*/ Array times;
     private final /*@Variance*/ Array variances;
     private Interpolation varianceCurve;
-    private final Interpolator factory;
+    private final Interpolation.Interpolator factory;
 
 
     //
@@ -125,7 +124,7 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
         }
 
         // default: linear interpolation
-        factory = LinearInterpolation.getInterpolator();
+        factory = new Linear();
     }
 
 
@@ -137,8 +136,8 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
         this.setInterpolation(factory);
     }
 
-    public final void setInterpolation(final Interpolator factory) {
-        varianceCurve = factory.interpolate(times.constIterator(), variances.constIterator());
+    public final void setInterpolation(final Interpolation.Interpolator factory) {
+        varianceCurve = factory.interpolate(times, variances);
         varianceCurve.enableExtrapolation();
         varianceCurve.update();
         notifyObservers();
@@ -177,9 +176,9 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
     @Override
     // TODO :: compare against C++ sources
     protected final /*@Variance*/ double blackVarianceImpl(final /*@Time*/ double t, final /*@Real*/ double maturity) {
-        if (t <= times.last())
+        if (t <= times.last()) {
             return varianceCurve.op(t);
-        else {
+        } else {
             // extrapolate with flat vol
             /*@Time*/ final double lastTime = times.last();  // TODO: probably an error here
             return varianceCurve.op(lastTime) * t / lastTime;
@@ -194,10 +193,11 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
     @Override
     public void accept(final TypedVisitor<TermStructure> v) {
         final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null)
+        if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             super.accept(v);
+        }
     }
 
 }

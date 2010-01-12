@@ -16,7 +16,10 @@ import org.jquantlib.math.matrixutilities.Matrix;
  * @see Array
  *
  * @author Richard Gomes
+ *
+ * @deprecated
  */
+@Deprecated
 public interface ConstIterator extends Iterator {
     // this is a tagging interface
 }

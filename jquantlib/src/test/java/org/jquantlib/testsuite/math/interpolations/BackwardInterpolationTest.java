@@ -46,7 +46,7 @@ public class BackwardInterpolationTest {
 	public BackwardInterpolationTest() {
 		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 
-        interpolation = new BackwardFlat().interpolate(x.constIterator(), y.constIterator());
+        interpolation = new BackwardFlat().interpolate(x, y);
         length = x.size();
         tolerance = 1.0e-12;
 	}
@@ -66,12 +66,11 @@ public class BackwardInterpolationTest {
 	}
 
 	@Test
-	public void checkAtMiddlePoints(){
+	public void checkAtMiddlePoints() {
 		for(int i=0; i<length-1; i++){
 			final double d = (x.get(i)+x.get(i+1))/2;
 			final double calculated = interpolation.op(d);
 			final double expected = y.get(i+1);
-
 			assertFalse("failed to interpolate correctly at "+d
 						+"\n expected:     "+expected
 						+"\n calculated:   "+calculated
@@ -81,7 +80,7 @@ public class BackwardInterpolationTest {
 	}
 
 	@Test
-	public void checkOutsideOriginalRange(){
+	public void checkOutsideOriginalRange() {
 		interpolation.enableExtrapolation();
 		double d = x.first() - 0.5;
 		double calculated = interpolation.op(d);
@@ -103,7 +102,7 @@ public class BackwardInterpolationTest {
 	}
 
 	@Test
-	public void checkPrimitiveAtOriginalPoints(){
+	public void checkPrimitiveAtOriginalPoints() {
 		double calculated = interpolation.primitive(x.first());
 		double expected = 0.0;
 		assertFalse("failed to calculate primitive at "+x.first()
@@ -112,7 +111,7 @@ public class BackwardInterpolationTest {
 			    	+"\n error:        "+abs(expected-calculated),
 			    	abs(expected-calculated) > tolerance);
 		double sum = 0.0;
-		for(int i=1; i<length; i++){
+		for (int i=1; i<length-1; i++) {
 			sum += (x.get(i)-x.get(i-1))*y.get(i);
 			calculated = interpolation.primitive(x.get(i));
 			expected=sum;
@@ -125,9 +124,9 @@ public class BackwardInterpolationTest {
 	}
 
 	@Test
-	public void checkPrimitiveAtMiddlePoints(){
+	public void checkPrimitiveAtMiddlePoints() {
 		double sum = 0.0;
-		for(int i=0; i<length-1; i++){
+		for (int i=0; i<length-1; i++) {
 			final double d = (x.get(i)+x.get(i+1))/2;
 			sum += (x.get(i+1)-x.get(i))*y.get(i+1)/2;
 			final double calculated = interpolation.primitive(d);

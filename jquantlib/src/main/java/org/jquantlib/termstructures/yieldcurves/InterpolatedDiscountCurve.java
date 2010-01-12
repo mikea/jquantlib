@@ -1,4 +1,5 @@
 /*
+Copyright (C) 2008 Richard Gomes
 Copyright (C) 2009 John Martin
 
 This source code is release under the BSD License.
@@ -20,177 +21,293 @@ JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
 
+/*
+ Copyright (C) 2002, 2003 Decillion Pty(Ltd)
+ Copyright (C) 2005, 2006, 2008 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+ */
+
 package org.jquantlib.termstructures.yieldcurves;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.reflect.ReflectConstants;
+import org.jquantlib.lang.reflect.TypeTokenTree;
+import org.jquantlib.math.Closeness;
 import org.jquantlib.math.interpolations.Interpolation;
-import org.jquantlib.math.interpolations.Interpolator;
+import org.jquantlib.math.interpolations.Interpolation.Interpolator;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.termstructures.AbstractYieldTermStructure;
-import org.jquantlib.termstructures.Bootstrapable;
-import org.jquantlib.termstructures.Compounding;
-import org.jquantlib.termstructures.InterestRate;
-import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
-import org.jquantlib.time.Frequency;
-import org.jquantlib.time.Period;
-import org.jquantlib.util.Observer;
 import org.jquantlib.util.Pair;
 
-public class InterpolatedDiscountCurve extends AbstractYieldTermStructure implements Bootstrapable
-{
+/**
+ * Term structure based on interpolation of discount factors.
+ * <p>
+ * Log-linear interpolation guarantees piecewise-constant forward rates.
+ *
+ * @category yieldtermstructures
+ *
+ * @author Richard Gomes
+ * @author John Martin
+ */
+public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractYieldTermStructure implements Traits.Curve {
 
-    private Date [] dates;
+    // TODO: all fields should be protected?  See: QL/C++
 
-    private Array data;
-    
-    private Array time;
-
-    private Interpolation interpolation;
-    
-    private Interpolator interpolator;
+    private Date[]              dates;
+    private /*@Time*/ double[]  times;
+    private double[]            data;
+    private Interpolation       interpolation;
+    private final Interpolator  interpolator;
 
 
-    public InterpolatedDiscountCurve (Date [] dates,
-                                      Array discounts,
-                                      DayCounter dc,
-                                      Calendar calendar,
-                                      Interpolator interpolator)
-    {
-        super (dates[0], calendar, dc);
-        QL.require (dates.length != 0, " Dates cannot be empty");
-        QL.require (discounts.size() != 0, "Discounts cannot be empty");
-        QL.require (dates.length == data.size(), "Dates must be the same size as Discounts");
-        QL.require (data.get (0) == 1.0, "Initial discount factor must be 1.0");
-        
+    //
+    // private fields
+    //
 
-        this.dates = dates; 
-        this.data = discounts;
-        this.interpolator = interpolator;
-        this.time = new Array (dates.length);
-        time.set (0, 0.0);
+    final private Class<?>      classI;
 
-        for (int i = 1; i < dates.length; ++ i)
-        {
-            QL.require (dates [i].gt (dates[i - 1]), "Dates must be in ascending order");
-            QL.require (data.get(i) > 0, "Negative Discount");
-            time.set (i, dc.yearFraction (dates[0], dates[i]));
-            //FIXME
-            //QL_REQUIRE(!close(times_[i],times_[i-1]),
-            //"two dates correspond to the same time "
-            //           "under this curve's day count convention");
+
+    //
+    // protected constructors
+    //
+
+    static private Interpolator constructInterpolator(final Class<?> klass) {
+        if (klass==null) {
+            throw new LibraryException("null interpolator"); // TODO: message
+        }
+        if (klass!=Interpolator.class) {
+            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
         }
 
-        interpolation = interpolator.interpolate (time.size(), time.constIterator(), data.constIterator ());
-        interpolation.update();
+        try {
+            return (Interpolator) klass.newInstance();
+        } catch (final Exception e) {
+            throw new LibraryException("cannot create Interpolator", e); // TODO: message
+        }
     }
 
-    public InterpolatedDiscountCurve (DayCounter dc, Interpolator interpolator)
-    {
-        super (dc);
-        this.interpolator = interpolator;
-    }
-    
-    //FIXME
-    // we need a way to tell the data sets an appropriate size, therfore we have created this constructor
-    public InterpolatedDiscountCurve (int instruments, Date referenceDate, DayCounter dc, Interpolator interpolator)
-    {
-        this (referenceDate, dc, interpolator);
-        dates = new Date [instruments];
-        data = new Array (instruments);
-        time = new Array (instruments);
-        interpolation = interpolator.interpolate (time.size(), time.constIterator(), data.constIterator ());
-        interpolation.update();
-    }
-    public InterpolatedDiscountCurve (Date referenceDate, DayCounter dc, Interpolator interpolator)
-    {
-        // FIXME default calendar
-        super (referenceDate, new Calendar(), dc);
-        this.interpolator = interpolator;
-    }
 
-    public InterpolatedDiscountCurve (int settlementDays, Calendar calendar, 
-                                      DayCounter dc, Interpolator interpolator)
-    {
-        super (settlementDays, calendar, dc);
+    protected InterpolatedDiscountCurve(final DayCounter dc) {
+        this(dc, new TypeTokenTree(InterpolatedDiscountCurve.class).getElement(0));
+    }
+    protected InterpolatedDiscountCurve(
+            final DayCounter dc,
+            final Class<?> interpolator) {
+        this(dc, constructInterpolator(interpolator));
+    }
+    protected InterpolatedDiscountCurve(
+            final DayCounter dc,
+            final Interpolator interpolator) {
+        super(dc);
+        QL.validateExperimentalMode();
+
+        this.classI = new TypeTokenTree(this.getClass()).getElement(0);
+        if (classI != interpolator.getClass()) {
+            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
+        }
         this.interpolator = interpolator;
     }
 
+    protected InterpolatedDiscountCurve(
+            final Date referenceDate,
+            final DayCounter dc) {
+        this(referenceDate, dc, new TypeTokenTree(InterpolatedDiscountCurve.class).getElement(0));
+    }
+    protected InterpolatedDiscountCurve(
+            final Date referenceDate,
+            final DayCounter dc,
+            final Class<?> interpolator) {
+        this(referenceDate, dc, constructInterpolator(interpolator));
+    }
+    protected InterpolatedDiscountCurve(
+            final Date referenceDate,
+            final DayCounter dc,
+            final Interpolator interpolator) {
+        super(referenceDate, new Calendar(), dc);
+        QL.validateExperimentalMode();
 
-    public Array getTimes()
-    {
-        return time;
+        this.classI = new TypeTokenTree(this.getClass()).getElement(0);
+        if (classI != interpolator.getClass()) {
+            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
+        }
+        this.interpolator = interpolator;
     }
 
-    public Array getData ()
-    {
-        return data;
+    protected InterpolatedDiscountCurve(
+            final /*@Natural*/ int settlementDays,
+            final Calendar cal,
+            final DayCounter dc) {
+        this(settlementDays, cal, dc, new TypeTokenTree(InterpolatedDiscountCurve.class).getElement(0));
+    }
+    protected InterpolatedDiscountCurve(
+            final /*@Natural*/ int settlementDays,
+            final Calendar cal,
+            final DayCounter dc,
+            final Class<?> interpolator) {
+        this(settlementDays, cal, dc, constructInterpolator(interpolator));
+    }
+    protected InterpolatedDiscountCurve(
+            final /*@Natural*/ int settlementDays,
+            final Calendar cal,
+            final DayCounter dc,
+            final Interpolator interpolator) {
+        super(settlementDays, cal, dc);
+        QL.validateExperimentalMode();
+
+        this.classI = new TypeTokenTree(this.getClass()).getElement(0);
+        if (classI != interpolator.getClass()) {
+            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
+        }
+        this.interpolator = interpolator;
     }
 
-    public Date [] getDates()
-    {
+    protected InterpolatedDiscountCurve(
+            final Date [] dates,
+            final double[] discounts,
+            final DayCounter dc,
+            final Calendar cal) {
+        this(dates, discounts, dc, cal, new TypeTokenTree(InterpolatedDiscountCurve.class).getElement(0));
+    }
+    protected InterpolatedDiscountCurve(
+            final Date [] dates,
+            final double[] discounts,
+            final DayCounter dc,
+            final Calendar cal,
+            final Class<?> interpolator) {
+        this(dates, discounts, dc, cal, constructInterpolator(interpolator));
+    }
+
+
+    //
+    // public constructors
+    //
+
+    public InterpolatedDiscountCurve (
+            final Date [] dates,
+            final double[] discounts,
+            final DayCounter dc,
+            final Calendar calendar,
+            final Interpolator interpolator) {
+        super (dates[0], calendar, dc);
+        QL.validateExperimentalMode();
+
+        this.classI = new TypeTokenTree(this.getClass()).getElement(0);
+        if (classI != interpolator.getClass()) {
+            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
+        }
+
+        QL.require (dates.length != 0, " Dates cannot be empty"); // TODO: message
+        QL.require (discounts.length != 0, "Discounts cannot be empty"); // TODO: message
+        QL.require (dates.length == data.length, "Dates must be the same size as Discounts"); // TODO: message
+        QL.require (data[0] == 1.0, "Initial discount factor must be 1.0"); // TODO: message
+
+        this.dates = dates;
+        this.data = discounts;
+        this.interpolator = interpolator;
+
+        this.times = new double[dates.length];
+        times[0] = 0.0;
+
+        for (int i = 1; i < dates.length; ++ i) {
+            QL.require (dates[i].gt (dates[i - 1]), "Dates must be in ascending order"); // TODO: message
+            QL.require (data[i] > 0, "Negative discount"); // TODO: message
+            times[i] = dc.yearFraction (dates[0], dates[i]);
+            QL.require(Closeness.isClose(times[i],times[i-1]),
+            "two dates correspond to the same time under this curve's day count convention"); // TODO: message
+        }
+
+        this.interpolation = interpolator.interpolate(new Array(times), new Array(data));
+        this.interpolation.update();
+    }
+
+
+    //
+    // implement Traits.Curve
+    //
+
+    @Override
+    public Date[] dates() {
         return dates;
     }
 
-    public List <Pair <Date, Double> > nodes ()
-    {
-        List <Pair <Date, Double> > nodes = new ArrayList < Pair <Date, Double> > ();
-        for (int i = 0; i < dates.length; ++ i)
-        {
-            nodes.add (new Pair<Date, Double> (dates[i], data.get(i)));
+    @Override
+    public Date maxDate() {
+        return dates[dates.length - 1];
+    }
+
+    @Override
+    public List<Pair<Date, Double>> nodes() {
+        final List<Pair<Date, Double>> nodes = new ArrayList<Pair<Date, Double>>();
+        for (int i = 0; i < dates.length; ++i) {
+            nodes.add(new Pair<Date, Double>(dates[i], data[i]));
         }
         return nodes;
     }
 
     @Override
-    protected double discountImpl (double t)
-    {
-        return interpolation.evaluate (t, true);
+    public /*@Time*/ double[] times() {
+        return times;
     }
 
     @Override
-    public Date maxDate ()
-    {
-        return dates[dates.length - 1];
+    public double[] data() {
+        return data;
     }
 
     @Override
-    public Interpolation getInterpolation ()
-    {
+    public double discountImpl(final double t) {
+        return interpolation.op(t, true);
+    }
+
+    @Override
+    public Interpolation interpolation() {
         return interpolation;
     }
 
     @Override
-    public void resetData (int size)
-    {
-        data = new Array (size);
-    }
-
-    @Override
-    public void resetDates (int size)
-    {
-        dates = new Date [size];
-    }
-
-    @Override
-    public void resetTime (int size)
-    {
-        time = new Array (size);
-    }
-
-    @Override
-    public Interpolator getInterpolator ()
-    {
+    public Interpolator interpolator() {
         return interpolator;
     }
 
     @Override
-    public void setInterpolation (Interpolation interpolation)
-    {
-        this.interpolation = interpolation;        
+    public void setInterpolation(final Interpolation interpolation) {
+        this.interpolation = interpolation;
     }
+
+    @Override
+    public void setData(final double[] data) {
+        this.data = data; // TODO: clone() ?
+    }
+
+
+    @Override
+    public void setDates(final Date[] dates) {
+        this.dates = dates; // TODO: clone() ?
+    }
+
+
+    @Override
+    public void setTimes(final double[] times) {
+        this.times = times; // TODO: clone() ?
+    }
+
 }

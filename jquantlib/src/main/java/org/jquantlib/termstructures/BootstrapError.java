@@ -24,36 +24,82 @@ When applicable, the original copyright notice follows this notice.
 
 package org.jquantlib.termstructures;
 
+import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.reflect.ReflectConstants;
+import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.math.Ops;
-import org.jquantlib.termstructures.yieldcurves.BootstrapTraits;
-import org.jquantlib.termstructures.Bootstrapable;
+import org.jquantlib.termstructures.yieldcurves.PiecewiseCurve;
+import org.jquantlib.termstructures.yieldcurves.Traits;
 
-public class BootstrapError implements Ops.DoubleOp{
+// FIXME: http://bugs.jquantlib.org/view.php?id=463
+public class BootstrapError<T extends Traits> implements Ops.DoubleOp {
 
-    private Bootstrapable curve;
-    
-    private BootstrapTraits traits;
+    private final PiecewiseCurve    curve;
+    private final Traits            traits;
+    private final RateHelper        helper;
+    private final int               segment;
 
-    private RateHelper helper;
+    public BootstrapError(
+            final PiecewiseCurve curve,
+            final RateHelper helper,
+            final int segment) {
+        this(new TypeTokenTree(BootstrapError.class).getElement(0), curve, helper, segment);
+    }
+    public BootstrapError(
+            final Class<?> klass,
+            final PiecewiseCurve curve,
+            final RateHelper helper,
+            final int segment) {
+        this(constructTraits(klass), curve, helper, segment);
+    }
+    public BootstrapError(
+            final Traits traits,
+            final PiecewiseCurve c,
+            final RateHelper helper,
+            final int segment) {
+        QL.validateExperimentalMode();
 
-    private int segment;
-    
-    // purposeful deviation from quantlib. There is no need to use CurveTraits
-    // as a group of static functions and a type definition. We should use
-    // an interface and well defined classes
-    public BootstrapError (final Bootstrapable c, RateHelper helper, BootstrapTraits traits, int segment)
-    {
-        this.curve = c;
+        if (!Traits.class.isAssignableFrom(traits.getClass())) {
+            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
+        }
+
         this.traits = traits;
+        this.curve = c;
         this.segment = segment;
         this.helper = helper;
     }
 
-    public double op (final double guess)
-    {
-        //TODO: ifndef doxygen...
-        traits.updateGuess (curve.getData(), guess, segment);
-        curve.getInterpolation().update();
-        return helper.quoteError(); 
+
+    //
+    // public methods
+    //
+
+    public double op (final double guess) {
+        //FIXME: find a way to solve this! :: ifndef DOXYGEN
+        traits.updateGuess (curve.data(), guess, segment);
+        curve.interpolation().update();
+        return helper.quoteError();
     }
+
+
+    //
+    // static private methods
+    //
+
+    static private Traits constructTraits(final Class<?> klass) {
+        if (klass==null) {
+            throw new LibraryException("null Traits"); // TODO: message
+        }
+        if (klass!=Traits.class) {
+            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
+        }
+
+        try {
+            return (Traits) klass.newInstance();
+        } catch (final Exception e) {
+            throw new LibraryException("cannot create Traits", e); // TODO: message
+        }
+    }
+
 }

@@ -23,16 +23,15 @@ When applicable, the original copyright notice follows this notice.
 
 package org.jquantlib.termstructures;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
+
 import org.jquantlib.QL;
-import org.jquantlib.instruments.Instrument;
-import org.jquantlib.termstructures.yieldcurves.BootstrapTraits;
-import org.jquantlib.math.interpolations.Interpolator;
+import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.reflect.ReflectConstants;
+import org.jquantlib.lang.reflect.TypeTokenTree;
+import org.jquantlib.math.interpolations.Interpolation;
+import org.jquantlib.math.interpolations.Interpolation.Interpolator;
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.termstructures.Bootstrapable;
-import org.jquantlib.termstructures.BootstrapHelperSorter;
-import org.jquantlib.time.Date;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.CostFunction;
 import org.jquantlib.math.optimization.EndCriteria;
@@ -40,186 +39,155 @@ import org.jquantlib.math.optimization.LevenbergMarquardt;
 import org.jquantlib.math.optimization.NoConstraint;
 import org.jquantlib.math.optimization.PositiveConstraint;
 import org.jquantlib.math.optimization.Problem;
-import org.jquantlib.termstructures.Bootstrapper;
+import org.jquantlib.termstructures.yieldcurves.PiecewiseCurve;
+import org.jquantlib.termstructures.yieldcurves.Traits;
+import org.jquantlib.time.Date;
 
-public class LocalBootstrap implements Bootstrapper
-{
-    private class PenaltyFunction extends CostFunction
-    {
-        private int initialIndex;
-        private int rateHelpersStart;
-        private int rateHelpersEnd;
-        private int penaltylocalisation;
-        
-        public PenaltyFunction (int initialIndex, int rateHelpersStart, int rateHelpersEnd)
-        {
-            this.initialIndex = initialIndex;
-            this.rateHelpersStart = rateHelpersStart;
-            this.rateHelpersEnd = rateHelpersEnd;
-            this.penaltylocalisation = rateHelpersEnd - rateHelpersStart;
-        }
+//FIXME: This class should be declared generic, like this:
+//
+//      class LocalBootstrap<Curve extends Traits.Curve> implements Bootstrap
+//
+// ... in spite that there's no real value on doing it unless strict API resemblance to QL/C++
+//
+public class LocalBootstrap implements Bootstrap {
 
-        public double value (final Array x)
-        {
-            int i = initialIndex;
-            int guessIt = 0;
-            for (;guessIt < x.size(); ++guessIt, ++i)
-            {
-                traits.updateGuess (bootstrapable.getData(), guessIt, i);
-            }
+    //
+    // private fields
+    //
 
-            bootstrapable.getInterpolation().update();
+    private boolean         validCurve;
+    private PiecewiseCurve  ts;
+    private RateHelper[]    instruments;
 
-            double penalty = 0.0;
-            int j = rateHelpersStart;
-            for (; j != rateHelpersEnd; ++j)
-            {
-                penalty += Math.abs (instruments[j].quoteError());
-            }
-            return penalty;
-        }
+    private final int               localisation;
+    private final boolean           forcePositive;
 
-        public Array values (final Array x)
-        {
-            int i = initialIndex;
-            int guessIt = 0;
-            for (;guessIt < x.size(); ++guessIt, ++i)
-            {
-                traits.updateGuess (bootstrapable.getData(), x.get (guessIt), i);
-            }
-            bootstrapable.getInterpolation().update();
-            Array penalties = new Array (penaltylocalisation);
-            int instIterator = rateHelpersStart;
-            int penIt = 0;
-            for (; instIterator != rateHelpersEnd; ++ instIterator, ++ penIt)
-            {
-                penalties.set (penIt, Math.abs (instruments[instIterator].quoteError()));
-            }
-            return penalties;
-        }
-    }
-    
-    private boolean validCurve;
-    
-    private YieldTermStructure termStructure;
-    
-    private Bootstrapable bootstrapable;
-    
-    private RateHelper [] instruments;
-    
-    private final int localisation;
-    
-    private boolean forcePositive;
-    
-    private BootstrapTraits traits;
+    private Traits          traits;
+    private Interpolator    interpolator;
+    private Interpolation   interpolation;
 
-    public LocalBootstrap ()
-    {
-        this (2, true);
+
+    //
+    // final private fields
+    //
+
+    final private Class<?>  classB;
+
+
+    //
+    // public constructors
+    //
+
+    public LocalBootstrap(final int localisation, final boolean forcePositive) {
+        this(new TypeTokenTree(LocalBootstrap.class).getElement(0), localisation, forcePositive);
     }
 
-    public LocalBootstrap (int localisation, boolean forcePositive)
-    {
+    public LocalBootstrap(final Class<?> klass, final int localisation, final boolean forcePositive) {
+        QL.validateExperimentalMode();
+
+        if (klass==null) {
+            throw new LibraryException("null PiecewiseCurve"); // TODO: message
+        }
+        if (!PiecewiseCurve.class.isAssignableFrom(klass)) {
+            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
+        }
+        this.classB = klass;
+
+        this.validCurve = false;
+        this.ts = null;
         this.localisation = localisation;
         this.forcePositive = forcePositive;
-        throw new UnsupportedOperationException ("work in progress...");
     }
 
-    public void setup (YieldTermStructure termStructure, Bootstrapable bootstrapable, 
-                       RateHelper [] instruments, BootstrapTraits traits)
-    {
-        QL.ensure (termStructure != null, "TermStructure cannot be null");
-        this.termStructure = termStructure;
-        this.bootstrapable = bootstrapable;
-        this.instruments = instruments;
-        this.traits = traits;
-        int n = instruments.length;
-        // FIXME
-        QL.require (n >= 2, "Not enough instruments provided");
-        QL.ensure (termStructure != null, "TermStructure cannot be null");
-        // FIXME
 
-        //QL.require (n >= InterpolatorType::requiredPoints, "Not enough instruments provided");
+    //
+    // public methods
+    //
 
+    public void setup(final PiecewiseCurve ts) {
+
+        QL.ensure (ts != null, "TermStructure cannot be null");
+        if (!classB.isAssignableFrom(ts.getClass())) {
+            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
+        }
+
+        this.ts            = ts;
+        this.interpolator  = ts.interpolator();
+        this.interpolation = ts.interpolation();
+        this.traits        = ts.traits();
+        this.instruments   = ts.instruments();
+
+        final int n = instruments.length;
+        QL.require(n+1 >= ts.interpolator().requiredPoints(), "not enough instruments provided");
         QL.require (n >= localisation, "Not enough instruments provided");
-        for (RateHelper i : instruments)
-        {
-            termStructure.addObserver (i);
+
+        for (int i=0; i<n; ++i) {
+            instruments[i].addObserver(ts);
         }
     }
 
-    public void calculate ()
-    {
-        validCurve = false;
-        int isize = instruments.length;
-        
-        // checkInstruments must ensure this
-        //Collections.sort (instruments, new BootstrapHelperSorter <RateHelper> ());
+    public void calculate () {
 
-        Array data = bootstrapable.getData();
-        Date [] dates  = bootstrapable.getDates();
-        Array times = bootstrapable.getTimes();
+        final int nInsts = instruments.length;
+        final Date dates[] = ts.dates();
+        /*@Time*/ final double times[] = ts.times();
+        double data[] = ts.data();
 
-        // assert no instruments with same maturity, again now done in check instruments
-        /*
-        for (int i = 1; i < isize; ++ i)
-        {
-            Date m1 = instruments[i].latestDate();
-            Date m2 = instruments[i - 1].latestDate();
-            QL.require (! m1.equals (m2), "Two instruments cannot have the same maturity");
-        }
-        */
+        // ensure rate helpers are sorted
+        Arrays.sort(instruments, new BootstrapHelperSorter());
 
-        // assert no invalid quotes
-        for (RateHelper i : instruments)
-        {
-            // set term structure
-            QL.ensure (i.quoteIsValid(), " Instrument cannot have invalid quote.");
-            i.setTermStructure (termStructure);
+        // check that there is no instruments with the same maturity
+        for (int i=1; i<nInsts; ++i) {
+            final Date m1 = instruments[i-1].latestDate();
+            final Date m2 = instruments[i].latestDate();
+            QL.require(m1 != m2, "two instruments have the same maturity");
         }
-        
-        if (validCurve)
-        {
-            QL.ensure (data.size() == isize + 1, "Dimensions mismatch expected");
+
+        // check that there is no instruments with invalid quote
+        for (int i=0; i<nInsts; ++i) {
+            QL.require(instruments[i].quoteIsValid(), " instrument has an invalid quote");
         }
-        else
-        {
-            bootstrapable.resetData (data.size());
-            data = bootstrapable.getData();
-            data.set (0, traits.initialValue ());
+
+        // setup instruments
+        for (int i=0; i<nInsts; ++i) {
+            // don't try this at home!
+            // This call creates instruments, and removes "const".
+            // There is a significant interaction with observability.
+            instruments[i].setTermStructure(ts);
+        }
+
+        if (validCurve) {
+            QL.ensure (data.length == nInsts + 1, "Dimensions mismatch expected");
+        } else {
+            data = new double[nInsts+1];
+            data = ts.data();
+            data[0] = traits.initialValue(ts);
         }
 
 
-        dates[0] = traits.initialDate (termStructure);
-        times.set (0, termStructure.timeFromReference (dates[0]));
-        for (int i = 0; i < isize - 1; ++ i)
-        {
+        dates[0] = traits.initialDate (ts);
+        times[0] = ts.timeFromReference (dates[0]);
+        for (int i = 0; i < nInsts - 1; ++ i) {
             dates[i + 1] = instruments[i].latestDate();
-            times.set (i + 1, termStructure.timeFromReference (dates[i+1]));
-            if (! validCurve)
-            {
-                data.set (i + 1, data.get(i));
+            times[i+1] = ts.timeFromReference (dates[i+1]);
+            if (! validCurve) {
+                data[i+1] = data[i];
             }
         }
 
-        LevenbergMarquardt solver = new LevenbergMarquardt (traits.getAccuracy(), 
-                traits.getAccuracy(), 
-                traits.getAccuracy());
+        final LevenbergMarquardt solver = new LevenbergMarquardt (ts.accuracy(), ts.accuracy(), ts.accuracy());
 
-        EndCriteria endCriteria = new EndCriteria (100, 10, 0.00, traits.getAccuracy (), 0.00);
-        Constraint solverConstraint = (Constraint)(forcePositive ? 
-                    new PositiveConstraint() : new NoConstraint());
+        final EndCriteria endCriteria = new EndCriteria (100, 10, 0.00, ts.accuracy(), 0.00);
+        final Constraint solverConstraint = (forcePositive ? new PositiveConstraint() : new NoConstraint());
         int i = localisation -1;
-        //FIXME, convexmonotone interpolation? 
-        int dataAdjust = 1;
-        
-        for (; i < isize; ++ i)
-        {
-            int initialDataPoint = i + 1 - localisation + dataAdjust;
-            Array startArray = new Array (localisation + 1 - dataAdjust);
-            for (int j = 0; j < startArray.size() - 1; ++ j)
-            {
-                startArray.set (j, data.get (initialDataPoint + j));
+        //FIXME, convexmonotone interpolation?
+        final int dataAdjust = 1;
+
+        for (; i < nInsts; ++ i) {
+            final int initialDataPoint = i + 1 - localisation + dataAdjust;
+            final double startArray[] = new double[localisation+1-dataAdjust];
+            for (int j=0; j < startArray.length-1; ++j) {
+                startArray[j] = data[initialDataPoint+j];
 
                 // here we are extending the interpolation a point at a
                 // time... but the local interpolator can make an
@@ -240,34 +208,79 @@ public class LocalBootstrap implements Bootstrapper
                                               nInsts+1);
                 */
                 //bootstrapable.getInterpolation ().update ();
-                
-                bootstrapable.setInterpolation 
-                    (bootstrapable.getInterpolator().interpolate (i + 2,
-                         times.constIterator (), data.constIterator ()));
 
+                ts.setInterpolation(interpolator.interpolate(new Array(times, i+2), new Array(data)));
 
-                if (i >= localisation)
-                {
-                    startArray.set (localisation - dataAdjust, traits.guess (termStructure, dates[i]));
-                }
-                else
-                {
-                    startArray.set (localisation - dataAdjust, data.get(0));
+                if (i >= localisation) {
+                    startArray[localisation-dataAdjust] = traits.guess(ts, dates[i]);
+                } else {
+                    startArray[localisation-dataAdjust] = data[0];
                 }
 
-                PenaltyFunction currentCost = new PenaltyFunction(initialDataPoint,
-                                                     (i - localisation + 1),
-                                                     (i + 1));
+                final PenaltyFunction currentCost = new PenaltyFunction(initialDataPoint, (i - localisation + 1), (i + 1));
 
-                Problem toSolve = new Problem((CostFunction) currentCost, solverConstraint, startArray);
-                EndCriteria.Type endType = solver.minimize (toSolve, endCriteria);
+                final Problem toSolve = new Problem(currentCost, solverConstraint, new Array(startArray));
+                final EndCriteria.Type endType = solver.minimize (toSolve, endCriteria);
 
-                QL.require (endType == EndCriteria.Type.StationaryFunctionAccuracy || 
-                            endType == EndCriteria.Type.StationaryFunctionValue, 
+                QL.require (endType == EndCriteria.Type.StationaryFunctionAccuracy ||
+                            endType == EndCriteria.Type.StationaryFunctionValue,
                             "Unable to strip yieldcurve to required accuracy");
             }
         }
         validCurve = true;
+    }
+
+
+    //
+    // inner classes
+    //
+
+    private class PenaltyFunction extends CostFunction {
+        private final int initialIndex;
+        private final int rateHelpersStart;
+        private final int rateHelpersEnd;
+        private final int penaltylocalisation;
+
+        public PenaltyFunction (final int initialIndex, final int rateHelpersStart, final int rateHelpersEnd) {
+            this.initialIndex = initialIndex;
+            this.rateHelpersStart = rateHelpersStart;
+            this.rateHelpersEnd = rateHelpersEnd;
+            this.penaltylocalisation = rateHelpersEnd - rateHelpersStart;
+        }
+
+        @Override
+        public double value (final Array x) {
+            int i = initialIndex;
+            int guessIt = 0;
+            for (;guessIt < x.size(); ++guessIt, ++i) {
+                traits.updateGuess (ts.data(), guessIt, i);
+            }
+
+            ts.interpolation().update();
+
+            double penalty = 0.0;
+            int j = rateHelpersStart;
+            for (; j != rateHelpersEnd; ++j)
+            {
+                penalty += Math.abs (instruments[j].quoteError());
+            }
+            return penalty;
+        }
+
+        @Override
+        public Array values (final Array x) {
+            int guessIt = 0;
+            for (int i = initialIndex; guessIt < x.size(); ++guessIt, ++i) {
+                traits.updateGuess (ts.data(), x.get (guessIt), i);
+            }
+            interpolation.update();
+            final Array penalties = new Array (penaltylocalisation);
+            int instIterator = rateHelpersStart;
+            for (int penIt = 0; instIterator != rateHelpersEnd; ++ instIterator, ++ penIt) {
+                penalties.set (penIt, Math.abs (instruments[instIterator].quoteError()));
+            }
+            return penalties;
+        }
     }
 
 }

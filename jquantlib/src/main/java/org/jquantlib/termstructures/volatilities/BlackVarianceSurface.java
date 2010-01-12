@@ -42,10 +42,9 @@ package org.jquantlib.termstructures.volatilities;
 
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.math.interpolations.BilinearInterpolation;
 import org.jquantlib.math.interpolations.Interpolation2D;
-import org.jquantlib.math.interpolations.Interpolator;
-import org.jquantlib.math.interpolations.Interpolator2D;
+import org.jquantlib.math.interpolations.Interpolation.Interpolator;
+import org.jquantlib.math.interpolations.factories.Bilinear;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
@@ -84,7 +83,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
     private Interpolation2D varianceSurface;
     private final Extrapolation lowerExtrapolation;
     private final Extrapolation upperExtrapolation;
-    private final Interpolator2D factory;
+    private final Interpolation2D.Interpolator2D factory;
 
 
     //
@@ -125,8 +124,9 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
         this.variances = new Matrix(strikes.size(), dates.length+1); // TODO: verify if length is correct
         this.strikes = new Array(strikes.size()+1); // TODO: verify if length is correct
 
-        for(int i = 1; i < strikes.size()+1; i++)
+        for(int i = 1; i < strikes.size()+1; i++) {
             this.strikes.set(i, strikes.get(i-1));
+        }
 
         for (int j = 1; j <= blackVolMatrix.columns(); j++) {
             times.set(j, timeFromReference(dates[j-1]));
@@ -139,7 +139,7 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
             }
         }
         // default: bilinear interpolation
-        factory = BilinearInterpolation.getInterpolator();
+        factory = new Bilinear();
     }
 
 
@@ -187,16 +187,21 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
     @Override
     protected final/* @Variance */double blackVarianceImpl(/* @Time */final double t, /* @Real */double strike) /* @ReadOnly */{
 
-        if (t == 0.0)
+        if (t == 0.0) {
             return 0.0;
+        }
 
         // enforce constant extrapolation when required
-        if (strike < strikes.first() && lowerExtrapolation == Extrapolation.ConstantExtrapolation) strike = strikes.first();
-        if (strike > strikes.last()  && upperExtrapolation == Extrapolation.ConstantExtrapolation) strike = strikes.last();
+        if (strike < strikes.first() && lowerExtrapolation == Extrapolation.ConstantExtrapolation) {
+            strike = strikes.first();
+        }
+        if (strike > strikes.last()  && upperExtrapolation == Extrapolation.ConstantExtrapolation) {
+            strike = strikes.last();
+        }
 
-        if (t <= times.last())
+        if (t <= times.last()) {
             return varianceSurface.op(t, strike);
-        else {
+        } else {
             // TODO: code review :: please verify against QL/C++ code
             // t>times_.back() || extrapolate
             /* @Time */final double lastTime = times.last();
@@ -212,10 +217,11 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
     @Override
     public void accept(final TypedVisitor<TermStructure> v) {
         final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null)
+        if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             super.accept(v);
+        }
     }
 
 }

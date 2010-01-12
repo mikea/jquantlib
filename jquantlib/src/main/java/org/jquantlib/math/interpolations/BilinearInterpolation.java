@@ -29,8 +29,6 @@ import org.jquantlib.math.matrixutilities.Matrix;
 
 /**
  * Bilinear interpolation between discrete points
- * <p>
- * Interpolations are not instantiated directly by applications, but via a factory class.
  *
  * @see Bilinear
  *
@@ -44,54 +42,15 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
 
     /**
      * Constructor for a bilinear interpolation between discrete points
-     * <p>
-     * Interpolations are not instantiated directly by applications, but via a factory class.
      *
      * @see Bilinear
      */
-    private BilinearInterpolation() {
-    	// access denied to public default constructor
-	}
-
-
-    //
-    // static methods
-    //
-
-    /**
-     * This is a factory method intended to create this interpolation.
-     *
-     * @see Bilinear
-     */
-    static public Interpolator2D getInterpolator() {
-        final BilinearInterpolation bilinearInterpolation = new BilinearInterpolation();
-        return new BilinearInterpolationImpl(bilinearInterpolation);
+    public BilinearInterpolation(final Array vx, final Array vy, final Matrix mz) {
+        super.impl_ = new BilinearInterpolationImpl(vx, vy, mz);
     }
-
-
-    //
-    // overrides AbstractInterpolation2D
-    //
-
-    @Override
-    public double evaluateImpl(final double x, final double y) /* @ReadOnly */{
-        final int i = locateX(x);
-        final int j = locateY(y);
-
-        final double z1 = mz.get(j, i);
-        final double z2 = mz.get(j, i+1);
-        final double z3 = mz.get(j+1, i);
-        final double z4 = mz.get(j+1, i+1);
-
-        final double t = (x - vx.get(i)) / (vx.get(i+1) - vx.get(i));
-        final double u = (y - vy.get(j)) / (vy.get(j+1) - vy.get(j));
-
-        return (1.0 - t) * (1.0 - u) * z1 + t * (1.0 - u) * z2 + (1.0 - t) * u * z3 + t * u * z4;
-    }
-
 
 	//
-    // inner classes
+    // private inner classes
     //
 
     /**
@@ -99,21 +58,33 @@ public class BilinearInterpolation extends AbstractInterpolation2D {
 	 *
 	 * @author Richard Gomes
 	 */
-	private static class BilinearInterpolationImpl implements Interpolator2D {
-		private final BilinearInterpolation delegate;
+	private class BilinearInterpolationImpl extends AbstractInterpolation2D.Impl {
 
-		public BilinearInterpolationImpl(final BilinearInterpolation delegate) {
-			this.delegate = delegate;
+		public BilinearInterpolationImpl(final Array vx, final Array vy, final Matrix mz) {
+		    super(vx, vy, mz);
+		    calculate();
 		}
 
 		@Override
-		public Interpolation2D interpolate(final Array x, final Array y, final Matrix z) {
-			delegate.vx = x;
-			delegate.vy = y;
-			delegate.mz = z;
-			delegate.update();
-			return delegate;
+		public void calculate() {
+		    // nothing
 		}
+
+	    @Override
+	    public double op(final double x, final double y) /* @ReadOnly */ {
+	        final int i = locateX(x);
+	        final int j = locateY(y);
+
+	        final double z1 = mz.get(j, i);
+	        final double z2 = mz.get(j, i+1);
+	        final double z3 = mz.get(j+1, i);
+	        final double z4 = mz.get(j+1, i+1);
+
+	        final double t = (x - vx.get(i)) / (vx.get(i+1) - vx.get(i));
+	        final double u = (y - vy.get(j)) / (vy.get(j+1) - vy.get(j));
+
+	        return (1.0 - t) * (1.0 - u) * z1 + t * (1.0 - u) * z2 + (1.0 - t) * u * z3 + t * u * z4;
+	    }
 
 	}
 

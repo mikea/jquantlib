@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Richard Gomes
+ Copyright (C) 2007 John Martin
 
  This source code is release under the BSD License.
 
@@ -21,8 +21,7 @@
  */
 
 /*
- Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
- Copyright (C) 2003, 2004, 2005, 2006, 2007 StatPro Italia srl
+ Copyright (C) 2006 Allen Kuo
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -37,44 +36,37 @@
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
 */
+package org.jquantlib.instruments;
 
-package org.jquantlib.quotes;
-
-import org.jquantlib.util.Observable;
+import org.jquantlib.lang.exceptions.LibraryException;
 
 /**
- * Relinkable handle to an observable
- * <p>
- * An instance of this class can be relinked so that it points to another
- * observable. The change will be propagated to all handles that were created as
- * copies of such instance.
- *
- * @author Richard Gomes
+ * @author John Martin
  */
-//FIXME:
-public class RelinkableHandle<T extends Observable> extends Handle<T> {
+public enum Position {
+	Long(1),
+	Short(-1);
 
-//XXX
-//    public RelinkableHandle(Class<T> klass) {
-//        super(klass);
-//    }
+    private static final String UNKNOWN_POSITION_TYPE = "Unknown Position Type";
 
-	public RelinkableHandle(final T observable) {
-    	this(observable, true);
-    }
+	private int value;
 
-    public RelinkableHandle(final T observable, final boolean isObserver) {
-    	super(observable, isObserver);
-    }
+	private Position(final int type) {
+		this.value = type;
+	}
 
-    @Override
-    public final void linkTo(final T observable) {
-    	super.internalLinkTo(observable, true);
-    }
+	public int toInteger() {
+		return value;
+	}
 
-    @Override
-    public final void linkTo(final T observable, final boolean isObserver) {
-    	super.internalLinkTo(observable, isObserver);
-    }
-
+	@Override
+	public String toString() {
+		if (value == 1) {
+			return "Long";
+		}
+		if (value == -1) {
+			return "Short";
+		}
+		throw new LibraryException(UNKNOWN_POSITION_TYPE);
+	}
 }

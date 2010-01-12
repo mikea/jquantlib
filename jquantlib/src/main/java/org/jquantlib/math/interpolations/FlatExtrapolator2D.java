@@ -22,11 +22,6 @@
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.QL;
-import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.math.matrixutilities.Matrix;
-
-
 /**
  * This class performs a flat extrapolation backed by an existing {@link Interpolation2D}.
  * <p>
@@ -37,139 +32,108 @@ import org.jquantlib.math.matrixutilities.Matrix;
  */
 public class FlatExtrapolator2D extends AbstractInterpolation2D {
 
-    //
-    // private final fields
-    //
-
-    private final Interpolation2D decorated;
-
-
-    //
-    // private constructors
-    //
-
-    private FlatExtrapolator2D(final Interpolation2D decorated) {
-        QL.require(decorated != null , "null interpolation"); // QA:[RG]::verified // TODO: message
-        this.decorated = decorated;
+    public FlatExtrapolator2D(final Interpolation2D decoratedInterpolation) {
+        super.impl_ = new FlatExtrapolator2DImpl(decoratedInterpolation);
     }
 
+    private class FlatExtrapolator2DImpl extends AbstractInterpolation2D.Impl {
 
-    //
-    // static public methods
-    //
+        private final Interpolation2D decoratedInterp_;
 
-    // FIXME: should be Interpolation2D, but the xMin(), xMax() etc are not in the interface.
-    public static Interpolation2D getInterpolation2D(final Interpolation2D decorated) {
-        final FlatExtrapolator2D flatExtrapolation2D = new FlatExtrapolator2D(decorated);
-        return flatExtrapolation2D;
+        private FlatExtrapolator2DImpl(final Interpolation2D decoratedInterpolation) {
+            // intentionally calls "super()"
+            this.decoratedInterp_ = decoratedInterpolation;
+            calculate();
+        }
+
+//XXX
+//        //
+//        // public methods
+//        //
+//
+//        public void update() {
+//            decoratedInterp_.update();
+//        }
+
+        //
+        // overrides AbstractInterpolation2D.Impl
+        //
+
+        @Override
+        public double xMin() /* @ReadOnly */{
+            return decoratedInterp_.xMin();
+        }
+
+        @Override
+        public double xMax() /* @ReadOnly */{
+            return decoratedInterp_.xMax();
+        }
+
+        @Override
+        public double yMin() /* @ReadOnly */{
+            return decoratedInterp_.yMin();
+        }
+
+        @Override
+        public double yMax() /* @ReadOnly */{
+            return decoratedInterp_.yMax();
+        }
+
+        @Override
+        public boolean isInRange(final double x, final double y) /* @ReadOnly */{
+            return decoratedInterp_.isInRange(x, y);
+        }
+
+        @Override
+        public void calculate() {
+            // nothing
+        }
+
+        @Override
+        public double op(double x, double y) /* @ReadOnly */{
+            x = bindX(x);
+            y = bindY(y);
+            return decoratedInterp_.op(x, y);
+        }
+
+        //
+        // protected methods
+        //
+
+        @Override
+        protected int locateX(final double x) /* @ReadOnly */{
+            return decoratedInterp_.locateX(x);
+        }
+
+        @Override
+        protected int locateY(final double y) /* @ReadOnly */{
+            return decoratedInterp_.locateY(y);
+        }
+
+
+        //
+        // private methods
+        //
+
+        private double bindX(final double x) /* @ReadOnly */{
+            if (x < xMin()) {
+                return xMin();
+            }
+            if (x > xMax()) {
+                return xMax();
+            }
+            return x;
+        }
+
+        private double bindY(final double y) /* @ReadOnly */{
+            if (y < yMin()) {
+                return yMin();
+            }
+            if (y > yMax()) {
+                return yMax();
+            }
+            return y;
+        }
+
     }
-
-
-    //
-    // overrides Interpolator2D
-    //
-
-    @Override
-    public double xMin() {
-        return decorated.xMin();
-    }
-
-    @Override
-    public double xMax() {
-        return decorated.xMax();
-    }
-
-    @Override
-    public double yMin() {
-        return decorated.yMin();
-    }
-
-    @Override
-    public double yMax() {
-        return decorated.yMax();
-    }
-
-    @Override
-    public Array xValues() {
-        return decorated.xValues();
-    }
-
-    @Override
-    public Array yValues() {
-        return decorated.yValues();
-    }
-
-    @Override
-    public Matrix zData() {
-        return decorated.zData();
-    }
-
-    @Override
-    public int locateX(final double x) {
-        return decorated.locateX(x);
-    }
-
-    @Override
-    public int locateY(final double y) {
-        return decorated.locateY(y);
-    }
-
-    @Override
-    public boolean isInRange(final double x, final double y) {
-        return decorated.isInRange(x, y);
-    }
-
-    @Override
-    public void update() {
-        decorated.update();
-    }
-
-
-    //
-    // overrides Ops.BinaryDoubleOp
-    //
-
-    @Override
-    public double op(double x, double y) {
-        x = bindX(x);
-        y = bindY(y);
-        return decorated.op(x, y);
-    }
-
-
-    //
-    // overrides AbstractInterpolation2D
-    //
-
-    /**
-     * This method always throws UnsupportedOperationException
-     *
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    protected double evaluateImpl(final double x, final double y) {
-        throw new UnsupportedOperationException(); //TODO: message
-    }
-
-
-    //
-    // private methods
-    //
-
-    private double bindX(final double x) /* @ReadOnly */{
-        if (x < xMin())
-            return xMin();
-        if (x > xMax())
-            return xMax();
-        return x;
-    }
-
-    private double bindY(final double y) /* @ReadOnly */{
-        if (y < yMin())
-            return yMin();
-        if (y > yMax())
-            return yMax();
-        return y;
-    }
-
 }

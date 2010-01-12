@@ -28,6 +28,11 @@ public class NullPayoff extends Payoff {
         throw new LibraryException("dummy payoff given");
     }
 
+
+    //
+    // implements TypedVisitable
+    //
+
     @Override
     public void accept(final TypedVisitor<Payoff> v) {
         final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;

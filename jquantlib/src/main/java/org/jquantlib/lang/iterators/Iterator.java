@@ -33,7 +33,10 @@ import org.jquantlib.math.matrixutilities.Matrix;
  * @see Array
  *
  * @author Richard Gomes
+ *
+ * @deprecated
  */
+@Deprecated
 public interface Iterator extends Algebra<Iterator>, RandomListIterator<Double> {
 
     /**

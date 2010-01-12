@@ -20,22 +20,25 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.math.interpolations;
+package org.jquantlib.termstructures;
 
-import org.jquantlib.lang.iterators.ConstIterator;
-
-
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
- * @see Interpolator2D
+ * This class implements a {@link Comparator} for {@link RateHelper} objects.
+ *
+ * @see Comparator
+ * @see RateHelper
  *
  * @author Richard Gomes
+ * @param <T>
  */
-public interface Interpolator {
+public class RateHelperSorter<T extends RateHelper> implements Comparator<T>, Serializable {
 
-	public Interpolation interpolate(final ConstIterator x, final ConstIterator y);
-	public Interpolation interpolate(final int size, final ConstIterator x, final ConstIterator y);
+	private static final long serialVersionUID = 6335152611463577317L;
 
-	public boolean global();
-
+	public int compare(final T h1, final T h2) /* @ReadOnly */ {
+		return h1.latestDate().compareTo(h2.latestDate());
+	}
 }

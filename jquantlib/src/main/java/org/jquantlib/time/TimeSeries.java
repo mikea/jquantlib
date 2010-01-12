@@ -60,7 +60,7 @@ public class TimeSeries<T> {
     //
 
     public TimeSeries() {
-        final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
+        final Class<?> klass = new TypeTokenTree(this.getClass()).getElement(0);
         if (Double.class.isAssignableFrom(klass)) {
             this.delegate = new TimeSeriesDouble();
         } else if (IntervalPrice.class.isAssignableFrom(klass)) {
@@ -71,7 +71,7 @@ public class TimeSeries<T> {
     }
 
     public TimeSeries(final Date[] dates, final double[] values) {
-        final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
+        final Class<?> klass = new TypeTokenTree(this.getClass()).getElement(0);
         if (Double.class.isAssignableFrom(klass)) {
             this.delegate = new TimeSeriesDouble(dates, values);
         } else {
@@ -80,7 +80,7 @@ public class TimeSeries<T> {
     }
 
     public TimeSeries(final Date[] dates, final Double[] values) {
-        final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
+        final Class<?> klass = new TypeTokenTree(this.getClass()).getElement(0);
         if (Double.class.isAssignableFrom(klass)) {
             this.delegate = new TimeSeriesDouble(dates, values);
         } else {
@@ -89,7 +89,7 @@ public class TimeSeries<T> {
     }
 
     public TimeSeries(final Date[] dates, final IntervalPrice[] values) {
-        final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
+        final Class<?> klass = new TypeTokenTree(this.getClass()).getElement(0);
         if (IntervalPrice.class.isAssignableFrom(klass)) {
             this.delegate = new TimeSeriesIntervalPrice(dates, values);
         } else {
@@ -98,7 +98,7 @@ public class TimeSeries<T> {
     }
 
     public TimeSeries(final Date startingDate, final List<T> values) {
-        final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
+        final Class<?> klass = new TypeTokenTree(this.getClass()).getElement(0);
         if (Double.class.isAssignableFrom(klass)) {
             this.delegate = new TimeSeriesDouble(startingDate, (List<Double>)values);
         } else if (IntervalPrice.class.isAssignableFrom(klass)) {

@@ -40,122 +40,80 @@
 
 package org.jquantlib.math.interpolations;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jquantlib.math.interpolations.factories.BicubicSpline;
+import org.jquantlib.math.interpolations.CubicInterpolation.BoundaryCondition;
+import org.jquantlib.math.interpolations.CubicInterpolation.DerivativeApprox;
+import org.jquantlib.math.interpolations.factories.Bilinear;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 
 /**
  * Bicubic spline interpolation between discrete points
- * <p>
- * Interpolations are not instantiated directly by applications, but via a factory class.
  *
- * @see BicubicSpline
+ * @see Bicubic
  *
  * @author Richard Gomes
  */
+// TODO: rename to BicubicSpline
 public class BicubicSplineInterpolation extends AbstractInterpolation2D {
-
-    //
-    // private fields
-    //
-
-    private final List<Interpolation> splines;
-
-
 
     //
     // private constructors
     //
 
     /**
-     * Constructor for a bicubic spline interpolation between discrete points
-     * <p>
-     * Interpolations are not instantiated directly by applications, but via a factory class.
+     * Constructor for a bilinear interpolation between discrete points
      *
-     * @see BicubicSpline
+     * @see Bilinear
      */
-    private BicubicSplineInterpolation() {
-        splines = new ArrayList<Interpolation>();
+    public BicubicSplineInterpolation(final Array vx, final Array vy, final Matrix mz) {
+        super.impl_ = new BicubicSplineImpl(vx, vy, mz);
     }
 
-
     //
-    // static methods
+    // private inner classes
     //
 
     /**
-     * This is a factory method intended to create this interpolation.
-     * <p>
-     * Interpolations are not instantiated directly by applications, but via a factory class.
-     *
-     * @see BicubicSpline
-     */
-    static public Interpolator2D getInterpolator() {
-        final BicubicSplineInterpolation bicubicSplineInterpolation = new BicubicSplineInterpolation();
-        return new BicubicSplineInterpolationImpl(bicubicSplineInterpolation);
-    }
-
-
-    //
-    // overrides AbstractInterpolation2D
-    //
-
-    @Override
-    public void calculate() {
-        throw new UnsupportedOperationException("work in progress");
-// TODO : [Richard needs to complete implementation]
-//        // splines.reserve(this.mz.length); // TODO: verify what .length returns
-//        for (int i=0; i<(this.mz.length); i++) {
-//            splines.add(NaturalCubicSpline(this.vx, this.vy, this.mz.row_begin(i))); // TODO: row_begin ???
-//        }
-    }
-
-
-    @Override
-    public double evaluateImpl(final double x, final double y) /* @ReadOnly */ {
-        if (System.getProperty("EXPERIMENTAL") == null)
-            throw new UnsupportedOperationException("Work in progress");
-        final double[] section = new double[splines.size()];
-        for (int i=0; i<splines.size(); i++)
-            section[i]=splines.get(i).evaluate(x, true);
-
-// TODO : [Richard needs to complete implementation]
-//        NaturalCubicSpline spline = new Spline(this->yBegin_, this->yEnd_, section.begin());
-//        return spline.evaluate(y,true);
-
-        return 1.0; // fake!!
-    }
-
-
-    //
-    // inner classes
-    //
-
-    /**
-     * This class is a default implementation for {@link BicubicSplineInterpolation} instances.
+     * This class is a default implementation for {@link BilinearInterpolation} instances.
      *
      * @author Richard Gomes
      */
-    private static class BicubicSplineInterpolationImpl implements Interpolator2D {
-        private final BicubicSplineInterpolation delegate;
+    private class BicubicSplineImpl extends AbstractInterpolation2D.Impl {
 
-        public BicubicSplineInterpolationImpl(final BicubicSplineInterpolation delegate) {
-            this.delegate = delegate;
+        private Interpolation[] splines_;
+
+        public BicubicSplineImpl(final Array vx, final Array vy, final Matrix mz) {
+            super(vx, vy, mz);
+            calculate();
         }
 
         @Override
-        public Interpolation2D interpolate(final Array x, final Array y, final Matrix z) {
-            delegate.vx = x;
-            delegate.vy = y;
-            delegate.mz = z;
-            delegate.update();
-            return delegate;
+        public void calculate() {
+            throw new UnsupportedOperationException();
+//            splines_ = new Interpolation[mz.rows()];
+//            for (int i=0; i<mz.rows(); i++) {
+//                splines_[i] = new CubicInterpolation(
+//                                vx, mz.rangeRow(i),
+//                                DerivativeApprox.Spline, false,
+//                                BoundaryCondition.SecondDerivative, 0.0,
+//                                BoundaryCondition.SecondDerivative, 0.0);
+//            }
+        }
+
+        @Override
+        public double op(final double x, final double y) /* @ReadOnly */ {
+            final double[] section = new double[splines_.length];
+            for (int i=0; i<splines_.length; i++) {
+                section[i] = splines_[i].op(x, true);
+            }
+
+            final CubicInterpolation spline = new CubicInterpolation(vy, new Array(section),
+                                      DerivativeApprox.Spline, false,
+                                      BoundaryCondition.SecondDerivative, 0.0,
+                                      BoundaryCondition.SecondDerivative, 0.0);
+            return spline.op(y, true);
         }
 
     }
 
 }
-

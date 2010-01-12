@@ -155,9 +155,11 @@ public class BarrierOptionTest {
                 //---- new NewBarrierOptionData( BarrierType.DownOut,    45.0,    0.0,  Option.Type.PUT,     50,  50.0,-0.05, 0.10, 1.00, 0.50,   5.477, 1.0e-3 )
         };
 
-        final Date today = new Settings().evaluationDate();
-
         final DayCounter dc = new Actual360();
+        final Date today = Date.todaysDate();
+
+        //FIXME: http://bugs.jquantlib.org/view.php?id=460
+        new Settings().setEvaluationDate(today);
 
         final SimpleQuote           spot  = new SimpleQuote(0.0);
         final SimpleQuote           qRate = new SimpleQuote(0.0);
@@ -201,20 +203,16 @@ public class BarrierOptionTest {
         }
     }
 
-    private int timeToDays(/*@Time*/ final double t) {
-        return (int) (t*360+0.5);
-    }
-
     @Test
     public void testBabsiriValues() {
         QL.info("Testing barrier options against Babsiri's values...");
-        /*
-        Data from
-        "Simulating Path-Dependent Options: A New Approach"
-          - M. El Babsiri and G. Noel
-            Journal of Derivatives; Winter 1998; 6, 2
-         */
 
+        /**
+         * Data from
+         * "Simulating Path-Dependent Options: A New Approach"
+         * - M. El Babsiri and G. Noel
+         * Journal of Derivatives; Winter 1998; 6, 2
+         */
         final BarrierOptionData values[] = {
                 new BarrierOptionData( BarrierType.DownIn,   0.10,   100,  90,   0.07187,  0.0),
                 new BarrierOptionData( BarrierType.DownIn,   0.15,   100,  90,   0.60638,  0.0),
@@ -235,6 +233,9 @@ public class BarrierOptionTest {
 
         final DayCounter dc = new Actual360();
         final Date today = Date.todaysDate();
+
+        //FIXME: http://bugs.jquantlib.org/view.php?id=460
+        new Settings().setEvaluationDate(today);
 
         final Quote                 underlying = new SimpleQuote(underlyingPrice);
         final Quote                 qH_SME     = new SimpleQuote(q);
@@ -278,12 +279,12 @@ public class BarrierOptionTest {
     public void testBeagleholeValues() {
 
         QL.info("Testing barrier options against Beaglehole's values...");
-        /*
-            Data from
-            "Going to Extreme: Correcting Simulation Bias in Exotic
-             Option Valuation"
-              - D.R. Beaglehole, P.H. Dybvig and G. Zhou
-                Financial Analysts Journal; Jan / Feb 1997; 53, 1
+
+        /**
+         * Data from
+         * "Going to Extreme: Correcting Simulation Bias in Exotic Option Valuation"
+         * - D.R. Beaglehole, P.H. Dybvig and G. Zhou
+         * Financial Analysts Journal; Jan / Feb 1997; 53, 1
          */
         final BarrierOptionData values[] = {
                 new BarrierOptionData(BarrierType.DownOut, 0.50,   50,      45,  5.477,  0.0)
@@ -296,6 +297,9 @@ public class BarrierOptionTest {
 
         final DayCounter dc = new Actual360();
         final Date today = Date.todaysDate();
+
+        //FIXME: http://bugs.jquantlib.org/view.php?id=460
+        new Settings().setEvaluationDate(today);
 
         final Quote                 underlying = new SimpleQuote(underlyingPrice);
         final Quote                 qH_SME     = new SimpleQuote(q);
@@ -371,6 +375,102 @@ public class BarrierOptionTest {
 
 
 
+// http://bugs.jquantlib.org/view.php?id=459
+//
+//    void BarrierOptionTest::testPerturbative() {
+//        BOOST_MESSAGE("Testing perturbative engine for barrier options...");
+//
+//        Real S = 100.0;
+//        Real rebate = 0.0;
+//        Rate r = 0.03;
+//        Rate q = 0.02;
+//
+//        DayCounter dc = Actual360();
+//        Date today = Date::todaysDate();
+//
+                // ---- This is future Java code, to be inserted when this code were translated
+                //FIXME: http://bugs.jquantlib.org/view.php?id=460
+                //new Settings().setEvaluationDate(today);
+//
+//        boost::shared_ptr<SimpleQuote> underlying(new SimpleQuote(S));
+//        boost::shared_ptr<YieldTermStructure> qTS = flatRate(today, q, dc);
+//        boost::shared_ptr<YieldTermStructure> rTS = flatRate(today, r, dc);
+//
+//        std::vector<Date> dates(2);
+//        std::vector<Volatility> vols(2);
+//
+//        dates[0] = today + 90;  vols[0] = 0.105;
+//        dates[1] = today + 180; vols[1] = 0.11;
+//
+//        boost::shared_ptr<BlackVolTermStructure> volTS(
+//                                  new BlackVarianceCurve(today, dates, vols, dc));
+//
+//        boost::shared_ptr<BlackScholesMertonProcess> stochProcess(
+//            new BlackScholesMertonProcess(Handle<Quote>(underlying),
+//                                          Handle<YieldTermStructure>(qTS),
+//                                          Handle<YieldTermStructure>(rTS),
+//                                          Handle<BlackVolTermStructure>(volTS)));
+//
+//        Real strike = 101.0;
+//        Real barrier = 101.0;
+//        Date exDate = today+180;
+//
+//        boost::shared_ptr<Exercise> exercise(new EuropeanExercise(exDate));
+//        boost::shared_ptr<StrikedTypePayoff> payoff(
+//                                     new PlainVanillaPayoff(Option::Put, strike));
+//
+//        BarrierOption option(Barrier::UpOut, barrier, rebate, payoff, exercise);
+//
+//        Natural order = 0;
+//        bool zeroGamma = false;
+//        boost::shared_ptr<PricingEngine> engine(
+//             new PerturbativeBarrierOptionEngine(stochProcess, order, zeroGamma));
+//
+//        option.setPricingEngine(engine);
+//
+//        Real calculated = option.NPV();
+//        Real expected = 0.897365;
+//        Real tolerance = 1.0e-6;
+//        if (std::fabs(calculated-expected) > tolerance) {
+//            BOOST_ERROR("Failed to reproduce expected value"
+//                        << "\n  calculated: " << std::setprecision(5) << calculated
+//                        << "\n  expected:   " << std::setprecision(5) << expected);
+//        }
+//
+//        order = 1;
+//        engine = boost::shared_ptr<PricingEngine>(
+//             new PerturbativeBarrierOptionEngine(stochProcess, order, zeroGamma));
+//
+//        option.setPricingEngine(engine);
+//
+//        calculated = option.NPV();
+//        expected = 0.894374;
+//        if (std::fabs(calculated-expected) > tolerance) {
+//            BOOST_ERROR("Failed to reproduce expected value"
+//                        << "\n  calculated: " << std::setprecision(5) << calculated
+//                        << "\n  expected:   " << std::setprecision(5) << expected);
+//        }
+//
+//        order = 2;
+//        engine = boost::shared_ptr<PricingEngine>(
+//             new PerturbativeBarrierOptionEngine(stochProcess, order, zeroGamma));
+//
+//        option.setPricingEngine(engine);
+//
+//        calculated = option.NPV();
+//        expected = 0.894375;
+//        if (std::fabs(calculated-expected) > tolerance) {
+//            BOOST_ERROR("Failed to reproduce expected value"
+//                        << "\n  calculated: " << std::setprecision(5) << calculated
+//                        << "\n  expected:   " << std::setprecision(5) << expected);
+//        }
+//    }
+
+
+    private int timeToDays(/*@Time*/ final double t) {
+        return (int) (t*360+0.5);
+    }
+
 
     private void REPORT_FAILURE(final String greekName, final BarrierType barrierType,
             final double barrier, final double rebate, final StrikedTypePayoff payoff,
@@ -411,7 +511,8 @@ public class BarrierOptionTest {
         private final double result;   // result
         private final double tol;      // tolerance
 
-        public NewBarrierOptionData(   final BarrierType barrierType,
+        public NewBarrierOptionData(
+                final BarrierType barrierType,
                 final double barrier,
                 final double rebate,
                 final Option.Type type,
@@ -439,15 +540,23 @@ public class BarrierOptionTest {
         }
     }
 
+
     private static class BarrierOptionData {
 
-        public BarrierOptionData(      final BarrierType barrierType,
+        private final BarrierType barrierType;
+        private final double volatility;
+        private final double strike;
+        private final double barrier;
+        private final double callValue;
+        private final double putValue;
+
+        public BarrierOptionData(
+                final BarrierType barrierType,
                 final double volatility,
                 final double strike,
                 final double barrier,
                 final double callValue,
-                final double putValue
-        ) {
+                final double putValue) {
             this.barrierType = barrierType;
             this.volatility = volatility;
             this.strike = strike;
@@ -455,12 +564,7 @@ public class BarrierOptionTest {
             this.callValue = callValue;
             this.putValue = putValue;
         }
-        BarrierType barrierType;
-        double volatility;
-        double strike;
-        double barrier;
-        double callValue;
-        double putValue;
-    };
+
+    }
 
 }

@@ -40,6 +40,7 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
@@ -74,6 +75,8 @@ public class ForwardSpreadedTermStructure extends ForwardRateStructure {
     //
 
     public ForwardSpreadedTermStructure(final Handle<YieldTermStructure> h, final Handle<Quote> spread) {
+        QL.validateExperimentalMode();
+
         this.originalCurve = h;
         this.spread = spread;
 

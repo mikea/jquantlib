@@ -68,15 +68,16 @@ public class SimpsonIntegral extends TrapezoidIntegral<TrapezoidIntegral.Default
     protected double integrate(final Ops.DoubleOp f, final double a, final double b) {
         // start from the coarsest trapezoid...
         int N = 1;
-        double I = (f.op(a) + f.op(b)) * (b - a) / 2.0;
+        double I = (f.op(a)+f.op(b))*(b-a)/2.0;
         double adjI = I;
 
+        double newI, newAdjI;
         // ...and refine it
         int i = 1;
         do {
-            final double newI = policy.integrate(f, a, b, I, N);
+            newI = policy.integrate(f, a, b, I, N);
             N *= 2;
-            final double newAdjI = (4.0 * newI - I) / 3.0;
+            newAdjI = (4.0 * newI - I) / 3.0;
 
             // good enough? Also, don't run away immediately
             if (Math.abs(adjI - newAdjI) <= absoluteAccuracy() && i > 5) {

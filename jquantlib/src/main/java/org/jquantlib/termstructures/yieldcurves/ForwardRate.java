@@ -1,15 +1,6 @@
-package org.jquantlib.termstructures.yieldcurves;
-
-import org.jquantlib.Settings;
-import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.math.Constants;
-import org.jquantlib.math.interpolations.Interpolator;
-import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.time.Date;
-
 /*
 Copyright (C) 2008 Richard Gomes
+Copyright (C) 2009 John Martin
 
 This source code is release under the BSD License.
 
@@ -28,7 +19,7 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 
 JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
-*/
+ */
 
 /*
 Copyright (C) 2005, 2006, 2007 StatPro Italia srl
@@ -45,83 +36,86 @@ copy of the license along with this program; if not, please email
 This program is distributed in the hope that it will be useful, but WITHOUT
 ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
+
+package org.jquantlib.termstructures.yieldcurves;
+
+import org.jquantlib.QL;
+import org.jquantlib.Settings;
+import org.jquantlib.math.Constants;
+import org.jquantlib.termstructures.Compounding;
+import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.Frequency;
 
 /**
- * Discount-curve traits
- * 
+ * Forward-curve traits
+ *
  * @author Richard Gomes
+ * @author John Martin
  */
-public class DiscountTraits implements BootstrapTraits {
+public class ForwardRate implements Traits {
 
-    private static final double averageRate = .05;
+    static private final double averageRate = .05;
 
-    @Override
-    public double initialValue() {
-        return 1.0;
+    //TODO: think how constructor must look like
+    public ForwardRate() {
+        QL.validateExperimentalMode();
     }
 
     @Override
-    public boolean dummyInitialValue ()
-    {
-        return false;
-    }
-
-    @Override
-    public Date initialDate (final YieldTermStructure curve)
-    {
-        return curve.referenceDate();
+    public double initialValue(final YieldTermStructure curve) {
+        return averageRate;
     }
 
     @Override
     public double initialGuess() {
-        return 1.0 / (1.0 + averageRate * 0.25);
+        return averageRate;
     }
 
     @Override
-    public double guess(YieldTermStructure c, Date d) {
-        return c.discount(d,true);
+    public double guess(final YieldTermStructure c, final Date d) {
+        return c.forwardRate(d, d, c.dayCounter(), Compounding.Continuous, Frequency.Annual, true).rate();
     }
 
     @Override
-    public double minValueAfter(int i, Array data) {
+    public double minValueAfter(final int i, final double[] data) {
+        if (new Settings().isNegativeRates()) {
+            // no constraints.
+            // We choose as min a value very unlikely to be exceeded.
+            return -3.0;
+        }
         return Constants.QL_EPSILON;
     }
 
     @Override
-    public double maxValueAfter(int i, Array data) 
-    {
-        if (new Settings().isNegativeRates())
-        {
-            // discount are not required to be decreasing --all bets are off.
-            // We choose as max a value very unlikely to be exceeded.
-            return 3.0;
+    public double maxValueAfter(final int i, final double[] data) {
+        // no constraints.
+        // We choose as max a value very unlikely to be exceeded.
+        return 3.0;
+    }
+
+    @Override
+    public void updateGuess(final double[] data, final double value, final int i) {
+        data[i] = value;
+        if (i == 1) {
+            data[0] = value; // first point is updated as well
         }
-        // discounts cannot decrease
-        return data.get (i-1);
     }
 
     @Override
-    public void updateGuess(Array data, double value, int i) {
-        data.set(i, value);
+    public boolean dummyInitialValue() {
+        return true;
     }
 
     @Override
-    public int maxIterations ()
-    {
-        return 50;
+    public Date initialDate(final YieldTermStructure curve) {
+        return curve.referenceDate();
     }
 
     @Override
-    public YieldTermStructure buildCurve (int instruments, Date referenceDate, DayCounter dc,
-            Interpolator interpolator)
-    {
-        return new InterpolatedDiscountCurve (instruments, referenceDate, dc, interpolator);
+    public int maxIterations() {
+        return 30;
     }
 
-    @Override
-    public double getAccuracy ()
-    {
-        return 1.0E-15;
-    }
 }

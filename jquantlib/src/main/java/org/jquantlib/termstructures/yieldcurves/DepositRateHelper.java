@@ -47,7 +47,7 @@ public class DepositRateHelper extends RelativeDateRateHelper {
 
     private Date fixingDate;
     private final IborIndex iborIndex;
-    private RelinkableHandle<YieldTermStructure> termStructureHandle = new RelinkableHandle <YieldTermStructure> (null);
+    private final RelinkableHandle<YieldTermStructure> termStructureHandle = new RelinkableHandle <YieldTermStructure> (null);
 
     public DepositRateHelper(
                 final Handle<Quote> rate,
@@ -58,6 +58,8 @@ public class DepositRateHelper extends RelativeDateRateHelper {
                 final boolean endOfMonth,
                 final DayCounter dayCounter) {
         super(rate);
+        QL.validateExperimentalMode();
+
         this.iborIndex = new IborIndex(
                       "no-fix", // never take fixing into account
                       tenor, fixingDays,
@@ -75,6 +77,8 @@ public class DepositRateHelper extends RelativeDateRateHelper {
                 final boolean endOfMonth,
                 final DayCounter dayCounter) {
         super(rate);
+        QL.validateExperimentalMode();
+
         this.iborIndex = new IborIndex(
                       "no-fix", // never take fixing into account
                       tenor, fixingDays,
@@ -87,6 +91,8 @@ public class DepositRateHelper extends RelativeDateRateHelper {
                 final Handle<Quote> rate,
                 final IborIndex iborIndex) {
         super(rate);
+        QL.validateExperimentalMode();
+
         this.iborIndex = new IborIndex(
                       "no-fix", // never take fixing into account
                       iborIndex.tenor(), iborIndex.fixingDays(), new Currency(),
@@ -99,6 +105,8 @@ public class DepositRateHelper extends RelativeDateRateHelper {
                 /*@Rate*/ final double  rate,
                 final IborIndex i) {
         super(rate);
+        QL.validateExperimentalMode();
+
         this.iborIndex = new IborIndex(
                       "no-fix", // never take fixing into account
                       i.tenor(), i.fixingDays(), new Currency(),
@@ -133,9 +141,14 @@ public class DepositRateHelper extends RelativeDateRateHelper {
      *
      * @param termStructureHandle
      */
+    @Override
     public void setTermStructure (final YieldTermStructure term) {
 
         termStructureHandle.linkTo(term, false);
         super.setTermStructure (term);
     }
+
+
+    // FIXME: method accept is missing?
+
 }

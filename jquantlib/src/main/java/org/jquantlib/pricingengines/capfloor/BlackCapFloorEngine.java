@@ -24,32 +24,37 @@ When applicable, the original copyright notice follows this notice.
 
 package org.jquantlib.pricingengines.capfloor;
 
+import org.jquantlib.QL;
+import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.lang.annotation.Volatility;
 import org.jquantlib.quotes.Handle;
+import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.optionlet.OptionletVolatilityStructure;
 
 // TODO implementation
 //FIXME - JM
 
-/*
-public class BlackCapFloorEngine extends CapFloor.Engine
+public class BlackCapFloorEngine //TODO:: extends CapFloor.Engine
 {
-    private final Handle <YieldTermStructure> termStructure;
-    
-    private Handle <OptionletVolatilityStructure> volatility;
+//TODO:
+//    private final Handle <YieldTermStructure> termStructure;
+//
+//    private Handle <OptionletVolatilityStructure> volatility;
 
 
     public BlackCapFloorEngine (final Handle <YieldTermStructure> termStructureHandle,
-                                Volatility v,
+                                final Volatility v,
                                 final DayCounter dc)
-                              
+
     {
-        this.termStructure = termStructureHandle;
-        
-        //this.volatility = new OptionletVolatilityStructure (new ConstantOptionletVolatility 
-        //                      (0, new NullCalendar(), BusinessDayConvention.Following, v, dc));
-        this.termStructure.addObserver (this);
+        QL.validateExperimentalMode();
+//
+//        this.termStructure = termStructureHandle;
+//
+//        //this.volatility = new OptionletVolatilityStructure (new ConstantOptionletVolatility
+//        //                      (0, new NullCalendar(), BusinessDayConvention.Following, v, dc));
+//        this.termStructure.addObserver (this);
     }
 
 
@@ -57,43 +62,45 @@ public class BlackCapFloorEngine extends CapFloor.Engine
                                 final Handle <Quote> v,
                                 final DayCounter dc)
     {
-        this.termStructure = termStructureHandle;
-        this.volatility = new OptionletVolatilityStructure 
-            (new ConstantOptionVolatility (0, new NullCalendar(), 
-                                           BusinessDayConvention.Following, v, dc));
-
-        this.termStructure.addObserver (this);
-        this.volatility.addObserver (this);
+        QL.validateExperimentalMode();
+//        this.termStructure = termStructureHandle;
+//        this.volatility = new OptionletVolatilityStructure
+//            (new ConstantOptionVolatility (0, new NullCalendar(),
+//                                           BusinessDayConvention.Following, v, dc));
+//
+//        this.termStructure.addObserver (this);
+//        this.volatility.addObserver (this);
     }
 
 
     public BlackCapFloorEngine (final Handle <YieldTermStructure> termStructureHandle,
-                                Handle <OptionletVolatilityStructure> vol)
-                              
-    {
-        this.termStructure = termStructureHandle;
-        this.volatility = vol;
+                                final Handle <OptionletVolatilityStructure> vol)
 
-        this.termStructure.addObserver (this);
-        this.volatility.addObserver (this);
+    {
+        QL.validateExperimentalMode();
+//        this.termStructure = termStructureHandle;
+//        this.volatility = vol;
+//
+//        this.termStructure.addObserver (this);
+//        this.volatility.addObserver (this);
     }
 
     public void calculate()
     {
-        double value = 0.0;
-        double vega = 0.0;
-        int optionlets = arguments_.startDates.size();
-        Array values = new Array (optionlets, 0.0);
-        Array vegas = new Array (optionlets, 0.0);
-        Array stdDevs = new Array (optionletgs, 0.0);
-        CapFloor.Type type = arguments_.type;
-        Date today = volatility.referenceDate();
-        Date settlement = termStructure.referenceDate();
-
-        for (int i = 0; i < optionlets; ++ i)
-        {
-            Date paymentDate = arguments_.endDates
-        }
+        QL.validateExperimentalMode();
+//        double value = 0.0;
+//        double vega = 0.0;
+//        int optionlets = arguments_.startDates.size();
+//        Array values = new Array (optionlets, 0.0);
+//        Array vegas = new Array (optionlets, 0.0);
+//        Array stdDevs = new Array (optionletgs, 0.0);
+//        CapFloor.Type type = arguments_.type;
+//        Date today = volatility.referenceDate();
+//        Date settlement = termStructure.referenceDate();
+//
+//        for (int i = 0; i < optionlets; ++ i)
+//        {
+//            Date paymentDate = arguments_.endDates
+//        }
     }
 }
-*/

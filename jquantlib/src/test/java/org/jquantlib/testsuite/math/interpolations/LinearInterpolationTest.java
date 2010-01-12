@@ -55,7 +55,7 @@ public class LinearInterpolationTest {
 	public static void setUpLinearInterpolation(){
 		QL.info("::::: Testing use of interpolations as functors... :::::");
 
-		interpolation = new Linear().interpolate(x.constIterator(), y.constIterator());
+		interpolation = new Linear().interpolate(x, y);
 		interpolation.update();
 	    length = x2.size();
 	    y2 = new double[length];
@@ -84,8 +84,9 @@ public class LinearInterpolationTest {
 	            sb.append("\n    calculated: ").append(y2[i]);
 	            sb.append("\n    error:      ").append(abs(y2[i]-expected));
 
-	            if (abs(y2[i]-expected) > tolerance)
-	            	fail(sb.toString());
+	            if (abs(y2[i]-expected) > tolerance) {
+                    fail(sb.toString());
+                }
 	        }
 	    }
 	}

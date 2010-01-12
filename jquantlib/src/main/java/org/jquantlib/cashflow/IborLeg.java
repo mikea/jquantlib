@@ -1,5 +1,5 @@
-
 /*
+Copyright (C) 2009 Ueli Hofstetter
 Copyright (C) 2009 John Martin
 
 This source code is release under the BSD License.
@@ -21,19 +21,40 @@ JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
 
+/*
+ Copyright (C) 2007 Ferdinando Ametrano
+ Copyright (C) 2007 Giorgio Facchinetti
+ Copyright (C) 2007 Cristina Duminuco
+ Copyright (C) 2007 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
 package org.jquantlib.cashflow;
 
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.quotes.Handle;
-import org.jquantlib.termstructures.volatilities.VolatilityTermStructure;
 import org.jquantlib.termstructures.volatilities.optionlet.OptionletVolatilityStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Schedule;
 
 /**
  * Helper class building a sequence of capped/floored ibor-rate coupons
+ *
+ * @author Ueli Hofstetter
+ * @author John Martin
  */
 public class IborLeg {
 
@@ -63,8 +84,8 @@ public class IborLeg {
         spreads_ = new Array(0);
         caps_ = new Array(0);
         floors_ = new Array(0);
-        inArrears_ = (false);
-        zeroPayments_ = (false);
+        inArrears_ = false;
+        zeroPayments_ = false;
     }
 
     public final IborLeg withNotionals(/* @Real */final double notional) {
@@ -149,14 +170,15 @@ public class IborLeg {
 
     public Leg Leg() /* @ReadOnly */{
 
-        final Leg cashflows = new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(notionals_, schedule_, index_,
-                paymentDayCounter_, paymentAdjustment_, fixingDays_, gearings_, spreads_, caps_, floors_, inArrears_, zeroPayments_){};
-        
-        if (caps_.empty() && floors_.empty() && !inArrears_)
-        {
-            PricerSetter.setCouponPricer (cashflows, new BlackIborCouponPricer (new Handle <OptionletVolatilityStructure> ()));
-        }
+        final Leg cashflows = new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(
+                notionals_, schedule_, index_,
+                paymentDayCounter_, paymentAdjustment_, fixingDays_,
+                gearings_, spreads_, caps_, floors_, inArrears_, zeroPayments_) { /* anonymous */ };
 
+        if (caps_.empty() && floors_.empty() && !inArrears_) {
+            PricerSetter.setCouponPricer(cashflows, new BlackIborCouponPricer(new Handle <OptionletVolatilityStructure>()));
+        }
         return cashflows;
     }
+
 }

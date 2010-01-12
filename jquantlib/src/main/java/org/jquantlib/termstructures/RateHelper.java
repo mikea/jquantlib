@@ -22,10 +22,8 @@
 
 package org.jquantlib.termstructures;
 
-import org.jquantlib.termstructures.BootstrapHelper;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
-
 
 /**
  * Base helper class for yield-curve bootstrapping
@@ -38,16 +36,13 @@ import org.jquantlib.quotes.Quote;
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
+public abstract class RateHelper extends BootstrapHelper <YieldTermStructure> {
 
-public abstract class RateHelper extends BootstrapHelper <YieldTermStructure>
-{
-    public RateHelper (Handle <Quote> quote)
-    {
+    public RateHelper (final Handle <Quote> quote) {
         super (quote);
     }
 
-    public RateHelper (double quote)
-    {
+    public RateHelper (final double quote) {
         super (quote);
     }
 }

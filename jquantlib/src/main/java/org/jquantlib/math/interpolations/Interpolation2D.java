@@ -43,35 +43,47 @@ package org.jquantlib.math.interpolations;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
-import org.jquantlib.util.Observer;
 
 /**
- * Interface for 2-D interpolations.
+ * Base class for 2-D interpolations.
  * <p>
- * Classes which implement this interface will provide interpolated values from two sequences
- * of length {@latex$ N } and {@latex$ M }, representing the discretized values of
- * the {@latex$ x }and {@latex$ y } variables, and a {@latex$ N \times M } matrix representing the
- * tabulated function values.
+ * Classes derived from this class will provide interpolated
+ * values from two sequences of length {@latex$ N } and {@latex$ M },
+ * representing the discretized values of the {@latex$ x } and {@latex$ y }
+ * variables, and a {@latex$ N \times M } matrix representing
+ * the tabulated function values.
  *
  * @author Richard Gomes
  */
 public interface Interpolation2D extends Extrapolator, Ops.BinaryDoubleOp {
 
-    /**
-     * This method performs the interpolation itself.
-     *
-     * @note Do not confuse this method with {@link Observer#update()}
-     */
-	public void update();
+    public boolean empty() /*@ReadOnly*/;
 
-    public double xMin();
-    public double xMax();
-    public double yMin();
-    public double yMax();
-    public Array xValues();
-    public Array yValues();
-    public Matrix zData();
-    public int locateX(double x);
-    public int locateY(double y);
-    public boolean isInRange(double x, double y);
+    public double op(final double x, double y, boolean allowExtrapolation) /*@ReadOnly*/;
+    public double op(final double x, double y) /*@ReadOnly*/;
+
+    public double xMin() /*@ReadOnly*/;
+    public double xMax() /*@ReadOnly*/;
+    public double yMin() /*@ReadOnly*/;
+    public double yMax() /*@ReadOnly*/;
+
+//XXX
+//  public Array xValues() /*@ReadOnly*/;
+//  public Array yValues() /*@ReadOnly*/;
+//  public Matrix zData() /*@ReadOnly*/;
+
+    public int locateX(double x) /*@ReadOnly*/;
+    public int locateY(double y) /*@ReadOnly*/;
+
+    public boolean isInRange(final double x, double y) /*@ReadOnly*/;
+
+    public void update();
+
+
+    public interface Interpolator2D {
+
+        public Interpolation2D interpolate(final Array vx, final Array vy, final Matrix mZ);
+
+    }
+
 }

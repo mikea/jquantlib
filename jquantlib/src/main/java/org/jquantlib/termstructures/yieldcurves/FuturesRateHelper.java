@@ -29,7 +29,6 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.RateHelper;
-import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
@@ -57,8 +56,8 @@ public class FuturesRateHelper extends RateHelper {
             final DayCounter dayCounter,
             final Handle<Quote> convAdj) {
         super(price);
-        if (System.getProperty("EXPERIMENTAL") == null)
-            throw new UnsupportedOperationException("Work in progress");
+        QL.validateExperimentalMode();
+
         QL.require(new IMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
         earliestDate = immDate;
         latestDate = calendar.advance(
@@ -81,8 +80,8 @@ public class FuturesRateHelper extends RateHelper {
             final DayCounter dayCounter,
             final double conv) {
         super(price);
-        if (System.getProperty("EXPERIMENTAL") == null)
-            throw new UnsupportedOperationException("Work in progress");
+        QL.validateExperimentalMode();
+
         QL.require(new IMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
         convAdj = new Handle<Quote>(new SimpleQuote(conv));
         earliestDate = immDate;
@@ -100,8 +99,8 @@ public class FuturesRateHelper extends RateHelper {
             final IborIndex i,
             final double conv) {
         super(price);
-        if (System.getProperty("EXPERIMENTAL") == null)
-            throw new UnsupportedOperationException("Work in progress");
+        QL.validateExperimentalMode();
+
         QL.require(new IMM().isIMMdate(immDate, false) , "not a valid IMM date"); // QA:[RG]::verified // TODO: message
         convAdj = new Handle<Quote>(new SimpleQuote(conv));
         earliestDate = immDate;

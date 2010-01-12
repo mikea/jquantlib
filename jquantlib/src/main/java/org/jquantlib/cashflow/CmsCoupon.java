@@ -49,16 +49,16 @@ import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 
-    //! CMS coupon class
-    /*! \warning This class does not perform any date adjustment,
-                 i.e., the start and end date passed upon finalruction
-                 should be already rolled to a business day.
-    */
+/**
+ * CMS coupon class
+ * @author rgomes
+ *
+ * @warning This class does not perform any date adjustment,
+ *          i.e., the start and end date passed upon finalruction
+ *          should be already rolled to a business day.
+ */
+public class CmsCoupon extends FloatingRateCoupon {
 
-
-
-public class CmsCoupon extends FloatingRateCoupon 
-{
     protected SwapIndex swapIndex_;
 
     public CmsCoupon(final Date paymentDate,
@@ -66,8 +66,7 @@ public class CmsCoupon extends FloatingRateCoupon
                      final Date startDate,
                      final Date endDate,
                      final int fixingDays,
-                     final SwapIndex index)
-    {
+                     final SwapIndex index) {
         // gearing default
         this (paymentDate, nominal, startDate, endDate, fixingDays, index, 1.0);
     }
@@ -78,8 +77,7 @@ public class CmsCoupon extends FloatingRateCoupon
                      final Date endDate,
                      final int fixingDays,
                      final SwapIndex index,
-                     final double gearing)
-    {
+                     final double gearing) {
         // spread default
         this (paymentDate, nominal, startDate, endDate, fixingDays, index, gearing, 0.0);
     }
@@ -91,10 +89,9 @@ public class CmsCoupon extends FloatingRateCoupon
                      final int fixingDays,
                      final SwapIndex index,
                      final double gearing,
-                     final double spread)
-    {
+                     final double spread) {
         // reference dates defaults
-        this (paymentDate, nominal, startDate, endDate, fixingDays, 
+        this (paymentDate, nominal, startDate, endDate, fixingDays,
               index, gearing, spread, new Date(), new Date());
     }
 
@@ -108,10 +105,9 @@ public class CmsCoupon extends FloatingRateCoupon
                      final double gearing,
                      final double spread,
                      final Date refPeriodStart,
-                     final Date refPeriodEnd)
-    {
+                     final Date refPeriodEnd) {
         // daycounter default
-        this (paymentDate, nominal, startDate, endDate, fixingDays, 
+        this (paymentDate, nominal, startDate, endDate, fixingDays,
               index, gearing, spread, refPeriodStart, refPeriodEnd,
               new DayCounter());
     }
@@ -127,10 +123,9 @@ public class CmsCoupon extends FloatingRateCoupon
                      final double spread,
                      final Date refPeriodStart,
                      final Date refPeriodEnd,
-                     final DayCounter dayCounter)
-    {
+                     final DayCounter dayCounter) {
         // inArrears default
-        this (paymentDate, nominal, startDate, endDate, fixingDays, 
+        this (paymentDate, nominal, startDate, endDate, fixingDays,
               index, gearing, spread, refPeriodStart, refPeriodEnd,
               dayCounter, false);
     }
@@ -143,21 +138,20 @@ public class CmsCoupon extends FloatingRateCoupon
                      final int fixingDays,
                      final SwapIndex index,
                      final double gearing,
-                     final double spread, 
+                     final double spread,
                      final Date refPeriodStart,
                      final Date refPeriodEnd,
                      final DayCounter dayCounter,
-                     boolean isInArrears)
-    {
-        super (paymentDate, nominal, startDate, endDate, fixingDays, 
+                     final boolean isInArrears) {
+        super (paymentDate, nominal, startDate, endDate, fixingDays,
                index, gearing, spread, refPeriodStart, refPeriodEnd,
                dayCounter, isInArrears);
     }
-    
-    public SwapIndex swapIndex() 
-    {
+
+    public SwapIndex swapIndex() {
         return swapIndex_;
     }
+
 
     //
     // implements TypedVisitable

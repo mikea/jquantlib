@@ -19,11 +19,10 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-
 /*
- Copyright (C) 2002, 2003 Ferdinando Ametrano
+ Copyright (C) 2004, 2008 Ferdinando Ametrano
  Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
- Copyright (C) 2003, 2004, 2005, 2006 StatPro Italia srl
+ Copyright (C) 2001, 2002, 2003 Nicolas Di C�sar�
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -37,50 +36,43 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- */
+*/
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.math.Ops;
+import org.jquantlib.math.interpolations.CubicInterpolation.BoundaryCondition;
+import org.jquantlib.math.interpolations.CubicInterpolation.DerivativeApprox;
+import org.jquantlib.math.interpolations.factories.Cubic;
 import org.jquantlib.math.matrixutilities.Array;
 
+
 /**
- * Interface for 1-D interpolations.
- * <p>
- * Classes which implement this interface will provide interpolated values from two sequences of equal length, representing
- * discretized values of a variable and a function of the former, respectively.
+ * log-cubic interpolation between discrete points
  *
  * @author Richard Gomes
  */
-public interface Interpolation extends Extrapolator, Ops.DoubleOp {
+public class LogCubicInterpolation extends AbstractInterpolation {
 
-    public boolean empty() /*@ReadOnly*/;
+    //
+    // public constructors
+    //
 
-    public double op(final double x, boolean allowExtrapolation) /*@ReadOnly*/;
-    public double primitive(final double x, boolean allowExtrapolation) /*@ReadOnly*/;
-    public double derivative(final double x, boolean allowExtrapolation) /*@ReadOnly*/;
-    public double secondDerivative(final double x, boolean allowExtrapolation) /*@ReadOnly*/;
-
-    public double op(final double x) /*@ReadOnly*/;
-    public double primitive(final double x) /*@ReadOnly*/;
-    public double derivative(final double x) /*@ReadOnly*/;
-    public double secondDerivative(final double x) /*@ReadOnly*/;
-
-    public double xMin() /*@ReadOnly*/;
-    public double xMax() /*@ReadOnly*/;
-
-    public boolean isInRange(final double x) /*@ReadOnly*/;
-
-    public void update();
-
-
-    public interface Interpolator {
-
-        public boolean global() /*@ReadOnly*/;
-        public int requiredPoints() /*@ReadOnly*/;
-
-        public Interpolation interpolate(final Array vx, final Array vy);
-
+    public LogCubicInterpolation(
+            final Array vx,
+            final Array vy,
+            final DerivativeApprox da,
+            final boolean monotonic,
+            final BoundaryCondition leftCondition,
+            final double leftConditionValue,
+            final BoundaryCondition rightCondition,
+            final double rightConditionValue) {
+        super.impl = new AbstractInterpolation.LogInterpolationImpl(
+                vx, vy,
+                new Cubic(
+                        da, monotonic,
+                        leftCondition, leftConditionValue,
+                        rightCondition, rightConditionValue));
+        super.impl.update();
     }
 
 }

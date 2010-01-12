@@ -20,6 +20,24 @@ JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
 
+/*
+ Copyright (C) 2006, 2008 Ferdinando Ametrano
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2003, 2004, 2005, 2006, 2007 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+ */
 package org.jquantlib.instruments;
 
 import java.util.ArrayList;
@@ -36,7 +54,6 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
-import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Date;
@@ -45,23 +62,23 @@ import org.jquantlib.time.Schedule;
 /**
  * Plain-vanilla swap
  *
- * @note if QL_TODAYS_PAYMENTS was defined (in userconfig.hpp
-                 or when calling ./configure; it is undefined by
-                 default) payments occurring at the settlement date of
-                 the swap are included in the NPV, and therefore
-                 affect the fair-rate and fair-spread
-                 calculation. This might not be what you want.
-
-    @category instruments
-
+ * @note if you define TodaysPayments like this
+ * <pre>
+ * new Settings().setTodaysPayments(true);
+ * </pre>
+ * payments occurring at the settlement date of
+ * the swap are included in the NPV, and therefore
+ * affect the fair-rate and fair-spread
+ * calculation. This might not be what you want.
+ *
+ * @category instruments
+ *
  * @author Richard Gomes
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class VanillaSwap extends Swap {
 
     static final /*@Spread*/ double  basisPoint = 1.0e-4;
-
-
 
     private final Type type;
     private final /*@Real*/ double nominal;
@@ -73,12 +90,13 @@ public class VanillaSwap extends Swap {
     private final /*@Spread*/ double spread;
     private final DayCounter floatingDayCount;
     private final BusinessDayConvention paymentConvention;
-    private final Array fixingDays;
+    // private final Array fixingDays;
 
     // results
     private /*@Rate*/ double fairRate;
     private /*@Spread*/ double fairSpread;
 
+
     public VanillaSwap(
             final Type type,
             final /*@Real*/ double nominal,
@@ -88,15 +106,12 @@ public class VanillaSwap extends Swap {
             final Schedule floatSchedule,
             final IborIndex iborIndex,
             final /*@Spread*/ double spread,
-            final DayCounter floatingDayCount,
-            final BusinessDayConvention paymentConvention) 
-    {
-        this (type, nominal, fixedSchedule, fixedRate, fixedDayCount,
-              floatSchedule, iborIndex, spread, floatingDayCount, paymentConvention, null);
-              
+            final DayCounter floatingDayCount) {
+        this(type, nominal, fixedSchedule, fixedRate, fixedDayCount, floatSchedule,
+                iborIndex, spread, floatingDayCount, BusinessDayConvention.Following);
     }
 
-
+    //FIXME: remove parameter "fixingDays"
     public VanillaSwap(
             final Type type,
             final /*@Real*/ double nominal,
@@ -107,10 +122,8 @@ public class VanillaSwap extends Swap {
             final IborIndex iborIndex,
             final /*@Spread*/ double spread,
             final DayCounter floatingDayCount,
-            final BusinessDayConvention paymentConvention,
-            final Array fixingDays)
-    {
-
+            final BusinessDayConvention paymentConvention
+    /*, final Array fixingDays*/) {
         super(2);
         this.type = type;
         this.nominal = nominal;
@@ -122,7 +135,7 @@ public class VanillaSwap extends Swap {
         this.spread = spread;
         this.floatingDayCount = floatingDayCount;
         this.paymentConvention = paymentConvention;
-        this.fixingDays = fixingDays;
+        //FIXME this.fixingDays = fixingDays;
 
         final Leg fixedLeg = new FixedRateLeg(fixedSchedule, fixedDayCount)
         .withNotionals(nominal)
@@ -130,18 +143,19 @@ public class VanillaSwap extends Swap {
         .withPaymentAdjustment(paymentConvention)
         .Leg();
 
-        // JM where are gearings set they cannot be null for the floating leg.  
+        // JM where are gearings set they cannot be null for the floating leg.
         final Leg floatingLeg = new IborLeg(floatingSchedule, iborIndex)
         .withNotionals(nominal)
         .withPaymentDayCounter(floatingDayCount)
         .withPaymentAdjustment(paymentConvention)
-        // slight deviation from quantlib, need to expose fixing days up the stack
-        .withFixingDays (fixingDays)
-        // TODO: code review :: please verify against QL/C++ code
-        //.withFixingDays(iborIndex.fixingDays())   
+
+        //FIXME:: .withFixingDays (fixingDays) // FIXME: slight deviation from quantlib, need to expose fixing days up the stack
+
         .withSpreads(spread)
+
         // FIXME: JM quantlib does not assign this, it is currently required for construction
-        .withGearings(1.0)
+        // .withGearings(1.0)
+
         .Leg();
 
         for (final CashFlow item : floatingLeg) {

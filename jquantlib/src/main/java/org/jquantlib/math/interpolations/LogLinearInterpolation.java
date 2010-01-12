@@ -1,5 +1,6 @@
 /*
- Copyright (C) 2008 Richard Gomes
+ Copyright (C) 2008 Dominik Holenstein
+ Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
 
@@ -19,21 +20,33 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+/*
+ Copyright (C) 2004, 2008 Ferdinando Ametrano
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2001, 2002, 2003 Nicolas Di C�sar�
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.QL;
-import org.jquantlib.lang.iterators.ConstIterator;
-import org.jquantlib.math.interpolations.factories.LogLinear;
+import org.jquantlib.math.interpolations.factories.Linear;
 import org.jquantlib.math.matrixutilities.Array;
 
 
 /**
- * This class provides log-linear interpolation between discrete points
- * <p>
- * Interpolations are not instantiated directly by applications, but via a factory class.
- *
- * @see LogLinear
+ * log-linear interpolation between discrete points
  *
  * @author Dominik Holenstein
  * @author Richard Gomes
@@ -41,153 +54,12 @@ import org.jquantlib.math.matrixutilities.Array;
 public class LogLinearInterpolation extends AbstractInterpolation {
 
     //
-    // private fields
+    // public constructors
     //
 
-    private Array logY;
-    private Interpolation linearInterpolation;
-
-
-    //
-    // private constructors
-    //
-
-    /**
-     * Constructor for a backward-flat interpolation between discrete points
-     * <p>
-     * Interpolations are not instantiated directly by applications, but via a factory class.
-     *
-     * @see LogLinear
-     */
-    private LogLinearInterpolation() {
-        // access denied to default constructor
-    }
-
-
-    //
-    // static public methods
-    //
-
-    /**
-     * This is a factory method intended to create this interpolation.
-     *
-     * @see LogLinear
-     */
-    static public Interpolator getInterpolator() {
-        final LogLinearInterpolation logLinearInterpolation = new LogLinearInterpolation();
-        return new LogLinearInterpolationImpl(logLinearInterpolation);
-    }
-
-
-    //
-    // overrides AbstractInterpolation
-    //
-
-    /**
-     * This method throws UnsupportedOperationException because the original
-     * QuantLib/C++ code does not implement this functionality
-     *
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    protected double primitiveImpl(final double x) /* @ReadOnly */ {
-        throw new UnsupportedOperationException(); //TODO: message
-    }
-
-    /**
-     * This method throws UnsupportedOperationException because the original
-     * QuantLib/C++ code does not implement this functionality
-     *
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    protected double derivativeImpl(final double x) /* @ReadOnly */ {
-        throw new UnsupportedOperationException(); //TODO: message
-    }
-
-    /**
-     * This method throws UnsupportedOperationException because the original
-     * QuantLib/C++ code does not implement this functionality
-     *
-     * @throws UnsupportedOperationException
-     */
-    @Override
-    protected double secondDerivativeImpl(final double x) /* @ReadOnly */ {
-        throw new UnsupportedOperationException(); //TODO: message
-    }
-
-
-    //
-    // Overrides AbstractInterpolation
-    //
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
-     */
-    @Override
-    public void update() {
-        super.update();
-
-        logY = new Array(vx.size());
-        for (int i=0; i<vx.size(); i++){
-            QL.require(vx.get(i) > 0.0 , "negative or null value "); // QA:[RG]::verified // TODO: message
-            final double value = Math.log(vy.get(i));
-            logY.set(i, value);
-        }
-        linearInterpolation = LinearInterpolation.getInterpolator().interpolate(vx, logY.constIterator());
-    }
-
-
-    //
-    // implements Ops.DoubleOp
-    //
-    @Override
-    protected double opImpl(final double x) /* @ReadOnly */ {
-        return Math.exp(linearInterpolation.op(x));
-    }
-
-
-    //
-    // private inner classes
-    //
-
-    /**
-     * This static class is a default implementation for {@link LogLinearInterpolation} instances.
-     *
-     * @author Dominik Holenstein
-     * @author Richard Gomes
-     */
-
-    private static class LogLinearInterpolationImpl implements Interpolator {
-        private final LogLinearInterpolation delegate;
-
-        public LogLinearInterpolationImpl(final LogLinearInterpolation delegate) {
-            this.delegate = delegate;
-        }
-
-        //
-        // implements Interpolator
-        //
-
-        @Override
-        public final Interpolation interpolate(final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
-            return interpolate(x.size(), x, y);
-        }
-
-        @Override
-        public final Interpolation interpolate(final int size, final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
-            delegate.vx = x.constIterator(0, size);
-            delegate.vy = y.constIterator(0, size);
-            delegate.update();
-            return delegate;
-        }
-
-        @Override
-        public final boolean global() {
-            return false; // only CubicSpline and Sabr are global, whatever it means!
-        }
+    public LogLinearInterpolation(final Array vx, final Array vy) {
+        super.impl = new AbstractInterpolation.LogInterpolationImpl(vx, vy, new Linear());
+        super.impl.update();
     }
 
 }

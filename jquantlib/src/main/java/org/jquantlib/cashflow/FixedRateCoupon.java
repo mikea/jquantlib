@@ -16,7 +16,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -34,21 +34,21 @@ import org.jquantlib.util.Visitor;
 // TODO: code review :: Please review this class! :S
 public class FixedRateCoupon extends Coupon {
 
-	private InterestRate rate;
-	private DayCounter dayCounter;
+	private final InterestRate rate;
+	private final DayCounter dayCounter;
 
 	//
 	// constructors
 	//
 
-	public FixedRateCoupon(double nominal, final Date paymentDate,
+	public FixedRateCoupon(final double nominal, final Date paymentDate,
 			final double rate, final DayCounter dayCounter,
 			final Date accrualStartDate, final Date accrualEndDate) {
 		this(nominal, paymentDate, rate, dayCounter, accrualStartDate,
 				accrualEndDate, new Date(), new Date());
 	}
 
-	public FixedRateCoupon(double nominal, final Date paymentDate,
+	public FixedRateCoupon(final double nominal, final Date paymentDate,
 			final double rate, final DayCounter dayCounter,
 			final Date accrualStartDate, final Date accrualEndDate,
 			final Date refPeriodStart, final Date refPeriodEnd) {
@@ -100,12 +100,12 @@ public class FixedRateCoupon extends Coupon {
 	}
 
 	@Override
-	public double accruedAmount(Date d) {
+	public double accruedAmount(final Date d) {
 		if (d.le(accrualStartDate) || d.gt(paymentDate)) {
 			return 0.0;
 		}
 		else {
-			Date minD = d.le(accrualEndDate) ? d : accrualEndDate;
+			final Date minD = d.le(accrualEndDate) ? d : accrualEndDate;
 			return nominal()
 					* (rate.compoundFactor(accrualStartDate, minD,
 							refPeriodStart, refPeriodEnd) - 1.0);
@@ -123,18 +123,18 @@ public class FixedRateCoupon extends Coupon {
 						refPeriodStart, refPeriodEnd) - 1.0);
 	}
 
+
 	//
 	// implements TypedVisitable
 	//
 
 	@Override
 	public void accept(final TypedVisitor<Object> v) {
-		Visitor<Object> v1 = (v != null) ? v.getVisitor(this.getClass()
+		final Visitor<Object> v1 = (v != null) ? v.getVisitor(this.getClass()
 				.getSuperclass()) : null;
 		if (v1 != null) {
 			v1.visit(this);
-		}
-		else {
+		} else {
 			super.accept(v);
 		}
 	}

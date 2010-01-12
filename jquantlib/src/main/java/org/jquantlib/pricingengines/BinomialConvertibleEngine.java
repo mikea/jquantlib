@@ -74,7 +74,7 @@ public class BinomialConvertibleEngine<T extends BinomialTree> extends Convertib
     //
 
     public BinomialConvertibleEngine(final GeneralizedBlackScholesProcess process, final int timeSteps) {
-        this.clazz = (Class<T>)new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
+        this.clazz = (Class<T>)new TypeTokenTree(this.getClass()).getElement(0);
         QL.require(timeSteps>0, "timeSteps must be positive"); // TODO: message
         this.timeSteps_ = timeSteps;
         this.a = arguments;
@@ -101,13 +101,13 @@ public class BinomialConvertibleEngine<T extends BinomialTree> extends Convertib
         final /*@Volatility*/ double v = process_.blackVolatility().currentLink().blackVol(a.exercise.lastDate(), s0);
         final Date maturityDate = a.exercise.lastDate();
         final /*@Rate*/ double  riskFreeRate = process_
-                                        .riskFreeRate().currentLink()
-                                        .zeroRate(maturityDate, rfdc, Compounding.Continuous, Frequency.NoFrequency)
-                                        .rate();
+        .riskFreeRate().currentLink()
+        .zeroRate(maturityDate, rfdc, Compounding.Continuous, Frequency.NoFrequency)
+        .rate();
         final /*@Rate*/ double  q = process_
-                                        .dividendYield().currentLink()
-                                        .zeroRate(maturityDate, divdc, Compounding.Continuous, Frequency.NoFrequency)
-                                        .rate();
+        .dividendYield().currentLink()
+        .zeroRate(maturityDate, divdc, Compounding.Continuous, Frequency.NoFrequency)
+        .rate();
         final Date referenceDate = process_.riskFreeRate().currentLink().referenceDate();
 
         // subtract dividends
@@ -115,7 +115,7 @@ public class BinomialConvertibleEngine<T extends BinomialTree> extends Convertib
         for (i=0; i<a.dividends.size(); i++) {
             if (a.dividends.get(i).date().gt(referenceDate)) {
                 s0 -= a.dividends.get(i).amount() *
-                      process_.riskFreeRate().currentLink().discount(a.dividends.get(i).date());
+                process_.riskFreeRate().currentLink().discount(a.dividends.get(i).date());
             }
         }
         QL.require(s0 > 0.0, "negative value after subtracting dividends");

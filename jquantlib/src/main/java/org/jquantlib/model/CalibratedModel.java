@@ -31,8 +31,6 @@ import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.math.matrixutilities.Cells.ConstRowIterator;
-import org.jquantlib.math.matrixutilities.Cells.RowIterator;
 import org.jquantlib.math.optimization.CompositeConstraint;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.CostFunction;
@@ -70,8 +68,9 @@ public abstract class CalibratedModel implements Observer, Observable {
     //
 
     public CalibratedModel(final int nArguments) {
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
         this.arguments_ = new ArrayList<Parameter>(nArguments);
         this.constraint_ = new PrivateConstraint(arguments_);
         this.shortRateEndCriteria_ = EndCriteria.Type.None;
@@ -92,16 +91,18 @@ public abstract class CalibratedModel implements Observer, Observable {
         "mismatch between number of instruments and weights"); // TODO: message
 
         Constraint c;
-        if (additionalConstraint.empty())
+        if (additionalConstraint.empty()) {
             c = constraint_;
-        else
+        } else {
             c = new CompositeConstraint(constraint_, additionalConstraint);
+        }
 
         final double[] w = new double[instruments.size()];
-        if (weights==null)
+        if (weights==null) {
             Arrays.fill(w, 1.0);
-        else
+        } else {
             System.arraycopy(weights, 0, w, 0, w.length);
+        }
 
         final CalibrationFunction f = new CalibrationFunction(this, instruments, w);
 
@@ -137,25 +138,40 @@ public abstract class CalibratedModel implements Observer, Observable {
      */
     public Array params() /* @ReadOnly */ {
         int size = 0;
-        for (int i=0; i<arguments_.size(); i++)
+        for (int i=0; i<arguments_.size(); i++) {
             size += arguments_.get(i).size();
+        }
         final Array params = new Array(size);
         int k = 0;
-        for (int i=0; i<arguments_.size(); i++)
+        for (int i=0; i<arguments_.size(); i++) {
             for (int j=0; j<arguments_.get(i).size(); j++, k++) {
                 final double value = arguments_.get(i).params().get(j);
                 params.set(k, value);
             }
+        }
         return params;
     }
 
-    public void setParams(final Array  params) {
-        final ConstRowIterator from = params.constIterator();
+    public void setParams(final Array params) {
+
+// original C++ code:
+//      Array::const_iterator p = params.begin();
+//      for (Size i=0; i<arguments_.size(); ++i) {
+//          for (Size j=0; j<arguments_[i].size(); ++j, ++p) {
+//              QL_REQUIRE(p!=params.end(),"parameter array too small");
+//              arguments_[i].setParam(j, *p);
+//          }
+//      }
+
+        final double[] from = params.toDoubleArray();
+        int pos = 0;
         for (int i=0; i<arguments_.size(); i++) {
-            final RowIterator to = arguments_.get(i).params.iterator();
-            to.fill(from, to.size());
+            final double[] to = arguments_.get(i).params.toDoubleArray();
+            System.arraycopy(from, pos, to, 0, to.length);
+            pos += to.length;
         }
-        QL.require(from.remaining()==0, "parameter array too big"); // TODO: message
+
+        QL.require(pos==params.size(), "parameter array too big"); // TODO: message
         update();
     }
 
@@ -287,7 +303,7 @@ public abstract class CalibratedModel implements Observer, Observable {
         }
 
         /**
-         * <p>{@link Default} epsilon for finite difference method :. </p>
+         * Default epsilon for finite difference method:
          */
         @Override
         public double finiteDifferenceEpsilon() /* @ReadOnly */ {
@@ -345,10 +361,12 @@ public abstract class CalibratedModel implements Observer, Observable {
                 for (int i = 0; i < arguments_.size(); i++) {
                     final int size = arguments_.get(i).size();
                     final Array testParams = new Array(size);
-                    for (int j = 0; j < size; j++, k++)
+                    for (int j = 0; j < size; j++, k++) {
                         testParams.set(j, params.get(k));
-                    if (!arguments_.get(i).testParams(testParams))
+                    }
+                    if (!arguments_.get(i).testParams(testParams)) {
                         return false;
+                    }
                 }
                 return true;
             }

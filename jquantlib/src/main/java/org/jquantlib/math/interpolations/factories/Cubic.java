@@ -40,75 +40,56 @@
 
 package org.jquantlib.math.interpolations.factories;
 
-import org.jquantlib.lang.iterators.ConstIterator;
-import org.jquantlib.math.interpolations.CubicSplineInterpolation;
-import org.jquantlib.math.interpolations.Interpolator;
+import org.jquantlib.math.interpolations.CubicInterpolation;
+import org.jquantlib.math.interpolations.Interpolation;
+import org.jquantlib.math.interpolations.CubicInterpolation.BoundaryCondition;
+import org.jquantlib.math.interpolations.CubicInterpolation.DerivativeApprox;
+import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * Cubic spline interpolation factory and traits.
- * <p>
- * This is not the implementation of a interpolation class, but only its factory.
  *
- * @see CubicSplineInterpolation
+ * @see CubicInterpolation
  *
  * @author Richard Gomes
  * @author Daniel Kong
  */
-//TEST : needs code review and test classes
-public class CubicSpline implements Interpolator {
+public class Cubic implements Interpolation.Interpolator {
+    private final DerivativeApprox da;
+    private final BoundaryCondition leftType;
+    private final BoundaryCondition rightType;
+    private final double leftValue;
+    private final double rightValue;
+    private final boolean monotonic;
 
-    //
-    // private final fields
-    //
-
-    private final Interpolator delegate;
-
-
-    //
-    // public constructors
-    //
-
-    /**
-     * Constructs a interpolation factory.
-     * <p>
-     * This is not the implementation of a interpolation class, but only its factory.
-     *
-     * @see CubicSplineInterpolation
-     */
-    public CubicSpline() {
-        this(CubicSplineInterpolation.BoundaryCondition.SecondDerivative, 0.0, CubicSplineInterpolation.BoundaryCondition.SecondDerivative, 0.0, false);
+    public Cubic() {
+        this(DerivativeApprox.Kruger, false, BoundaryCondition.SecondDerivative, 0.0, BoundaryCondition.SecondDerivative, 0.0);
     }
 
-
-    public CubicSpline(
-            final CubicSplineInterpolation.BoundaryCondition leftCondition,
+    public Cubic(
+            final DerivativeApprox da,
+            final boolean monotonic,
+            final BoundaryCondition leftCondition,
             final double leftConditionValue,
-            final CubicSplineInterpolation.BoundaryCondition rightCondition,
-            final double rightConditionValue,
-            final boolean monotonicityConstraint) {
-        delegate = CubicSplineInterpolation.getInterpolator(
-                leftCondition, leftConditionValue, rightCondition, rightConditionValue, monotonicityConstraint);
-    }
-
-
-    //
-    // implements Interpolator
-    //
-
-    @Override
-    public final CubicSplineInterpolation interpolate(final int size, final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
-        return interpolate(x, y);
+            final BoundaryCondition rightCondition,
+            final double rightConditionValue) {
+        this.da = da;
+        this.monotonic = monotonic;
+        this.leftType = leftCondition;
+        this.rightType = rightCondition;
+        this.leftValue = leftConditionValue;
+        this.rightValue = rightConditionValue;
     }
 
     @Override
-    public final CubicSplineInterpolation interpolate(final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
-        return (CubicSplineInterpolation)delegate.interpolate(x, y);
-    }
+    public final boolean global()     { return true; }
 
     @Override
-    public final boolean global() /* @ReadOnly */ {
-        return delegate.global();
+    public final int requiredPoints() { return 2; }
+
+    @Override
+    public final Interpolation interpolate(final Array vx, final Array vy) /* @ReadOnly */ {
+        return new CubicInterpolation(vx, vy, da, monotonic, leftType, leftValue, rightType, rightValue);
     }
 
 }
-

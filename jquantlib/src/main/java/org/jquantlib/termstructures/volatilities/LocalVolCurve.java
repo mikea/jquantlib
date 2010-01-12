@@ -123,6 +123,7 @@ public class LocalVolCurve extends LocalVolTermStructure {
         return Math.sqrt(derivative);
     }
 
+
     //
     // implements TypedVisitable
     //
@@ -130,10 +131,11 @@ public class LocalVolCurve extends LocalVolTermStructure {
     @Override
     public void accept(final TypedVisitor<TermStructure> v) {
         final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null)
+        if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             super.accept(v);
+        }
     }
 
 }

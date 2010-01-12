@@ -78,7 +78,7 @@ public class TrapezoidIntegral<T extends TrapezoidIntegral.IntegrationPolicy> ex
 
     public TrapezoidIntegral(final double accuracy, final int maxEvaluations) {
         super(accuracy, maxEvaluations);
-        final Class<?> klass = new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
+        final Class<?> klass = new TypeTokenTree(this.getClass()).getElement(0);
         if (klass==Default.class) {
             this.policy = new Default();
         } else if (klass==MidPoint.class) {

@@ -63,11 +63,11 @@ public abstract class Integrator {
         if (a == b) {
             return 0.0;
         }
-        if (a > b) {
-            return -1 * op(f, b, a);
+        if (b > a) {
+            return integrate(f, a, b);
+        } else {
+            return -integrate(f, b, a);
         }
-        this.numberOfEvaluations = 0;
-        return integrate(f, a, b);
     }
 
 

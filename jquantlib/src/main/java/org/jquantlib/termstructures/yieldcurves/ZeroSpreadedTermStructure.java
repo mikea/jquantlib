@@ -1,6 +1,7 @@
 package org.jquantlib.termstructures.yieldcurves;
 
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
@@ -31,6 +32,8 @@ public class ZeroSpreadedTermStructure extends ZeroYieldStructure  {
             final Handle<YieldTermStructure> h,
             final Handle<Quote> spread, final Compounding comp , final Frequency freq,
             final DayCounter dc){
+        QL.validateExperimentalMode();
+
         this.originalCurve = h;
         this.spread = spread;
         this.comp = comp;

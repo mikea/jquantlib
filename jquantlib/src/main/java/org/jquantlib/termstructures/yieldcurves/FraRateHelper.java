@@ -36,8 +36,8 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
-import org.jquantlib.util.Visitor;
 import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.Visitor;
 
 /**
  * @author Srinivas Hasti
@@ -54,7 +54,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 
     private final IborIndex iborIndex;
 
-    private RelinkableHandle<YieldTermStructure> termStructureHandle = new RelinkableHandle <YieldTermStructure> (null);
+    private final RelinkableHandle<YieldTermStructure> termStructureHandle = new RelinkableHandle <YieldTermStructure> (null);
 
     public FraRateHelper(
             final Handle<Quote> rate,
@@ -66,11 +66,13 @@ public class FraRateHelper extends RelativeDateRateHelper {
             final boolean endOfMonth,
             final DayCounter dayCounter) {
         super(rate);
+        QL.validateExperimentalMode();
+
         QL.require(monthsToEnd > monthsToStart , "monthsToEnd must be greater than monthsToStart"); // QA:[RG]::verified // TODO: message
         this.quote = rate;
         this.monthsToStart = monthsToStart;
         //never take fixing into account
-        iborIndex = new IborIndex("no-fix", 
+        iborIndex = new IborIndex("no-fix",
                 new Period(monthsToEnd - monthsToStart, TimeUnit.Months),
                 fixingDays,
                 null,
@@ -88,6 +90,8 @@ public class FraRateHelper extends RelativeDateRateHelper {
             final BusinessDayConvention convention, final boolean endOfMonth,
             final DayCounter dayCounter) {
         super(rate);
+        QL.validateExperimentalMode();
+
         QL.require(monthsToEnd > monthsToStart , "monthsToEnd must be greater than monthsToStart");
         this.monthsToStart = monthsToStart;
         iborIndex = new IborIndex(
@@ -105,6 +109,8 @@ public class FraRateHelper extends RelativeDateRateHelper {
 
     public FraRateHelper(final Handle<Quote> rate, final int monthsToStart, final IborIndex i) {
         super(rate);
+        QL.validateExperimentalMode();
+
         this.quote = rate;
         this.monthsToStart = monthsToStart;
         iborIndex = new IborIndex(
@@ -117,16 +123,22 @@ public class FraRateHelper extends RelativeDateRateHelper {
 
     public FraRateHelper(final double rate, final int monthsToStart, final IborIndex i) {
         this (new Handle <Quote> (new SimpleQuote (rate)), monthsToStart, i);
+        QL.validateExperimentalMode();
     }
+
+
+    //
+    // public methods
+    //
 
     @Override
     public double impliedQuote()  {
-        QL.require(termStructure != null , "term structure not set"); 
+        QL.require(termStructure != null , "term structure not set");
         return iborIndex.fixing(fixingDate, true);
     }
 
-    public void setTermStructure(final YieldTermStructure t) 
-    {
+    @Override
+    public void setTermStructure(final YieldTermStructure t) {
         // no need to register---the index is not lazy
         termStructureHandle.linkTo(t, false);
         super.setTermStructure(t);
@@ -134,8 +146,8 @@ public class FraRateHelper extends RelativeDateRateHelper {
 
     @Override
     protected void initializeDates() {
-        
-        final Date settlement = iborIndex.fixingCalendar().advance(evaluationDate, 
+
+        final Date settlement = iborIndex.fixingCalendar().advance(evaluationDate,
            new Period(iborIndex.fixingDays(),TimeUnit.Days), BusinessDayConvention.Following, false);
         earliestDate = iborIndex.fixingCalendar().advance(
                 settlement,
@@ -146,16 +158,19 @@ public class FraRateHelper extends RelativeDateRateHelper {
         fixingDate = iborIndex.fixingDate(earliestDate);
     }
 
-    public void accept (final TypedVisitor <FraRateHelper> v)
-    {
-       Visitor<FraRateHelper> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
-       if (v1 != null) 
-       {
-           v1.visit(this);
-       }
-       else 
-       {
-           super.accept((Visitor <BootstrapHelper <YieldTermStructure>>) v);
-       }
+
+    //
+    // implements TypedVisitable
+    //
+
+    @Override
+    public void accept(final TypedVisitor<BootstrapHelper> v) {
+        final Visitor<BootstrapHelper> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null) {
+            v1.visit(this);
+        } else {
+            super.accept(v);
+        }
     }
+
 }

@@ -85,6 +85,7 @@ public class ExchangeRateManager {
      *
      * @return The ExchangeRateManager shared by everything loaded with this classloader.
      */
+    //FIXME: remove singleton pattern
     public static ExchangeRateManager getInstance() {
         if (instance == null) {
             synchronized (ExchangeRateManager.class) {

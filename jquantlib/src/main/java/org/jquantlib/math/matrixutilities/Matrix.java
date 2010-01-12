@@ -148,19 +148,10 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
     /**
      * Default constructor
      * <p>
-     * Builds an empty Matrix
+     * Builds a Matrix with dimensions 1x1
      */
     public Matrix() {
-        this(Style.JAVA);
-    }
-
-    /**
-     * Builds an empty Matrix
-     *
-     * @param style allows transparent access to elements by FORTRAN based algorithms.
-     */
-    public Matrix(final Style style) {
-        super(1, 1, style);
+        super(1, 1);
     }
 
     /**
@@ -171,21 +162,7 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @throws IllegalArgumentException if parameters are less than zero
      */
     public Matrix(final int rows, final int cols) {
-        this(rows, cols, Style.JAVA);
-    }
-
-    /**
-     * Builds a Matrix of <code>rows</code> by <code>cols</code>
-     *
-     * @param rows is the number of rows
-     * @param cols is the number of columns
-     * @param style allows transparent access to elements by FORTRAN based algorithms.
-     * @throws IllegalArgumentException if parameters are less than zero
-     *
-     * @see Style
-     */
-    public Matrix(final int rows, final int cols, final Style style) {
-        super(rows, cols, style);
+        super(rows, cols);
     }
 
 
@@ -195,22 +172,11 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @param data
      */
     public Matrix(final double[][] data) {
-        this(data, Style.JAVA);
-    }
+        super(data.length, data[0].length);
 
-    /**
-     * Creates a Matrix given a double[][] array
-     *
-     * @param data is a bi-dimensional array, always organized as a Java index access style, zero-based double[][].
-     * @param style allows transparent access to elements by FORTRAN based algorithms.
-     *
-     * @see Style
-     */
-    public Matrix(final double[][] data, final Style style) {
-        super(data.length, data[0].length, style);
-
-        for (int i=0; i<rows; i++)
-            System.arraycopy(data[i], 0, this.data, addrJ(i, 0), cols);
+        for (int i=0; i<rows; i++) {
+            System.arraycopy(data[i], 0, this.data, addr(i, 0), cols);
+        }
     }
 
     /**
@@ -219,18 +185,7 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @param data
      */
     public Matrix(final Matrix m) {
-        super(m.rows, m.cols, m.style);
-        System.arraycopy(m.data, 0, this.data, 0, size);
-    }
-
-    /**
-     * Creates a Matrix given a double[][] array
-     *
-     * @param m is an existing matrix
-     * @param style allows transparent access to elements by FORTRAN based algorithms.
-     */
-    public Matrix(final Matrix m, final Style style) {
-        super(m.rows, m.cols, style);
+        super(m.rows, m.cols);
         System.arraycopy(m.data, 0, this.data, 0, size);
     }
 
@@ -249,11 +204,13 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
 
     @Override
     public boolean equals(final Object o) {
-        if (o == null || !(o instanceof Matrix))
+        if (o == null || !(o instanceof Matrix)) {
             return false;
+        }
         final Matrix another = (Matrix) o;
-        if (rows != another.rows || cols != another.cols)
+        if (rows != another.rows || cols != another.cols) {
             return false;
+        }
         return Arrays.equals(data, another.data);
     }
 
@@ -264,23 +221,15 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
 
 
     public Object toArray() {
-        return toArray(Style.JAVA);
-    }
-
-    public Object toArray(final Style style) {
-        final double buffer[][] = new double[rows+style.base][cols+style.base];
-        return toArray(buffer, style);
+        final double buffer[][] = new double[rows][cols];
+        return toArray(buffer);
     }
 
     public double[][] toArray(final double[][] buffer) {
-        return toArray(buffer, Style.JAVA);
-    }
-
-    public double[][] toArray(final double[][] buffer, final Style style) {
-        QL.require(rows+style.base == buffer.length && cols+style.base == buffer[0].length, WRONG_BUFFER_LENGTH); // QA:[RG]::verified
+        QL.require(rows == buffer.length && cols == buffer[0].length, WRONG_BUFFER_LENGTH); // QA:[RG]::verified
         int addr = 0;
         for (int row=0; row<rows; row++) {
-            System.arraycopy(data, addr, buffer[row+style.base], style.base, cols);
+            System.arraycopy(data, addr, buffer[row], 0, cols);
             addr += cols;
         }
         return buffer;
@@ -294,7 +243,7 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      */
     public void fillRow(final int row, final Array array) {
         QL.require(cols == array.size ,  ARRAY_IS_INCOMPATIBLE);
-        System.arraycopy(array.data, 0, data, addr(row, style.base), cols);
+        System.arraycopy(array.data, 0, data, addr(row), cols);
     }
 
     /**
@@ -305,11 +254,11 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      */
     public void fillCol(final int col, final Array array) {
         QL.require(rows == array.size ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        if (cols == 1)
+        if (cols == 1) {
             System.arraycopy(array.data, 0, data, 0, size);
-        else {
-            int addr = addr(style.base, col);
-            for (int row = style.base; row < rows+style.base; row++) {
+        } else {
+            int addr = addr(0, col);
+            for (int row = 0; row < rows; row++) {
                 data[addr] = array.data[array.addr(row)];
                 addr += cols;
             }
@@ -361,10 +310,10 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
     public Matrix addAssign(final Matrix another) {
         QL.require(rows == another.rows && cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int row=0; row<rows; row++) {
-            int addrJ = addrJ(row, 0);
+            int addr = addr(row, 0);
             for (int col=0; col<cols; col++) {
-                data[addrJ] += another.data[addrJ];
-                addrJ++;
+                data[addr] += another.data[addr];
+                addr++;
             }
         }
         return this;
@@ -379,10 +328,10 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
     public Matrix subAssign(final Matrix another) {
         QL.require(rows == another.rows && cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         for (int row=0; row<rows; row++) {
-            int addrJ = addrJ(row, 0);
+            int addr = addr(row, 0);
             for (int col=0; col<cols; col++) {
-                data[addrJ] -= another.data[addrJ];
-                addrJ++;
+                data[addr] -= another.data[addr];
+                addr++;
             }
         }
         return this;
@@ -396,10 +345,10 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      */
     public Matrix mulAssign(final double scalar) {
         for (int row = 0; row < rows; row++) {
-            final int raddrJ = addrJ(row, 0);
+            final int raddr = addr(row, 0);
             for (int col = 0; col < cols; col++) {
-                final int addrJ = raddrJ + col;
-                data[addrJ] *= scalar;
+                final int addr = raddr + col;
+                data[addr] *= scalar;
             }
         }
         return this;
@@ -413,10 +362,10 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      */
     public Matrix divAssign(final double scalar) {
         for (int row = 0; row < rows; row++) {
-            final int raddrJ = addrJ(row, 0);
+            final int raddr = addr(row, 0);
             for (int col = 0; col < cols; col++) {
-                final int addrJ = raddrJ + col;
-                data[addrJ] /= scalar;
+                final int addr = raddr + col;
+                data[addr] /= scalar;
             }
         }
         return this;
@@ -444,12 +393,12 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      */
     public Matrix add(final Matrix another) {
         QL.require(rows == another.rows && cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Matrix result = new Matrix(rows, cols, style);
+        final Matrix result = new Matrix(rows, cols);
         for (int row=0; row<rows; row++) {
-            int addrJ = addrJ(row, 0);
+            int addr = addr(row, 0);
             for (int col=0; col<cols; col++) {
-                result.data[addrJ] = data[addrJ] + another.data[addrJ];
-                addrJ++;
+                result.data[addr] = data[addr] + another.data[addr];
+                addr++;
             }
         }
         return result;
@@ -463,12 +412,12 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      */
     public Matrix sub(final Matrix another) {
         QL.require(rows == another.rows && cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Matrix result = new Matrix(rows, cols, style);
+        final Matrix result = new Matrix(rows, cols);
         for (int row=0; row<rows; row++) {
-            int addrJ = addrJ(row, 0);
+            int addr = addr(row, 0);
             for (int col=0; col<cols; col++) {
-                result.data[addrJ] = data[addrJ] - another.data[addrJ];
-                addrJ++;
+                result.data[addr] = data[addr] - another.data[addr];
+                addr++;
             }
         }
         return result;
@@ -492,12 +441,12 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new instance
      */
     public Matrix mul(final double scalar) {
-        final Matrix result = new Matrix(rows, cols, style);
+        final Matrix result = new Matrix(rows, cols);
         for (int row=0; row<rows; row++) {
-            int addrJ = addrJ(row, 0);
+            int addr = addr(row, 0);
             for (int col=0; col<cols; col++) {
-                result.data[addrJ] = data[addrJ] * scalar;
-                addrJ++;
+                result.data[addr] = data[addr] * scalar;
+                addr++;
             }
         }
         return result;
@@ -510,12 +459,12 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new instance
      */
     public Matrix div(final double scalar) {
-        final Matrix result = new Matrix(rows, cols, style);
+        final Matrix result = new Matrix(rows, cols);
         for (int row=0; row<rows; row++) {
-            int addrJ = addrJ(row, 0);
+            int addr = addr(row, 0);
             for (int col=0; col<cols; col++) {
-                result.data[addrJ] = data[addrJ] / scalar;
-                addrJ++;
+                result.data[addr] = data[addr] / scalar;
+                addr++;
             }
         }
         return result;
@@ -539,12 +488,13 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      */
     public Array mul(final Array array) {
         QL.require(cols == array.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(rows, style);
+        final Array result = new Array(rows);
         for (int i = 0; i < result.size; i++) {
-            final int addrJ = addrJ(i, 0);
+            final int addr = addr(i, 0);
             double sum = 0.0;
-            for (int col = 0; col < this.cols; col++)
-                sum += array.data[col] * this.data[addrJ + col];
+            for (int col = 0; col < this.cols; col++) {
+                sum += array.data[col] * this.data[addr + col];
+            }
             result.data[i] = sum;
         }
         return result;
@@ -558,18 +508,18 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      */
     public Matrix mul(final Matrix another) {
         QL.require(cols == another.rows ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Matrix result = new Matrix(rows, another.cols, style);
+        final Matrix result = new Matrix(rows, another.cols);
         for (int col = 0; col < another.cols; col++) {
-            final int caddrJ = another.addrJ(0, col);
+            final int caddr = another.addr(0, col);
             for (int row = 0; row < rows; row++) {
-                final int raddrJ = addrJ(row, 0);
-                int addrJ = caddrJ;
+                final int raddr = addr(row, 0);
+                int addr = caddr;
                 double sum = 0.0;
                 for (int i = 0; i < cols; i++) {
-                    sum += data[raddrJ + i] * another.data[addrJ];
-                    addrJ += another.cols;
+                    sum += data[raddr + i] * another.data[addr];
+                    addr += another.cols;
                 }
-                result.data[result.addrJ(row, col)] = sum;
+                result.data[result.addr(row, col)] = sum;
             }
         }
         return result;
@@ -681,14 +631,14 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new instance which contains the result of this operation
      */
     public Matrix transpose() {
-        final Matrix result = new Matrix(cols, rows, style);
+        final Matrix result = new Matrix(cols, rows);
         for (int row=0; row<rows; row++) {
-            int raddrJ = addrJ(row, 0);
-            int caddrJ = result.addrJ(0, row);
+            int raddr = addr(row, 0);
+            int caddr = result.addr(0, row);
             for (int col=0; col<cols; col++) {
-                result.data[caddrJ] = data[raddrJ];
-                caddrJ += result.cols;
-                raddrJ++;
+                result.data[caddr] = data[raddr];
+                caddr += result.cols;
+                raddr++;
             }
         }
         return result;
@@ -701,11 +651,11 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      */
     public Array diagonal() {
         QL.require(rows == cols ,  MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
-        final Array result = new Array(cols, style);
-        int addrJ = 0;
+        final Array result = new Array(cols);
+        int addr = 0;
         for (int i = 0; i < cols; i++) {
-            result.data[i] = data[addrJ];
-            addrJ += cols + 1;
+            result.data[i] = data[addr];
+            addr += cols + 1;
         }
         return result;
     }
@@ -751,18 +701,19 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @exception IllegalArgumentException when indices are out of range
      */
     public Matrix range(final int row0, final int row1, final int col0, final int col1) {
-        QL.require(row0 >= style.base && row1 > row0 && row1 <= rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-        QL.require(col0 >= style.base && col1 > col0 && col1 <= cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(row0 >= 0 && row1 > row0 && row1 <= rows, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(col0 >= 0 && col1 > col0 && col1 <= cols, INVALID_ARGUMENTS); // QA:[RG]::verified
 
-        final Matrix result = new Matrix(row1-row0, col1-col0, style);
+        final Matrix result = new Matrix(row1-row0, col1-col0);
         if (col1-col0 == cols) {
-            if (row1-row0 == rows)
-                System.arraycopy(data, style.base, result.data, style.base, size);
-            else
-                System.arraycopy(data, addr(row0, style.base), result.data, style.base, result.size);
+            if (row1-row0 == rows) {
+                System.arraycopy(data, 0, result.data, 0, size);
+            } else {
+                System.arraycopy(data, addr(row0), result.data, 0, result.size);
+            }
         } else {
             final int ncols = col1-col0;
-            int addr = style.base;
+            int addr = 0;
             for (int i = row0; i <= row1; i++) {
                 System.arraycopy(data, addr(i, col0), result.data, addr, ncols);
                 addr += ncols;
@@ -787,18 +738,21 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * <pre>
      *     int [] c = new int[] { 0, 2, 3, 1 };; // FORTRAN style : array elements are one-based.
      * <pre>
-     * @return A( [row0:row1) , c(:) ), preserving the {@link Style} of <code>this</code> Matrix
+     * @return A( [row0:row1) , c(:) ) of <code>this</code> Matrix
      * @exception IllegalArgumentException when indices are out of range
      */
     public Matrix range(final int row0, final int row1, final int[] c) {
-        QL.require(row0 >= style.base && row1 > row0 && row1 <= rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-        for (final int col : c)
-            QL.require(col>=style.base && col<cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(row0 >= 0 && row1 > row0 && row1 <= rows, INVALID_ARGUMENTS); // QA:[RG]::verified
+        for (final int col : c) {
+            QL.require(col>=0 && col<cols, INVALID_ARGUMENTS); // QA:[RG]::verified
+        }
 
-        final Matrix result = new Matrix(row1-row0, c.length, style);
-        for (int i = row0; i <= row1; i++)
-            for (int j = style.base; j < c.length+style.base; j++)
+        final Matrix result = new Matrix(row1-row0, c.length);
+        for (int i = row0; i <= row1; i++) {
+            for (int j = 0; j < c.length; j++) {
                 result.set(i-row0, j, get(i, c[j]));
+            }
+        }
         return result;
     }
 
@@ -827,19 +781,21 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * <pre>
      *     int [] c = new int[] { 0, 2, 3, 1 };; // FORTRAN style : array elements are one-based.
      * <pre>
-     * @return A(r(:),c(:)), preserving the {@link Style} of <code>this</code> Matrix
+     * @return A(r(:),c(:)) of <code>this</code> Matrix
      * @exception IllegalArgumentException when indices are out of range
      */
     public Matrix range(final int[] r, final int[] c) {
-        for (final int row : r)
-            QL.require(row>=style.base && row<rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-        for (final int col : c)
-            QL.require(col>=style.base && col<cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+        for (final int row : r) {
+            QL.require(row>=0 && row<rows, INVALID_ARGUMENTS); // QA:[RG]::verified
+        }
+        for (final int col : c) {
+            QL.require(col>=0 && col<cols, INVALID_ARGUMENTS); // QA:[RG]::verified
+        }
 
-        final Matrix result = new Matrix(r.length-style.base, c.length-style.base, style);
-        for (int i=style.base; i<r.length+style.base; i++) {
+        final Matrix result = new Matrix(r.length, c.length);
+        for (int i=0; i<r.length; i++) {
             final int row = r[i];
-            for (int j=style.base; j<c.length+style.base; j++) {
+            for (int j=0; j<c.length; j++) {
                 final int col = c[j];
                 result.set(i, j, get(row, col));
             }
@@ -863,18 +819,19 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * <pre>
      * @param col0 Initial column index, inclusive
      * @param col1 Final column index, exclusive
-     * @return A(r(:), [col0:col1) ), preserving the {@link Style} of <code>this</code> Matrix
+     * @return A(r(:), [col0:col1) ) of <code>this</code> Matrix
      * @exception IllegalArgumentException when indices are out of range
      */
     public Matrix range(final int[] r, final int col0, final int col1) {
-        for (final int row : r)
-            QL.require(row>=style.base && row<rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
-        QL.require(col0 >= style.base && col1 > col0 && col1 <= cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+        for (final int row : r) {
+            QL.require(row>=0 && row<rows, INVALID_ARGUMENTS); // QA:[RG]::verified
+        }
+        QL.require(col0 >= 0 && col1 > col0 && col1 <= cols, INVALID_ARGUMENTS); // QA:[RG]::verified
 
-        final Matrix result = new Matrix(r.length, col1-col0, style);
+        final Matrix result = new Matrix(r.length, col1-col0);
         final int ncols = col1-col0;
 
-        int addr = style.base;
+        int addr = 0;
         for (final int row : r) {
             System.arraycopy(data, addr(row, col0), result.data, addr, ncols);
             addr += ncols;
@@ -1088,8 +1045,9 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
         } else if (b != 0) {
             r = a / b;
             r = Math.abs(b) * Math.sqrt(1 + r * r);
-        } else
+        } else {
             r = 0.0;
+        }
         return r;
     }
 

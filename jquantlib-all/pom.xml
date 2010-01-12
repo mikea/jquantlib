@@ -301,6 +301,10 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>failsafe-maven-plugin</artifactId>
+                </plugin>
+                <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>jdepend-maven-plugin</artifactId>
                     <!-- version>2.0-beta-1</version -->
@@ -687,7 +691,7 @@
                             <!-- UMLGraph-4.9.0 works fine -->
                             <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
                             <docletArtifact>
-                                <groupId>gr.spinellis</groupId>
+                                <groupId>UmlGraph</groupId>
                                 <artifactId>UmlGraph</artifactId>
                                 <version>4.9.0</version>
                             </docletArtifact>

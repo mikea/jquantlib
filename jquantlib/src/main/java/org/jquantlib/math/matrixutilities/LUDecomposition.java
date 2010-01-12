@@ -70,7 +70,7 @@ public class LUDecomposition {
      * @return Structure to access L, U and piv.
      */
     public LUDecomposition(final Matrix A) {
-        this.LU = new Matrix(A, Cells.Style.JAVA); // clone and force Java indexing style
+        this.LU = new Matrix(A); // clone and force Java indexing style
         this.m = LU.rows;
         this.n = LU.cols;
 
@@ -148,8 +148,9 @@ public class LUDecomposition {
      */
     public boolean isNonSingular() {
         for (int j = 0; j < n; j++) {
-            if (LU.data[LU.addr(j, j)] == 0)
+            if (LU.data[LU.addr(j, j)] == 0) {
                 return false;
+            }
         }
         return true;
     }
@@ -248,8 +249,9 @@ public class LUDecomposition {
      */
     public Matrix solve(final Matrix B) {
         QL.require(B.rows == this.m, Matrix.MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        if (!this.isNonSingular())
+        if (!this.isNonSingular()) {
             throw new LibraryException(MATRIX_IS_SINGULAR);
+        }
 
         // Copy right hand side with pivoting
         final Matrix X = B.range(piv, 0, B.cols);

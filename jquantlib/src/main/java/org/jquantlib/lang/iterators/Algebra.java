@@ -308,10 +308,11 @@ public interface Algebra<T> {
 
     /**
      * Return differences between adjacent values.
+     * <p>
+     * Computes the difference between adjacent values in the range [first,last) using subtraction to compute differences
+     * and returns the results as an Array.
      *
-     * @note Mimics std::adjacent_difference
-     *
-     * @return a <code>&lt;T&gt;</code> containing the computed adjacent differences
+     * @return an array which contains the computed adjacent differences.
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
      */
@@ -319,12 +320,14 @@ public interface Algebra<T> {
 
     /**
      * Return differences between adjacent values.
+     * <p>
+     * Computes the difference between adjacent values in the range [first,last) using subtraction to compute differences
+     * and returns the results as an Array.
      *
-     * @note Mimics std::adjacent_difference
+     * @param first is the start of range
+     * @param last is the end of range
      *
-     * @param from is the initial index, inclusive
-     * @param to is the final index, exclusive
-     * @return a <code>&lt;T&gt;</code> containing the computed adjacent differences
+     * @return an array which contains the computed adjacent differences.
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
      */
@@ -332,11 +335,13 @@ public interface Algebra<T> {
 
     /**
      * Return differences between adjacent values.
+     * <p>
+     * Computes the difference between adjacent values in the range [begin(),end()+1) using a function for computing the differences
+     * and returns the results as an Array.
      *
-     * @note Mimics std::adjacent_difference
+     * @param f is a function
      *
-     * @param f is a function to be used to compute the adjacent differences
-     * @return a <code>&lt;T&gt;</code> containing the computed adjacent differences
+     * @return an array which contains the computed adjacent differences.
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
      */
@@ -344,13 +349,15 @@ public interface Algebra<T> {
 
     /**
      * Return differences between adjacent values.
+     * <p>
+     * Computes the difference between adjacent values in the range [first,last) using a function for computing the differences
+     * and returns the results as an Array.
      *
-     * @note Mimics std::adjacent_difference
+     * @param first is the start of range
+     * @param last is the end of range
+     * @param f is a function
      *
-     * @param from is the initial index, inclusive
-     * @param to is the final index, exclusive
-     * @param f is a function to be used to compute the adjacent differences
-     * @return a <code>&lt;T&gt;</code> containing the computed adjacent differences
+     * @return an array which contains the computed adjacent differences.
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#d7df62eaf265ba5c859998b1673fd427">std::adjacent_difference</a>
      */
@@ -455,12 +462,15 @@ public interface Algebra<T> {
      */
     public T exp();
 
+
+
     /**
      * Accumulate values in a range.
+     * <p>
+     * Accumulates the values in the range [begin,end+1).
+     * The initial value is zero. The values are processed in order.
      *
-     * @note Mimics std::accumulate
-     *
-     * @return a scalar
+     * @return the final sum
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
      */
@@ -468,11 +478,13 @@ public interface Algebra<T> {
 
     /**
      * Accumulate values in a range.
+     * <p>
+     * Accumulates the values in the range [begin(),end()+1).
+     * The initial value is init. The values are processed in order.
      *
-     * @note Mimics std::accumulate
+     * @param init is the starting value to add other values to.
      *
-     * @param init is an initial value to be used during computation
-     * @return a scalar
+     * @return the final sum
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
      */
@@ -480,35 +492,77 @@ public interface Algebra<T> {
 
     /**
      * Accumulate values in a range.
+     * <p>
+     * Accumulates the values in the range [first,last).
+     * The initial value is init. The values are processed in order.
      *
-     * @note Mimics std::accumulate
+     * @param first is the start of range, inclusive
+     * @param last is the end of range, exclusive
+     * @param init is the starting value to add other values to.
      *
-     * @param from is the initial inclusive index
-     * @param to   is the final exclusive index
-     * @param init is an initial value to be used during computation
-     * @return a scalar
+     * @return the final sum
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a00969.html#3e6040dba097b64311fce39fa87d1b29">std::accumulate</a>
      */
     public double accumulate(final int from, final int to, final double init);
 
     /**
-     * Applies a transformation function to every element of <code>this</code> instance.
+     * Perform an operation on a sequence in a range [first,last)
+     * <p>
+     * Applies the operator to each element in the input range and assigns the results to itself.
+     * Evaluates input[first+N] = unary_op(array[first+N]) for each <code>N</code> in the range [0, end()-begin() ).
      *
-     * @return this
+     * @param f is an unary function to be applied
+     *
+     * @return <code>this</code>, i.e: performs the transformation in place
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01161.html#gaaf771a08ae2322b42640bb14fc342c5d">std::transform</a>
      */
     public T transform(final DoubleOp func);
 
     /**
-     * Applies a transformation function to every element of <code>this</code> instance.
+     * Perform an operation on a sequence in a range [first,last)
+     * <p>
+     * Applies the operator to each element in the input range and assigns the results to itself.
+     * Evaluates input[first+N] = unary_op(array[first+N]) for each <code>N</code> in the range [0, last-first).
      *
-     * @param from is the start element, inclusive
-     * @param to is the end element, exclusive
-     * @paran func is a function to be applied to every element
+     * @param first is the start of range, inclusive
+     * @param last is the end of range, exclusive
+     * @param f is an unary function to be applied
      *
-     * @return this
+     * @return <code>this</code>, i.e: performs the transformation in place
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01161.html#gaaf771a08ae2322b42640bb14fc342c5d">std::transform</a>
      */
-    public T transform(final int from, final int to, final Ops.DoubleOp func);
+    public T transform(final int first, final int last, final Ops.DoubleOp f);
+
+
+//
+// TO BE IMPLEMENTED
+//
+//    /**
+//     * Perform an operation on a sequence in a range [first,last)
+//     * <p>
+//     * Applies the operator to each element in the input range and assigns the results to successive elements of
+//     * the output sequence. Evaluates input[first+N] = unary_op(array[to+N]) for each <code>N</code> in the range [0, last-first).
+//     *
+//     * @param first is the start of range, inclusive
+//     * @param last is the end of range, exclusive
+//     * @param result is the output sequence
+//     * @param to is the first element of the output sequence
+//     * @param f is an unary function to be applied
+//     *
+//     * @return the result sequence received as input
+//     *
+//     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01161.html#gaaf771a08ae2322b42640bb14fc342c5d">std::transform</a>
+//     */
+//    public T transform(final int first, final int last, final T result, final int to, final Ops.DoubleOp f);
+//
+//    public T transform(final T another, final Ops.BinaryDoubleOp f);
+//
+//    public T transform(final int first1, final int last1, final T another, final int first2, final Ops.BinaryDoubleOp f);
+//
+//    public T transform(final int first1, final int last1, final T another, final int first2, final T result, final int to, final Ops.BinaryDoubleOp f);
 
 
     //
@@ -522,43 +576,112 @@ public interface Algebra<T> {
     /**
      * Finds the first position in which val could be inserted without changing the ordering.
      *
-     * @note Mimics std::lower_bound
+     * @param value to be searched
      *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
+     * @return an index pointing to the first element "not less than" <code>val</code>, or end() if every element is
+     * less than <code>val</code>.
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01165.html#ga0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
      */
     public abstract int lowerBound(final double val);
 
     /**
      * Finds the first position in which val could be inserted without changing the ordering.
      *
-     * @note Mimics std::lower_bound
+     * @param first element, inclusive
+     * @param last element, <b>inclusive</b>
+     * @param value to be searched
      *
-     * @param from is the initial index, inclusive
-     * @param to is the final index, exclusive
+     * @return an index pointing to the first element "not less than" <code>val</code>, or end() if every element is
+     * less than <code>val</code>.
      *
-     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01165.html#ga0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
      */
     public abstract int lowerBound(int from, final int to, final double val);
 
     /**
-     * Finds the last position in which val could be inserted without changing the ordering.
+     * Finds the first position in which val could be inserted without changing the ordering.
      *
-     * @note Mimics std::upper_bound
+     * @param value to be searched
+     * @param f is a BinaryDoublePredicate which defines the comparison function
+     *
+     * @return an index pointing to the first element "not less than" <code>val</code>, or end() if every element is
+     * less than <code>val</code>.
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01165.html#ga0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
+     */
+    public abstract int lowerBound(final double val, final Ops.BinaryDoublePredicate f);
+
+    /**
+     * Finds the first position in which val could be inserted without changing the ordering.
+     *
+     * @param first element, inclusive
+     * @param last element, <b>inclusive</b>
+     * @param value to be searched
+     * @param f is a BinaryDoublePredicate which defines the comparison function
+     *
+     * @return an index pointing to the first element "not less than" <code>val</code>, or end() if every element is
+     * less than <code>val</code>.
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01165.html#ga0ff3b53e875d75731ff8361958fac68f">std::lower_bound</a>
+     */
+    public abstract int lowerBound(int from, final int to, final double val, final Ops.BinaryDoublePredicate f);
+
+    /**
+     * Finds the last position in which val could be inserted in a sequence [begin(), end()] without changing the ordering.
+     *
+     * @param value to be searched
+     *
+     * @return an index pointing to the first element greater than <code>val</code>, or
+     * end() if no elements are greater than <code>val</code>.
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
      */
     public abstract int upperBound(final double val);
 
+
     /**
-     * Finds the last position in which val could be inserted without changing the ordering.
+     * Finds the last position in which val could be inserted in a sequence [first,last] without changing the ordering.
      *
-     * @note Mimics std::upper_bound
+     * @param first element, inclusive
+     * @param last element, <b>inclusive</b>
+     * @param value to be searched
      *
-     * @param from is the initial index, inclusive
-     * @param to is the final index, exclusive
+     * @return an index pointing to the first element greater than <code>val</code>, or
+     * end() if no elements are greater than <code>val</code>.
      *
      * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
      */
-    public abstract int upperBound(int from, final int to, final double val);
+    public abstract int upperBound(int first, final int last, final double val);
+
+
+    /**
+     * Finds the last position in which val could be inserted in a sequence [begin(), end()] without changing the ordering.
+     *
+     * @param value to be searched
+     * @param f is a BinaryDoublePredicate which defines the comparison function
+     *
+     * @return an index pointing to the first element greater than <code>val</code>, or
+     * end() if no elements are greater than <code>val</code>.
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
+     */
+    public abstract int upperBound(final double val, final Ops.BinaryDoublePredicate f);
+
+
+    /**
+     * Finds the last position in which val could be inserted in a sequence [first,last] without changing the ordering.
+     *
+     * @param first element, inclusive
+     * @param last element, <b>inclusive</b>
+     * @param value to be searched
+     * @param f is a BinaryDoublePredicate which defines the comparison function
+     *
+     * @return an index pointing to the first element greater than <code>val</code>, or
+     * end() if no elements are greater than <code>val</code>.
+     *
+     * @see <a href="http://gcc.gnu.org/onlinedocs/libstdc++/latest-doxygen/a01016.html#g9bf525d5276b91ff6441e27386034a75">std::upper_bound</a>
+     */
+    public abstract int upperBound(int first, final int last, final double val, final Ops.BinaryDoublePredicate f);
 
 }

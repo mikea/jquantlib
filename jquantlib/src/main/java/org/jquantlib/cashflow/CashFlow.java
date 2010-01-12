@@ -2,7 +2,7 @@
  Copyright (C) 2007 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -35,7 +35,7 @@ public abstract class CashFlow extends Event implements Comparable<CashFlow> {
     //
     // public abstract methods
     //
-    
+
     /**
 	 * @return amount of the cash flow. The amount is not discounted, i.e., it is the actual amount paid at the cash flow date.
 	 */
@@ -45,17 +45,19 @@ public abstract class CashFlow extends Event implements Comparable<CashFlow> {
     //
     // implements Comparable
     //
-    
+
 	@Override
-    public int compareTo(CashFlow c2) {
-        if (date().lt(c2.date()))
+    public int compareTo(final CashFlow c2) {
+        if (date().lt(c2.date())) {
             return -1;
+        }
 
         if (date().equals(c2.date())) {
             try {
-                if (amount() < c2.amount())
+                if (amount() < c2.amount()) {
                     return -1;
-            } catch (Exception e) {
+                }
+            } catch (final Exception e) {
                 return -1;
             }
             return 0;
@@ -64,10 +66,11 @@ public abstract class CashFlow extends Event implements Comparable<CashFlow> {
         return 1;
     }
 
+
 	//
 	// implements TypedVisitable
 	//
-	
+
 	// TODO: code review :: object model needs to be validated and eventually refactored
 	@Override
 	public void accept(final TypedVisitor<Object> v) {

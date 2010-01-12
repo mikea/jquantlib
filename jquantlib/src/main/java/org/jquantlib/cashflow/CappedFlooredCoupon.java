@@ -1,5 +1,5 @@
-
 /*
+Copyright (C) 2009 Ueli Hofstetter
 Copyright (C) 2009 John Martin
 
 This source code is release under the BSD License.
@@ -24,10 +24,7 @@ When applicable, the original copyright notice follows this notice.
 package org.jquantlib.cashflow;
 
 import org.jquantlib.QL;
-import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.math.Constants;
-import org.jquantlib.time.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
@@ -52,28 +49,54 @@ import org.jquantlib.util.Visitor;
  * {@latex[ R = (a L + b) + |a| \min(\frac{C - b}{|a|} - \xi L, 0) }
  *
  * @author Ueli Hofstetter
+ * @author John Martin
+ */
+
+/*
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2003, 2004 StatPro Italia srl
+ Copyright (C) 2003 Nicolas Di C�sar�
+ Copyright (C) 2006, 2007 Cristina Duminuco
+ Copyright (C) 2006 Ferdinando Ametrano
+ Copyright (C) 2007 Giorgio Facchinetti
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
+/**
+ * Coupon paying a variable index-based rate
+ *
+ * @author Ueli Hofstetter
+ * @author John Martin
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 // TODO: code review :: please verify against QL/C++ code
 public class CappedFlooredCoupon extends FloatingRateCoupon {
 
-    // OK WAT?
     protected FloatingRateCoupon underlying_;
-
     protected boolean isCapped_, isFloored_;
-    protected/* Rate */double cap_, floor_;
+    protected /* @Rate */ double cap_, floor_;
 
-    /*
-     * Implied constructor
-     */
+
+    //
+    // public constructors
+    //
 
     public CappedFlooredCoupon(final FloatingRateCoupon underlying) {
-        this(underlying, Double.NaN, Double.NaN);
+        this(underlying, Constants.NULL_REAL, Constants.NULL_REAL);
     }
 
-    /*
-     * Standard Constructor
-     */
     public CappedFlooredCoupon(final FloatingRateCoupon underlying, final double cap, final double floor) {
         super(underlying.date(), underlying.nominal,
                 underlying.accrualStartDate(), underlying.accrualEndDate(),
@@ -81,8 +104,8 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
                 underlying.referencePeriodStart(), underlying.referencePeriodEnd(),
                 underlying.dayCounter(), underlying.isInArrears());
         this.underlying_ = underlying;
-        isCapped_ = (false);
-        isFloored_ = (false);
+        isCapped_ = false;
+        isFloored_ = false;
 
         if (gearing_ > 0) {
             if (!Double.isNaN(cap)) {
@@ -93,16 +116,16 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
                 floor_ = floor;
                 isFloored_ = true;
             }
-        } 
-        
-        // FIXME
+        }
+
+        // FIXME :: this comment does not belong to C++ code :: evaluate and eventually remove
+        //
         // note subtle difference, caps become floors and floors become caps
         // if gearing is < 0.
-        // It maybe WRONG to do this, note how we access the floor() and cap() 
-        // functions defined below. if we swap the caps and floors at construction, for  
+        // It maybe WRONG to do this, note how we access the floor() and cap()
+        // functions defined below. if we swap the caps and floors at construction, for
         // a negative gearing, we will undo this change when we access the negative
         // gearing again through the floor and cap functions.
-
 
         else {
             if (!Double.isNaN(cap)) {
@@ -115,9 +138,8 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
             }
         }
 
-        if (isCapped_ && isFloored_) 
-        {
-            QL.require(cap >= floor, "cap rate must be higher then floor rate"); 
+        if (isCapped_ && isFloored_) {
+            QL.require(cap >= floor , "cap level less than floor level"); // TODO: message
         }
 
         this.underlying_.addObserver(this);
@@ -125,86 +147,86 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
         // registerWith(underlying);
     }
 
-    // TODO: code review :: please verify against QL/C++ code
-    public void setPricer(FloatingRateCouponPricer pricer) 
-    { 
-    	// if we let the bottom require first we don't have to check anything
-    	underlying_.setPricer (pricer);
+    @Override
+    public void setPricer(final FloatingRateCouponPricer pricer) {
 
-        if (this.pricer != null)
-        {
+        if (this.pricer != null) {
             this.pricer.deleteObserver (this);
         }
         this.pricer = pricer;
-        this.pricer.addObserver (this);
+        if (this.pricer != null) {
+            this.pricer.addObserver (this);
+        }
         update();
+        underlying_.setPricer (pricer);
     }
 
     @Override
-    public /*@Rate*/ double rate() /* @ReadOnly */ 
-    {
+    public /*@Rate*/ double rate() /* @ReadOnly */ {
         QL.require (underlying_.pricer != null, "pricer not set");
-        double swapletRate = underlying_.rate();
+        final double swapletRate = underlying_.rate();
         double floorRate = 0.0;
         double capRate = 0.0;
-        if (isFloored_)
-        {
+        if (isFloored_) {
             floorRate = underlying_.pricer.floorletRate(effectiveFloor());
         }
-        if (isCapped_)
-        {
+        if (isCapped_) {
             capRate = underlying_.pricer.capletRate (effectiveCap());
-        }   
+        }
         return swapletRate + floorRate - capRate;
     }
 
     @Override
-    public /*@Rate*/ double convexityAdjustment() /* @ReadOnly */ 
-    {
+    public /*@Rate*/ double convexityAdjustment() /* @ReadOnly */ {
         return underlying_.convexityAdjustment();
-    }    
+    }
 
-    private /*@Rate*/ double cap() /* @ReadOnly */ 
-    {
-        if (gearing_ > 0 && isCapped_)
-        {
+    public boolean isCapped() /* @ReadOnly */{
+        return isCapped_;
+    }
+
+    public boolean isFloored() /* @ReadOnly */{
+        return isFloored_;
+    }
+
+    public /*@Rate*/ double cap() /* @ReadOnly */ {
+        if (gearing_ > 0 && isCapped_) {
             return cap_;
         }
-        if (gearing_ < 0 && isFloored_)
-        {
+        if (gearing_ < 0 && isFloored_) {
             return floor_;
         }
         return Constants.NULL_REAL;
     }
 
-    private /*@Rate*/ double floor() /* @ReadOnly */ 
-    {
-        if (gearing_ > 0 && isFloored_)
-        {
+    public /*@Rate*/ double floor() /* @ReadOnly */ {
+        if (gearing_ > 0 && isFloored_) {
             return floor_;
         }
-        if (gearing_ < 0 && isCapped_)
-        {
+        if (gearing_ < 0 && isCapped_) {
             return cap_;
         }
         return Constants.NULL_REAL;
     }
 
-    private /*@Rate*/ double effectiveCap() /* @ReadOnly */ 
-    {
+    private /*@Rate*/ double effectiveCap() /* @ReadOnly */ {
         return (cap_ - spread()) / gearing();
     }
 
-    private /*@Rate*/ double effectiveFloor() /* @ReadOnly */ 
-    {
+    private /*@Rate*/ double effectiveFloor() /* @ReadOnly */ {
         return (floor_ - spread()) / gearing();
     }
 
+
+    //
+    // implements Observer
+    //
+
     @Override
-    public void update() 
-    {
+    public void update() {
         notifyObservers();
     }
+
 
     //
     // implements TypedVisitable
@@ -219,5 +241,6 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
             super.accept(v);
         }
     }
+
 
 }

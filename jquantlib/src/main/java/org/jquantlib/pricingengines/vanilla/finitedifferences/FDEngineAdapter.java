@@ -34,7 +34,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
-*/
+ */
 package org.jquantlib.pricingengines.vanilla.finitedifferences;
 
 import java.lang.reflect.Constructor;
@@ -56,8 +56,8 @@ import org.jquantlib.util.Observer;
  * @author Richard Gomes
  */
 public abstract class FDEngineAdapter
-        <Base extends FDVanillaEngine, Engine extends OneAssetOption.Engine>
-        implements OneAssetOption.Engine {
+<Base extends FDVanillaEngine, Engine extends OneAssetOption.Engine>
+implements OneAssetOption.Engine {
 
     //
     // private fields
@@ -92,12 +92,12 @@ public abstract class FDEngineAdapter
 
         try {
             // instantiate 1st generic parameter : a base FD engine
-            final Class<Base> fdBaseClass = (Class<Base>) new TypeTokenTree(this.getClass()).getRoot().get(0).getElement();
+            final Class<Base> fdBaseClass = (Class<Base>) new TypeTokenTree(this.getClass()).getElement(0);
             final Constructor<Base> baseConstructor = fdBaseClass.getConstructor(GeneralizedBlackScholesProcess.class, int.class, int.class, boolean.class);
             baseInstance = baseConstructor.newInstance(process, timeSteps, gridPoints, timeDependent);
 
             // instantiate 2nd generic parameter : a pricing engine ( SEE COMMENTS on field engineClass )
-            engineClass = (Class<Engine>) new TypeTokenTree(this.getClass()).getRoot().get(1).getElement();
+            engineClass = (Class<Engine>) new TypeTokenTree(this.getClass()).getElement(1);
 
         } catch (final Exception e) {
             throw new LibraryException(e);
@@ -113,10 +113,12 @@ public abstract class FDEngineAdapter
     @Override
     public void calculate() /* @ReadOnly */ {
         // minimum sanity check on p-impl idiom
-        if (impl==null)
+        if (impl==null) {
             throw new LibraryException(PRICING_ENGINE_NOT_SET);
-        if (!engineClass.isAssignableFrom(impl.getClass()))
+        }
+        if (!engineClass.isAssignableFrom(impl.getClass())) {
             throw new LibraryException(ReflectConstants.ILLEGAL_TYPE_PARAMETER);
+        }
         baseInstance.setupArguments(impl.getArguments());
         baseInstance.calculate(impl.getResults());
     }
@@ -128,8 +130,9 @@ public abstract class FDEngineAdapter
 
     @Override
     public void update() {
-        if (impl==null)
+        if (impl==null) {
             throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        }
         impl.update();
     }
 
@@ -140,50 +143,57 @@ public abstract class FDEngineAdapter
 
     @Override
     public void addObserver(final Observer observer) {
-        if (impl==null)
+        if (impl==null) {
             throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        }
         impl.addObserver(observer);
     }
 
     @Override
     public int countObservers() {
-        if (impl==null)
+        if (impl==null) {
             throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        }
         return impl.countObservers();
     }
 
     @Override
     public void deleteObserver(final Observer observer) {
-        if (impl==null)
+        if (impl==null) {
             throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        }
         impl.deleteObserver(observer);
     }
 
     @Override
     public void deleteObservers() {
-        if (impl==null)
+        if (impl==null) {
             throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        }
         impl.deleteObservers();
     }
 
     @Override
     public List<Observer> getObservers() {
-        if (impl==null)
+        if (impl==null) {
             throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        }
         return impl.getObservers();
     }
 
     @Override
     public void notifyObservers() {
-        if (impl==null)
+        if (impl==null) {
             throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        }
         impl.notifyObservers();
     }
 
     @Override
     public void notifyObservers(final Object arg) {
-        if (impl==null)
+        if (impl==null) {
             throw new LibraryException(PRICING_ENGINE_NOT_SET);
+        }
         impl.notifyObservers(arg);
     }
 

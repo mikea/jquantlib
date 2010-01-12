@@ -42,8 +42,8 @@ package org.jquantlib.math;
 
 import org.jquantlib.QL;
 import org.jquantlib.math.functions.Identity;
-import org.jquantlib.math.interpolations.CubicSplineInterpolation;
-import org.jquantlib.math.interpolations.factories.NaturalCubicSpline;
+import org.jquantlib.math.interpolations.CubicInterpolation;
+import org.jquantlib.math.interpolations.NaturalCubicInterpolation;
 import org.jquantlib.math.matrixutilities.Array;
 
 /**
@@ -162,19 +162,21 @@ public class SampledCurve {
     public double valueAtCenter() /* @Readonly */{
         QL.require(!empty() , "empty sampled curve"); // QA:[RG]::verified // TODO: message
         final int jmid = size() / 2;
-        if (size() % 2 != 0)
+        if (size() % 2 != 0) {
             return values.get(jmid);
-        else
+        } else {
             return (values.get(jmid) + values.get(jmid - 1)) / 2.0;
+        }
     }
 
     public double firstDerivativeAtCenter() /* @Readonly */{
         QL.require(size() >= 3 , "the size of the curve must be at least 3"); // QA:[RG]::verified // TODO: message
         final int jmid = size() / 2;
-        if (size() % 2 != 0)
+        if (size() % 2 != 0) {
             return (values.get(jmid + 1) - values.get(jmid - 1)) / (grid.get(jmid + 1) - grid.get(jmid - 1));
-        else
+        } else {
             return (values.get(jmid) - values.get(jmid - 1)) / (grid.get(jmid) - grid.get(jmid - 1));
+        }
     }
 
     public double secondDerivativeAtCenter() /* @Readonly */{
@@ -214,12 +216,12 @@ public class SampledCurve {
             newValues = newGrid.clone().transform(f);
         }
 
-        final CubicSplineInterpolation priceSpline = new NaturalCubicSpline().interpolate(
-                transformed.constIterator(), values.constIterator());
+        final CubicInterpolation priceSpline = new NaturalCubicInterpolation(transformed, values);
 
         priceSpline.update();
-        for (int i=0; i<newValues.size(); i++)
-            newValues.set(i, priceSpline.evaluate(newValues.get(i), true) );
+        for (int i=0; i<newValues.size(); i++) {
+            newValues.set(i, priceSpline.op(newValues.get(i), true) );
+        }
 
         this.grid.swap(newGrid);
         this.values.swap(newValues);

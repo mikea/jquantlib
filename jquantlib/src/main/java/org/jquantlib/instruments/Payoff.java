@@ -94,6 +94,7 @@ public abstract class Payoff implements TypedVisitable<Payoff> {
         }
 	}
 
+
     //
     // overrides Object
     //

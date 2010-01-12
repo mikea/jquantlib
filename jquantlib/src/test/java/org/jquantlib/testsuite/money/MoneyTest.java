@@ -44,6 +44,8 @@ public class MoneyTest {
         QL.info("see testsuite.money.cpp/hpp");
     }
 
+    // FIXME: Remove @Ignore when ExchangeRateManager becomes available (and reviewed!)
+    // See: http://bugs.jquantlib.org/view.php?id=466
     @Ignore
     @Test
     public void testBaseCurrency(){
@@ -79,14 +81,14 @@ public class MoneyTest {
 
 
         final Rounding round = Money.baseCurrency.rounding();
-        /*Decimal*/final double x = round.operator(m1.value()*3.0/eur_gbp.rate()) + 2.5*m2.value() -
+        /*@Decimal*/final double x = round.operator(m1.value()*3.0/eur_gbp.rate()) + 2.5*m2.value() -
         round.operator(m3.value()/(5.0*eur_usd.rate()));
         QL.info("Expected value: " + x);
 
         final Money expected = new Money(x, EUR);
 
         assertTrue(Closeness.isClose(calculated3.value(),expected.value()));
-        if(!calculated3.equals(expected)){
+        if(!calculated3.equals(expected)) {
             fail("Wrong result: \n"
                     + "    expected:   " + expected + "\n"
                     + "    calculated: " + calculated3);

@@ -1,123 +1,163 @@
 package org.jquantlib.termstructures;
 
-import java.text.DecimalFormat;
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
+
 import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.reflect.ReflectConstants;
+import org.jquantlib.lang.reflect.TypeTokenTree;
+import org.jquantlib.math.interpolations.Interpolation;
+import org.jquantlib.math.interpolations.Interpolation.Interpolator;
 import org.jquantlib.math.interpolations.factories.Linear;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.solvers1D.Brent;
-import org.jquantlib.termstructures.Bootstrapper;
-import org.jquantlib.termstructures.yieldcurves.BootstrapTraits;
+import org.jquantlib.termstructures.yieldcurves.PiecewiseCurve;
+import org.jquantlib.termstructures.yieldcurves.Traits;
 import org.jquantlib.time.Date;
 
-public class IterativeBootstrap implements Bootstrapper
-{
-    private boolean validCurve;
-    
-    private YieldTermStructure termStructure;
-    
-    private Bootstrapable bootstrapable;
+//FIXME: This class should be declared generic, like this:
+//
+//      class IterativeBootstrap<Curve extends Traits.Curve> implements Bootstrap
+//
+// ... in spite that there's no real value on doing it unless strict API resemblance to QL/C++
+//
+public class IterativeBootstrap implements Bootstrap {
 
-    private BootstrapTraits traits;
+    //
+    // private fields
+    //
 
-    private RateHelper [] instruments; 
-    
+    private boolean         validCurve;
+    private PiecewiseCurve  ts;
+    private RateHelper[]    instruments;
 
-    public IterativeBootstrap ()
-    {
+    private Traits          traits;
+    private Interpolator    interpolator;
+    private Interpolation   interpolation;
+
+    //
+    // final private fields
+    //
+
+    final private Class<?>  classB;
+
+
+    //
+    // public constructors
+    //
+
+    public IterativeBootstrap() {
+        this(new TypeTokenTree(IterativeBootstrap.class).getElement(0));
+    }
+
+    public IterativeBootstrap(final Class<?> klass) {
+        QL.validateExperimentalMode();
+
+        if (klass==null) {
+            throw new LibraryException("null PiecewiseCurve"); // TODO: message
+        }
+        if (!PiecewiseCurve.class.isAssignableFrom(klass)) {
+            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
+        }
+        this.classB = klass;
+
         this.validCurve = false;
+        this.ts = null;
     }
 
-    public void setup (YieldTermStructure termStructure, Bootstrapable bootstrapable, 
-                       RateHelper [] instruments, BootstrapTraits traits)
-    {
-        QL.ensure (termStructure != null, "TermStructure cannot be null");
-        this.termStructure = termStructure;
-        this.bootstrapable = bootstrapable;
-        this.instruments = instruments;
-        this.traits = traits;
-        int n = instruments.length;
 
-        if (System.getProperty("EXPERIMENTAL") == null)
-            throw new UnsupportedOperationException("Work in progress");
+    //
+    // public methods
+    //
 
-        // FIXME
-        QL.require (n >= 2, "Not enough instruments provided");
+    public void setup(final PiecewiseCurve ts) {
 
-        for (int i = 0; i < n; ++ i)
-        {
-            termStructure.addObserver (instruments[i]);
+        QL.ensure (ts != null, "TermStructure cannot be null");
+        if (!classB.isAssignableFrom(ts.getClass())) {
+            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
         }
-        bootstrapable.resetData (n + 1);
-        bootstrapable.resetTime (n + 1);
-        bootstrapable.resetDates (n + 1);
+
+        this.ts            = ts;
+        this.interpolator  = ts.interpolator();
+        this.interpolation = ts.interpolation();
+        this.traits        = ts.traits();
+        this.instruments   = ts.instruments();
+
+        final int n = instruments.length;
+        QL.require(n+1 >= ts.interpolator().requiredPoints(), "not enough instruments provided");
+
+        for (int i=0; i<n; ++i) {
+            instruments[i].addObserver(ts);
+        }
     }
 
-    public void calculate ()
-    {
-        int isize = instruments.length;
-        Array data = bootstrapable.getData();
-        Date [] dates  = bootstrapable.getDates();
-        Array times = bootstrapable.getTimes();
-        // sorting and maturity date check is done by check instruments on the piecewise yield curve
-        // assert no invalid quotes, and assign term structure
-        for (RateHelper i : instruments)
-        {
-            QL.ensure (i.quoteIsValid(), " Instrument cannot have invalid quote.");
-            // set term structure on instrument
-            i.setTermStructure (termStructure);
-        }
-        // set initial guess only if the current curve cannot be used as a guess
-        if (validCurve)
-        {
-            QL.ensure (bootstrapable.getData().size() == isize + 1, "Dimensions mismatch expected");
-        }
-        else
-        {
-            bootstrapable.resetData (isize + 1);
-            data = bootstrapable.getData ();
-            data.set (0, traits.initialValue());
-            for (int k = 0; k < data.size(); ++k)
-            {
-                data.set (k, traits.initialGuess());
-            }
-        }
-        // we really only need to do this once, why bother doing it everytime we calculate?
-        dates[0] = traits.initialDate (termStructure);
-        times.set (0, termStructure.timeFromReference (dates[0]));
-        data.set (0, traits.initialValue ());
-        for (int i = 0; i < isize ; ++ i)
-        {
-            dates[i + 1] = instruments[i].latestDate();
-            times.set (i + 1, termStructure.timeFromReference (dates[i+1]));
-            if (! validCurve)
-            {
-                data.set (i + 1, data.get (i));
-            }
-        }
-        
 
-        DecimalFormat df = new DecimalFormat("###.###############");
-        df.setMinimumFractionDigits (15);
+    public void calculate () {
 
-        Brent solver = new Brent ();
-        int maxIterations = traits.maxIterations();
-        
-        for (int iteration = 0;; ++iteration) 
-        {
+        final int n = instruments.length;
+        Date dates[] = ts.dates();
+        /*@Time*/ double times[] = ts.times();
+        double data[] = ts.data();
+
+        // ensure rate helpers are sorted
+        Arrays.sort(instruments, new BootstrapHelperSorter());
+
+        // check that there is no instruments with the same maturity
+        for (int i=1; i<n; ++i) {
+            final Date m1 = instruments[i-1].latestDate();
+            final Date m2 = instruments[i].latestDate();
+            QL.require(m1 != m2, "two instruments have the same maturity");
+        }
+
+        // check that there is no instruments with invalid quote
+        for (int i=0; i<n; ++i) {
+            QL.require(instruments[i].quoteIsValid(), " instrument has an invalid quote");
+        }
+
+        // setup instruments
+        for (int i=0; i<n; ++i) {
+            // don't try this at home!
+            // This call creates instruments, and removes "const".
+            // There is a significant interaction with observability.
+            instruments[i].setTermStructure(ts);
+        }
+
+        // calculate dates and times
+        dates = new Date[n+1];
+        times = new /*@Time*/ double[n+1];
+        dates[0] = traits.initialDate(ts);
+        times[0] = ts.timeFromReference(dates[0]);
+        for (int i=0; i<n; ++i) {
+            dates[i+1] = instruments[i].latestDate();
+            times[i+1] = ts.timeFromReference(dates[i+1]);
+        }
+        ts.setDates(dates);
+        ts.setTimes(times);
+
+        // set initial guess only if the current curve cannot be used as guess
+        if (validCurve) {
+            QL.ensure(ts.data().length == n+1, "dimension mismatch");
+        } else {
+            data = new /*@Rate*/ double[n+1];
+            data[0] = traits.initialValue(ts);
+            for (int i=0; i<n; ++i) {
+                data[i+1] = traits.initialGuess();
+            }
+            ts.setData(data);
+        }
+
+        final Brent solver = new Brent ();
+        final int maxIterations = traits.maxIterations();
+
+        for (int iteration = 0;; ++iteration) {
             // only read safe to use as a reference
-            final Array previousData = data.clone();
+            final double previousData[] = data.clone(); // TODO: verify if clone() is needed
             // restart from the previous interpolation
-            if (validCurve) 
-            {
-                bootstrapable.setInterpolation 
-                (bootstrapable.getInterpolator().interpolate (
-                     times.constIterator (), data.constIterator ()));
+            if (validCurve) {
+                ts.setInterpolation(interpolator.interpolate(new Array(times), new Array(data)));
             }
-            
-            for (int i = 1; i < isize + 1; ++i) 
-            {
+
+            for (int i=1; i<n+1; ++i) {
                 /*
                 for (int k = 0; k < data.size(); ++ k)
                 {
@@ -131,115 +171,90 @@ public class IterativeBootstrap implements Bootstrapper
                     QL.debug (sb.toString ());
                 }
                 */
+
                 // calculate guess before extending interpolation
                 // to ensure that any extrapolation is performed
                 // using the curve bootstrapped so far and no more
-                RateHelper instrument = instruments[i-1];
+                final RateHelper instrument = instruments[i-1];
                 double guess = 0.0;
-                if (validCurve|| iteration>0) 
-                {
-                    guess = data.get (i);
-                } 
-                else if (i==1) 
-                {
+                if (validCurve|| iteration>0) {
+                    guess = ts.data()[i];
+                } else if (i==1) {
                     guess = traits.initialGuess();
-                } 
-                else 
-                {
+                } else {
                     // most traits extrapolate
-                    guess = traits.guess(termStructure, dates[i]);
+                    guess = traits.guess(ts, dates[i]);
                 }
-                
-                //QL.debug (" Guess : " + ((Double)(guess)).toString());
-                
-                // bracket
-                double min = traits.minValueAfter(i, data);
-                double max = traits.maxValueAfter(i, data);
 
-                if (guess <= min || guess >= max)
-                {
+                //QL.debug (" Guess : " + ((Double)(guess)).toString());
+
+                // bracket
+                final double min = traits.minValueAfter(i, data);
+                final double max = traits.maxValueAfter(i, data);
+
+                if (guess <= min || guess >= max) {
                     guess = (min + max) / 2.0;
                 }
 
-                if (! validCurve && iteration == 0)
-                {
+                if (! validCurve && iteration == 0) {
                     // extend interpolation a point at a time
-                    try
-                    {
-                        bootstrapable.setInterpolation 
-                            (bootstrapable.getInterpolator().interpolate (i + 1,
-                             times.constIterator (), data.constIterator ()));
-                    }
-                    catch (Exception e) 
-                    {
+                    try {
+                        ts.setInterpolation(interpolator.interpolate (new Array(times, i+1), new Array(data)));
+                    } catch (final Exception e) {
                         // no chance to fix it in a later iteration
-                        //if (bootstrapable.getInterpolator().global());
-                        //    throw; 
+                        if (ts.interpolator().global()) {
+                            throw new LibraryException("no chance to fix it in a later iteration");
+                        }
 
-                        // otherwise, if the target interpolation is
-                        // not usable yet
-                        bootstrapable.setInterpolation 
-                            (new Linear().interpolate (i + 1,
-                             times.constIterator (), data.constIterator ()));
+                        // otherwise, if the target interpolation is not usable yet
+                        ts.setInterpolation(new Linear().interpolate (new Array(times, i+1), new Array(data)));
                     }
                 }
                 // required because we just changed the data
                 // is it really required?
-                bootstrapable.getInterpolation().update();
-                                
-                try
-                {
-                    BootstrapError error = new BootstrapError (bootstrapable, instrument, traits, i);
-                    double r = solver.solve (error, traits.getAccuracy(),guess, min, max);
+                ts.interpolation().update();
+
+                try {
+                    final BootstrapError error = new BootstrapError(traits, ts, instrument, i);
+                    final double r = solver.solve (error, ts.accuracy(), guess, min, max);
                     // redundant assignment (as it has been already performed
                     // by BootstrapError in solve procedure), but safe
-                    data.set (i, r);
-                } 
-                catch (Exception e) 
-                {
+                    data[i] = r;
+                } catch (final Exception e) {
                     validCurve = false;
                     QL.error ("could not bootstrap");
                 }
             }
 
-            // no need for convergence loop, i don't like this and no one seems to know 
-            // what the hell it is.
-            /*
-            if (! bootstrapable.getInterpolator ().global ())
-            {
-                break;      
-            }
-            */
-            if (!validCurve && iteration == 0)
-            {
+            if (!interpolator.global ()) {
+                break; // no need for convergence loop
+            } else if (!validCurve && iteration == 0) {
                 // ensure the target interpolation is used
-                bootstrapable.setInterpolation 
-                (bootstrapable.getInterpolator().interpolate (times.constIterator (), data.constIterator ()));
-                
+                ts.setInterpolation(interpolator.interpolate (new Array(times), new Array(data)));
+
                 // at least one more iteration is needed to check convergence
                 continue;
             }
 
-            // exit conditions, wat?
+            // exit conditions
             double improvement = 0.0;
-            for (int i = 1; i < isize + 1; ++i)
-            {
-                improvement = Math.max(improvement, Math.abs (data.get (i) - previousData.get (i)));
+            for (int i=1; i<n+1; ++i) {
+                improvement = Math.max(improvement, Math.abs (data[i] - previousData[i]));
             }
             //QL.debug ("improvement :" + ((Double) improvement).toString());
-            if (improvement <= traits.getAccuracy())
-            {
+            if (improvement <= ts.accuracy()) {
                 // convergence reached
                 break;
             }
 
             QL.require (iteration + 1 < maxIterations, "convergence not reached after " +
-                        ((Integer) (iteration + 1)).toString() + 
+                        ((Integer) (iteration + 1)).toString() +
                         " iterations; last improvement " +
                         ((Double) (improvement)).toString() + ", required accuracy " +
-                        ((Double) (traits.getAccuracy())).toString());
+                        ((Double) (ts.accuracy())).toString());
 
         }
         validCurve = true;
     }
+
 }

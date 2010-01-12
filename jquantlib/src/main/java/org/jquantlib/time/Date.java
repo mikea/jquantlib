@@ -266,17 +266,20 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
         final int d = dayOfYear(); // dayOfYear is 1 based
         int m = d / 30 + 1;
         final boolean leap = isLeap(year());
-        while (d <= monthOffset(m, leap))
+        while (d <= monthOffset(m, leap)) {
             --m;
-        while (d > monthOffset(m + 1, leap))
+        }
+        while (d > monthOffset(m + 1, leap)) {
             ++m;
+        }
         return Month.valueOf(m);
     }
 
     public int year() /* @ReadOnly */ {
         int y = (serialNumber / 365) + 1900;
-        if (serialNumber <= yearOffset(y))
+        if (serialNumber <= yearOffset(y)) {
             --y;
+        }
         return y;
     }
 
@@ -484,7 +487,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
         final int d = cal.get(java.util.Calendar.DAY_OF_MONTH);
         final int m = cal.get(java.util.Calendar.MONTH);
         final int y = cal.get(java.util.Calendar.YEAR);
-        return serialNumber == fromDMY(d, m, y);
+        return serialNumber == fromDMY(d, m+1, y);
     }
 
 
@@ -532,10 +535,12 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     @Override
     public int compareTo(final Date o) {
-        if (this.equals(o))
+        if (this.equals(o)) {
             return 0;
-        if (this.le(o))
+        }
+        if (this.le(o)) {
             return -1;
+        }
         return 1;
     }
 
@@ -589,10 +594,12 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     @Override
     public boolean equals(final Object anObject) {
-        if (anObject==null)
+        if (anObject==null) {
             return false;
-        if (!(anObject instanceof Date))
+        }
+        if (!(anObject instanceof Date)) {
             return false;
+        }
         return eq((Date)anObject);
     }
 
@@ -687,8 +694,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
             QL.ensure(y >= 1900 && y <= 2099 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
             final int length = monthLength(m, isLeap(y));
-            if (d > length)
+            if (d > length) {
                 d = length;
+            }
             final int result = fromDMY(d, m, y);
             //QL.debug("{}", result);
             return result;
@@ -699,8 +707,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             final int y = date.year() + n;
 
             QL.ensure(y >= 1900 && y <= 2199 , "year out of bounds. It must be in [1901,2099]"); // QA:[RG]::verified // TODO: message
-            if (d == 29 && m == Month.February.value() && !isLeap(y))
+            if (d == 29 && m == Month.February.value() && !isLeap(y)) {
                 d = 28;
+            }
 
             final int result = fromDMY(d, m, y);
             //QL.debug("{}", result);
@@ -837,14 +846,15 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      */
     public static Date min(final Date... t) {
         QL.require(t!=null , "argument cannot be null"); // QA:[RG]::verified // TODO: message
-        if (t.length == 0)
+        if (t.length == 0) {
             return new Date();
-        else {
+        } else {
             Date min = t[0];
             for (int i=1; i<t.length; i++) {
                 final Date curr = t[i];
-                if (curr.lt(min))
+                if (curr.lt(min)) {
                     min = curr;
+                }
             }
             return min;
         }
@@ -855,14 +865,15 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      */
     public static Date max(final Date... t) {
         QL.require(t!=null , "argument cannot be null"); // QA:[RG]::verified // TODO: message
-        if (t.length == 0)
+        if (t.length == 0) {
             return new Date();
-        else {
+        } else {
             Date max = t[0];
             for (int i=1; i<t.length; i++) {
                 final Date curr = t[i];
-                if (curr.gt(max))
+                if (curr.gt(max)) {
                     max = curr;
+                }
             }
             return max;
         }
@@ -957,8 +968,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
                 from = middle;
                 from++;
                 len = len - half - 1;
-            } else
+            } else {
                 len = half;
+            }
         }
         return from;
      }
@@ -982,9 +994,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             half = len >> 1;
             middle = from;
             middle = middle + half;
-            if (value.compareTo(dates.get(middle)) == -1)
+            if (value.compareTo(dates.get(middle)) == -1) {
                 len = half;
-            else {
+            } else {
                 from = middle;
                 from++;
                 len = len - half - 1;
@@ -1003,9 +1015,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     private final class LongDate {
         @Override
         public final String toString() {
-            if ( isNull() )
+            if ( isNull() ) {
                 return "null date";
-            else {
+            } else {
                 final StringBuilder sb = new StringBuilder();
                 final Formatter formatter = new Formatter(sb, Locale.US);
                 formatter.format("%s %d, %d", month(), dayOfMonth(), year());
@@ -1021,9 +1033,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     private final class ShortDate {
         @Override
         public final String toString() {
-            if ( isNull() )
+            if ( isNull() ) {
                 return "null date";
-            else {
+            } else {
                 final StringBuilder sb = new StringBuilder();
                 final Formatter formatter = new Formatter(sb, Locale.US);
                 formatter.format("%02d/%02d/%4d", month().value(), dayOfMonth(), year());
@@ -1038,9 +1050,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     private final class ISODate {
         @Override
         public final String toString() {
-            if ( isNull() )
+            if ( isNull() ) {
                 return "null date";
-            else {
+            } else {
                 final StringBuilder sb = new StringBuilder();
                 final Formatter formatter = new Formatter(sb, Locale.US);
                 formatter.format("%04d-%02d-%02d", year(), month().value(), dayOfMonth());

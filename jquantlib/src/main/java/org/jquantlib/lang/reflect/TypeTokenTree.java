@@ -68,6 +68,15 @@ public class TypeTokenTree {
         this.root = retrieve(klass);
     }
 
+    /**
+     * Returns the Class of a generic parameter
+     * 
+     * @param pos represents the position of parameter, first is zero
+     * @return the Class of a generic parameter
+     */
+    public Class<?> getElement(final int pos) {
+        return root.get(pos).getElement();
+    }
 
     //
     // public methods
@@ -86,34 +95,37 @@ public class TypeTokenTree {
         final Type superclass = klass.getGenericSuperclass();
         QL.require(!(superclass instanceof Class) , ReflectConstants.SHOULD_BE_ANONYMOUS_OR_EXTENDED); // QA:[RG]::verified
         final TypeNode node = new TypeNode(klass);
-        for (final Type t : ((ParameterizedType) superclass).getActualTypeArguments() )
+        for (final Type t : ((ParameterizedType) superclass).getActualTypeArguments() ) {
             node.add(retrieve(t));
+        }
         return node;
     }
 
     private TypeNode retrieve(final Type type) {
         final TypeNode node;
-        if (type instanceof Class<?>)
+        if (type instanceof Class<?>) {
             node = new TypeNode((Class<?>)type);
-        else if (type instanceof ParameterizedType) {
+        } else if (type instanceof ParameterizedType) {
             final Type rawType = ((ParameterizedType) type).getRawType();
             node = retrieve(rawType);
-            for (final Type arg : ((ParameterizedType) type).getActualTypeArguments())
+            for (final Type arg : ((ParameterizedType) type).getActualTypeArguments()) {
                 node.add(retrieve(arg));
-//
-//TODO: code review
-//
-// More test cases need to be done, specially related to Monte Carlo needs on generic parameters
-//
-//        } else if (type instanceof TypeVariable) {
-//            GenericDeclaration declaration = ((TypeVariable) type).getGenericDeclaration();
-//            node = new TypeNode(declaration);
-//            for (Type arg : ((TypeVariable) type).getBounds()) {
-//                node.add(retrieve(arg));
-//            }
-//
-        } else
+                //
+                //TODO: code review
+                //
+                // More test cases need to be done, specially related to Monte Carlo needs on generic parameters
+                //
+                //        } else if (type instanceof TypeVariable) {
+                //            GenericDeclaration declaration = ((TypeVariable) type).getGenericDeclaration();
+                //            node = new TypeNode(declaration);
+                //            for (Type arg : ((TypeVariable) type).getBounds()) {
+                //                node.add(retrieve(arg));
+                //            }
+                //
+            }
+        } else {
             throw new IllegalArgumentException(ReflectConstants.ILLEGAL_TYPE_PARAMETER);
+        }
         return node;
     }
 

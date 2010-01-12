@@ -19,6 +19,26 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
+
+/*
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2006 Ferdinando Ametrano
+ Copyright (C) 2007, 2008 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+ */
+
 package org.jquantlib.instruments;
 
 import java.util.ArrayList;
@@ -42,10 +62,8 @@ import org.jquantlib.time.Date;
  *
  * @category instruments
  *
- * @author Richard Gomes
+ * @author Praneet Tiwari
  */
-// FIXME: use arrays instead of lists
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class Swap extends Instrument {
 
     protected List<Leg> legs;
@@ -125,7 +143,7 @@ public class Swap extends Instrument {
     // public methods
     //
 
-    public Date startDate() /* @ReadOnly */{
+    public Date startDate() /* @ReadOnly */ {
         QL.require(legs.size() > 0 , "no legs given"); // QA:[RG]::verified // TODO: message
         Date d = CashFlows.getInstance().startDate(this.legs.get(0));
         for (int j = 1; j < this.legs.size(); j++) {
@@ -134,7 +152,7 @@ public class Swap extends Instrument {
         return d;
     }
 
-    public Date maturityDate() /* @ReadOnly */{
+    public Date maturityDate() /* @ReadOnly */ {
         QL.require(legs.size() > 0 , "no legs given"); // QA:[RG]::verified // TODO: message
         Date d = CashFlows.getInstance().maturityDate(this.legs.get(0));
         for (int j = 1; j < this.legs.size(); j++) {
@@ -149,7 +167,7 @@ public class Swap extends Instrument {
     //
 
     @Override
-    public boolean isExpired() /* @ReadOnly */{
+    public boolean isExpired() /* @ReadOnly */ {
         final Date today = new Settings().evaluationDate();
         for (int i = 0; i < legs.size(); i++) {
             for (final CashFlow item : legs.get(i)) {
@@ -161,27 +179,22 @@ public class Swap extends Instrument {
         return true;
     }
 
-
-    //
-    // overrides Instrument
-    //
-
     @Override
-    protected void setupExpired() /* @ReadOnly */{
+    protected void setupExpired() /* @ReadOnly */ {
         super.setupExpired();
         Arrays.fill(legBPS, 0.0);
         Arrays.fill(legNPV, 0.0);
     }
 
     @Override
-    public void setupArguments(final PricingEngine.Arguments arguments) /* @ReadOnly */{
+    public void setupArguments(final PricingEngine.Arguments arguments) /* @ReadOnly */ {
         final Swap.ArgumentsImpl a = (Swap.ArgumentsImpl)arguments;
         a.legs = legs;
         a.payer = payer;
     }
 
     @Override
-    public void fetchResults(final PricingEngine.Results results) /* @ReadOnly */{
+    public void fetchResults(final PricingEngine.Results results) /* @ReadOnly */ {
         super.fetchResults(results);
 
         final Swap.ResultsImpl r = (Swap.ResultsImpl)results;
@@ -202,11 +215,11 @@ public class Swap extends Instrument {
 
 
     //
-    // inner interfaces
+    // public inner interfaces
     //
 
     /**
-     * basic swap arguments
+     * Basic swap arguments
      *
      * @author Richard Gomes
      */
@@ -214,7 +227,7 @@ public class Swap extends Instrument {
 
 
     /**
-     * basic swap results
+     * Basic swap results
      *
      * @author Richard Gomes
      */
@@ -222,7 +235,7 @@ public class Swap extends Instrument {
 
 
     //
-    // ???? inner classes
+    // public inner classes
     //
 
     static public class ArgumentsImpl implements Swap.Arguments {
@@ -244,12 +257,10 @@ public class Swap extends Instrument {
         @Override
         public void reset() {
             super.reset();
-            if (legNPV != null)
-            {
+            if (legNPV != null) {
                 Arrays.fill(legNPV, 0.0);
             }
-            if (legBPS != null)
-            {
+            if (legBPS != null) {
                 Arrays.fill(legBPS, 0.0);
             }
         }
@@ -262,12 +273,9 @@ public class Swap extends Instrument {
         }
 
         @Override
-        //TODO: code review
         public void calculate() /* @ReadOnly */ {
             // nothing
         }
-
     }
-
 
 }

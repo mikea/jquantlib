@@ -45,7 +45,7 @@ public class FlatForwardInterpolationTest  {
 
 	public FlatForwardInterpolationTest () {
 		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
-		interpolation = new ForwardFlat().interpolate(x.constIterator(), y.constIterator());
+		interpolation = new ForwardFlat().interpolate(x, y);
 	    length = x.size();
 	    tolerance = 1.0e-12;
 	}

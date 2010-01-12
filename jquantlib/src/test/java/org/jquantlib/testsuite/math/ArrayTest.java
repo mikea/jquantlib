@@ -22,15 +22,18 @@
 
 package org.jquantlib.testsuite.math;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.iterators.Iterator;
+import org.jquantlib.math.Ops;
+import org.jquantlib.math.functions.GreaterThanPredicate;
 import org.jquantlib.math.functions.Square;
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.math.matrixutilities.Cells;
 import org.jquantlib.math.matrixutilities.Matrix;
 import org.junit.Test;
+
 
 /**
  *
@@ -45,15 +48,8 @@ public class ArrayTest {
 
     @Test
     public void testEquals() {
-        testEquals(Cells.Style.JAVA,    Cells.Style.JAVA);
-        testEquals(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        testEquals(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        testEquals(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void testEquals(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleA);
-        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleB);
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
+        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
 
         if (!aA.equals(aB)) {
             fail("'equals' failed");
@@ -70,15 +66,8 @@ public class ArrayTest {
 
     @Test
     public void testClone() {
-        testClone(Cells.Style.JAVA,    Cells.Style.JAVA);
-        testClone(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        testClone(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        testClone(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void testClone(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleA);
-        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleB);
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
+        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
 
         final Array array = aA.clone();
         if (array == aA) {
@@ -100,15 +89,8 @@ public class ArrayTest {
 
     @Test
     public void abs() {
-        abs(Cells.Style.JAVA,    Cells.Style.JAVA);
-        abs(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        abs(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        abs(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void abs(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 1.0, -2.0, -3.0, 5.0, -9.0, -11.0, -12.0 }, styleA);
-        final Array aB = new Array(new double[] { 1.0,  2.0,  3.0, 5.0,  9.0,  11.0,  12.0 }, styleB);
+        final Array aA = new Array(new double[] { 1.0, -2.0, -3.0, 5.0, -9.0, -11.0, -12.0 });
+        final Array aB = new Array(new double[] { 1.0,  2.0,  3.0, 5.0,  9.0,  11.0,  12.0 });
 
         final Array result = aA.abs();
         if (result == aA) {
@@ -131,39 +113,27 @@ public class ArrayTest {
 
     @Test
     public void accumulate() {
-        accumulate(Cells.Style.JAVA);
-        accumulate(Cells.Style.FORTRAN);
-    }
-
-    private void accumulate(final Cells.Style style) {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 }, style);
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 });
 
         if (aA.accumulate() != 45.0) {
             fail("'accumulate' failed");
         }
-        if (aA.accumulate(2+aA.base(), 5+aA.base(), -2.0) != 10.0) {
+        if (aA.accumulate(2, 5, -2.0) != 10.0) {
             fail("'accumulate' failed");
         }
 
         if (aA.constIterator().accumulate() != 45.0) {
             fail("'accumulate' failed");
         }
-        if (aA.constIterator().accumulate(2+aA.base(), 5+aA.base(), -2.0) != 10.0) {
+        if (aA.constIterator().accumulate(2, 5, -2.0) != 10.0) {
             fail("'accumulate' failed");
         }
     }
 
     @Test
     public void add() {
-        add(Cells.Style.JAVA,    Cells.Style.JAVA);
-        add(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        add(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        add(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void add(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleA);
-        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 });
 
         final Array a = aA.add(aB);
         if (a == aA) {
@@ -173,7 +143,7 @@ public class ArrayTest {
             fail("'add' failed");
         }
 
-        for (int i = a.base(); i < a.size() + a.base(); i++) {
+        for (int i=0; i<a.size(); i++) {
             if (a.get(i) != 5) {
                 fail("'add' failed");
             }
@@ -195,15 +165,8 @@ public class ArrayTest {
 
     @Test
     public void addAssign() {
-        addAssign(Cells.Style.JAVA,    Cells.Style.JAVA);
-        addAssign(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        addAssign(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        addAssign(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void addAssign(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleA);
-        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 });
 
         final Array clone = aA.clone();
         final Array a = clone.addAssign(aB);
@@ -211,7 +174,7 @@ public class ArrayTest {
             fail("addAssign must return <this>");
         }
 
-        for (int i=a.base(); i<a.size()+a.base(); i++) {
+        for (int i=0; i<a.size(); i++) {
             if (a.get(i) != 5) {
                 fail("'addAssign' failed");
             }
@@ -234,15 +197,8 @@ public class ArrayTest {
 
     @Test
     public void sub() {
-        sub(Cells.Style.JAVA,    Cells.Style.JAVA);
-        sub(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        sub(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        sub(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void sub(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 9.0, 8.0, 7.0, 6.0 }, styleA);
-        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
+        final Array aA = new Array(new double[] { 9.0, 8.0, 7.0, 6.0 });
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 });
 
         final Array a = aA.sub(aB);
         if (a == aA) {
@@ -252,7 +208,7 @@ public class ArrayTest {
             fail("'sub' failed");
         }
 
-        for (int i = a.base(); i < a.size() + a.base(); i++) {
+        for (int i=0; i < a.size(); i++) {
             if (a.get(i) != 5) {
                 fail("'sub' failed");
             }
@@ -273,15 +229,8 @@ public class ArrayTest {
 
     @Test
     public void subAssign() {
-        subAssign(Cells.Style.JAVA,    Cells.Style.JAVA);
-        subAssign(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        subAssign(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        subAssign(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void subAssign(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 9.0, 8.0, 7.0, 6.0 }, styleA);
-        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
+        final Array aA = new Array(new double[] { 9.0, 8.0, 7.0, 6.0 });
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 });
 
         final Array clone = aA.clone();
         final Array a = clone.subAssign(aB);
@@ -292,7 +241,7 @@ public class ArrayTest {
             fail("'subAssign' failed");
         }
 
-        for (int i=a.base(); i<a.size()+a.base(); i++) {
+        for (int i=0; i<a.size(); i++) {
             if (a.get(i) != 5) {
                 fail("'subAssign' failed");
             }
@@ -314,15 +263,8 @@ public class ArrayTest {
 
     @Test
     public void mul() {
-        mul(Cells.Style.JAVA,    Cells.Style.JAVA);
-        mul(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        mul(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        mul(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void mul(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 200.0, 100.0, 250.0, 500.0 }, styleA);
-        final Array aB1 = new Array(new double[] {   5.0,  10.0,   4.0,   2.0 }, styleB);
+        final Array aA = new Array(new double[] { 200.0, 100.0, 250.0, 500.0 });
+        final Array aB1 = new Array(new double[] {   5.0,  10.0,   4.0,   2.0 });
 
         final Array clone = aA.clone();
         final Array a1 = clone.mul(aB1);
@@ -333,7 +275,7 @@ public class ArrayTest {
             fail("'mul' failed");
         }
 
-        for (int i=a1.base(); i<a1.size()+a1.base(); i++) {
+        for (int i=0; i<a1.size(); i++) {
             if (a1.get(i) != 1000) {
                 fail("'mul' failed");
             }
@@ -361,8 +303,8 @@ public class ArrayTest {
                 { 2.0,  1.0,  0.0 },
                 { 2.0,  1.0,  1.0 },
                 { 1.0,  2.0,  0.0 }
-        }, styleA);
-        final Array aB2 = new Array(new double[] { 1400.0,  1750.0,   250.0 }, styleB);
+        });
+        final Array aB2 = new Array(new double[] { 1400.0,  1750.0,   250.0 });
 
         final Array a2 = clone.mul(mB);
 
@@ -373,31 +315,18 @@ public class ArrayTest {
             fail("'mul' failed");
         }
 
-        for (int i=a2.base(); i<a2.size()+a2.base(); i++) {
-            final int idx = aB2.base() + i-a2.base();
-            final double elem = aB2.get(idx);
+        for (int i=0; i<a2.size(); i++) {
+            final double elem = aB2.get(i);
             if (a2.get(i) != elem) {
                 fail("'mul' failed");
             }
         }
-
-
-
-
-
     }
 
     @Test
     public void mulAssign() {
-        mulAssign(Cells.Style.JAVA,    Cells.Style.JAVA);
-        mulAssign(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        mulAssign(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        mulAssign(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void mulAssign(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 200.0, 100.0, 250.0, 500.0 }, styleA);
-        final Array aB = new Array(new double[] {   5.0,  10.0,   4.0,   2.0 }, styleB);
+        final Array aA = new Array(new double[] { 200.0, 100.0, 250.0, 500.0 });
+        final Array aB = new Array(new double[] {   5.0,  10.0,   4.0,   2.0 });
 
         final Array clone = aA.clone();
         final Array a = clone.mulAssign(aB);
@@ -408,7 +337,7 @@ public class ArrayTest {
             fail("'mulAssign' failed");
         }
 
-        for (int i=a.base(); i<a.size()+a.base(); i++) {
+        for (int i=0; i<a.size(); i++) {
             if (a.get(i) != 1000) {
                 fail("'mulAssign' failed");
             }
@@ -430,15 +359,8 @@ public class ArrayTest {
 
     @Test
     public void div() {
-        div(Cells.Style.JAVA,    Cells.Style.JAVA);
-        div(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        div(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        div(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void div(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 20.0, 18.0, 16.0, 14.0 }, styleA);
-        final Array aB = new Array(new double[] { 10.0,  9.0,  8.0,  7.0 }, styleB);
+        final Array aA = new Array(new double[] { 20.0, 18.0, 16.0, 14.0 });
+        final Array aB = new Array(new double[] { 10.0,  9.0,  8.0,  7.0 });
 
         final Array clone = aA.clone();
         final Array a = clone.div(aB);
@@ -449,7 +371,7 @@ public class ArrayTest {
             fail("'div' failed");
         }
 
-        for (int i=a.base(); i<a.size()+a.base(); i++) {
+        for (int i=0; i<a.size(); i++) {
             if (a.get(i) != 2) {
                 fail("'div' failed");
             }
@@ -472,15 +394,8 @@ public class ArrayTest {
 
     @Test
     public void divAssign() {
-        divAssign(Cells.Style.JAVA,    Cells.Style.JAVA);
-        divAssign(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        divAssign(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        divAssign(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void divAssign(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 20.0, 18.0, 16.0, 14.0 }, styleA);
-        final Array aB = new Array(new double[] { 10.0,  9.0,  8.0,  7.0 }, styleB);
+        final Array aA = new Array(new double[] { 20.0, 18.0, 16.0, 14.0 });
+        final Array aB = new Array(new double[] { 10.0,  9.0,  8.0,  7.0 });
 
         final Array clone = aA.clone();
         final Array a = clone.divAssign(aB);
@@ -491,7 +406,7 @@ public class ArrayTest {
             fail("'divAssign' failed");
         }
 
-        for (int i=a.base(); i<a.size()+a.base(); i++) {
+        for (int i=0; i<a.size(); i++) {
             if (a.get(i) != 2) {
                 fail("'divAssign' failed");
             }
@@ -513,15 +428,8 @@ public class ArrayTest {
 
     @Test
     public void dotProduct() {
-        dotProduct(Cells.Style.JAVA,    Cells.Style.JAVA);
-        dotProduct(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        dotProduct(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        dotProduct(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void dotProduct(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 2.0, 1.0, -2.0, 3.0 }, styleA);
-        final Array aB = new Array(new double[] { 3.0, 4.0,  5.0, 1.0 }, styleB);
+        final Array aA = new Array(new double[] { 2.0, 1.0, -2.0, 3.0 });
+        final Array aB = new Array(new double[] { 3.0, 4.0,  5.0, 1.0 });
 
         if (aA.dotProduct(aB) != 3) {
             fail("'dotProduct' failed");
@@ -541,15 +449,8 @@ public class ArrayTest {
 
     @Test
     public void outerProduct() {
-        outerProduct(Cells.Style.JAVA,    Cells.Style.JAVA);
-        outerProduct(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        outerProduct(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        outerProduct(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void outerProduct(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 2.0, 1.0, -2.0, }, styleA);
-        final Array aB = new Array(new double[] { 3.0, 4.0,  5.0, 1.0 }, styleB);
+        final Array aA = new Array(new double[] { 2.0, 1.0, -2.0, });
+        final Array aB = new Array(new double[] { 3.0, 4.0,  5.0, 1.0 });
 
         final Matrix m = new Matrix( new double[][] {
                 {  6.0,  8.0,  10.0,  2.0 },
@@ -568,24 +469,13 @@ public class ArrayTest {
 
     @Test
     public void transform() {
-        transform1(Cells.Style.JAVA,    Cells.Style.JAVA);
-        transform1(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        transform1(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        transform1(Cells.Style.FORTRAN, Cells.Style.JAVA);
-        transform2(Cells.Style.JAVA,    Cells.Style.JAVA);
-        transform2(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        transform2(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        transform2(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void transform1(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] {  5.0, 2.0, 3.0,  4.0 }, styleA);
-        final Array aB = new Array(new double[] { 25.0, 4.0, 9.0, 16.0 }, styleB);
+        final Array aA = new Array(new double[] {  5.0, 2.0, 3.0,  4.0 });
+        final Array aB = new Array(new double[] { 25.0, 4.0, 9.0, 16.0 });
 
         Array tmp;
 
         tmp = aA.clone();
-        final Array result = tmp.transform(new Square());
+        Array result = tmp.transform(new Square());
         if (result != tmp) {
             fail("'transform' must return this");
         }
@@ -594,159 +484,313 @@ public class ArrayTest {
         }
 
         tmp = aA.clone();
-        final Iterator itA = tmp.iterator().transform(new Square());
-        final Iterator itB = aB.constIterator();
+        Iterator itA = tmp.iterator().transform(new Square());
+        Iterator itB = aB.constIterator();
         if (! itA.equals(itB) ) {
             fail("'transform' failed");
         }
-    }
 
-    private void transform2(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 5.0, 2.0, 3.0,  4.0 }, styleA);
-        final Array aB = new Array(new double[] { 5.0, 4.0, 9.0,  4.0 }, styleB);
-
-        Array tmp;
+        final Array aC = new Array(new double[] { 5.0, 4.0, 9.0,  4.0 });
 
         tmp = aA.clone();
-        final Array result = tmp.transform(aA.base()+1, aA.base()+3, new Square());
+        result = tmp.transform(1, 3, new Square());
         if (result != tmp) {
             fail("'transform' must return this");
         }
-        if (!result.equals(aB)) {
+        if (!result.equals(aC)) {
             fail("'transform' failed");
         }
 
         tmp = aA.clone();
-        final Iterator itA = tmp.iterator().transform(aA.base()+1, aA.base()+3, new Square());
-        final Iterator itB = aB.constIterator();
+        itA = tmp.iterator().transform(1, 3, new Square());
+        itB = aC.constIterator();
         if (! itA.equals(itB) ) {
             fail("'transform' failed");
         }
     }
 
 
+    /**
+     * @see <a href="http://gcc.gnu.org/viewcvs/trunk/libstdc%2B%2B-v3/testsuite/25_algorithms/lower_bound/">lower_bound test cases</a>
+     */
     @Test
     public void lowerBound() {
-        lowerBound(Cells.Style.JAVA);
-        lowerBound(Cells.Style.FORTRAN);
-    }
 
-    private void lowerBound(final Cells.Style style) {
-        final Array aA = new Array(new double[] { -10.0, -5.0, -2.0, -1.0, 0.0, 2.0, 5.0, 10.0 }, style);
-        final int base = aA.base();
-        final int size = aA.size();
+        final String MESSAGE = "lowerBound' failed";
 
-        lowerBound(aA, 0+base, size+base,  -12.0, 0+base);
-        lowerBound(aA, 0+base, size+base,  -10.0, 0+base);
-        lowerBound(aA, 0+base, size+base,   -9.0, 1+base);
-        lowerBound(aA, 0+base, size+base,   -8.0, 1+base);
-        lowerBound(aA, 0+base, size+base,   -6.0, 1+base);
-        lowerBound(aA, 0+base, size+base,   -5.0, 1+base);
-        lowerBound(aA, 0+base, size+base,   -4.0, 2+base);
-        lowerBound(aA, 0+base, size+base,    1.0, 5+base);
-        lowerBound(aA, 0+base, size+base,    2.0, 5+base);
-        lowerBound(aA, 0+base, size+base,    3.0, 6+base);
-        lowerBound(aA, 0+base, size+base,    8.0, 7+base);
-        lowerBound(aA, 0+base, size+base,    9.0, 7+base);
-        lowerBound(aA, 0+base, size+base,   10.0, 7+base);
-        lowerBound(aA, 0+base, size+base,   11.0, 8+base);
-        lowerBound(aA, 0+base, size+base,   12.0, 8+base);
+        //
+        // test case :: 1.cc
+        //
 
-        lowerBound(aA, 2+base, 5+base,  -12.0, 2+base);
-        lowerBound(aA, 2+base, 5+base,  -10.0, 2+base);
-        lowerBound(aA, 2+base, 5+base,   -9.0, 2+base);
-        lowerBound(aA, 2+base, 5+base,   -8.0, 2+base);
-        lowerBound(aA, 2+base, 5+base,   -6.0, 2+base);
-        lowerBound(aA, 2+base, 5+base,   -5.0, 2+base);
-        lowerBound(aA, 2+base, 5+base,   -4.0, 2+base);
-        lowerBound(aA, 2+base, 5+base,    1.0, 5+base);
-        lowerBound(aA, 2+base, 5+base,    2.0, 5+base);
-        lowerBound(aA, 2+base, 5+base,    3.0, 5+base);
-        lowerBound(aA, 2+base, 5+base,    8.0, 5+base);
-        lowerBound(aA, 2+base, 5+base,    9.0, 5+base);
-        lowerBound(aA, 2+base, 5+base,   10.0, 5+base);
-        lowerBound(aA, 2+base, 5+base,   11.0, 5+base);
-        lowerBound(aA, 2+base, 5+base,   12.0, 5+base);
+//        typedef test_container<int, forward_iterator_wrapper> Container;
+//        int array[] = {0, 0, 0, 0, 1, 1, 1, 1};
+//
+//        void
+//        test1()
+//        {
+//          for(int i = 0; i < 5; ++i)
+//            for(int j = 4; j < 7; ++j)
+//              {
+//            Container con(array + i, array + j);
+//            VERIFY(lower_bound(con.begin(), con.end(), 1).ptr == array + 4);
+//              }
+//        }
 
-    }
+        final double array[] = {0, 0, 0, 0, 1, 1, 1, 1};
 
-    private void lowerBound(final Array a, final int pos0, final int pos1, final double value, final int expected) {
-        int pos;
-        pos = a.lowerBound(pos0, pos1, value);                 if (pos != expected) {
-            fail("'lowerBound' failed");
+        for (int i = 0; i < 5; ++i) {
+            for (int j = 4; j < 7; ++j) {
+                final double container[] = new double[j-i +1];
+                System.arraycopy(array, i, container, 0, j-i+1);
+                final Array con = new Array(container);
+
+                final int pos = con.lowerBound(1);
+                if (pos != 4 - i) {
+                    fail(MESSAGE);
+                }
+            }
         }
-        pos = a.constIterator().lowerBound(pos0, pos1, value); if (pos != expected) {
-            fail("'lowerBound' failed");
-        }
+
+
+        //
+        // test case :: 2.cc
+        //
+
+//        #include <algorithm>
+//        #include <testsuite_hooks.h>
+//
+//        bool test __attribute__((unused)) = true;
+//
+//        const int A[] = {1, 2, 3, 3, 3, 5, 8};
+//        const int C[] = {8, 5, 3, 3, 3, 2, 1};
+//        const int N = sizeof(A) / sizeof(int);
+//
+//        // A comparison, equalivalent to std::greater<int> without the
+//        // dependency on <functional>.
+//        struct gt
+//        {
+//            bool
+//            operator()(const int& x, const int& y) const
+//            { return x > y; }
+//        };
+//
+//        // Each test performs general-case, bookend, not-found condition,
+//        // and predicate functional checks.
+//
+//        // 25.3.3.1 lower_bound, with and without comparison predicate
+//        void
+//        test01()
+//        {
+//            using std::lower_bound;
+//
+//            const int first = A[0];
+//            const int last = A[N - 1];
+//
+//            const int* p = lower_bound(A, A + N, 3);
+//            VERIFY(p == A + 2);
+//
+//            const int* q = lower_bound(A, A + N, first);
+//            VERIFY(q == A + 0);
+//
+//            const int* r = lower_bound(A, A + N, last);
+//            VERIFY(r == A + N - 1);
+//
+//            const int* s = lower_bound(A, A + N, 4);
+//            VERIFY(s == A + 5);
+//
+//            const int* t = lower_bound(C, C + N, 3, gt());
+//            VERIFY(t == C + 2);
+//
+//            const int* u = lower_bound(C, C + N, first, gt());
+//            VERIFY(u == C + N - 1);
+//
+//            const int* v = lower_bound(C, C + N, last, gt());
+//            VERIFY(v == C + 0);
+//
+//            const int* w = lower_bound(C, C + N, 4, gt());
+//            VERIFY(w == C + 2);
+//        }
+
+        final Array A = new Array(new double[]{1, 2, 3, 3, 3, 5, 8});
+        final Array C = new Array(new double[]{8, 5, 3, 3, 3, 2, 1});
+        final int N = A.size();
+
+
+            final double first = A.first();
+            final double  last = A.last();
+            int pos;
+
+            pos = A.lowerBound(3);
+            assertTrue(MESSAGE, pos==2);
+
+            pos = A.lowerBound(first);
+            assertTrue(MESSAGE, pos==0);
+
+            pos = A.lowerBound(last);
+            assertTrue(MESSAGE, pos==N-1);
+
+            pos = A.lowerBound(4);
+            assertTrue(MESSAGE, pos==5);
+
+            final Ops.BinaryDoublePredicate gt = new GreaterThanPredicate();
+
+            pos = C.lowerBound(3, gt);
+            assertTrue(MESSAGE, pos==2);
+
+            pos = C.lowerBound(first, gt);
+            assertTrue(MESSAGE, pos==N-1);
+
+            pos = C.lowerBound(last, gt);
+            assertTrue(MESSAGE, pos==0);
+
+            pos = C.lowerBound(4, gt);
+            assertTrue(MESSAGE, pos==2);
     }
 
 
+
+    /**
+     * @see <a href="http://gcc.gnu.org/viewcvs/trunk/libstdc%2B%2B-v3/testsuite/25_algorithms/upper_bound/">upper_bound test cases</a>
+     */
     @Test
     public void upperBound() {
-        upperBound(Cells.Style.JAVA);
-        upperBound(Cells.Style.FORTRAN);
-    }
 
-    private void upperBound(final Cells.Style style) {
-        final Array aA = new Array(new double[] { -10.0, -5.0, -2.0, -1.0, 0.0, 2.0, 5.0, 10.0 }, style);
-        final int base = aA.base();
-        final int size = aA.size();
+        final String MESSAGE = "upperBound' failed";
 
-        upperBound(aA, 0+base, size+base,  -12.0, 0+base);
-        upperBound(aA, 0+base, size+base,  -10.0, 1+base);
-        upperBound(aA, 0+base, size+base,   -9.0, 1+base);
-        upperBound(aA, 0+base, size+base,   -8.0, 1+base);
-        upperBound(aA, 0+base, size+base,   -6.0, 1+base);
-        upperBound(aA, 0+base, size+base,   -5.0, 2+base);
-        upperBound(aA, 0+base, size+base,   -4.0, 2+base);
-        upperBound(aA, 0+base, size+base,    1.0, 5+base);
-        upperBound(aA, 0+base, size+base,    2.0, 6+base);
-        upperBound(aA, 0+base, size+base,    3.0, 6+base);
-        upperBound(aA, 0+base, size+base,    8.0, 7+base);
-        upperBound(aA, 0+base, size+base,    9.0, 7+base);
-        upperBound(aA, 0+base, size+base,   10.0, 8+base);
-        upperBound(aA, 0+base, size+base,   11.0, 8+base);
-        upperBound(aA, 0+base, size+base,   12.0, 8+base);
+        //
+        // test case :: 1.cc
+        //
 
-        upperBound(aA, 1+base, 6+base,  -12.0, 1+base);
-        upperBound(aA, 1+base, 6+base,  -10.0, 1+base);
-        upperBound(aA, 1+base, 6+base,   -9.0, 1+base);
-        upperBound(aA, 1+base, 6+base,   -8.0, 1+base);
-        upperBound(aA, 1+base, 6+base,   -6.0, 1+base);
-        upperBound(aA, 1+base, 6+base,   -5.0, 2+base);
-        upperBound(aA, 1+base, 6+base,   -4.0, 2+base);
-        upperBound(aA, 1+base, 6+base,    1.0, 5+base);
-        upperBound(aA, 1+base, 6+base,    2.0, 6+base);
-        upperBound(aA, 1+base, 6+base,    3.0, 6+base);
-        upperBound(aA, 1+base, 6+base,    8.0, 6+base);
-        upperBound(aA, 1+base, 6+base,    9.0, 6+base);
-        upperBound(aA, 1+base, 6+base,   10.0, 6+base);
-        upperBound(aA, 1+base, 6+base,   11.0, 6+base);
-        upperBound(aA, 1+base, 6+base,   12.0, 6+base);
-    }
+//        typedef test_container<int, forward_iterator_wrapper> Container;
+//        int array[] = {0, 0, 0, 0, 1, 1, 1, 1};
+//
+//        void
+//        test1()
+//        {
+//          for(int i = 0; i < 5; ++i)
+//            for(int j = 4; j < 7; ++j)
+//              {
+//            Container con(array + i, array + j);
+//            VERIFY(upper_bound(con.begin(), con.end(), 0).ptr == array + 4);
+//              }
+//        }
 
-    private void upperBound(final Array a, final int pos0, final int pos1, final double value, final int expected) {
-        int pos;
-        pos = a.upperBound(pos0, pos1, value);                 if (pos != expected) {
-            fail("'upperBound' failed");
+        final double array[] = {0, 0, 0, 0, 1, 1, 1, 1};
+
+        for (int i = 0; i < 5; ++i) {
+            for (int j = 4; j < 7; ++j) {
+                final double container[] = new double[j-i +1];
+                System.arraycopy(array, i, container, 0, j-i+1);
+                final Array con = new Array(container);
+
+                final int pos = con.upperBound(0);
+                if (pos != 4 - i) {
+                    fail(MESSAGE);
+                }
+            }
         }
-        pos = a.constIterator().upperBound(pos0, pos1, value); if (pos != expected) {
-            fail("'upperBound' failed");
-        }
+
+
+        //
+        // test case :: 2.cc
+        //
+
+//      #include <algorithm>
+//      #include <testsuite_hooks.h>
+//
+//      bool test __attribute__((unused)) = true;
+//
+//        const int A[] = {1, 2, 3, 3, 3, 5, 8};
+//        const int C[] = {8, 5, 3, 3, 3, 2, 1};
+//        const int N = sizeof(A) / sizeof(int);
+//
+//        // A comparison, equalivalent to std::greater<int> without the
+//        // dependency on <functional>.
+//        struct gt
+//        {
+//            bool
+//            operator()(const int& x, const int& y) const
+//            { return x > y; }
+//        };
+//
+//        // Each test performs general-case, bookend, not-found condition,
+//        // and predicate functional checks.
+//
+//        // 25.3.3.2 upper_bound, with and without comparison predicate
+//        void
+//        test02()
+//        {
+//            using std::upper_bound;
+//
+//            const int first = A[0];
+//            const int last = A[N - 1];
+//
+//            const int* p = upper_bound(A, A + N, 3);
+//            VERIFY(p == A + 5);
+//
+//            const int* q = upper_bound(A, A + N, first);
+//            VERIFY(q == A + 1);
+//
+//            const int* r = upper_bound(A, A + N, last);
+//            VERIFY(r == A + N);
+//
+//            const int* s = upper_bound(A, A + N, 4);
+//            VERIFY(s == A + 5);
+//
+//            const int* t = upper_bound(C, C + N, 3, gt());
+//            VERIFY(t == C + 5);
+//
+//            const int* u = upper_bound(C, C + N, first, gt());
+//            VERIFY(u == C + N);
+//
+//            const int* v = upper_bound(C, C + N, last, gt());
+//            VERIFY(v == C + 1);
+//
+//            const int* w = upper_bound(C, C + N, 4, gt());
+//            VERIFY(w == C + 2);
+//        }
+
+        final Array A = new Array(new double[]{1, 2, 3, 3, 3, 5, 8});
+        final Array C = new Array(new double[]{8, 5, 3, 3, 3, 2, 1});
+        final int N = A.size();
+
+
+            final double first = A.first();
+            final double  last = A.last();
+            int pos;
+
+            pos = A.upperBound(3);
+            assertTrue(MESSAGE, pos==5);
+
+            pos = A.upperBound(first);
+            assertTrue(MESSAGE, pos==1);
+
+            pos = A.upperBound(last);
+            assertTrue(MESSAGE, pos==N);
+
+            pos = A.upperBound(4);
+            assertTrue(MESSAGE, pos==5);
+
+            final Ops.BinaryDoublePredicate gt = new GreaterThanPredicate();
+
+            pos = C.upperBound(3, gt);
+            assertTrue(MESSAGE, pos==5);
+
+            pos = C.upperBound(first, gt);
+            assertTrue(MESSAGE, pos==N);
+
+            pos = C.upperBound(last, gt);
+            assertTrue(MESSAGE, pos==1);
+
+            pos = C.upperBound(4, gt);
+            assertTrue(MESSAGE, pos==2);
     }
 
 
     @Test
     public void adjacentDifference() {
-        adjacentDifference(Cells.Style.JAVA,    Cells.Style.JAVA);
-        adjacentDifference(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        adjacentDifference(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        adjacentDifference(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void adjacentDifference(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 5.0, 9.0, 11.0, 12.0 }, styleA);
-        final Array aB = new Array(new double[] { 1.0, 1.0, 1.0, 2.0, 4.0,  2.0,  1.0 }, styleB);
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 5.0, 9.0, 11.0, 12.0 });
+        final Array aB = new Array(new double[] { 1.0, 1.0, 1.0, 2.0, 4.0,  2.0,  1.0 });
 
         final Array result = aA.adjacentDifference();
         if (result == aA) {
@@ -769,15 +813,8 @@ public class ArrayTest {
 
     @Test
     public void exp() {
-        exp(Cells.Style.JAVA,    Cells.Style.JAVA);
-        exp(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        exp(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        exp(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void exp(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleA);
-        final Array aB = new Array(new double[] { Math.exp(1), Math.exp(2), Math.exp(3), Math.exp(4) }, styleB);
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
+        final Array aB = new Array(new double[] { Math.exp(1), Math.exp(2), Math.exp(3), Math.exp(4) });
 
         final Array result = aA.exp();
         if (result == aA) {
@@ -800,12 +837,7 @@ public class ArrayTest {
 
     @Test
     public void fill() {
-        fill(Cells.Style.JAVA);
-        fill(Cells.Style.FORTRAN);
-    }
-
-    private void fill(final Cells.Style style) {
-        final Array aA = new Array(new double[] { 2.0, 2.0, 2.0, 2.0 }, style);
+        final Array aA = new Array(new double[] { 2.0, 2.0, 2.0, 2.0 });
 
         final Array result = new Array(4).fill(2.0);
         if (!result.equals(aA)) {
@@ -815,12 +847,7 @@ public class ArrayTest {
 
     @Test
     public void first() {
-        first(Cells.Style.JAVA);
-        first(Cells.Style.FORTRAN);
-    }
-
-    private void first(final Cells.Style style) {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, style);
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
 
         if (aA.first() != 1.0) {
             fail("'first' failed");
@@ -829,12 +856,7 @@ public class ArrayTest {
 
     @Test
     public void last() {
-        last(Cells.Style.JAVA);
-        last(Cells.Style.FORTRAN);
-    }
-
-    private void last(final Cells.Style style) {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, style);
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
 
         if (aA.last() != 4.0) {
             fail("'last' failed");
@@ -844,15 +866,8 @@ public class ArrayTest {
 
     @Test
     public void log() {
-        log(Cells.Style.JAVA,    Cells.Style.JAVA);
-        log(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        log(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        log(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void log(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { Math.exp(1), Math.exp(2), Math.exp(3), Math.exp(4) }, styleA);
-        final Array aB = new Array(new double[] { 1.0,  2.0,   3.0,    4.0 }, styleB);
+        final Array aA = new Array(new double[] { Math.exp(1), Math.exp(2), Math.exp(3), Math.exp(4) });
+        final Array aB = new Array(new double[] { 1.0,  2.0,   3.0,    4.0 });
 
         final Array result = aA.log();
         if (result == aA) {
@@ -874,17 +889,12 @@ public class ArrayTest {
 
     @Test
     public void min() {
-        min(Cells.Style.JAVA);
-        min(Cells.Style.FORTRAN);
-    }
-
-    public void min(final Cells.Style style) {
-        final Array aA = new Array(new double[] { 0.0, 1.0, 2.0, -3.0, 4.0, 0.0, -6.0, 7.0, 8.0, 0.0 }, style);
+        final Array aA = new Array(new double[] { 0.0, 1.0, 2.0, -3.0, 4.0, 0.0, -6.0, 7.0, 8.0, 0.0 });
 
         if (aA.min() != -6.0) {
             fail("'min' failed");
         }
-        if (aA.min(2+aA.base(), 6+aA.base()) != -3.0) {
+        if (aA.min(2, 6) != -3.0) {
             fail("'min' failed");
         }
     }
@@ -892,17 +902,12 @@ public class ArrayTest {
 
     @Test
     public void max() {
-        max(Cells.Style.JAVA);
-        max(Cells.Style.FORTRAN);
-    }
-
-    private void max(final Cells.Style style) {
-        final Array aA = new Array(new double[] { 0.0, 1.0, 2.0, -3.0, 4.0, 0.0, -6.0, 7.0, 8.0, 0.0 }, style);
+        final Array aA = new Array(new double[] { 0.0, 1.0, 2.0, -3.0, 4.0, 0.0, -6.0, 7.0, 8.0, 0.0 });
 
         if (aA.max() != 8.0) {
             fail("'max' failed");
         }
-        if (aA.max(2+aA.base(), 6+aA.base()) != 4.0) {
+        if (aA.max(2, 6) != 4.0) {
             fail("'max' failed");
         }
     }
@@ -910,15 +915,8 @@ public class ArrayTest {
 
     @Test
     public void sort() {
-        sort(Cells.Style.JAVA,    Cells.Style.JAVA);
-        sort(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        sort(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        sort(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void sort(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 9.0, 8.0, 2.0, 3.0, 1.0, 4.0, 8.0, 9.0 }, styleA);
-        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0, 8.0, 8.0, 9.0, 9.0 }, styleB);
+        final Array aA = new Array(new double[] { 9.0, 8.0, 2.0, 3.0, 1.0, 4.0, 8.0, 9.0 });
+        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0, 8.0, 8.0, 9.0, 9.0 });
 
         final Array result = aA.sort();
         if (result != aA) {
@@ -932,15 +930,8 @@ public class ArrayTest {
 
     @Test
     public void sqrt() {
-        sqrt(Cells.Style.JAVA,    Cells.Style.JAVA);
-        sqrt(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        sqrt(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        sqrt(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void sqrt(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 1.0, 4.0, 9.0, 16.0 }, styleA);
-        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0,  4.0 }, styleB);
+        final Array aA = new Array(new double[] { 1.0, 4.0, 9.0, 16.0 });
+        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0,  4.0 });
 
         final Array result = aA.sqrt();
         if (result == aA) {
@@ -963,15 +954,8 @@ public class ArrayTest {
 
     @Test
     public void sqr() {
-        sqr(Cells.Style.JAVA,    Cells.Style.JAVA);
-        sqr(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        sqr(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        sqr(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
-
-    private void sqr(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0,  4.0 }, styleA);
-        final Array aB = new Array(new double[] { 1.0, 4.0, 9.0, 16.0 }, styleB);
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0,  4.0 });
+        final Array aB = new Array(new double[] { 1.0, 4.0, 9.0, 16.0 });
 
         final Array result = aA.sqr();
         if (result == aA) {
@@ -994,16 +978,9 @@ public class ArrayTest {
 
     @Test
     public void swap() {
-        swap(Cells.Style.JAVA,    Cells.Style.JAVA);
-        swap(Cells.Style.FORTRAN, Cells.Style.FORTRAN);
-        swap(Cells.Style.JAVA,    Cells.Style.FORTRAN);
-        swap(Cells.Style.FORTRAN, Cells.Style.JAVA);
-    }
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
 
-    public void swap(final Cells.Style styleA, final Cells.Style styleB) {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, styleA);
-
-        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, styleB);
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 });
 
         final Array aAclone = aA.clone();
         final Array aBclone = aB.clone();
@@ -1020,23 +997,11 @@ public class ArrayTest {
 
     @Test
     public void toArray() {
-        toArray(Cells.Style.JAVA);
-        toArray(Cells.Style.FORTRAN);
-    }
-
-    private void toArray(final Cells.Style style) {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, style);
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
 
         final double[] doubles = new double[] { 1.0, 2.0, 3.0, 4.0 };
 
-        double[] result = (double[]) aA.toArray();
-        for (int i=0; i<aA.size(); i++) {
-            if (result[i] != doubles[i]) {
-                fail("toArray failed");
-            }
-        }
-
-        result = aA.toArray(new double[4]);
+        final double[] result = aA.toDoubleArray();
         for (int i=0; i<aA.size(); i++) {
             if (result[i] != doubles[i]) {
                 fail("toArray failed");

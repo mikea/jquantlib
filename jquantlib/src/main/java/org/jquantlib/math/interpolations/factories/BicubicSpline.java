@@ -42,52 +42,21 @@ package org.jquantlib.math.interpolations.factories;
 
 import org.jquantlib.math.interpolations.BicubicSplineInterpolation;
 import org.jquantlib.math.interpolations.Interpolation2D;
-import org.jquantlib.math.interpolations.Interpolator2D;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 
 /**
- * This class provides bilinear interpolation factory and traits
- * <p>
- * This is not the implementation of a interpolation class, but only its factory.
+ * Bicubic spline interpolation factory
  *
  * @see BicubicSplineInterpolation
  *
  * @author Richard Gomes
  */
-public class BicubicSpline implements Interpolator2D {
+// TODO: rename to Bicubic
+public class BicubicSpline implements Interpolation2D.Interpolator2D {
 
-    //
-    // private final fields
-    //
-
-    private final Interpolator2D delegate;
-
-
-    //
-    // public constructors
-    //
-
-    /**
-     * Constructs a interpolation factory.
-     * <p>
-     * This is not the implementation of a interpolation class, but only its factory.
-     *
-     * @see BicubicSplineInterpolation
-     */
-    public BicubicSpline() {
-        delegate = BicubicSplineInterpolation.getInterpolator();
-    }
-
-
-    //
-    // implements Interpolator2D
-    //
-
-    @Override
-    public Interpolation2D interpolate(final Array x, final Array y, final Matrix z) {
-        return delegate.interpolate(x, y, z);
+    public Interpolation2D interpolate(final Array vx, final Array vy, final Matrix mz) /* @ReadOnly */ {
+        return new BicubicSplineInterpolation(vx, vy, mz);
     }
 
 }
-

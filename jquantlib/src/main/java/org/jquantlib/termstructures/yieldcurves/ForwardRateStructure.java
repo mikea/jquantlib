@@ -40,6 +40,7 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.termstructures.AbstractYieldTermStructure;
@@ -72,9 +73,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure() {
 		this(new Actual365Fixed());
-		if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        QL.validateExperimentalMode();
 	}
 
 	/**
@@ -84,9 +83,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final DayCounter dc) {
 		super(dc);
-		if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        QL.validateExperimentalMode();
 	}
 
 	// ---
@@ -100,9 +97,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final Date refDate, final Calendar cal) {
 		this(refDate, cal, new Actual365Fixed());
-		if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        QL.validateExperimentalMode();
 	}
 
 	/**
@@ -114,9 +109,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final Date refDate, final DayCounter dc) {
 		this(refDate, new Target(), dc); // FIXME: code review : default calendar
-		if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        QL.validateExperimentalMode();
 	}
 
 	/**
@@ -128,9 +121,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final Date refDate) {
 		this(refDate, new Target(), new Actual365Fixed()); // FIXME: code review : default calendar
-		if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        QL.validateExperimentalMode();
 	}
 
 	/**
@@ -142,9 +133,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final Date refDate, final Calendar cal, final DayCounter dc) {
 		super(refDate, cal, dc);
-		if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        QL.validateExperimentalMode();
 	}
 
 	// ---
@@ -158,9 +147,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final int settlementDays, final Calendar cal) {
 		super(settlementDays, cal, new Actual365Fixed());
-		if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        QL.validateExperimentalMode();
 	}
 
 	/**
@@ -172,9 +159,7 @@ public abstract class ForwardRateStructure extends AbstractYieldTermStructure {
 	 */
 	protected ForwardRateStructure(final int settlementDays, final Calendar cal, final DayCounter dc) {
 		super(settlementDays, cal, dc);
-		if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        QL.validateExperimentalMode();
 	}
 
 

@@ -27,18 +27,16 @@ package org.jquantlib.cashflow;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.SwapIndex;
 import org.jquantlib.time.Date;
-import org.jquantlib.cashflow.CmsLeg;
 
-public class CappedFlooredCmsCoupon extends CappedFlooredCoupon 
-{
+public class CappedFlooredCmsCoupon extends CappedFlooredCoupon {
+
     public CappedFlooredCmsCoupon(
             final Date paymentDate,
             final /*Real*/double nominal,
             final Date startDate,
             final Date endDate,
             final /*Natural*/int fixingDays,
-            final SwapIndex index)
-    {
+            final SwapIndex index) {
         // default gearing to 1.0
         this (paymentDate, nominal, startDate, endDate, fixingDays, index, 1.0);
     }
@@ -50,8 +48,7 @@ public class CappedFlooredCmsCoupon extends CappedFlooredCoupon
             final Date endDate,
             final /*Natural*/int fixingDays,
             final SwapIndex index,
-            final double gearing)
-    {
+            final double gearing) {
         // default spread to 0.0
         this (paymentDate, nominal, startDate, endDate, fixingDays, index, gearing, 0.0);
     }
@@ -64,10 +61,9 @@ public class CappedFlooredCmsCoupon extends CappedFlooredCoupon
             final /*Natural*/int fixingDays,
             final SwapIndex index,
             final double gearing,
-            final double spread)
-    {
+            final double spread) {
         // default cap and floor to NaN
-        this (paymentDate, nominal, startDate, endDate, 
+        this (paymentDate, nominal, startDate, endDate,
               fixingDays, index, gearing, spread, Double.NaN, Double.NaN);
     }
 
@@ -81,12 +77,11 @@ public class CappedFlooredCmsCoupon extends CappedFlooredCoupon
             final double gearing,
             final double spread,
             final double cap,
-            final double floor)
-    {
+            final double floor) {
         // default reference dates
-        this (paymentDate, nominal, startDate, endDate, 
-              fixingDays, index, gearing, spread, 
-              cap, floor, new Date(), new Date()); 
+        this (paymentDate, nominal, startDate, endDate,
+              fixingDays, index, gearing, spread,
+              cap, floor, new Date(), new Date());
     }
 
     public CappedFlooredCmsCoupon(
@@ -101,14 +96,12 @@ public class CappedFlooredCmsCoupon extends CappedFlooredCoupon
             final double cap,
             final double floor,
             final Date refPeriodStart,
-            final Date refPeriodEnd)
-    {
+            final Date refPeriodEnd) {
         // default day counter
-        this (paymentDate, nominal, startDate, endDate, 
-              fixingDays, index, gearing, spread, 
+        this (paymentDate, nominal, startDate, endDate,
+              fixingDays, index, gearing, spread,
               cap, floor, refPeriodStart, refPeriodEnd, new DayCounter());
     }
-
 
     public CappedFlooredCmsCoupon(
             final Date paymentDate,
@@ -123,11 +116,10 @@ public class CappedFlooredCmsCoupon extends CappedFlooredCoupon
             final double floor,
             final Date refPeriodStart,
             final Date refPeriodEnd,
-            final DayCounter dayCounter)
-    {
+            final DayCounter dayCounter) {
         // default isInArrears false
-        this (paymentDate, nominal, startDate, endDate, 
-              fixingDays, index, gearing, spread, 
+        this (paymentDate, nominal, startDate, endDate,
+              fixingDays, index, gearing, spread,
               cap, floor, refPeriodStart, refPeriodEnd,
               dayCounter, false);
     }
@@ -146,8 +138,7 @@ public class CappedFlooredCmsCoupon extends CappedFlooredCoupon
             final Date refPeriodStart,
             final Date refPeriodEnd,
             final DayCounter dayCounter,
-            boolean isInArrears)
-    {
+            final boolean isInArrears) {
         super (new CmsCoupon(paymentDate, nominal, startDate, endDate, fixingDays,
             index, gearing, spread, refPeriodStart, refPeriodEnd,
                 dayCounter, isInArrears), cap, floor);

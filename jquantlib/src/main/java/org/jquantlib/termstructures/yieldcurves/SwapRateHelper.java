@@ -79,6 +79,8 @@ public class SwapRateHelper extends RelativeDateRateHelper {
             final Handle<Quote> spread,
             final Period fwdStart) {
         super(rate);
+        QL.validateExperimentalMode();
+
         this.tenor = swapIndex.tenor();
         this.calendar = swapIndex.fixingCalendar();
         this.fixedConvention = swapIndex.fixedLegConvention();
@@ -105,6 +107,8 @@ public class SwapRateHelper extends RelativeDateRateHelper {
             final Handle<Quote> spread,
             final Period fwdStart) {
         super(rate);
+        QL.validateExperimentalMode();
+
         this.tenor = tenor;
         this.calendar = calendar;
         this.fixedConvention = fixedConvention;
@@ -131,6 +135,8 @@ public class SwapRateHelper extends RelativeDateRateHelper {
             final Handle<Quote> spread,
             final Period fwdStart) {
         super(rate);
+        QL.validateExperimentalMode();
+
         this.tenor = tenor;
         this.calendar = calendar;
         this.fixedConvention = fixedConvention;
@@ -152,6 +158,8 @@ public class SwapRateHelper extends RelativeDateRateHelper {
             final Handle<Quote> spread,
             final Period fwdStart) {
         super(rate);
+        QL.validateExperimentalMode();
+
         this.tenor = swapIndex.tenor();
         this.calendar = swapIndex.fixingCalendar();
         this.fixedConvention = swapIndex.fixedLegConvention();
@@ -196,8 +204,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         this.latestDate = swap.maturityDate();
 
         // ...but due to adjustments, the last floating coupon might need a later date for fixing
-        if (new Settings().isUseIndexedCoupon())
-        {
+        if (new Settings().isUseIndexedCoupon()) {
             final FloatingRateCoupon lastFloating = (FloatingRateCoupon) swap.floatingLeg().last();
             final Date fixingValueDate = iborIndex.valueDate(lastFloating.fixingDate());
             final Date endValueDate = iborIndex.maturityDate(fixingValueDate);
@@ -212,6 +219,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
      *
      * @param t
      */
+    @Override
     public void setTermStructure(final YieldTermStructure t) {
         // TODO: code review :: please verify against QL/C++ code
         // ---- termStructureHandle.linkTo( shared_ptr<YieldTermStructure>(t, no_deletion), false);
@@ -231,11 +239,11 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         swap.recalculate();
 
         // weak implementation... to be improved
-        final double floatingLegNPV = swap.floatingLegNPV();
-        final double spread = this.spread.empty() ? 0.0 : this.spread.currentLink().value();
-        final double spreadNPV = swap.floatingLegBPS() / basisPoint * spread;
-        final double totNPV = - (floatingLegNPV + spreadNPV);
-        final double result = totNPV / (swap.fixedLegBPS() / basisPoint);
+        /*@Real*/ final double floatingLegNPV = swap.floatingLegNPV();
+        /*@Spread*/ final double spread = this.spread.empty() ? 0.0 : this.spread.currentLink().value();
+        /*@Real*/ final double spreadNPV = swap.floatingLegBPS()/basisPoint*spread;
+        /*@Real*/ final double totNPV = - (floatingLegNPV+spreadNPV);
+        /*@Real*/ final double result = totNPV/(swap.fixedLegBPS()/basisPoint);
         return result;
     }
 
@@ -256,19 +264,14 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     // implements TypedVisitable
     //
 
-    // TODO: code review :: object model needs to be validated and eventually refactored
-    // TODO: code review :: please verify against QL/C++ code
-    // FIXME
-    public void accept(final TypedVisitor<SwapRateHelper> v)
-    {
-       Visitor<SwapRateHelper> v1 = (v != null) ? v.getVisitor(this.getClass()) : null;
-       if (v1 != null) 
-       {
-           v1.visit(this);
-       }
-       else 
-       {
-           super.accept((Visitor <BootstrapHelper <YieldTermStructure>>) v);
-       }
+    @Override
+    public void accept(final TypedVisitor<BootstrapHelper> v) {
+        final Visitor<BootstrapHelper> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null) {
+            v1.visit(this);
+        } else {
+            super.accept(v);
+        }
     }
+
 }

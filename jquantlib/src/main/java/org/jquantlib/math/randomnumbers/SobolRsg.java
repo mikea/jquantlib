@@ -84,7 +84,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  * @author Q.Boiler
  */
 // TODO: code review :: please verify against QL/C++ code
-public class SobolRSG implements UniformRandomSequenceGenerator {
+public class SobolRsg implements UniformRandomSequenceGenerator {
 
     // Sobol' Levitan coefficients of the free direction integers as given by Bratley, P., Fox, B.L. (1988)
     private static final long dim02SLinitializers[] = {1, 0};
@@ -1392,15 +1392,15 @@ public class SobolRSG implements UniformRandomSequenceGenerator {
     /**
      * dimensionality must be <= PPMT_MAX_DIM
      */
-    public SobolRSG(final int dimensionality) {
+    public SobolRsg(final int dimensionality) {
         this(dimensionality, 0);
     }
 
-    public SobolRSG(final int dimensionality, final long seed) {
+    public SobolRsg(final int dimensionality, final long seed) {
         this(dimensionality, seed, DirectionIntegers.Jaeckel);
     }
 
-    public SobolRSG(final int dimensionality, final long seed, final DirectionIntegers direction) {
+    public SobolRsg(final int dimensionality, final long seed, final DirectionIntegers direction) {
 
         if (System.getProperty("EXPERIMENTAL")==null) {
             throw new UnsupportedOperationException("Work in progress");

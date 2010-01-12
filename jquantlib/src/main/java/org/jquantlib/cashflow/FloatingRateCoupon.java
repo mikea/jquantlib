@@ -20,6 +20,27 @@
  When applicable, the original copyright notice follows this notice.
  */
 
+/*
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2003, 2004 StatPro Italia srl
+ Copyright (C) 2003 Nicolas Di C�sar�
+ Copyright (C) 2006, 2007 Cristina Duminuco
+ Copyright (C) 2006 Ferdinando Ametrano
+ Copyright (C) 2007 Giorgio Facchinetti
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
 
 package org.jquantlib.cashflow;
 
@@ -55,8 +76,7 @@ public class FloatingRateCoupon extends Coupon implements Observer {
 
 
     private final DayCounter dayCounter;
-    // FIXME - JM should be final
-    private int fixingDays;
+    private int fixingDays; // FIXME - JM:: should be final
     private final double spread;
     private final boolean isInArrears;
 
@@ -107,8 +127,9 @@ public class FloatingRateCoupon extends Coupon implements Observer {
             final boolean isInArrears) {
         super(nominal, paymentDate, startDate, endDate, refPeriodStart, refPeriodEnd);
 
-        if (System.getProperty("EXPERIMENTAL") == null)
+        if (System.getProperty("EXPERIMENTAL") == null) {
             throw new UnsupportedOperationException("Work in progress");
+        }
 
         // TODO: code review :: please verify against QL/C++ code
         QL.require(gearing > 0 , null_gearing); // QA:[RG]::verified
@@ -119,10 +140,11 @@ public class FloatingRateCoupon extends Coupon implements Observer {
         this.spread = spread;
         this.isInArrears = isInArrears;
 
-        if (dayCounter != null)
+        if (dayCounter != null) {
             this.dayCounter = dayCounter;
-        else
+        } else {
             this.dayCounter = index_.dayCounter();
+        }
 
         final Date evaluationDate = new Settings().evaluationDate();
 
@@ -145,8 +167,9 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     public void setPricer(final FloatingRateCouponPricer pricer){
         QL.require(pricer != null , no_adequate_pricer_given);
 
-        if (this.pricer != null)
+        if (this.pricer != null) {
             this.pricer.deleteObserver(this);
+        }
             //XXX:registerWith
             //unregisterWith(this.pricer);
         this.pricer = pricer;
@@ -172,8 +195,8 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     public int fixingDays() {
         return fixingDays;
     }
-    
-    
+
+
 
     public Date fixingDate() {
         // if isInArrears_ fix at the end of period
@@ -213,7 +236,7 @@ public class FloatingRateCoupon extends Coupon implements Observer {
 
     // FIXME move up the stack to specifiy fixing array
     // for now use this function will refactor jan 2010
-    public void setFixingDays(int fixingDays) {
+    public void setFixingDays(final int fixingDays) {
         this.fixingDays = fixingDays;
     }
 
@@ -245,6 +268,10 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     // implements Observer
     //
 
+    @Override
+    public void update() {
+        notifyObservers();
+    }
     //XXX:registerWith
     //    @Override
     //    public void registerWith(final Observable o) {
@@ -256,12 +283,6 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     //        o.deleteObserver(this);
     //    }
 
-    @Override
-    //XX::OBS public void update(final Observable o, final Object arg) {
-    public void update() {
-        notifyObservers();
-    }
-
 
     //
     // implements TypedVisitable
@@ -270,10 +291,11 @@ public class FloatingRateCoupon extends Coupon implements Observer {
     @Override
     public void accept(final TypedVisitor<Object> v) {
         final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null)
+        if (v1 != null) {
             v1.visit(this);
-        else
-            super.accept(v);
+        } else {
+            super.accept(v) ;
+        }
     }
 
 }

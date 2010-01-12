@@ -29,14 +29,15 @@ import org.jquantlib.QL;
 import org.jquantlib.lang.iterators.BulkStorage;
 import org.jquantlib.lang.iterators.ConstIterator;
 import org.jquantlib.lang.iterators.Iterator;
+import org.jquantlib.math.Ops;
 import org.jquantlib.math.Ops.BinaryDoubleOp;
 import org.jquantlib.math.Ops.DoubleOp;
 import org.jquantlib.math.functions.Abs;
 import org.jquantlib.math.functions.Exp;
 import org.jquantlib.math.functions.Log;
 import org.jquantlib.math.functions.Minus;
-import org.jquantlib.math.functions.Square;
 import org.jquantlib.math.functions.Sqrt;
+import org.jquantlib.math.functions.Square;
 
 /**
  * This class provides efficient basement for matrix operations by mapping matrices on
@@ -83,130 +84,12 @@ public class Cells {
     protected final int cols;
     protected final int size;
 
-    /**
-     * This field allows transparent access to elements by FORTRAN based algorithms.
-     * <p>
-     * Whilst in C, C++ and Java we employ zero-based indexing, in FORTRAN we employ one-based indexing.
-     * Certain algorithms make use of FORTRAN style indexing. In these you will tend to see
-     * <pre>
-     *     for (i = 1; i <= n; i++)
-     * </pre>
-     * rather than what you can see in Java, C, C++:
-     * <pre>
-     *     for (i = 0; i < n; i++)
-     * </pre>
-     *
-     * @see Style
-     */
-    protected final Style style;
-
 
     //
     // protected fields
     //
 
     protected double[] data;
-
-
-
-
-    /**
-     * This enumeration describes how an algorithm can employ different styles of accessing data.
-     * <p>
-     * <p>
-     * <b>IMPORTANT:</b> This class is intended only for internal use only.<br/>
-     * This class may disappear without notice. You were warned!!!<br/>
-     * <p>
-     * Whilst in C, C++ and Java we employ zero-based indexing, in FORTRAN we employ one-based indexing.
-     * Certain algorithms make use of FORTRAN style indexing. In these you will tend to see
-     * <pre>
-     *     for (i = 1; i <= n; i++)
-     * </pre>
-     * rather than what you can see in Java, C, C++:
-     * <pre>
-     *     for (i = 0; i < n; i++)
-     * </pre>
-     * <p>
-     * When a FORTRAN style indexing is required, you need to choose {@link Style}.FORTRAN
-     * This will allow you use a FORTRAN style indexing on a data structure implemented in Java.
-     * Notice that methods {@link Matrix#addr(int, int)} and {@link Array#addr(int)} transparently convert from
-     * FORTRAN one-based indexing to native Java zero-based indexing.
-     * <pre>
-     *     for (i = 1; i <= m; i++) {
-     *         for (j = 1; j <= n; j++) {
-     *             // access a matrix, FORTRAN one-based indexing style
-     *             matrix.addr(matrix.addr(i,j) = (i==j) ? 1.0 : 0.0;
-     *         }
-     *         // access an array, FORTRAN one-based indexing style
-     *         array.aIndexStyleddr(array.addr(i) = (i%2==0) ? 1.0 : 0.0;
-     *     }
-     * </pre>
-     * <p>
-     * When a Java, C or C++ style indexing is required, which is what happens in general, you need to choose
-     * {@link Style}.JAVA, which is the default.
-     * <pre>
-     *     for (i = 1; i <= m; i++) {
-     *         for (j = 1; j <= n; j++) {
-     *             // access a matrix, Java zero-based indexing style
-     *             matrix.addr(matrix.addr(i,j) = (i==j) ? 1.0 : 0.0;
-     *         }
-     *         // access an array, Java zero-based indexing style
-     *         array.addr(array.addr(i) = (i%2==0) ? 1.0 : 0.0;
-     *     }
-     * </pre>
-     * <p>
-     * This method is used internally and is provided for performance reasons.
-     *
-     * @deprecated
-     *
-     * @author Richard Gomes
-     */
-    public enum Style {
-
-        /**
-         * When a Java, C or C++ style indexing is required, which is what happens in general, you need to choose
-         * {@link Style}.JAVA, which is the default.
-         *
-         * <pre>
-         *     for (i = 1; i &lt;= m; i++) {
-         *         for (j = 1; j &lt;= n; j++) {
-         *             // access a matrix, Java zero-based indexing style
-         *             matrix.addr(matrix.addr(i,j) = (i==j) ? 1.0 : 0.0;
-         *         }
-         *         // access an array, Java zero-based indexing style
-         *         array.addr(array.addr(i) = (i%2==0) ? 1.0 : 0.0;
-         *     }
-         * </pre>
-         */
-        JAVA (0),
-
-        /**
-         * When a FORTRAN style indexing is required, you need to choose {@link Style}.FORTRAN This will allow you use a
-         * FORTRAN style indexing on a data structure implemented in Java. Notice that methods {@link Matrix#addr(int, int)} and
-         * {@link Array#addr(int)} transparently convert from FORTRAN one-based indexing to native Java zero-based indexing.
-         *
-         * <pre>
-         *     for (i = 1; i &lt;= m; i++) {
-         *         for (j = 1; j &lt;= n; j++) {
-         *             // access a matrix, FORTRAN one-based indexing style
-         *             matrix.addr(matrix.addr(i,j) = (i==j) ? 1.0 : 0.0;
-         *         }
-         *         // access an array, FORTRAN one-based indexing style
-         *         array.addr(array.addr(i) = (i%2==0) ? 1.0 : 0.0;
-         *     }
-         * </pre>
-         */
-        FORTRAN (1);
-
-
-        protected final int base;
-
-        private Style(final int base) {
-            this.base = base;
-        }
-
-    }
-
 
 
     /**
@@ -217,23 +100,10 @@ public class Cells {
      * @throws IllegalArgumentException if parameters are less than zero
      */
     protected Cells(final int rows, final int cols) {
-        this(rows, cols, Style.JAVA);
-    }
-
-    /**
-     * Builds a Storage of <code>rows</code> by <code>cols</code>
-     *
-     * @param rows is the number of rows
-     * @param cols is the number of columns
-     * @param style is an {@link Style}
-     * @throws IllegalArgumentException if parameters are less than zero
-     */
-    protected Cells(final int rows, final int cols, final Style style) {
         QL.require(rows>=0 && cols>=0 ,  INVALID_ARGUMENTS); // QA:[RG]::verified
         this.rows = rows;
         this.cols = cols;
         this.size = rows*cols;
-        this.style = style;
         this.data = new double[size];
     }
 
@@ -244,8 +114,6 @@ public class Cells {
 
     public final int rows()      { return rows; }
     public final int columns()   { return cols; }
-    public final Style style()   { return style; }
-    public final int base()      { return style.base; }
     public final int size()      { return size; }
     public final boolean empty() { return size <= 0; }
 
@@ -257,7 +125,7 @@ public class Cells {
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer();
-        sb.append("[rows=").append(rows).append(" cols=").append(cols).append(" style=").append(style.toString()).append('\n');
+        sb.append("[rows=").append(rows).append(" cols=").append(cols).append('\n');
         int addr = 0;
         for (int row = 0; row < rows; row++) {
             sb.append(" [ ");
@@ -279,38 +147,16 @@ public class Cells {
 
     /**
      * Calculates the address of a given cell identified by <i>(row, col)</i>
-     * <p>
-     * This method provides transparent access by both JAVA and FORTRAN algorithms.
-     *
-     * @see Style
      */
     protected int addr(final int row, final int col) {
-        return (row-style.base)*cols + (col-style.base);
-    }
-
-    /**
-     * Calculates the Java index style address (zero-based) of a given cell identified by <i>(row, col)</i>
-     * <p>
-     * This method provides transparent access by both JAVA and FORTRAN algorithms.
-     *
-     * @see Style
-     */
-    protected int addrJ(final int row, final int col) {
-        return row*cols+col;
+        return (row)*cols + (col);
     }
 
     /**
      * Calculates the address of a given cell identified by <i>col</i> in the first row.
      */
     protected int addr(final int col) {
-        return addr(style.base, col);
-    }
-
-    /**
-     * Calculates the address of a given cell identified by <i>col</i> in the first row.
-     */
-    protected int addrJ(final int col) {
-        return addrJ(0, col);
+        return addr(0, col);
     }
 
 
@@ -379,6 +225,7 @@ public class Cells {
     // private inner classes
     //
 
+    @Deprecated
     private abstract class AbstractIterator implements Iterator {
 
         protected final int dim;
@@ -430,15 +277,15 @@ public class Cells {
             final StringBuffer sb = new StringBuffer();
             sb.append(this.getClass().getSimpleName()).append('\n');;
             sb.append(" dimensions=").append('{').append(dim).append(",[").append(pos0).append(':').append(pos1).append(")}");
-            sb.append(" size=").append(size);
-            sb.append(" style=").append(style).append('\n');
+            sb.append(" size=").append(size).append('\n');
             final int addr = addr(dim, cursor);
             double curr;
-            if (addr>=0 && addr < size)
+            if (addr>=0 && addr < size) {
                 curr = data[addr];
-            else
+            } else {
                 curr = Double.NaN;
-            sb.append(" cursor position=").append(cursor-pos0+style.base).append(" value=").append(curr).append('\n');
+            }
+            sb.append(" cursor position=").append(cursor-pos0).append(" value=").append(curr).append('\n');
             return sb.toString();
         }
 
@@ -464,8 +311,9 @@ public class Cells {
                     // compare
                     this.begin(); another.begin();
                     boolean result = true;
-                    while (this.hasNext() && result)
+                    while (this.hasNext() && result) {
                         result = this.nextDouble() == another.nextDouble();
+                    }
                     // double check if both Iterators have been completely compared
                     result &= !(this.hasNext() || another.hasNext());
                     // restore cursor positions
@@ -552,15 +400,16 @@ public class Cells {
 
         @Override
         public int cursor() {
-            return cursor-pos0+style.base;
+            return cursor-pos0;
         }
 
         @Override
         public void seek(final int pos) {
-            if (pos-pos0 >= 0 && pos-pos0 < size)
-                cursor = pos0+pos-style.base;
-            else
+            if (pos-pos0 >= 0 && pos-pos0 < size) {
+                cursor = pos0+pos;
+            } else {
                 throw new NoSuchElementException();
+            }
         }
 
         @Override
@@ -578,18 +427,20 @@ public class Cells {
 
         @Override
         public void forward() {
-            if (cursor < pos1)
+            if (cursor < pos1) {
                 lastRet = cursor++;
-            else
+            } else {
                 throw new NoSuchElementException();
+            }
         }
 
         @Override
         public void backward() {
-            if (cursor >= pos0)
+            if (cursor >= pos0) {
                 lastRet = --cursor;
-            else
+            } else {
                 throw new NoSuchElementException();
+            }
         }
 
 
@@ -683,8 +534,9 @@ public class Cells {
         @Override
         public Iterator addAssign(final double scalar) {
             begin();
-            while (hasNext())
+            while (hasNext()) {
                 setDouble(nextDouble() + scalar);
+            }
             begin();
             return this;
         }
@@ -698,8 +550,9 @@ public class Cells {
         public Iterator addAssign(final Iterator another) {
             QL.require(this.size==another.size(), ITERATOR_IS_INCOMPATIBLE);
             this.begin(); another.begin();
-            while (hasNext())
+            while (hasNext()) {
                 setDouble(nextDouble() + another.nextDouble());
+            }
             this.begin(); another.begin();
             return this;
         }
@@ -712,8 +565,9 @@ public class Cells {
         @Override
         public Iterator subAssign(final double scalar) {
             begin();
-            while (hasNext())
+            while (hasNext()) {
                 setDouble(nextDouble() - scalar);
+            }
             begin();
             return this;
         }
@@ -727,8 +581,9 @@ public class Cells {
         public Iterator subAssign(final Iterator another) {
             QL.require(this.size==another.size(), ITERATOR_IS_INCOMPATIBLE);
             this.begin(); another.begin();
-            while (hasNext())
+            while (hasNext()) {
                 setDouble(nextDouble() - another.nextDouble());
+            }
             this.begin(); another.begin();
             return this;
         }
@@ -741,8 +596,9 @@ public class Cells {
         @Override
         public Iterator mulAssign(final double scalar) {
             begin();
-            while (hasNext())
+            while (hasNext()) {
                 setDouble(nextDouble() * scalar);
+            }
             begin();
             return this;
         }
@@ -757,8 +613,9 @@ public class Cells {
             QL.require(this.size==another.size(), ITERATOR_IS_INCOMPATIBLE);
             begin();
             another.begin();
-            while (hasNext())
+            while (hasNext()) {
                 setDouble(nextDouble() * another.nextDouble());
+            }
             begin();
             return this;
         }
@@ -771,8 +628,9 @@ public class Cells {
         @Override
         public Iterator divAssign(final double scalar) {
             begin();
-            while (hasNext())
+            while (hasNext()) {
                 setDouble(nextDouble() / scalar);
+            }
             begin();
             return this;
         }
@@ -786,8 +644,9 @@ public class Cells {
         public Iterator divAssign(final Iterator another) {
             QL.require(this.size==another.size(), ITERATOR_IS_INCOMPATIBLE);
             this.begin(); another.begin();
-            while (hasNext())
+            while (hasNext()) {
                 setDouble(nextDouble() / another.nextDouble());
+            }
             this.begin(); another.begin();
             return this;
         }
@@ -871,7 +730,7 @@ public class Cells {
             for (int i=0; hasNext(); i++) {
                 double sum = 0.0;
                 final double value = next();
-                int addrJ = matrix.addrJ(i, 0);
+                int addrJ = matrix.addr(i, 0);
                 for (int col=0; col<matrix.columns(); col++) {
                     sum += value * matrix.data[addrJ];
                     addrJ++;
@@ -925,8 +784,9 @@ public class Cells {
             QL.require(size() == another.size(), ITERATOR_IS_INCOMPATIBLE);
             this.begin(); another.begin();
             double sum = 0.0;
-            while (this.hasNext())
+            while (this.hasNext()) {
                 sum += this.nextDouble() * another.nextDouble();
+            }
             this.begin(); another.begin();
             return sum;
         }
@@ -970,13 +830,13 @@ public class Cells {
          */
         @Override
         public Matrix outerProduct(final Iterator another) {
-            final Matrix result = new Matrix(this.size, another.size(), style());
+            final Matrix result = new Matrix(this.size, another.size());
             // perform calculations
             this.begin(); another.begin();
-            int row = style.base; int col = style.base;
+            int row = 0; int col = 0;
             while (this.hasNext()) {
                 final double vt = this.nextDouble();
-                another.begin(); col=style.base;
+                another.begin(); col=0;
                 while (another.hasNext()) {
                     final double va = another.nextDouble();
                     result.set(row, col, vt*va);
@@ -995,7 +855,7 @@ public class Cells {
          */
         @Override
         public Matrix outerProduct(final Iterator another, final int from, final int to) {
-            QL.require(from >= style.base && to >= from && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(from >= 0 && to >= from && to <= size, INVALID_ARGUMENTS); // QA:[RG]::verified
             return outerProduct(another.iterator(from, to));
         }
 
@@ -1064,8 +924,9 @@ public class Cells {
             double result = Double.MAX_VALUE;
             while (hasNext()) {
                 final double d = nextDouble();
-                if (d < result)
+                if (d < result) {
                     result = d;
+                }
             }
             begin();
             return result;
@@ -1092,8 +953,9 @@ public class Cells {
             double result = Double.MIN_VALUE;
             while (hasNext()) {
                 final double d = nextDouble();
-                if (d > result)
+                if (d > result) {
                     result = d;
+                }
             }
             begin();
             return result;
@@ -1166,7 +1028,7 @@ public class Cells {
          */
         @Override
         public double accumulate() {
-            return accumulate(style.base, size+style.base, 0);
+            return accumulate(0, size, 0);
         }
 
         /**
@@ -1176,7 +1038,7 @@ public class Cells {
          */
         @Override
         public double accumulate(final double init) {
-            return accumulate(style.base, size+style.base, init);
+            return accumulate(0, size, init);
         }
 
         /**
@@ -1186,7 +1048,7 @@ public class Cells {
          */
         @Override
         public double accumulate(final int from, final int to, final double init) {
-            QL.require(from >= style.base && to >= from && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(from >= 0 && to >= from && to <= size, INVALID_ARGUMENTS); // QA:[RG]::verified
             seek(from);
             int size = to - from;
             double sum = init;
@@ -1205,7 +1067,7 @@ public class Cells {
          */
         @Override
         public Iterator transform(final DoubleOp func) {
-            return transform(style.base, size+style.base, func);
+            return transform(0, size, func);
         }
 
         /**
@@ -1215,7 +1077,7 @@ public class Cells {
          */
         @Override
         public Iterator transform(final int from, final int to, final DoubleOp func) {
-            QL.require(from >= style.base && to >= from && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(from >= 0 && to >= from && to <= size, INVALID_ARGUMENTS); // QA:[RG]::verified
             seek(from);
             int size = to - from;
             while (hasNext() && size > 0) {
@@ -1234,7 +1096,7 @@ public class Cells {
          */
         @Override
         public int lowerBound(final double val) {
-            return lowerBound(style.base, size+style.base-1, val);
+            return lowerBound(0, size-1, val);
         }
 
         /**
@@ -1244,7 +1106,7 @@ public class Cells {
          */
         @Override
         public int lowerBound(int from, final int to, final double val) {
-            QL.require(from >= style.base && to >= from && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(from >= 0 && to >= from && to <= size, INVALID_ARGUMENTS); // QA:[RG]::verified
             int len = to - from;
             int half;
             int middle;
@@ -1258,8 +1120,47 @@ public class Cells {
                     from = middle;
                     from++;
                     len = len - half - 1;
-                } else
+                } else {
                     len = half;
+                }
+            }
+            return from;
+        }
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
+         */
+        @Override
+        public int lowerBound(final double val, final Ops.BinaryDoublePredicate f) {
+            return lowerBound(0, size-1, val, f);
+        }
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
+         */
+        @Override
+        public int lowerBound(int from, final int to, final double val, final Ops.BinaryDoublePredicate f) {
+            QL.require(from >= 0 && to >= from && to <= size, INVALID_ARGUMENTS); // QA:[RG]::verified
+            int len = to - from;
+            int half;
+            int middle;
+
+            while (len > 0) {
+                half = len >> 1;
+                middle = from;
+                middle = middle + half;
+
+                if (f.op(this.get(middle+pos0), val)) {
+                    from = middle;
+                    from++;
+                    len = len - half - 1;
+                } else {
+                    len = half;
+                }
             }
             return from;
         }
@@ -1271,7 +1172,7 @@ public class Cells {
          */
         @Override
         public int upperBound(final double val) {
-            return upperBound(style.base, size+style.base-1, val);
+            return upperBound(0, size-1, val);
         }
 
         /**
@@ -1281,7 +1182,7 @@ public class Cells {
          */
         @Override
         public int upperBound(int from, final int to, final double val) {
-            QL.require(from >= style.base && to >= from && to <= size+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(from >= 0 && to >= from && to <= size, INVALID_ARGUMENTS); // QA:[RG]::verified
             int len = to - from;
             int half;
             int middle;
@@ -1291,33 +1192,72 @@ public class Cells {
                 middle = from;
                 middle = middle + half;
 
-                if (val < this.get(middle+pos0))
+                if (val < this.get(middle+pos0)) {
                     len = half;
-                else {
+                } else {
                     from = middle;
                     from++;
                     len = len - half - 1;
                 }
             }
-            return from/*+style.base*/;
+            return from/**/;
+        }
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
+         */
+        @Override
+        public int upperBound(final double val, final Ops.BinaryDoublePredicate f) {
+            return upperBound(0, size-1, val, f);
+        }
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * @note This method resets cursor to the start position of {@link Iterator}(s) involved
+         */
+        @Override
+        public int upperBound(int from, final int to, final double val, final Ops.BinaryDoublePredicate f) {
+            QL.require(from >= 0 && to >= from && to <= size, INVALID_ARGUMENTS); // QA:[RG]::verified
+            int len = to - from;
+            int half;
+            int middle;
+
+            while (len > 0) {
+                half = len >> 1;
+                middle = from;
+                middle = middle + half;
+
+                if (f.op(val, this.get(middle+pos0))) {
+                    len = half;
+                } else {
+                    from = middle;
+                    from++;
+                    len = len - half - 1;
+                }
+            }
+            return from/**/;
         }
 
     }
 
 
+    @Deprecated
     private abstract class AbstractRowIterator extends AbstractIterator {
 
         public AbstractRowIterator(final int row) {
-            this(row, style.base, cols+style.base);
+            this(row, 0, cols);
         }
 
         public AbstractRowIterator(final int row, final int col0) {
-            this(row, col0, cols+style.base);
+            this(row, col0, cols);
         }
 
         public AbstractRowIterator(final int row, final int col0, final int col1) {
             super(row, col0, col1, col0);
-            QL.require(row>=style.base && row<rows+style.base && col0 >=style.base && col1>=col0 && col1 <= cols+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(row>=0 && row<rows && col0 >=0 && col1>=col0 && col1 <= cols, INVALID_ARGUMENTS); // QA:[RG]::verified
         }
 
 
@@ -1361,8 +1301,9 @@ public class Cells {
                 final double next = data[addr(dim, cursor)];
                 lastRet = cursor++;
                 return next;
-            } else
+            } else {
                 throw new NoSuchElementException();
+            }
         }
 
         @Override
@@ -1370,16 +1311,18 @@ public class Cells {
             if (cursor > pos0) {
                 lastRet = --cursor;
                 return data[addr(dim, cursor)];
-            } else
+            } else {
                 throw new NoSuchElementException();
+            }
         }
 
         @Override
         public void setDouble(final double e) {
-            if (lastRet!=-1)
+            if (lastRet!=-1) {
                 data[addr(dim, lastRet)] = e;
-            else
+            } else {
                 throw new NoSuchElementException();
+            }
         }
 
         @Override
@@ -1472,19 +1415,20 @@ public class Cells {
     }
 
 
+    @Deprecated
     private abstract class AbstractColumnIterator extends AbstractIterator {
 
         public AbstractColumnIterator(final int col) {
-            this(col, style.base, rows+style.base);
+            this(col, 0, rows);
         }
 
         public AbstractColumnIterator(final int col, final int row0) {
-            this(col, row0, rows+style.base);
+            this(col, row0, rows);
         }
 
         public AbstractColumnIterator(final int col, final int row0, final int row1) {
             super(col, row0, row1, row0);
-            QL.require(col>=style.base && col<cols+style.base && row0 >=style.base && row1>=row0 && row1 <= rows+style.base, INVALID_ARGUMENTS); // QA:[RG]::verified
+            QL.require(col>=0 && col<cols && row0 >=0 && row1>=row0 && row1 <= rows, INVALID_ARGUMENTS); // QA:[RG]::verified
         }
 
 
@@ -1518,8 +1462,9 @@ public class Cells {
                 final double next = data[addr(cursor, dim)];
                 lastRet = cursor++;
                 return next;
-            } else
+            } else {
                 throw new NoSuchElementException();
+            }
         }
 
         @Override
@@ -1527,16 +1472,18 @@ public class Cells {
             if (cursor > pos0) {
                 lastRet = --cursor;
                 return data[addr(cursor, dim)];
-            } else
+            } else {
                 throw new NoSuchElementException();
+            }
         }
 
         @Override
         public void setDouble(final double e) {
-            if (lastRet!=-1)
+            if (lastRet!=-1) {
                 data[addr(lastRet, dim)] = e;
-            else
+            } else {
                 throw new NoSuchElementException();
+            }
         }
 
         @Override
@@ -1650,7 +1597,10 @@ public class Cells {
      * This class also implements {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
      *
      * @author Richard Gomes
+     *
+     * @deprecated
      */
+    @Deprecated
     public class RowIterator extends AbstractRowIterator implements Cloneable {
 
         /**
@@ -1715,7 +1665,10 @@ public class Cells {
      * @note Operations {@link #setDouble(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
      *
      * @author Richard Gomes
+     *
+     * @deprecated
      */
+    @Deprecated
     public class ConstRowIterator extends RowIterator implements ConstIterator {
 
         /**
@@ -1802,7 +1755,10 @@ public class Cells {
      * This class implements {@link ListIterator} and {@link DoubleListIterator} which has the property of avoiding boxing/unboxing.
      *
      * @author Richard Gomes
+     *
+     * @deprecated
      */
+    @Deprecated
     public class ColumnIterator extends AbstractColumnIterator implements Cloneable {
 
         /**
@@ -1867,7 +1823,10 @@ public class Cells {
      * @note Operations {@link #setDouble(double)}, {@link #set(Double)} and {@link #remove()} throw {@link UnsupportedOperationException}
      *
      * @author Richard Gomes
+     *
+     * @deprecated
      */
+    @Deprecated
     public class ConstColumnIterator extends ColumnIterator implements ConstIterator {
 
         /**

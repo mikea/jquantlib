@@ -80,7 +80,8 @@ public class TermStructuresTest {
         this.termStructure = null;
         this.dummyTermStructure = null;
 
-        //TODO: remove comments
+        //FIXME: remove comments when PiecewiseYieldCurve becomes available
+
         //		calendar = org.jquantlib.time.calendars.Target.getCalendar();
         //        settlementDays = 2;
         //        org.jquantlib.util.Date today = calendar.advance(org.jquantlib.util.DateFactory.getFactory().getTodaysDate());
@@ -96,12 +97,11 @@ public class TermStructuresTest {
         //        };
         //
         //        Datum swapData[] =  new Datum[] {
-        ////TODO: remove comments when we have implemented Swaps and related classes, etc
-        ////        		  new Datum(  1, TimeUnit.YEARS, 4.54 ),
-        ////                new Datum(  5, TimeUnit.YEARS, 4.99 ),
-        ////                new Datum( 10, TimeUnit.YEARS, 5.47 ),
-        ////                new Datum( 20, TimeUnit.YEARS, 5.89 ),
-        ////                new Datum( 30, TimeUnit.YEARS, 5.96 )
+        //        		  new Datum(  1, TimeUnit.YEARS, 4.54 ),
+        //                new Datum(  5, TimeUnit.YEARS, 4.99 ),
+        //                new Datum( 10, TimeUnit.YEARS, 5.47 ),
+        //                new Datum( 20, TimeUnit.YEARS, 5.89 ),
+        //                new Datum( 30, TimeUnit.YEARS, 5.96 )
         //        };
         //
         //        int deposits = depositData.length;
@@ -129,8 +129,7 @@ public class TermStructuresTest {
         //								BusinessDayConvention.MODIFIED_FOLLOWING,
         //								false,
         //								Actual360.getDayCounter());
-
-        //TODO: remove comments when we have implemented Swaps and related classes, etc
+        //
         //        for (int i=0; i<swaps; ++i) {
         //            instruments[i+deposits] = new SwapRateHelper(
         //            						swapData[i].rate/100,
@@ -173,11 +172,13 @@ public class TermStructuresTest {
             calculated[i] = localTermStructure.discount(anotherDay);
         }
 
-        for (int i=0; i<days.length; i++)
-            if (!Closeness.isClose(expected[i],calculated[i]))
+        for (int i=0; i<days.length; i++) {
+            if (!Closeness.isClose(expected[i],calculated[i])) {
                 fail("\n  Discount at " + days[i] + " days:\n"
                         + "    before date change: " + expected[i] + "\n"
                         + "    after date change:  " + calculated[i]);
+            }
+        }
     }
 
 
@@ -208,6 +209,7 @@ public class TermStructuresTest {
 
 
     /**
+     * FIXME:
      * This test should be using PiecewiseYieldCurve but was changed to use another TermStructure for the time being whilst
      * PiecewiseYieldCurve is not available.
      */
@@ -215,12 +217,16 @@ public class TermStructuresTest {
     public void testImpliedObs() {
         QL.info("Testing observability of implied term structure...");
 
-        //        final Date today = calendar.advance(Date.todaysDate());
         final Date today = new Settings().evaluationDate();
         final Date newToday = today.add(Period.ONE_YEAR_FORWARD.mul(3));
         final Date newSettlement = new Target().advance(newToday, settlementDays, TimeUnit.Days);
 
-        // final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(YieldTermStructure.class); //FIXME::RG::Handle
+        //FIXME:: Fix RelinkableHandle. The initialization of "h" should be:
+        //
+        //        final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>() { /* anonymous */ };
+        //
+        // see: http://bugs.jquantlib.org/view.php?id=465
+        //
         final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(
                 new AbstractYieldTermStructure() {
                     @Override
@@ -242,18 +248,32 @@ public class TermStructuresTest {
         // h.setLink(termStructure);
 
         // -------------------------------------------------------------------------------------------------------------
-        // XXX: This code was added instead. Please remove when PiecewiseYieldCurve becomes ready
+        // FIXME: This code was added instead. Please remove when PiecewiseYieldCurve becomes ready
         //
         final Quote quote = new SimpleQuote(100.0);
         final Flag anotherFlag = new Flag();
         quote.addObserver(anotherFlag);
         h.linkTo(new FlatForward(today, new Handle<Quote>(quote), new Actual360()));
-        if (!anotherFlag.isUp())
+        if (!anotherFlag.isUp()) {
             fail("Observer was not notified of term structure change");
+        }
 
-        if (!flag.isUp())
+        if (!flag.isUp()) {
             fail("Observer was not notified of term structure change");
+        }
     }
+//    Date today = Settings::instance().evaluationDate();
+//    Date newToday = today + 3*Years;
+//    Date newSettlement = vars.calendar.advance(newToday,
+//                                               vars.settlementDays,Days);
+//    RelinkableHandle<YieldTermStructure> h;
+//    boost::shared_ptr<YieldTermStructure> implied(
+//                                  new ImpliedTermStructure(h, newSettlement));
+//    Flag flag;
+//    flag.registerWith(implied);
+//    h.linkTo(vars.termStructure);
+//    if (!flag.isUp())
+//        BOOST_ERROR("Observer was not notified of term structure change");
 
 
     @Ignore

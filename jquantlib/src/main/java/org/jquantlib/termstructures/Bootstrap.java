@@ -1,4 +1,3 @@
-
 /*
 Copyright (C) 2009 John Martin
 
@@ -21,31 +20,19 @@ JQuantLib is based on QuantLib. http://quantlib.org/
 When applicable, the original copyright notice follows this notice.
  */
 
-
 package org.jquantlib.termstructures;
 
-import org.jquantlib.math.interpolations.Interpolation;
-import org.jquantlib.math.interpolations.Interpolator;
-import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.time.Date;
+import org.jquantlib.termstructures.yieldcurves.PiecewiseCurve;
 
-public interface Bootstrapable
-{
-    public abstract Array getData ();
-    
-    public abstract Date [] getDates ();
-    
-    public abstract Array getTimes ();
-    
-    public abstract Interpolator getInterpolator();
-    
-    public abstract Interpolation getInterpolation();
-    
-    public abstract void setInterpolation (Interpolation interpolation);
-    
-    public abstract void resetData (int size);
-    
-    public abstract void resetTime (int size);
-    
-    public abstract void resetDates (int size);
+public interface Bootstrap {
+
+    public void calculate();
+
+    public void setup(PiecewiseCurve curve);
+    //XXX
+    //    public void setup(
+    //            final YieldTermStructure termStructure,
+    //            final Bootstrapable bootstrapable,
+    //            final RateHelper[] instruments,
+    //            final BootstrapTraits traits);
 }

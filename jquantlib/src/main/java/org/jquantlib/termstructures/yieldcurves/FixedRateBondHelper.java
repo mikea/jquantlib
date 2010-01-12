@@ -24,6 +24,7 @@ package org.jquantlib.termstructures.yieldcurves;
 
 import java.util.List;
 
+import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
@@ -32,7 +33,7 @@ import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Schedule;
 
-//TODO: Finish
+//TODO: This class still needs to be finished
 public class FixedRateBondHelper<YieldTermStructure> extends RateHelper {
 
 	public FixedRateBondHelper(
@@ -47,6 +48,8 @@ public class FixedRateBondHelper<YieldTermStructure> extends RateHelper {
             Date issueDate)
  {
      super (cleanPrice);
+     QL.validateExperimentalMode();
+     
 	 //super(cleanPrice);
 	 /*
 bond_ = boost::shared_ptr<FixedRateBond>(new

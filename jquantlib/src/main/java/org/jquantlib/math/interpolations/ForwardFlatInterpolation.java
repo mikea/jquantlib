@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2008 Anand Mani
+ Copyright (C) 2009 Richard Gomes
 
  This source code is release under the BSD License.
 
@@ -19,154 +20,114 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+/*
+ Copyright (C) 2004, 2008 Ferdinando Ametrano
+ Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
+ Copyright (C) 2001, 2002, 2003 Nicolas Di C�sar�
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.lang.iterators.ConstIterator;
 import org.jquantlib.math.interpolations.factories.ForwardFlat;
 import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * Forward-flat interpolation between discrete points
- * <p>
- * Interpolations are not instantiated directly by applications, but via a factory class.
  *
  * @see ForwardFlat
  *
  * @author Anand Mani
+ * @author Richard Gomes
  */
 public class ForwardFlatInterpolation extends AbstractInterpolation {
 
-	//
-    // private fields
+    //
+    // public constructors
     //
 
-    private Array vp;
-
-
-    //
-    // private constructors
-    //
-
-    /**
-     * Constructor for a forward-flat interpolation between discrete points
-     * <p>
-     * Interpolations are not instantiated directly by applications, but via a factory class.
-     *
-     * @see ForwardFlat
-     */
-	private ForwardFlatInterpolation() {
-		// access denied to default constructor
-	}
-
-
-	//
-    // static public methods
-    //
-
-    /**
-     * This is a factory method intended to create this interpolation.
-     *
-     * @see ForwardFlat
-     */
-    static public Interpolator getInterpolator() /* @ReadOnly */{
-        final ForwardFlatInterpolation forwardFlatInterpolation = new ForwardFlatInterpolation();
-        return new ForwardFlatInterpolationImpl(forwardFlatInterpolation);
+    public ForwardFlatInterpolation(final Array vx, final Array vy) {
+        super.impl = new ForwardFlatInterpolationImpl(vx, vy);
+        super.impl.update();
     }
 
 
-	//
-	// overrides AbstractInterpolation
-	//
-
-	@Override
-	protected double primitiveImpl(final double x) /* @ReadOnly */{
-		final int i = locate(x);
-		final double dx = x - vx.get(i);
-		return vp.get(i) + dx * vy.get(i);
-	}
-
-	@Override
-	protected double derivativeImpl(final double x) /* @ReadOnly */{
-		return 0.0;
-	}
-
-	@Override
-	protected double secondDerivativeImpl(final double x) /* @ReadOnly */{
-		return 0.0;
-	}
-
     //
-    // Overrides AbstractInterpolation
+    // protected inner classes
     //
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
-     */
-	@Override
-	public void update() {
-		super.update();
+    private class ForwardFlatInterpolationImpl extends AbstractInterpolation.Impl {
 
-		vp = new Array(vx.size());
-		vp.set(0, 0.0);
-		for (int i=1; i<vx.size(); i++) {
-			final double dx = vx.get(i) - vx.get(i-1);
-			final double value = vp.get(i-1) + dx * vy.get(i-1);
-			vp.set(i, value);
-		}
-	}
+        //
+        // private fields
+        //
+
+        private final Array vp;
+        private final int n;
 
 
-	//
-	// implements Ops.DoubleOp
-	//
+        //
+        // protected constructors
+        //
 
-    @Override
-	protected double opImpl(final double x) /* @ReadOnly */{
-		final int n = vx.size();
-		if (x >= vx.get(n-1))
-			return vy.get(n-1);
-		final int i = locate(x);
-		return vy.get(i);
-	}
+        protected ForwardFlatInterpolationImpl(final Array vx, final Array vy) {
+            super(vx, vy);
+            this.n  = vx.size();
+            this.vp = new Array(n);
+        }
 
 
-	//
-	// private inner classes
-	//
+        //
+        // overrides AbstractInterpolation.Impl
+        //
 
-	/**
-	 * This class is a default implementation for {@link ForwardFlatInterpolation} instances.
-	 *
-	 * @author Anand Mani
-	 */
+        @Override
+        public void update() {
+            vp.set(0, 0.0);
+            for (int i=1; i<vx.size(); i++) {
+                final double dx = vx.get(i) - vx.get(i-1);
+                vp.set(i, vp.get(i-1) + dx * vy.get(i-1));
+            }
+        }
 
-	private static class ForwardFlatInterpolationImpl implements Interpolator {
-		private final ForwardFlatInterpolation delegate;
+        @Override
+        public double op(final double x) {
+            if (x >= vx.get(n-1)) {
+                return vy.get(n-1);
+            }
+            final int i = locate(x);
+            return vy.get(i);
+        }
 
-		public ForwardFlatInterpolationImpl(final ForwardFlatInterpolation delegate) {
-			this.delegate = delegate;
-		}
+        @Override
+        public double primitive(final double x) {
+            final int i = locate(x);
+            final double dx = x - vx.get(i);
+            return vp.get(i) + dx * vy.get(i);
+        }
 
-	    @Override
-		public final Interpolation interpolate(final ConstIterator x, final ConstIterator y) /* @ReadOnly */{
-			return interpolate(x.size(), x, y);
-		}
+        @Override
+        public double derivative(final double x) {
+            return 0.0;
+        }
 
-	    @Override
-		public final Interpolation interpolate(final int size, final ConstIterator x, final ConstIterator y) /* @ReadOnly */{
-			delegate.vx = x.constIterator(0, size);
-			delegate.vy = y.constIterator(0, size);
-			delegate.update();
-			return delegate;
-		}
+        @Override
+        public double secondDerivative(final double x) {
+            return 0.0;
+        }
 
-	    @Override
-		public final boolean global() {
-			return false; // only CubicSpline and Sabr are global, whatever it means!
-		}
-	}
+    }
 
 }

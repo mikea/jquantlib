@@ -2,9 +2,6 @@ package org.jquantlib.lang.iterators;
 
 import java.util.ListIterator;
 
-import org.jquantlib.math.matrixutilities.Cells.Style;
-
-
 /**
  * This interface is similar to {@link ListIterator} but it provides methods which avoid un/boxing and methods which provide
  * direct access to elements, retrieving/modifying them or not.
@@ -65,8 +62,6 @@ public interface RandomListIterator<T> extends ListIterator<T> {
     public abstract int remaining();
 
     /**
-     * Returns the current cursor position according to the {@link Style} representation
-     *
      * @return a scalar
      */
     public abstract int cursor();

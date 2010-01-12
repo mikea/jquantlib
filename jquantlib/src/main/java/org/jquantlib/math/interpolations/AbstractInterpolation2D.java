@@ -19,6 +19,23 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+/*
+ Copyright (C) 2002, 2003, 2006 Ferdinando Ametrano
+ Copyright (C) 2004, 2005, 2006, 2007 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
 
 package org.jquantlib.math.interpolations;
 
@@ -29,55 +46,67 @@ import org.jquantlib.Settings;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 
+public class AbstractInterpolation2D implements Interpolation2D {
 
-public abstract class AbstractInterpolation2D implements Interpolation2D {
+    protected Impl impl_;
 
-    //
-    // protected fields
-    //
+    @Override
+    public boolean empty() /* @ReadOnly */ { return impl_==null; }
 
-    /**
-     * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i>
-     */
-    protected Array vx;
+    @Override
+    public /*@Real*/ double op(final /*@Real*/ double x, final /*@Real*/ double y) /* @ReadOnly */ {
+        return op(x, y, false);
+    }
+    @Override
+    public /*@Real*/ double op(final /*@Real*/ double x, final /*@Real*/ double y, final boolean allowExtrapolation) /* @ReadOnly */ {
+        checkRange(x, y, allowExtrapolation);
+        return impl_.op(x, y);
+    }
 
-    /**
-     * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i>
-     */
-    protected Array vy;
+    @Override
+    public /*@Real*/ double xMin() /* @ReadOnly */ {
+        return impl_.xMin();
+    }
 
-    /**
-     * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i>
-     */
-    protected Matrix mz;
+    @Override
+    public /*@Real*/ double xMax() /* @ReadOnly */ {
+        return impl_.xMax();
+    }
 
+    @Override
+    public /*@Real*/ double yMin() /* @ReadOnly */ {
+        return impl_.yMin();
+    }
 
-    //
-    // protected abstract methods
-    //
+    @Override
+    public /*@Real*/ double yMax() /* @ReadOnly */ {
+        return impl_.yMax();
+    }
 
-    protected abstract double evaluateImpl(final double x, final double y);
+    @Override
+    public int locateX(final double x) {
+        return impl_.locateX(x);
+    }
 
+    @Override
+    public int locateY(final double y) {
+        return impl_.locateY(y);
+    }
 
-    //
-    // public methods
-    //
+    @Override
+    public boolean isInRange(final double x, final double y) /*@ReadOnly*/ {
+        return impl_.isInRange(x, y);
+    }
 
-    /**
-     * This method intentionally throws UnsupportedOperationException in order to
-     * oblige derived classes to reimplement it if needed.
-     *
-     * @throws UnsupportedOperationException
-     */
-    public void calculate() {
-        throw new UnsupportedOperationException();
+    @Override
+    public void update() {
+        impl_.calculate();
     }
 
 
     //
     // protected methods
     //
-
 
     /**
      * This method verifies if
@@ -88,12 +117,10 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
      * @param extrapolate
      *
      * @throws IllegalStateException if extrapolation is not enabled.
-     * @throws IllegalArgumentException if <i>x</i> is our of range
+     * @throws IllegalArgumentException if <i>x</i> is out of range
      */
-    // TODO: code review :: please verify against QL/C++ code
-    // FIXME: code review : verify if parameter 'extrapolate' is really needed
-    protected final void checkRange(final double x, final double y, final boolean extrapolate) {
-        if (! (extrapolate || allowsExtrapolation() || isInRange(x, y)) ) {
+    protected final void checkRange(final double x, final double y, final boolean extrapolate) /* @ReadOnly */{
+        if (!(extrapolate || allowsExtrapolation() || isInRange(x, y))) {
             final StringBuilder sb = new StringBuilder();
             sb.append("interpolation range is [");
             sb.append(xMin()).append(", ").append(xMax());
@@ -105,32 +132,6 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
             throw new IllegalArgumentException(sb.toString());
         }
     }
-
-
-    //
-    // implements Interpolation
-    //
-
-    @Override
-    public void update() {
-        QL.require(vx.size() >= 2 && vy.size() >= 2 , "not enough points to interpolate"); // QA:[RG]::verified // TODO: message
-        for (int i = 0; i < vx.size()-1; i++) {
-            QL.require(vx.get(i) <= vx.get(i+1) , "unsorted values on array X"); // QA:[RG]::verified // TODO: message
-            QL.require(vy.get(i) <= vy.get(i+1) , "unsorted values on array Y"); // QA:[RG]::verified // TODO: message
-        }
-    }
-
-
-    //
-    // implements Ops.BinaryDoubleOp
-    //
-
-    @Override
-    public double op(final double x, final double y) {
-        checkRange(x, y, this.allowsExtrapolation());
-        return evaluateImpl(x, y);
-    }
-
 
     //
     // implements Extrapolator
@@ -160,98 +161,147 @@ public abstract class AbstractInterpolation2D implements Interpolation2D {
 
 
     //
-    // implements Interpolation2D
+    // protected inner classes
     //
 
-    @Override
-    public double xMin() {
-        return vx.first();
-    }
+    protected abstract class Impl {
 
-    @Override
-    public double xMax() {
-        return vx.last();
-    }
+        /**
+         * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i>
+         */
+        protected Array vx;
 
-    @Override
-    public double yMin() {
-        return  vy.first();
-    }
+        /**
+         * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i>
+         */
+        protected Array vy;
 
-    @Override
-    public double yMax() {
-        return vy.last();
-    }
+        /**
+         * @note Derived classes are responsible for initializing <i>vx</i>, <i>vy</i> and eventually <i>mz</i>
+         */
+        protected Matrix mz;
 
-    @Override
-    public Array xValues() {
-        return vx.clone();
-    }
 
-    @Override
-    public Array yValues() {
-        return vy.clone();
-    }
+        //
+        // protected constructors
+        //
 
-    @Override
-    public Matrix zData() {
-        return mz.clone();
-        // FIXME: code review :: return (double[][])Arrays.trimToCapacity(mz, mz.length);
-    }
+        protected Impl() {
+            // nothing
+        }
 
-    @Override
-    // FIXME: code review here: compare against original C++ code
-    public int locateX(final double x) /* @ReadOnly */ {
-        if (x <= vx.first())
-            return 0;
-        else if (x > vx.last())
-            return vx.size()-2;
-        else
-            return vx.upperBound(x) - 1;
-    }
+        protected Impl(final Array vx, final Array vy, final Matrix mz) {
+            this.vx = vx; // TODO: clone?
+            this.vy = vy; // TODO: clone?
+            this.mz = mz; // TODO: clone?
 
-    @Override
-    // FIXME: code review here: compare against original C++ code
-    public int locateY(final double y) /* @ReadOnly */ {
-        if (y <= vy.first())
-            return 0;
-        else if (y > vy.last())
-            return vy.size()-2;
-        else
-            return vy.upperBound(y) - 1;
-    }
+            QL.require(vx.size() >= 2 && vy.size() >= 2, "not enough points to interpolate"); // QA:[RG]::verified // TODO: message
+            for (int i = 0; i < vx.size() - 1; i++) {
+                QL.require(vx.get(i) <= vx.get(i + 1), "unsorted values on array X"); // TODO: message
+                QL.require(vy.get(i) <= vy.get(i + 1), "unsorted values on array Y"); // TODO: message
+            }
+        }
 
-    @Override
-    public boolean isInRange(final double x, final double y) {
-        QL.require(extraSafetyChecksX(), "unsorted values on array X"); // QA:[RG]::verified // TODO: message
-        final double x1 = xMin(), x2 = xMax();
-        final boolean xIsInrange = (x >= x1 && x <= x2) || isClose(x,x1) || isClose(x,x2);
-        if (!xIsInrange)
-            return false;
+        //
+        // final public methods
+        //
 
-        QL.require(extraSafetyChecksY(), "unsorted values on array Y"); // QA:[RG]::verified // TODO: message
-        final double y1 = yMin(), y2 = yMax();
-        return (y >= y1 && y <= y2) || isClose(y,y1) || isClose(y,y2);
-    }
+        public double xMin() /* @ReadOnly */ {
+            return  vx.first();
+        }
 
-    //
-    // private methods
-    //
+        public double xMax() /* @ReadOnly */ {
+            return vx.last();
+        }
 
-    private boolean extraSafetyChecksX() {
-        if (new Settings().isExtraSafetyChecks())
-            for (int i=0; i<vx.size()-1; i++)
-                if (vx.get(i) > vx.get(i+1))
-                    return false;
-        return true;
-    }
+        public double yMin() /* @ReadOnly */ {
+            return  vy.first();
+        }
 
-    private boolean extraSafetyChecksY() {
-        if (new Settings().isExtraSafetyChecks())
-            for (int i=0; i<vy.size()-1; i++)
-                if (vy.get(i) > vy.get(i+1))
-                    return false;
-        return true;
+        public double yMax() /* @ReadOnly */ {
+            return vy.last();
+        }
+
+        public double op(final double x, final double y, final boolean allowExtrapolation) {
+            checkRange(x, y, allowExtrapolation);
+            return op(x, y);
+        }
+
+        public boolean isInRange(final double x, final double y) /*@ReadOnly*/ {
+            QL.require(extraSafetyChecksX(), "unsorted values on array X"); // TODO: message
+            final double x1 = xMin(), x2 = xMax();
+            final boolean xIsInrange = (x >= x1 && x <= x2) || isClose(x, x1) || isClose(x, x2);
+            if (!xIsInrange) {
+                return false;
+            }
+
+            QL.require(extraSafetyChecksY(), "unsorted values on array Y"); // TODO: message
+            final double y1 = yMin(), y2 = yMax();
+            return (y >= y1 && y <= y2) || isClose(y, y1) || isClose(y, y2);
+        }
+
+
+        //
+        // virtual public methods
+        //
+
+        public abstract double op(final double x, final double y) /* @ReadOnly */;
+        public abstract void calculate();
+
+
+        //
+        // protected methods
+        //
+
+        protected int locateX(final double x) /* @ReadOnly */{
+            QL.require(extraSafetyChecksX(), "unsorted values on array X"); // TODO: message
+            if (x <= vx.first()) {
+                return 0;
+            } else if (x > vx.last()) {
+                return vx.size() - 2;
+            } else {
+                return vx.upperBound(x) - 1;
+            }
+        }
+
+        protected int locateY(final double y) /* @ReadOnly */{
+            QL.require(extraSafetyChecksY(), "unsorted values on array Y"); // TODO: message
+            if (y <= vy.first()) {
+                return 0;
+            } else if (y > vy.last()) {
+                return vy.size() - 2;
+            } else {
+                return vy.upperBound(y) - 1;
+            }
+        }
+
+
+        //
+        // private methods
+        //
+
+        private boolean extraSafetyChecksX() {
+            if (new Settings().isExtraSafetyChecks()) {
+                for (int i = 0; i < vx.size() - 1; i++) {
+                    if (vx.get(i) > vx.get(i + 1)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        private boolean extraSafetyChecksY() {
+            if (new Settings().isExtraSafetyChecks()) {
+                for (int i = 0; i < vy.size() - 1; i++) {
+                    if (vy.get(i) > vy.get(i + 1)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
     }
 
 }

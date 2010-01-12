@@ -22,15 +22,12 @@
 
 package org.jquantlib.math.interpolations;
 
-import org.jquantlib.lang.iterators.ConstIterator;
 import org.jquantlib.math.interpolations.factories.BackwardFlat;
 import org.jquantlib.math.matrixutilities.Array;
 
 
 /**
  * Backward-flat interpolation between discrete points
- * <p>
- * Interpolations are not instantiated directly by applications, but via a factory class.
  *
  * @see BackwardFlat
  *
@@ -39,131 +36,81 @@ import org.jquantlib.math.matrixutilities.Array;
 public class BackwardFlatInterpolation extends AbstractInterpolation {
 
     //
-    // private fields
+    // public constructors
     //
 
-    private Array vp;
-
-
-    //
-    // private constructors
-    //
-
-    /**
-     * Constructor for a backward-flat interpolation between discrete points
-     * <p>
-     * Interpolations are not instantiated directly by applications, but via a factory class.
-     *
-     * @see BackwardFlat
-     */
-    private BackwardFlatInterpolation() {
-        // access denied to default constructor
+    public BackwardFlatInterpolation(final Array vx, final Array vy) {
+        super.impl = new BackwardFlatInterpolationImpl(vx, vy);
+        super.impl.update();
     }
 
 
     //
-    // static public methods
+    // protected inner classes
     //
 
-    /**
-     * This is a factory method intended to create this interpolation.
-     *
-     * @see BackwardFlat
-     */
-    static public Interpolator getInterpolator() /* @ReadOnly */ {
-        final BackwardFlatInterpolation backwardFlatInterpolation = new BackwardFlatInterpolation();
-        return new BackwardFlarInterpolationImpl(backwardFlatInterpolation);
-    }
+    private class BackwardFlatInterpolationImpl extends AbstractInterpolation.Impl {
+
+        //
+        // private fields
+        //
+
+        private final Array vp;
 
 
-    //
-    // Overrides AbstractInterpolation
-    //
+        //
+        // protected constructors
+        //
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * @note Class factory is responsible for initializing <i>vx</i> and <i>vy</i>
-     */
-    @Override
-    public void update() {
-        super.update();
-
-        vp = new Array(vx.size());
-        vp.set(0, 0.0);
-        for (int i=1; i<vx.size(); i++) {
-            final double dx = vx.get(i) - vx.get(i-1);
-            vp.set(i, vp.get(i-1) + dx*vy.get(i));
+        protected BackwardFlatInterpolationImpl(final Array vx, final Array vy) {
+            super(vx, vy);
+            this.vp = new Array(vx.size());
         }
-    }
-
-    @Override
-    protected double primitiveImpl(final double x) /* @ReadOnly */ {
-        final int i = locate(x);
-        final double dx = x - vx.get(i);
-        return vp.get(i) + dx*vy.get(i+1);
-    }
-
-    @Override
-    protected double derivativeImpl(final double x) /* @ReadOnly */ {
-        return 0.0;
-    }
-
-    @Override
-    protected double secondDerivativeImpl(final double x) /* @ReadOnly */ {
-        return 0.0;
-    }
 
 
-    //
-    // implements Ops.DoubleOp
-    //
+        //
+        // overrides AbstractInterpolation.Impl
+        //
 
-    @Override
-    protected double opImpl(final double x) /* @ReadOnly */ {
-        if (x <= vx.get(0)) return vy.get(0);
-        final int i = locate(x);
-        if (x == vx.get(i))
-            return vy.get(i);
-        else
-            return vy.get(i+1);
-    }
-
-
-    //
-    // private inner classes
-    //
-
-    /**
-     * This class is a default implementation for {@link BackwardFlatInterpolation} instances.
-     *
-     * @author Richard Gomes
-     */
-
-    private static class BackwardFlarInterpolationImpl implements Interpolator {
-        private final BackwardFlatInterpolation delegate;
-
-        public BackwardFlarInterpolationImpl(final BackwardFlatInterpolation delegate) {
-            this.delegate = delegate;
+        @Override
+        public void update() {
+            vp.set(0, 0.0);
+            for (int i=1; i<vx.size(); i++) {
+                final double dx = vx.get(i) - vx.get(i-1);
+                vp.set(i, vp.get(i-1) + dx*vy.get(i));
+            }
         }
 
         @Override
-        public final Interpolation interpolate(final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
-            return interpolate(x.size(), x, y);
+        public double op(final double x) {
+            if (x <= vx.get(0)) {
+                return vy.get(0);
+            }
+            final int i = locate(x);
+            if (x == vx.get(i)) {
+                return vy.get(i);
+            } else {
+                return vy.get(i+1);
+            }
         }
 
         @Override
-        public final Interpolation interpolate(final int size, final ConstIterator x, final ConstIterator y) /* @ReadOnly */ {
-            delegate.vx = x.constIterator(0, size);
-            delegate.vy = y.constIterator(0, size);
-            delegate.update();
-            return delegate;
+        public double primitive(final double x) {
+            final int i = locate(x);
+            final double dx = x - vx.get(i);
+            return vp.get(i) + dx*vy.get(i+1);
         }
 
         @Override
-        public final boolean global() {
-            return false; // only CubicSpline and Sabr are global, whatever it means!
+        public double derivative(final double x) {
+            return 0.0;
         }
+
+        @Override
+        public double secondDerivative(final double x) {
+            return 0.0;
+        }
+
     }
 
 }
