@@ -70,12 +70,19 @@ public class TypeTokenTree {
 
     /**
      * Returns the Class of a generic parameter
-     * 
+     *
      * @param pos represents the position of parameter, first is zero
      * @return the Class of a generic parameter
      */
     public Class<?> getElement(final int pos) {
-        return root.get(pos).getElement();
+        if (root==null) {
+            return null;
+        }
+        final TypeNode typeNode = root.get(pos);
+        if (typeNode==null) {
+            return null;
+        }
+        return typeNode.getElement();
     }
 
     //

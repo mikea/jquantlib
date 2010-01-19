@@ -10,8 +10,18 @@ import java.util.TreeMap;
 
 import org.jquantlib.QL;
 import org.jquantlib.cashflow.Leg;
+import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.lang.reflect.TypeNode;
 import org.jquantlib.lang.reflect.TypeTokenTree;
+import org.jquantlib.math.interpolations.factories.Linear;
+import org.jquantlib.quotes.Handle;
+import org.jquantlib.quotes.Quote;
+import org.jquantlib.termstructures.IterativeBootstrap;
+import org.jquantlib.termstructures.RateHelper;
+import org.jquantlib.termstructures.yieldcurves.Discount;
+import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldCurve;
+import org.jquantlib.time.Date;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TypeTokenTreeTest {
@@ -96,6 +106,39 @@ public class TypeTokenTreeTest {
         testThirdGenericParameter(mapClass);
     }
 
+    @Ignore
+    @Test
+    public void testPiecewiseYieldCurve() {
+        final Date d = new Date();
+        final RateHelper[] instruments = null;
+        final DayCounter dc = new DayCounter();
+        final Handle<Quote> jumps[] = null;
+        final Date[] jumpDates = null;
+        final double accuracy = 0;
+        final org.jquantlib.math.interpolations.Interpolation.Interpolator i = new Linear();
+        final org.jquantlib.termstructures.Bootstrap b = new IterativeBootstrap(PiecewiseYieldCurve.class);
+
+
+        final PiecewiseYieldCurve<Discount, Linear, IterativeBootstrap> pyc = new PiecewiseYieldCurve<Discount, Linear, IterativeBootstrap>(
+                d, instruments, dc, jumps, jumpDates, accuracy, i, b) { /* anonymous */ };
+        if (pyc == null) {
+            throw new NullPointerException();
+        }
+    }
+
+//    public PiecewiseYieldCurve(
+//                final Date referenceDate,
+//                final RateHelper[] instruments,
+//                final DayCounter dayCounter,
+//                final Handle<Quote>[] jumps,
+//                final Date[] jumpDates,
+//                final /*@Real*/ double accuracy, //TODO: default value: 1.0e-12
+//                final I interpolator, //TODO: default value: Interpolator()
+//                final B bootstrap) { //TODO: default value: Bootstrap<this_curve>()
+//
+//
+//
+//    }
 
 
     private interface TypeNodeTester {

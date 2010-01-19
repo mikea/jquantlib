@@ -156,6 +156,32 @@ public class PiecewiseYieldCurve<
     final private Bootstrap     bootstrap;
 
 
+
+    public PiecewiseYieldCurve(
+            final Date referenceDate,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates) {
+        this(referenceDate, instruments, dayCounter, jumps, jumpDates,
+                1.0e-12,
+                new TypeTokenTree(PiecewiseYieldCurve.class).getElement(1),
+                new TypeTokenTree(PiecewiseYieldCurve.class).getElement(2));
+    }
+
+    public PiecewiseYieldCurve(
+            final Date referenceDate,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy) {
+        this(referenceDate, instruments, dayCounter, jumps, jumpDates,
+                accuracy,
+                new TypeTokenTree(PiecewiseYieldCurve.class).getElement(1),
+                new TypeTokenTree(PiecewiseYieldCurve.class).getElement(2));
+    }
+
     public PiecewiseYieldCurve(
             final Date referenceDate,
             final RateHelper[] instruments,
@@ -163,8 +189,37 @@ public class PiecewiseYieldCurve<
             final Handle<Quote>[] jumps,
             final Date[] jumpDates,
             final /*@Real*/ double accuracy, //TODO: default value: 1.0e-12
-            final I interpolator, //TODO: default value: Interpolator()
-            final B bootstrap) { //TODO: default value: Bootstrap<this_curve>()
+            final Class<?> interpolator) {
+        this(referenceDate, instruments, dayCounter, jumps, jumpDates,
+                accuracy,
+                constructInterpolator(interpolator),
+                constructBootstrap(new TypeTokenTree(PiecewiseYieldCurve.class).getElement(2)));
+    }
+
+    public PiecewiseYieldCurve(
+            final Date referenceDate,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy, //TODO: default value: 1.0e-12
+            final Class<?> interpolator,
+            final Class<?> bootstrap) {
+        this(referenceDate, instruments, dayCounter, jumps, jumpDates,
+                accuracy,
+                constructInterpolator(interpolator),
+                constructBootstrap(bootstrap));
+    }
+
+    public PiecewiseYieldCurve(
+            final Date referenceDate,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy, //TODO: default value: 1.0e-12
+            final Interpolator interpolator, //TODO: default value: Interpolator()
+            final Bootstrap bootstrap) { //TODO: default value: Bootstrap<this_curve>()
 
         QL.validateExperimentalMode();
 
@@ -182,7 +237,7 @@ public class PiecewiseYieldCurve<
         QL.require(classB!=null , "B is null"); // TODO: message
 
         // instantiate base class and call super constructor
-        this.baseCurve = constructBaseClass(referenceDate, dayCounter, classT);
+        this.baseCurve = constructBaseClass(referenceDate, dayCounter, classI, classT);
 
         this.traits = constructTraits(classT);
         this.interpolator = constructInterpolator(classI);
@@ -203,6 +258,7 @@ public class PiecewiseYieldCurve<
         bootstrap.setup(this);
     }
 
+
     public PiecewiseYieldCurve(
             final /*@Natural*/ int settlementDays,
             final Calendar calendar,
@@ -211,8 +267,8 @@ public class PiecewiseYieldCurve<
             final Handle<Quote>[] jumps,
             final Date[] jumpDates,
             final /*@Real*/ double accuracy, //TODO: default value: 1.0e-12
-            final I interpolator, //TODO: default value: Interpolator()
-            final B bootstrap) { //TODO: default value: Bootstrap<this_curve>()
+            final Interpolator interpolator, //TODO: default value: Interpolator()
+            final Bootstrap bootstrap) { //TODO: default value: Bootstrap<this_curve>()
 
         QL.validateExperimentalMode();
 
@@ -236,7 +292,6 @@ public class PiecewiseYieldCurve<
         this.interpolator = constructInterpolator(classI);
         this.bootstrap = constructBootstrap(classB);
 
-
         this.instruments = instruments;
         this.jumps = jumps;
         this.nJumps = jumps.length;
@@ -251,42 +306,46 @@ public class PiecewiseYieldCurve<
         bootstrap.setup(this);
     }
 
-    private Traits.Curve constructBaseClass(
+
+
+
+    static private Traits.Curve constructBaseClass(
             final Date referenceDate,
             final DayCounter dayCounter,
+            final Class<?> classI,
             final Class<?> classT) {
         if (classT == Discount.class) {
-            return new InterpolatedDiscountCurve(referenceDate, dayCounter);
+            return new InterpolatedDiscountCurve(referenceDate, dayCounter, classI);
         } else if (classT == ForwardRate.class) {
-            //TODO: this.baseCurve = new InterpolatedForwardCurve(referenceDate, dayCounter);
+            //TODO: this.baseCurve = new InterpolatedForwardCurve(referenceDate, dayCounter, classI);
             throw new UnsupportedOperationException();
         } else if (classT == ZeroYield.class) {
-            //TODO: this.baseCurve = new InterpolatedZeroCurve(referenceDate, dayCounter);
+            //TODO: this.baseCurve = new InterpolatedZeroCurve(referenceDate, dayCounter, classI);
             throw new UnsupportedOperationException();
         } else {
             throw new LibraryException("only Discount, ForwardRate and ZeroYield are supported"); // TODO: message
         }
     }
 
-    private Traits.Curve constructBaseClass(
+    static private Traits.Curve constructBaseClass(
             final /*@Natural*/ int settlementDays,
             final Calendar calendar,
             final DayCounter dayCounter,
             final Class<?> classT) {
         if (classT == Discount.class) {
-            return new InterpolatedDiscountCurve(settlementDays, calendar, dayCounter);
+            return new InterpolatedDiscountCurve(settlementDays, calendar, dayCounter, classT);
         } else if (classT == ForwardRate.class) {
-            //TODO: this.baseCurve = new InterpolatedForwardCurve(settlementDays, calendar, dayCounter);
+            //TODO: this.baseCurve = new InterpolatedForwardCurve(settlementDays, calendar, dayCounter, classT);
             throw new UnsupportedOperationException();
         } else if (classT == ZeroYield.class) {
-            //TODO: this.baseCurve = new InterpolatedZeroCurve(settlementDays, calendar, dayCounter);
+            //TODO: this.baseCurve = new InterpolatedZeroCurve(settlementDays, calendar, dayCounter, classT);
             throw new UnsupportedOperationException();
         } else {
             throw new LibraryException("only Discount, ForwardRate and ZeroYield are supported"); // TODO: message
         }
     }
 
-    private Traits constructTraits(final Class<?> classT) {
+    static private Traits constructTraits(final Class<?> classT) {
         if (Traits.class.isAssignableFrom(classT)) {
             try {
                 return (Traits) classT.newInstance();
@@ -295,10 +354,10 @@ public class PiecewiseYieldCurve<
             }
         }
 
-        throw new LibraryException("not an Interpolator"); // TODO: message
+        throw new LibraryException("not a Traits"); // TODO: message
     }
 
-    private Interpolator constructInterpolator(final Class<?> classI) {
+    static private Interpolator constructInterpolator(final Class<?> classI) {
         if (Interpolator.class.isAssignableFrom(classI)) {
             try {
                 return (Interpolator) classI.newInstance();
@@ -310,18 +369,20 @@ public class PiecewiseYieldCurve<
         throw new LibraryException("not an Interpolator"); // TODO: message
     }
 
-    private Bootstrap constructBootstrap(final Class<?> classB) {
+    static private Bootstrap constructBootstrap(final Class<?> classB) {
         if (Bootstrap.class.isAssignableFrom(classB)) {
             try {
-                final Constructor<Bootstrap> c = (Constructor<Bootstrap>) classB.getConstructor(PiecewiseCurve.class);
-                return (Bootstrap) classB.newInstance();
+                final Constructor<Bootstrap> c = (Constructor<Bootstrap>) classB.getConstructor(Class.class);
+                return c.newInstance(new Object[] { PiecewiseCurve.class });
             } catch (final Exception e) {
                 throw new LibraryException("could not instantiate Bootstrap", e); // TODO: message
             }
         }
 
-        throw new LibraryException("not an Interpolator"); // TODO: message
+        throw new LibraryException("not a Bootstrap"); // TODO: message
     }
+
+
 
 
     //

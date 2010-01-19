@@ -94,7 +94,7 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
         if (klass==null) {
             throw new LibraryException("null interpolator"); // TODO: message
         }
-        if (klass!=Interpolator.class) {
+        if (!Interpolator.class.isAssignableFrom(klass)) {
             throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
         }
 
@@ -145,10 +145,11 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
         super(referenceDate, new Calendar(), dc);
         QL.validateExperimentalMode();
 
-        this.classI = new TypeTokenTree(this.getClass()).getElement(0);
-        if (classI != interpolator.getClass()) {
-            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
-        }
+        this.classI = interpolator.getClass();
+//XXX     this.classI = new TypeTokenTree(this.getClass()).getElement(0);
+//        if (classI != interpolator.getClass()) {
+//            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
+//        }
         this.interpolator = interpolator;
     }
 
