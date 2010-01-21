@@ -24,12 +24,13 @@
 <!--
 	** ===== Profiles defined by this parent pom.xml =====
     **
-    ** with-scm          :: allows validation of local copy against SVN repository
-    ** with-javadoc      :: allows generation of mathematical equations and fancy UML documentation
-    ** with-clirr        :: turns on comparison of binaries or sources for compatibility
-    ** with-cobertura    :: turns on complete code coverage and Cobertura test reports
-    ** without-surefire  :: turns off system tests provided by Surefire
+    ** with-uml          :: allows generation of mathematical equations and fancy UML documentation
     **
+    ** with-scm          :: allows validation of local copy against SVN repository
+    ** with-clirr        :: turns on comparison of binaries or sources for compatibility
+    **
+    ** without-tests     :: turns off system tests provided by Surefire
+    ** with-cobertura    :: turns on complete code coverage and Cobertura test reports
     **
     ** ===== Profiles expected to exist in your settings.xml (optional) =====
     **
@@ -48,14 +49,18 @@
     **
     **
     ** These profiles can be combined, selecting the desired features.
-    ** In the following example we generate all reports except Surefire and Cobertura reports:
+    ** In the following example we generate all reports:
     **
-    **      mvn clean site -P with-javadoc,with-clirr,without-surefire
+    **      mvn clean site -P with-uml,with-scm,with-clirr,with-cobertura
     **
     **
-    **  When deploying to an staging website, please add 'staging' profile:
+    ** When deploying to an staging website, please add 'staging' profile:
     **
-    **      mvn clean site -P staging,with-javadoc,with-clirr,with-surefire
+    **      mvn clean site -P with-uml,with-scm,with-clirr,with-cobertura,stating
+    **
+    ** The example below do not execute test cases and do not produce test case reports: 
+    **
+    **      mvn clean site -P without-tests,stating
 	**
 	** @author Richard Gomes
 	**
@@ -92,7 +97,6 @@
     </modules>
 
     <properties>
-        <props.buildNumber.doCheck>false</props.buildNumber.doCheck>
         <props.compile.jdk.source>1.6</props.compile.jdk.source>
         <props.compile.jdk.target>1.6</props.compile.jdk.target>
         <props.compile.meminitial>128m</props.compile.meminitial>
@@ -107,12 +111,12 @@
         <repository>
             <id>jquantlib-releases</id>
             <name>jquantlib-releases</name>
-            <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-releases</url>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/libs-releases-local</url>
         </repository>
         <snapshotRepository>
             <id>jquantlib-snapshots</id>
             <name>jquantlib-snapshots</name>
-            <url>http://artifactory.jquantlib.org:8080/artifactory/inhouse-snapshots</url>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/libs-snapshots-local</url>
         </snapshotRepository>
 
         <!-- NOTES:
@@ -274,16 +278,16 @@
 
     <repositories>
         <repository>
-            <id>joda-primitives</id>
-            <name>joda-primitives</name>
-            <url>http://joda-primitives.sourceforge.net/repo/</url>
+            <id>jquantlib</id>
+            <name>JQuantLib Repository</name>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/repo/</url>
             <releases>  <enabled>true</enabled>  </releases>
             <snapshots> <enabled>true</enabled>  </snapshots>
         </repository>
         <repository>
-            <id>jquantlib</id>
-            <name>JQuantLib Repository</name>
-            <url>http://artifactory.jquantlib.org:8080/artifactory/repo/</url>
+            <id>joda-primitives</id>
+            <name>joda-primitives</name>
+            <url>http://joda-primitives.sourceforge.net/repo/</url>
             <releases>  <enabled>true</enabled>  </releases>
             <snapshots> <enabled>true</enabled>  </snapshots>
         </repository>
@@ -292,6 +296,14 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>properties-maven-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -307,56 +319,75 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>jdepend-maven-plugin</artifactId>
-                    <!-- version>2.0-beta-1</version -->
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>findbugs-maven-plugin</artifactId>
-                    <!-- version>1.2</version -->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <!-- version>2.4</version -->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jxr-plugin</artifactId>
-                    <!-- version>2.1</version -->
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>taglist-maven-plugin</artifactId>
-                    <!-- version>2.3</version -->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <!-- version>2.0</version -->
                 </plugin>
             </plugins>
         </pluginManagement>
 
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>buildNumber</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>set-system-properties</goal>
+                        </goals>
+                        <configuration>
+                            <properties>
+                                <property>
+                                    <name>buildNumber</name>
+                                    <value>none</value>
+                                </property>
+                            </properties>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>props.tests.skip</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>set-system-properties</goal>
+                        </goals>
+                        <configuration>
+                            <properties>
+                                <property>
+                                    <name>props.tests.skip</name>
+                                    <value>false</value>
+                                </property>
+                            </properties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.ant</groupId>
-                        <artifactId>ant-antlr</artifactId>
-                        <version>1.7.1</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>antlr</groupId>
-                        <artifactId>antlrall</artifactId>
-                        <version>2.7.4</version>
-                    </dependency>
-                </dependencies>
                 <executions>
                     <execution>
                         <id>info</id>
-                        <phase>validate</phase>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
@@ -365,6 +396,7 @@
                                 <echo>project.groupId=${project.groupId}</echo>
                                 <echo>project.artifactId=${project.artifactId}</echo>
                                 <echo>project.version=${project.version}</echo>
+                                <echo>buildNumber=${buildNumber}</echo>
                                 <echo>user.home=${user.home}</echo>
                                 <echo>basedir=${basedir}</echo>
                                 <echo>java.version=${java.version}</echo>
@@ -375,6 +407,8 @@
                                 <echo>java.library.path=${java.library.path}</echo>
                                 <echo>java.runtime.version=${java.runtime.version}</echo>
                                 <echo>java.specification.version=${java.specification.version}</echo>
+                                <echo>props.tests.skip=${props.tests.skip}</echo>
+                                <!-- echo>PATH=${env.PATH}</echo -->
                             </tasks>
                         </configuration>
                     </execution>
@@ -416,25 +450,6 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>failsafe-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>integration-test</id>
-                        <goals>
-                            <goal>integration-test</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>verify</id>
-                        <goals>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
         </plugins>
@@ -549,6 +564,23 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>${props.tests.skip}</skip>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>failsafe-maven-plugin</artifactId>
+                <configuration>
+                    <skip>${props.tests.skip}</skip>
+                </configuration>
+            </plugin>
+
         </plugins>
         
     </reporting>
@@ -562,37 +594,43 @@
                     <plugins>
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-scm-plugin</artifactId>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>buildnumber-maven-plugin</artifactId>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-changelog-plugin</artifactId>
-                            <!-- version>2.1</version -->
                         </plugin>
                     </plugins>
                 </pluginManagement>
 			    <plugins>
-		            <plugin>
-		                <groupId>org.apache.maven.plugins</groupId>
-		                <artifactId>maven-scm-plugin</artifactId>
-		                <configuration>
-		                    <goals>install</goals>
-		                    <startDate>YYYY-MM-DD</startDate>
-		                    <endDate>YYYY-MM-DD</endDate>
-		                </configuration>
-		            </plugin>
-		
-		            <plugin>
-		                <groupId>org.codehaus.mojo</groupId>
-		                <artifactId>buildnumber-maven-plugin</artifactId>
-		                <executions>
-		                    <execution>
-		                        <phase>validate</phase>
-		                        <goals>
-		                            <goal>create</goal>
-		                        </goals>
-		                    </execution>
-		                </executions>
-		                <configuration>
-		                    <doCheck>${props.buildNumber.doCheck}</doCheck>
-		                </configuration>
-		            </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-scm-plugin</artifactId>
+                        <configuration>
+                            <startDate>YYYY-MM-DD</startDate>
+                            <endDate>YYYY-MM-DD</endDate>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>buildnumber-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>buildNumber</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>create</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <doCheck>true</doCheck>
+                        </configuration>
+                    </plugin>
 			    </plugins>
 			</build>
             <reporting>
@@ -616,13 +654,27 @@
                     </plugin>
                 </plugins>
             </reporting>
-			<properties>
-			    <props.buildNumber.doCheck>true</props.buildNumber.doCheck>
-			</properties>
 		</profile>
         
         <profile>
-            <id>with-javadoc</id>
+            <id>with-uml</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <!-- UMLGraph-4.9.0 works fine -->
+                            <!-- UMLGraph-5.0, 5.1 and 5.2 do not work :( -->
+                            <groupId>gr.spinellis</groupId>
+                            <artifactId>UmlGraph</artifactId>
+                            <version>4.9.0</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>net.sf.latextaglet</groupId>
+                            <artifactId>latextaglet</artifactId>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
             <reporting>
                 <plugins>
                     <plugin>
@@ -688,23 +740,11 @@
                                 <link>http://junit.sourceforge.net/javadoc/</link>
                             </links>
 
-                            <!-- UMLGraph-4.9.0 works fine -->
                             <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
-                            <docletArtifact>
-                                <groupId>UmlGraph</groupId>
-                                <artifactId>UmlGraph</artifactId>
-                                <version>4.9.0</version>
-                            </docletArtifact>
-
-                            <!-- UMLGraph-5.0, 5.1 and 5.2 do not work :( -->
-                            <!-- 
-                            <doclet>org.umlgraph.doclet.UmlGraph</doclet>
                             <docletArtifact>
                                 <groupId>gr.spinellis</groupId>
                                 <artifactId>UmlGraph</artifactId>
-                                <version>5.0</version>
                             </docletArtifact>
-                            -->
 
                             <taglets>
                                 <taglet>
@@ -712,7 +752,6 @@
                                     <tagletArtifact>
                                         <groupId>net.sf.latextaglet</groupId>
                                         <artifactId>latextaglet</artifactId>
-                                        <version>0.1.1</version>
                                     </tagletArtifact>
                                 </taglet>
                                 <taglet>
@@ -720,7 +759,6 @@
                                     <tagletArtifact>
                                         <groupId>net.sf.latextaglet</groupId>
                                         <artifactId>latextaglet</artifactId>
-                                        <version>0.1.1</version>
                                     </tagletArtifact>
                                 </taglet>
                                 <taglet>
@@ -728,7 +766,6 @@
                                     <tagletArtifact>
                                         <groupId>net.sf.latextaglet</groupId>
                                         <artifactId>latextaglet</artifactId>
-                                        <version>0.1.1</version>
                                     </tagletArtifact>
                                 </taglet>
                             </taglets>
@@ -750,10 +787,35 @@
 		            	<plugin>
 		                    <groupId>org.codehaus.mojo</groupId>
 		                    <artifactId>clirr-maven-plugin</artifactId>
-		                    <!-- version>2.2.1</version -->
 		                </plugin>
             		</plugins>
             	</pluginManagement>
+                <plugins>
+                    <!-- plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>enforce-buildNumber</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireProperty>
+                                            <property>buildNumber</property>
+                                            <message>"Failed to retrieve property: buildNumber"</message>
+                                            <regex>"\d"</regex>
+                                            <regexMessage>"Profile required: with-scm"</regexMessage>
+                                        </requireProperty>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin -->
+                </plugins>
             </build>
             <reporting>
                 <plugins>
@@ -767,6 +829,42 @@
 
         <profile>
             <id>with-cobertura</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>cobertura-maven-plugin</artifactId>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+                <plugins>
+                    <!-- plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>enforce-props.tests.skip</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <requireProperty>
+                                            <property>props.tests.skip</property>
+                                            <message>"Failed to retrieve property: props.tests.skip"</message>
+                                            <regex>"false"</regex>
+                                            <regexMessage>"Profile profile: without-tests"</regexMessage>
+                                        </requireProperty>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin -->
+                </plugins>
+            </build>
             <reporting>
                 <plugins>
                     <plugin>
@@ -778,18 +876,32 @@
         </profile>
 
         <profile>
-            <id>without-surefire</id>
-            <reporting>
+            <id>without-tests</id>
+            <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>properties-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>props.tests.skip</id>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>set-system-properties</goal>
+                                </goals>
+                                <configuration>
+                                    <properties>
+                                        <property>
+                                            <name>props.tests.skip</name>
+                                            <value>true</value>
+                                        </property>
+                                    </properties>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
-            </reporting>
+            </build>
         </profile>
 
     </profiles>
