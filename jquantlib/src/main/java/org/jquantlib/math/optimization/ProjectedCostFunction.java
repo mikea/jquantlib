@@ -40,6 +40,7 @@ public class ProjectedCostFunction extends CostFunction {
         this.fixedParameters  = parameterValues.clone();
         this.actualParameters = parameterValues.clone();
         this.parametersFreedoms_ = parametersFreedoms;
+        this.costFunction = costFunction;
 
         if (fixedParameters.size() != parametersFreedoms_.length)
             throw new IllegalArgumentException("fixedParameters_.size()!=parametersFreedoms_.size()");
