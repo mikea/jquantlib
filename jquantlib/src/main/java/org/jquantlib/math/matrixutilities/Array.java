@@ -80,9 +80,10 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
     }
 
     /**
-     * Builds an Array of <code>size</code>
+     * Builds an Array of <code>size</code>, filled with the initial value <code>initialValue</code>.
      *
      * @param size is the size of <code>this</code> Array
+     * @param initialValue is the initial value with which to fill the array.
      * @throws IllegalArgumentException if size are less than zero
      */
     public Array(final int size, final double initialValue) {
