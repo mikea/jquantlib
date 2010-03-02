@@ -80,6 +80,18 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
     }
 
     /**
+     * Builds an Array of <code>size</code>
+     *
+     * @param size is the size of <code>this</code> Array
+     * @throws IllegalArgumentException if size are less than zero
+     */
+    public Array(final int size, final double initialValue) {
+        super(1, size);
+        for (int i = 0; i < data.length; i++)
+        	data[i] = initialValue;
+    }
+
+    /**
      * Creates an Array given a double[] array
      *
      * @param data is a unidimensional array
