@@ -80,19 +80,6 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
     }
 
     /**
-     * Builds an Array of <code>size</code>, filled with the initial value <code>initialValue</code>.
-     *
-     * @param size is the size of <code>this</code> Array
-     * @param initialValue is the initial value with which to fill the array.
-     * @throws IllegalArgumentException if size are less than zero
-     */
-    public Array(final int size, final double initialValue) {
-        super(1, size);
-        for (int i = 0; i < data.length; i++)
-        	data[i] = initialValue;
-    }
-
-    /**
      * Creates an Array given a double[] array
      *
      * @param data is a unidimensional array
@@ -136,13 +123,11 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public boolean equals(final Object o) {
-        if (o == null || !(o instanceof Array)) {
+        if (o == null || !(o instanceof Array))
             return false;
-        }
         final Array another = (Array) o;
-        if (this.rows != another.rows || this.cols != another.cols) {
+        if (this.rows != another.rows || this.cols != another.cols)
             return false;
-        }
         return Arrays.equals(data, another.data);
     }
 

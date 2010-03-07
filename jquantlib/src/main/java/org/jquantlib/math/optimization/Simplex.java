@@ -29,6 +29,7 @@ import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.EndCriteria.Type;
 
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+@Deprecated
 public class Simplex extends OptimizationMethod {
 
     private final double lambda;
@@ -77,9 +78,10 @@ public class Simplex extends OptimizationMethod {
 
         vertices = new ArrayList<Array>(n+1);
         //add empty Arrays
-        for (int fill = 0; fill<=n+1; fill++)
+        for (int fill = 0; fill<=n+1; fill++) {
             // TODO: code review :: use of clone()
             vertices.add(x_.clone());
+        }
         for(i = 0; i<n; i++){
             final Array direction = new Array(n);
             direction.set(i, 1.0);
@@ -87,13 +89,15 @@ public class Simplex extends OptimizationMethod {
         }
 
         values = new Array(n+1);
-        for(i = 0; i<= n; i++)
+        for(i = 0; i<= n; i++) {
             values.set(i, P.value(vertices.get(i)));
+        }
 
         do {
             sum = new Array(n);
-            for (i=0; i<=n; i++)
+            for (i=0; i<=n; i++) {
                 sum = sum.add(vertices.get(i));
+            }
             //Determine best, worst and 2nd worst vertices
             int iLowest = 0;
             int iHighest, iNextHighest;
@@ -108,10 +112,12 @@ public class Simplex extends OptimizationMethod {
                 if (values.get(i)>values.get(iHighest)) {
                     iNextHighest = iHighest;
                     iHighest = i;
-                } else if ((values.get(i)>values.get(iHighest)) && i!=iHighest)
+                } else if ((values.get(i)>values.get(iHighest)) && i!=iHighest) {
                     iNextHighest = i;
-                if (values.get(i)<values.get(iLowest))
+                }
+                if (values.get(i)<values.get(iLowest)) {
                     iLowest = i;
+                }
             }
             final double low = values.get(iLowest), high = values.get(iHighest);
             final double rtol = 2.0*Math.abs(high - low)/
@@ -136,13 +142,14 @@ public class Simplex extends OptimizationMethod {
                 final double vSave = values.get(iHighest);
                 factor = 0.5;
                 vTry = extrapolate(P, iHighest, factor);
-                if (vTry >= vSave)
+                if (vTry >= vSave) {
                     for (i=0; i<=n; i++)
                         if (i!=iLowest) {
                             vertices.set(i,
                                     (vertices.get(i).add(vertices.get(iLowest))).mul(0.5));
                             values.set(i, P.value(vertices.get(i)));
                         }
+                }
             }
         } while (forever);
         //-- throw new ArithmeticException("optimization failed: unexpected behaviour");

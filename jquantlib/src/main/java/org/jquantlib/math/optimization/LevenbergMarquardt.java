@@ -24,30 +24,31 @@ package org.jquantlib.math.optimization;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.EndCriteria.Type;
 
-//! Levenberg-Marquardt optimization method
-/*! This implementation is based on MINPACK
-    (<http://www.netlib.org/minpack>,
-    <http://www.netlib.org/cephes/linalg.tgz>)
-*/
-
+/**
+ * Levenberg-Marquardt optimization method
+ * <p>
+ * This implementation is based on MINPACK
+ * @see http://www.netlib.org/minpack
+ * @see http://www.netlib.org/cephes/linalg.tgz
+ *
+ * @author Ueli Hofstetter
+ */
 public class LevenbergMarquardt extends OptimizationMethod {
 
     private final double epsfcn_, xtol_, gtol_;
     private Integer info_;
 
     public LevenbergMarquardt() {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         this.epsfcn_ = 1.0e-8;
         this.xtol_ = 1.0e-8;
         this.gtol_ = 1.0e-8;
     }
 
     public LevenbergMarquardt(final double epsfcn, final double xtol, final double gtol){
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         this.epsfcn_ = epsfcn;
         this.xtol_ = xtol;
         this.gtol_ = gtol;
