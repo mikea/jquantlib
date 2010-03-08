@@ -69,11 +69,11 @@ public class CholeskyDecomposition {
      * @return Structure to access L and isspd flag.
      */
     public CholeskyDecomposition(final Matrix A) {
-        QL.require(A.rows == A.cols, Matrix.MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
+        QL.require(A.rows() == A.cols(), Matrix.MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
 
-        this.n = A.rows;
+        this.n = A.rows();
         this.L = new Matrix(n, n);
-        this.isspd = (A.rows == A.cols);
+        this.isspd = (A.rows() == A.cols());
 
         // Main loop.
         for (int j = 0; j < n; j++) {
@@ -81,17 +81,17 @@ public class CholeskyDecomposition {
             for (int k = 0; k < j; k++) {
                 double s = 0.0;
                 for (int i = 0; i < k; i++) {
-                    s += L.data[L.addr(k, i)] * L.data[L.addr(j, i)];
+                    s += L.data[L.addr.op(k, i)] * L.data[L.addr.op(j, i)];
                 }
-                L.data[L.addr(j, k)] = s = (A.data[A.addr(j, k)] - s) / L.data[L.addr(k, k)];
+                L.data[L.addr.op(j, k)] = s = (A.data[A.addr.op(j, k)] - s) / L.data[L.addr.op(k, k)];
                 d = d + s * s;
-                isspd = isspd & (A.data[A.addr(k, j)] == A.data[A.addr(j, k)]);
+                isspd = isspd & (A.data[A.addr.op(k, j)] == A.data[A.addr.op(j, k)]);
             }
-            d = A.data[A.addr(j, j)] - d;
+            d = A.data[A.addr.op(j, j)] - d;
             isspd = isspd & (d > 0.0);
-            L.data[L.addr(j, j)] = Math.sqrt(Math.max(d, 0.0));
+            L.data[L.addr.op(j, j)] = Math.sqrt(Math.max(d, 0.0));
             for (int k = j + 1; k < n; k++) {
-                L.data[L.addr(j, k)] = 0.0;
+                L.data[L.addr.op(j, k)] = 0.0;
             }
         }
     }
@@ -128,21 +128,21 @@ public class CholeskyDecomposition {
      */
 
     public Matrix solve(final Matrix B) {
-        QL.require(B.rows == this.n, Matrix.MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        QL.require(B.rows() == this.n, Matrix.MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
         if (!this.isSPD())
             throw new LibraryException(MATRIX_IS_NOT_SIMMETRIC_POSITIVE);
 
         // Copy right hand side.
-        final int nx = B.cols;
+        final int nx = B.cols();
         final Matrix X = B.clone();
 
         // Solve L*Y = B;
         for (int k = 0; k < n; k++) {
             for (int j = 0; j < nx; j++) {
                 for (int i = 0; i < k; i++) {
-                    X.data[X.addr(k, j)] -= X.data[X.addr(i, j)] * L.data[L.addr(k, i)];
+                    X.data[X.addr.op(k, j)] -= X.data[X.addr.op(i, j)] * L.data[L.addr.op(k, i)];
                 }
-                X.data[X.addr(k, j)] /= L.data[L.addr(k, k)];
+                X.data[X.addr.op(k, j)] /= L.data[L.addr.op(k, k)];
             }
         }
 
@@ -150,9 +150,9 @@ public class CholeskyDecomposition {
         for (int k = n - 1; k >= 0; k--) {
             for (int j = 0; j < nx; j++) {
                 for (int i = k + 1; i < n; i++) {
-                    X.data[X.addr(k, j)] -= X.data[X.addr(i, j)] * L.data[L.addr(i, k)];
+                    X.data[X.addr.op(k, j)] -= X.data[X.addr.op(i, j)] * L.data[L.addr.op(i, k)];
                 }
-                X.data[X.addr(k, j)] /= L.data[L.addr(k, k)];
+                X.data[X.addr.op(k, j)] /= L.data[L.addr.op(k, k)];
             }
         }
 

@@ -1,5 +1,8 @@
 package org.jquantlib;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import org.jquantlib.lang.exceptions.LibraryException;
 
 // TODO: OSGi :: remove statics
@@ -8,18 +11,45 @@ public class QL {
     /**
      * Throws an error if a <b>pre-condition</b> is not verified
      * <p>
-     * @note  this method should <b>never</b> be removed from bytecode by AspectJ.
-     *        If you do so, you must be plenty sure of effects and risks of this decision.
-     * <p>
      * @param condition is a condition to be verified
      * @param message is a message emitted.
      * @throws a LibraryException if the condition is not met
      */
     public static void require(final boolean condition, final String message) {
-        if (!condition) {
+        if (!condition)
             throw new LibraryException(message);
+    }
+
+    /**
+     * Throws an error if a <b>pre-condition</b> is not verified
+     * <p>
+     * @param condition is a condition to be verified
+     * @param klass is a Class which extends RuntimeException
+     * @param message is a message emitted.
+     * @throws a LibraryException if the condition is not met
+     */
+    public static void require(final boolean condition, final Class<? extends RuntimeException> klass, final String message) {
+        if (!condition) {
+            try {
+                final Constructor<? extends RuntimeException> c = klass.getConstructor(String.class);
+                throw c.newInstance(message);
+            } catch (final SecurityException e) {
+                e.printStackTrace();
+            } catch (final NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (final IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (final InstantiationException e) {
+                e.printStackTrace();
+            } catch (final IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (final InvocationTargetException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+
 
     /**
      * Throws an error if a <b>post-condition</b> is not verified
@@ -32,9 +62,8 @@ public class QL {
      * @throws a LibraryException if the condition is not met
      */
     public static void ensure(final boolean condition, final String message) {
-        if (!condition) {
+        if (!condition)
             throw new LibraryException(message);
-        }
     }
 
 
@@ -274,15 +303,14 @@ public class QL {
             t.printStackTrace(System.err);
         }
     }
-    
+
     /**
      * This method to validate whether code is being run in
      * experimental mode or not
      */
     public static void validateExperimentalMode(){
-    	if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
     }
 
 }

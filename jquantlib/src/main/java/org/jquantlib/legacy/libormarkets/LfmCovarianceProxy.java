@@ -37,8 +37,9 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
         final Matrix pca = corrModel_.pseudoSqrt(t, x);
         // TODO: code review :: use of clone()
         final Array  vol = volaModel_.volatility(t, x);
-        for (int i=0; i<size_; ++i)
-            pca.rowIterator(i).mulAssign(vol.get(i));
+        for (int i=0; i<size_; ++i) {
+            pca.rangeRow(i).mulAssign(vol.get(i));
+        }
         return pca;
     }
 
@@ -49,9 +50,11 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
         final Matrix correlation = corrModel_.correlation(t, x);
 
         final Matrix tmp = new Matrix(size_, size_);
-        for (int i = 0; i < size_; ++i)
-            for (int j = 0; j < size_; ++j)
+        for (int i = 0; i < size_; ++i) {
+            for (int j = 0; j < size_; ++j) {
                 tmp.set(i, j, volatility.get(i) * correlation.get(i, j) * volatility.get(j));
+            }
+        }
 
         return tmp;
     }
@@ -73,9 +76,9 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
       public double op(final double t)  {
           /*@Volatility*/ double v1, v2;
 
-          if (i_ == j_)
+          if (i_ == j_) {
             v1 = v2 = volaModel_.volatility(i_, t);
-        else {
+        } else {
               v1 = volaModel_.volatility(i_, t);
               v2 = volaModel_.volatility(j_, t);
           }
@@ -86,7 +89,7 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
 
      public  double integratedCovariance(final int i, final int j, /*@Time*/final double t, final Array x)  {
 
-          if (corrModel_.isTimeIndependent())
+          if (corrModel_.isTimeIndependent()) {
             try {
                   // if all objects support these methods
                   // thats by far the fastest way to get the
@@ -97,6 +100,7 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
                   // okay proceed with the
                   // slow numerical integration routine
               }
+        }
 
           QL.require(!x.empty() , "can not handle given x here"); // QA:[RG]::verified // TODO: message
 
@@ -104,8 +108,9 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
           final Var_Helper helper = new Var_Helper(this, i, j);
 
           final GaussKronrodAdaptive integrator = new GaussKronrodAdaptive(1e-10, 10000);
-          for (int k=0; k<64; ++k)
+          for (int k=0; k<64; ++k) {
             tmp+=integrator.op(helper, k*t/64., (k+1)*t/64.);
+        }
           return tmp;
       }
 

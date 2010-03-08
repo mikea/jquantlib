@@ -50,9 +50,8 @@ public class StochasticProcessArray extends StochasticProcess {
 
     public StochasticProcessArray(final List<StochasticProcess1D> processes, final Matrix correlation) {
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         QL.require(!processes.isEmpty() , no_process_given); // QA:[RG]::verified // TODO: message
         QL.require(correlation.rows() == processes.size() , mismatch_processnumber_sizecorrelationmatrix); // QA:[RG]::verified // TODO: message
@@ -95,11 +94,10 @@ public class StochasticProcessArray extends StochasticProcess {
     }
 
     @Override
-    // TODO: review iterators
     public Matrix diffusion(final /*Time*/ double t, final Array x)  {
         for (int i=0; i<size(); i++) {
             final double sigma = processes_.get(i).diffusion(t, x.get(i));
-            sqrtCorrelation_.rowIterator(i).mulAssign(sigma);
+            sqrtCorrelation_.rangeRow(i).mulAssign(sigma);
         }
         return sqrtCorrelation_;
     }
@@ -114,11 +112,10 @@ public class StochasticProcessArray extends StochasticProcess {
     }
 
     @Override
-    // TODO: review iterators
     public Matrix stdDeviation(final /*@Time*/ double t0, final Array x0, final /*@Time*/ double dt)  {
         for (int i=0; i<size(); i++) {
             final double sigma = processes_.get(i).stdDeviation(t0, x0.get(i), dt);
-            sqrtCorrelation_.rowIterator(i).mulAssign(sigma);
+            sqrtCorrelation_.rangeRow(i).mulAssign(sigma);
         }
         return sqrtCorrelation_;
     }

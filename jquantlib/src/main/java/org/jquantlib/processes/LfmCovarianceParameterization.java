@@ -71,14 +71,16 @@ public abstract class LfmCovarianceParameterization {
         QL.require(!x.empty() , "can not handle given x here"); // QA:[RG]::verified // TODO: message
 
         final Matrix tmp = new Matrix(size_, size_);
-        for (int i = 0; i < size_; ++i)
+        for (int i = 0; i < size_; ++i) {
             for (int j = 0; j <= i; ++j) {
                 final Var_Helper helper = new Var_Helper(this, i, j);
                 final GaussKronrodAdaptive integrator = new GaussKronrodAdaptive(1e-10, 10000);
-                for(int k = 0; k<64; ++k)
+                for(int k = 0; k<64; ++k) {
                     tmp.set(i, j, tmp.get(i, j)+integrator.op(helper, k*t/64.0,(k+1)*t/64.0));
+                }
                 tmp.set(j,i, tmp.get(i, j));
             }
+        }
 
         return tmp;
     }
@@ -98,14 +100,9 @@ public abstract class LfmCovarianceParameterization {
             this.param_ = param;
         }
 
-        // TODO: review iterators
         public double op(final double t) {
             final Matrix m = param_.diffusion(t);
-//XXX
-//            final Array iRow = m.constRowIterator(i_);
-//            final Array jRow = m.constRowIterator(j_);
-//            return iRow.innerProduct(jRow);
-            return m.constRowIterator(i_).innerProduct(m.constRowIterator(j_));
+            return m.constRangeRow(i_).innerProduct(m.constRangeRow(j_));
         }
     }
 

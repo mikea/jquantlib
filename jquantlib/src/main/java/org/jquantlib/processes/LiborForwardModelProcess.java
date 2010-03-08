@@ -149,8 +149,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
         final int m = 0;//NextA
         for (int k = m; k < size_; ++k) {
             m1.set(k, accrualPeriod_.get(k) * x.get(k) / (1 + accrualPeriod_.get(k) * x.get(k)));
-            // XXX final double value = m1.innerProduct(covariance.rangeCol(k), m, k+1-m) - 0.5 * covariance.get(k, k);
-            final double value = m1.constIterator().innerProduct(covariance.constColumnIterator(k), m, k+1-m) - 0.5 * covariance.get(k, k);
+            final double value = m1.innerProduct(covariance.constRangeCol(k), m, k+1-m) - 0.5 * covariance.get(k, k);
             f.set(k, value);
         }
         return f;
@@ -169,13 +168,16 @@ public class LiborForwardModelProcess extends StochasticProcess {
     @Override
     public Array apply(final Array x0, final Array dx){
         final Array tmp = new Array(size_);
-        for(int k = 0; k<size_; ++k)
+        for(int k = 0; k<size_; ++k) {
             tmp.set(k, x0.get(k)*Math.exp(dx.get(k)));
+        }
         return tmp;
     }
 
     @Override
     public Array evolve(/*@Time*/ final double t0, final Array x0, /*@Time*/ final double dt, final Array dw)  {
+
+        //FIXME:: code review against QuantLib/C++
 
         /* predictor-corrector step to reduce discretization errors.
 
@@ -190,7 +192,7 @@ public class LiborForwardModelProcess extends StochasticProcess {
            The following implementation does the same but is faster.
         */
 
-        if(true)
+        if (true)
             throw new UnsupportedOperationException("work in progress");
         final int m   = 0;//nextIndexReset(t0);
         final double sdt = Math.sqrt(dt);
@@ -204,17 +206,12 @@ public class LiborForwardModelProcess extends StochasticProcess {
             final double y = accrualPeriod_.get(k)*x0.get(k);
             m1.set(k,y/(1+y));
 
-            //XXX final double d = (m1.innerProduct(covariance.rangeCol(k), m, k+1-m)-0.5*covariance.get(k, k)) * dt;
-            final double d = (m1.constIterator().innerProduct(covariance.constColumnIterator(k), m, k+1-m)-0.5*covariance.get(k, k)) * dt;
-
-            //XXX final double r = diff.rangeRow(k).innerProduct(dw)*sdt;
-            final double r = diff.constRowIterator(k).innerProduct(dw.constIterator())*sdt;
-
+            final double d = (m1.innerProduct(covariance.constRangeCol(k), m, k+1-m)-0.5*covariance.get(k, k)) * dt;
+            final double r = diff.rangeRow(k).innerProduct(dw)*sdt;
             final double x = y*Math.exp(d + r);
             m2.set(k, x/(1+x));
 
-            //XXX final double ip = m2.innerProduct(covariance.rangeCol(k), m, k+1-m);
-            final double ip = m2.constIterator().innerProduct(covariance.constColumnIterator(k), m, k+1-m);
+            final double ip = m2.innerProduct(covariance.constRangeCol(k), m, k+1-m);
             final double value = x0.get(k) * Math.exp(0.5*(d+ip-0.5*covariance.get(k,k))*dt) + r;
             f.set(k, value);
         }

@@ -22,6 +22,7 @@
 
 package org.jquantlib.testsuite.math;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.QL;
@@ -35,8 +36,6 @@ import org.jquantlib.math.matrixutilities.Identity;
 import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.math.matrixutilities.QRDecomposition;
 import org.jquantlib.math.matrixutilities.SymmetricSchurDecomposition;
-import org.jquantlib.math.matrixutilities.Cells.ColumnIterator;
-import org.jquantlib.math.matrixutilities.Cells.RowIterator;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -104,29 +103,68 @@ public class MatrixTest {
 
 
 
-    @Test
-    public void testEquals() {
-        final Matrix mA = new Matrix(new double[][] {
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-        });
+//    @Test
+//    public void testEquals() {
+//        final Matrix mA = new Matrix(new double[][] {
+//                { 1.0, 2.0, 3.0, 4.0 },
+//                { 1.0, 2.0, 3.0, 4.0 },
+//                { 1.0, 2.0, 3.0, 4.0 },
+//        });
+//
+//        final Matrix mB = new Matrix(new double[][] {
+//                { 1.0, 2.0, 3.0, 4.0 },
+//                { 1.0, 2.0, 3.0, 4.0 },
+//                { 1.0, 2.0, 3.0, 4.0 },
+//        });
+//
+//        if (!mA.equals(mB)) {
+//            fail("'equals' failed");
+//        }
+//    }
 
-        final Matrix mB = new Matrix(new double[][] {
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-        });
 
-        if (!mA.equals(mB)) {
-            fail("'equals' failed");
+    private Matrix augmented(final Matrix matrix) {
+        final Matrix result = new Matrix(matrix.rows()+2, matrix.cols()+2);
+        // set first row with random numbers
+        for (int j=0; j<result.cols(); j++) {
+            result.set(0, j, Math.random());
         }
+        // copy matrix to inner part of a new matrix
+        for (int i=0, ii=1; i<matrix.size(); i++,ii++) {
+            result.set(ii, 0, Math.random());
+            for (int j=0, jj=1; i<matrix.cols(); j++,jj++) {
+                result.set(ii, jj, matrix.get(i,j));
+            }
+            result.set(ii, result.cols()-1, Math.random());
+        }
+        // set last row with random numbers
+        for (int j=0; j<result.cols(); j++) {
+            result.set(result.rows()-1, j, Math.random());
+        }
+        return result;
+    }
+
+    private Matrix range(final Matrix matrix) {
+        return matrix.range(1, 1, matrix.rows()-2, matrix.cols()-2 );
+    }
+
+
+    public static boolean equals(final Matrix a, final Matrix b) {
+        if (a.size() != b.size())
+            return false;
+        for (int i=0; i<a.rows(); i++) {
+            for (int j=0; j<a.cols(); j++) {
+                if (a.get(i,j) != b.get(i,j))
+                    return false;
+            }
+        }
+        return true;
     }
 
 
 
     @Test
-    public void testClone() { // final Cells.Style style
+    public void testClone() {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -146,7 +184,7 @@ public class MatrixTest {
         if (m == mB) {
             fail("'clone' must return a new instance");
         }
-        if (!m.equals(mB)) {
+        if (!equals(m, mB)) {
             fail("'clone' failed");
         }
     }
@@ -154,7 +192,7 @@ public class MatrixTest {
 
 
     @Test
-    public void toArray() { // final Cells.Style style
+    public void toArray() {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -169,7 +207,7 @@ public class MatrixTest {
 
         double[][] result = (double[][]) mA.toArray();
         for (int row=0; row<mA.rows(); row++) {
-            for (int col=0; col<mA.columns(); col++) {
+            for (int col=0; col<mA.cols(); col++) {
                 if (result[row][col] != doubles[row][col]) {
                     fail("toArray failed");
                 }
@@ -178,7 +216,7 @@ public class MatrixTest {
 
         result = mA.toArray(new double[3][4]);
         for (int row=0; row<mA.rows(); row++) {
-            for (int col=0; col<mA.columns(); col++) {
+            for (int col=0; col<mA.cols(); col++) {
                 if (result[row][col] != doubles[row][col]) {
                     fail("toArray failed");
                 }
@@ -187,7 +225,7 @@ public class MatrixTest {
     }
 
     @Test
-    public void empty() { // final Cells.Style style
+    public void empty() {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -202,7 +240,7 @@ public class MatrixTest {
 
 
     @Test
-    public void fill() { // final Cells.Style style
+    public void fill() {
         final Matrix mA = new Matrix(new double[][] {
                 { 2.0, 2.0, 2.0, 2.0 },
                 { 2.0, 2.0, 2.0, 2.0 },
@@ -210,14 +248,14 @@ public class MatrixTest {
         });
 
         final Matrix m = new Matrix(3, 4).fill(2.0);
-        if (!m.equals(mA)) {
+        if (!equals(m, mA)) {
             fail("'fill' failed");
         }
     }
 
 
     @Test
-    public void addAssign() { // final Cells.Style style
+    public void addAssign() {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -239,7 +277,7 @@ public class MatrixTest {
         }
 
         for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.columns(); col++) {
+            for (int col=0; col<m.cols(); col++) {
                 if (m.get(row, col) != row+5) {
                     fail("addAssign failed");
                 }
@@ -249,7 +287,7 @@ public class MatrixTest {
 
 
     @Test
-    public void subAssign() { // final Cells.Style style
+    public void subAssign() {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -271,7 +309,7 @@ public class MatrixTest {
         }
 
         for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.columns(); col++) {
+            for (int col=0; col<m.cols(); col++) {
                 if (m.get(row, col) != row+3) {
                     fail("subAssign failed");
                 }
@@ -282,7 +320,7 @@ public class MatrixTest {
 
 
     @Test
-    public void mulAssign() { // final Cells.Style style
+    public void mulAssign() {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -296,7 +334,7 @@ public class MatrixTest {
         }
 
         for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.columns(); col++) {
+            for (int col=0; col<m.cols(); col++) {
                 if (m.get(row, col) != (col+1)*2.5) {
                     fail("mulAssign failed");
                 }
@@ -306,7 +344,7 @@ public class MatrixTest {
 
 
     @Test
-    public void divAssign() { // final Cells.Style style
+    public void divAssign() {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -320,7 +358,7 @@ public class MatrixTest {
         }
 
         for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.columns(); col++) {
+            for (int col=0; col<m.cols(); col++) {
                 if (m.get(row, col) != (col+1)/2.5) {
                     fail("divAssign failed");
                 }
@@ -330,7 +368,7 @@ public class MatrixTest {
 
 
     @Test
-    public void add() { // final Cells.Style style
+    public void add() {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -350,12 +388,12 @@ public class MatrixTest {
         if (m == mA) {
             fail("'add' must return a new instance");
         }
-        if (m.rows() != mA.rows() || m.columns() != mA.columns()) {
+        if (m.rows() != mA.rows() || m.cols() != mA.cols()) {
             fail("'add' failed");
         }
 
         for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.columns(); col++) {
+            for (int col=0; col<m.cols(); col++) {
                 if (m.get(row, col) != row+5) {
                     fail("'add' failed");
                 }
@@ -365,7 +403,7 @@ public class MatrixTest {
 
 
     @Test
-    public void sub() { // final Cells.Style style
+    public void sub() {
 
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -382,69 +420,19 @@ public class MatrixTest {
         });
 
 
-        Matrix m = mB.sub(mA);
+        final Matrix m = mB.sub(mA);
         if (m == mB) {
             fail("'sub' must return a new instance");
         }
-        if (m.rows() != mB.rows() || m.columns() != mB.columns()) {
+        if (m.rows() != mB.rows() || m.cols() != mB.cols()) {
             fail("'sub' failed");
         }
 
         for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.columns(); col++) {
+            for (int col=0; col<m.cols(); col++) {
                 if (m.get(row, col) != row+3) {
                     fail("'sub' failed");
                 }
-            }
-        }
-
-
-        // scalar
-
-        final Matrix mC = new Matrix(new double[][] {
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-        });
-
-        m = mC.mul(2.5);
-        if (m == mC) {
-            fail("'mul' must return a new instance");
-        }
-        if (m.rows() != mC.rows() || m.columns() != mC.columns()) {
-            fail("'mul' failed");
-        }
-
-        for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.columns(); col++) {
-                if (m.get(row, col) != (col+1)*2.5) {
-                    fail("'mul' failed");
-                }
-            }
-        }
-
-
-        // array
-
-        final Matrix mD = new Matrix(new double[][] {
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-        });
-
-        final Array aD = new Array(new double[] { 1.0, 1.0, 1.0, 1.0 });
-
-        final Array a = mD.mul(aD);
-        if (a.size() != mD.rows()) {
-            fail("'add' failed");
-        }
-
-        for (int col=0; col<a.columns(); col++) {
-            if (a.get(col) != 10.0) {
-                fail("'mul' failed");
             }
         }
 
@@ -453,7 +441,7 @@ public class MatrixTest {
 
 
     @Test
-    public void div() { // final Cells.Style style
+    public void div() {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -465,12 +453,12 @@ public class MatrixTest {
         if (m == mA) {
             fail("'div' must return a new instance");
         }
-        if (m.rows() != mA.rows() || m.columns() != mA.columns()) {
+        if (m.rows() != mA.rows() || m.cols() != mA.cols()) {
             fail("'add' failed");
         }
 
         for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.columns(); col++) {
+            for (int col=0; col<m.cols(); col++) {
                 if (m.get(row, col) != (col+1)/2.5) {
                     fail("'div' failed");
                 }
@@ -481,7 +469,7 @@ public class MatrixTest {
 
 
     @Test
-    public void mul() { // final Cells.Style style
+    public void mulMatrix() {
         final Matrix mI = new Matrix(new double[][] {
                 { 1, 0, 0, 0 },
                 { 0, 1, 0, 0 },
@@ -503,14 +491,68 @@ public class MatrixTest {
         if (m == mA) {
             fail("'mul' must return a new instance");
         }
-        if (!m.equals(mA)) {
+        if (!equals(m,mA)) {
             fail("'mul' failed");
+        }
+    }
+
+    @Test
+    public void mulScalar() {
+
+        final Matrix mA = new Matrix(new double[][] {
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+        });
+
+        final Matrix m = mA.mul(2.5);
+        if (m == mA) {
+            fail("'sub' must return a new instance");
+        }
+        if (m.rows() != mA.rows() || m.cols() != mA.cols()) {
+            fail("'sub' failed");
+        }
+
+        for (int row=0; row<m.rows(); row++) {
+            for (int col=0; col<m.cols(); col++) {
+                if (m.get(row, col) != (col+1)*2.5) {
+                    fail("'mul' failed");
+                }
+            }
         }
     }
 
 
     @Test
-    public void swap() { // final Cells.Style style
+    public void mulArray() {
+
+        final Matrix mA = new Matrix(new double[][] {
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+        });
+
+        final Array aD = new Array(new double[] { 1.0, 1.0, 1.0, 1.0 });
+
+        final Array a = mA.mul(aD);
+        if (a.size() != mA.rows()) {
+            fail("'mul' failed");
+        }
+
+        for (int col=0; col<a.cols(); col++) {
+            if (a.get(col) != 10.0) {
+                fail("'mul' failed");
+            }
+        }
+
+    }
+
+
+    @Test
+    public void swap() {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -529,17 +571,17 @@ public class MatrixTest {
         final Matrix mBclone = mB.clone();
 
         mA.swap(mB);
-        if (!mA.equals(mBclone)) {
+        if (!equals(mA, mBclone)) {
             fail("'swap' failed");
         }
-        if (!mB.equals(mAclone)) {
+        if (!equals(mB, mAclone)) {
             fail("'swap' failed");
         }
     }
 
 
     @Test
-    public void transpose() { // final Cells.Style style
+    public void transpose() {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -561,14 +603,14 @@ public class MatrixTest {
         if (m == mB) {
             fail("'transpose' must return a new instance");
         }
-        if (!m.equals(mB)) {
+        if (!equals(m, mB)) {
             fail("'transpose' failed");
         }
     }
 
 
     @Test
-    public void diagonal() { // final Cells.Style style
+    public void diagonal() {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 9.0, 9.0, 9.0 },
                 { 9.0, 2.0, 9.0, 9.0 },
@@ -578,371 +620,651 @@ public class MatrixTest {
 
         final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
 
-        if (!mA.diagonal().equals(aA)) {
-            fail("'transpose' failed");
+        if (!ArrayTest.equals(mA.diagonal(), aA)) {
+            fail("'diagonal' failed");
         }
     }
 
+
+    @Test
+    public void inverseLU() {
+        QL.info("Testing LU inverse calculation...");
+
+        inverse(M1);
+        inverse(M2);
+        inverse(I);
+        inverse(M5);
+    }
 
     @Ignore
     @Test
-    public void inverse() { // final Cells.Style style
+    public void inverseQR() {
+        QL.info("Testing QR inverse calculation...");
+
+        inverse(M3);
+        inverse(M4);
+    }
+
+    private void inverse(final Matrix m) {
         QL.info("Testing LU inverse calculation...");
 
         final double tol = 1.0e-12;
-        final Matrix testMatrices[] = { M1, M2, M3, I, M4, M5 };
 
-        for (final Matrix m : testMatrices) {
+        final Matrix A = new Matrix(m);
+        System.out.println("A = "+A.toString());
 
-            final Matrix A = new Matrix(m);
+        final Matrix invA = A.inverse();
+        System.out.println("invA = "+invA.toString());
 
-            final Matrix invA = A.inverse();
+        final Matrix I1 = invA.mul(A);
+        System.out.println("I1 = "+I1.toString());
 
-            final Matrix I1 = invA.mul(A);
-            final Matrix I2 = A.mul(invA);
+        final Matrix I2 = A.mul(invA);
+        System.out.println("I2 = "+I2.toString());
 
-            final Matrix eins = new Identity(A.rows());
+        final Matrix eins = new Identity(A.rows());
+        System.out.println("eins = "+eins.toString());
 
-            if (norm(I1.sub(eins)) > tol) {
-                fail("inverse(A)*A does not recover unit matrix");
-            }
+        final double d = norm(I1.sub(eins));
+        System.out.println("d = "+String.valueOf(d));
 
-            if (norm(I2.sub(eins)) > tol) {
-                fail("A*inverse(A) does not recover unit matrix");
-            }
+        if (d > tol) {
+            fail("inverse(A)*A does not recover unit matrix");
+        }
+
+        if (norm(I2.sub(eins)) > tol) {
+            fail("A*inverse(A) does not recover unit matrix");
         }
     }
 
 
+    static private final String RangeRow_FAILED = "RangeRow failed";
+    static private final String RangeCol_FAILED = "RangeCol failed";
+    static private final String WRONG_EXCEPTION = "wrong exception was thrown";
+    static private final String MISSING_EXCEPTION = "failed to throw an exception";
+    static private final String TEST_SUCCEEDED = "**** Exception caught: TEST SUCCEEDED *****";
+
+
     @Test
-    public void testRowIterator() { // final Cells.Style style
-        RowIterator it;
-        int cells;
-        double sum;
+    public void testRangeRow() {
 
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0,  0.9,  0.7 },
-                { 0.9,  1.0,  0.3 },
-                { 0.7,  0.3,  1.0 }
+                { 0.8,  2.0,  3.2 },
+                { 0.6,  3.1,  5.0 }
         });
 
-        it = mA.rowIterator(0);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==6 && Closeness.isCloseEnough(sum, 5.2))) {
-            fail("RowIterator failed");
-        }
+        testRangeRow(mA);
+    }
 
-        it = mA.rowIterator(1, 1);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==4 && Closeness.isCloseEnough(sum, 2.6))) {
-            fail("RowIterator failed");
-        }
+    private void testRangeRow(final Matrix mA) {
+        Array array;
 
-        it = mA.rowIterator(2, 2);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==2 && Closeness.isCloseEnough(sum, 2.0))) {
-            fail("RowIterator failed");
-        }
+        // test RangeRow
 
-        it = mA.rowIterator(2, 3);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==0)) {
-            fail("RowIterator failed");
-        }
+        // { 1.0,  0.9,  0.7 }
 
-        it = mA.rowIterator(0, 0, 3);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==6 && Closeness.isCloseEnough(sum, 5.2))) {
-            fail("RowIterator failed");
-        }
+        array = mA.rangeRow(0, 0, 0);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==1);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 1.0));
 
-        it = mA.rowIterator(0, 0, 2);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==4 && Closeness.isCloseEnough(sum, 3.8))) {
-            fail("RowIterator failed");
-        }
+        array = mA.rangeRow(0, 0, 1);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==2);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 1.9));
 
-        it = mA.rowIterator(0, 0, 1);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==2 && Closeness.isCloseEnough(sum, 2.0))) {
-            fail("RowIterator failed");
-        }
+        array = mA.rangeRow(0, 0, 2);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==3);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 2.6));
 
-        it = mA.rowIterator(0, 0, 0);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==0)) {
-            fail("RowIterator failed");
-        }
+        array = mA.rangeRow(0, 1, 2);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==2);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 1.6));
 
-        // test columns out of bounds
+        array = mA.rangeRow(0, 2, 2);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==1);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 0.7));
+
+        // { 0.8,  2.0,  3.2 }
+
+        array = mA.rangeRow(1, 0, 0);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==1);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 0.8));
+
+        array = mA.rangeRow(1, 0, 1);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==2);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 2.8));
+
+        array = mA.rangeRow(1, 0, 2);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==3);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 6.0));
+
+        array = mA.rangeRow(1, 1, 2);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==2);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 5.2));
+
+        array = mA.rangeRow(1, 2, 2);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==1);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 3.2));
+
+        // { 0.6,  3.1,  5.0 }
+
+        array = mA.rangeRow(2, 0, 0);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==1);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 0.6));
+
+        array = mA.rangeRow(2, 0, 1);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==2);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 3.7));
+
+        array = mA.rangeRow(2, 0, 2);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==3);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 8.7));
+
+        array = mA.rangeRow(2, 1, 2);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==2);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 8.1));
+
+        array = mA.rangeRow(2, 2, 2);
+        System.out.println(array.toString());
+        assertTrue(RangeRow_FAILED, array.size()==1);
+        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 5.0));
+
+
+//        // test RangeRow backwards
+//
+//        // { 1.0,  0.9,  0.7 }
+//
+//        array = mA.rangeRow(0, 0, 0);
+//        assertTrue(RangeRow_FAILED, array.size()==1);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 1.0));
+//
+//        array = mA.rangeRow(0, 1, 0);
+//        assertTrue(RangeRow_FAILED, array.size()==2);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 1.9));
+//
+//        array = mA.rangeRow(0, 2, 0);
+//        assertTrue(RangeRow_FAILED, array.size()==3);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 2.6));
+//
+//        array = mA.rangeRow(0, 2, 1);
+//        assertTrue(RangeRow_FAILED, array.size()==2);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 1.6));
+//
+//        array = mA.rangeRow(0, 2, 2);
+//        assertTrue(RangeRow_FAILED, array.size()==1);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 0.7));
+//
+//        // { 0.8,  2.0,  3.2 }
+//
+//        array = mA.rangeRow(1, 0, 0);
+//        assertTrue(RangeRow_FAILED, array.size()==1);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 0.8));
+//
+//        array = mA.rangeRow(1, 1, 0);
+//        assertTrue(RangeRow_FAILED, array.size()==2);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 2.8));
+//
+//        array = mA.rangeRow(1, 2, 0);
+//        assertTrue(RangeRow_FAILED, array.size()==3);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 6.0));
+//
+//        array = mA.rangeRow(1, 2, 1);
+//        assertTrue(RangeRow_FAILED, array.size()==2);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 5.2));
+//
+//        array = mA.rangeRow(1, 2, 2);
+//        assertTrue(RangeRow_FAILED, array.size()==1);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 3.2));
+//
+//        // { 0.6,  3.1,  5.0 }
+//
+//        array = mA.rangeRow(2, 0, 0);
+//        assertTrue(RangeRow_FAILED, array.size()==1);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 0.6));
+//
+//        array = mA.rangeRow(2, 1, 0);
+//        assertTrue(RangeRow_FAILED, array.size()==2);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 3.7));
+//
+//        array = mA.rangeRow(2, 2, 0);
+//        assertTrue(RangeRow_FAILED, array.size()==3);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 8.7));
+//
+//        array = mA.rangeRow(2, 2, 1);
+//        assertTrue(RangeRow_FAILED, array.size()==2);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 8.1));
+//
+//        array = mA.rangeRow(2, 2, 2);
+//        assertTrue(RangeRow_FAILED, array.size()==1);
+//        assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 5.0));
+
+        // test RangeRow raising ArrayIndexOutOfBoundsException
 
         try {
-            it = mA.rowIterator(0, -1);
-            fail("RowIterator failed");
+            array = mA.rangeRow(-1);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
-            System.out.println("**** Exception caught: TEST SUCCEEDED *****");
+            fail(WRONG_EXCEPTION);
         }
 
         try {
-            it = mA.rowIterator(0, 4);
-            fail("RowIterator failed");
+            array = mA.rangeRow(0, -1);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
-            System.out.println("**** Exception caught: TEST SUCCEEDED *****");
+            fail(WRONG_EXCEPTION);
         }
 
         try {
-            it = mA.rowIterator(0, 2, 4);
-            fail("RowIterator failed");
+            array = mA.rangeRow(0, 0, -1);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
-            System.out.println("**** Exception caught: TEST SUCCEEDED *****");
-        }
-
-        // test rows out of bounds
-
-        try {
-            it = mA.rowIterator(-1);
-            fail("RowIterator failed");
-        } catch (final Exception e) {
-            System.out.println("**** Exception caught: TEST SUCCEEDED *****");
+            fail(WRONG_EXCEPTION);
         }
 
         try {
-            it = mA.rowIterator(3);
-            fail("RowIterator failed");
+            array = mA.rangeRow(0, -1, 0);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
-            System.out.println("**** Exception caught: TEST SUCCEEDED *****");
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            array = mA.rangeRow(0, -1, -1);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            array = mA.rangeRow(0, 0, 3);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            array = mA.rangeRow(0, 3, 0);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            array = mA.rangeRow(0, 3, 3);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
         }
 
     }
 
 
     @Test
-    public void testColumnIterator() { // final Cells.Style style
-        ColumnIterator it;
-        int cells;
-        double sum;
+    public void testRangeCol() {
 
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0,  0.9,  0.7 },
-                { 0.9,  1.0,  0.3 },
-                { 0.7,  0.3,  1.0 }
+                { 0.8,  2.0,  3.2 },
+                { 0.6,  3.1,  5.0 }
         });
 
-        it = mA.columnIterator(0);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==6 && Closeness.isCloseEnough(sum, 5.2))) {
-            fail("ColumnIterator failed");
-        }
+        testRangeCol(mA);
+    }
 
-        it = mA.columnIterator(1, 1);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==4 && Closeness.isCloseEnough(sum, 2.6))) {
-            fail("ColumnIterator failed");
-        }
+    private void testRangeCol(final Matrix mA) {
 
-        it = mA.columnIterator(2, 2);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==2 && Closeness.isCloseEnough(sum, 2.0))) {
-            fail("ColumnIterator failed");
-        }
+        Array array;
 
-        it = mA.columnIterator(2, 3);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==0)) {
-            fail("ColumnIterator failed");
-        }
+        // test RangeCol
 
-        it = mA.columnIterator(0, 0, 3);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==6 && Closeness.isCloseEnough(sum, 5.2))) {
-            fail("ColumnIterator failed");
-        }
+        // { 1.0,  0.8,  0.6 }
 
-        it = mA.columnIterator(0, 0, 2);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==4 && Closeness.isCloseEnough(sum, 3.8))) {
-            fail("ColumnIterator failed");
-        }
+        array = mA.rangeCol(0, 0, 0);
+        assertTrue(RangeCol_FAILED, array.size()==1);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 1.0));
 
-        it = mA.columnIterator(0, 0, 1);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==2 && Closeness.isCloseEnough(sum, 2.0))) {
-            fail("ColumnIterator failed");
-        }
+        array = mA.rangeCol(0, 0, 1);
+        System.out.println(array.toString());
+        assertTrue(RangeCol_FAILED, array.size()==2);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 1.8));
 
-        it = mA.columnIterator(0, 0, 0);
-        cells = 0; sum = 0.0;
-        while (it.hasNext()) {
-            sum += it.nextDouble();
-            cells++;
-        }
-        while (it.hasPrevious()) {
-            sum += it.previousDouble();
-            cells++;
-        }
-        if (!(cells==0)) {
-            fail("ColumnIterator failed");
-        }
+        array = mA.rangeCol(0, 0, 2);
+        assertTrue(RangeCol_FAILED, array.size()==3);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 2.4));
 
-        // test columns out of bounds
+        array = mA.rangeCol(0, 1, 2);
+        assertTrue(RangeCol_FAILED, array.size()==2);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 1.4));
+
+        array = mA.rangeCol(0, 2, 2);
+        assertTrue(RangeCol_FAILED, array.size()==1);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 0.6));
+
+        // { 0.9,  2.0,  3.1 }
+
+        array = mA.rangeCol(1, 0, 0);
+        assertTrue(RangeCol_FAILED, array.size()==1);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 0.9));
+
+        array = mA.rangeCol(1, 0, 1);
+        assertTrue(RangeCol_FAILED, array.size()==2);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 2.9));
+
+        array = mA.rangeCol(1, 0, 2);
+        assertTrue(RangeCol_FAILED, array.size()==3);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 6.0));
+
+        array = mA.rangeCol(1, 1, 2);
+        assertTrue(RangeCol_FAILED, array.size()==2);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 5.1));
+
+        array = mA.rangeCol(1, 2, 2);
+        assertTrue(RangeCol_FAILED, array.size()==1);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 3.1));
+
+        // { 0.7,  3.2,  5.0 }
+
+        array = mA.rangeCol(2, 0, 0);
+        assertTrue(RangeCol_FAILED, array.size()==1);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 0.7));
+
+        array = mA.rangeCol(2, 0, 1);
+        assertTrue(RangeCol_FAILED, array.size()==2);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 3.9));
+
+        array = mA.rangeCol(2, 0, 2);
+        assertTrue(RangeCol_FAILED, array.size()==3);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 8.9));
+
+        array = mA.rangeCol(2, 1, 2);
+        assertTrue(RangeCol_FAILED, array.size()==2);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 8.2));
+
+        array = mA.rangeCol(2, 2, 2);
+        assertTrue(RangeCol_FAILED, array.size()==1);
+        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 5.0));
+
+
+//        // test rangeCol backwards
+//
+//        // { 1.0,  0.8,  0.6 }
+//
+//        array = mA.rangeCol(0, 0, 0);
+//        assertTrue(RangeCol_FAILED, array.size()==1);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 1.0));
+//
+//        array = mA.rangeCol(0, 1, 0);
+//        assertTrue(RangeCol_FAILED, array.size()==2);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 1.8));
+//
+//        array = mA.rangeCol(0, 2, 0);
+//        assertTrue(RangeCol_FAILED, array.size()==3);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 2.4));
+//
+//        array = mA.rangeCol(0, 2, 1);
+//        assertTrue(RangeCol_FAILED, array.size()==2);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 1.4));
+//
+//        array = mA.rangeCol(0, 2, 2);
+//        assertTrue(RangeCol_FAILED, array.size()==1);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 0.6));
+//
+//        // { 0.9,  2.0,  3.1 }
+//
+//        array = mA.rangeCol(1, 0, 0);
+//        assertTrue(RangeCol_FAILED, array.size()==1);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 0.9));
+//
+//        array = mA.rangeCol(1, 1, 0);
+//        assertTrue(RangeCol_FAILED, array.size()==2);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 2.9));
+//
+//        array = mA.rangeCol(1, 2, 0);
+//        assertTrue(RangeCol_FAILED, array.size()==3);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 6.0));
+//
+//        array = mA.rangeCol(1, 2, 1);
+//        assertTrue(RangeCol_FAILED, array.size()==2);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 5.1));
+//
+//        array = mA.rangeCol(1, 2, 2);
+//        assertTrue(RangeCol_FAILED, array.size()==1);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 3.1));
+//
+//        // { 0.7,  3.2,  5.0 }
+//
+//        array = mA.rangeCol(2, 0, 0);
+//        assertTrue(RangeCol_FAILED, array.size()==1);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 0.7));
+//
+//        array = mA.rangeCol(2, 1, 0);
+//        assertTrue(RangeCol_FAILED, array.size()==2);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 3.9));
+//
+//        array = mA.rangeCol(2, 2, 0);
+//        assertTrue(RangeCol_FAILED, array.size()==3);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 8.9));
+//
+//        array = mA.rangeCol(2, 2, 1);
+//        assertTrue(RangeCol_FAILED, array.size()==2);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 8.2));
+//
+//        array = mA.rangeCol(2, 2, 2);
+//        assertTrue(RangeCol_FAILED, array.size()==1);
+//        assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 5.0));
+
+        // test rangeCol raising ArrayIndexOutOfBoundsException
 
         try {
-            it = mA.columnIterator(0, -1);
-            fail("ColumnIterator failed");
+            array = mA.rangeCol(-1);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
-            System.out.println("**** Exception caught: TEST SUCCEEDED *****");
+            fail(WRONG_EXCEPTION);
         }
 
         try {
-            it = mA.columnIterator(0, 4);
-            fail("ColumnIterator failed");
+            array = mA.rangeCol(0, -1);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
-            System.out.println("**** Exception caught: TEST SUCCEEDED *****");
+            fail(WRONG_EXCEPTION);
         }
 
         try {
-            it = mA.columnIterator(0, 2, 4);
-            fail("ColumnIterator failed");
+            array = mA.rangeCol(0, 0, -1);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
-            System.out.println("**** Exception caught: TEST SUCCEEDED *****");
-        }
-
-        // test rows out of bounds
-
-        try {
-            it = mA.columnIterator(-1);
-            fail("ColumnIterator failed");
-        } catch (final Exception e) {
-            System.out.println("**** Exception caught: TEST SUCCEEDED *****");
+            fail(WRONG_EXCEPTION);
         }
 
         try {
-            it = mA.columnIterator(3);
-            fail("ColumnIterator failed");
+            array = mA.rangeCol(0, -1, 0);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
-            System.out.println("**** Exception caught: TEST SUCCEEDED *****");
+            fail(WRONG_EXCEPTION);
         }
 
+        try {
+            array = mA.rangeCol(0, -1, -1);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            array = mA.rangeCol(0, 0, 3);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            array = mA.rangeCol(0, 3, 0);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            array = mA.rangeCol(0, 3, 3);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+    }
+
+
+    @Test
+    public void testRange() {
+
+        final Matrix mA = new Matrix(new double[][] {
+                { -1.0,      1.1,  1.1,  1.1,      -9.0 },
+                //--------------------------------------
+                { -1.0, /**/ 1.0,  0.9,  0.7, /**/ -9.0 },
+                { -2.5, /**/ 0.8,  2.0,  3.2, /**/ -6.5 },
+                { -4.0, /**/ 0.6,  3.1,  5.0, /**/ -4.0 },
+                //--------------------------------------
+                { -4.0,      9.9,  9.9,  9.9,      -4.0 },
+        });
+
+        final Matrix mB = new Matrix(new double[][] {
+                { -1.0,      1.1,  1.1,  1.1,      -9.0 },
+                //--------------------------------------
+                { -1.0, /**/ 5.0,  3.1,  0.6, /**/ -9.0 },
+                { -2.5, /**/ 3.2,  2.0,  0.8, /**/ -6.5 },
+                { -4.0, /**/ 0.7,  0.9,  1.0, /**/ -4.0 },
+                //--------------------------------------
+                { -4.0,      9.9,  9.9,  9.9,      -4.0 },
+        });
+
+        Matrix matrix;
+
+        matrix = mA.range(1, 3, 1, 3);
+        System.out.println(matrix.toString());
+        testRangeRow(matrix);
+
+// test range() backwards
+//        matrix = mA.range(3, 1, 3, 1);
+//        testRangeRow(matrix);
+
+
+        try {
+            matrix = mA.range(-1, 3, 1, 3);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            matrix = mA.range(1, -1, 1, 3);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            matrix = mA.range(1, 3, -1, 3);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            matrix = mA.range(1, 3, 1, -1);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            matrix = mA.range(5, 3, 1, 3);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            matrix = mA.range(1, 5, 1, 3);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            matrix = mA.range(1, 3, 5, 3);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
+
+        try {
+            matrix = mA.range(1, 3, 1, 5);
+            fail(MISSING_EXCEPTION);
+        } catch (final ArrayIndexOutOfBoundsException e) {
+            System.out.println(TEST_SUCCEEDED);
+        } catch (final Exception e) {
+            fail(WRONG_EXCEPTION);
+        }
     }
 
 
@@ -960,7 +1282,7 @@ public class MatrixTest {
     		final Matrix eigenVectors = schur.eigenvectors();
     		final double minHolder = Constants.QL_MAX_REAL;
 
-    		final int N = M.columns();
+    		final int N = M.cols();
 
     		for (int i=0; i<N; i++) {
     			final Array v = new Array(N);
@@ -1068,12 +1390,12 @@ public class MatrixTest {
     //
     //            // tests
     //            final Matrix U_Utranspose = U.transpose().mul(U);
-    //            ID = new Identity(U_Utranspose.columns());
+    //            ID = new Identity(U_Utranspose.cols());
     //            if (norm(U_Utranspose.sub(ID)) > tol)
     //                fail("U not orthogonal");
     //
     //            final Matrix V_Vtranspose = V.transpose().mul(V);
-    //            ID = new Identity(V_Vtranspose.columns());
+    //            ID = new Identity(V_Vtranspose.cols());
     //            if (norm(V_Vtranspose.sub(ID)) > tol)
     //                fail("V not orthogonal");
     //
@@ -1161,7 +1483,7 @@ public class MatrixTest {
     //        final double tol = 1.0e-12;
     //        final MersenneTwisterUniformRng rng = new MersenneTwisterUniformRng(1234);
     //        final Matrix bigM = new Matrix(50, 100);
-    //        for (int i=0; i < Math.min(bigM.rows(), bigM.columns()); i++) {
+    //        for (int i=0; i < Math.min(bigM.rows(), bigM.cols()); i++) {
     //            bigM.set(i, i, i+1.0);
     //        }
     //
@@ -1194,13 +1516,13 @@ public class MatrixTest {
     //                final Matrix H  = qr.H();
     //                final Matrix P  = qr.P();
     //
-    //                if (A.columns() >= A.rows()) {
+    //                if (A.cols() >= A.rows()) {
     //                    final double t = norm(A.mul(x).sub(b));
     //                    if (t > tol)
     //                        fail("A*x does not match vector b");
     //                } else {
     //                    // use the SVD to calculate the reference values
-    //                    final int n = A.columns();
+    //                    final int n = A.cols();
     //                    final Array xr = new Array(n);
     //
     //                    final SVD svd = A.svd();
@@ -1374,7 +1696,7 @@ public class MatrixTest {
     private double norm(final Matrix m) {
         double sum = 0.0;
         for (int i=0; i<m.rows(); i++) {
-            for (int j=0; j<m.columns(); j++) {
+            for (int j=0; j<m.cols(); j++) {
                 sum += m.get(i, j) * m.get(i, j);
             }
         }

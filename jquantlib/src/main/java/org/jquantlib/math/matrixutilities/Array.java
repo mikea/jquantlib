@@ -45,11 +45,12 @@ import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
-import org.jquantlib.lang.iterators.Algebra;
-import org.jquantlib.lang.iterators.BulkStorage;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.Ops.BinaryDoubleOp;
 import org.jquantlib.math.Ops.DoubleOp;
+import org.jquantlib.math.matrixutilities.internal.Address;
+import org.jquantlib.math.matrixutilities.internal.FlatArrayRowAddress;
+
 
 
 /**
@@ -58,7 +59,11 @@ import org.jquantlib.math.Ops.DoubleOp;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q2_RESEMBLANCE, version = Version.V097, reviewers = { "Richard Gomes" })
-public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, Cloneable {
+public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Algebra<Array> {
+
+    //
+    // public constructors
+    //
 
     /**
      * Default constructor
@@ -66,8 +71,9 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
      * Builds an Array which contains only one element.
      */
     public Array() {
-        super(1, 1);
+        super(1, 1, new FlatArrayRowAddress(0, null, 0, 0, true, 1, 1));
     }
+
 
     /**
      * Builds an Array of <code>size</code>
@@ -76,7 +82,7 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
      * @throws IllegalArgumentException if size are less than zero
      */
     public Array(final int size) {
-        super(1, size);
+        super(1, size, new FlatArrayRowAddress(0, null, 0, size-1, true, 1, size));
     }
 
     /**
@@ -85,8 +91,8 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
      * @param data is a unidimensional array
      */
     public Array(final double[] array) {
-        super(1, array.length);
-        System.arraycopy(array, 0, data, 0, this.size);
+        super(1, array.length, new FlatArrayRowAddress(0, null, 0, array.length-1, true, 1, array.length));
+        System.arraycopy(array, 0, data, 0, this.size());
     }
 
     /**
@@ -96,8 +102,8 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
      * @param size is the desired number of elements to be taken, counted from the first position
      */
     public Array(final double[] array, final int size) {
-        super(1, size);
-        System.arraycopy(array, 0, data, 0, this.size);
+        super(1, size, new FlatArrayRowAddress(0, null, 0, size-1, true, 1, size));
+        System.arraycopy(array, 0, data, 0, this.size());
     }
 
     /**
@@ -105,9 +111,28 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
      *
      * @param data
      */
-    public Array(final Array a) {
-        super(1, a.cols);
-        System.arraycopy(a.data, 0, data, 0, this.size);
+    public Array(final Array array) {
+        super(1, array.cols(), new FlatArrayRowAddress(0, null, 0, array.cols()-1, true, 1, array.cols()));
+        if (array.addr.contiguous()) {
+            System.arraycopy(array.data, array.begin(), data, 0, this.size());
+        } else {
+            for (int i=0; i<array.size(); i++) {
+                this.data[i] = array.get(i);
+            }
+        }
+    }
+
+
+    //
+    // protected constructors
+    //
+
+    protected Array(
+            final int rows,
+            final int cols,
+            final double[] data,
+            final Address.ArrayAddress addr) {
+        super(rows, cols, data, addr);
     }
 
 
@@ -121,34 +146,24 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
     }
 
 
-    @Override
-    public boolean equals(final Object o) {
-        if (o == null || !(o instanceof Array))
-            return false;
-        final Array another = (Array) o;
-        if (this.rows != another.rows || this.cols != another.cols)
-            return false;
-        return Arrays.equals(data, another.data);
-    }
-
-
     //
     // public methods
     //
 
+//XXX
 //    public Object toArray() {
-//        final double buffer[] = new double[this.size];
+//        final double buffer[] = new double[this.size()];
 //        return toArray(buffer);
 //    }
 //
 //    public double[] toArray(final double[] buffer) {
-//        QL.require(this.size == buffer.length, WRONG_BUFFER_LENGTH); // QA:[RG]::verified
-//        System.arraycopy(data, 0, buffer, 0, this.size);
+//        QL.require(this.size() == buffer.length, WRONG_BUFFER_LENGTH); // QA:[RG]::verified
+//        System.arraycopy(data, 0, buffer, 0, this.size());
 //        return buffer;
 //    }
 
     /**
-     * This method intentionally returns the underlying <code>double[]</code> which keeps
+     * This method intentionally returns the underlying <code>double[]<toDoubleArray/code> which keeps
      * data stored in <code>this</code> Array.
      *
      * @note Tools like FindBugs complain that this method should not expose internal
@@ -158,16 +173,18 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
      *
      * @return double[] which contains data stored in <code>this</code> Array.
      */
+    //FIXME: http://bugs.jquantlib.org/view.php?id=471
     public final double[] toDoubleArray() /* @ReadOnly */ {
-        return this.data;
+        QL.require(addr.contiguous() && addr.base()==0, UnsupportedOperationException.class, "must be contiguous");
+        return data;
     }
 
     public int begin() {
-        return 0;
+        return addr.op(0);
     }
 
     public int end() {
-        return size-1;
+        return addr.op(size()-1);
     }
 
     public double first() {
@@ -192,7 +209,7 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
      * @see #getAddress(int, int)
      */
     public double get(final int pos) {
-        return data[addr(pos)];
+        return data[addr.op(pos)];
     }
 
     /**
@@ -208,7 +225,7 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
      * @see #getAddress(int, int)
      */
     public void set(final int pos, final double value) {
-        data[addr(pos)] = value;
+        data[addr.op(pos)] = value;
     }
 
 
@@ -237,16 +254,20 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public Array addAssign(final double scalar) {
-        for (int i=0; i<size; i++) {
-            data[addr(i)] += scalar;
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int i=0; i<size(); i++) {
+            data[src.op()] += scalar;
+            src.nextIndex();
         }
         return this;
     }
 
     @Override
     public Array subAssign(final double scalar) {
-        for (int i=0; i<size; i++) {
-            data[addr(i)] -= scalar;
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int i=0; i<size(); i++) {
+            data[src.op()] -= scalar;
+            src.nextIndex();
         }
         return this;
     }
@@ -259,52 +280,72 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
      */
     @Override
     public Array subAssign(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        for (int i=0; i<size; i++) {
-            data[addr(i)] -= another.data[another.addr(i)];
+        QL.require(this.size() == another.size(), ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Address.ArrayAddress.ArrayOffset toff = this.addr.offset();
+        final Address.ArrayAddress.ArrayOffset aoff = another.addr.offset();
+        for (int i=0; i<size(); i++) {
+            data[toff.op()] -= another.data[aoff.op()];
+            toff.nextIndex();
+            aoff.nextIndex();
         }
         return this;
     }
 
     @Override
     public Array mulAssign(final double scalar) {
-        for (int i=0; i<size; i++) {
-            data[addr(i)] *= scalar;
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int i=0; i<size(); i++) {
+            data[src.op()] *= scalar;
+            src.nextIndex();
         }
         return this;
     }
 
     @Override
     public Array divAssign(final double scalar) {
-        for (int i=0; i<size; i++) {
-            data[addr(i)] /= scalar;
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int i=0; i<size(); i++) {
+            data[src.op()] /= scalar;
+            src.nextIndex();
         }
         return this;
     }
 
     @Override
     public Array addAssign(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        for (int i=0; i<size; i++) {
-            data[addr(i)] += another.data[another.addr(i)];
+        QL.require(this.size() == another.size(), ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Address.ArrayAddress.ArrayOffset toff = this.addr.offset();
+        final Address.ArrayAddress.ArrayOffset aoff = another.addr.offset();
+        for (int i=0; i<size(); i++) {
+            data[toff.op()] += another.data[aoff.op()];
+            toff.nextIndex();
+            aoff.nextIndex();
         }
         return this;
     }
 
     @Override
     public Array mulAssign(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        for (int i=0; i<size; i++) {
-            data[addr(i)] *= another.data[another.addr(i)];
+        QL.require(this.size() == another.size(), ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Address.ArrayAddress.ArrayOffset toff = this.addr.offset();
+        final Address.ArrayAddress.ArrayOffset aoff = another.addr.offset();
+        for (int i=0; i<size(); i++) {
+            data[toff.op()] *= another.data[aoff.op()];
+            toff.nextIndex();
+            aoff.nextIndex();
         }
         return this;
     }
 
     @Override
     public Array divAssign(final Array another) {
-        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        for (int i=0; i<size; i++) {
-            data[i] /= another.data[i];
+        QL.require(this.size() == another.size(), ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Address.ArrayAddress.ArrayOffset toff = this.addr.offset();
+        final Address.ArrayAddress.ArrayOffset aoff = another.addr.offset();
+        for (int i=0; i<size(); i++) {
+            data[toff.op()] /= another.data[aoff.op()];
+            toff.nextIndex();
+            aoff.nextIndex();
         }
         return this;
     }
@@ -330,27 +371,33 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public Array add(final double scalar) {
-        final Array result = new Array(this.size);
-        for (int i=0; i<size; i++) {
-            result.data[result.addr(i)] = data[addr(i)] + scalar;
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int col=0; col<size(); col++) {
+            result.data[col] = data[src.op()] + scalar;
+            src.nextIndex();
         }
         return result;
     }
 
     @Override
     public Array sub(final double scalar) {
-        final Array result = new Array(this.size);
-        for (int i=0; i<size; i++) {
-            result.data[result.addr(i)] = data[addr(i)] - scalar;
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int col=0; col<size(); col++) {
+            result.data[col] = data[src.op()] - scalar;
+            src.nextIndex();
         }
         return result;
     }
 
     @Override
     public Array mul(final double scalar) {
-        final Array result = new Array(this.size);
-        for (int i=0; i<size; i++) {
-            result.data[result.addr(i)] = data[addr(i)] * scalar;
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int col=0; col<size(); col++) {
+            result.data[col] = data[src.op()] * scalar;
+            src.nextIndex();
         }
         return result;
     }
@@ -362,65 +409,89 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public Array div(final double scalar) {
-        final Array result = new Array(this.size);
-        for (int i=0; i<size; i++) {
-            result.data[result.addr(i)] = data[addr(i)] / scalar;
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int col=0; col<size(); col++) {
+            result.data[col] = data[src.op()] / scalar;
+            src.nextIndex();
         }
         return result;
     }
 
     @Override
     public Array add(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(this.size);
-        for (int i=0; i<size; i++) {
-            result.data[result.addr(i)] = data[addr(i)] + another.data[another.addr(i)];
+        QL.require(this.size() == another.size(), MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset toff = this.addr.offset();
+        final Address.ArrayAddress.ArrayOffset aoff = another.addr.offset();
+        for (int col=0; col<size(); col++) {
+            result.data[col] = data[toff.op()] + another.data[aoff.op()];
+            toff.nextIndex();
+            aoff.nextIndex();
         }
         return result;
     }
 
     @Override
     public Array sub(final Array another) {
-        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(this.size);
-        for (int i=0; i<size; i++) {
-            result.data[result.addr(i)] = data[addr(i)] - another.data[another.addr(i)];
+        QL.require(this.size() == another.size(), MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset toff = this.addr.offset();
+        final Address.ArrayAddress.ArrayOffset aoff = another.addr.offset();
+        for (int col=0; col<size(); col++) {
+            result.data[col] = data[toff.op()] - another.data[aoff.op()];
+            toff.nextIndex();
+            aoff.nextIndex();
         }
         return result;
     }
 
     @Override
     public Array mul(final Array another) {
-        QL.require(this.size == another.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(this.size);
-        for (int i=0; i<size; i++) {
-            result.data[result.addr(i)] = data[addr(i)] * another.data[another.addr(i)];
+        QL.require(this.size() == another.size(), MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset toff = this.addr.offset();
+        final Address.ArrayAddress.ArrayOffset aoff = another.addr.offset();
+        for (int col=0; col<size(); col++) {
+            result.data[col] = data[toff.op()] * another.data[aoff.op()];
+            toff.nextIndex();
+            aoff.nextIndex();
         }
         return result;
     }
 
     @Override
     public Array div(final Array another) {
-        QL.require(this.rows == another.rows && this.size == another.size, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(this.size);
-        for (int i=0; i<size; i++) {
-            result.data[result.addr(i)] = data[addr(i)] / another.data[another.addr(i)];
+        QL.require(this.size() == another.size(), MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset toff = this.addr.offset();
+        final Address.ArrayAddress.ArrayOffset aoff = another.addr.offset();
+        for (int col=0; col<size(); col++) {
+            result.data[col] = data[toff.op()] / another.data[aoff.op()];
+            toff.nextIndex();
+            aoff.nextIndex();
         }
         return result;
     }
 
     @Override
     public Array mul(final Matrix matrix) {
-        QL.require(this.size == matrix.rows, MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(matrix.cols);
-        for (int i=0; i<matrix.cols; i++) {
-            int addr = matrix.addr(0, i);
+        QL.require(this.size() == matrix.rows(), MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Array result = new Array(matrix.cols());
+        final Address.ArrayAddress.ArrayOffset  toff = this.addr.offset();
+        final Address.MatrixAddress.MatrixOffset aoff = matrix.addr.offset();
+        for (int col=0; col<matrix.cols(); col++) {
+            toff.setIndex(0);
+            aoff.setRow(0); aoff.setCol(col);
             double sum = 0.0;
-            for (int row=0; row<matrix.rows; row++) {
-                sum += this.data[row] * matrix.data[addr];
-                addr += matrix.cols;
+            for (int row=0; row<matrix.rows(); row++) {
+                final double telem = this.data[toff.op()];
+                final double aelem = matrix.data[aoff.op()];
+                sum += telem * aelem;
+                toff.nextIndex();
+                aoff.nextRow();
             }
-            result.data[i] = sum;
+            result.data[col] = sum;
         }
         return result;
     }
@@ -442,15 +513,17 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public double min() {
-        return min(0, this.size);
+        return min(0, this.size());
     }
 
     @Override
     public double min(final int from, final int to) {
-        QL.require(from >= 0 && to > from && to <= size ,  INVALID_ARGUMENTS); // QA:[RG]::verified
-        double result = data[addr(from)];
+        QL.require(from >= 0 && to > from && to <= size(),  INVALID_ARGUMENTS); // QA:[RG]::verified
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset(from);
+        double result = data[src.op()];
         for (int i=0; i<(to-from); i++) {
-            final double tmp = data[addr(from+i)];
+            final double tmp = data[src.op()];
+            src.nextIndex();
             if (tmp < result) {
                 result = tmp;
             }
@@ -460,15 +533,17 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public double max() {
-        return max(0, this.size);
+        return max(0, this.size());
     }
 
     @Override
     public double max(final int from, final int to) {
-        QL.require(from >= 0 && to > from && to <= size ,  INVALID_ARGUMENTS); // QA:[RG]::verified
-        double result = data[addr(from)];
+        QL.require(from >= 0 && to > from && to <= size(),  INVALID_ARGUMENTS); // QA:[RG]::verified
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset(from);
+        double result = data[src.op()];
         for (int i=0; i<(to-from); i++) {
-            final double tmp = data[addr(from+i)];
+            final double tmp = data[src.op()];
+            src.nextIndex();
             if (tmp > result) {
                 result = tmp;
             }
@@ -478,46 +553,56 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public Array abs() {
-        final Array result = new Array(this.size);
-        for (int i=0; i<this.size; i++) {
-            result.data[result.addr(i)] = Math.abs(data[addr(i)]);
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int i=0; i<this.size(); i++) {
+            result.data[i] = Math.abs(data[src.op()]);
+            src.nextIndex();
         }
         return result;
     }
 
     @Override
     public Array sqr() {
-        final Array result = new Array(this.size);
-        for (int i=0; i<this.size; i++) {
-            final double a = data[addr(i)];
-            result.data[result.addr(i)] = a*a;
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int i=0; i<this.size(); i++) {
+            final double a = data[src.op()];
+            result.data[i] = a*a;
+            src.nextIndex();
         }
         return result;
     }
 
     @Override
     public Array sqrt() {
-        final Array result = new Array(this.size);
-        for (int i=0; i<this.size; i++) {
-            result.data[result.addr(i)] = Math.sqrt(data[addr(i)]);
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int i=0; i<this.size(); i++) {
+            result.data[i] = Math.sqrt(data[src.op()]);
+            src.nextIndex();
         }
         return result;
     }
 
     @Override
     public Array log() {
-        final Array result = new Array(this.size);
-        for (int i=0; i<this.size; i++) {
-            result.data[result.addr(i)] = Math.log(data[addr(i)]);
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int i=0; i<this.size(); i++) {
+            result.data[i] = Math.log(data[src.op()]);
+            src.nextIndex();
         }
         return result;
     }
 
     @Override
     public Array exp() {
-        final Array result = new Array(this.size);
-        for (int i=0; i<this.size; i++) {
-            result.data[result.addr(i)] = Math.exp(data[addr(i)]);
+        final Array result = new Array(this.size());
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset();
+        for (int i=0; i<this.size(); i++) {
+            result.data[i] = Math.exp(data[src.op()]);
+            src.nextIndex();
         }
         return result;
     }
@@ -535,17 +620,22 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public double dotProduct(final Array another) {
-        return dotProduct(another, 0, another.size);
+        return dotProduct(another, 0, another.size());
     }
 
     @Override
     public double dotProduct(final Array another, final int from, final int to) {
         QL.require(this.size() == to-from, ITERATOR_IS_INCOMPATIBLE);
-        QL.require(from >= 0 && to >= from && to <= another.size, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(from >= 0 && to >= from && to <= another.size(), INVALID_ARGUMENTS); // QA:[RG]::verified
+        final Address.ArrayAddress.ArrayOffset toff = this.addr.offset();
+        final Address.ArrayAddress.ArrayOffset aoff = this.addr.offset(from);
         double sum = 0.0;
-        final int offset = from;
-        for (int i=0; i<this.size; i++) {
-            sum += this.data[i] * another.data[offset + i];
+        for (int i=0; i<this.size(); i++) {
+            final double telem = this.data[toff.op()];
+            final double aelem = another.data[aoff.op()];
+            sum += telem * aelem;
+            toff.nextIndex();
+            aoff.nextIndex();
         }
         return sum;
     }
@@ -564,19 +654,25 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public Matrix outerProduct(final Array another) {
-        return outerProduct(another, 0, another.size);
+        return outerProduct(another, 0, another.size());
     }
 
     @Override
     public Matrix outerProduct(final Array another, final int from, final int to) {
-        QL.require(from >= 0 && to >= from && to <= another.size, INVALID_ARGUMENTS); // QA:[RG]::verified
-        final Matrix m = new Matrix(this.size, to-from);
+        QL.require(from >= 0 && to >= from && to <= another.size(), INVALID_ARGUMENTS); // QA:[RG]::verified
+        final Matrix result = new Matrix(this.size(), to-from);
+        final Address.ArrayAddress.ArrayOffset toff = this.addr.offset();
+        int addr = 0;
         for (int i=0; i<this.size(); i++) {
+            final Address.ArrayAddress.ArrayOffset aoff = another.addr.offset(from);
             for (int j=from; j < to; j++) {
-                m.data[m.addr(i, j)] = this.data[i] * another.data[j];
+                result.data[addr] = this.data[toff.op()] * another.data[aoff.op()];
+                addr++;
+                aoff.nextIndex();
             }
+            toff.nextIndex();
         }
-        return m;
+        return result;
     }
 
 
@@ -587,48 +683,51 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public double accumulate() {
-        return accumulate(0, this.size, 0.0);
+        return accumulate(0, this.size(), 0.0);
     }
 
     @Override
     public double accumulate(final double init) {
-        return accumulate(0, this.size, init);
+        return accumulate(0, this.size(), init);
     }
 
     @Override
     public double accumulate(final int first, final int last, final double init) {
-        QL.require(first>=0 && last>=first && last<=size,  INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(first>=0 && last>first && last<=size(),  INVALID_ARGUMENTS); // QA:[RG]::verified
         double sum = init;
-        for (int i=first; i<last; i++) {
-            sum += data[addr(i)];
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset(first);
+        for (int i=0; i<last-first; i++) {
+            final double elem = this.data[src.op()];
+            sum += elem;
+            src.nextIndex();
         }
         return sum;
     }
 
     @Override
     public final Array adjacentDifference() {
-        return adjacentDifference(0, size);
+        return adjacentDifference(0, size());
     }
 
     @Override
     public final Array adjacentDifference(final int first, final int last) {
-        QL.require(first>=0 && first<=last && last<=size, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(first>=0 && first<=last && last<=size(), INVALID_ARGUMENTS); // QA:[RG]::verified
         final Array diff = new Array(last-first);
-        diff.data[0] = data[first];
+        diff.data[0] = data[addr.op(first)];
         for (int i=1; i<last; i++) {
-            diff.data[i] = data[i] - data[i-1];
+            diff.data[i] = data[addr.op(i)] - data[addr.op(i-1)];
         }
         return diff;
     }
 
     @Override
     public Array adjacentDifference(final BinaryDoubleOp f) {
-        return adjacentDifference(0, size, f);
+        return adjacentDifference(0, size(), f);
     }
 
     @Override
     public Array adjacentDifference(final int first, final int last, final BinaryDoubleOp f) {
-        QL.require(first>=0 && first<=last && last<=size, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(first>=0 && first<=last && last<=size(), INVALID_ARGUMENTS); // QA:[RG]::verified
         final Array diff = new Array(last-first);
         diff.data[0] = data[first];
         for (int i=1; i<last; i++) {
@@ -639,14 +738,16 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public Array transform(final DoubleOp f) {
-        return transform(0, this.size, f);
+        return transform(0, this.size(), f);
     }
 
     @Override
     public Array transform(final int first, final int last, final Ops.DoubleOp f) {
-        QL.require(first>=0 && first<=last && last<=this.size && f!=null, INVALID_ARGUMENTS); // QA:[RG]::verified
-        for (int i=first; i < last; i++) {
-            data[addr(i)] = f.op(data[addr(i)]);
+        QL.require(first>=0 && first<=last && last<=this.size() && f!=null, INVALID_ARGUMENTS); // QA:[RG]::verified
+        final Address.ArrayAddress.ArrayOffset src = this.addr.offset(first);
+        for (int i=first; i<last; i++) {
+            data[src.op()] = f.op(data[src.op()]);
+            src.nextIndex();
         }
         return this;
     }
@@ -654,17 +755,17 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public int lowerBound(final double val) {
-        return lowerBound(0, size, val);
+        return lowerBound(0, size(), val);
     }
 
     @Override
     public int lowerBound(int first, final int last, final double val) {
-        QL.require(first>=0 && first<=last && last<=size, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(first>=0 && first<=last && last<=size(), INVALID_ARGUMENTS); // QA:[RG]::verified
         int len = last - first;
         while (len > 0) {
             final int half = len >> 1;
             final int middle = first + half;
-            if (data[addr(middle)] < val) {
+            if (data[addr.op(middle)] < val) {
                 first = middle + 1;
                 len -= half + 1;
             } else {
@@ -676,17 +777,17 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public int lowerBound(final double val, final Ops.BinaryDoublePredicate f) {
-        return lowerBound(0, size, val, f);
+        return lowerBound(0, size(), val, f);
     }
 
     @Override
     public int lowerBound(int first, final int last, final double val, final Ops.BinaryDoublePredicate f) {
-        QL.require(first>=0 && first<=last && last<=size, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(first>=0 && first<=last && last<=size(), INVALID_ARGUMENTS); // QA:[RG]::verified
         int len = last - first;
         while (len > 0) {
             final int half = len >> 1;
             final int middle = first + half;
-            if (f.op(data[addr(middle)], val)) {
+            if (f.op(data[addr.op(middle)], val)) {
                 first = middle + 1;
                 len -= half + 1;
             } else {
@@ -698,17 +799,17 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public int upperBound(final double val) {
-        return upperBound(0, size, val);
+        return upperBound(0, size(), val);
     }
 
     @Override
     public int upperBound(int first, final int last, final double val) {
-        QL.require(first>=0 && first<=last && last<=size, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(first>=0 && first<=last && last<=size(), INVALID_ARGUMENTS); // QA:[RG]::verified
         int len = last - first;
         while (len > 0) {
             final int half = len >> 1;
             final int middle = first + half;
-            if (val < data[addr(middle)]) {
+            if (val < data[addr.op(middle)]) {
                 len = half;
             } else {
                 first = middle + 1;
@@ -721,17 +822,17 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
     @Override
     public int upperBound(final double val, final Ops.BinaryDoublePredicate f) {
-        return upperBound(0, size, val, f);
+        return upperBound(0, size(), val, f);
     }
 
     @Override
     public int upperBound(int first, final int last, final double val, final Ops.BinaryDoublePredicate f) {
-        QL.require(first>=0 && first<=last && last<=size, INVALID_ARGUMENTS); // QA:[RG]::verified
+        QL.require(first>=0 && first<=last && last<=size(), INVALID_ARGUMENTS); // QA:[RG]::verified
         int len = last - first;
         while (len > 0) {
             final int half = len >> 1;
             final int middle = first + half;
-            if (f.op(val, data[addr(middle)])) {
+            if (f.op(val, data[addr.op(middle)])) {
                 len = half;
             } else {
                 first = middle + 1;
@@ -743,110 +844,99 @@ public class Array extends Cells implements Algebra<Array>, BulkStorage<Array>, 
 
 
     //
-    //  Element iterators
+    //  Range
     //
-    //  method              this    right    result
-    //  ------------------- ------- -------- ------
-    //  iterator            Array            RowIterator
-    //  constIterator       Array            ConstRowIterator
-    //
-
-
-    /**
-     * Creates a RowIterator for an entire row <code>row</code>
-     *
-     * @param dim is the desired row
-     * @return an Array obtained from row A( row , [:] )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public RowIterator iterator() {
-        return new RowIterator(0);
-    }
-
-    /**
-     * Creates a RowIterator for row <code>row</code>
-     *
-     * @param dim is the desired row
-     * @param col0 is the initial column, inclusive
-     * @return an Array obtained from row A( row , [col0:) )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public RowIterator iterator(final int col0) {
-        return new RowIterator(0, col0);
-    }
-
-    /**
-     * Creates a RowIterator for row <code>row</code>
-     *
-     * @param dim is the desired row
-     * @param col0 is the initial column, inclusive
-     * @param col1 is the initial column, exclusive
-     * @return an Array obtained from row A( row , [col0:col1) )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public RowIterator iterator(final int col0, final int col1) {
-        return new RowIterator(0, col0, col1);
-    }
-
-    /**
-     * Creates a constant, non-modifiable RowIterator for an entire row
-     *
-     * @param dim is the desired row
-     * @return an Array obtained from row A( row , [;] )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstRowIterator constIterator() {
-        return new ConstRowIterator(0);
-    }
-
-    /**
-     * Creates a constant, non-modifiable RowIterator for row <code>row</code>
-     *
-     * @param dim is the desired row
-     * @param col0 is the initial column, inclusive
-     * @return an Array obtained from row A( row , [col0:) )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstRowIterator constIterator(final int col0) {
-        return new ConstRowIterator(0, col0);
-    }
-
-    /**
-     * Creates a constant, non-modifiable RowIterator for row <code>row</code>
-     *
-     * @param dim is the desired row
-     * @param col0 is the initial column, inclusive
-     * @param col1 is the initial column, exclusive
-     * @return an Array obtained from row A( row , [col0:col1) )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstRowIterator constIterator(final int col0, final int col1) {
-        return new ConstRowIterator(0, col0, col1);
-    }
-
-
-    //
-    // implements BulkStorage
+    //  method       this    right    result
+    //  ------------ ------- -------- ------
+    //  range        Array            Array
     //
 
-    @Override
+
+    public Array range(final int col0) {
+        return range(col0, cols()-1);
+    }
+
+    public Array range(final int col0, final int col1) {
+        QL.require(col0 >= 0 && col0 < cols() && col1 >= 0 && col1 < cols(), Address.INVALID_COLUMN_INDEX);
+        return new Range(this.addr, data, col0, col1, rows(), cols());
+    }
+
+
+
+    //TODO: better comments
+    //
+    // methods moved from Cells
+    //
+
     public Array fill(final double scalar) {
-        return (Array) super.bulkStorage.fill(scalar);
+        QL.require(addr.contiguous(), NON_CONTIGUOUS_DATA);
+        Arrays.fill(data, addr.base(), addr.last(), scalar);
+        return this;
     }
 
-    @Override
     public Array fill(final Array another) {
-        return (Array) super.bulkStorage.fill(another);
+        QL.require(addr.contiguous(), NON_CONTIGUOUS_DATA);
+        QL.require(another.addr.contiguous(), NON_CONTIGUOUS_DATA);
+        QL.require(this.rows()==another.rows() && this.cols()==another.cols() && this.size()==another.size(), WRONG_BUFFER_LENGTH);
+        // copies data
+        System.arraycopy(another.data, addr.base(), this.data, 0, addr.last()-addr.base());
+        return this;
     }
 
-    @Override
-    public Array sort() {
-        return (Array) super.bulkStorage.sort();
-    }
-
-    @Override
     public Array swap(final Array another) {
-        return (Array) super.bulkStorage.swap(another);
+        QL.require(addr.contiguous(), NON_CONTIGUOUS_DATA);
+        QL.require(another.addr.contiguous(), NON_CONTIGUOUS_DATA);
+        QL.require(this.rows()==another.rows() && this.cols()==another.cols() && this.size()==another.size(), WRONG_BUFFER_LENGTH);
+        // swaps data
+        final double [] tdata;
+        final Address.ArrayAddress taddr;
+        tdata = this.data;  this.data = another.data;  another.data = tdata;
+        taddr = this.addr;  this.addr = another.addr;  another.addr = taddr;
+        return this;
+    }
+
+    public Array sort() {
+        QL.require(addr.contiguous(), NON_CONTIGUOUS_DATA);
+        Arrays.sort(data, addr.base(), addr.last());
+        return this;
+    }
+
+
+    //
+    // Overrides Object
+    //
+
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("[rows()=").append(rows()).append(" cols()=").append(cols()).append('\n');
+        sb.append(" [ ");
+        sb.append(this.data[this.addr.op(0)]);
+        for (int pos = 1; pos < size(); pos++) {
+            sb.append(", ");
+            sb.append(data[addr.op(pos)]);
+        }
+        sb.append(" ]\n");
+        return sb.toString();
+    }
+
+
+
+    //
+    // private inner classes
+    //
+
+    private class Range extends Array {
+
+        public Range(
+            final Address.ArrayAddress chain,
+            final double[] data,
+            final int col0,
+            final int col1,
+            final int rows, final int cols) {
+            super(1, col1-col0+1, data, new FlatArrayRowAddress(0, chain, col0, col1, true, rows, cols));
+        }
     }
 
 }

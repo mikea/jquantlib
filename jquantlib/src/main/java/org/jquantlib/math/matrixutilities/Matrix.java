@@ -46,20 +46,39 @@ import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
-import org.jquantlib.lang.iterators.BulkStorage;
+import org.jquantlib.math.matrixutilities.internal.Address;
+import org.jquantlib.math.matrixutilities.internal.FlatArrayColAddress;
+import org.jquantlib.math.matrixutilities.internal.FlatArrayRowAddress;
+import org.jquantlib.math.matrixutilities.internal.FlatMatrixAddress;
+import org.jquantlib.math.matrixutilities.internal.FlatMatrixIndexAddress;
+import org.jquantlib.math.matrixutilities.internal.Address.MatrixAddress.MatrixOffset;
 
 /**
  * Bidimensional matrix operations
  * <p>
  * Performance of multidimensional arrays is a big concern in Java. This is because multidimensional arrays are stored as arrays of
  * arrays, spanning this concept to as many depths as necessary. In C++, a multidimensional array is stored internally as a
- * unidimensional array where depths are stacked together one after another. A very simple calculation is needed to map multiple
- * dimensional indexes to an unidimensional index.
+ * unidimensional array where depths are stacked together one after another. A very simple calculation is needed in order to map
+ * multiple dimensional indexes to an unidimensional index.
  * <p>
- * This implementation provides the C/C++ approach of an internal unidimensional array. Everytime a bidimensional index is involved
- * (because this is a 2d matrix) it is converted to a unidimensional index. In case developers are seriously concerned about
- * performance, a unidimensional access method is provided, giving a chance for application developers to 'cache' the starting of a
- * row and reducing the number of multiplications needed for offset calculations.
+ * This class provides a C/C++ like approach of internal unidimensional array backing a conceptual bidimensional matrix. This
+ * mapping is provided by method <code>op(int row, int col)</code> which is responsible for returning the physical address of
+ * the desired tuple <row,col>, given a certain access method.
+ * <p>
+ * The mentioned access method is provided by a concrete implementation of {@link Address} which is passed to constructors.
+ * Doing so, it is possible to access the same underlying unidimensional data storage in various different ways, which allows us
+ * obtain another Matrix (see method {@link Matrix#range(int, int, int, int) and alike}) from an existing Matrix without any
+ * need of copying the underlying data. Certain operations benefit a lot from such approach, like {@link Matrix#transpose()} which
+ * presents constant execution time.
+ * <p>
+ * The price we have to pay for such flexibility and benefits is that an access method is necessary, which means that a the bytecode
+ * may potentially need a dereference to a class which contain the concrete implementation of method <code>op(int row, int col)</code>.
+ * In order to keep this cost at minimum, implementation of access method keep indexes at hand whenever possible, in order to
+ * being able to calculate the actual unidimensional index as fast as possible. This additional dereference impacts performance
+ * more or less in the same ways dereference impacts performance when a bidimensional array (<code>double[][]</code>) is employed.
+ * Contrary to the bidimensional implementation, our implementation can potentially benefit from bytecode inlining, which means
+ * that calculation of the unidimensional index can be performed potentially faster than calculation of address location when a
+ * bidimensional array (<code>double[][]</code>) is used as underlying storage.
  * <p>
  * <p>
  * <b>Assignment operations</b>
@@ -139,7 +158,7 @@ import org.jquantlib.lang.iterators.BulkStorage;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.V097, reviewers = { "Richard Gomes" })
-public class Matrix extends Cells implements BulkStorage<Matrix> {
+public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
 
     //
     // public constructors
@@ -150,8 +169,9 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * <p>
      * Builds a Matrix with dimensions 1x1
      */
+    // TODO: better documentation
     public Matrix() {
-        super(1, 1);
+        super(1, 1, new FlatMatrixAddress(0, 0, null, 0, 0, true, 1, 1));
     }
 
     /**
@@ -161,8 +181,9 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @param cols is the number of columns
      * @throws IllegalArgumentException if parameters are less than zero
      */
+    // TODO: better documentation
     public Matrix(final int rows, final int cols) {
-        super(rows, cols);
+        super(rows, cols, new FlatMatrixAddress(0, rows-1, null, 0, cols-1, true, rows, cols));
     }
 
 
@@ -171,47 +192,56 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      *
      * @param data
      */
+    // TODO: better documentation
     public Matrix(final double[][] data) {
-        super(data.length, data[0].length);
-
-        for (int i=0; i<rows; i++) {
-            System.arraycopy(data[i], 0, this.data, addr(i, 0), cols);
+        super(data.length, data[0].length,
+              new FlatMatrixAddress(0, data.length - 1, null, 0, data[0].length - 1, true, data.length, data[0].length));
+        for (int row=0; row<data.length; row++) {
+            System.arraycopy(data[row], 0, this.data, row*this.cols, this.cols);
         }
     }
 
     /**
-     * Creates a Matrix given a double[][] array
+     * copy constructor
      *
      * @param data
      */
+    // TODO: better documentation
     public Matrix(final Matrix m) {
-        super(m.rows, m.cols);
-        System.arraycopy(m.data, 0, this.data, 0, size);
+        super(m.rows(), m.cols(), copyData(m), m.addr.clone());
     }
 
 
-    //
-    // overrides Object
-    //
-
-    /**
-     * Returns a copy of <code>this</code> Matrix
-     */
-    @Override
-    public Matrix clone() {
-        return new Matrix(this);
+    private static final double[] copyData(final Matrix m) {
+        final Address addr = m.addr;
+        final int size = m.rows()*m.cols();
+        final double[] data = new double[size];
+        if (addr.contiguous()) {
+            System.arraycopy(m.data, addr.base(), data, 0, size);
+        } else {
+            final MatrixOffset offset = m.addr.offset();
+            final int cols = m.cols();
+            for (int row=0; row<m.rows(); row++) {
+                System.arraycopy(m.data, offset.op(), data, row*cols, cols);
+                offset.nextRow();
+            }
+        }
+        return data;
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (o == null || !(o instanceof Matrix)) {
-            return false;
-        }
-        final Matrix another = (Matrix) o;
-        if (rows != another.rows || cols != another.cols) {
-            return false;
-        }
-        return Arrays.equals(data, another.data);
+
+
+    //
+    // protected constructors
+    //
+
+    // TODO: better documentation
+    protected Matrix(
+            final int rows,
+            final int cols,
+            final double[] data,
+            final Address.MatrixAddress addr) {
+        super(rows, cols, data, addr);
     }
 
 
@@ -221,19 +251,36 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
 
 
     public Object toArray() {
-        final double buffer[][] = new double[rows][cols];
+        final double buffer[][] = new double[rows()][cols()];
         return toArray(buffer);
     }
 
     public double[][] toArray(final double[][] buffer) {
-        QL.require(rows == buffer.length && cols == buffer[0].length, WRONG_BUFFER_LENGTH); // QA:[RG]::verified
-        int addr = 0;
-        for (int row=0; row<rows; row++) {
-            System.arraycopy(data, addr, buffer[row], 0, cols);
-            addr += cols;
+        QL.require(rows() == buffer.length && cols() == buffer[0].length, WRONG_BUFFER_LENGTH); // QA:[RG]::verified
+        if (addr.contiguous()) {
+            int addr = 0;
+            for (int row=0; row<rows(); row++) {
+                System.arraycopy(data, addr, buffer[row], 0, cols());
+                addr += cols();
+            }
+        } else {
+            final Address.MatrixAddress.MatrixOffset src = this.addr.offset();
+            for (int row=0; row<rows(); row++) {
+                src.setRow(row);
+                for (int col=0; col < cols(); col++) {
+                    buffer[row][col] = this.data[src.op()];
+                    src.nextCol();
+                }
+            }
         }
         return buffer;
     }
+
+
+
+
+
+
 
     /**
      * Overwrites contents of a certain row
@@ -242,8 +289,18 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @param array contains the elements to be copied
      */
     public void fillRow(final int row, final Array array) {
-        QL.require(cols == array.size ,  ARRAY_IS_INCOMPATIBLE);
-        System.arraycopy(array.data, 0, data, addr(row), cols);
+        QL.require(cols() == array.size() ,  ARRAY_IS_INCOMPATIBLE);
+        if (this.addr.contiguous() && array.addr.contiguous()) {
+            System.arraycopy(array.data, 0, data, addr.op(row, 0), cols());
+        } else {
+            final Address.ArrayAddress.ArrayOffset src = array.addr.offset();
+            final Address.MatrixAddress.MatrixOffset dst = this.addr.offset(row, 0);
+            for (int col = 0; col < cols(); col++) {
+                data[dst.op()] = array.data[src.op()];
+                src.nextIndex();
+                dst.nextCol();
+            }
+        }
     }
 
     /**
@@ -253,14 +310,16 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @param array contains the elements to be copied
      */
     public void fillCol(final int col, final Array array) {
-        QL.require(rows == array.size ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        if (cols == 1) {
-            System.arraycopy(array.data, 0, data, 0, size);
+        QL.require(rows() == array.size() ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
+        if (this.addr.contiguous() && array.addr.contiguous() && cols() == 1) {
+            System.arraycopy(array.data, 0, data, 0, size());
         } else {
-            int addr = addr(0, col);
-            for (int row = 0; row < rows; row++) {
-                data[addr] = array.data[array.addr(row)];
-                addr += cols;
+            final Address.ArrayAddress.ArrayOffset src = array.addr.offset();
+            final Address.MatrixAddress.MatrixOffset dst = this.addr.offset(0, col);
+            for (int row = 0; row < rows(); row++) {
+                data[dst.op()] = array.data[src.op()];
+                src.nextIndex();
+                dst.nextRow();
             }
         }
     }
@@ -273,7 +332,7 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return the contents of a given cell
      */
     public double get(final int row, final int col) {
-        return data[addr(row, col)];
+        return data[addr.op(row, col)];
     }
 
     /**
@@ -283,7 +342,7 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @param col coordinate
      */
     public void set(final int row, final int col, final double value) {
-        data[addr(row, col)] = value;
+        data[addr.op(row, col)] = value;
     }
 
 
@@ -308,12 +367,24 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return this
      */
     public Matrix addAssign(final Matrix another) {
-        QL.require(rows == another.rows && cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        for (int row=0; row<rows; row++) {
-            int addr = addr(row, 0);
-            for (int col=0; col<cols; col++) {
-                data[addr] += another.data[addr];
-                addr++;
+        QL.require(rows() == another.rows() && cols() == another.cols() ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        if (this.addr.contiguous() && another.addr.contiguous()) {
+            for (int i=0; i<size(); i++) {
+                this.data[i] += another.data[i];
+            }
+        } else {
+            int addr = 0;
+            final Address.MatrixAddress.MatrixOffset toff = this.addr.offset();
+            final Address.MatrixAddress.MatrixOffset aoff = another.addr.offset();
+            for (int row=0; row<rows(); row++) {
+                toff.setRow(row);
+                aoff.setRow(row);
+                for (int col=0; col<cols(); col++) {
+                    this.data[toff.op()] += another.data[aoff.op()];
+                    addr++;
+                    toff.nextCol();
+                    aoff.nextCol();
+                }
             }
         }
         return this;
@@ -326,12 +397,24 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return this
      */
     public Matrix subAssign(final Matrix another) {
-        QL.require(rows == another.rows && cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        for (int row=0; row<rows; row++) {
-            int addr = addr(row, 0);
-            for (int col=0; col<cols; col++) {
-                data[addr] -= another.data[addr];
-                addr++;
+        QL.require(rows() == another.rows() && cols() == another.cols() ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        if (this.addr.contiguous() && another.addr.contiguous()) {
+            for (int i=0; i<size(); i++) {
+                this.data[i] -= another.data[i];
+            }
+        } else {
+            int addr = 0;
+            final Address.MatrixAddress.MatrixOffset toff = this.addr.offset();
+            final Address.MatrixAddress.MatrixOffset aoff = another.addr.offset();
+            for (int row=0; row<rows(); row++) {
+                toff.setRow(row);
+                aoff.setRow(row);
+                for (int col=0; col<cols(); col++) {
+                    this.data[toff.op()] -= another.data[aoff.op()];
+                    addr++;
+                    toff.nextCol();
+                    aoff.nextCol();
+                }
             }
         }
         return this;
@@ -344,11 +427,18 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return this
      */
     public Matrix mulAssign(final double scalar) {
-        for (int row = 0; row < rows; row++) {
-            final int raddr = addr(row, 0);
-            for (int col = 0; col < cols; col++) {
-                final int addr = raddr + col;
+        if (addr.contiguous()) {
+            for (int addr=0; addr<size(); addr++) {
                 data[addr] *= scalar;
+            }
+        } else {
+            final Address.MatrixAddress.MatrixOffset dst = this.addr.offset();
+            for (int row = 0; row < rows(); row++) {
+                dst.setRow(row);
+                for (int col = 0; col < cols(); col++) {
+                    data[dst.op()] *= scalar;
+                    dst.nextCol();
+                }
             }
         }
         return this;
@@ -361,11 +451,18 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return this
      */
     public Matrix divAssign(final double scalar) {
-        for (int row = 0; row < rows; row++) {
-            final int raddr = addr(row, 0);
-            for (int col = 0; col < cols; col++) {
-                final int addr = raddr + col;
+        if (addr.contiguous()) {
+            for (int addr=0; addr<size(); addr++) {
                 data[addr] /= scalar;
+            }
+        } else {
+            final Address.MatrixAddress.MatrixOffset dst = this.addr.offset();
+            for (int row = 0; row < rows(); row++) {
+                dst.setRow(row);
+                for (int col = 0; col < cols(); col++) {
+                    data[dst.op()] /= scalar;
+                    dst.nextCol();
+                }
             }
         }
         return this;
@@ -392,13 +489,25 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new instance
      */
     public Matrix add(final Matrix another) {
-        QL.require(rows == another.rows && cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Matrix result = new Matrix(rows, cols);
-        for (int row=0; row<rows; row++) {
-            int addr = addr(row, 0);
-            for (int col=0; col<cols; col++) {
-                result.data[addr] = data[addr] + another.data[addr];
-                addr++;
+        QL.require(rows() == another.rows() && cols() == another.cols() ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Matrix result = new Matrix(rows(), cols());
+        if (this.addr.contiguous() && another.addr.contiguous()) {
+            for (int i=0; i<size(); i++) {
+                result.data[i] = this.data[i] + another.data[i];
+            }
+        } else {
+            int addr = 0;
+            final Address.MatrixAddress.MatrixOffset toff = this.addr.offset();
+            final Address.MatrixAddress.MatrixOffset aoff = another.addr.offset();
+            for (int row=0; row<rows(); row++) {
+                toff.setRow(row);
+                aoff.setRow(row);
+                for (int col=0; col<cols(); col++) {
+                    result.data[addr] = this.data[toff.op()] + another.data[aoff.op()];
+                    addr++;
+                    toff.nextCol();
+                    aoff.nextCol();
+                }
             }
         }
         return result;
@@ -411,13 +520,25 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new instance
      */
     public Matrix sub(final Matrix another) {
-        QL.require(rows == another.rows && cols == another.cols ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Matrix result = new Matrix(rows, cols);
-        for (int row=0; row<rows; row++) {
-            int addr = addr(row, 0);
-            for (int col=0; col<cols; col++) {
-                result.data[addr] = data[addr] - another.data[addr];
-                addr++;
+        QL.require(rows() == another.rows() && cols() == another.cols() ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Matrix result = new Matrix(rows(), cols());
+        if (this.addr.contiguous() && another.addr.contiguous()) {
+            for (int addr=0; addr<size(); addr++) {
+                result.data[addr] = this.data[addr] - another.data[addr];
+            }
+        } else {
+            int addr = 0;
+            final Address.MatrixAddress.MatrixOffset toff = this.addr.offset();
+            final Address.MatrixAddress.MatrixOffset aoff = another.addr.offset();
+            for (int row=0; row<rows(); row++) {
+                toff.setRow(row);
+                aoff.setRow(row);
+                for (int col=0; col<cols(); col++) {
+                    result.data[addr] = this.data[toff.op()] - another.data[aoff.op()];
+                    addr++;
+                    toff.nextCol();
+                    aoff.nextCol();
+                }
             }
         }
         return result;
@@ -441,12 +562,21 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new instance
      */
     public Matrix mul(final double scalar) {
-        final Matrix result = new Matrix(rows, cols);
-        for (int row=0; row<rows; row++) {
-            int addr = addr(row, 0);
-            for (int col=0; col<cols; col++) {
-                result.data[addr] = data[addr] * scalar;
-                addr++;
+        final Matrix result = new Matrix(rows(), cols());
+        if (addr.contiguous()) {
+            for (int addr=0; addr<size(); addr++) {
+                result.data[addr] = this.data[addr] * scalar;
+            }
+        } else {
+            int addr = 0;
+            final Address.MatrixAddress.MatrixOffset src = this.addr.offset();
+            for (int row = 0; row < rows(); row++) {
+                src.setRow(row);
+                for (int col = 0; col < cols(); col++) {
+                    result.data[addr] = this.data[src.op()] * scalar;
+                    addr++;
+                    src.nextCol();
+                }
             }
         }
         return result;
@@ -459,12 +589,21 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new instance
      */
     public Matrix div(final double scalar) {
-        final Matrix result = new Matrix(rows, cols);
-        for (int row=0; row<rows; row++) {
-            int addr = addr(row, 0);
-            for (int col=0; col<cols; col++) {
-                result.data[addr] = data[addr] / scalar;
-                addr++;
+        final Matrix result = new Matrix(rows(), cols());
+        if (addr.contiguous()) {
+            for (int addr=0; addr<size(); addr++) {
+                result.data[addr] = this.data[addr] / scalar;
+            }
+        } else {
+            int addr = 0;
+            final Address.MatrixAddress.MatrixOffset src = this.addr.offset();
+            for (int row = 0; row < rows(); row++) {
+                src.setRow(row);
+                for (int col = 0; col < cols(); col++) {
+                    result.data[addr] = this.data[src.op()] / scalar;
+                    addr++;
+                    src.nextCol();
+                }
             }
         }
         return result;
@@ -487,15 +626,22 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new Array which contains the result
      */
     public Array mul(final Array array) {
-        QL.require(cols == array.size, ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Array result = new Array(rows);
-        for (int i = 0; i < result.size; i++) {
-            final int addr = addr(i, 0);
+        QL.require(cols() == array.size(), ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Array result = new Array(rows());
+        final Address.MatrixAddress.MatrixOffset toff = this.addr.offset();
+        final Address.ArrayAddress.ArrayOffset  aoff = array.addr.offset();
+        for (int row = 0; row < result.size(); row++) {
+            toff.setRow(row); toff.setCol(0);
+            aoff.setIndex(0);
             double sum = 0.0;
-            for (int col = 0; col < this.cols; col++) {
-                sum += array.data[col] * this.data[addr + col];
+            for (int col = 0; col < this.cols(); col++) {
+                final double telem = this.data[toff.op()];
+                final double aelem = array.data[aoff.op()];
+                sum += telem * aelem;
+                toff.nextCol();
+                aoff.nextIndex();
             }
-            result.data[i] = sum;
+            result.data[row] = sum;
         }
         return result;
     }
@@ -507,19 +653,23 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new Matrix which contains the result
      */
     public Matrix mul(final Matrix another) {
-        QL.require(cols == another.rows ,  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
-        final Matrix result = new Matrix(rows, another.cols);
-        for (int col = 0; col < another.cols; col++) {
-            final int caddr = another.addr(0, col);
-            for (int row = 0; row < rows; row++) {
-                final int raddr = addr(row, 0);
-                int addr = caddr;
+        QL.require(cols() == another.rows(),  MATRIX_IS_INCOMPATIBLE); // QA:[RG]::verified
+        final Matrix result = new Matrix(rows(), another.cols());
+        final Address.MatrixAddress.MatrixOffset toff = this.addr.offset();
+        final Address.MatrixAddress.MatrixOffset aoff = another.addr.offset();
+        for (int col = 0; col < another.cols(); col++) {
+            for (int row = 0; row < this.rows(); row++) {
+                toff.setRow(row); toff.setCol(0);
+                aoff.setRow(0);   aoff.setCol(col);
                 double sum = 0.0;
-                for (int i = 0; i < cols; i++) {
-                    sum += data[raddr + i] * another.data[addr];
-                    addr += another.cols;
+                for (int i = 0; i < this.cols(); i++) {
+                    final double telem = this.data[toff.op()];
+                    final double aelem = another.data[aoff.op()];
+                    sum += telem * aelem;
+                    toff.nextCol();
+                    aoff.nextRow();
                 }
-                result.data[result.addr(row, col)] = sum;
+                result.data[result.addr.op(row, col)] = sum;
             }
         }
         return result;
@@ -620,10 +770,6 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
     //	inverse      Matrix           Matrix
     //  solve        Matrix           Matrix
     //  swap         Matrix  Matrix   this
-    //  range        Matrix           Matrix
-    //  rangeRow     Matrix           Array
-    //  rangeCol     Matrix           Array
-    //
 
     /**
      * Returns the transpose of <code>this</code> Matrix
@@ -631,14 +777,16 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new instance which contains the result of this operation
      */
     public Matrix transpose() {
-        final Matrix result = new Matrix(cols, rows);
-        for (int row=0; row<rows; row++) {
-            int raddr = addr(row, 0);
-            int caddr = result.addr(0, row);
-            for (int col=0; col<cols; col++) {
-                result.data[caddr] = data[raddr];
-                caddr += result.cols;
-                raddr++;
+        final Matrix result = new Matrix(cols(), rows());
+        final Address.MatrixAddress.MatrixOffset src = this.addr.offset();
+        final Address.MatrixAddress.MatrixOffset dst = result.addr.offset();
+        for (int row=0; row<rows(); row++) {
+            src.setRow(row); src.setCol(0);
+            dst.setRow(0);   dst.setCol(row);
+            for (int col=0; col<cols(); col++) {
+                result.data[dst.op()] = data[src.op()];
+                src.nextCol();
+                dst.nextRow();
             }
         }
         return result;
@@ -650,12 +798,12 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new instance which contains the result of this operation
      */
     public Array diagonal() {
-        QL.require(rows == cols ,  MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
-        final Array result = new Array(cols);
+        QL.require(rows() == cols(),  MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
+        final Array result = new Array(cols());
         int addr = 0;
-        for (int i = 0; i < cols; i++) {
+        for (int i = 0; i < cols(); i++) {
             result.data[i] = data[addr];
-            addr += cols + 1;
+            addr += cols() + 1;
         }
         return result;
     }
@@ -676,7 +824,7 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return a new instance which contains the result of this operation
      */
     public Matrix inverse() {
-        return solve(new Identity(rows));
+        return solve(new Identity(rows()));
     }
 
     /**
@@ -686,345 +834,235 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
      * @return solution if A is square, least squares solution otherwise
      */
     public Matrix solve (final Matrix m) {
-       return (rows == cols ? (new LUDecomposition(this)).solve(m) : (new QRDecomposition(this)).solve(m));
+       return (rows() == cols()
+               ? (new LUDecomposition(this)).solve(m)
+                       : (new QRDecomposition(this)).solve(m));
     }
 
 
-    /**
-     * Creates a sub-matrix made of elements of <code>this</code> Matrix, specified by a certain range of elements.
-     *
-     * @param row0 Initial row index, inclusive
-     * @param row1 Final row index, exclusive
-     * @param col0 Initial column index, inclusive
-     * @param col1 Final column index, exclusive
-     * @return A( [row0:row1) , [col0:col1) )
-     * @exception IllegalArgumentException when indices are out of range
-     */
+    //
+    //  Range
+    //
+    //  method       this    right    result
+    //  ------------ ------- -------- ------
+    //  rangeRow     Matrix           Array
+    //  rangeCol     Matrix           Array
+    //  range        Matrix           Matrix
+    //
+
+    public Array rangeRow(final int row) {
+        return rangeRow(row, 0, cols()-1);
+    }
+
+    public Array rangeRow(final int row, final int col0) {
+        return rangeRow(row, col0, cols()-1);
+    }
+
+    public Array rangeRow(final int row, final int col0, final int col1) {
+        QL.require(row  >= 0 && row  < rows(), ArrayIndexOutOfBoundsException.class, Address.INVALID_ROW_INDEX);
+        QL.require(col0 >= 0 && col0 < cols() && col1 >= 0 && col1 < cols(), ArrayIndexOutOfBoundsException.class, Address.INVALID_COLUMN_INDEX);
+        QL.require(col0<=col1, Address.INVALID_BACKWARD_INDEXING);
+        return new RangeRow(row, this.addr, col0, col1, data, rows(), cols());
+    }
+
+
+    public Array rangeCol(final int col) {
+        return rangeCol(col, 0, rows()-1);
+    }
+
+    public Array rangeCol(final int col, final int row0) {
+        return rangeCol(col, row0, rows()-1);
+    }
+
+    public Array rangeCol(final int col, final int row0, final int row1) {
+        QL.require(col  >= 0 && col  < cols(), ArrayIndexOutOfBoundsException.class, Address.INVALID_COLUMN_INDEX);
+        QL.require(row0 >= 0 && row0 < rows() && row1 >= 0 && row1 < rows(), ArrayIndexOutOfBoundsException.class, Address.INVALID_ROW_INDEX);
+        QL.require(row0<=row1, Address.INVALID_BACKWARD_INDEXING);
+        return new RangeCol(row0, row1, this.addr, col, data, rows(), cols());
+    }
+
+
     public Matrix range(final int row0, final int row1, final int col0, final int col1) {
-        QL.require(row0 >= 0 && row1 > row0 && row1 <= rows, INVALID_ARGUMENTS); // QA:[RG]::verified
-        QL.require(col0 >= 0 && col1 > col0 && col1 <= cols, INVALID_ARGUMENTS); // QA:[RG]::verified
-
-        final Matrix result = new Matrix(row1-row0, col1-col0);
-        if (col1-col0 == cols) {
-            if (row1-row0 == rows) {
-                System.arraycopy(data, 0, result.data, 0, size);
-            } else {
-                System.arraycopy(data, addr(row0), result.data, 0, result.size);
-            }
-        } else {
-            final int ncols = col1-col0;
-            int addr = 0;
-            for (int i = row0; i <= row1; i++) {
-                System.arraycopy(data, addr(i, col0), result.data, addr, ncols);
-                addr += ncols;
-            }
-        }
-        return result;
+        QL.require(row0 >= 0 && row0 < rows() && row1 >= 0 && row1 < rows(), ArrayIndexOutOfBoundsException.class, Address.INVALID_ROW_INDEX);
+        QL.require(row0<=row1, Address.INVALID_BACKWARD_INDEXING);
+        QL.require(col0 >= 0 && col0 < cols() && col1 >= 0 && col1 < cols(), ArrayIndexOutOfBoundsException.class, Address.INVALID_COLUMN_INDEX);
+        QL.require(col0<=col1, Address.INVALID_BACKWARD_INDEXING);
+        final boolean contiguous = super.cols()==(col1-col0+1);
+        return new RangeMatrix(row0, row1, this.addr, col0, col1, contiguous, data, rows(), cols());
     }
 
-    /**
-     * Creates a sub-matrix made of elements of <code>this</code> Matrix, specified by a certain range of elements.
-     *
-     * @param row0 Initial row index, inclusive
-     * @param row1 Final row index, exclusive
-     * @param c Array of column indices.
-     * This parameter can a regular int[] array as usual or it can be a one-based int[] array composed by one-based indexes
-     * if <code>this</code> Matrix has a FORTRAN style indexing.
-     * For example, suppose we wish to pass an array made of indexes [1, 2, 0]. We can do it using the usual Java style as:
-     * <pre>
-     *     int [] c = new int[] { 1, 2, 0 };; // Java style, as usual. No surprises
-     * </pre>
-     * whilst using FORTRAN style we need to add one leading cell (which is discarded) and we need to adjust array elements:
-     * <pre>
-     *     int [] c = new int[] { 0, 2, 3, 1 };; // FORTRAN style : array elements are one-based.
-     * <pre>
-     * @return A( [row0:row1) , c(:) ) of <code>this</code> Matrix
-     * @exception IllegalArgumentException when indices are out of range
-     */
-    public Matrix range(final int row0, final int row1, final int[] c) {
-        QL.require(row0 >= 0 && row1 > row0 && row1 <= rows, INVALID_ARGUMENTS); // QA:[RG]::verified
-        for (final int col : c) {
-            QL.require(col>=0 && col<cols, INVALID_ARGUMENTS); // QA:[RG]::verified
-        }
-
-        final Matrix result = new Matrix(row1-row0, c.length);
-        for (int i = row0; i <= row1; i++) {
-            for (int j = 0; j < c.length; j++) {
-                result.set(i-row0, j, get(i, c[j]));
-            }
-        }
-        return result;
+    public Matrix range(final int[] ridx, final int col0, final int col1) {
+        return new RangeMatrix(ridx, this.addr, col0, col1, data, rows(), cols());
     }
 
-    /**
-     * Creates a sub-matrix made of elements of <code>this</code> Matrix, specified by a certain range of elements.
-     *
-     * @param r Array of row indices.
-     * This parameter can a regular int[] array as usual or it can be a one-based int[] array composed by one-based indexes
-     * if <code>this</code> Matrix has a FORTRAN style indexing.
-     * For example, suppose we wish to pass an array made of indexes [1, 2, 0]. We can do it using the usual Java style as:
-     * <pre>
-     *     int [] r = new int[] { 1, 2, 0 };; // Java style, as usual. No surprises
-     * </pre>
-     * whilst using FORTRAN style we need to add one leading cell (which is discarded) and we need to adjust array elements:
-     * <pre>
-     *     int [] r = new int[] { 0, 2, 3, 1 };; // FORTRAN style : array elements are one-based.
-     * <pre>
-     * @param c Array of column indices.
-     * This parameter can a regular int[] array as usual or it can be a one-based int[] array composed by one-based indexes
-     * if <code>this</code> Matrix has a FORTRAN style indexing.
-     * For example, suppose we wish to pass an array made of indexes [1, 2, 0]. We can do it using the usual Java style as:
-     * <pre>
-     *     int [] c = new int[] { 1, 2, 0 };; // Java style, as usual. No surprises
-     * </pre>
-     * whilst using FORTRAN style we need to add one leading cell (which is discarded) and we need to adjust array elements:
-     * <pre>
-     *     int [] c = new int[] { 0, 2, 3, 1 };; // FORTRAN style : array elements are one-based.
-     * <pre>
-     * @return A(r(:),c(:)) of <code>this</code> Matrix
-     * @exception IllegalArgumentException when indices are out of range
-     */
-    public Matrix range(final int[] r, final int[] c) {
-        for (final int row : r) {
-            QL.require(row>=0 && row<rows, INVALID_ARGUMENTS); // QA:[RG]::verified
-        }
-        for (final int col : c) {
-            QL.require(col>=0 && col<cols, INVALID_ARGUMENTS); // QA:[RG]::verified
-        }
-
-        final Matrix result = new Matrix(r.length, c.length);
-        for (int i=0; i<r.length; i++) {
-            final int row = r[i];
-            for (int j=0; j<c.length; j++) {
-                final int col = c[j];
-                result.set(i, j, get(row, col));
-            }
-        }
-        return result;
+    public Matrix range(final int row0, final int row1, final int[] cidx) {
+        return new RangeMatrix(row0, row1, this.addr, cidx, data, rows(), cols());
     }
 
-    /**
-     * Creates a sub-matrix made of elements of <code>this</code> Matrix, specified by a certain range of elements.
-     *
-     * @param r Array of row indices.
-     * This parameter can a regular int[] array as usual or it can be a one-based int[] array composed by one-based indexes
-     * if <code>this</code> Matrix has a FORTRAN style indexing.
-     * For example, suppose we wish to pass an array made of indexes [1, 2, 0]. We can do it using the usual Java style as:
-     * <pre>
-     *     int [] r = new int[] { 1, 2, 0 };; // Java style, as usual. No surprises
-     * </pre>
-     * whilst using FORTRAN style we need to add one leading cell (which is discarded) and we need to adjust array elements:
-     * <pre>
-     *     int [] r = new int[] { 0, 2, 3, 1 };; // FORTRAN style : array elements are one-based.
-     * <pre>
-     * @param col0 Initial column index, inclusive
-     * @param col1 Final column index, exclusive
-     * @return A(r(:), [col0:col1) ) of <code>this</code> Matrix
-     * @exception IllegalArgumentException when indices are out of range
-     */
-    public Matrix range(final int[] r, final int col0, final int col1) {
-        for (final int row : r) {
-            QL.require(row>=0 && row<rows, INVALID_ARGUMENTS); // QA:[RG]::verified
-        }
-        QL.require(col0 >= 0 && col1 > col0 && col1 <= cols, INVALID_ARGUMENTS); // QA:[RG]::verified
-
-        final Matrix result = new Matrix(r.length, col1-col0);
-        final int ncols = col1-col0;
-
-        int addr = 0;
-        for (final int row : r) {
-            System.arraycopy(data, addr(row, col0), result.data, addr, ncols);
-            addr += ncols;
-        }
-        return result;
+    public Matrix range(final int[] ridx, final int[] cidx) {
+        return new RangeMatrix(ridx, this.addr, cidx, data, rows(), cols());
     }
 
 
+
+
+
+
+    public Array constRangeRow(final int row) {
+        return constRangeRow(row, 0, cols()-1);
+    }
+
+    public Array constRangeRow(final int row, final int col0) {
+        return constRangeRow(row, col0, cols()-1);
+    }
+
+    public Array constRangeRow(final int row, final int col0, final int col1) {
+        QL.require(row  >= 0 && row  < rows(), ArrayIndexOutOfBoundsException.class, Address.INVALID_ROW_INDEX);
+        QL.require(col0 >= 0 && col0 < cols() && col1 >= 0 && col1 < cols(), ArrayIndexOutOfBoundsException.class, Address.INVALID_COLUMN_INDEX);
+        QL.require(col0<=col1, Address.INVALID_BACKWARD_INDEXING);
+        return new ConstRangeRow(row, this.addr, col0, col1, data, rows(), cols());
+    }
+
+
+    public Array constRangeCol(final int col) {
+        return constRangeCol(col, 0, rows()-1);
+    }
+
+    public Array constRangeCol(final int col, final int row0) {
+        return constRangeCol(col, row0, rows()-1);
+    }
+
+    public Array constRangeCol(final int col, final int row0, final int row1) {
+        QL.require(col  >= 0 && col  < cols(), ArrayIndexOutOfBoundsException.class, Address.INVALID_COLUMN_INDEX);
+        QL.require(row0 >= 0 && row0 < rows() && row1 >= 0 && row1 < rows(), ArrayIndexOutOfBoundsException.class, Address.INVALID_ROW_INDEX);
+        QL.require(row0<=row1, Address.INVALID_BACKWARD_INDEXING);
+        return new ConstRangeCol(row0, row1, this.addr, col, data, rows(), cols());
+    }
+
+
+    public Matrix constRange(final int row0, final int row1, final int col0, final int col1) {
+        QL.require(row0 >= 0 && row0 < rows() && row1 >= 0 && row1 < rows(), ArrayIndexOutOfBoundsException.class, Address.INVALID_ROW_INDEX);
+        QL.require(row0<=row1, Address.INVALID_BACKWARD_INDEXING);
+        QL.require(col0 >= 0 && col0 < cols() && col1 >= 0 && col1 < cols(), ArrayIndexOutOfBoundsException.class, Address.INVALID_COLUMN_INDEX);
+        QL.require(col0<=col1, Address.INVALID_BACKWARD_INDEXING);
+        final boolean contiguous = super.cols()==(col1-col0+1);
+        return new ConstRangeMatrix(row0, row1, this.addr, col0, col1, contiguous, data, rows(), cols());
+    }
+
+    public Matrix constRange(final int[] ridx, final int col0, final int col1) {
+        return new ConstRangeMatrix(ridx, this.addr, col0, col1, data, rows(), cols());
+    }
+
+    public Matrix constRange(final int row0, final int row1, final int[] cidx) {
+        return new ConstRangeMatrix(row0, row1, this.addr, cidx, data, rows(), cols());
+    }
+
+    public Matrix constRange(final int[] ridx, final int[] cidx) {
+        return new ConstRangeMatrix(ridx, this.addr, cidx, data, rows(), cols());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //TODO: better comments
     //
-    //  Element iterators
-    //
-    //  method              this    right    result
-    //  ------------------- ------- -------- ------
-    //  rowIterator         Matrix           RowIterator
-    //  constRowIterator    Matrix           ConstRowIterator
-    //  columnIterator      Matrix           ColumnIterator
-    //  constColumnIterator Matrix           ConstColumnIterator
+    // methods moved from Cells
     //
 
-
-    /**
-     * Creates a RowIterator for an entire row <code>row</code>
-     *
-     * @param row is the desired row
-     * @return an Array obtained from row A( row , [:] )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public RowIterator rowIterator(final int row) {
-        return new RowIterator(row);
-    }
-
-    /**
-     * Creates a RowIterator for row <code>row</code>
-     *
-     * @param row is the desired row
-     * @param col0 is the initial column, inclusive
-     * @return an Array obtained from row A( row , [col0:) )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public RowIterator rowIterator(final int row, final int col0) {
-        return new RowIterator(row, col0);
-    }
-
-    /**
-     * Creates a RowIterator for row <code>row</code>
-     *
-     * @param row is the desired row
-     * @param col0 is the initial column, inclusive
-     * @param col1 is the initial column, exclusive
-     * @return an Array obtained from row A( row , [col0:col1) )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public RowIterator rowIterator(final int row, final int col0, final int col1) {
-        return new RowIterator(row, col0, col1);
-    }
-
-    /**
-     * Creates a constant, non-modifiable RowIterator for an entire row
-     *
-     * @param row is the desired row
-     * @return an Array obtained from row A( row , [;] )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstRowIterator constRowIterator(final int row) {
-        return new ConstRowIterator(row);
-    }
-
-    /**
-     * Creates a constant, non-modifiable RowIterator for row <code>row</code>
-     *
-     * @param row is the desired row
-     * @param col0 is the initial column, inclusive
-     * @return an Array obtained from row A( row , [col0:) )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstRowIterator constRowIterator(final int row, final int col0) {
-        return new ConstRowIterator(row, col0);
-    }
-
-    /**
-     * Creates a constant, non-modifiable RowIterator for row <code>row</code>
-     *
-     * @param row is the desired row
-     * @param col0 is the initial column, inclusive
-     * @param col1 is the initial column, exclusive
-     * @return an Array obtained from row A( row , [col0:col1) )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstRowIterator constRowIterator(final int row, final int col0, final int col1) {
-        return new ConstRowIterator(row, col0, col1);
-    }
-
-    /**
-     * Creates a ColumnIterator for an entire column <code>col</code>
-     *
-     * @param col is the desired column
-     * @return an Array obtained from row A( [;] , col )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ColumnIterator columnIterator(final int col) {
-        return new ColumnIterator(col);
-    }
-
-    /**
-     * Creates a ColumnIterator for column <code>col</code>
-     *
-     * @param col is the desired column
-     * @param row0 is the initial row, inclusive
-     * @return an Array obtained from row A( [row0:) , col )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ColumnIterator columnIterator(final int col, final int row0) {
-        return new ColumnIterator(col, row0);
-    }
-
-    /**
-     * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
-     *
-     * @param col is the desired column
-     * @param row0 is the initial row, inclusive
-     * @param row1 is the final row, exclusive
-     * @return an Array obtained from row A( [row0:row1) , col )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ColumnIterator columnIterator(final int col, final int row0, final int row1) {
-        return new ColumnIterator(col, row0, row1);
-    }
-
-    /**
-     * Creates a constant, non-modifiable ColumnIterator for the entire column <code>col</code>
-     *
-     * @param col is the desired column
-     * @return an Array obtained from row A( [:] , col )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstColumnIterator constColumnIterator(final int col) {
-        return new ConstColumnIterator(col);
-    }
-
-    /**
-     * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
-     *
-     * @param col is the desired column
-     * @param row0 is the initial row, inclusive
-     * @return an Array obtained from row A( [row0:) , col )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstColumnIterator constColumnIterator(final int col, final int row0) {
-        return new ConstColumnIterator(col, row0);
-    }
-
-
-    /**
-     * Creates a constant, non-modifiable ColumnIterator for column <code>col</code>
-     *
-     * @param col is the desired column
-     * @param row0 is the initial row, inclusive
-     * @param row1 is the final row, exclusive
-     * @return an Array obtained from row A( [row0:row1) , col )
-     * @throws IllegalArgumentException when indices are out of range
-     */
-    public ConstColumnIterator constColumnIterator(final int col, final int row0, final int row1) {
-        return new ConstColumnIterator(col, row0, row1);
-    }
-
-
-    //
-    // implements BulkStorage
-    //
-
-    @Override
     public Matrix fill(final double scalar) {
-        return (Matrix) super.bulkStorage.fill(scalar);
+        QL.require(addr.contiguous(), NON_CONTIGUOUS_DATA);
+        Arrays.fill(data, addr.base(), addr.last(), scalar);
+        return this;
     }
 
-    @Override
     public Matrix fill(final Matrix another) {
-        return (Matrix) super.bulkStorage.fill(another);
+        QL.require(addr.contiguous(), NON_CONTIGUOUS_DATA);
+        QL.require(another.addr.contiguous(), NON_CONTIGUOUS_DATA);
+        QL.require(this.rows()==another.rows() && this.cols()==another.cols() && this.size()==another.size(), WRONG_BUFFER_LENGTH);
+        // copies data
+        System.arraycopy(another.data, addr.base(), this.data, 0, addr.last()-addr.base());
+        return this;
     }
 
-    @Override
-    public Matrix sort() {
-        return (Matrix) super.bulkStorage.sort();
-    }
-
-    @Override
     public Matrix swap(final Matrix another) {
-        return (Matrix) super.bulkStorage.swap(another);
+        QL.require(addr.contiguous(), NON_CONTIGUOUS_DATA);
+        QL.require(another.addr.contiguous(), NON_CONTIGUOUS_DATA);
+        QL.require(this.rows()==another.rows() && this.cols()==another.cols() && this.size()==another.size(), WRONG_BUFFER_LENGTH);
+        // swaps data
+        final double [] tdata;
+        final Address.MatrixAddress taddr;
+        tdata = this.data;  this.data = another.data;  another.data = tdata;
+        taddr = this.addr;  this.addr = another.addr;  another.addr = taddr;
+        return this;
+    }
+
+    public Matrix sort() {
+        QL.require(addr.contiguous(), NON_CONTIGUOUS_DATA);
+        Arrays.sort(data, addr.base(), addr.last());
+        return this;
     }
 
 
 
+    //
+    // overrides Object
+    //
 
+    /**
+     * Returns a copy of <code>this</code> Matrix
+     */
+    @Override
+    public Matrix clone() {
+        return new Matrix(this);
+    }
+
+    @Override
+    // TODO: implement equals() with a near-linear approach
+    // 1. the chain of Addresses must be equal
+    // 2. the base and last memory addresses must be equal in all Addresses
+    // *** THIS IDEA NEEDS VALIDATION ***
+    public boolean equals(final Object obj) {
+        // TODO Auto-generated method stub
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        // TODO Auto-generated method stub
+        return super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer();
+        sb.append("[rows=").append(rows()).append(" cols=").append(cols()).append('\n');
+        for (int row = 0; row < rows(); row++) {
+            sb.append(" [ ");
+            sb.append(data[addr.op(row, 0)]);
+            for (int col = 1; col < cols(); col++) {
+                sb.append(", ");
+                sb.append(data[addr.op(row, col)]);
+            }
+            sb.append(" ]\n");
+        }
+        sb.append("]\n");
+        return sb.toString();
+    }
 
 
 
@@ -1037,6 +1075,7 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
     /**
      * sqrt(a^2 + b^2) without under/overflow.
      */
+    //TODO: verify if it can be replaced by Math.hypot
     public static double hypot(final double a, final double b) {
         double r;
         if (Math.abs(a) > Math.abs(b)) {
@@ -1051,6 +1090,182 @@ public class Matrix extends Cells implements BulkStorage<Matrix> {
         return r;
     }
 
+
+    //
+    // private inner classes
+    //
+
+    private static class RangeRow extends Array {
+
+        public RangeRow(
+            final int row,
+            final Address.MatrixAddress chain,
+            final int col0,
+            final int col1,
+            final double[] data,
+            final int rows,
+            final int cols) {
+            super(1, col1-col0+1, data, new FlatArrayRowAddress(row, chain, col0, col1, true, rows, cols));
+        }
+    }
+
+
+    private static class RangeCol extends Array {
+
+        public RangeCol(
+                final int row0,
+                final int row1,
+                final Address.MatrixAddress chain,
+                final int col,
+                final double[] data,
+                final int rows,
+                final int cols) {
+            super(row1-row0+1, 1, data, new FlatArrayColAddress(row0, row1, chain, col, false, rows, cols));
+        }
+    }
+
+
+    private static class RangeMatrix extends Matrix {
+
+        public RangeMatrix(
+            final int row0,
+            final int row1,
+            final Address.MatrixAddress chain,
+            final int col0,
+            final int col1,
+            final boolean contiguous,
+            final double[] data,
+            final int rows,
+            final int cols) {
+            super(row1-row0+1, col1-col0+1, data, new FlatMatrixAddress(row0, row1, chain, col0, col1, contiguous, rows, cols));
+        }
+
+        public RangeMatrix(
+            final int[] ridx,
+            final Address.MatrixAddress chain,
+            final int col0,
+            final int col1,
+            final double[] data,
+            final int rows,
+            final int cols) {
+            super(ridx.length, col1-col0+1, data, new FlatMatrixIndexAddress(ridx, col0, col1, chain, rows, cols));
+        }
+
+        public RangeMatrix(
+            final int row0,
+            final int row1,
+            final Address.MatrixAddress chain,
+            final int[] cidx,
+            final double[] data,
+            final int rows,
+            final int cols) {
+            super(row1-row0+1, cidx.length, data, new FlatMatrixIndexAddress(row0, row1, cidx, chain, rows, cols));
+        }
+
+        public RangeMatrix(
+            final int[] ridx,
+            final Address.MatrixAddress chain,
+            final int[] cidx,
+            final double[] data,
+            final int rows,
+            final int cols) {
+            super(ridx.length, cidx.length, data, new FlatMatrixIndexAddress(ridx, cidx, chain, rows, cols));
+        }
+    }
+
+
+    private static class ConstRangeRow extends RangeRow {
+
+        public ConstRangeRow(
+            final int row,
+            final Address.MatrixAddress chain,
+            final int col0,
+            final int col1,
+            final double[] data,
+            final int rows,
+            final int cols) {
+            super(row, chain, col0, col1, data, rows, cols);
+        }
+
+        @Override
+        public void set(final int pos, final double value) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+
+    private static class ConstRangeCol extends RangeCol {
+
+        public ConstRangeCol(
+                final int row0,
+                final int row1,
+                final Address.MatrixAddress chain,
+                final int col,
+                final double[] data,
+                final int rows,
+                final int cols) {
+            super(row0, row1, chain, col, data, rows, cols);
+        }
+
+        @Override
+        public void set(final int pos, final double value) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+
+    private static class ConstRangeMatrix extends RangeMatrix {
+
+        public ConstRangeMatrix(
+            final int row0,
+            final int row1,
+            final Address.MatrixAddress chain,
+            final int col0,
+            final int col1,
+            final boolean contiguous,
+            final double[] data,
+            final int rows,
+            final int cols) {
+            super(row0, row1, chain, col0, col1, contiguous, data, rows, cols);
+        }
+
+        public ConstRangeMatrix(
+            final int[] ridx,
+            final Address.MatrixAddress chain,
+            final int col0,
+            final int col1,
+            final double[] data,
+            final int rows,
+            final int cols) {
+            super(ridx, chain, col0, col1, data, rows, cols);
+        }
+
+        public ConstRangeMatrix(
+            final int row0,
+            final int row1,
+            final Address.MatrixAddress chain,
+            final int[] cidx,
+            final double[] data,
+            final int rows,
+            final int cols) {
+            super(row0, row1, chain, cidx, data, rows, cols);
+        }
+
+        public ConstRangeMatrix(
+            final int[] ridx,
+            final Address.MatrixAddress chain,
+            final int[] cidx,
+            final double[] data,
+            final int rows,
+            final int cols) {
+            super(ridx, chain, cidx, data, rows, cols);
+        }
+
+        @Override
+        public void set(final int row, final int col, final double value) {
+            throw new UnsupportedOperationException();
+        }
+
+    }
+
 }
-
-

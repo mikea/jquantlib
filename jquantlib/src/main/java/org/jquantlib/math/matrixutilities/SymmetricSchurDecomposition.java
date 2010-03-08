@@ -69,10 +69,10 @@ public class SymmetricSchurDecomposition {
 
 
     public SymmetricSchurDecomposition(final Matrix m) {
-        QL.require(m.rows == m.cols, Matrix.MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
+        QL.require(m.rows() == m.cols(), Matrix.MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
 
-        this.size = m.rows;
-        this.A = new Matrix(m.rows, m.cols);
+        this.size = m.rows();
+        this.A = new Matrix(m.rows(), m.cols());
         this.diag = new Array(size);
 
         final double tmpDiag[] = new double[size];
@@ -81,11 +81,12 @@ public class SymmetricSchurDecomposition {
         final Matrix s = m.clone();
 
         for (int q = 0; q < size; q++) {
-            diag.data[diag.addr(q)] = s.data[s.addr(q, q)];
-            A.data[A.addr(q, q)] = 1.0;
+            diag.data[diag.addr.op(q)] = s.data[s.addr.op(q, q)];
+            A.data[A.addr.op(q, q)] = 1.0;
         }
-        for (int j = 0; j < size; j++)
-            tmpDiag[j] = diag.data[diag.addr(j)];
+        for (int j = 0; j < size; j++) {
+            tmpDiag[j] = diag.data[diag.addr.op(j)];
+        }
 
         boolean keeplooping = true;
         int ite = 1;
@@ -93,61 +94,70 @@ public class SymmetricSchurDecomposition {
         do {
             // main loop
             double sum = 0;
-            for (int a = 0; a < size - 1; a++)
-                for (int b = a + 1; b < size; b++)
-                    sum += Math.abs(s.data[s.addr(a, b)]);
+            for (int a = 0; a < size - 1; a++) {
+                for (int b = a + 1; b < size; b++) {
+                    sum += Math.abs(s.data[s.addr.op(a, b)]);
+                }
+            }
 
-            if (sum == 0)
+            if (sum == 0) {
                 keeplooping = false;
-            else {
+            } else {
                 /*
                  * To speed up computation a threshold is introduced to make sure it is worthy to perform the Jacobi rotation
                  */
-                if (ite < 5)
+                if (ite < 5) {
                     threshold = 0.2 * sum / (size * size);
-                else
+                } else {
                     threshold = 0.0;
+                }
 
                 int j, k, l;
-                for (j = 0; j < size - 1; j++)
+                for (j = 0; j < size - 1; j++) {
                     for (k = j + 1; k < size; k++) {
                         double sine, rho, cosin, heig, tang, beta;
-                        final double smll = Math.abs(s.data[s.addr(j, k)]);
-                        if (ite > 5 && smll < epsPrec * Math.abs(diag.data[diag.addr(j)])
-                                && smll < epsPrec * Math.abs(diag.data[diag.addr(k)]))
-                            s.data[s.addr(j, k)] = 0;
-                        else if (Math.abs(s.data[s.addr(j, k)]) > threshold) {
-                            heig = diag.data[diag.addr(k)] - diag.data[diag.addr(j)];
-                            if (smll < epsPrec * Math.abs(heig))
-                                tang = s.data[s.addr(j, k)] / heig;
-                            else {
-                                beta = 0.5 * heig / s.data[s.addr(j, k)];
+                        final double smll = Math.abs(s.data[s.addr.op(j, k)]);
+                        if (ite > 5 && smll < epsPrec * Math.abs(diag.data[diag.addr.op(j)])
+                                && smll < epsPrec * Math.abs(diag.data[diag.addr.op(k)])) {
+                            s.data[s.addr.op(j, k)] = 0;
+                        } else if (Math.abs(s.data[s.addr.op(j, k)]) > threshold) {
+                            heig = diag.data[diag.addr.op(k)] - diag.data[diag.addr.op(j)];
+                            if (smll < epsPrec * Math.abs(heig)) {
+                                tang = s.data[s.addr.op(j, k)] / heig;
+                            } else {
+                                beta = 0.5 * heig / s.data[s.addr.op(j, k)];
                                 tang = 1.0 / (Math.abs(beta) + Math.sqrt(1 + beta * beta));
-                                if (beta < 0)
+                                if (beta < 0) {
                                     tang = -tang;
+                                }
                             }
                             cosin = 1 / Math.sqrt(1 + tang * tang);
                             sine = tang * cosin;
                             rho = sine / (1 + cosin);
-                            heig = tang * s.data[s.addr(j, k)];
+                            heig = tang * s.data[s.addr.op(j, k)];
                             tmpSum[j] -= heig;
                             tmpSum[k] += heig;
-                            diag.data[diag.addr(j)] -= heig;
-                            diag.data[diag.addr(k)] += heig;
-                            s.data[s.addr(j, k)] = 0.0;
-                            for (l = 0; l + 1 <= j; l++)
+                            diag.data[diag.addr.op(j)] -= heig;
+                            diag.data[diag.addr.op(k)] += heig;
+                            s.data[s.addr.op(j, k)] = 0.0;
+                            for (l = 0; l + 1 <= j; l++) {
                                 jacobiRotate(s, rho, sine, l, j, l, k);
-                            for (l = j + 1; l <= k - 1; l++)
+                            }
+                            for (l = j + 1; l <= k - 1; l++) {
                                 jacobiRotate(s, rho, sine, j, l, l, k);
-                            for (l = k + 1; l < size; l++)
+                            }
+                            for (l = k + 1; l < size; l++) {
                                 jacobiRotate(s, rho, sine, j, l, k, l);
-                            for (l = 0; l < size; l++)
+                            }
+                            for (l = 0; l < size; l++) {
                                 jacobiRotate(A, rho, sine, l, j, l, k);
+                            }
                         }
                     }
+                }
                 for (k = 0; k < size; k++) {
                     tmpDiag[k] += tmpSum[k];
-                    diag.data[diag.addr(k)] = tmpDiag[k];
+                    diag.data[diag.addr.op(k)] = tmpDiag[k];
                     tmpSum[k] = 0.0;
                 }
             }
@@ -159,19 +169,19 @@ public class SymmetricSchurDecomposition {
         final SortedMap<Double, ConstColumnIterator> map = new TreeMap<Double, ConstColumnIterator>();
         for (int col = 0; col < size; col++) {
             final ConstColumnIterator eigenVector = A.constColumnIterator(col);
-            map.put(diag.data[diag.addr(col)], eigenVector);
+            map.put(diag.data[diag.addr.op(col)], eigenVector);
         }
 
         final int col = 0;
         final double maxEv = map.firstKey();
         for (final double key : map.keySet()) {
             final ConstColumnIterator eigenVector = map.get(key);
-            diag.data[diag.addr(col)] = Math.abs(key / maxEv) < 1e-16 ? 0.0 : key;
+            diag.data[diag.addr.op(col)] = Math.abs(key / maxEv) < 1e-16 ? 0.0 : key;
             double sign = 1.0;
             if (eigenVector.get(0) < 0.0)
                 sign = -1.0;
             for (int row = 0; row < size; row++) {
-                A.data[A.addr(row, col)] = sign * eigenVector.get(row);
+                A.data[A.addr.op(row, col)] = sign * eigenVector.get(row);
             }
         }
         */
@@ -199,10 +209,10 @@ public class SymmetricSchurDecomposition {
     private void jacobiRotate(final Matrix m, final double rot, final double dil, final int j1, final int k1, final int j2,
             final int k2) /* @ReadOnly */{
         double x1, x2;
-        x1 = m.data[m.addr(j1, k1)];
-        x2 = m.data[m.addr(j2, k2)];
-        m.data[m.addr(j1, k1)] = x1 - dil * (x2 + x1 * rot);
-        m.data[m.addr(j2, k2)] = x2 + dil * (x1 - x2 * rot);
+        x1 = m.data[m.addr.op(j1, k1)];
+        x2 = m.data[m.addr.op(j2, k2)];
+        m.data[m.addr.op(j1, k1)] = x1 - dil * (x2 + x1 * rot);
+        m.data[m.addr.op(j2, k2)] = x2 + dil * (x1 - x2 * rot);
     }
 
 }

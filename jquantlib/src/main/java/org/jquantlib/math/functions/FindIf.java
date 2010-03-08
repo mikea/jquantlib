@@ -21,10 +21,9 @@
  */
 package org.jquantlib.math.functions;
 
+import org.jquantlib.QL;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.math.matrixutilities.Cells.ConstRowIterator;
-import org.jquantlib.math.matrixutilities.Cells.RowIterator;
 
 /**
  * This class verifies a condition and if true, returns the evaluation of
@@ -32,40 +31,39 @@ import org.jquantlib.math.matrixutilities.Cells.RowIterator;
  *
  * @author Richard Gomes
  */
-public final class FindIf implements org.jquantlib.lang.iterators.Iterable {
+public final class FindIf {
 
-    private final ConstRowIterator iterator;
+    private final Array array;
     private final Ops.DoublePredicate predicate;
 
     public FindIf(final Array array, final Ops.DoublePredicate predicate) {
-        this.iterator = array.constIterator();
+        this.array = array;
         this.predicate = predicate;
+        QL.validateExperimentalMode();
     }
 
 
-    //
-    // implements Ops.DoubleOp
-    //
-
-    @Override
-    public org.jquantlib.lang.iterators.Iterator iterator() {
+    public Array op() {
         // find first element which satisfies predicate and insert it, if found
-        final Array array = new Array(iterator.size());
-        final RowIterator it = array.iterator();
-        while (iterator.hasNext()) {
-            final double a = iterator.nextDouble();
+        int pos = 0;
+        double item = Double.NaN;
+        for (; pos<array.size(); pos++) {
+            final double a = array.get(pos);
             if ( predicate.op(a) ) {
-                it.setDouble( iterator.nextDouble() );
+                item = a;
                 break;
             }
         }
+        // allocate return array
+        final Array result = new Array(array.size() - pos);
+        result.set(0, item);
         // copy remaining elements
-        while (iterator.hasNext()) {
-            it.setDouble( iterator.nextDouble() );
-            it.forward();
+        int j=1;
+        for (++pos; pos<array.size(); pos++, j++) {
+        // while (iterator.hasNext()) {
+            result.set(j, array.get(pos) );
         }
-        it.begin();
-        return it;
+        return result;
     }
 
 }

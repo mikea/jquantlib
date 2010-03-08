@@ -1,8 +1,7 @@
-package org.jquantlib.lang.iterators;
+package org.jquantlib.math.matrixutilities;
 
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.Ops.DoubleOp;
-import org.jquantlib.math.matrixutilities.Matrix;
 
 
 public interface Algebra<T> {

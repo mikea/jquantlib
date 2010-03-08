@@ -89,6 +89,7 @@ import org.jquantlib.time.DateGeneration.Rule;
 import org.jquantlib.time.calendars.Brazil;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.time.calendars.UnitedStates;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BondTest {
@@ -98,8 +99,8 @@ public class BondTest {
 	}
 
 	private static class CommonVars {
-		private Calendar calendar;
-		private Date today;
+		private final Calendar calendar;
+		private final Date today;
 		private double faceAmount;
 
 
@@ -118,7 +119,9 @@ public class BondTest {
 		}
 	}
 
+	@Ignore
 	@Test
+	//FIXME: http://bugs.jquantlib.org/view.php?id=472
 	public void testYield() {
 		QL.info("Testing consistency of bond price/yield calculation....");
 
@@ -276,69 +279,69 @@ public class BondTest {
 			}
 		}
 	}
-	
+
 	@Test
 	public void testCached() {
 
 		QL.info("Testing bond price/yield calculation against cached values...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
 	    // with implicit settlement calculation:
 
-	    Date today = new Date(22, Month.November, 2004);
-	    Settings settings = new Settings();
+	    final Date today = new Date(22, Month.November, 2004);
+	    final Settings settings = new Settings();
 	    settings.setEvaluationDate(today);
 
-	    Calendar bondCalendar = new NullCalendar();
-	    DayCounter bondDayCount = new ActualActual(ActualActual.Convention.ISMA);
-	    int settlementDays = 1;
+	    final Calendar bondCalendar = new NullCalendar();
+	    final DayCounter bondDayCount = new ActualActual(ActualActual.Convention.ISMA);
+	    final int settlementDays = 1;
 
-		Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.03, new Actual360()));
+		final Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.03, new Actual360()));
 
 	    // actual market values from the evaluation date
 
-	    Frequency freq = Frequency.Semiannual;
-	    Schedule sch1 = new Schedule(new Date(31, Month.October, 2004),
+	    final Frequency freq = Frequency.Semiannual;
+	    final Schedule sch1 = new Schedule(new Date(31, Month.October, 2004),
 	                  new Date(31, Month.October, 2006), new Period(freq), bondCalendar,
 	                  BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted, DateGeneration.Rule.Backward, false);
 
-	    FixedRateBond bond1 = new FixedRateBond(settlementDays, vars.faceAmount, sch1,
+	    final FixedRateBond bond1 = new FixedRateBond(settlementDays, vars.faceAmount, sch1,
 	                        new double[] {0.025},
 	                        bondDayCount, BusinessDayConvention.ModifiedFollowing,
 	                        100.0, new Date(1, Month.November, 2004));
 
-		PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
+		final PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
 
 	    bond1.setPricingEngine(bondEngine);
 
-	    double marketPrice1 = 99.203125;
-	    double marketYield1 = 0.02925;
+	    final double marketPrice1 = 99.203125;
+	    final double marketYield1 = 0.02925;
 
-	    Schedule sch2 = new Schedule(new Date(15, Month.November, 2004),
+	    final Schedule sch2 = new Schedule(new Date(15, Month.November, 2004),
 	    		new Date(15, Month.November, 2009), new Period(freq), bondCalendar,
 	    		BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted, DateGeneration.Rule.Backward, false);
 
-	    FixedRateBond bond2 = new FixedRateBond(settlementDays, vars.faceAmount, sch2,
+	    final FixedRateBond bond2 = new FixedRateBond(settlementDays, vars.faceAmount, sch2,
 	                        new double [] {0.035},
 	                        bondDayCount, BusinessDayConvention.ModifiedFollowing,
 	                        100.0, new Date(15, Month.November, 2004));
 
 	    bond2.setPricingEngine(bondEngine);
 
-	    double marketPrice2 = 99.6875;
-	    double marketYield2 = 0.03569;
+	    final double marketPrice2 = 99.6875;
+	    final double marketYield2 = 0.03569;
 
 	    // calculated values
 
-	    double cachedPrice1a = 99.204505, cachedPrice2a = 99.687192;
-	    double cachedPrice1b = 98.943393, cachedPrice2b = 101.986794;
-	    double cachedYield1a = 0.029257,  cachedYield2a = 0.035689;
-	    double cachedYield1b = 0.029045,  cachedYield2b = 0.035375;
-	    double cachedYield1c = 0.030423,  cachedYield2c = 0.030432;
+	    final double cachedPrice1a = 99.204505, cachedPrice2a = 99.687192;
+	    final double cachedPrice1b = 98.943393, cachedPrice2b = 101.986794;
+	    final double cachedYield1a = 0.029257,  cachedYield2a = 0.035689;
+	    final double cachedYield1b = 0.029045,  cachedYield2b = 0.035375;
+	    final double cachedYield1c = 0.030423,  cachedYield2c = 0.030432;
 
 	    // check
-	    double tolerance = 1.0e-6;
+	    final double tolerance = 1.0e-6;
 	    double price, yield;
 
 	    price = bond1.cleanPrice(marketYield1,
@@ -435,12 +438,12 @@ public class BondTest {
 
 	    // with explicit settlement date:
 
-	    Schedule sch3 = new Schedule(new Date(30,Month.November,2004),
+	    final Schedule sch3 = new Schedule(new Date(30,Month.November,2004),
 	                  new Date(30,Month.November,2006), new Period(freq),
 	                  new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
 	                  BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted, DateGeneration.Rule.Backward, false);
 
-	    FixedRateBond bond3 = new FixedRateBond(settlementDays, vars.faceAmount, sch3,
+	    final FixedRateBond bond3 = new FixedRateBond(settlementDays, vars.faceAmount, sch3,
 	                        new double[] {0.02875},
 	                        new ActualActual(ActualActual.Convention.ISMA),
 	                        BusinessDayConvention.ModifiedFollowing,
@@ -448,10 +451,10 @@ public class BondTest {
 
 	    bond3.setPricingEngine(bondEngine);
 
-	    double marketYield3 = 0.02997;
+	    final double marketYield3 = 0.02997;
 
-	    Date settlementDate = new Date(30,Month.November,2004);
-	    double cachedPrice3 = 99.764874;
+	    final Date settlementDate = new Date(30,Month.November,2004);
+	    final double cachedPrice3 = 99.764874;
 
 	    price = bond3.cleanPrice(marketYield3,
 	                             bondDayCount, Compounding.Compounded, freq, settlementDate);
@@ -483,30 +486,30 @@ public class BondTest {
 
 		final CommonVars vars = new CommonVars();
 
-	    Date today = new Date(22,Month.November,2004);
+	    final Date today = new Date(22,Month.November,2004);
 
-	    Settings settings = new Settings();
+	    final Settings settings = new Settings();
 	    settings.setEvaluationDate(today);
 
-	    int settlementDays = 1;
+	    final int settlementDays = 1;
 
-		Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.03, new Actual360()));
+		final Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.03, new Actual360()));
 
-	    double tolerance = 1.0e-6;
+	    final double tolerance = 1.0e-6;
 
 	    // plain
 
-	    ZeroCouponBond bond1 = new ZeroCouponBond(settlementDays,
+	    final ZeroCouponBond bond1 = new ZeroCouponBond(settlementDays,
 	                         new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
 	                         vars.faceAmount,
 	                         new Date(30,Month.November,2008),
 	                         BusinessDayConvention.ModifiedFollowing,
 	                         100.0, new Date(30,Month.November,2004));
 
-		PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
+		final PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
 	    bond1.setPricingEngine(bondEngine);
 
-	    double cachedPrice1 = 88.551726;
+	    final double cachedPrice1 = 88.551726;
 
 	    double price = bond1.getCleanPrice();
 	    if (Math.abs(price-cachedPrice1) > tolerance) {
@@ -516,7 +519,7 @@ public class BondTest {
 	                   + "    error:      " + (price-cachedPrice1));
 	    }
 
-	    ZeroCouponBond bond2 = new ZeroCouponBond(settlementDays,
+	    final ZeroCouponBond bond2 = new ZeroCouponBond(settlementDays,
 	                         new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
 	                         vars.faceAmount,
 	                         new Date(30,Month.November,2007),
@@ -525,7 +528,7 @@ public class BondTest {
 
 	    bond2.setPricingEngine(bondEngine);
 
-	    double cachedPrice2 = 91.278949;
+	    final double cachedPrice2 = 91.278949;
 
 	    price = bond2.getCleanPrice();
 	    if (Math.abs(price-cachedPrice2) > tolerance) {
@@ -535,7 +538,7 @@ public class BondTest {
 	                   + "    error:      " + (price-cachedPrice2));
 	    }
 
-	    ZeroCouponBond bond3 = new ZeroCouponBond(settlementDays,
+	    final ZeroCouponBond bond3 = new ZeroCouponBond(settlementDays,
 	                         new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
 	                         vars.faceAmount,
 	                         new Date(30,Month.November,2006),
@@ -544,7 +547,7 @@ public class BondTest {
 
 	    bond3.setPricingEngine(bondEngine);
 
-	    double cachedPrice3 = 94.098006;
+	    final double cachedPrice3 = 94.098006;
 
 	    price = bond3.getCleanPrice();
 	    if (Math.abs(price-cachedPrice3) > tolerance) {
@@ -560,35 +563,35 @@ public class BondTest {
 
 	    QL.info("Testing fixed-coupon bond prices against cached values...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
-	    Date today = new Date(22,Month.November,2004);
-	    Settings settings = new Settings();
+	    final Date today = new Date(22,Month.November,2004);
+	    final Settings settings = new Settings();
 	    settings.setEvaluationDate(today);
 
-	    int settlementDays = 1;
+	    final int settlementDays = 1;
 
-		Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.03, new Actual360()));
+		final Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.03, new Actual360()));
 
-	    double tolerance = 1.0e-6;
+	    final double tolerance = 1.0e-6;
 
 	    // plain
 
-	    Schedule sch = new Schedule(new Date(30,Month.November,2004),
+	    final Schedule sch = new Schedule(new Date(30,Month.November,2004),
 	                 new Date(30,Month.November,2008), new Period(Frequency.Semiannual),
 	                 new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
 	                 BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted, DateGeneration.Rule.Backward, false);
 
-	    FixedRateBond bond1 = new FixedRateBond(settlementDays, vars.faceAmount, sch,
+	    final FixedRateBond bond1 = new FixedRateBond(settlementDays, vars.faceAmount, sch,
 	                        new double [] { 0.02875 },
 	                        new ActualActual(ActualActual.Convention.ISMA),
 	                        BusinessDayConvention.ModifiedFollowing,
 	                        100.0, new Date(30,Month.November,2004));
 
-	    PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
+	    final PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
 	    bond1.setPricingEngine(bondEngine);
 
-	    double cachedPrice1 = 99.298100;
+	    final double cachedPrice1 = 99.298100;
 
 	    double price = bond1.getCleanPrice();
 	    if (Math.abs(price-cachedPrice1) > tolerance) {
@@ -600,9 +603,9 @@ public class BondTest {
 
 	    // varying coupons
 
-	    double [] couponRates = new double[] { 0.02875, 0.03, 0.03125, 0.0325 };
+	    final double [] couponRates = new double[] { 0.02875, 0.03, 0.03125, 0.0325 };
 
-	    FixedRateBond bond2 = new FixedRateBond(settlementDays, vars.faceAmount, sch,
+	    final FixedRateBond bond2 = new FixedRateBond(settlementDays, vars.faceAmount, sch,
 	                          couponRates,
 	                          new ActualActual(ActualActual.Convention.ISMA),
 	                          BusinessDayConvention.ModifiedFollowing,
@@ -610,7 +613,7 @@ public class BondTest {
 
 	    bond2.setPricingEngine(bondEngine);
 
-	    double cachedPrice2 = 100.334149;
+	    final double cachedPrice2 = 100.334149;
 
 	    price = bond2.getCleanPrice();
 	    if (Math.abs(price-cachedPrice2) > tolerance) {
@@ -622,21 +625,21 @@ public class BondTest {
 
 	    // stub date
 
-	    Schedule sch3 = new Schedule(new Date(30,Month.November,2004),
+	    final Schedule sch3 = new Schedule(new Date(30,Month.November,2004),
 	                  new Date(30,Month.March,2009), new Period(Frequency.Semiannual),
 	                  new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
-	                  BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted, 
+	                  BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted,
 	                  DateGeneration.Rule.Backward, false,
 	                  new Date(), new Date(30,Month.November,2008));
 
-	    FixedRateBond bond3 = new FixedRateBond(settlementDays, vars.faceAmount, sch3,
+	    final FixedRateBond bond3 = new FixedRateBond(settlementDays, vars.faceAmount, sch3,
 	                          couponRates, new ActualActual(ActualActual.Convention.ISMA),
 	                          BusinessDayConvention.ModifiedFollowing,
 	                          100.0, new Date(30,Month.November,2004));
 
 	    bond3.setPricingEngine(bondEngine);
 
-	    double cachedPrice3 = 100.382794;
+	    final double cachedPrice3 = 100.382794;
 
 	    price = bond3.getCleanPrice();
 	    if (Math.abs(price-cachedPrice3) > tolerance) {
@@ -693,7 +696,7 @@ public class BondTest {
 //
 //	    PricerSetter.setCouponPricer(bond1.cashflows(),pricer);
 //
-//	    
+//
 //	    double cachedPrice1 = 99.874645;
 ////	    #if defined(QL_USE_INDEXED_COUPON)
 ////	    Real cachedPrice1 = 99.874645;
@@ -777,14 +780,14 @@ public class BondTest {
 	    QL.info(
 	        "Testing Brazilian public bond prices against cached values...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
-	    Date today = new Date(6,Month.June,2007);
-	    Settings settings = new Settings();
+	    final Date today = new Date(6,Month.June,2007);
+	    final Settings settings = new Settings();
 	    settings.setEvaluationDate(today);
 
 	    // NTN-F maturity dates
-	    Date [] maturityDates = new Date[6];
+	    final Date [] maturityDates = new Date[6];
 	    maturityDates[0] = new Date(1,Month.January,2008);
 	    maturityDates[1] = new Date(1,Month.January,2010);
 	    maturityDates[2] = new Date(1,Month.July,2010);
@@ -793,7 +796,7 @@ public class BondTest {
 	    maturityDates[5] = new Date(1,Month.January,2017);
 
 	    // NTN-F yields
-	    double [] yields = new double[6];
+	    final double [] yields = new double[6];
 	    yields[0] = 0.114614;
 	    yields[1] = 0.105726;
 	    yields[2] = 0.105328;
@@ -802,7 +805,7 @@ public class BondTest {
 	    yields[5] = 0.102948;
 
 	    // NTN-F prices
-	    double [] prices = new double[6];
+	    final double [] prices = new double[6];
 	    prices[0] = 1034.63031372;
 	    prices[1] = 1030.09919487;
 	    prices[2] = 1029.98307160;
@@ -810,30 +813,30 @@ public class BondTest {
 	    prices[4] = 1028.33383817;
 	    prices[5] = 1026.19716497;
 
-	    int settlementDays = 1;
+	    final int settlementDays = 1;
 	    vars.faceAmount = 1000.0;
 
 	    // The tolerance is high because Andima truncate yields
-	    double tolerance = 1.0e-4;
+	    final double tolerance = 1.0e-4;
 
-	    InterestRate [] couponRates = new InterestRate[1];
+	    final InterestRate [] couponRates = new InterestRate[1];
 	    couponRates[0] = new InterestRate(0.1,new Thirty360(),Compounding.Compounded,Frequency.Annual);
 
 	    for (int bondIndex = 0; bondIndex < maturityDates.length; bondIndex++) {
 
 	        // plain
-	        InterestRate yield = new InterestRate(yields[bondIndex],
+	        final InterestRate yield = new InterestRate(yields[bondIndex],
 	                           new Business252(new Brazil()),
 	                           Compounding.Compounded, Frequency.Annual);
 
-	        Schedule schedule = new Schedule(new Date(1,Month.January,2007),
+	        final Schedule schedule = new Schedule(new Date(1,Month.January,2007),
 	                          maturityDates[bondIndex], new Period(Frequency.Semiannual),
 	                          new Brazil(Brazil.Market.SETTLEMENT),
 	                          BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted,
 	                          DateGeneration.Rule.Backward, false);
 
 	        // fixed coupons
-	        Leg cashflows =
+	        final Leg cashflows =
 	            new FixedRateLeg(schedule, new Actual360())
 	            .withNotionals(vars.faceAmount)
 	            .withCouponRates(couponRates)
@@ -841,13 +844,13 @@ public class BondTest {
 	        // redemption
 	        cashflows.add(new SimpleCashFlow(vars.faceAmount, cashflows.last().date()));
 
-	        Bond bond = new Bond(settlementDays, new Brazil(Brazil.Market.SETTLEMENT),
+	        final Bond bond = new Bond(settlementDays, new Brazil(Brazil.Market.SETTLEMENT),
 	                  vars.faceAmount, cashflows.last().date(),
 	                  new Date(1,Month.January,2007), cashflows);
 
-	        double cachedPrice = prices[bondIndex];
+	        final double cachedPrice = prices[bondIndex];
 
-	        double price = vars.faceAmount*bond.dirtyPrice(yield.rate(),
+	        final double price = vars.faceAmount*bond.dirtyPrice(yield.rate(),
 	                                                     yield.dayCounter(),
 	                                                     yield.compounding(),
 	                                                     yield.frequency(),

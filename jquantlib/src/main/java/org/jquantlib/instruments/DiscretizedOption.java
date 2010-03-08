@@ -43,7 +43,6 @@ import java.util.List;
 import org.jquantlib.QL;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.iterators.Iterator;
 import org.jquantlib.math.functions.Bind2ndPredicate;
 import org.jquantlib.math.functions.FindIf;
 import org.jquantlib.math.functions.GreaterEqualPredicate;
@@ -82,26 +81,20 @@ public class DiscretizedOption extends DiscretizedAsset {
     @Override
     public List</* @Time */Double> mandatoryTimes() {
         final List</* @Time */Double> times = underlying.mandatoryTimes();
-//
-//        // discard negative times...
-//        std::vector<Time>::const_iterator i =
-//            std::find_if(exerciseTimes_.begin(),exerciseTimes_.end(),
-//                         std::bind2nd(std::greater_equal<Time>(),0.0));
-//        // and add the positive ones
-//        times.insert(times.end(), i, exerciseTimes_.end());
-//        return times;
-//
-        final Iterator it = new FindIf(exerciseTimes, new Bind2ndPredicate(new GreaterEqualPredicate(), 0.0)).iterator();
-        while ( it.hasNext() ) {
-            final double d = it.nextDouble();
-            times.add(d);
+
+        // discard negative times...
+        final Array array = new FindIf(exerciseTimes, new Bind2ndPredicate(new GreaterEqualPredicate(), 0.0)).op();
+        // and add the positive ones
+        for (int i=0; i< array.size(); i++) {
+            times.add(array.get(i));
         }
         return times;
     }
 
     protected void applyExerciseCondition() {
-        for (int i = 0; i < values.size(); i++)
+        for (int i = 0; i < values.size(); i++) {
             values.set(i, Math.max(underlying.values().get(i), values.get(i)));
+        }
     }
 
     @Override
@@ -117,15 +110,17 @@ public class DiscretizedOption extends DiscretizedAsset {
         int i;
         switch (exerciseType) {
         case American:
-            if (time >= exerciseTimes.get(0) && time <= exerciseTimes.get(1))
+            if (time >= exerciseTimes.get(0) && time <= exerciseTimes.get(1)) {
                 applyExerciseCondition();
+            }
             break;
         case Bermudan:
         case European:
             for (i = 0; i < exerciseTimes.size(); i++) {
                 final /* @Time */ double t = exerciseTimes.get(i);
-                if (t >= 0.0 && isOnTime(t))
+                if (t >= 0.0 && isOnTime(t)) {
                     applyExerciseCondition();
+                }
             }
             break;
         default:

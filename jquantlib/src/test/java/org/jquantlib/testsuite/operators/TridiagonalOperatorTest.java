@@ -43,42 +43,40 @@ public class TridiagonalOperatorTest {
 
     @Test
 	public void testSolveFor() {
-		try {
-			final Array low = new Array(2);
-			final Array mid = new Array(3);
-			final Array high = new Array(2);
+        final Array low = new Array(2);
+        final Array mid = new Array(3);
+        final Array high = new Array(2);
 
-			low.set(0, 11);
-			low.set(1, 1);
+        low.set(0, 11);
+        low.set(1, 1);
 
-			mid.set(0, 12);
-			mid.set(1, 10);
-			mid.set(2, 3);
+        mid.set(0, 12);
+        mid.set(1, 10);
+        mid.set(2, 3);
 
-			high.set(0, 7);
-			high.set(1, 9);
+        high.set(0, 7);
+        high.set(1, 9);
 
 
-			final TridiagonalOperator t = new TridiagonalOperator(low, mid, high);
+        final TridiagonalOperator t = new TridiagonalOperator(low, mid, high);
 
-			final Array rhs = new Array(3);
-			rhs.set(0, 7);
-			rhs.set(1, 8);
-			rhs.set(2, 7);
+        final Array rhs = new Array(3);
+        rhs.set(0, 7);
+        rhs.set(1, 8);
+        rhs.set(2, 7);
 
-			final Array solved = t.solveFor(rhs);
+        final Array solved = t.solveFor(rhs);
+        final Array expected = new Array(new double[] { 20.0, -33.285714285714285, 13.428571428571429 });
 
-			final Array expected = new Array(new double[] {20.0, -33.285714285714285, 13.428571428571429 });
-			//Array expectedArray = new Array(expected);
-			if(!solved.equals(expected))
-	        	fail(" TridiagonalOperator expected:\n"
-	                    + " { 20, -33.2857, 13.4286 } "   + "\n"
-	                    + " got: "   + solved.get(0) + "\n"
-	                    + "  "   + solved.get(1) + "\n"
-	                    + "  " + solved.get(2) );
-
-			} catch(final Exception e) {
-				QL.info(e.getMessage());
-		}
+        for (int i=0; i<3; i++) {
+            final double error = Math.abs(solved.get(i) - expected.get(i));
+            if (error > 1e-15) {
+                fail(" TridiagonalOperator expected:\n"
+                        + " { 20, -33.2857, 13.4286 } "   + "\n"
+                        + " got: "   + solved.get(0) + "\n"
+                        + "  "   + solved.get(1) + "\n"
+                        + "  " + solved.get(2) );
+            }
+        }
 	}
 }
