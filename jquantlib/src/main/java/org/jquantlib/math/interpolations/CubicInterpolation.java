@@ -91,7 +91,6 @@ import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
  *
  * @author Richard Gomes
  */
-//TODO: rename to CubicInterpolation
 public class CubicInterpolation extends AbstractInterpolation {
 
     //
@@ -167,13 +166,6 @@ public class CubicInterpolation extends AbstractInterpolation {
 
 
     //
-    // private final fields
-    //
-
-    private final CoefficientHolder coeffs;
-
-
-    //
     // public constructors
     //
 
@@ -199,7 +191,6 @@ public class CubicInterpolation extends AbstractInterpolation {
                 leftCondition, leftConditionValue,
                 rightCondition, rightConditionValue);
         super.impl.update();
-        this.coeffs = ((CubicInterpolationImpl)impl).coeffs;
     }
 
 
@@ -208,49 +199,25 @@ public class CubicInterpolation extends AbstractInterpolation {
     //
 
     public Array aCoefficients() /* @ReadOnly */ {
-        return coeffs.a_.clone();
+        return new Array(((CubicInterpolationImpl)(super.impl)).va_);
     }
 
     public Array bCoefficients() /* @ReadOnly */ {
-        return coeffs.b_.clone();
+        return new Array(((CubicInterpolationImpl)(super.impl)).vb_);
     }
 
     public Array cCoefficients() /* @ReadOnly */ {
-        return coeffs.c_.clone();
+        return new Array(((CubicInterpolationImpl)(super.impl)).vc_);
     }
 
     public boolean[] monotonicityAdjustments() /* @ReadOnly */ {
-        return coeffs.monotonicityAdjustments_.clone();
+        return ((CubicInterpolationImpl)(super.impl)).ma_.clone();
     }
 
 
     //
     // private inner classes
     //
-
-    private class CoefficientHolder {
-        // P[i](x) = y[i] +
-        //           a[i]*(x-x[i]) +
-        //           b[i]*(x-x[i])^2 +
-        //           c[i]*(x-x[i])^3
-        private final Array     primitiveConst_;
-
-        private final int       n_;
-        private final Array     a_;
-        private final Array     b_;
-        private final Array     c_;
-        private final boolean[] monotonicityAdjustments_;
-
-        public CoefficientHolder(final int n) {
-            this.n_ = n;
-            this.primitiveConst_ = new Array(n-1);
-            this.a_ = new Array(n-1);
-            this.b_ = new Array(n-1);
-            this.c_ = new Array(n-1);
-            this.monotonicityAdjustments_ = new boolean[n];
-        }
-    }
-
 
     private class CubicInterpolationImpl extends AbstractInterpolation.Impl {
 
@@ -264,15 +231,15 @@ public class CubicInterpolation extends AbstractInterpolation {
         private final BoundaryCondition rightType;
         private final double leftValue;
         private final double rightValue;
-        private final CoefficientHolder coeffs;
 
-        // variables defined for convenience
-        private final int n;
-        private final Array va;
-        private final Array vb;
-        private final Array vc;
-        private final Array vp;
-        private final boolean[] ma;
+        private final double[]  vx_;
+        private final double[]  vy_;
+        private final double[]  vp_;
+        private final double[]  va_;
+        private final double[]  vb_;
+        private final double[]  vc_;
+        private final boolean[] ma_; // monotonic adjustments
+        private final int       n;
 
 
         //
@@ -280,16 +247,26 @@ public class CubicInterpolation extends AbstractInterpolation {
         //
 
         protected CubicInterpolationImpl(
-                final Array vx,
-                final Array vy,
+                final Array x,
+                final Array y,
                 final DerivativeApprox da,
                 final boolean monotonic,
                 final CubicInterpolation.BoundaryCondition leftCondition,
                 final double leftConditionValue,
                 final CubicInterpolation.BoundaryCondition rightCondition,
                 final double rightConditionValue) {
-            super(vx, vy);
-            this.coeffs      = new CoefficientHolder(vx.size());
+            super(x, y);
+
+            this.vx_ = x.toDoubleArray();
+            this.vy_ = y.toDoubleArray();
+
+            this.n = vx_.length;
+
+            this.vp_ = new double[n-1];
+            this.va_ = new double[n-1];
+            this.vb_ = new double[n-1];
+            this.vc_ = new double[n-1];
+            this.ma_ = new boolean[n];
 
             this.da = da;
             this.monotonic = monotonic;
@@ -297,14 +274,6 @@ public class CubicInterpolation extends AbstractInterpolation {
             this.rightType   = rightCondition;
             this.leftValue   = leftConditionValue;
             this.rightValue  = rightConditionValue;
-
-            // Convenience variables
-            this.n = coeffs.n_;
-            this.va = coeffs.a_;
-            this.vb = coeffs.b_;
-            this.vc = coeffs.c_;
-            this.vp = coeffs.primitiveConst_;
-            this.ma = coeffs.monotonicityAdjustments_;
         }
 
 
@@ -315,22 +284,14 @@ public class CubicInterpolation extends AbstractInterpolation {
         @Override
         public void update() {
 
-            // helper variables
-            final double[] x = vx.toDoubleArray();
-            final double[] y = vy.toDoubleArray();
-            final double[] a = va.toDoubleArray();
-            final double[] b = vb.toDoubleArray();
-            final double[] c = vc.toDoubleArray();
-            final double[] p = vp.toDoubleArray();
-
             // temporary variables
             final double[] dx  = new double[n-1];
             final double[] S   = new double[n-1];
             double[] tmp = new double[n];
 
             for (int i=0; i<n-1; ++i) {
-                dx[i] = x[i+1] - x[i];
-                S[i] = (y[i+1] - y[i])/dx[i];
+                dx[i] = vx_[i+1] - vx_[i];
+                S[i] = (vy_[i+1] - vy_[i])/dx[i];
             }
 
             // first derivative approximation
@@ -427,7 +388,7 @@ public class CubicInterpolation extends AbstractInterpolation {
                 }
             }
 
-            Arrays.fill(ma, false);
+            Arrays.fill(ma_, false);
             // Hyman monotonicity constrained filter
             if (monotonic) {
                 double correction;
@@ -441,7 +402,7 @@ public class CubicInterpolation extends AbstractInterpolation {
                         }
                         if (correction!=tmp[i]) {
                             tmp[i] = correction;
-                            ma[i] = true;
+                            ma_[i] = true;
                         }
                     } else if (i==n-1) {
                         if (tmp[i]*S[n-2]>0.0) {
@@ -451,7 +412,7 @@ public class CubicInterpolation extends AbstractInterpolation {
                         }
                         if (correction!=tmp[i]) {
                             tmp[i] = correction;
-                            ma[i] = true;
+                            ma_[i] = true;
                         }
                     } else {
                         pm=(S[i-1]*dx[i]+S[i]*dx[i-1])/
@@ -484,7 +445,7 @@ public class CubicInterpolation extends AbstractInterpolation {
                         }
                         if (correction!=tmp[i]) {
                             tmp[i] = correction;
-                            ma[i] = true;
+                            ma_[i] = true;
                         }
                     }
                 }
@@ -493,47 +454,47 @@ public class CubicInterpolation extends AbstractInterpolation {
 
             // cubic coefficients
             for (int i=0; i<n-1; ++i) {
-                a[i] = tmp[i];
-                b[i] = (3.0*S[i] - tmp[i+1] - 2.0*tmp[i])/dx[i];
-                c[i] = (tmp[i+1] + tmp[i] - 2.0*S[i])/(dx[i]*dx[i]);
+                va_[i] = tmp[i];
+                vb_[i] = (3.0*S[i] - tmp[i+1] - 2.0*tmp[i])/dx[i];
+                vc_[i] = (tmp[i+1] + tmp[i] - 2.0*S[i])/(dx[i]*dx[i]);
             }
 
-            p[0] = 0.0;
+            vp_[0] = 0.0;
             for (int i=1; i<n-1; ++i) {
-                p[i] = p[i-1] + dx[i-1] * (y[i-1] + dx[i-1] * (a[i-1]/2.0 + dx[i-1] * (b[i-1]/3.0 + dx[i-1] * c[i-1]/4.0)));
+                vp_[i] = vp_[i-1] + dx[i-1] * (vy_[i-1] + dx[i-1] * (va_[i-1]/2.0 + dx[i-1] * (vb_[i-1]/3.0 + dx[i-1] * vc_[i-1]/4.0)));
             }
         }
 
 
         @Override
-        public double op(final double x) {
-            final int j = locate(x);
-            final double dx = x - vx.get(j);
-            return vy.get(j) + dx*(va.get(j) + dx*(vb.get(j) + dx*vc.get(j)));
+        public double op(final double val) {
+            final int j = locate(val);
+            final double dx = val - vx_[j];
+            return vy_[j] + dx*(va_[j] + dx*(vb_[j] + dx*vc_[j]));
         }
 
 
         @Override
-        public double primitive(final double x) {
-            final int j = locate(x);
-            final double dx = x - vx.get(j);
-            return vp.get(j) + dx*(vy.get(j) + dx*(va.get(j)/2.0 + dx*(vb.get(j)/3.0 + dx*vc.get(j)/4.0)));
+        public double primitive(final double val) {
+            final int j = locate(val);
+            final double dx = val - vx_[j];
+            return vp_[j] + dx*(vy_[j] + dx*(va_[j]/2.0 + dx*(vb_[j]/3.0 + dx*vc_[j]/4.0)));
         }
 
 
         @Override
         public double derivative(final double x) {
             final int j = locate(x);
-            final double dx = x - vx.get(j);
-            return va.get(j) + (2.0*vb.get(j) + 3.0*vc.get(j)*dx)*dx;
+            final double dx = x - vx_[j];
+            return va_[j] + (2.0*vb_[j] + 3.0*vc_[j]*dx)*dx;
         }
 
 
         @Override
-        public double secondDerivative(final double x) {
-            final int j = locate(x);
-            final double dx = x - vx.get(j);
-            return 2.0*vb.get(j) + 6.0*vc.get(j)*dx;
+        public double secondDerivative(final double val) {
+            final int j = locate(val);
+            final double dx = val - vx_[j];
+            return 2.0*vb_[j] + 6.0*vc_[j]*dx;
         }
 
     }

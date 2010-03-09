@@ -163,8 +163,8 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
 //    }
 
     /**
-     * This method intentionally returns the underlying <code>double[]<toDoubleArray/code> which keeps
-     * data stored in <code>this</code> Array.
+     * This method intentionally returns the underlying <code>double[]</code> which keeps
+     * data stored in <code>this</code> Array, for performance reasons.
      *
      * @note Tools like FindBugs complain that this method should not expose internal
      * data structures due to security reasons like stack overun, etc. As the internal

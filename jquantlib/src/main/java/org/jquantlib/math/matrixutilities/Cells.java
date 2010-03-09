@@ -29,19 +29,6 @@ import org.jquantlib.math.matrixutilities.internal.Address;
  * In addition, access to elements is calculated by a certain policy which is intended to
  *  Matrix elements need to be translated to the underlying linear
  * storage when they are read or written.
- * <p>
- * In addition, this class support Java and Fortran programming languages, being more
- * specific: the way how these languages perform loops. Whilst in C, C++ and Java we
- * employ zero-based indexing, in FORTRAN we employ one-based indexing.
- * <p>
- * Certain algorithms make use of FORTRAN style indexing. In these you will tend to see
- * <pre>
- *     for (i = 1; i <= n; i++)
- * </pre>
- * rather than what you can see in Java, C, C++:
- * <pre>
- *     for (i = 0; i < n; i++)
- * </pre>
  *
  * @author Richard Gomes
  */

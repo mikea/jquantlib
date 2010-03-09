@@ -157,8 +157,6 @@ public class BarrierOptionTest {
 
         final DayCounter dc = new Actual360();
         final Date today = Date.todaysDate();
-
-        //FIXME: http://bugs.jquantlib.org/view.php?id=460
         new Settings().setEvaluationDate(today);
 
         final SimpleQuote           spot  = new SimpleQuote(0.0);
@@ -233,8 +231,6 @@ public class BarrierOptionTest {
 
         final DayCounter dc = new Actual360();
         final Date today = Date.todaysDate();
-
-        //FIXME: http://bugs.jquantlib.org/view.php?id=460
         new Settings().setEvaluationDate(today);
 
         final Quote                 underlying = new SimpleQuote(underlyingPrice);
@@ -297,8 +293,6 @@ public class BarrierOptionTest {
 
         final DayCounter dc = new Actual360();
         final Date today = Date.todaysDate();
-
-        //FIXME: http://bugs.jquantlib.org/view.php?id=460
         new Settings().setEvaluationDate(today);
 
         final Quote                 underlying = new SimpleQuote(underlyingPrice);

@@ -671,6 +671,7 @@
                         <plugin>
                             <groupId>net.sf.latextaglet</groupId>
                             <artifactId>latextaglet</artifactId>
+                            <version>0.1.1</version>
                         </plugin>
                     </plugins>
                 </pluginManagement>
@@ -744,6 +745,7 @@
                             <docletArtifact>
                                 <groupId>gr.spinellis</groupId>
                                 <artifactId>UmlGraph</artifactId>
+                                <version>4.9.0</version>
                             </docletArtifact>
 
                             <taglets>
@@ -752,6 +754,7 @@
                                     <tagletArtifact>
                                         <groupId>net.sf.latextaglet</groupId>
                                         <artifactId>latextaglet</artifactId>
+                                        <version>0.1.1</version>
                                     </tagletArtifact>
                                 </taglet>
                                 <taglet>
@@ -759,6 +762,7 @@
                                     <tagletArtifact>
                                         <groupId>net.sf.latextaglet</groupId>
                                         <artifactId>latextaglet</artifactId>
+                                        <version>0.1.1</version>
                                     </tagletArtifact>
                                 </taglet>
                                 <taglet>
@@ -766,6 +770,7 @@
                                     <tagletArtifact>
                                         <groupId>net.sf.latextaglet</groupId>
                                         <artifactId>latextaglet</artifactId>
+                                        <version>0.1.1</version>
                                     </tagletArtifact>
                                 </taglet>
                             </taglets>
