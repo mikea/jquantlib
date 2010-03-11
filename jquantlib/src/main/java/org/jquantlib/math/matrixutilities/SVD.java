@@ -90,7 +90,7 @@ public class SVD {
                 // Compute 2-norm of k-th column without under/overflow.
                 s.data[s.addr.op(k)] = 0;
                 for (int i = k; i < m; i++) {
-                    s.data[s.addr.op(k)] = Matrix.hypot(s.data[s.addr.op(k)], A.data[A.addr.op(i, k)]);
+                    s.data[s.addr.op(k)] = Math.hypot(s.data[s.addr.op(k)], A.data[A.addr.op(i, k)]);
                 }
                 if (s.data[s.addr.op(k)] != 0.0) {
                     if (A.data[A.addr.op(k, k)] < 0.0) {
@@ -139,7 +139,7 @@ public class SVD {
                 // Compute 2-norm without under/overflow.
                 e[k] = 0;
                 for (int i = k + 1; i < n; i++) {
-                    e[k] = Matrix.hypot(e[k], e[i]);
+                    e[k] = Math.hypot(e[k], e[i]);
                 }
                 if (e[k] != 0.0) {
                     if (e[k + 1] < 0.0) {
@@ -320,7 +320,7 @@ public class SVD {
                 double f = e[p - 2];
                 e[p - 2] = 0.0;
                 for (int j = p - 2; j >= k; j--) {
-                    double t = Matrix.hypot(s.data[j], f);
+                    double t = Math.hypot(s.data[j], f);
                     final double cs = s.data[j] / t;
                     final double sn = f / t;
                     s.data[j] = t;
@@ -345,7 +345,7 @@ public class SVD {
                 double f = e[k - 1];
                 e[k - 1] = 0.0;
                 for (int j = k; j < p; j++) {
-                    double t = Matrix.hypot(s.data[j], f);
+                    double t = Math.hypot(s.data[j], f);
                     final double cs = s.data[j] / t;
                     final double sn = f / t;
                     s.data[j] = t;
@@ -391,7 +391,7 @@ public class SVD {
                 // Chase zeros.
 
                 for (int j = k; j < p - 1; j++) {
-                    double t = Matrix.hypot(f, g);
+                    double t = Math.hypot(f, g);
                     double cs = f / t;
                     double sn = g / t;
                     if (j != k) {
@@ -408,7 +408,7 @@ public class SVD {
                             V.data[V.addr.op(i, j)] = t;
                         }
                     }
-                    t = Matrix.hypot(f, g);
+                    t = Math.hypot(f, g);
                     cs = f / t;
                     sn = g / t;
                     s.data[j] = t;

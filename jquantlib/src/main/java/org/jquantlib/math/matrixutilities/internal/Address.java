@@ -1,5 +1,7 @@
 package org.jquantlib.math.matrixutilities.internal;
 
+import java.util.Set;
+
 public interface Address {
 
     public static final String INVALID_BACKWARD_INDEXING = "invalid backward indexing";
@@ -43,7 +45,7 @@ public interface Address {
      *
      * @return
      */
-    public int rbase();
+    public int row0();
 
     /**
      * <code>cbase</code> is the row offset of the leftmost column of a Matrix.
@@ -60,16 +62,73 @@ public interface Address {
      *
      * @return
      */
-    public int cbase();
+    public int col0();
 
     /**
-     * Tells if the underlying memory storage can be accessed in a continuous way.
-     * <p>
-     * When <code>contiguous</code> is <code>true</code>, certain operations are benefited by bulk opeations.
-     * @return
+     * This is a convenience method intended to return {@link Flags#CONTIGUOUS}
+     *
+     * @return Flags#CONTIGUOUS
      */
     public boolean contiguous();
 
+    /**
+     * This is a convenience method intended to return {@link Flags#FORTRAN}
+     *
+     * @return Flags#FORTRAN
+     */
+    public boolean fortran();
+
+    /**
+     * @return a set of flags in effect on this {@link Address} object.
+     */
+    public Set<Address.Flags> flags();
+
+
+    //
+    // public inner enumerations
+    //
+
+    public enum Flags {
+
+        /**
+         * Tells if the underlying memory storage can be accessed in a continuous way.
+         * <p>
+         * When <code>contiguous</code> is <code>true</code>, certain operations are benefited by bulk opeations.
+         */
+        CONTIGUOUS,
+
+        /**
+         * Tells if this {@link Address} is intended to Fortran 1-based indexing.
+         * <p>
+         * In FORTRAN language, access to vectors and matrices are 1-based, like this:
+         * <pre>
+         *     for (i = 1; i <= n; i++)
+         * </pre>
+         * rather than what you can see in Java, C, C++, etc:
+         * <pre>
+         *     for (i = 0; i < n; i++)
+         * </pre>
+         */
+        FORTRAN,
+
+        /**
+         * Tells if rows and columns must be transposed.
+         * <p>
+         * This feature is particularly important in 2 situations:
+         * <li>Implement Matrix transposition in constant time by simply changing the address mapping as opposed
+         * to performing the actual transposition of all elements of it;</li>
+         * <li>Increase performance when a Matrix is mostly used as a set of column arrays. As columns are mapped
+         * internally as rows, the processor will show better performance due to memory caching of adjacent elements</li>
+         * <p>
+         * <b>NOT IMPLEMENTED YET</b>
+         */
+        TRANSPOSE //TODO: to be implemented
+    }
+
+
+    //
+    // public inner interfaces
+    //
 
     public interface Offset {
         public abstract int op();

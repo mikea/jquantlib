@@ -98,26 +98,6 @@ public class BondTest {
 		QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 	}
 
-	private static class CommonVars {
-		private final Calendar calendar;
-		private final Date today;
-		private double faceAmount;
-
-
-		// FIXME: code review :: class SavedSettings was entirely commented out!
-
-
-		// cleanup
-		//-- SavedSettings backup = new SavedSettings();
-
-		// setup
-		public CommonVars() {
-			calendar = new org.jquantlib.time.calendars.Target();
-			today = calendar.adjust(Date.todaysDate());
-			new Settings().setEvaluationDate(today);
-			faceAmount = 1000000.0;
-		}
-	}
 
 	@Ignore
 	@Test
@@ -125,7 +105,9 @@ public class BondTest {
 	public void testYield() {
 		QL.info("Testing consistency of bond price/yield calculation....");
 
-		final CommonVars vars = new CommonVars();
+        final Calendar calendar = new org.jquantlib.time.calendars.Target();
+        final Date today = calendar.adjust(Date.todaysDate());
+        final double faceAmount = 1000000.0;
 
 		final double tolerance = 1.0e-7;
 		final int maxEvaluations = 100;
@@ -148,21 +130,21 @@ public class BondTest {
 				for (int k = 0; k < (coupons).length; k++) {
 					for (int l = 0; l < (frequencies).length; l++) {
 						for (int n = 0; n < (compounding).length; n++) {
-							final Date dated = vars.calendar.advance(vars.today, issueMonths[i], TimeUnit.Months);
+							final Date dated = calendar.advance(today, issueMonths[i], TimeUnit.Months);
 							final Date issue = dated;
-							final Date maturity = vars.calendar.advance(issue, lengths[j], TimeUnit.Years);
+							final Date maturity = calendar.advance(issue, lengths[j], TimeUnit.Years);
 
 							final Schedule sch = new Schedule(dated,
 									maturity, new
 									Period(frequencies[l]),
-									vars.calendar,
+									calendar,
 									accrualConvention,
 									accrualConvention,
 									DateGeneration.Rule.Backward,
 									false, new Date(), new Date());
 
 
-							final FixedRateBond bond = new FixedRateBond(settlementDays, vars.faceAmount, sch,
+							final FixedRateBond bond = new FixedRateBond(settlementDays, faceAmount, sch,
 									new double[] { coupons[k] }, bondDayCount, paymentConvention, redemption, issue);
 
 							for (int m = 0; m < (yields).length; m++) {
@@ -198,7 +180,9 @@ public class BondTest {
 	public void testTheoretical() {
 		QL.info("Testing theoretical bond price/yield calculation...");
 
-		final CommonVars vars = new CommonVars();
+        final Calendar calendar = new org.jquantlib.time.calendars.Target();
+        final Date today = calendar.adjust(Date.todaysDate());
+        final double faceAmount = 1000000.0;
 
 		final double tolerance = 1.0e-7;
 		final int maxEvaluations = 100;
@@ -218,21 +202,21 @@ public class BondTest {
 			for (final double coupon : coupons) {
 				for (final Frequency frequency : frequencies) {
 
-					final Date dated = vars.today;
+					final Date dated = today;
 					final Date issue = dated;
-					final Date maturity = vars.calendar.advance(issue, length, TimeUnit.Years);
+					final Date maturity = calendar.advance(issue, length, TimeUnit.Years);
 
 					final SimpleQuote rate = new SimpleQuote(0.0);
-					final Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(vars.today, rate, bondDayCount));
+					final Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(today, rate, bondDayCount));
 
 					final Schedule sch = new Schedule(
 					        dated, maturity,
-							new Period(frequency), vars.calendar,
+							new Period(frequency), calendar,
 							accrualConvention, accrualConvention,
 							Rule.Backward, false);
 
 					final FixedRateBond bond = new FixedRateBond(
-					        settlementDays, vars.faceAmount, sch,
+					        settlementDays, faceAmount, sch,
 							new double[] { coupon },
 							bondDayCount, paymentConvention,
 							redemption, issue);
@@ -285,7 +269,9 @@ public class BondTest {
 
 		QL.info("Testing bond price/yield calculation against cached values...");
 
-	    final CommonVars vars = new CommonVars();
+        final Calendar calendar = new org.jquantlib.time.calendars.Target();
+        // final Date today = calendar.adjust(Date.todaysDate());
+        final double faceAmount = 1000000.0;
 
 	    // with implicit settlement calculation:
 
@@ -306,7 +292,7 @@ public class BondTest {
 	                  new Date(31, Month.October, 2006), new Period(freq), bondCalendar,
 	                  BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted, DateGeneration.Rule.Backward, false);
 
-	    final FixedRateBond bond1 = new FixedRateBond(settlementDays, vars.faceAmount, sch1,
+	    final FixedRateBond bond1 = new FixedRateBond(settlementDays, faceAmount, sch1,
 	                        new double[] {0.025},
 	                        bondDayCount, BusinessDayConvention.ModifiedFollowing,
 	                        100.0, new Date(1, Month.November, 2004));
@@ -322,7 +308,7 @@ public class BondTest {
 	    		new Date(15, Month.November, 2009), new Period(freq), bondCalendar,
 	    		BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted, DateGeneration.Rule.Backward, false);
 
-	    final FixedRateBond bond2 = new FixedRateBond(settlementDays, vars.faceAmount, sch2,
+	    final FixedRateBond bond2 = new FixedRateBond(settlementDays, faceAmount, sch2,
 	                        new double [] {0.035},
 	                        bondDayCount, BusinessDayConvention.ModifiedFollowing,
 	                        100.0, new Date(15, Month.November, 2004));
@@ -443,7 +429,7 @@ public class BondTest {
 	                  new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
 	                  BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted, DateGeneration.Rule.Backward, false);
 
-	    final FixedRateBond bond3 = new FixedRateBond(settlementDays, vars.faceAmount, sch3,
+	    final FixedRateBond bond3 = new FixedRateBond(settlementDays, faceAmount, sch3,
 	                        new double[] {0.02875},
 	                        new ActualActual(ActualActual.Convention.ISMA),
 	                        BusinessDayConvention.ModifiedFollowing,
@@ -484,7 +470,9 @@ public class BondTest {
 
 	    QL.info("Testing zero-coupon bond prices against cached values...");
 
-		final CommonVars vars = new CommonVars();
+        final Calendar calendar = new org.jquantlib.time.calendars.Target();
+        // final Date today = calendar.adjust(Date.todaysDate());
+        final double faceAmount = 1000000.0;
 
 	    final Date today = new Date(22,Month.November,2004);
 
@@ -501,7 +489,7 @@ public class BondTest {
 
 	    final ZeroCouponBond bond1 = new ZeroCouponBond(settlementDays,
 	                         new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
-	                         vars.faceAmount,
+	                         faceAmount,
 	                         new Date(30,Month.November,2008),
 	                         BusinessDayConvention.ModifiedFollowing,
 	                         100.0, new Date(30,Month.November,2004));
@@ -521,7 +509,7 @@ public class BondTest {
 
 	    final ZeroCouponBond bond2 = new ZeroCouponBond(settlementDays,
 	                         new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
-	                         vars.faceAmount,
+	                         faceAmount,
 	                         new Date(30,Month.November,2007),
 	                         BusinessDayConvention.ModifiedFollowing,
 	                         100.0, new Date(30,Month.November,2004));
@@ -540,7 +528,7 @@ public class BondTest {
 
 	    final ZeroCouponBond bond3 = new ZeroCouponBond(settlementDays,
 	                         new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
-	                         vars.faceAmount,
+	                         faceAmount,
 	                         new Date(30,Month.November,2006),
 	                         BusinessDayConvention.ModifiedFollowing,
 	                         100.0, new Date(30,Month.November,2004));
@@ -563,7 +551,9 @@ public class BondTest {
 
 	    QL.info("Testing fixed-coupon bond prices against cached values...");
 
-	    final CommonVars vars = new CommonVars();
+        final Calendar calendar = new org.jquantlib.time.calendars.Target();
+        // final Date today = calendar.adjust(Date.todaysDate());
+        final double faceAmount = 1000000.0;
 
 	    final Date today = new Date(22,Month.November,2004);
 	    final Settings settings = new Settings();
@@ -582,7 +572,7 @@ public class BondTest {
 	                 new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
 	                 BusinessDayConvention.Unadjusted, BusinessDayConvention.Unadjusted, DateGeneration.Rule.Backward, false);
 
-	    final FixedRateBond bond1 = new FixedRateBond(settlementDays, vars.faceAmount, sch,
+	    final FixedRateBond bond1 = new FixedRateBond(settlementDays, faceAmount, sch,
 	                        new double [] { 0.02875 },
 	                        new ActualActual(ActualActual.Convention.ISMA),
 	                        BusinessDayConvention.ModifiedFollowing,
@@ -605,7 +595,7 @@ public class BondTest {
 
 	    final double [] couponRates = new double[] { 0.02875, 0.03, 0.03125, 0.0325 };
 
-	    final FixedRateBond bond2 = new FixedRateBond(settlementDays, vars.faceAmount, sch,
+	    final FixedRateBond bond2 = new FixedRateBond(settlementDays, faceAmount, sch,
 	                          couponRates,
 	                          new ActualActual(ActualActual.Convention.ISMA),
 	                          BusinessDayConvention.ModifiedFollowing,
@@ -632,7 +622,7 @@ public class BondTest {
 	                  DateGeneration.Rule.Backward, false,
 	                  new Date(), new Date(30,Month.November,2008));
 
-	    final FixedRateBond bond3 = new FixedRateBond(settlementDays, vars.faceAmount, sch3,
+	    final FixedRateBond bond3 = new FixedRateBond(settlementDays, faceAmount, sch3,
 	                          couponRates, new ActualActual(ActualActual.Convention.ISMA),
 	                          BusinessDayConvention.ModifiedFollowing,
 	                          100.0, new Date(30,Month.November,2004));
@@ -683,7 +673,7 @@ public class BondTest {
 //	                 BusinessDayConvention.ModifiedFollowing, BusinessDayConvention.ModifiedFollowing,
 //	                 DateGeneration.Rule.Backward, false);
 //
-//	    FloatingRateBond bond1 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
+//	    FloatingRateBond bond1 = new FloatingRateBond(settlementDays, faceAmount, sch,
 //	                           index, new ActualActual(ActualActual.Convention.ISMA),
 //	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
 //	                           new Array(), new Array(),
@@ -715,7 +705,7 @@ public class BondTest {
 //
 //	    // different risk-free and discount curve
 //
-//	    FloatingRateBond bond2 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
+//	    FloatingRateBond bond2 = new FloatingRateBond(settlementDays, faceAmount, sch,
 //	                           index, new ActualActual(ActualActual.Convention.ISMA),
 //	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
 //	                           new Array(), new Array(),
@@ -746,7 +736,7 @@ public class BondTest {
 //	    // varying spread
 //	    double [] spreads = new double[] { 0.001, 0.0012, 0.0014, 0.0016 };
 //
-//	    FloatingRateBond bond3 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
+//	    FloatingRateBond bond3 = new FloatingRateBond(settlementDays, faceAmount, sch,
 //	                           index, new ActualActual(ActualActual.Convention.ISMA),
 //	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
 //	                           new Array(), new Array(spreads),
@@ -780,7 +770,9 @@ public class BondTest {
 	    QL.info(
 	        "Testing Brazilian public bond prices against cached values...");
 
-	    final CommonVars vars = new CommonVars();
+        final Calendar calendar = new org.jquantlib.time.calendars.Target();
+        // final Date today = calendar.adjust(Date.todaysDate());
+        // final double faceAmount = 1000000.0;
 
 	    final Date today = new Date(6,Month.June,2007);
 	    final Settings settings = new Settings();
@@ -814,7 +806,7 @@ public class BondTest {
 	    prices[5] = 1026.19716497;
 
 	    final int settlementDays = 1;
-	    vars.faceAmount = 1000.0;
+	    final double faceAmount = 1000.0;
 
 	    // The tolerance is high because Andima truncate yields
 	    final double tolerance = 1.0e-4;
@@ -838,19 +830,19 @@ public class BondTest {
 	        // fixed coupons
 	        final Leg cashflows =
 	            new FixedRateLeg(schedule, new Actual360())
-	            .withNotionals(vars.faceAmount)
+	            .withNotionals(faceAmount)
 	            .withCouponRates(couponRates)
 	            .withPaymentAdjustment(BusinessDayConvention.ModifiedFollowing).Leg();
 	        // redemption
-	        cashflows.add(new SimpleCashFlow(vars.faceAmount, cashflows.last().date()));
+	        cashflows.add(new SimpleCashFlow(faceAmount, cashflows.last().date()));
 
 	        final Bond bond = new Bond(settlementDays, new Brazil(Brazil.Market.SETTLEMENT),
-	                  vars.faceAmount, cashflows.last().date(),
+	                  faceAmount, cashflows.last().date(),
 	                  new Date(1,Month.January,2007), cashflows);
 
 	        final double cachedPrice = prices[bondIndex];
 
-	        final double price = vars.faceAmount*bond.dirtyPrice(yield.rate(),
+	        final double price = faceAmount*bond.dirtyPrice(yield.rate(),
 	                                                     yield.dayCounter(),
 	                                                     yield.compounding(),
 	                                                     yield.frequency(),

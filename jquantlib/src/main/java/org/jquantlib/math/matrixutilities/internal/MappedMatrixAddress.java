@@ -1,35 +1,35 @@
 package org.jquantlib.math.matrixutilities.internal;
 
+import java.util.Set;
 
-public class FlatMatrixIndexAddress extends FlatIndexAddress implements Address.MatrixAddress {
 
-    public FlatMatrixIndexAddress(
+public class MappedMatrixAddress extends MappedAddress implements Address.MatrixAddress {
+
+    public MappedMatrixAddress(
             final int[] ridx,
-            final int col0,
-            final int col1,
             final Address.MatrixAddress chain,
-            final int rows,
-            final int cols) {
-        super(ridx, col0, col1, chain, rows, cols);
+            final int col0, final int col1,
+            final Set<Address.Flags> flags,
+            final int rows, final int cols) {
+        super(ridx, chain, col0, col1, flags, rows, cols);
     }
 
-    public FlatMatrixIndexAddress(
-            final int row0,
-            final int row1,
-            final int[] cidx,
+    public MappedMatrixAddress(
+            final int row0, final int row1,
             final Address.MatrixAddress chain,
-            final int rows,
-            final int cols) {
-        super(row0, row1, cidx, chain, rows, cols);
+            final int[] cidx,
+            final Set<Address.Flags> flags,
+            final int rows, final int cols) {
+        super(row0, row1, chain, cidx, flags, rows, cols);
     }
 
-    public FlatMatrixIndexAddress(
+    public MappedMatrixAddress(
             final int[] ridx,
-            final int[] cidx,
             final Address.MatrixAddress chain,
-            final int rows,
-            final int cols) {
-        super(ridx, cidx, chain, rows, cols);
+            final int[] cidx,
+            final Set<Address.Flags> flags,
+            final int rows, final int cols) {
+        super(ridx, chain, cidx, flags, rows, cols);
     }
 
     //
@@ -57,8 +57,8 @@ public class FlatMatrixIndexAddress extends FlatIndexAddress implements Address.
     //
 
     @Override
-    public FlatMatrixAddress clone() {
-        return new FlatMatrixAddress(row0, row1, chain, col0, col1, contiguous, rows, cols);
+    public DirectMatrixAddress clone() {
+        return new DirectMatrixAddress(row0, row1, chain, col0, col1, flags, rows, cols);
     }
 
 

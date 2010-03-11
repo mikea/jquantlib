@@ -1,17 +1,17 @@
 package org.jquantlib.math.matrixutilities.internal;
 
+import java.util.Set;
 
-public class FlatArrayRowAddress extends FlatAddress implements Address.ArrayAddress {
 
-    public FlatArrayRowAddress(
+public class DirectArrayRowAddress extends DirectAddress implements Address.ArrayAddress {
+
+    public DirectArrayRowAddress(
             final int row,
             final Address chain,
-            final int col0,
-            final int col1,
-            final boolean contiguous,
-            final int rows,
-            final int cols) {
-        super(row, row, chain, col0, col1, contiguous, rows, cols);
+            final int col0, final int col1,
+            final Set<Address.Flags> flags,
+            final int rows, final int cols) {
+        super(row, row, chain, col0, col1, flags, rows, cols);
     }
 
 
@@ -40,8 +40,8 @@ public class FlatArrayRowAddress extends FlatAddress implements Address.ArrayAdd
     //
 
     @Override
-    public FlatArrayRowAddress clone() {
-        return new FlatArrayRowAddress(row0, chain, col0, col1, contiguous, rows, cols);
+    public DirectArrayRowAddress clone() {
+        return new DirectArrayRowAddress(row0, chain, col0, col1, flags, rows, cols);
     }
 
 

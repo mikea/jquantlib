@@ -350,7 +350,7 @@ public class EigenvalueDecomposition {
 
                     double g = d[l];
                     double p = (d[l + 1] - g) / (2.0 * e[l]);
-                    double r = Matrix.hypot(p, 1.0);
+                    double r = Math.hypot(p, 1.0);
                     if (p < 0) {
                         r = -r;
                     }
@@ -378,7 +378,7 @@ public class EigenvalueDecomposition {
                         s2 = s;
                         g = c * e[i];
                         h = c * p;
-                        r = Matrix.hypot(p, e[i]);
+                        r = Math.hypot(p, e[i]);
                         e[i + 1] = s * r;
                         s = e[i] / r;
                         c = p / r;

@@ -40,6 +40,7 @@
 package org.jquantlib.math.matrixutilities;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
@@ -49,7 +50,7 @@ import org.jquantlib.math.Ops;
 import org.jquantlib.math.Ops.BinaryDoubleOp;
 import org.jquantlib.math.Ops.DoubleOp;
 import org.jquantlib.math.matrixutilities.internal.Address;
-import org.jquantlib.math.matrixutilities.internal.FlatArrayRowAddress;
+import org.jquantlib.math.matrixutilities.internal.DirectArrayRowAddress;
 
 
 
@@ -71,7 +72,8 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
      * Builds an Array which contains only one element.
      */
     public Array() {
-        super(1, 1, new FlatArrayRowAddress(0, null, 0, 0, true, 1, 1));
+        super(1, 1,
+              new DirectArrayRowAddress(0, null, 0, 0, EnumSet.of(Address.Flags.CONTIGUOUS), 1, 1));
     }
 
 
@@ -82,7 +84,8 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
      * @throws IllegalArgumentException if size are less than zero
      */
     public Array(final int size) {
-        super(1, size, new FlatArrayRowAddress(0, null, 0, size-1, true, 1, size));
+        super(1, size,
+              new DirectArrayRowAddress(0, null, 0, size-1, EnumSet.of(Address.Flags.CONTIGUOUS), 1, size));
     }
 
     /**
@@ -91,7 +94,8 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
      * @param data is a unidimensional array
      */
     public Array(final double[] array) {
-        super(1, array.length, new FlatArrayRowAddress(0, null, 0, array.length-1, true, 1, array.length));
+        super(1, array.length,
+              new DirectArrayRowAddress(0, null, 0, array.length-1, EnumSet.of(Address.Flags.CONTIGUOUS), 1, array.length));
         System.arraycopy(array, 0, data, 0, this.size());
     }
 
@@ -102,7 +106,8 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
      * @param size is the desired number of elements to be taken, counted from the first position
      */
     public Array(final double[] array, final int size) {
-        super(1, size, new FlatArrayRowAddress(0, null, 0, size-1, true, 1, size));
+        super(1, size,
+              new DirectArrayRowAddress(0, null, 0, size-1, EnumSet.of(Address.Flags.CONTIGUOUS), 1, size));
         System.arraycopy(array, 0, data, 0, this.size());
     }
 
@@ -112,7 +117,8 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
      * @param data
      */
     public Array(final Array array) {
-        super(1, array.cols(), new FlatArrayRowAddress(0, null, 0, array.cols()-1, true, 1, array.cols()));
+        super(1, array.cols(),
+              new DirectArrayRowAddress(0, null, 0, array.cols()-1, EnumSet.of(Address.Flags.CONTIGUOUS), 1, array.cols()));
         if (array.addr.contiguous()) {
             System.arraycopy(array.data, array.begin(), data, 0, this.size());
         } else {
@@ -935,7 +941,10 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
             final int col0,
             final int col1,
             final int rows, final int cols) {
-            super(1, col1-col0+1, data, new FlatArrayRowAddress(0, chain, col0, col1, true, rows, cols));
+            super(1,
+                  col1-col0+1,
+                  data,
+                  new DirectArrayRowAddress(0, chain, col0, col1, EnumSet.of(Address.Flags.CONTIGUOUS), rows, cols));
         }
     }
 

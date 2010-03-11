@@ -41,16 +41,17 @@ FOR A PARTICULAR PURPOSE.  See the license for more details.
 package org.jquantlib.math.matrixutilities;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.math.matrixutilities.internal.Address;
-import org.jquantlib.math.matrixutilities.internal.FlatArrayColAddress;
-import org.jquantlib.math.matrixutilities.internal.FlatArrayRowAddress;
-import org.jquantlib.math.matrixutilities.internal.FlatMatrixAddress;
-import org.jquantlib.math.matrixutilities.internal.FlatMatrixIndexAddress;
+import org.jquantlib.math.matrixutilities.internal.DirectArrayColAddress;
+import org.jquantlib.math.matrixutilities.internal.DirectArrayRowAddress;
+import org.jquantlib.math.matrixutilities.internal.DirectMatrixAddress;
+import org.jquantlib.math.matrixutilities.internal.MappedMatrixAddress;
 import org.jquantlib.math.matrixutilities.internal.Address.MatrixAddress.MatrixOffset;
 
 /**
@@ -158,6 +159,7 @@ import org.jquantlib.math.matrixutilities.internal.Address.MatrixAddress.MatrixO
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.V097, reviewers = { "Richard Gomes" })
+// TODO: better documentation
 public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
 
     //
@@ -169,9 +171,9 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
      * <p>
      * Builds a Matrix with dimensions 1x1
      */
-    // TODO: better documentation
     public Matrix() {
-        super(1, 1, new FlatMatrixAddress(0, 0, null, 0, 0, true, 1, 1));
+        super(1, 1,
+              new DirectMatrixAddress(0, 0, null, 0, 0, EnumSet.of(Address.Flags.CONTIGUOUS), 1, 1));
     }
 
     /**
@@ -181,9 +183,9 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
      * @param cols is the number of columns
      * @throws IllegalArgumentException if parameters are less than zero
      */
-    // TODO: better documentation
     public Matrix(final int rows, final int cols) {
-        super(rows, cols, new FlatMatrixAddress(0, rows-1, null, 0, cols-1, true, rows, cols));
+        super(rows, cols,
+              new DirectMatrixAddress(0, rows-1, null, 0, cols-1, EnumSet.of(Address.Flags.CONTIGUOUS), rows, cols));
     }
 
 
@@ -192,10 +194,9 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
      *
      * @param data
      */
-    // TODO: better documentation
     public Matrix(final double[][] data) {
         super(data.length, data[0].length,
-              new FlatMatrixAddress(0, data.length - 1, null, 0, data[0].length - 1, true, data.length, data[0].length));
+              new DirectMatrixAddress(0, data.length - 1, null, 0, data[0].length - 1, EnumSet.of(Address.Flags.CONTIGUOUS), data.length, data[0].length));
         for (int row=0; row<data.length; row++) {
             System.arraycopy(data[row], 0, this.data, row*this.cols, this.cols);
         }
@@ -206,7 +207,6 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
      *
      * @param data
      */
-    // TODO: better documentation
     public Matrix(final Matrix m) {
         super(m.rows(), m.cols(), copyData(m), m.addr.clone());
     }
@@ -235,7 +235,6 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
     // protected constructors
     //
 
-    // TODO: better documentation
     protected Matrix(
             final int rows,
             final int cols,
@@ -274,54 +273,6 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
             }
         }
         return buffer;
-    }
-
-
-
-
-
-
-
-    /**
-     * Overwrites contents of a certain row
-     *
-     * @param row is the requested row to be overwritten
-     * @param array contains the elements to be copied
-     */
-    public void fillRow(final int row, final Array array) {
-        QL.require(cols() == array.size() ,  ARRAY_IS_INCOMPATIBLE);
-        if (this.addr.contiguous() && array.addr.contiguous()) {
-            System.arraycopy(array.data, 0, data, addr.op(row, 0), cols());
-        } else {
-            final Address.ArrayAddress.ArrayOffset src = array.addr.offset();
-            final Address.MatrixAddress.MatrixOffset dst = this.addr.offset(row, 0);
-            for (int col = 0; col < cols(); col++) {
-                data[dst.op()] = array.data[src.op()];
-                src.nextIndex();
-                dst.nextCol();
-            }
-        }
-    }
-
-    /**
-     * Overwrites contents of a certain column
-     *
-     * @param col is the requested column to be overwritten
-     * @param array contains the elements to be copied
-     */
-    public void fillCol(final int col, final Array array) {
-        QL.require(rows() == array.size() ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
-        if (this.addr.contiguous() && array.addr.contiguous() && cols() == 1) {
-            System.arraycopy(array.data, 0, data, 0, size());
-        } else {
-            final Address.ArrayAddress.ArrayOffset src = array.addr.offset();
-            final Address.MatrixAddress.MatrixOffset dst = this.addr.offset(0, col);
-            for (int row = 0; row < rows(); row++) {
-                data[dst.op()] = array.data[src.op()];
-                src.nextIndex();
-                dst.nextRow();
-            }
-        }
     }
 
     /**
@@ -974,14 +925,8 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
 
 
 
-
-
-
-
-
-    //TODO: better comments
     //
-    // methods moved from Cells
+    // TODO: better comments
     //
 
     public Matrix fill(final double scalar) {
@@ -997,6 +942,48 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
         // copies data
         System.arraycopy(another.data, addr.base(), this.data, 0, addr.last()-addr.base());
         return this;
+    }
+
+    /**
+     * Overwrites contents of a certain row
+     *
+     * @param row is the requested row to be overwritten
+     * @param array contains the elements to be copied
+     */
+    public void fillRow(final int row, final Array array) {
+        QL.require(cols() == array.size() ,  ARRAY_IS_INCOMPATIBLE);
+        if (this.addr.contiguous() && array.addr.contiguous()) {
+            System.arraycopy(array.data, 0, data, addr.op(row, 0), cols());
+        } else {
+            final Address.ArrayAddress.ArrayOffset src = array.addr.offset();
+            final Address.MatrixAddress.MatrixOffset dst = this.addr.offset(row, 0);
+            for (int col = 0; col < cols(); col++) {
+                data[dst.op()] = array.data[src.op()];
+                src.nextIndex();
+                dst.nextCol();
+            }
+        }
+    }
+
+    /**
+     * Overwrites contents of a certain column
+     *
+     * @param col is the requested column to be overwritten
+     * @param array contains the elements to be copied
+     */
+    public void fillCol(final int col, final Array array) {
+        QL.require(rows() == array.size() ,  ARRAY_IS_INCOMPATIBLE); // QA:[RG]::verified
+        if (this.addr.contiguous() && array.addr.contiguous() && cols() == 1) {
+            System.arraycopy(array.data, 0, data, 0, size());
+        } else {
+            final Address.ArrayAddress.ArrayOffset src = array.addr.offset();
+            final Address.MatrixAddress.MatrixOffset dst = this.addr.offset(0, col);
+            for (int row = 0; row < rows(); row++) {
+                data[dst.op()] = array.data[src.op()];
+                src.nextIndex();
+                dst.nextRow();
+            }
+        }
     }
 
     public Matrix swap(final Matrix another) {
@@ -1066,29 +1053,29 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
 
 
 
-    //
-    // static methods
-    //
 
-    // TODO: OSGi :: remove statics
-
-    /**
-     * sqrt(a^2 + b^2) without under/overflow.
-     */
-    //TODO: verify if it can be replaced by Math.hypot
-    public static double hypot(final double a, final double b) {
-        double r;
-        if (Math.abs(a) > Math.abs(b)) {
-            r = b / a;
-            r = Math.abs(a) * Math.sqrt(1 + r * r);
-        } else if (b != 0) {
-            r = a / b;
-            r = Math.abs(b) * Math.sqrt(1 + r * r);
-        } else {
-            r = 0.0;
-        }
-        return r;
-    }
+//XXX
+//  //
+//  // static methods
+//  //
+//
+//    /**
+//     * sqrt(a^2 + b^2) without under/overflow.
+//     */
+//    //TODO: verify if it can be replaced by Math.hypot
+//    public static double hypot(final double a, final double b) {
+//        double r;
+//        if (Math.abs(a) > Math.abs(b)) {
+//            r = b / a;
+//            r = Math.abs(a) * Math.sqrt(1 + r * r); Math.h
+//        } else if (b != 0) {
+//            r = a / b;
+//            r = Math.abs(b) * Math.sqrt(1 + r * r);
+//        } else {
+//            r = 0.0;
+//        }
+//        return r;
+//    }
 
 
     //
@@ -1105,7 +1092,9 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
             final double[] data,
             final int rows,
             final int cols) {
-            super(1, col1-col0+1, data, new FlatArrayRowAddress(row, chain, col0, col1, true, rows, cols));
+            super(1, col1-col0+1,
+                  data,
+                  new DirectArrayRowAddress(row, chain, col0, col1, EnumSet.of(Address.Flags.CONTIGUOUS), rows, cols));
         }
     }
 
@@ -1120,7 +1109,9 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
                 final double[] data,
                 final int rows,
                 final int cols) {
-            super(row1-row0+1, 1, data, new FlatArrayColAddress(row0, row1, chain, col, false, rows, cols));
+            super(row1-row0+1, 1,
+                  data,
+                  new DirectArrayColAddress(row0, row1, chain, col, EnumSet.of(Address.Flags.CONTIGUOUS), rows, cols));
         }
     }
 
@@ -1137,7 +1128,9 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
             final double[] data,
             final int rows,
             final int cols) {
-            super(row1-row0+1, col1-col0+1, data, new FlatMatrixAddress(row0, row1, chain, col0, col1, contiguous, rows, cols));
+            super(row1-row0+1, col1-col0+1,
+                  data,
+                  new DirectMatrixAddress(row0, row1, chain, col0, col1, EnumSet.of(Address.Flags.CONTIGUOUS), rows, cols));
         }
 
         public RangeMatrix(
@@ -1148,7 +1141,9 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
             final double[] data,
             final int rows,
             final int cols) {
-            super(ridx.length, col1-col0+1, data, new FlatMatrixIndexAddress(ridx, col0, col1, chain, rows, cols));
+            super(ridx.length, col1-col0+1,
+                  data,
+                  new MappedMatrixAddress(ridx, chain, col0, col1, EnumSet.noneOf(Address.Flags.class), rows, cols));
         }
 
         public RangeMatrix(
@@ -1159,7 +1154,9 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
             final double[] data,
             final int rows,
             final int cols) {
-            super(row1-row0+1, cidx.length, data, new FlatMatrixIndexAddress(row0, row1, cidx, chain, rows, cols));
+            super(row1-row0+1, cidx.length,
+                  data,
+                  new MappedMatrixAddress(row0, row1, chain, cidx, EnumSet.noneOf(Address.Flags.class), rows, cols));
         }
 
         public RangeMatrix(
@@ -1169,7 +1166,9 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
             final double[] data,
             final int rows,
             final int cols) {
-            super(ridx.length, cidx.length, data, new FlatMatrixIndexAddress(ridx, cidx, chain, rows, cols));
+            super(ridx.length, cidx.length,
+                  data,
+                  new MappedMatrixAddress(ridx, chain, cidx, EnumSet.noneOf(Address.Flags.class), rows, cols));
         }
     }
 
