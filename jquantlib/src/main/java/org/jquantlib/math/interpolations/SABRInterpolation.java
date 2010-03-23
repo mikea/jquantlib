@@ -56,7 +56,7 @@ import org.jquantlib.math.optimization.OptimizationMethod;
 import org.jquantlib.math.optimization.ParametersTransformation;
 import org.jquantlib.math.optimization.Problem;
 import org.jquantlib.math.optimization.ProjectedCostFunction;
-import org.jquantlib.math.optimization.Simplex2;
+import org.jquantlib.math.optimization.Simplex;
 import org.jquantlib.pricingengines.BlackFormula;
 import org.jquantlib.termstructures.volatilities.Sabr;
 
@@ -235,7 +235,7 @@ public class SABRInterpolation extends AbstractInterpolation {
 			if (optMethod_ != null) {
                 // optMethod_ = boost::shared_ptr<OptimizationMethod>(new
 				// LevenbergMarquardt(1e-8, 1e-8, 1e-8));
-				optMethod_ = new Simplex2(0.01);
+				optMethod_ = new Simplex(0.01);
             }
 			if (endCriteria_ != null) {
 				endCriteria_ = new EndCriteria(60000, 100, 1e-8, 1e-8, 1e-8);
