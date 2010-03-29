@@ -37,7 +37,7 @@ import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.EndCriteria;
 import org.jquantlib.math.optimization.LevenbergMarquardt;
 import org.jquantlib.math.optimization.OptimizationMethod;
-import org.jquantlib.math.optimization.Simplex2;
+import org.jquantlib.math.optimization.Simplex;
 import org.jquantlib.termstructures.volatilities.Sabr;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -125,7 +125,7 @@ public class SABRInterpolationTest {
         final double calibrationTolerance = 5.0e-8;
         // initialize optimization methods
         final List<OptimizationMethod> methods_ = new ArrayList<OptimizationMethod>();
-        methods_.add(new Simplex2(0.01));
+        methods_.add(new Simplex(0.01));
         methods_.add(new LevenbergMarquardt(1e-8, 1e-8, 1e-8));
         // Initialize end criteria
         final EndCriteria endCriteria = new EndCriteria(100000, 100, 1e-8, 1e-8, 1e-8);
