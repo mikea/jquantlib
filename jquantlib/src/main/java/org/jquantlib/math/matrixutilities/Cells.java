@@ -20,6 +20,9 @@
 
 package org.jquantlib.math.matrixutilities;
 
+import java.util.Set;
+
+import org.jquantlib.QL;
 import org.jquantlib.math.matrixutilities.internal.Address;
 
 /**
@@ -33,6 +36,12 @@ import org.jquantlib.math.matrixutilities.internal.Address;
  * @author Richard Gomes
  */
 public abstract class Cells<T extends Address> {
+
+    //
+    // private final static fields :: error messages
+    //
+
+    private final static String FORTRAN_ADDRESSING_EXPECTED = "variable \"%s\" should be FORTRAN-style addressing";
 
     //
     // protected final static fields :: error messages
@@ -63,9 +72,68 @@ public abstract class Cells<T extends Address> {
     // protected fields
     //
 
-    protected double[] data;
     protected T addr;
 
+
+    //
+    // public fields
+    //
+
+    /**
+     * This is the internal data storage where data is kept in an uni-dimensional <code>double[]</code>
+     * <p>
+     * <b>The use of this field is highly discouraged by end-user applications.</b>
+     * <p>
+     * Note: this field is deprecated in order to remind application developers avoid its use.
+     * <p>
+     * If you cannot avoid access to the underlying data, please remember that it can be non-contiguous, chained or mapped, which
+     * means that:
+     * <li>you'd better obtain a reference to this internal data structure via method {@link Cells#data()} instead;</li>
+     * <li>you must be sure to use methods {@link Array#_(int)} and {@link Matrix#_(int, int)} in order to guarantee you calculate
+     * properly addresses of elements in the underlying data structure.</li>
+     * <p>
+     * This internal data structure is exposed for <b>convenience purposes only</b>, given the fact that algorithms in general
+     * handle arrays or matrices directly. It's recommended that application code <b>never calculate indexes directly</b>, but
+     * employ Address mappings in order to perform this task.
+     * <p>
+     * In particular, when employing <a href="http://icl.cs.utk.edu/f2j/">f2j</a> in order to translate algorithms from FORTRAN
+     * into Java, the obtained code is 1-based indexed, like it is in FORTRAN, like this:
+     * <pre>
+     *    for (i = 1; i <= n; i++)
+     * </pre>
+     * rather than 0-based, like it is in Java, like this:
+     * <pre>
+     *    for (i = 0; i < n; i++)
+     * </pre>
+     * For this reason, you'd better let JQuantLib manage indexing. The only thing you need to adjust is direct access to
+     * elements of arrays and matrices, converting things like <code>a[i]</code> to <code>a.$[a._(i)]</code> in case of arrays
+     * and things like <code>m[i][j]</code> to <code>m.$[m._(i,j)]</code> in case of matrices.
+     *
+     * @see Array#_(int)
+     * @see Matrix#_(int, int)
+     */
+    @Deprecated
+    public double[] $;
+
+
+    /**
+     * This is a convenience method which returns a reference to the underlying data structure which keeps data
+     * relative to <code>this</code> object.
+     * <p>
+     * <b>The use of this method is highly discouraged by end-user applications.</b>
+     * <p>
+     * Note: this method is deprecated in order to remind application developers avoid its use.
+     * <p>
+     * This method makes sure that access to the underlying data can be done in a contiguous ways. This property is critical for
+     * certain algorithms which assume that a chunk of data can be acessed in a continuous way, typically copy, swap and sort.
+     *
+     * @return a reference to the underlying data. If you don't know what we are talking about, you'd better avoid this method.
+     */
+    @Deprecated
+    public final double[] data() /* @ReadOnly */{
+        QL.require(addr.isContiguous() && addr.base() == 0, UnsupportedOperationException.class, "must be contiguous");
+        return $;
+    }
 
 
     /**
@@ -83,7 +151,7 @@ public abstract class Cells<T extends Address> {
         this.cols = cols;
         this.addr = addr;
         this.size = rows*cols;
-        this.data = new double[size];
+        this.$ = new double[size];
     }
 
 
@@ -105,7 +173,7 @@ public abstract class Cells<T extends Address> {
             final T addr) {
         this.rows = rows;
         this.cols = cols;
-        this.data = data;
+        this.$ = data;
         this.addr = addr;
         this.size = rows*cols;
         if (data.length != addr.rows()*addr.cols())
@@ -117,10 +185,52 @@ public abstract class Cells<T extends Address> {
     // public methods
     //
 
-    public final int rows()      { return rows; }
-    public final int columns()   { return cols; }
-    public final int cols()      { return cols; } // FIXME: remove this
-    public final int size()      { return size; }
+//TODO: implement hashCode and equals
+//
+//    @Override
+//    public int hashCode() {
+//        final int prime = 31;
+//        int result = 1;
+//        result = prime * result + cols;
+//        result = prime * result + rows;
+//        return result;
+//    }
+//
+//
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj)
+//            return true;
+//        if (obj == null)
+//            return false;
+//        if (getClass() != obj.getClass())
+//            return false;
+//        Cells other = (Cells) obj;
+//        if (cols != other.cols)
+//            return false;
+//        if (rows != other.rows)
+//            return false;
+//        return true;
+//    }
+
+
+    public final int rows()       { return rows; }
+    public final int columns()    { return cols; }
+    public final int cols()       { return cols; } // FIXME: remove this
+    public final int size()       { return size; }
     public final boolean empty() { return size <= 0; }
+
+    public final Set<Address.Flags> flags() {
+        return addr.flags();
+    }
+
+    public void requireFlags(final Set<Address.Flags> required, final String variable) {
+
+        if (required.contains(Address.Flags.FORTRAN) != addr.isFortran()) {
+            final String name = (variable==null) ? "variable" : (this.getClass().getSimpleName() + " " + variable);
+            final String message = String.format(FORTRAN_ADDRESSING_EXPECTED, name);
+            QL.error(String.format(FORTRAN_ADDRESSING_EXPECTED, name));
+        }
+    }
 
 }

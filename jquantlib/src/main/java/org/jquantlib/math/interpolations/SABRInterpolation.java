@@ -345,7 +345,7 @@ public class SABRInterpolation extends AbstractInterpolation {
 			int ix = vx.begin();
 			int iy = vy.begin();
 			int iw = itsCoeffs.weights_.begin();
-			while (ix <= vx.end()) {
+			while (ix < vx.end()) {
 				final double x = vx.get(ix);
 				final double y = vy.get(iy);
 				final double w = itsCoeffs.weights_.get(iw);
@@ -365,7 +365,7 @@ public class SABRInterpolation extends AbstractInterpolation {
 			int iy = vy.begin();
 			int iw = itsCoeffs.weights_.begin();
 			int ir = results.begin();
-			while (ix <= vx.end()) {
+			while (ix < vx.end()) {
 				final double x = vx.get(ix);
 				final double y = vy.get(iy);
 				final double w = itsCoeffs.weights_.get(iw);

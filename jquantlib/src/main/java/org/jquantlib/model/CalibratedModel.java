@@ -68,9 +68,8 @@ public abstract class CalibratedModel implements Observer, Observable {
     //
 
     public CalibratedModel(final int nArguments) {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         this.arguments_ = new ArrayList<Parameter>(nArguments);
         this.constraint_ = new PrivateConstraint(arguments_);
         this.shortRateEndCriteria_ = EndCriteria.Type.None;
@@ -163,10 +162,10 @@ public abstract class CalibratedModel implements Observer, Observable {
 //          }
 //      }
 
-        final double[] from = params.toDoubleArray();
+        final double[] from = params.$;
         int pos = 0;
         for (int i=0; i<arguments_.size(); i++) {
-            final double[] to = arguments_.get(i).params.toDoubleArray();
+            final double[] to = arguments_.get(i).params.$;
             System.arraycopy(from, pos, to, 0, to.length);
             pos += to.length;
         }
@@ -364,9 +363,8 @@ public abstract class CalibratedModel implements Observer, Observable {
                     for (int j = 0; j < size; j++, k++) {
                         testParams.set(j, params.get(k));
                     }
-                    if (!arguments_.get(i).testParams(testParams)) {
+                    if (!arguments_.get(i).testParams(testParams))
                         return false;
-                    }
                 }
                 return true;
             }

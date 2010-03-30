@@ -1,5 +1,6 @@
 package org.jquantlib.math.matrixutilities.internal;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 public class DirectMatrixAddress extends DirectAddress implements Address.MatrixAddress {
@@ -9,22 +10,37 @@ public class DirectMatrixAddress extends DirectAddress implements Address.Matrix
             final Address chain,
             final int col0, final int col1,
             final Set<Address.Flags> flags,
+            final boolean contiguous,
             final int rows, final int cols) {
-        super(row0, row1, chain, col0, col1, flags, rows, cols);
+        super(row0, row1, chain, col0, col1, flags, contiguous, rows, cols);
     }
+
 
     //
     // implements MatrixAddress
     //
 
     @Override
+    public MatrixAddress toFortran() {
+        return isFortran() ? this :
+            new DirectMatrixAddress(row0, row1, this.chain, col0, col1, EnumSet.of(Address.Flags.FORTRAN), contiguous, rows, cols);
+    }
+
+    @Override
+    public MatrixAddress toJava() {
+        return isFortran() ?
+            new DirectMatrixAddress(row0+1, row1+1, this.chain, col0+1, col1+1, EnumSet.noneOf(Address.Flags.class), contiguous, rows, cols)
+            : this;
+    }
+
+    @Override
     public MatrixOffset offset() {
-        return new FastMatrixAddressOffset(0, 0);
+        return new DirectMatrixAddressOffset(offset, offset);
     }
 
     @Override
     public MatrixOffset offset(final int row, final int col) {
-        return new FastMatrixAddressOffset(row, col);
+        return new DirectMatrixAddressOffset(row, col);
     }
 
     @Override
@@ -39,7 +55,7 @@ public class DirectMatrixAddress extends DirectAddress implements Address.Matrix
 
     @Override
     public DirectMatrixAddress clone() {
-        return new DirectMatrixAddress(row0, row1, chain, col0, col1, flags, rows, cols);
+        return (DirectMatrixAddress) super.clone();
     }
 
 
@@ -47,9 +63,9 @@ public class DirectMatrixAddress extends DirectAddress implements Address.Matrix
     // private inner classes
     //
 
-    private class FastMatrixAddressOffset extends FastAddressOffset implements Address.MatrixAddress.MatrixOffset {
+    private class DirectMatrixAddressOffset extends DirectAddressOffset implements Address.MatrixAddress.MatrixOffset {
 
-        public FastMatrixAddressOffset(final int row, final int col) {
+        public DirectMatrixAddressOffset(final int row, final int col) {
             super.row = row0+row;
             super.col = col0+col;
         }

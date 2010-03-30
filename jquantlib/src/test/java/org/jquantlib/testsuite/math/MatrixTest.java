@@ -25,6 +25,9 @@ package org.jquantlib.testsuite.math;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -36,7 +39,7 @@ import org.jquantlib.math.matrixutilities.Identity;
 import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.math.matrixutilities.QRDecomposition;
 import org.jquantlib.math.matrixutilities.SymmetricSchurDecomposition;
-import org.junit.Ignore;
+import org.jquantlib.math.matrixutilities.internal.Address;
 import org.junit.Test;
 
 /**
@@ -45,60 +48,169 @@ import org.junit.Test;
 @QualityAssurance(quality = Quality.Q0_UNFINISHED, version = Version.V097, reviewers = { "" })
 public class MatrixTest {
 
-    //XXX private final int N;
-    private final Matrix M1, M2, M3, M4, M5, M6, M7;
-    private final Matrix I;
+    private final Set<Address.Flags> jFlags;
+    private final Set<Address.Flags> fFlags;
 
 
     public MatrixTest() {
         QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
 
-        M1 = new Matrix(new double[][] {
-                { 1.0,  0.9,  0.7 },
-                { 0.9,  1.0,  0.4 },
-                { 0.7,  0.4,  1.0 }
-        });
+        this.jFlags = EnumSet.noneOf(Address.Flags.class);
+        this.fFlags = EnumSet.of(Address.Flags.FORTRAN);
+    }
 
-        M2 = new Matrix(new double[][] {
-                { 1.0,  0.9,  0.7 },
-                { 0.9,  1.0,  0.3 },
-                { 0.7,  0.3,  1.0 }
-        });
 
-        I = new Identity(3);
+    @Test
+    public void testToString() {
+        testToString(jFlags);
+        testToString(fFlags);
+    }
 
-        M3 = new Matrix(new double[][] {
-                { 1,   2,   3,   4 },
-                { 2,   0,   2,   1 },
-                { 0,   1,   0,   0 }
-        });
+    private void testToString(final Set<Address.Flags> flags) {
 
-        M4 = new Matrix(new double[][] {
-                {  1,   2,   400    },
-                {  2,   0,     1    },
-                { 30,   2,     0    },
-                {  2,   0,     1.05 }
-        });
+        final Matrix M1 = new Matrix(new double[][] {
+              { 1.0,  0.9,  0.7 },
+              { 0.9,  1.0,  0.4 },
+              { 0.7,  0.4,  1.0 }
+        }, flags);
+
+        final Matrix M2 = new Matrix(new double[][] {
+              { 1.0,  0.9,  0.7 },
+              { 0.9,  1.0,  0.3 },
+              { 0.7,  0.3,  1.0 }
+        }, flags);
+
+        final Matrix I = new Identity(3, flags);
+
+        final Matrix M3 = new Matrix(new double[][] {
+              { 1,   2,   3,   4 },
+              { 2,   0,   2,   1 },
+              { 0,   1,   0,   0 }
+        }, flags);
+
+        final Matrix M4 = new Matrix(new double[][] {
+              {  1,   2,   400    },
+              {  2,   0,     1    },
+              { 30,   2,     0    },
+              {  2,   0,     1.05 }
+        }, flags);
 
         // from Higham - nearest correlation matrix
-        M5 = new Matrix(new double[][] {
-                {  2,   -1,     0,    0 },
-                { -1,    2,    -1,    0 },
-                {  0,   -1,     2,   -1 },
-                {  0,    0,    -1,    2 },
-        });
+        final Matrix M5 = new Matrix(new double[][] {
+              {  2,   -1,     0,    0 },
+              { -1,    2,    -1,    0 },
+              {  0,   -1,     2,   -1 },
+              {  0,    0,    -1,    2 },
+        }, flags);
 
-        // from Higham - nearest correlation matrix to M5
-        M6 = new Matrix(new double[][] {
-                {  1,              -0.8084124981,    0.1915875019,    0.106775049  },
-                { -0.8084124981,    1,              -0.6562326948,    0.1915875019 },
-                {  0.1915875019,   -0.6562326948,    1,              -0.8084124981 },
-                {  0.106775049,     0.1915875019,   -0.8084124981,    1            }
-        });
+        final Matrix matrices[] = { M1, M2, M3, M4, M5 };
 
-        M7 = M1.clone();
-        M7.set(0, 1, 0.3); M7.set(0, 2, 0.2); M7.set(2, 1, 1.2);
+        for (final Matrix m : matrices) {
+            System.out.println(m);
+        }
     }
+
+    @Test
+    public void toFortran() {
+        toFortran(jFlags);
+        toFortran(fFlags);
+    }
+
+    private void toFortran(final Set<Address.Flags> flags) {
+
+        final Matrix M1 = new Matrix(new double[][] {
+              { 1.0,  0.9,  0.7 },
+              { 0.9,  1.0,  0.4 },
+              { 0.7,  0.4,  1.0 }
+        }, flags);
+
+        final Matrix M2 = new Matrix(new double[][] {
+              { 1.0,  0.9,  0.7 },
+              { 0.9,  1.0,  0.3 },
+              { 0.7,  0.3,  1.0 }
+        }, flags);
+
+        final Matrix I = new Identity(3, flags);
+
+        final Matrix M3 = new Matrix(new double[][] {
+              { 1,   2,   3,   4 },
+              { 2,   0,   2,   1 },
+              { 0,   1,   0,   0 }
+        }, flags);
+
+        final Matrix M4 = new Matrix(new double[][] {
+              {  1,   2,   400    },
+              {  2,   0,     1    },
+              { 30,   2,     0    },
+              {  2,   0,     1.05 }
+        }, flags);
+
+        // from Higham - nearest correlation matrix
+        final Matrix M5 = new Matrix(new double[][] {
+              {  2,   -1,     0,    0 },
+              { -1,    2,    -1,    0 },
+              {  0,   -1,     2,   -1 },
+              {  0,    0,    -1,    2 },
+        }, flags);
+
+        final Matrix matrices[] = { M1, M2, M3, M4, M5 };
+
+        for (final Matrix m : matrices) {
+            System.out.println(m.toFortran());
+        }
+    }
+
+
+    @Test
+    public void toJava() {
+        toJava(jFlags);
+        toJava(fFlags);
+    }
+
+    private void toJava(final Set<Address.Flags> flags) {
+
+        final Matrix M1 = new Matrix(new double[][] {
+              { 1.0,  0.9,  0.7 },
+              { 0.9,  1.0,  0.4 },
+              { 0.7,  0.4,  1.0 }
+        }, flags);
+
+        final Matrix M2 = new Matrix(new double[][] {
+              { 1.0,  0.9,  0.7 },
+              { 0.9,  1.0,  0.3 },
+              { 0.7,  0.3,  1.0 }
+        }, flags);
+
+        final Matrix I = new Identity(3, flags);
+
+        final Matrix M3 = new Matrix(new double[][] {
+              { 1,   2,   3,   4 },
+              { 2,   0,   2,   1 },
+              { 0,   1,   0,   0 }
+        }, flags);
+
+        final Matrix M4 = new Matrix(new double[][] {
+              {  1,   2,   400    },
+              {  2,   0,     1    },
+              { 30,   2,     0    },
+              {  2,   0,     1.05 }
+        }, flags);
+
+        // from Higham - nearest correlation matrix
+        final Matrix M5 = new Matrix(new double[][] {
+              {  2,   -1,     0,    0 },
+              { -1,    2,    -1,    0 },
+              {  0,   -1,     2,   -1 },
+              {  0,    0,    -1,    2 },
+        }, flags);
+
+        final Matrix matrices[] = { M1, M2, M3, M4, M5 };
+
+        for (final Matrix m : matrices) {
+            System.out.println(m.toJava());
+        }
+    }
+
 
 
 
@@ -123,38 +235,42 @@ public class MatrixTest {
 //    }
 
 
-    private Matrix augmented(final Matrix matrix) {
-        final Matrix result = new Matrix(matrix.rows()+2, matrix.cols()+2);
-        // set first row with random numbers
-        for (int j=0; j<result.cols(); j++) {
-            result.set(0, j, Math.random());
-        }
-        // copy matrix to inner part of a new matrix
-        for (int i=0, ii=1; i<matrix.size(); i++,ii++) {
-            result.set(ii, 0, Math.random());
-            for (int j=0, jj=1; i<matrix.cols(); j++,jj++) {
-                result.set(ii, jj, matrix.get(i,j));
-            }
-            result.set(ii, result.cols()-1, Math.random());
-        }
-        // set last row with random numbers
-        for (int j=0; j<result.cols(); j++) {
-            result.set(result.rows()-1, j, Math.random());
-        }
-        return result;
-    }
-
-    private Matrix range(final Matrix matrix) {
-        return matrix.range(1, 1, matrix.rows()-2, matrix.cols()-2 );
-    }
+//XXX :: not used anymore
+//
+//    private Matrix augmented(final Matrix matrix) {
+//        final Matrix result = new Matrix(matrix.rows()+2, matrix.cols()+2);
+//        // set first row with random numbers
+//        for (int j=0; j<result.cols(); j++) {
+//            result.set(0, j, Math.random());
+//        }
+//        // copy matrix to inner part of a new matrix
+//        for (int i=0, ii=1; i<matrix.size(); i++,ii++) {
+//            result.set(ii, 0, Math.random());
+//            for (int j=0, jj=1; i<matrix.cols(); j++,jj++) {
+//                result.set(ii, jj, matrix.get(i,j));
+//            }
+//            result.set(ii, result.cols()-1, Math.random());
+//        }
+//        // set last row with random numbers
+//        for (int j=0; j<result.cols(); j++) {
+//            result.set(result.rows()-1, j, Math.random());
+//        }
+//        return result;
+//    }
+//
+//    private Matrix range(final Matrix matrix) {
+//        return matrix.range(1, 1, matrix.rows()-2, matrix.cols()-2 );
+//    }
 
 
     public static boolean equals(final Matrix a, final Matrix b) {
         if (a.size() != b.size())
             return false;
+        final int offsetA = a.offset();
+        final int offsetB = b.offset();
         for (int i=0; i<a.rows(); i++) {
             for (int j=0; j<a.cols(); j++) {
-                if (a.get(i,j) != b.get(i,j))
+                if (a.get(i+offsetA, j+offsetA) != b.get(i+offsetB, j+offsetB))
                     return false;
             }
         }
@@ -165,17 +281,24 @@ public class MatrixTest {
 
     @Test
     public void testClone() {
+        testClone(jFlags, jFlags);
+        testClone(jFlags, fFlags);
+        testClone(fFlags, jFlags);
+        testClone(fFlags, fFlags);
+    }
+
+    private void testClone(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
-        });
+        }, flagsA);
 
         final Matrix mB = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
-        });
+        }, flagsB);
 
         final Matrix m = mA.clone();
         if (m == mA) {
@@ -192,45 +315,17 @@ public class MatrixTest {
 
 
     @Test
-    public void toArray() {
-        final Matrix mA = new Matrix(new double[][] {
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-        });
-
-        final double[][] doubles = new double[][] {
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-        };
-
-        double[][] result = (double[][]) mA.toArray();
-        for (int row=0; row<mA.rows(); row++) {
-            for (int col=0; col<mA.cols(); col++) {
-                if (result[row][col] != doubles[row][col]) {
-                    fail("toArray failed");
-                }
-            }
-        }
-
-        result = mA.toArray(new double[3][4]);
-        for (int row=0; row<mA.rows(); row++) {
-            for (int col=0; col<mA.cols(); col++) {
-                if (result[row][col] != doubles[row][col]) {
-                    fail("toArray failed");
-                }
-            }
-        }
+    public void empty() {
+        empty(jFlags);
+        empty(fFlags);
     }
 
-    @Test
-    public void empty() {
+    private void empty(final Set<Address.Flags> flags) {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
-        });
+        }, flags);
 
         if (mA.empty()) {
             fail("'empty' failed");
@@ -241,11 +336,16 @@ public class MatrixTest {
 
     @Test
     public void fill() {
+        fill(jFlags);
+        fill(fFlags);
+    }
+
+    private void fill(final Set<Address.Flags> flags) {
         final Matrix mA = new Matrix(new double[][] {
                 { 2.0, 2.0, 2.0, 2.0 },
                 { 2.0, 2.0, 2.0, 2.0 },
                 { 2.0, 2.0, 2.0, 2.0 },
-        });
+        }, flags);
 
         final Matrix m = new Matrix(3, 4).fill(2.0);
         if (!equals(m, mA)) {
@@ -256,19 +356,26 @@ public class MatrixTest {
 
     @Test
     public void addAssign() {
+        addAssign(jFlags, jFlags);
+        addAssign(jFlags, fFlags);
+        addAssign(fFlags, jFlags);
+        addAssign(fFlags, fFlags);
+    }
+
+    private void addAssign(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
-        });
+        }, flagsA);
 
         final Matrix mB = new Matrix(new double[][] {
                 { 4.0, 3.0, 2.0, 1.0 },
                 { 5.0, 4.0, 3.0, 2.0 },
                 { 6.0, 5.0, 4.0, 3.0 },
                 { 7.0, 6.0, 5.0, 4.0 },
-        });
+        }, flagsB);
 
 
         final Matrix m = mA.addAssign(mB);
@@ -276,9 +383,10 @@ public class MatrixTest {
             fail("addAssign must return <this>");
         }
 
-        for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.cols(); col++) {
-                if (m.get(row, col) != row+5) {
+        final int offset = m.offset();
+        for (int row=offset; row<m.rows()+offset; row++) {
+            for (int col=offset; col<m.cols()+offset; col++) {
+                if (m.get(row, col) != row-offset+5) {
                     fail("addAssign failed");
                 }
             }
@@ -288,19 +396,26 @@ public class MatrixTest {
 
     @Test
     public void subAssign() {
+        subAssign(jFlags, jFlags);
+        subAssign(jFlags, fFlags);
+        subAssign(fFlags, jFlags);
+        subAssign(fFlags, fFlags);
+    }
+
+    private void subAssign(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
-        });
+        }, flagsA);
 
         final Matrix mB = new Matrix(new double[][] {
                 { 4.0, 5.0, 6.0,  7.0 },
                 { 5.0, 6.0, 7.0,  8.0 },
                 { 6.0, 7.0, 8.0,  9.0 },
                 { 7.0, 8.0, 9.0, 10.0 },
-        });
+        }, flagsB);
 
 
         final Matrix m = mB.subAssign(mA);
@@ -308,9 +423,10 @@ public class MatrixTest {
             fail("subAssign must return <this>");
         }
 
-        for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.cols(); col++) {
-                if (m.get(row, col) != row+3) {
+        final int offset = m.offset();
+        for (int row=offset; row<m.rows()+offset; row++) {
+            for (int col=offset; col<m.cols()+offset; col++) {
+                if (m.get(row, col) != row-offset+3) {
                     fail("subAssign failed");
                 }
             }
@@ -321,21 +437,27 @@ public class MatrixTest {
 
     @Test
     public void mulAssign() {
+        mulAssign(jFlags);
+        mulAssign(fFlags);
+    }
+
+    private void mulAssign(final Set<Address.Flags> flags) {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
-        });
+        }, flags);
 
         final Matrix m = mA.mulAssign(2.5);
         if (m != mA) {
             fail("mulAssign must return <this>");
         }
 
-        for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.cols(); col++) {
-                if (m.get(row, col) != (col+1)*2.5) {
+        final int offset = m.offset();
+        for (int row=offset; row<m.rows()+offset; row++) {
+            for (int col=offset; col<m.cols()+offset; col++) {
+                if (m.get(row, col) != (col-offset+1)*2.5) {
                     fail("mulAssign failed");
                 }
             }
@@ -345,21 +467,27 @@ public class MatrixTest {
 
     @Test
     public void divAssign() {
+        divAssign(jFlags);
+        divAssign(fFlags);
+    }
+
+    private void divAssign(final Set<Address.Flags> flags) {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
-        });
+        }, flags);
 
         final Matrix m = mA.divAssign(2.5);
         if (m != mA) {
             fail("divAssign must return <this>");
         }
 
-        for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.cols(); col++) {
-                if (m.get(row, col) != (col+1)/2.5) {
+        final int offset = m.offset();
+        for (int row=offset; row<m.rows()+offset; row++) {
+            for (int col=offset; col<m.cols()+offset; col++) {
+                if (m.get(row, col) != (col-offset+1)/2.5) {
                     fail("divAssign failed");
                 }
             }
@@ -369,19 +497,26 @@ public class MatrixTest {
 
     @Test
     public void add() {
+        add(jFlags, jFlags);
+        add(jFlags, fFlags);
+        add(fFlags, jFlags);
+        add(fFlags, fFlags);
+    }
+
+    private void add(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
-        });
+        }, flagsA);
 
         final Matrix mB = new Matrix(new double[][] {
                 { 4.0, 3.0, 2.0, 1.0 },
                 { 5.0, 4.0, 3.0, 2.0 },
                 { 6.0, 5.0, 4.0, 3.0 },
                 { 7.0, 6.0, 5.0, 4.0 },
-        });
+        }, flagsB);
 
 
         final Matrix m = mA.add(mB);
@@ -404,20 +539,27 @@ public class MatrixTest {
 
     @Test
     public void sub() {
+        sub(jFlags, jFlags);
+        sub(jFlags, fFlags);
+        sub(fFlags, jFlags);
+        sub(fFlags, fFlags);
+    }
+
+    private void sub(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
 
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
-        });
+        }, flagsA);
 
         final Matrix mB = new Matrix(new double[][] {
                 { 4.0, 5.0, 6.0,  7.0 },
                 { 5.0, 6.0, 7.0,  8.0 },
                 { 6.0, 7.0, 8.0,  9.0 },
                 { 7.0, 8.0, 9.0, 10.0 },
-        });
+        }, flagsB);
 
 
         final Matrix m = mB.sub(mA);
@@ -441,7 +583,115 @@ public class MatrixTest {
 
 
     @Test
-    public void div() {
+    public void mulScalar() {
+        mulScalar(jFlags);
+        mulScalar(fFlags);
+    }
+
+    private void mulScalar(final Set<Address.Flags> flags) {
+
+        final Matrix mA = new Matrix(new double[][] {
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+        }, flags);
+
+        final Matrix m = mA.mul(2.5);
+        if (m == mA) {
+            fail("'sub' must return a new instance");
+        }
+        if (m.rows() != mA.rows() || m.cols() != mA.cols()) {
+            fail("'sub' failed");
+        }
+
+        for (int row=0; row<m.rows(); row++) {
+            for (int col=0; col<m.cols(); col++) {
+                if (m.get(row, col) != (col+1)*2.5) {
+                    fail("'mul' failed");
+                }
+            }
+        }
+    }
+
+
+    @Test
+    public void mulArray() {
+        mulArray(jFlags, jFlags);
+        mulArray(jFlags, fFlags);
+        mulArray(fFlags, jFlags);
+        mulArray(fFlags, fFlags);
+    }
+
+    private void mulArray(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+
+        final Matrix mA = new Matrix(new double[][] {
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+                { 1.0, 2.0, 3.0, 4.0 },
+        }, flagsA);
+
+        final Array aD = new Array(new double[] { 1.0, 1.0, 1.0, 1.0 }, flagsB);
+
+        final Array a = mA.mul(aD);
+        if (a.size() != mA.rows()) {
+            fail("'mul' failed");
+        }
+
+        final int offset = a.offset();
+        for (int col=offset; col<a.cols()+offset; col++) {
+            if (a.get(col) != 10.0) {
+                fail("'mul' failed");
+            }
+        }
+
+    }
+
+
+    @Test
+    public void mulMatrix() {
+        mulMatrix(jFlags, jFlags);
+        mulMatrix(jFlags, fFlags);
+        mulMatrix(fFlags, jFlags);
+        mulMatrix(fFlags, fFlags);
+    }
+
+    private void mulMatrix(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Matrix mI = new Matrix(new double[][] {
+                { 1, 0, 0, 0 },
+                { 0, 1, 0, 0 },
+                { 0, 0, 1, 0 },
+                { 0, 0, 0, 1 },
+        }, flagsA);
+
+        final Matrix mA = new Matrix(new double[][] {
+                { 4.0, 3.0, 2.0, 1.0 },
+                { 5.0, 4.0, 3.0, 2.0 },
+                { 6.0, 5.0, 4.0, 3.0 },
+                { 7.0, 6.0, 5.0, 4.0 },
+        }, flagsB);
+
+        final Matrix m = mI.mul(mA);
+        if (m == mI) {
+            fail("'mul' must return a new instance");
+        }
+        if (m == mA) {
+            fail("'mul' must return a new instance");
+        }
+        if (!equals(m,mA)) {
+            fail("'mul' failed");
+        }
+    }
+
+    @Test
+    public void divScalar() {
+        divScalar(jFlags);
+        divScalar(fFlags);
+    }
+
+    private void divScalar(final Set<Address.Flags> flags) {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
@@ -469,103 +719,27 @@ public class MatrixTest {
 
 
     @Test
-    public void mulMatrix() {
-        final Matrix mI = new Matrix(new double[][] {
-                { 1, 0, 0, 0 },
-                { 0, 1, 0, 0 },
-                { 0, 0, 1, 0 },
-                { 0, 0, 0, 1 },
-        });
-
-        final Matrix mA = new Matrix(new double[][] {
-                { 4.0, 3.0, 2.0, 1.0 },
-                { 5.0, 4.0, 3.0, 2.0 },
-                { 6.0, 5.0, 4.0, 3.0 },
-                { 7.0, 6.0, 5.0, 4.0 },
-        });
-
-        final Matrix m = mI.mul(mA);
-        if (m == mI) {
-            fail("'mul' must return a new instance");
-        }
-        if (m == mA) {
-            fail("'mul' must return a new instance");
-        }
-        if (!equals(m,mA)) {
-            fail("'mul' failed");
-        }
-    }
-
-    @Test
-    public void mulScalar() {
-
-        final Matrix mA = new Matrix(new double[][] {
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-        });
-
-        final Matrix m = mA.mul(2.5);
-        if (m == mA) {
-            fail("'sub' must return a new instance");
-        }
-        if (m.rows() != mA.rows() || m.cols() != mA.cols()) {
-            fail("'sub' failed");
-        }
-
-        for (int row=0; row<m.rows(); row++) {
-            for (int col=0; col<m.cols(); col++) {
-                if (m.get(row, col) != (col+1)*2.5) {
-                    fail("'mul' failed");
-                }
-            }
-        }
-    }
-
-
-    @Test
-    public void mulArray() {
-
-        final Matrix mA = new Matrix(new double[][] {
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-                { 1.0, 2.0, 3.0, 4.0 },
-        });
-
-        final Array aD = new Array(new double[] { 1.0, 1.0, 1.0, 1.0 });
-
-        final Array a = mA.mul(aD);
-        if (a.size() != mA.rows()) {
-            fail("'mul' failed");
-        }
-
-        for (int col=0; col<a.cols(); col++) {
-            if (a.get(col) != 10.0) {
-                fail("'mul' failed");
-            }
-        }
-
-    }
-
-
-    @Test
     public void swap() {
+        swap(jFlags, jFlags);
+        swap(jFlags, fFlags);
+        swap(fFlags, jFlags);
+        swap(fFlags, fFlags);
+    }
+
+    private void swap(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
-        });
+        }, flagsA);
 
         final Matrix mB = new Matrix(new double[][] {
                 { 4.0, 3.0, 2.0, 1.0 },
                 { 5.0, 4.0, 3.0, 2.0 },
                 { 6.0, 5.0, 4.0, 3.0 },
                 { 7.0, 6.0, 5.0, 4.0 },
-        });
+        }, flagsB);
 
         final Matrix mAclone = mA.clone();
         final Matrix mBclone = mB.clone();
@@ -582,18 +756,25 @@ public class MatrixTest {
 
     @Test
     public void transpose() {
+        transpose(jFlags, jFlags);
+        transpose(jFlags, fFlags);
+        transpose(fFlags, jFlags);
+        transpose(fFlags, fFlags);
+    }
+
+    private void transpose(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
                 { 1.0, 2.0, 3.0, 4.0 },
-        });
+        }, flagsA);
 
         final Matrix mB = new Matrix(new double[][] {
                 { 1.0, 1.0, 1.0 },
                 { 2.0, 2.0, 2.0 },
                 { 3.0, 3.0, 3.0 },
                 { 4.0, 4.0, 4.0 },
-        });
+        }, flagsB);
 
         final Matrix m = mA.transpose();
 
@@ -611,14 +792,21 @@ public class MatrixTest {
 
     @Test
     public void diagonal() {
+        diagonal(jFlags, jFlags);
+        diagonal(jFlags, fFlags);
+        diagonal(fFlags, jFlags);
+        diagonal(fFlags, fFlags);
+    }
+
+    private void diagonal(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
         final Matrix mA = new Matrix(new double[][] {
                 { 1.0, 9.0, 9.0, 9.0 },
                 { 9.0, 2.0, 9.0, 9.0 },
                 { 9.0, 9.0, 3.0, 9.0 },
                 { 9.0, 9.0, 9.0, 4.0 },
-        });
+        }, flagsA);
 
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, flagsB);
 
         if (!ArrayTest.equals(mA.diagonal(), aA)) {
             fail("'diagonal' failed");
@@ -627,23 +815,44 @@ public class MatrixTest {
 
 
     @Test
-    public void inverseLU() {
+    public void inverse() {
+        inverse(jFlags);
+        inverse(fFlags);
+    }
+
+    private void inverse(final Set<Address.Flags> flags) {
+
+        final Matrix M1 = new Matrix(new double[][] {
+              { 1.0,  0.9,  0.7 },
+              { 0.9,  1.0,  0.4 },
+              { 0.7,  0.4,  1.0 }
+        }, flags);
+
+        final Matrix M2 = new Matrix(new double[][] {
+              { 1.0,  0.9,  0.7 },
+              { 0.9,  1.0,  0.3 },
+              { 0.7,  0.3,  1.0 }
+        }, flags);
+
+        final Matrix I = new Identity(3, flags);
+
+        // from Higham - nearest correlation matrix
+        final Matrix M5 = new Matrix(new double[][] {
+              {  2,   -1,     0,    0 },
+              { -1,    2,    -1,    0 },
+              {  0,   -1,     2,   -1 },
+              {  0,    0,    -1,    2 },
+        }, flags);
+
         QL.info("Testing LU inverse calculation...");
 
-        inverse(M1);
-        inverse(M2);
-        inverse(I);
-        inverse(M5);
+        final Matrix matrices[] = { M1, M2, I, M5 };
+
+        for (final Matrix m : matrices) {
+            inverse(m);
+        }
     }
 
-    @Ignore
-    @Test
-    public void inverseQR() {
-        QL.info("Testing QR inverse calculation...");
-
-        inverse(M3);
-        inverse(M4);
-    }
 
     private void inverse(final Matrix m) {
         QL.info("Testing LU inverse calculation...");
@@ -704,81 +913,81 @@ public class MatrixTest {
 
         // { 1.0,  0.9,  0.7 }
 
-        array = mA.rangeRow(0, 0, 0);
+        array = mA.rangeRow(0, 0, 1);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==1);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 1.0));
 
-        array = mA.rangeRow(0, 0, 1);
+        array = mA.rangeRow(0, 0, 2);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==2);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 1.9));
 
-        array = mA.rangeRow(0, 0, 2);
+        array = mA.rangeRow(0, 0, 3);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==3);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 2.6));
 
-        array = mA.rangeRow(0, 1, 2);
+        array = mA.rangeRow(0, 1, 3);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==2);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 1.6));
 
-        array = mA.rangeRow(0, 2, 2);
+        array = mA.rangeRow(0, 2, 3);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==1);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 0.7));
 
         // { 0.8,  2.0,  3.2 }
 
-        array = mA.rangeRow(1, 0, 0);
+        array = mA.rangeRow(1, 0, 1);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==1);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 0.8));
 
-        array = mA.rangeRow(1, 0, 1);
+        array = mA.rangeRow(1, 0, 2);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==2);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 2.8));
 
-        array = mA.rangeRow(1, 0, 2);
+        array = mA.rangeRow(1, 0, 3);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==3);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 6.0));
 
-        array = mA.rangeRow(1, 1, 2);
+        array = mA.rangeRow(1, 1, 3);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==2);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 5.2));
 
-        array = mA.rangeRow(1, 2, 2);
+        array = mA.rangeRow(1, 2, 3);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==1);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 3.2));
 
         // { 0.6,  3.1,  5.0 }
 
-        array = mA.rangeRow(2, 0, 0);
+        array = mA.rangeRow(2, 0, 1);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==1);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 0.6));
 
-        array = mA.rangeRow(2, 0, 1);
+        array = mA.rangeRow(2, 0, 2);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==2);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 3.7));
 
-        array = mA.rangeRow(2, 0, 2);
+        array = mA.rangeRow(2, 0, 3);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==3);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 8.7));
 
-        array = mA.rangeRow(2, 1, 2);
+        array = mA.rangeRow(2, 1, 3);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==2);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 8.1));
 
-        array = mA.rangeRow(2, 2, 2);
+        array = mA.rangeRow(2, 2, 3);
         System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==1);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 5.0));
@@ -900,7 +1109,7 @@ public class MatrixTest {
         }
 
         try {
-            array = mA.rangeRow(0, 0, 3);
+            array = mA.rangeRow(0, 0, 4);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
             System.out.println(TEST_SUCCEEDED);
@@ -909,7 +1118,7 @@ public class MatrixTest {
         }
 
         try {
-            array = mA.rangeRow(0, 3, 0);
+            array = mA.rangeRow(0, 4, 0);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
             System.out.println(TEST_SUCCEEDED);
@@ -918,7 +1127,7 @@ public class MatrixTest {
         }
 
         try {
-            array = mA.rangeRow(0, 3, 3);
+            array = mA.rangeRow(0, 4, 4);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
             System.out.println(TEST_SUCCEEDED);
@@ -949,68 +1158,68 @@ public class MatrixTest {
 
         // { 1.0,  0.8,  0.6 }
 
-        array = mA.rangeCol(0, 0, 0);
+        array = mA.rangeCol(0, 0, 1);
         assertTrue(RangeCol_FAILED, array.size()==1);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 1.0));
 
-        array = mA.rangeCol(0, 0, 1);
+        array = mA.rangeCol(0, 0, 2);
         System.out.println(array.toString());
         assertTrue(RangeCol_FAILED, array.size()==2);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 1.8));
 
-        array = mA.rangeCol(0, 0, 2);
+        array = mA.rangeCol(0, 0, 3);
         assertTrue(RangeCol_FAILED, array.size()==3);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 2.4));
 
-        array = mA.rangeCol(0, 1, 2);
+        array = mA.rangeCol(0, 1, 3);
         assertTrue(RangeCol_FAILED, array.size()==2);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 1.4));
 
-        array = mA.rangeCol(0, 2, 2);
+        array = mA.rangeCol(0, 2, 3);
         assertTrue(RangeCol_FAILED, array.size()==1);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 0.6));
 
         // { 0.9,  2.0,  3.1 }
 
-        array = mA.rangeCol(1, 0, 0);
+        array = mA.rangeCol(1, 0, 1);
         assertTrue(RangeCol_FAILED, array.size()==1);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 0.9));
 
-        array = mA.rangeCol(1, 0, 1);
+        array = mA.rangeCol(1, 0, 2);
         assertTrue(RangeCol_FAILED, array.size()==2);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 2.9));
 
-        array = mA.rangeCol(1, 0, 2);
+        array = mA.rangeCol(1, 0, 3);
         assertTrue(RangeCol_FAILED, array.size()==3);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 6.0));
 
-        array = mA.rangeCol(1, 1, 2);
+        array = mA.rangeCol(1, 1, 3);
         assertTrue(RangeCol_FAILED, array.size()==2);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 5.1));
 
-        array = mA.rangeCol(1, 2, 2);
+        array = mA.rangeCol(1, 2, 3);
         assertTrue(RangeCol_FAILED, array.size()==1);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 3.1));
 
         // { 0.7,  3.2,  5.0 }
 
-        array = mA.rangeCol(2, 0, 0);
+        array = mA.rangeCol(2, 0, 1);
         assertTrue(RangeCol_FAILED, array.size()==1);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 0.7));
 
-        array = mA.rangeCol(2, 0, 1);
+        array = mA.rangeCol(2, 0, 2);
         assertTrue(RangeCol_FAILED, array.size()==2);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 3.9));
 
-        array = mA.rangeCol(2, 0, 2);
+        array = mA.rangeCol(2, 0, 3);
         assertTrue(RangeCol_FAILED, array.size()==3);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 8.9));
 
-        array = mA.rangeCol(2, 1, 2);
+        array = mA.rangeCol(2, 1, 3);
         assertTrue(RangeCol_FAILED, array.size()==2);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 8.2));
 
-        array = mA.rangeCol(2, 2, 2);
+        array = mA.rangeCol(2, 2, 3);
         assertTrue(RangeCol_FAILED, array.size()==1);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 5.0));
 
@@ -1131,7 +1340,7 @@ public class MatrixTest {
         }
 
         try {
-            array = mA.rangeCol(0, 0, 3);
+            array = mA.rangeCol(0, 0, 4);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
             System.out.println(TEST_SUCCEEDED);
@@ -1140,7 +1349,7 @@ public class MatrixTest {
         }
 
         try {
-            array = mA.rangeCol(0, 3, 0);
+            array = mA.rangeCol(0, 4, 0);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
             System.out.println(TEST_SUCCEEDED);
@@ -1149,7 +1358,7 @@ public class MatrixTest {
         }
 
         try {
-            array = mA.rangeCol(0, 3, 3);
+            array = mA.rangeCol(0, 4, 4);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
             System.out.println(TEST_SUCCEEDED);
@@ -1185,7 +1394,7 @@ public class MatrixTest {
 
         Matrix matrix;
 
-        matrix = mA.range(1, 3, 1, 3);
+        matrix = mA.range(1, 4, 1, 4);
         System.out.println(matrix.toString());
         testRangeRow(matrix);
 
@@ -1231,7 +1440,7 @@ public class MatrixTest {
         }
 
         try {
-            matrix = mA.range(5, 3, 1, 3);
+            matrix = mA.range(1, 6, 1, 4);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
             System.out.println(TEST_SUCCEEDED);
@@ -1240,7 +1449,7 @@ public class MatrixTest {
         }
 
         try {
-            matrix = mA.range(1, 5, 1, 3);
+            matrix = mA.range(1, 4, 4, 1);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
             System.out.println(TEST_SUCCEEDED);
@@ -1249,7 +1458,7 @@ public class MatrixTest {
         }
 
         try {
-            matrix = mA.range(1, 3, 5, 3);
+            matrix = mA.range(4, 1, 1, 4);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
             System.out.println(TEST_SUCCEEDED);
@@ -1257,25 +1466,34 @@ public class MatrixTest {
             fail(WRONG_EXCEPTION);
         }
 
-        try {
-            matrix = mA.range(1, 3, 1, 5);
-            fail(MISSING_EXCEPTION);
-        } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
-        } catch (final Exception e) {
-            fail(WRONG_EXCEPTION);
-        }
     }
 
 
     @Test
     public void testEigenvectors() {
+        testEigenvectors(jFlags);
+        testEigenvectors(fFlags);
+    }
 
+    private void testEigenvectors(final Set<Address.Flags> flags) {
     	QL.info("Testing eigenvalues and eigenvectors calculation...");
 
-    	final Matrix testMatrices[] = { M1, M2 };
+        final Matrix M1 = new Matrix(new double[][] {
+                { 1.0,  0.9,  0.7 },
+                { 0.9,  1.0,  0.4 },
+                { 0.7,  0.4,  1.0 }
+        }, flags);
 
-    	for (final Matrix M : testMatrices) {
+        final Matrix M2 = new Matrix(new double[][] {
+                { 1.0,  0.9,  0.7 },
+                { 0.9,  1.0,  0.3 },
+                { 0.7,  0.3,  1.0 }
+        }, flags);
+
+        final Matrix testMatrices[] = { M1, M2 };
+
+
+        for (final Matrix M : testMatrices) {
 
     		final SymmetricSchurDecomposition schur = M.schur();
     		final Array eigenValues = schur.eigenvalues();
@@ -1283,11 +1501,12 @@ public class MatrixTest {
     		final double minHolder = Constants.QL_MAX_REAL;
 
     		final int N = M.cols();
+    		final int offset = M.offset();
 
-    		for (int i=0; i<N; i++) {
-    			final Array v = new Array(N);
-    			for (int j=0; j<N; j++) {
-                    v.set( j, eigenVectors.get(j,i) );
+    		for (int i=offset; i<N+offset; i++) {
+    			final Array v = new Array(N, M.flags());
+    			for (int j=offset; j<N+offset; j++) {
+                    v.set( j, eigenVectors.get(j, i) );
                 }
     			// check definition
     			final Array a = M.mul(v);
@@ -1295,11 +1514,6 @@ public class MatrixTest {
     			final double tol = norm(a.sub(b));
     			if (tol > 1.0e-15) {
                     fail("Eigenvector definition not satisfied");
-    			// check decreasing ordering
-    			//if (eigenValues.get(i) >= minHolder) {
-    			//	fail("Eigenvalues not ordered");
-    			//} else
-    			//	minHolder = eigenValues.get(i);
                 }
     		}
 
@@ -1408,6 +1622,59 @@ public class MatrixTest {
 
     @Test
     public void testQRDecomposition() {
+        testQRDecomposition(jFlags);
+        testQRDecomposition(fFlags);
+    }
+
+    private void testQRDecomposition(final Set<Address.Flags> flags) {
+
+
+        final Matrix M1 = new Matrix(new double[][] {
+              { 1.0,  0.9,  0.7 },
+              { 0.9,  1.0,  0.4 },
+              { 0.7,  0.4,  1.0 }
+        }, flags);
+
+        final Matrix M2 = new Matrix(new double[][] {
+              { 1.0,  0.9,  0.7 },
+              { 0.9,  1.0,  0.3 },
+              { 0.7,  0.3,  1.0 }
+        }, flags);
+
+        final Matrix I = new Identity(3, flags);
+
+        final Matrix M3 = new Matrix(new double[][] {
+              { 1,   2,   3,   4 },
+              { 2,   0,   2,   1 },
+              { 0,   1,   0,   0 }
+        }, flags);
+
+        final Matrix M4 = new Matrix(new double[][] {
+              {  1,   2,   400    },
+              {  2,   0,     1    },
+              { 30,   2,     0    },
+              {  2,   0,     1.05 }
+        }, flags);
+
+        // from Higham - nearest correlation matrix
+        final Matrix M5 = new Matrix(new double[][] {
+              {  2,   -1,     0,    0 },
+              { -1,    2,    -1,    0 },
+              {  0,   -1,     2,   -1 },
+              {  0,    0,    -1,    2 },
+        }, flags);
+
+//        // from Higham - nearest correlation matrix to M5
+//        Matrix M6 = new Matrix(new double[][] {
+//              {  1,              -0.8084124981,    0.1915875019,    0.106775049  },
+//              { -0.8084124981,    1,              -0.6562326948,    0.1915875019 },
+//              {  0.1915875019,   -0.6562326948,    1,              -0.8084124981 },
+//              {  0.106775049,     0.1915875019,   -0.8084124981,    1            }
+//        });
+//
+//        Matrix M7 = M1.clone();
+//        M7.set(0, 1, 0.3); M7.set(0, 2, 0.2); M7.set(2, 1, 1.2);
+
 
         QL.info("Testing QR decomposition...");
 
@@ -1415,63 +1682,50 @@ public class MatrixTest {
 
         final Matrix testMatrices[] = { M1, M2, I, M3, M3.transpose(), M4, M4.transpose(), M5 };
 
-        //XXX
-        //        final Matrix T1 = new Matrix( new double[][] {
-        //                {1, -1,  4},
-        //                {1,  4, -2},
-        //                {1,  4,  2},
-        //                {1, -1,  0}
-        //            });
-        //
-        //        final Matrix T1_R = new Matrix( new double[][] {
-        //                {  2,  3,  2 },
-        //                {  0,  5, -2 },
-        //                {  0,  0,  4 }
-        //            });
-        //
-        //        final Matrix T1_Q = new Matrix( new double[][] {
-        //                {  1/2,  -1/2,  1/2,  1/2 },
-        //                {  1/2,   1/2, -1/2, -1/2 },
-        //                {  1/2,   1/2,  1/2,  1/2 },
-        //                {  1/2,  -1/2, -1/2,  1/2 },
-        //            });
-        //
-        //        final Matrix testMatrices[] = { T1 };
-
         for (final Matrix A : testMatrices) {
 
             QRDecomposition qr;
             Matrix Q;
             Matrix R;
             final Matrix P;
+            final Matrix mT;
             Matrix mul1;
             final Matrix mul2;
-            double tol;
+            double norm;
 
-            // QR decomposition without column pivoting
-            qr = new Matrix(A).qr();
-            R = qr.R();
-            Q = qr.Q();
-            mul1 = Q.mul(R);
-            tol = norm(mul1.sub(A)); // norm(Q*R - A)
-            if (tol > tolerance) {
-                fail("Q*R (pivot=false) does not match matrix A*P");
-            }
+            System.out.println("///////////////////////////////////////////////");
 
+            System.out.println("Matrix A = "+A.toString());
 
-            //TODO: test QR with column pivoting
-
-            // QR decomposition with column pivoting
+            System.out.println("// QR decomposition with column pivoting");
             qr = new Matrix(A).qr(true);
             R = qr.R();
             Q = qr.Q();
             P = qr.P();
+
+            // norm(Q*R - A*P)
             mul1 = Q.mul(R);
             mul2 = A.mul(P);
-            tol = norm( mul1.sub(mul2) ); // norm(Q*R - A*P)
-            if (tol > tolerance) {
-                fail("Q*R (pivot=true) does not match matrix A*P");
+            norm = norm( mul1.sub(mul2) );
+            if (norm > tolerance) {
+                fail("Q*R (pivot=true) does not match matrix A*P :: norm = "+String.valueOf(norm));
             }
+
+
+
+            System.out.println("// QR decomposition without column pivoting");
+            qr = new Matrix(A).qr();
+            // norm(Q*R - A)
+            R = qr.R();
+            Q = qr.Q();
+
+            mul1 = Q.mul(R);
+            norm = norm(mul1.sub(A));
+            if (norm > tolerance) {
+                fail("Q*R (pivot=false) does not match matrix A :: norm = "+String.valueOf(norm));
+            }
+
+
         }
     }
 

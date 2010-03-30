@@ -49,7 +49,7 @@ import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * Constrained optimization problem
- * 
+ *
  * @author Ueli Hofstetter
  */
 @QualityAssurance(quality=Quality.Q3_DOCUMENTATION, version=Version.V097, reviewers="Richard Gomes")
@@ -92,6 +92,10 @@ public class Problem {
     //
     // public constructors
     //
+
+    public Problem(final CostFunction  costFunction, final Constraint  constraint) {
+        this(costFunction, constraint, new Array());
+    }
 
     public Problem(final CostFunction  costFunction, final Constraint  constraint, final Array  initialValue) {
         this.costFunction_ = costFunction;

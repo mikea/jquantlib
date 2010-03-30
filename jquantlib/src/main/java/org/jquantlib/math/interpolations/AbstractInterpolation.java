@@ -253,13 +253,13 @@ public abstract class AbstractInterpolation implements Interpolation {
 
         protected int locate(final double x) /* @ReadOnly */ {
             QL.require(extraSafetyChecks(), "unsorted values on array X"); // TODO: message
-            if (x < vx.first()) {
+            if (x < vx.first())
                 return 0;
-            } else if (x > vx.last()) {
+            else if (x > vx.last())
                 return vx.size()-2;
-            } else {
+            else {
                 //return vx.upperBound(x)-1;
-                final int ub = vx.upperBound(vx.begin(), vx.end(), x)-1;
+                final int ub = vx.upperBound(vx.begin(), vx.end()-1, x)-1;
                 return ub;
             }
         }
@@ -272,9 +272,8 @@ public abstract class AbstractInterpolation implements Interpolation {
         private boolean extraSafetyChecks() {
             if (new Settings().isExtraSafetyChecks()) {
                 for (int i=0; i<vx.size()-1; i++) {
-                    if (vx.get(i) > vx.get(i+1)) {
+                    if (vx.get(i) > vx.get(i+1))
                         return false;
-                    }
                 }
             }
             return true;

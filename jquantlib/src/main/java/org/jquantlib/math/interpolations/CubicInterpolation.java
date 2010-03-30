@@ -257,8 +257,8 @@ public class CubicInterpolation extends AbstractInterpolation {
                 final double rightConditionValue) {
             super(x, y);
 
-            this.vx_ = x.toDoubleArray();
-            this.vy_ = y.toDoubleArray();
+            this.vx_ = x.$;
+            this.vy_ = y.$;
 
             this.n = vx_.length;
 
@@ -353,7 +353,7 @@ public class CubicInterpolation extends AbstractInterpolation {
                 }
 
                 // solve the system
-                tmp = L.solveFor(new Array(tmp)).toDoubleArray();
+                tmp = L.solveFor(tmp);
             } else { // local schemes
                 if (n==2) {
                     tmp[0] = tmp[1] = S[0];

@@ -25,12 +25,16 @@ package org.jquantlib.testsuite.math;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import org.jquantlib.QL;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.functions.GreaterThanPredicate;
 import org.jquantlib.math.functions.Square;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
+import org.jquantlib.math.matrixutilities.internal.Address;
 import org.junit.Test;
 
 
@@ -40,29 +44,43 @@ import org.junit.Test;
  */
 public class ArrayTest {
 
+    private final Set<Address.Flags> jFlags;
+    private final Set<Address.Flags> fFlags;
+
+
     public ArrayTest() {
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
+
+        this.jFlags = EnumSet.noneOf(Address.Flags.class);
+        this.fFlags = EnumSet.of(Address.Flags.FORTRAN);
     }
 
     private Array augmented(final Array array) {
-        final Array result = new Array(array.size()+2);
-        result.set(0, Math.random());
-        for (int i=0, j=1; i<array.size(); i++,j++) {
+        final int begin = array.begin();
+        final int end = array.end();
+        final Array result = new Array(array.size()+2, array.flags());
+        result.set(begin, Math.random());
+        for (int i=begin, j=1+begin; i<end; i++,j++) {
             result.set(j, array.get(i));
         }
-        result.set(result.size()-1, Math.random());
+        result.set(end+1, Math.random());
+        System.out.println(result);
         return result;
     }
 
     private Array range(final Array array) {
-        return array.range(1, array.size()-2 );
+        final int begin = array.begin();
+        final int end = array.end();
+        return array.range(begin+1, end-1 );
     }
 
     public static boolean equals(final Array a, final Array b) {
         if (a.size() != b.size())
             return false;
+        final int offsetA = a.flags().contains(Address.Flags.FORTRAN) ? 1 : 0;
+        final int offsetB = b.flags().contains(Address.Flags.FORTRAN) ? 1 : 0;
         for (int i=0; i<a.size(); i++) {
-            if (a.get(i) != b.get(i))
+            if (a.get(i+offsetA) != b.get(i+offsetB))
                 return false;
         }
         return true;
@@ -70,11 +88,73 @@ public class ArrayTest {
 
 
     @Test
+    public void testToString() {
+        testToString(jFlags);
+        testToString(fFlags);
+    }
+
+    private void testToString(final Set<Address.Flags> flags) {
+        final Array a = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, flags);
+        testToString(a);
+        testToString(range(augmented(a)));
+        testToString(range(augmented(range(augmented(a)))));
+    }
+
+    private void testToString(final Array a) {
+        System.out.println(a.toString());
+    }
+
+
+    @Test
+    public void toFortran() {
+        toFortran(jFlags);
+        toFortran(fFlags);
+    }
+
+    private void toFortran(final Set<Address.Flags> flags) {
+        final Array a = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, flags).toFortran();
+        toFortran(a);
+        toFortran(range(augmented(a)));
+        toFortran(range(augmented(range(augmented(a)))));
+    }
+
+    private void toFortran(final Array a) {
+        System.out.println(a.toString());
+    }
+
+
+    @Test
+    public void toJava() {
+        toJava(jFlags);
+        toJava(fFlags);
+    }
+
+    private void toJava(final Set<Address.Flags> flags) {
+        final Array a = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, flags).toJava();
+        toJava(a);
+        toJava(range(augmented(a)));
+        toJava(range(augmented(range(augmented(a)))));
+    }
+
+    private void toJava(final Array a) {
+        System.out.println(a.toString());
+    }
+
+
+    @Test
     public void testClone() {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
-        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
+        testClone(jFlags, jFlags);
+        testClone(jFlags, fFlags);
+        testClone(fFlags, jFlags);
+        testClone(fFlags, fFlags);
+    }
+
+    private void testClone(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, flagsA);
+        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, flagsB);
         testClone(aA, aB);
         testClone(range(augmented(aA)), range(augmented(aB)));
+        testClone(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void testClone(final Array aA, final Array aB) {
@@ -90,12 +170,21 @@ public class ArrayTest {
         }
     }
 
+
     @Test
     public void abs() {
-        final Array aA = new Array(new double[] { 1.0, -2.0, -3.0, 5.0, -9.0, -11.0, -12.0 });
-        final Array aB = new Array(new double[] { 1.0,  2.0,  3.0, 5.0,  9.0,  11.0,  12.0 });
+        abs(jFlags, jFlags);
+        abs(jFlags, fFlags);
+        abs(fFlags, jFlags);
+        abs(fFlags, fFlags);
+    }
+
+    private void abs(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 1.0, -2.0, -3.0, 5.0, -9.0, -11.0, -12.0 }, flagsA);
+        final Array aB = new Array(new double[] { 1.0,  2.0,  3.0, 5.0,  9.0,  11.0,  12.0 }, flagsB);
         abs(aA, aB);
         abs(range(augmented(aA)), range(augmented(aB)));
+        abs(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void abs(final Array aA, final Array aB) {
@@ -111,11 +200,13 @@ public class ArrayTest {
         }
     }
 
+
     @Test
     public void accumulate() {
         final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0 });
         accumulate(aA);
         accumulate(range(augmented(aA)));
+        accumulate(range(augmented(range(augmented(aA)))));
     }
 
     private void accumulate(final Array aA) {
@@ -127,12 +218,21 @@ public class ArrayTest {
         }
     }
 
+
     @Test
     public void add() {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
-        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 });
+        add(jFlags, jFlags);
+        add(jFlags, fFlags);
+        add(fFlags, jFlags);
+        add(fFlags, fFlags);
+    }
+
+    private void add(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, flagsA);
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, flagsB);
         add(aA, aB);
         add(range(augmented(aA)), range(augmented(aB)));
+        add(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void add(final Array aA, final Array aB) {
@@ -151,12 +251,21 @@ public class ArrayTest {
         }
     }
 
+
     @Test
     public void addAssign() {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
-        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 });
+        addAssign(jFlags, jFlags);
+        addAssign(jFlags, fFlags);
+        addAssign(fFlags, jFlags);
+        addAssign(fFlags, fFlags);
+    }
+
+    private void addAssign(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, flagsA);
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, flagsB);
         addAssign(aA, aB);
         addAssign(range(augmented(aA)), range(augmented(aB)));
+        addAssign(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void addAssign(final Array aA, final Array aB) {
@@ -166,19 +275,30 @@ public class ArrayTest {
             fail("addAssign must return <this>");
         }
 
-        for (int i=0; i<a.size(); i++) {
+        final int begin = a.begin();
+        final int end = a.end();
+        for (int i=begin; i<end; i++) {
             if (a.get(i) != 5) {
                 fail("'addAssign' failed");
             }
         }
     }
 
+
     @Test
     public void sub() {
-        final Array aA = new Array(new double[] { 9.0, 8.0, 7.0, 6.0 });
-        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 });
+        sub(jFlags, jFlags);
+        sub(jFlags, fFlags);
+        sub(fFlags, jFlags);
+        sub(fFlags, fFlags);
+    }
+
+    private void sub(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 9.0, 8.0, 7.0, 6.0 }, flagsA);
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, flagsB);
         sub(aA, aB);
         sub(range(augmented(aA)), range(augmented(aB)));
+        sub(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void sub(final Array aA, final Array aB) {
@@ -197,12 +317,21 @@ public class ArrayTest {
         }
     }
 
+
     @Test
     public void subAssign() {
-        final Array aA = new Array(new double[] { 9.0, 8.0, 7.0, 6.0 });
-        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 });
+        subAssign(jFlags, jFlags);
+        subAssign(jFlags, fFlags);
+        subAssign(fFlags, jFlags);
+        subAssign(fFlags, fFlags);
+    }
+
+    private void subAssign(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 9.0, 8.0, 7.0, 6.0 }, flagsA);
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, flagsB);
         subAssign(aA, aB);
         subAssign(range(augmented(aA)), range(augmented(aB)));
+        subAssign(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void subAssign(final Array aA, final Array aB) {
@@ -215,19 +344,30 @@ public class ArrayTest {
             fail("'subAssign' failed");
         }
 
-        for (int i=0; i<a.size(); i++) {
+        final int begin = a.begin();
+        final int end = a.end();
+        for (int i=begin; i<end; i++) {
             if (a.get(i) != 5) {
                 fail("'subAssign' failed");
             }
         }
     }
 
+
     @Test
     public void mul() {
-        final Array aA = new Array(new double[] { 200.0, 100.0, 250.0, 500.0 });
-        final Array aB = new Array(new double[] {   5.0,  10.0,   4.0,   2.0 });
+        mul(jFlags, jFlags);
+        mul(jFlags, fFlags);
+        mul(fFlags, jFlags);
+        mul(fFlags, fFlags);
+    }
+
+    private void mul(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 200.0, 100.0, 250.0, 500.0 }, flagsA);
+        final Array aB = new Array(new double[] {   5.0,  10.0,   4.0,   2.0 }, flagsB);
         mul(aA, aB);
         mul(range(augmented(aA)), range(augmented(aB)));
+        mul(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void mul(final Array aA, final Array aB) {
@@ -240,7 +380,7 @@ public class ArrayTest {
             fail("'mul' failed");
         }
 
-        for (int i=0; i<a1.size(); i++) {
+        for (int i=a1.begin(); i<a1.end(); i++) {
             if (a1.get(i) != 1000) {
                 fail("'mul' failed");
             }
@@ -265,7 +405,7 @@ public class ArrayTest {
             fail("'mul' failed");
         }
 
-        for (int i=0; i<a2.size(); i++) {
+        for (int i=a2.begin(); i<a2.end(); i++) {
             final double elem = aB2.get(i);
             if (a2.get(i) != elem) {
                 fail("'mul' failed");
@@ -273,12 +413,21 @@ public class ArrayTest {
         }
     }
 
+
     @Test
     public void mulAssign() {
-        final Array aA = new Array(new double[] { 200.0, 100.0, 250.0, 500.0 });
-        final Array aB = new Array(new double[] {   5.0,  10.0,   4.0,   2.0 });
+        mulAssign(jFlags, jFlags);
+        mulAssign(jFlags, fFlags);
+        mulAssign(fFlags, jFlags);
+        mulAssign(fFlags, fFlags);
+    }
+
+    private void mulAssign(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 200.0, 100.0, 250.0, 500.0 }, flagsA);
+        final Array aB = new Array(new double[] {   5.0,  10.0,   4.0,   2.0 }, flagsB);
         mulAssign(aA, aB);
         mulAssign(range(augmented(aA)), range(augmented(aB)));
+        mulAssign(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void mulAssign(final Array aA, final Array aB) {
@@ -291,7 +440,9 @@ public class ArrayTest {
             fail("'mulAssign' failed");
         }
 
-        for (int i=0; i<a.size(); i++) {
+        final int begin = a.begin();
+        final int end = a.end();
+        for (int i=begin; i<end; i++) {
             if (a.get(i) != 1000) {
                 fail("'mulAssign' failed");
             }
@@ -301,8 +452,15 @@ public class ArrayTest {
 
     @Test
     public void div() {
-        final Array aA = new Array(new double[] { 20.0, 18.0, 16.0, 14.0 });
-        final Array aB = new Array(new double[] { 10.0,  9.0,  8.0,  7.0 });
+        div(jFlags, jFlags);
+        div(jFlags, fFlags);
+        div(fFlags, jFlags);
+        div(fFlags, fFlags);
+    }
+
+    private void div(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 20.0, 18.0, 16.0, 14.0 }, flagsA);
+        final Array aB = new Array(new double[] { 10.0,  9.0,  8.0,  7.0 }, flagsB);
         div(aA, aB);
         div(range(augmented(aA)), range(augmented(aB)));
     }
@@ -327,10 +485,18 @@ public class ArrayTest {
 
     @Test
     public void divAssign() {
-        final Array aA = new Array(new double[] { 20.0, 18.0, 16.0, 14.0 });
-        final Array aB = new Array(new double[] { 10.0,  9.0,  8.0,  7.0 });
+        divAssign(jFlags, jFlags);
+        divAssign(jFlags, fFlags);
+        divAssign(fFlags, jFlags);
+        divAssign(fFlags, fFlags);
+    }
+
+    private void divAssign(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 20.0, 18.0, 16.0, 14.0 }, flagsA);
+        final Array aB = new Array(new double[] { 10.0,  9.0,  8.0,  7.0 }, flagsB);
         divAssign(aA, aB);
         divAssign(range(augmented(aA)), range(augmented(aB)));
+        divAssign(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void divAssign(final Array aA, final Array aB) {
@@ -343,7 +509,9 @@ public class ArrayTest {
             fail("'divAssign' failed");
         }
 
-        for (int i=0; i<a.size(); i++) {
+        final int begin = a.begin();
+        final int end = a.end();
+        for (int i=begin; i<end; i++) {
             if (a.get(i) != 2) {
                 fail("'divAssign' failed");
             }
@@ -353,10 +521,18 @@ public class ArrayTest {
 
     @Test
     public void dotProduct() {
-        final Array aA = new Array(new double[] { 2.0, 1.0, -2.0, 3.0 });
-        final Array aB = new Array(new double[] { 3.0, 4.0,  5.0, 1.0 });
+        dotProduct(jFlags, jFlags);
+        dotProduct(jFlags, fFlags);
+        dotProduct(fFlags, jFlags);
+        dotProduct(fFlags, fFlags);
+    }
+
+    private void dotProduct(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 2.0, 1.0, -2.0, 3.0 }, flagsA);
+        final Array aB = new Array(new double[] { 3.0, 4.0,  5.0, 1.0 }, flagsB);
         dotProduct(aA, aB);
         dotProduct(range(augmented(aA)), range(augmented(aB)));
+        dotProduct(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void dotProduct(final Array aA, final Array aB) {
@@ -375,10 +551,18 @@ public class ArrayTest {
 
     @Test
     public void outerProduct() {
-        final Array aA = new Array(new double[] { 2.0, 1.0, -2.0, });
-        final Array aB = new Array(new double[] { 3.0, 4.0,  5.0, 1.0 });
+        outerProduct(jFlags, jFlags);
+        outerProduct(jFlags, fFlags);
+        outerProduct(fFlags, jFlags);
+        outerProduct(fFlags, fFlags);
+    }
+
+    private void outerProduct(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 2.0, 1.0, -2.0, }, flagsA);
+        final Array aB = new Array(new double[] { 3.0, 4.0,  5.0, 1.0 }, flagsB);
         outerProduct(aA, aB);
         outerProduct(range(augmented(aA)), range(augmented(aB)));
+        outerProduct(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void outerProduct(final Array aA, final Array aB) {
@@ -397,10 +581,18 @@ public class ArrayTest {
 
     @Test
     public void transform() {
-        final Array aA = new Array(new double[] {  5.0, 2.0, 3.0,  4.0 });
-        final Array aB = new Array(new double[] { 25.0, 4.0, 9.0, 16.0 });
+        transform(jFlags, jFlags);
+        transform(jFlags, fFlags);
+        transform(fFlags, jFlags);
+        transform(fFlags, fFlags);
+    }
+
+    private void transform(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] {  5.0, 2.0, 3.0,  4.0 }, flagsA);
+        final Array aB = new Array(new double[] { 25.0, 4.0, 9.0, 16.0 }, flagsB);
         transform(aA, aB);
         transform(range(augmented(aA)), range(augmented(aB)));
+        transform(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void transform(final Array aA, final Array aB) {
@@ -416,7 +608,8 @@ public class ArrayTest {
         final Array aC = new Array(new double[] { 5.0, 4.0, 9.0,  4.0 });
 
         final Array tmp2 = aA.clone();
-        result = tmp2.transform(1, 3, new Square());
+        final int offset = aA.begin();
+        result = tmp2.transform(1+offset, 3+offset, new Square());
         if (result != tmp2) {
             fail("'transform' must return this");
         }
@@ -430,38 +623,27 @@ public class ArrayTest {
      * @see <a href="http://gcc.gnu.org/viewcvs/trunk/libstdc%2B%2B-v3/testsuite/25_algorithms/lower_bound/">lower_bound test cases</a>
      */
     @Test
+    //TODO: test range(augmented(...))
     public void lowerBound_Case1() {
+        lowerBound_Case1(jFlags);
+        lowerBound_Case1(fFlags);
+    }
+
+    private void lowerBound_Case1(final Set<Address.Flags> flags) {
 
         final String MESSAGE = "lowerBound Case 1 failed";
-
-        //
-        // test case :: 1.cc
-        //
-
-//        typedef test_container<int, forward_iterator_wrapper> Container;
-//        int array[] = {0, 0, 0, 0, 1, 1, 1, 1};
-//
-//        void
-//        test1()
-//        {
-//          for(int i = 0; i < 5; ++i)
-//            for(int j = 4; j < 7; ++j)
-//              {
-//            Container con(array + i, array + j);
-//            VERIFY(lower_bound(con.begin(), con.end(), 1).ptr == array + 4);
-//              }
-//        }
 
         final double array[] = {0, 0, 0, 0, 1, 1, 1, 1};
 
         for (int i = 0; i < 5; ++i) {
             for (int j = 4; j < 7; ++j) {
-                final double container[] = new double[j-i +1];
-                System.arraycopy(array, i, container, 0, j-i+1);
-                final Array con = new Array(container);
+                final double tmp[] = new double[j-i +1];
+                System.arraycopy(array, i, tmp, 0, j-i+1);
+                final Array con = new Array(tmp, flags);
+                final int offset = con.begin();
 
                 final int pos = con.lowerBound(1);
-                if (pos != 4 - i) {
+                if (pos != 4 - i + offset) {
                     fail(MESSAGE);
                 }
             }
@@ -473,9 +655,17 @@ public class ArrayTest {
      * @see <a href="http://gcc.gnu.org/viewcvs/trunk/libstdc%2B%2B-v3/testsuite/25_algorithms/lower_bound/">lower_bound test cases</a>
      */
     @Test
+    //TODO: test range(augmented(...))
     public void lowerBound_Case2() {
-        final Array A = new Array(new double[]{1, 2, 3, 3, 3, 5, 8});
-        final Array C = new Array(new double[]{8, 5, 3, 3, 3, 2, 1});
+        lowerBound_Case2(jFlags, jFlags);
+        lowerBound_Case2(jFlags, fFlags);
+        lowerBound_Case2(fFlags, jFlags);
+        lowerBound_Case2(fFlags, fFlags);
+    }
+
+    private void lowerBound_Case2(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array A = new Array(new double[] { 1, 2, 3, 3, 3, 5, 8 }, flagsA);
+        final Array C = new Array(new double[] { 8, 5, 3, 3, 3, 2, 1 }, flagsB);
         lowerBound_Case2(A, C);
         lowerBound_Case2(range(augmented(A)), range(augmented(C)));
     }
@@ -484,97 +674,39 @@ public class ArrayTest {
 
         final String MESSAGE = "lowerBound Case 2 failed";
 
-        //
-        // test case :: 2.cc
-        //
-
-//        #include <algorithm>
-//        #include <testsuite_hooks.h>
-//
-//        bool test __attribute__((unused)) = true;
-//
-//        const int A[] = {1, 2, 3, 3, 3, 5, 8};
-//        const int C[] = {8, 5, 3, 3, 3, 2, 1};
-//        const int N = sizeof(A) / sizeof(int);
-//
-//        // A comparison, equalivalent to std::greater<int> without the
-//        // dependency on <functional>.
-//        struct gt
-//        {
-//            bool
-//            operator()(const int& x, const int& y) const
-//            { return x > y; }
-//        };
-//
-//        // Each test performs general-case, bookend, not-found condition,
-//        // and predicate functional checks.
-//
-//        // 25.3.3.1 lower_bound, with and without comparison predicate
-//        void
-//        test01()
-//        {
-//            using std::lower_bound;
-//
-//            const int first = A[0];
-//            const int last = A[N - 1];
-//
-//            const int* p = lower_bound(A, A + N, 3);
-//            VERIFY(p == A + 2);
-//
-//            const int* q = lower_bound(A, A + N, first);
-//            VERIFY(q == A + 0);
-//
-//            const int* r = lower_bound(A, A + N, last);
-//            VERIFY(r == A + N - 1);
-//
-//            const int* s = lower_bound(A, A + N, 4);
-//            VERIFY(s == A + 5);
-//
-//            const int* t = lower_bound(C, C + N, 3, gt());
-//            VERIFY(t == C + 2);
-//
-//            const int* u = lower_bound(C, C + N, first, gt());
-//            VERIFY(u == C + N - 1);
-//
-//            const int* v = lower_bound(C, C + N, last, gt());
-//            VERIFY(v == C + 0);
-//
-//            const int* w = lower_bound(C, C + N, 4, gt());
-//            VERIFY(w == C + 2);
-//        }
-
         final int N = A.size();
 
-
             final double first = A.first();
-            final double  last = A.last();
+            final double last = A.last();
+            final int offsetA = A.begin();
             int pos;
 
             pos = A.lowerBound(3);
-            assertTrue(MESSAGE, pos==2);
+            assertTrue(MESSAGE, pos==2+offsetA);
 
             pos = A.lowerBound(first);
-            assertTrue(MESSAGE, pos==0);
+            assertTrue(MESSAGE, pos==0+offsetA);
 
             pos = A.lowerBound(last);
-            assertTrue(MESSAGE, pos==N-1);
+            assertTrue(MESSAGE, pos==N-1+offsetA);
 
             pos = A.lowerBound(4);
-            assertTrue(MESSAGE, pos==5);
+            assertTrue(MESSAGE, pos==5+offsetA);
 
             final Ops.BinaryDoublePredicate gt = new GreaterThanPredicate();
+            final int offsetC = C.begin();
 
             pos = C.lowerBound(3, gt);
-            assertTrue(MESSAGE, pos==2);
+            assertTrue(MESSAGE, pos==2+offsetC);
 
             pos = C.lowerBound(first, gt);
-            assertTrue(MESSAGE, pos==N-1);
+            assertTrue(MESSAGE, pos==N-1+offsetC);
 
             pos = C.lowerBound(last, gt);
-            assertTrue(MESSAGE, pos==0);
+            assertTrue(MESSAGE, pos==0+offsetC);
 
             pos = C.lowerBound(4, gt);
-            assertTrue(MESSAGE, pos==2);
+            assertTrue(MESSAGE, pos==2+offsetC);
     }
 
 
@@ -583,38 +715,27 @@ public class ArrayTest {
      * @see <a href="http://gcc.gnu.org/viewcvs/trunk/libstdc%2B%2B-v3/testsuite/25_algorithms/upper_bound/">upper_bound test cases</a>
      */
     @Test
+    //TODO: test range(augmented(...))
     public void upperBound_Case1() {
+        upperBound_Case1(jFlags);
+        upperBound_Case1(fFlags);
+    }
+
+    private void upperBound_Case1(final Set<Address.Flags> flags) {
 
         final String MESSAGE = "upperBound Case 1 failed";
-
-        //
-        // test case :: 1.cc
-        //
-
-//        typedef test_container<int, forward_iterator_wrapper> Container;
-//        int array[] = {0, 0, 0, 0, 1, 1, 1, 1};
-//
-//        void
-//        test1()
-//        {
-//          for(int i = 0; i < 5; ++i)
-//            for(int j = 4; j < 7; ++j)
-//              {
-//            Container con(array + i, array + j);
-//            VERIFY(upper_bound(con.begin(), con.end(), 0).ptr == array + 4);
-//              }
-//        }
 
         final double array[] = {0, 0, 0, 0, 1, 1, 1, 1};
 
         for (int i = 0; i < 5; ++i) {
             for (int j = 4; j < 7; ++j) {
-                final double container[] = new double[j-i +1];
-                System.arraycopy(array, i, container, 0, j-i+1);
-                final Array con = new Array(container);
+                final double tmp[] = new double[j-i +1];
+                System.arraycopy(array, i, tmp, 0, j-i+1);
+                final Array con = new Array(tmp, flags);
+                final int offset = con.begin();
 
                 final int pos = con.upperBound(0);
-                if (pos != 4 - i) {
+                if (pos != 4 - i + offset) {
                     fail(MESSAGE);
                 }
             }
@@ -626,9 +747,17 @@ public class ArrayTest {
      * @see <a href="http://gcc.gnu.org/viewcvs/trunk/libstdc%2B%2B-v3/testsuite/25_algorithms/upper_bound/">upper_bound test cases</a>
      */
     @Test
+    //TODO: test range(augmented(...))
     public void upperBound_Case2() {
-        final Array A = new Array(new double[]{1, 2, 3, 3, 3, 5, 8});
-        final Array C = new Array(new double[]{8, 5, 3, 3, 3, 2, 1});
+        upperBound_Case2(jFlags, jFlags);
+        upperBound_Case2(jFlags, fFlags);
+        upperBound_Case2(fFlags, jFlags);
+        upperBound_Case2(fFlags, fFlags);
+    }
+
+    private void upperBound_Case2(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array A = new Array(new double[]{1, 2, 3, 3, 3, 5, 8}, flagsA);
+        final Array C = new Array(new double[]{8, 5, 3, 3, 3, 2, 1}, flagsB);
         upperBound_Case2(A, C);
         upperBound_Case2(range(augmented(A)), range(augmented(C)));
     }
@@ -637,106 +766,58 @@ public class ArrayTest {
 
         final String MESSAGE = "upperBound Case 2 failed";
 
-        //
-        // test case :: 2.cc
-        //
-
-//      #include <algorithm>
-//      #include <testsuite_hooks.h>
-//
-//      bool test __attribute__((unused)) = true;
-//
-//        const int A[] = {1, 2, 3, 3, 3, 5, 8};
-//        const int C[] = {8, 5, 3, 3, 3, 2, 1};
-//        const int N = sizeof(A) / sizeof(int);
-//
-//        // A comparison, equalivalent to std::greater<int> without the
-//        // dependency on <functional>.
-//        struct gt
-//        {
-//            bool
-//            operator()(const int& x, const int& y) const
-//            { return x > y; }
-//        };
-//
-//        // Each test performs general-case, bookend, not-found condition,
-//        // and predicate functional checks.
-//
-//        // 25.3.3.2 upper_bound, with and without comparison predicate
-//        void
-//        test02()
-//        {
-//            using std::upper_bound;
-//
-//            const int first = A[0];
-//            const int last = A[N - 1];
-//
-//            const int* p = upper_bound(A, A + N, 3);
-//            VERIFY(p == A + 5);
-//
-//            const int* q = upper_bound(A, A + N, first);
-//            VERIFY(q == A + 1);
-//
-//            const int* r = upper_bound(A, A + N, last);
-//            VERIFY(r == A + N);
-//
-//            const int* s = upper_bound(A, A + N, 4);
-//            VERIFY(s == A + 5);
-//
-//            const int* t = upper_bound(C, C + N, 3, gt());
-//            VERIFY(t == C + 5);
-//
-//            const int* u = upper_bound(C, C + N, first, gt());
-//            VERIFY(u == C + N);
-//
-//            const int* v = upper_bound(C, C + N, last, gt());
-//            VERIFY(v == C + 1);
-//
-//            const int* w = upper_bound(C, C + N, 4, gt());
-//            VERIFY(w == C + 2);
-//        }
-
         final int N = A.size();
 
 
             final double first = A.first();
             final double  last = A.last();
+            final int offsetA = A.begin();
+
             int pos;
 
             pos = A.upperBound(3);
-            assertTrue(MESSAGE, pos==5);
+            assertTrue(MESSAGE, pos==5+offsetA);
 
             pos = A.upperBound(first);
-            assertTrue(MESSAGE, pos==1);
+            assertTrue(MESSAGE, pos==1+offsetA);
 
             pos = A.upperBound(last);
-            assertTrue(MESSAGE, pos==N);
+            assertTrue(MESSAGE, pos==N+offsetA);
 
             pos = A.upperBound(4);
-            assertTrue(MESSAGE, pos==5);
+            assertTrue(MESSAGE, pos==5+offsetA);
 
             final Ops.BinaryDoublePredicate gt = new GreaterThanPredicate();
+            final int offsetC = C.begin();
 
             pos = C.upperBound(3, gt);
-            assertTrue(MESSAGE, pos==5);
+            assertTrue(MESSAGE, pos==5+offsetC);
 
             pos = C.upperBound(first, gt);
-            assertTrue(MESSAGE, pos==N);
+            assertTrue(MESSAGE, pos==N+offsetC);
 
             pos = C.upperBound(last, gt);
-            assertTrue(MESSAGE, pos==1);
+            assertTrue(MESSAGE, pos==1+offsetC);
 
             pos = C.upperBound(4, gt);
-            assertTrue(MESSAGE, pos==2);
+            assertTrue(MESSAGE, pos==2+offsetC);
     }
 
 
     @Test
     public void adjacentDifference() {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 5.0, 9.0, 11.0, 12.0 });
-        final Array aB = new Array(new double[] { 1.0, 1.0, 1.0, 2.0, 4.0,  2.0,  1.0 });
+        adjacentDifference(jFlags, jFlags);
+        adjacentDifference(jFlags, fFlags);
+        adjacentDifference(fFlags, jFlags);
+        adjacentDifference(fFlags, fFlags);
+    }
+
+    private void adjacentDifference(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 5.0, 9.0, 11.0, 12.0 }, flagsA);
+        final Array aB = new Array(new double[] { 1.0, 1.0, 1.0, 2.0, 4.0,  2.0,  1.0 }, flagsB);
         adjacentDifference(aA, aB);
         adjacentDifference(range(augmented(aA)), range(augmented(aB)));
+        adjacentDifference(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
 
@@ -756,10 +837,18 @@ public class ArrayTest {
 
     @Test
     public void exp() {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
-        final Array aB = new Array(new double[] { Math.exp(1), Math.exp(2), Math.exp(3), Math.exp(4) });
+        exp(jFlags, jFlags);
+        exp(jFlags, fFlags);
+        exp(fFlags, jFlags);
+        exp(fFlags, fFlags);
+    }
+
+    private void exp(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, flagsA);
+        final Array aB = new Array(new double[] { Math.exp(1), Math.exp(2), Math.exp(3), Math.exp(4) }, flagsB);
         exp(aA, aB);
         exp(range(augmented(aA)), range(augmented(aB)));
+        exp(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void exp(final Array aA, final Array aB) {
@@ -777,24 +866,68 @@ public class ArrayTest {
 
 
     @Test
-    public void fill() {
-        final Array aA = new Array(new double[] { 2.0, 2.0, 2.0, 2.0 });
-        fill(aA);
-        fill(range(augmented(aA)));
+    public void fillScalar() {
+        fillScalar(jFlags, jFlags);
+        fillScalar(jFlags, fFlags);
+        fillScalar(fFlags, jFlags);
+        fillScalar(fFlags, fFlags);
     }
 
-    private void fill(final Array aA) {
-        final Array result = new Array(4).fill(2.0);
-        if (!equals(result, aA)) {
+    private void fillScalar(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(4, flagsA);
+        final Array aB = new Array(new double[] { 2.0, 2.0, 2.0, 2.0 }, flagsB);
+        fillScalar(aA, aB);
+        fillScalar(range(augmented(aA)), range(augmented(aB)));
+        fillScalar(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
+    }
+
+    private void fillScalar(final Array aA, final Array aB) {
+        aA.fill(2.0);
+        if (!equals(aA, aB)) {
             fail("'fill' failed");
         }
     }
 
+
+    @Test
+    public void fillArray() {
+        fillArray(jFlags, jFlags);
+        fillArray(jFlags, fFlags);
+        fillArray(fFlags, jFlags);
+        fillArray(fFlags, fFlags);
+    }
+
+    private void fillArray(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(4, flagsA);
+        final Array aB = new Array(new double[] { 2.0, 2.0, 2.0, 2.0 }, flagsB);
+        fillArray(aA, aB);
+        fillArray(range(augmented(aA)), range(augmented(aB)));
+        fillArray(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
+    }
+
+    private void fillArray(final Array aA, final Array aB) {
+        aA.fill(aB);
+        if (!equals(aA, aB)) {
+            fail("'fill' failed");
+        }
+    }
+
+
+
+
+
+
     @Test
     public void first() {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
+        first(jFlags);
+        first(fFlags);
+    }
+
+    private void first(final Set<Address.Flags> flags) {
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, flags);
         first(aA);
         first(range(augmented(aA)));
+        first(range(augmented(range(augmented(aA)))));
     }
 
     private void first(final Array aA) {
@@ -805,9 +938,15 @@ public class ArrayTest {
 
     @Test
     public void last() {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
+        last(jFlags);
+        last(fFlags);
+    }
+
+    private void last(final Set<Address.Flags> flags) {
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, flags);
         last(aA);
         last(range(augmented(aA)));
+        last(range(augmented(range(augmented(aA)))));
     }
 
     private void last(final Array aA) {
@@ -819,10 +958,18 @@ public class ArrayTest {
 
     @Test
     public void log() {
-        final Array aA = new Array(new double[] { Math.exp(1), Math.exp(2), Math.exp(3), Math.exp(4) });
-        final Array aB = new Array(new double[] { 1.0,  2.0,   3.0,    4.0 });
+        log(jFlags, jFlags);
+        log(jFlags, fFlags);
+        log(fFlags, jFlags);
+        log(fFlags, fFlags);
+    }
+
+    private void log(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { Math.exp(1), Math.exp(2), Math.exp(3), Math.exp(4) }, flagsA);
+        final Array aB = new Array(new double[] { 1.0,  2.0,   3.0,    4.0 }, flagsB);
         log(aA, aB);
         log(range(augmented(aA)), range(augmented(aB)));
+        log(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void log(final Array aA, final Array aB) {
@@ -840,9 +987,15 @@ public class ArrayTest {
 
     @Test
     public void min() {
-        final Array aA = new Array(new double[] { 0.0, 1.0, 2.0, -3.0, 4.0, 0.0, -6.0, 7.0, 8.0, 0.0 });
+        min(jFlags);
+        min(fFlags);
+    }
+
+    private void min(final Set<Address.Flags> flags) {
+        final Array aA = new Array(new double[] { 0.0, 1.0, 2.0, -3.0, 4.0, 0.0, -6.0, 7.0, 8.0, 0.0 }, flags);
         min(aA);
         min(range(augmented(aA)));
+        min(range(augmented(range(augmented(aA)))));
     }
 
     private void min(final Array aA) {
@@ -857,9 +1010,15 @@ public class ArrayTest {
 
     @Test
     public void max() {
-        final Array aA = new Array(new double[] { 0.0, 1.0, 2.0, -3.0, 4.0, 0.0, -6.0, 7.0, 8.0, 0.0 });
+        max(jFlags);
+        max(fFlags);
+    }
+
+    private void max(final Set<Address.Flags> flags) {
+        final Array aA = new Array(new double[] { 0.0, 1.0, 2.0, -3.0, 4.0, 0.0, -6.0, 7.0, 8.0, 0.0 }, flags);
         max(aA);
         max(range(augmented(aA)));
+        max(range(augmented(range(augmented(aA)))));
     }
 
     private void max(final Array aA) {
@@ -874,10 +1033,18 @@ public class ArrayTest {
 
     @Test
     public void sort() {
-        final Array aA = new Array(new double[] { 9.0, 8.0, 2.0, 3.0, 1.0, 4.0, 8.0, 9.0 });
-        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0, 8.0, 8.0, 9.0, 9.0 });
+        sort(jFlags, jFlags);
+        sort(jFlags, fFlags);
+        sort(fFlags, jFlags);
+        sort(fFlags, fFlags);
+    }
+
+    private void sort(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 9.0, 8.0, 2.0, 3.0, 1.0, 4.0, 8.0, 9.0 }, flagsA);
+        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0, 4.0, 8.0, 8.0, 9.0, 9.0 }, flagsB);
         sort(aA, aB);
         sort(range(augmented(aA)), range(augmented(aB)));
+        sort(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void sort(final Array aA, final Array aB) {
@@ -893,10 +1060,18 @@ public class ArrayTest {
 
     @Test
     public void sqrt() {
-        final Array aA = new Array(new double[] { 1.0, 4.0, 9.0, 16.0 });
-        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0,  4.0 });
+        sqrt(jFlags, jFlags);
+        sqrt(jFlags, fFlags);
+        sqrt(fFlags, jFlags);
+        sqrt(fFlags, fFlags);
+    }
+
+    private void sqrt(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 1.0, 4.0, 9.0, 16.0 }, flagsA);
+        final Array aB = new Array(new double[] { 1.0, 2.0, 3.0,  4.0 }, flagsB);
         sqrt(aA, aB);
         sqrt(range(augmented(aA)), range(augmented(aB)));
+        sqrt(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void sqrt(final Array aA, final Array aB) {
@@ -915,10 +1090,18 @@ public class ArrayTest {
 
     @Test
     public void sqr() {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0,  4.0 });
-        final Array aB = new Array(new double[] { 1.0, 4.0, 9.0, 16.0 });
+        sqr(jFlags, jFlags);
+        sqr(jFlags, fFlags);
+        sqr(fFlags, jFlags);
+        sqr(fFlags, fFlags);
+    }
+
+    private void sqr(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0,  4.0 }, flagsA);
+        final Array aB = new Array(new double[] { 1.0, 4.0, 9.0, 16.0 }, flagsB);
         sqr(aA, aB);
         sqr(range(augmented(aA)), range(augmented(aB)));
+        sqr(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void sqr(final Array aA, final Array aB) {
@@ -937,10 +1120,18 @@ public class ArrayTest {
 
     @Test
     public void swap() {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
-        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 });
+        swap(jFlags, jFlags);
+        swap(jFlags, fFlags);
+        swap(fFlags, jFlags);
+        swap(fFlags, fFlags);
+    }
+
+    private void swap(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 }, flagsA);
+        final Array aB = new Array(new double[] { 4.0, 3.0, 2.0, 1.0 }, flagsB);
         swap(aA, aB);
         swap(range(augmented(aA)), range(augmented(aB)));
+        swap(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
     }
 
     private void swap(final Array aA, final Array aB) {
@@ -953,26 +1144,6 @@ public class ArrayTest {
         }
         if (!equals(aB, aAclone)) {
             fail("'swap' failed");
-        }
-    }
-
-
-    @Test
-    public void toArray() {
-        final Array aA = new Array(new double[] { 1.0, 2.0, 3.0, 4.0 });
-        toArray(aA);
-
-        //FIXME: http://bugs.jquantlib.org/view.php?id=471
-        // toArray(range(augmented(aA)));
-    }
-
-    private void toArray(final Array aA) {
-        final double[] doubles = new double[] { 1.0, 2.0, 3.0, 4.0 };
-        final double[] result = aA.toDoubleArray();
-        for (int i=0; i<aA.size(); i++) {
-            if (result[i] != doubles[i]) {
-                fail("toArray failed");
-            }
         }
     }
 

@@ -98,9 +98,8 @@ public class TimeGrid {
      */
     public TimeGrid(@Time @NonNegative final Array mandatoryTimes) {
 
-        if (System.getProperty("EXPERIMENTAL")==null) {
+        if (System.getProperty("EXPERIMENTAL")==null)
             throw new UnsupportedOperationException("This constructor is not available yet");
-        }
 
         // THIS COMMENT COMES FROM QuantLib/C++ code
         //
@@ -126,9 +125,9 @@ public class TimeGrid {
         final ArrayDoubleList tmp = new ArrayDoubleList();
         if (this.mandatoryTimes.first() > 0.00) {
             tmp.add(0.0);
-            tmp.addAll(1, this.mandatoryTimes.toDoubleArray());
+            tmp.addAll(1, this.mandatoryTimes.$);
         } else {
-            tmp.addAll(0, this.mandatoryTimes.toDoubleArray());
+            tmp.addAll(0, this.mandatoryTimes.$);
         }
         times = new Array(tmp.toDoubleArray());
         //FIXME: Review when adjacent_difference is fixed. null is wrong.
@@ -150,9 +149,8 @@ public class TimeGrid {
     //TODO: needs code review when integrated to callers.
     public TimeGrid(@Time final Array mandatoryTimes, final int steps) {
 
-        if (System.getProperty("EXPERIMENTAL")==null) {
+        if (System.getProperty("EXPERIMENTAL")==null)
             throw new UnsupportedOperationException("This constructor is not available yet");
-        }
 
         // THIS COMMENT COMES FROM QuantLib/C++ code
         //
@@ -297,17 +295,17 @@ public class TimeGrid {
 
     public @NonNegative int index(@Time @NonNegative final double t) /* @ReadOnly */ {
         final @NonNegative int i = closestIndex(t);
-        if (Closeness.isCloseEnough(t, times.get(i))) {
+        if (Closeness.isCloseEnough(t, times.get(i)))
             return i;
-        } else if (t < front()) {
+        else if (t < front())
             throw new IllegalArgumentException(
                     "using inadequate time grid: all nodes are later than the required time t = "
                     + t + " (earliest node is t1 = " + times.first() + ")" );
-        } else if (t > back()) {
+        else if (t > back())
             throw new IllegalArgumentException(
                     "using inadequate time grid: all nodes are earlier than the required time t = "
                     + t + " (latest node is t1 = " + back() + ")" );
-        } else {
+        else {
             /*@NonNegative*/ int j, k;
             if (t > times.get(i)) {
                 j = i;
@@ -327,18 +325,17 @@ public class TimeGrid {
         final int size = times.size();
         final int result = times.lowerBound(t);
 
-        if (result == 0) {
+        if (result == 0)
             return 0;
-        } else if (result == size) {
+        else if (result == size)
             return size-1;
-        } else {
+        else {
             final @Time double dt1 = times.get(result) - t;
             final @Time double dt2 = t - times.get(result-1);
-            if (dt1 < dt2) {
+            if (dt1 < dt2)
                 return result;
-            } else {
+            else
                 return result-1;
-            }
         }
     }
 

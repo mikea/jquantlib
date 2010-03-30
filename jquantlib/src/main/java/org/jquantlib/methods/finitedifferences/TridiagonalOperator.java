@@ -51,9 +51,8 @@ public class TridiagonalOperator implements Operator {
 			this.lowerDiagonal = new Array(0);
 			this.diagonal = new Array(0);
 			this.upperDiagonal = new Array(0);
-		} else {
-			throw new IllegalStateException("Invalid size for Tridiagonal Operator"); // TODO: message
-		}
+		} else
+            throw new IllegalStateException("Invalid size for Tridiagonal Operator"); // TODO: message
 
 	}
 
@@ -335,14 +334,44 @@ public class TridiagonalOperator implements Operator {
 		}
 
 		// cannot be j>=0 with Size j
-		for (j = size() - 2; j > 0; --j)
-			result.set(j, result.get(j) - (tmp.get(j + 1) * result.get(j + 1)));
+		for (j = size() - 2; j > 0; --j) {
+            result.set(j, result.get(j) - (tmp.get(j + 1) * result.get(j + 1)));
+        }
 
 		result.set(0, result.first() - (tmp.get(1) * result.get(1)));
 		return result;
 	}
 
-	/*public Operator assign(Operator d) {
+    @Override
+    public final double[] solveFor(final double[] rhs) {
+        final double[] result = new double[size()];
+        final double[] tmp = new double[size()];
+
+        double bet = diagonal.first();
+        if (bet == 0.0) throw new IllegalStateException("division by zero");
+
+        result[0] = rhs[0] / bet;
+        int j;
+        for (j = 1; j <= size() - 1; j++) {
+            tmp[j] = upperDiagonal.get(j - 1) / bet;
+            bet = diagonal.get(j) - lowerDiagonal.get(j - 1) * tmp[j];
+            if (bet == 0.0) throw new IllegalStateException("division by zero");
+            result[j] = (rhs[j] - lowerDiagonal.get(j - 1) * result[j-1]) / bet;
+        }
+
+        // cannot be j>=0 with Size j
+        for (j = size() - 2; j > 0; --j) {
+            result[j] -= tmp[j + 1] * result[j + 1];
+        }
+
+        result[0] = result[0] - (tmp[1] * result[1]);
+        return result;
+    }
+
+
+
+    //TODO : code review against QuantLib/C++
+    /*public Operator assign(Operator d) {
 		swap(d);
 		return this;
 	}*/

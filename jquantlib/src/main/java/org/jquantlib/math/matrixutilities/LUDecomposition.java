@@ -70,7 +70,7 @@ public class LUDecomposition {
      * @return Structure to access L, U and piv.
      */
     public LUDecomposition(final Matrix A) {
-        this.LU = new Matrix(A); // clone and force Java indexing style
+        this.LU = A.clone().toJava();
         this.m = LU.rows();
         this.n = LU.cols();
 
@@ -90,7 +90,7 @@ public class LUDecomposition {
             // Make a copy of the j-th column to localize references.
 
             for (int i = 0; i < m; i++) {
-                LUcolj[i] = LU.data[LU.addr.op(i, j)];
+                LUcolj[i] = LU.$[LU.addr.op(i, j)];
             }
 
             // Apply previous transformations.
@@ -101,10 +101,10 @@ public class LUDecomposition {
                 final int kmax = Math.min(i, j);
                 double s = 0.0;
                 for (int k = 0; k < kmax; k++) {
-                    s += LU.data[LU.addr.op(i, k)] * LUcolj[k];
+                    s += LU.$[LU.addr.op(i, k)] * LUcolj[k];
                 }
 
-                LU.data[LU.addr.op(i, j)] = LUcolj[i] -= s;
+                LU.$[LU.addr.op(i, j)] = LUcolj[i] -= s;
             }
 
             // Find pivot and exchange if necessary.
@@ -117,9 +117,9 @@ public class LUDecomposition {
             }
             if (p != j) {
                 for (int k = 0; k < n; k++) {
-                    final double t = LU.data[LU.addr.op(p, k)];
-                    LU.data[LU.addr.op(p, k)] = LU.data[LU.addr.op(j, k)];
-                    LU.data[LU.addr.op(j, k)] = t;
+                    final double t = LU.$[LU.addr.op(p, k)];
+                    LU.$[LU.addr.op(p, k)] = LU.$[LU.addr.op(j, k)];
+                    LU.$[LU.addr.op(j, k)] = t;
                 }
                 final int k = piv[p];
                 piv[p] = piv[j];
@@ -129,9 +129,9 @@ public class LUDecomposition {
 
             // Compute multipliers.
 
-            if (j < m & LU.data[LU.addr.op(j, j)] != 0.0) {
+            if (j < m & LU.$[LU.addr.op(j, j)] != 0.0) {
                 for (int i = j + 1; i < m; i++) {
-                    LU.data[LU.addr.op(i, j)] /= LU.data[LU.addr.op(j, j)];
+                    LU.$[LU.addr.op(i, j)] /= LU.$[LU.addr.op(j, j)];
                 }
             }
         }
@@ -148,7 +148,7 @@ public class LUDecomposition {
      */
     public boolean isNonSingular() {
         for (int j = 0; j < n; j++) {
-            if (LU.data[LU.addr.op(j, j)] == 0)
+            if (LU.$[LU.addr.op(j, j)] == 0)
                 return false;
         }
         return true;
@@ -164,9 +164,9 @@ public class LUDecomposition {
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 if (i > j) {
-                    L.data[L.addr.op(i, j)] = LU.data[LU.addr.op(i, j)];
+                    L.$[L.addr.op(i, j)] = LU.$[LU.addr.op(i, j)];
                 } else if (i == j) {
-                    L.data[L.addr.op(i, j)] = 1.0;
+                    L.$[L.addr.op(i, j)] = 1.0;
 //XXX - not needed
 //                } else {
 //                    L.data[L.addr.op(i, j)] = 0.0;
@@ -186,7 +186,7 @@ public class LUDecomposition {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (i <= j) {
-                    U.data[U.addr.op(i, j)] = LU.data[LU.addr.op(i, j)];
+                    U.$[U.addr.op(i, j)] = LU.$[LU.addr.op(i, j)];
 //XXX - not needed
 //                } else {
 //                    U.data[U.addr.op(i, j)] = 0.0;
@@ -201,6 +201,8 @@ public class LUDecomposition {
      *
      * @return piv
      */
+    //FIXME: code review
+    //FIXME: should return ArrayInt (array of integers) instead
     public int[] getPivot() {
         final int[] p = new int[m];
         for (int i = 0; i < m; i++) {
@@ -209,18 +211,19 @@ public class LUDecomposition {
         return p;
     }
 
-    /**
-     * Return pivot permutation vector as a one-dimensional double array
-     *
-     * @return (double) piv
-     */
-    public double[] getDoublePivot() {
-        final double[] vals = new double[m];
-        for (int i = 0; i < m; i++) {
-            vals[i] = piv[i];
-        }
-        return vals;
-    }
+//XXX
+//    /**
+//     * Return pivot permutation vector as a one-dimensional double array
+//     *
+//     * @return (double) piv
+//     */
+//    public double[] getDoublePivot() {
+//        final double[] vals = new double[m];
+//        for (int i = 0; i < m; i++) {
+//            vals[i] = piv[i];
+//        }
+//        return vals;
+//    }
 
     /**
      * Determinant
@@ -233,7 +236,7 @@ public class LUDecomposition {
 
         double d = pivsign;
         for (int j = 0; j < n; j++) {
-            d *= LU.data[LU.addr.op(j, j)];
+            d *= LU.$[LU.addr.op(j, j)];
         }
         return d;
     }
@@ -252,24 +255,24 @@ public class LUDecomposition {
             throw new LibraryException(MATRIX_IS_SINGULAR);
 
         // Copy right hand side with pivoting
-        final Matrix X = B.range(piv, 0, B.cols()-1);
+        final Matrix X = B.range(piv, 0, B.cols());
 
         // Solve L*Y = B(piv,:)
         for (int k = 0; k < n; k++) {
             for (int i = k + 1; i < n; i++) {
                 for (int j = 0; j < B.cols(); j++) {
-                    X.data[X.addr.op(i, j)] -= X.data[X.addr.op(k, j)] * LU.data[LU.addr.op(i, k)];
+                    X.$[X.addr.op(i, j)] -= X.$[X.addr.op(k, j)] * LU.$[LU.addr.op(i, k)];
                 }
             }
         }
         // Solve U*X = Y;
         for (int k = n - 1; k >= 0; k--) {
             for (int j = 0; j < B.cols(); j++) {
-                X.data[X.addr.op(k, j)] /= LU.data[LU.addr.op(k, k)];
+                X.$[X.addr.op(k, j)] /= LU.$[LU.addr.op(k, k)];
             }
             for (int i = 0; i < k; i++) {
                 for (int j = 0; j < B.cols(); j++) {
-                    X.data[X.addr.op(i, j)] -= X.data[X.addr.op(k, j)] * LU.data[LU.addr.op(i, k)];
+                    X.$[X.addr.op(i, j)] -= X.$[X.addr.op(k, j)] * LU.$[LU.addr.op(i, k)];
                 }
             }
         }

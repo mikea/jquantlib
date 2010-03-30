@@ -88,40 +88,40 @@ public class SVD {
                 // Compute the transformation for the k-th column and
                 // place the k-th diagonal in s.data[s.addr.op(k)].
                 // Compute 2-norm of k-th column without under/overflow.
-                s.data[s.addr.op(k)] = 0;
+                s.$[s.addr.op(k)] = 0;
                 for (int i = k; i < m; i++) {
-                    s.data[s.addr.op(k)] = Math.hypot(s.data[s.addr.op(k)], A.data[A.addr.op(i, k)]);
+                    s.$[s.addr.op(k)] = Math.hypot(s.$[s.addr.op(k)], A.$[A.addr.op(i, k)]);
                 }
-                if (s.data[s.addr.op(k)] != 0.0) {
-                    if (A.data[A.addr.op(k, k)] < 0.0) {
-                        s.data[s.addr.op(k)] = -s.data[s.addr.op(k)];
+                if (s.$[s.addr.op(k)] != 0.0) {
+                    if (A.$[A.addr.op(k, k)] < 0.0) {
+                        s.$[s.addr.op(k)] = -s.$[s.addr.op(k)];
                     }
                     for (int i = k; i < m; i++) {
-                        A.data[A.addr.op(i, k)] /= s.data[s.addr.op(k)];
+                        A.$[A.addr.op(i, k)] /= s.$[s.addr.op(k)];
                     }
-                    A.data[A.addr.op(k, k)] += 1.0;
+                    A.$[A.addr.op(k, k)] += 1.0;
                 }
-                s.data[s.addr.op(k)] = -s.data[s.addr.op(k)];
+                s.$[s.addr.op(k)] = -s.$[s.addr.op(k)];
             }
             for (int j = k + 1; j < n; j++) {
-                if ((k < nct) & (s.data[s.addr.op(k)] != 0.0)) {
+                if ((k < nct) & (s.$[s.addr.op(k)] != 0.0)) {
 
                     // Apply the transformation.
 
                     double t = 0;
                     for (int i = k; i < m; i++) {
-                        t += A.data[A.addr.op(i, k)] * A.data[A.addr.op(i, j)];
+                        t += A.$[A.addr.op(i, k)] * A.$[A.addr.op(i, j)];
                     }
-                    t = -t / A.data[A.addr.op(k, k)];
+                    t = -t / A.$[A.addr.op(k, k)];
                     for (int i = k; i < m; i++) {
-                        A.data[A.addr.op(i, j)] += t * A.data[A.addr.op(i, k)];
+                        A.$[A.addr.op(i, j)] += t * A.$[A.addr.op(i, k)];
                     }
                 }
 
                 // Place the k-th row of A into e for the
                 // subsequent calculation of the row transformation.
 
-                e[j] = A.data[A.addr.op(k, j)];
+                e[j] = A.$[A.addr.op(k, j)];
             }
             if (wantu & (k < nct)) {
 
@@ -129,7 +129,7 @@ public class SVD {
                 // multiplication.
 
                 for (int i = k; i < m; i++) {
-                    U.data[U.addr.op(i, k)] = A.data[A.addr.op(i, k)];
+                    U.$[U.addr.op(i, k)] = A.$[A.addr.op(i, k)];
                 }
             }
             if (k < nrt) {
@@ -160,13 +160,13 @@ public class SVD {
                     }
                     for (int j = k + 1; j < n; j++) {
                         for (int i = k + 1; i < m; i++) {
-                            work[i] += e[j] * A.data[A.addr.op(i, j)];
+                            work[i] += e[j] * A.$[A.addr.op(i, j)];
                         }
                     }
                     for (int j = k + 1; j < n; j++) {
                         final double t = -e[j] / e[k + 1];
                         for (int i = k + 1; i < m; i++) {
-                            A.data[A.addr.op(i, j)] += t * work[i];
+                            A.$[A.addr.op(i, j)] += t * work[i];
                         }
                     }
                 }
@@ -176,7 +176,7 @@ public class SVD {
                     // back multiplication.
 
                     for (int i = k + 1; i < n; i++) {
-                        V.data[V.addr.op(i, k)] = e[i];
+                        V.$[V.addr.op(i, k)] = e[i];
                     }
                 }
             }
@@ -186,13 +186,13 @@ public class SVD {
 
         int p = Math.min(n, m + 1);
         if (nct < n) {
-            s.data[nct] = A.data[A.addr.op(nct, nct)];
+            s.$[nct] = A.$[A.addr.op(nct, nct)];
         }
         if (m < p) {
-            s.data[p - 1] = 0.0;
+            s.$[p - 1] = 0.0;
         }
         if (nrt + 1 < p) {
-            e[nrt] = A.data[A.addr.op(nrt, p - 1)];
+            e[nrt] = A.$[A.addr.op(nrt, p - 1)];
         }
         e[p - 1] = 0.0;
 
@@ -201,34 +201,34 @@ public class SVD {
         if (wantu) {
             for (int j = nct; j < nu; j++) {
                 for (int i = 0; i < m; i++) {
-                    U.data[U.addr.op(i, j)] = 0.0;
+                    U.$[U.addr.op(i, j)] = 0.0;
                 }
-                U.data[U.addr.op(j, j)] = 1.0;
+                U.$[U.addr.op(j, j)] = 1.0;
             }
             for (int k = nct - 1; k >= 0; k--) {
-                if (s.data[s.addr.op(k)] != 0.0) {
+                if (s.$[s.addr.op(k)] != 0.0) {
                     for (int j = k + 1; j < nu; j++) {
                         double t = 0;
                         for (int i = k; i < m; i++) {
-                            t += U.data[U.addr.op(i, k)] * U.data[U.addr.op(i, j)];
+                            t += U.$[U.addr.op(i, k)] * U.$[U.addr.op(i, j)];
                         }
-                        t = -t / U.data[U.addr.op(k, k)];
+                        t = -t / U.$[U.addr.op(k, k)];
                         for (int i = k; i < m; i++) {
-                            U.data[U.addr.op(i, j)] += t * U.data[U.addr.op(i, k)];
+                            U.$[U.addr.op(i, j)] += t * U.$[U.addr.op(i, k)];
                         }
                     }
                     for (int i = k; i < m; i++) {
-                        U.data[U.addr.op(i, k)] = -U.data[U.addr.op(i, k)];
+                        U.$[U.addr.op(i, k)] = -U.$[U.addr.op(i, k)];
                     }
-                    U.data[U.addr.op(k, k)] = 1.0 + U.data[U.addr.op(k, k)];
+                    U.$[U.addr.op(k, k)] = 1.0 + U.$[U.addr.op(k, k)];
                     for (int i = 0; i < k - 1; i++) {
-                        U.data[U.addr.op(i, k)] = 0.0;
+                        U.$[U.addr.op(i, k)] = 0.0;
                     }
                 } else {
                     for (int i = 0; i < m; i++) {
-                        U.data[U.addr.op(i, k)] = 0.0;
+                        U.$[U.addr.op(i, k)] = 0.0;
                     }
-                    U.data[U.addr.op(k, k)] = 1.0;
+                    U.$[U.addr.op(k, k)] = 1.0;
                 }
             }
         }
@@ -241,18 +241,18 @@ public class SVD {
                     for (int j = k + 1; j < nu; j++) {
                         double t = 0;
                         for (int i = k + 1; i < n; i++) {
-                            t += V.data[V.addr.op(i, k)] * V.data[V.addr.op(i, j)];
+                            t += V.$[V.addr.op(i, k)] * V.$[V.addr.op(i, j)];
                         }
-                        t = -t / V.data[V.addr.op(k + 1, k)];
+                        t = -t / V.$[V.addr.op(k + 1, k)];
                         for (int i = k + 1; i < n; i++) {
-                            V.data[V.addr.op(i, j)] += t * V.data[V.addr.op(i, k)];
+                            V.$[V.addr.op(i, j)] += t * V.$[V.addr.op(i, k)];
                         }
                     }
                 }
                 for (int i = 0; i < n; i++) {
-                    V.data[V.addr.op(i, k)] = 0.0;
+                    V.$[V.addr.op(i, k)] = 0.0;
                 }
-                V.data[V.addr.op(k, k)] = 1.0;
+                V.$[V.addr.op(k, k)] = 1.0;
             }
         }
 
@@ -280,7 +280,7 @@ public class SVD {
                 if (k == -1) {
                     break;
                 }
-                if (Math.abs(e[k]) <= eps * (Math.abs(s.data[s.addr.op(k)]) + Math.abs(s.data[s.addr.op(k + 1)]))) {
+                if (Math.abs(e[k]) <= eps * (Math.abs(s.$[s.addr.op(k)]) + Math.abs(s.$[s.addr.op(k + 1)]))) {
                     e[k] = 0.0;
                     break;
                 }
@@ -294,8 +294,8 @@ public class SVD {
                         break;
                     }
                     final double t = (ks != p ? Math.abs(e[ks]) : 0.) + (ks != k + 1 ? Math.abs(e[ks - 1]) : 0.);
-                    if (Math.abs(s.data[s.addr.op(ks)]) <= eps * t) {
-                        s.data[s.addr.op(ks)] = 0.0;
+                    if (Math.abs(s.$[s.addr.op(ks)]) <= eps * t) {
+                        s.$[s.addr.op(ks)] = 0.0;
                         break;
                     }
                 }
@@ -320,19 +320,19 @@ public class SVD {
                 double f = e[p - 2];
                 e[p - 2] = 0.0;
                 for (int j = p - 2; j >= k; j--) {
-                    double t = Math.hypot(s.data[j], f);
-                    final double cs = s.data[j] / t;
+                    double t = Math.hypot(s.$[j], f);
+                    final double cs = s.$[j] / t;
                     final double sn = f / t;
-                    s.data[j] = t;
+                    s.$[j] = t;
                     if (j != k) {
                         f = -sn * e[j - 1];
                         e[j - 1] = cs * e[j - 1];
                     }
                     if (wantv) {
                         for (int i = 0; i < n; i++) {
-                            t = cs * V.data[V.addr.op(i, j)] + sn * V.data[V.addr.op(i, p - 1)];
-                            V.data[V.addr.op(i, p - 1)] = -sn * V.data[V.addr.op(i, j)] + cs * V.data[V.addr.op(i, p - 1)];
-                            V.data[V.addr.op(i, j)] = t;
+                            t = cs * V.$[V.addr.op(i, j)] + sn * V.$[V.addr.op(i, p - 1)];
+                            V.$[V.addr.op(i, p - 1)] = -sn * V.$[V.addr.op(i, j)] + cs * V.$[V.addr.op(i, p - 1)];
+                            V.$[V.addr.op(i, j)] = t;
                         }
                     }
                 }
@@ -345,17 +345,17 @@ public class SVD {
                 double f = e[k - 1];
                 e[k - 1] = 0.0;
                 for (int j = k; j < p; j++) {
-                    double t = Math.hypot(s.data[j], f);
-                    final double cs = s.data[j] / t;
+                    double t = Math.hypot(s.$[j], f);
+                    final double cs = s.$[j] / t;
                     final double sn = f / t;
-                    s.data[j] = t;
+                    s.$[j] = t;
                     f = -sn * e[j];
                     e[j] = cs * e[j];
                     if (wantu) {
                         for (int i = 0; i < m; i++) {
-                            t = cs * U.data[U.addr.op(i, j)] + sn * U.data[U.addr.op(i, k - 1)];
-                            U.data[U.addr.op(i, k - 1)] = -sn * U.data[U.addr.op(i, j)] + cs * U.data[U.addr.op(i, k - 1)];
-                            U.data[U.addr.op(i, j)] = t;
+                            t = cs * U.$[U.addr.op(i, j)] + sn * U.$[U.addr.op(i, k - 1)];
+                            U.$[U.addr.op(i, k - 1)] = -sn * U.$[U.addr.op(i, j)] + cs * U.$[U.addr.op(i, k - 1)];
+                            U.$[U.addr.op(i, j)] = t;
                         }
                     }
                 }
@@ -368,12 +368,12 @@ public class SVD {
 
                 // Calculate the shift.
 
-                final double scale = Math.max(Math.max(Math.max(Math.max(Math.abs(s.data[p - 1]), Math.abs(s.data[p - 2])),
-                        Math.abs(e[p - 2])), Math.abs(s.data[s.addr.op(k)])), Math.abs(e[k]));
-                final double sp = s.data[p - 1] / scale;
-                final double spm1 = s.data[p - 2] / scale;
+                final double scale = Math.max(Math.max(Math.max(Math.max(Math.abs(s.$[p - 1]), Math.abs(s.$[p - 2])),
+                        Math.abs(e[p - 2])), Math.abs(s.$[s.addr.op(k)])), Math.abs(e[k]));
+                final double sp = s.$[p - 1] / scale;
+                final double spm1 = s.$[p - 2] / scale;
                 final double epm1 = e[p - 2] / scale;
-                final double sk = s.data[s.addr.op(k)] / scale;
+                final double sk = s.$[s.addr.op(k)] / scale;
                 final double ek = e[k] / scale;
                 final double b = ((spm1 + sp) * (spm1 - sp) + epm1 * epm1) / 2.0;
                 final double c = (sp * epm1) * (sp * epm1);
@@ -397,30 +397,30 @@ public class SVD {
                     if (j != k) {
                         e[j - 1] = t;
                     }
-                    f = cs * s.data[j] + sn * e[j];
-                    e[j] = cs * e[j] - sn * s.data[j];
-                    g = sn * s.data[j + 1];
-                    s.data[j + 1] = cs * s.data[j + 1];
+                    f = cs * s.$[j] + sn * e[j];
+                    e[j] = cs * e[j] - sn * s.$[j];
+                    g = sn * s.$[j + 1];
+                    s.$[j + 1] = cs * s.$[j + 1];
                     if (wantv) {
                         for (int i = 0; i < n; i++) {
-                            t = cs * V.data[V.addr.op(i, j)] + sn * V.data[V.addr.op(i, j + 1)];
-                            V.data[V.addr.op(i, j + 1)] = -sn * V.data[V.addr.op(i, j)] + cs * V.data[V.addr.op(i, j + 1)];
-                            V.data[V.addr.op(i, j)] = t;
+                            t = cs * V.$[V.addr.op(i, j)] + sn * V.$[V.addr.op(i, j + 1)];
+                            V.$[V.addr.op(i, j + 1)] = -sn * V.$[V.addr.op(i, j)] + cs * V.$[V.addr.op(i, j + 1)];
+                            V.$[V.addr.op(i, j)] = t;
                         }
                     }
                     t = Math.hypot(f, g);
                     cs = f / t;
                     sn = g / t;
-                    s.data[j] = t;
-                    f = cs * e[j] + sn * s.data[j + 1];
-                    s.data[j + 1] = -sn * e[j] + cs * s.data[j + 1];
+                    s.$[j] = t;
+                    f = cs * e[j] + sn * s.$[j + 1];
+                    s.$[j + 1] = -sn * e[j] + cs * s.$[j + 1];
                     g = sn * e[j + 1];
                     e[j + 1] = cs * e[j + 1];
                     if (wantu && (j < m - 1)) {
                         for (int i = 0; i < m; i++) {
-                            t = cs * U.data[U.addr.op(i, j)] + sn * U.data[U.addr.op(i, j + 1)];
-                            U.data[U.addr.op(i, j + 1)] = -sn * U.data[U.addr.op(i, j)] + cs * U.data[U.addr.op(i, j + 1)];
-                            U.data[U.addr.op(i, j)] = t;
+                            t = cs * U.$[U.addr.op(i, j)] + sn * U.$[U.addr.op(i, j + 1)];
+                            U.$[U.addr.op(i, j + 1)] = -sn * U.$[U.addr.op(i, j)] + cs * U.$[U.addr.op(i, j + 1)];
+                            U.$[U.addr.op(i, j)] = t;
                         }
                     }
                 }
@@ -435,11 +435,11 @@ public class SVD {
 
                 // Make the singular values positive.
 
-                if (s.data[s.addr.op(k)] <= 0.0) {
-                    s.data[s.addr.op(k)] = (s.data[s.addr.op(k)] < 0.0 ? -s.data[s.addr.op(k)] : 0.0);
+                if (s.$[s.addr.op(k)] <= 0.0) {
+                    s.$[s.addr.op(k)] = (s.$[s.addr.op(k)] < 0.0 ? -s.$[s.addr.op(k)] : 0.0);
                     if (wantv) {
                         for (int i = 0; i <= pp; i++) {
-                            V.data[V.addr.op(i, k)] = -V.data[V.addr.op(i, k)];
+                            V.$[V.addr.op(i, k)] = -V.$[V.addr.op(i, k)];
                         }
                     }
                 }
@@ -447,24 +447,24 @@ public class SVD {
                 // Order the singular values.
 
                 while (k < pp) {
-                    if (s.data[s.addr.op(k)] >= s.data[s.addr.op(k + 1)]) {
+                    if (s.$[s.addr.op(k)] >= s.$[s.addr.op(k + 1)]) {
                         break;
                     }
-                    double t = s.data[s.addr.op(k)];
-                    s.data[s.addr.op(k)] = s.data[s.addr.op(k + 1)];
-                    s.data[s.addr.op(k + 1)] = t;
+                    double t = s.$[s.addr.op(k)];
+                    s.$[s.addr.op(k)] = s.$[s.addr.op(k + 1)];
+                    s.$[s.addr.op(k + 1)] = t;
                     if (wantv && (k < n - 1)) {
                         for (int i = 0; i < n; i++) {
-                            t = V.data[V.addr.op(i, k + 1)];
-                            V.data[V.addr.op(i, k + 1)] = V.data[V.addr.op(i, k)];
-                            V.data[V.addr.op(i, k)] = t;
+                            t = V.$[V.addr.op(i, k + 1)];
+                            V.$[V.addr.op(i, k + 1)] = V.$[V.addr.op(i, k)];
+                            V.$[V.addr.op(i, k)] = t;
                         }
                     }
                     if (wantu && (k < m - 1)) {
                         for (int i = 0; i < m; i++) {
-                            t = U.data[U.addr.op(i, k + 1)];
-                            U.data[U.addr.op(i, k + 1)] = U.data[U.addr.op(i, k)];
-                            U.data[U.addr.op(i, k)] = t;
+                            t = U.$[U.addr.op(i, k + 1)];
+                            U.$[U.addr.op(i, k + 1)] = U.$[U.addr.op(i, k)];
+                            U.$[U.addr.op(i, k)] = t;
                         }
                     }
                     k++;
@@ -484,7 +484,7 @@ public class SVD {
             // for (int j = 0; j < n; j++) {
             // S.data[S.addr.op(i,j)] = 0.0;
             // }
-            S.data[S.addr.op(i, i)] = s.data[s.addr.op(i)];
+            S.$[S.addr.op(i, i)] = s.$[s.addr.op(i)];
         }
     }
 
@@ -534,7 +534,7 @@ public class SVD {
      * @return max(S)
      */
     public double norm2() {
-        return s.data[s.addr.op(0)];
+        return s.$[s.addr.op(0)];
     }
 
     /**
@@ -543,7 +543,7 @@ public class SVD {
      * @return max(S)/min(S)
      */
     public double cond() {
-        return s.data[s.addr.op(0)] / s.data[Math.min(m, n) - 1];
+        return s.$[s.addr.op(0)] / s.$[Math.min(m, n) - 1];
     }
 
     /**
@@ -553,10 +553,10 @@ public class SVD {
      */
     public int rank() {
         final double eps = Math.pow(2.0, -52.0);
-        final double tol = Math.max(m, n) * s.data[s.addr.op(0)] * eps;
+        final double tol = Math.max(m, n) * s.$[s.addr.op(0)] * eps;
         int r = 0;
         for (int i = 0; i < s.size(); i++) {
-            if (s.data[s.addr.op(i)] > tol) {
+            if (s.$[s.addr.op(i)] > tol) {
                 r++;
             }
         }

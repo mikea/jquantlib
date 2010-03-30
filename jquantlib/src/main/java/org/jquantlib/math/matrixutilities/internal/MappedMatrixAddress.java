@@ -1,5 +1,6 @@
 package org.jquantlib.math.matrixutilities.internal;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 
@@ -10,8 +11,9 @@ public class MappedMatrixAddress extends MappedAddress implements Address.Matrix
             final Address.MatrixAddress chain,
             final int col0, final int col1,
             final Set<Address.Flags> flags,
+            final boolean contiguous,
             final int rows, final int cols) {
-        super(ridx, chain, col0, col1, flags, rows, cols);
+        super(ridx, chain, col0, col1, flags, contiguous, rows, cols);
     }
 
     public MappedMatrixAddress(
@@ -19,8 +21,9 @@ public class MappedMatrixAddress extends MappedAddress implements Address.Matrix
             final Address.MatrixAddress chain,
             final int[] cidx,
             final Set<Address.Flags> flags,
+            final boolean contiguous,
             final int rows, final int cols) {
-        super(row0, row1, chain, cidx, flags, rows, cols);
+        super(row0, row1, chain, cidx, flags, contiguous, rows, cols);
     }
 
     public MappedMatrixAddress(
@@ -28,13 +31,27 @@ public class MappedMatrixAddress extends MappedAddress implements Address.Matrix
             final Address.MatrixAddress chain,
             final int[] cidx,
             final Set<Address.Flags> flags,
+            final boolean contiguous,
             final int rows, final int cols) {
-        super(ridx, chain, cidx, flags, rows, cols);
+        super(ridx, chain, cidx, flags, contiguous, rows, cols);
     }
 
     //
     // implements MatrixAddress
     //
+
+    @Override
+    public MatrixAddress toFortran() {
+        return isFortran() ? this :
+            new DirectMatrixAddress(row0, row1, this.chain, col0, col1, EnumSet.of(Address.Flags.FORTRAN), contiguous, rows, cols);
+    }
+
+    @Override
+    public MatrixAddress toJava() {
+        return isFortran() ?
+            new DirectMatrixAddress(row0+1, row1+1, this.chain, col0+1, col1+1, EnumSet.noneOf(Address.Flags.class), contiguous, rows, cols)
+            : this;
+    }
 
     @Override
     public MatrixOffset offset() {
@@ -58,7 +75,7 @@ public class MappedMatrixAddress extends MappedAddress implements Address.Matrix
 
     @Override
     public DirectMatrixAddress clone() {
-        return new DirectMatrixAddress(row0, row1, chain, col0, col1, flags, rows, cols);
+        return new DirectMatrixAddress(row0, row1, chain, col0, col1, flags, contiguous, rows, cols);
     }
 
 

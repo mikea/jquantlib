@@ -31,52 +31,50 @@ public interface Address {
     public int last();
 
     /**
-     * <code>rbase</code> is the row offset of the upmost row of a Matrix.
+     * <code>row0</code> is the row offset of the upmost row of a Matrix.
      * <p>
-     * So, imagine that you create matrices A and B like shown below, where B is a submatrix of A:
+     * Example: Matrix B, being a sub-matrix of A, has <code>row0</code> like shown below:
      * <pre>
      *     Matrix A = new Matrix(5, 8);
      *     int row0 = 1; int row1 = 4;
      *     int col0 = 5; int col1 = 8;
      *     Matrix B = A.range(row0, row1, col0, col1);
      * </pre>
-     * <p>
-     * where <code>row0</code> determines rbase.
      *
      * @return
      */
     public int row0();
 
     /**
-     * <code>cbase</code> is the row offset of the leftmost column of a Matrix.
+     * <code>col0</code> is the row offset of the leftmost column of a Matrix.
      * <p>
-     * So, imagine that you create matrices A and B like shown below, where B is a submatrix of A:
+     * Example: Matrix B, being a sub-matrix of A, has <code>col0</code> like shown below:
      * <pre>
      *     Matrix A = new Matrix(5, 8);
      *     int row0 = 1; int row1 = 4;
      *     int col0 = 5; int col1 = 8;
      *     Matrix B = A.range(row0, row1, col0, col1);
      * </pre>
-     * <p>
-     * where <code>col0</code> determines cbase.
      *
      * @return
      */
     public int col0();
 
     /**
-     * This is a convenience method intended to return {@link Flags#CONTIGUOUS}
-     *
-     * @return Flags#CONTIGUOUS
+     * Tells if the underlying memory storage can be accessed in a continuous way.
+     * <p>
+     * When <code>contiguous</code> is <code>true</code>, certain operations are benefited by bulk operations.
      */
-    public boolean contiguous();
+    public boolean isContiguous();
 
     /**
      * This is a convenience method intended to return {@link Flags#FORTRAN}
      *
      * @return Flags#FORTRAN
      */
-    public boolean fortran();
+    public boolean isFortran();
+
+
 
     /**
      * @return a set of flags in effect on this {@link Address} object.
@@ -89,13 +87,6 @@ public interface Address {
     //
 
     public enum Flags {
-
-        /**
-         * Tells if the underlying memory storage can be accessed in a continuous way.
-         * <p>
-         * When <code>contiguous</code> is <code>true</code>, certain operations are benefited by bulk opeations.
-         */
-        CONTIGUOUS,
 
         /**
          * Tells if this {@link Address} is intended to Fortran 1-based indexing.
@@ -111,19 +102,23 @@ public interface Address {
          */
         FORTRAN,
 
-        /**
-         * Tells if rows and columns must be transposed.
-         * <p>
-         * This feature is particularly important in 2 situations:
-         * <li>Implement Matrix transposition in constant time by simply changing the address mapping as opposed
-         * to performing the actual transposition of all elements of it;</li>
-         * <li>Increase performance when a Matrix is mostly used as a set of column arrays. As columns are mapped
-         * internally as rows, the processor will show better performance due to memory caching of adjacent elements</li>
-         * <p>
-         * <b>NOT IMPLEMENTED YET</b>
-         */
-        TRANSPOSE //TODO: to be implemented
+//TODO: to be implemented
+//        /**
+//         * Tells if rows and columns must be transposed.
+//         * <p>
+//         * This feature is particularly important in 2 situations:
+//         * <li>Implement Matrix transposition in constant time by simply changing the address mapping as opposed
+//         * to performing the actual transposition of all elements of it;</li>
+//         * <li>Increase performance when a Matrix is mostly used as a set of column arrays. As columns are mapped
+//         * internally as rows, the processor will show better performance due to memory caching of adjacent elements</li>
+//         * <p>
+//         * <b>NOT IMPLEMENTED YET</b>
+//         */
+//        TRANSPOSE
     }
+
+
+
 
 
     //
@@ -140,6 +135,9 @@ public interface Address {
 
         public int op(int index);
 
+        public ArrayAddress toFortran();
+        public ArrayAddress toJava();
+
         public ArrayOffset offset();
         public ArrayOffset offset(int index);
 
@@ -155,6 +153,9 @@ public interface Address {
         public MatrixAddress clone();
 
         public int op(int row, int col);
+
+        public MatrixAddress toFortran();
+        public MatrixAddress toJava();
 
         public MatrixOffset offset();
         public MatrixOffset offset(final int row, final int col);

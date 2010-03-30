@@ -81,17 +81,17 @@ public class CholeskyDecomposition {
             for (int k = 0; k < j; k++) {
                 double s = 0.0;
                 for (int i = 0; i < k; i++) {
-                    s += L.data[L.addr.op(k, i)] * L.data[L.addr.op(j, i)];
+                    s += L.$[L.addr.op(k, i)] * L.$[L.addr.op(j, i)];
                 }
-                L.data[L.addr.op(j, k)] = s = (A.data[A.addr.op(j, k)] - s) / L.data[L.addr.op(k, k)];
+                L.$[L.addr.op(j, k)] = s = (A.$[A.addr.op(j, k)] - s) / L.$[L.addr.op(k, k)];
                 d = d + s * s;
-                isspd = isspd & (A.data[A.addr.op(k, j)] == A.data[A.addr.op(j, k)]);
+                isspd = isspd & (A.$[A.addr.op(k, j)] == A.$[A.addr.op(j, k)]);
             }
-            d = A.data[A.addr.op(j, j)] - d;
+            d = A.$[A.addr.op(j, j)] - d;
             isspd = isspd & (d > 0.0);
-            L.data[L.addr.op(j, j)] = Math.sqrt(Math.max(d, 0.0));
+            L.$[L.addr.op(j, j)] = Math.sqrt(Math.max(d, 0.0));
             for (int k = j + 1; k < n; k++) {
-                L.data[L.addr.op(j, k)] = 0.0;
+                L.$[L.addr.op(j, k)] = 0.0;
             }
         }
     }
@@ -140,9 +140,9 @@ public class CholeskyDecomposition {
         for (int k = 0; k < n; k++) {
             for (int j = 0; j < nx; j++) {
                 for (int i = 0; i < k; i++) {
-                    X.data[X.addr.op(k, j)] -= X.data[X.addr.op(i, j)] * L.data[L.addr.op(k, i)];
+                    X.$[X.addr.op(k, j)] -= X.$[X.addr.op(i, j)] * L.$[L.addr.op(k, i)];
                 }
-                X.data[X.addr.op(k, j)] /= L.data[L.addr.op(k, k)];
+                X.$[X.addr.op(k, j)] /= L.$[L.addr.op(k, k)];
             }
         }
 
@@ -150,9 +150,9 @@ public class CholeskyDecomposition {
         for (int k = n - 1; k >= 0; k--) {
             for (int j = 0; j < nx; j++) {
                 for (int i = k + 1; i < n; i++) {
-                    X.data[X.addr.op(k, j)] -= X.data[X.addr.op(i, j)] * L.data[L.addr.op(i, k)];
+                    X.$[X.addr.op(k, j)] -= X.$[X.addr.op(i, j)] * L.$[L.addr.op(i, k)];
                 }
-                X.data[X.addr.op(k, j)] /= L.data[L.addr.op(k, k)];
+                X.$[X.addr.op(k, j)] /= L.$[L.addr.op(k, k)];
             }
         }
 

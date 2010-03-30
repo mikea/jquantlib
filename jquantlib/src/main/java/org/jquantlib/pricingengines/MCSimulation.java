@@ -42,7 +42,6 @@ package org.jquantlib.pricingengines;
 import org.jquantlib.math.randomnumbers.RandomNumberGenerator;
 import org.jquantlib.math.statistics.Statistics;
 import org.jquantlib.methods.montecarlo.Variate;
-//import org.jquantlib.methods.montecarlo.MonteCarloModel;
 
 /**
  *
@@ -54,162 +53,185 @@ import org.jquantlib.methods.montecarlo.Variate;
  * @ee McVanillaEngine
  *
  * @author Richard Gomes
- * @author Selene Makarios
  */
+public class MCSimulation<MC extends Variate, RNG extends RandomNumberGenerator, S extends Statistics> {
 
-/*
-
-public abstract class McSimulation<MC extends Variate, RNG extends RandomNumberGenerator, S extends Statistics> {
-    //typedef typename MonteCarloModel<MC,RNG,S>.path_generator_type
-    //    path_generator_type;
-    //typedef typename MonteCarloModel<MC,RNG,S>.path_pricer_type
-    //    path_pricer_type;
-    //typedef typename MonteCarloModel<MC,RNG,S>.stats_type
-    //    stats_type;
-    //typedef typename MonteCarloModel<MC,RNG,S>.result_type result_type;
-
-    protected McSimulation(boolean antitheticVariate, boolean controlVariate) {
-     antitheticVariate_ = (antitheticVariate);
-      controlVariate_ = (controlVariate);
-    }
-    
-    protected abstract MonteCarloModel<MC,RNG,S>.path_pricer_type pathPricer();
-    protected abstract MonteCarloModel<MC,RNG,S>.path_generator_type pathGenerator();
-    protected abstract TimeGrid timeGrid();
-    protected MonteCarloModel<MC,RNG,S>.path_pricer_type controlPathPricer() {
-        return new MonteCarloModel<MC,RNG,S>.path_pricer_type();
-    }
-    protected MonteCarloModel<MC,RNG,S>.path_generator_type controlPathGenerator() {
-        return new MonteCarloModel<MC,RNG,S>.path_generator_type();
-    }
-    protected PricingEngine controlPricingEngine() {
-        return new PricingEngine();
-    }
-    protected MonteCarloModel<MC,RNG,S>.result_type controlVariateValue() {
-        return null;
-    }
-    protected static <Sequence> double maxError(Sequence sequence) {
-        return *std.max_element(sequence.begin(), sequence.end());
-    }
-    protected static double maxError(double error) {
-        return error;
-    }
-    
-    //! add samples until the required absolute tolerance is reached
-    public MonteCarloModel<MC,RNG,S>.result_type  value(double tolerance) {
-    	return value(tolerance, QL_MAX_INTEGER, 1023);
-    }
-    
-    public MonteCarloModel<MC,RNG,S>.result_type 
-    	value(double tolerance, int maxSamples = QL_MAX_INTEGER, int minSamples = 1023) {
-	    int sampleNumber = mcModel_.sampleAccumulator().samples();
-	    if (sampleNumber<minSamples) {
-	        mcModel_.addSamples(minSamples-sampleNumber);
-	        sampleNumber = mcModel_.sampleAccumulator().samples();
-	    }
-	
-	    int nextBatch;
-	    double order;
-	    MonteCarloModel<MC,RNG,S>.result_type error(mcModel_.sampleAccumulator().errorEstimate());
-	    while (maxError(error) > tolerance) {
-	        QL_REQUIRE(sampleNumber<maxSamples,
-	                   "max number of samples (" << maxSamples
-	                   << ") reached, while error (" << error
-	                   << ") is still above tolerance (" << tolerance << ")");
-	
-	        // conservative estimate of how many samples are needed
-	        order = maxError(error*error)/tolerance/tolerance;
-	        nextBatch =
-	            int(std.max<double>(sampleNumber*order*0.8-sampleNumber,
-	                                minSamples));
-	
-	        // do not exceed maxSamples
-	        nextBatch = std.min(nextBatch, maxSamples-sampleNumber);
-	        sampleNumber += nextBatch;
-	        mcModel_.addSamples(nextBatch);
-	        error = MonteCarloModel<MC,RNG,S>.result_type(mcModel_.sampleAccumulator().errorEstimate());
-	    }
-	
-	    return MonteCarloModel<MC,RNG,S>.result_type(mcModel_.sampleAccumulator().mean());
-	}
-
-
-    public MonteCarloModel<MC,RNG,S>.result_type valueWithSamples(int samples) {
-
-    int sampleNumber = mcModel_.sampleAccumulator().samples();
-
-    QL_REQUIRE(samples>=sampleNumber,
-               "number of already simulated samples (" << sampleNumber
-               << ") greater than requested samples (" << samples << ")");
-
-    mcModel_.addSamples(samples-sampleNumber);
-
-    return MonteCarloModel<MC,RNG,S>.result_type(mcModel_.sampleAccumulator().mean());
-}
-
-
-    //! basic calculate method provided to inherited pricing engines
-    public void calculate(double requiredTolerance, int requiredSamples, int maxSamples) final {
-    QL_REQUIRE(requiredTolerance != Null<double>() ||
-               requiredSamples != Null<int>(),
-               "neither tolerance nor number of samples set");
-
-    //! Initialize the one-factor Monte Carlo
-    if (this.controlVariate_) {
-
-        MonteCarloModel<MC,RNG,S>.result_type controlVariateValue = this.controlVariateValue();
-        QL_REQUIRE(controlVariateValue != Null<result_type>(),
-                   "engine does not provide "
-                   "control-variation price");
-
-        boost.shared_ptr<MonteCarloModel<MC,RNG,S>.path_pricer_type> controlPP =
-            this.controlPathPricer();
-        QL_REQUIRE(controlPP,
-                   "engine does not provide "
-                   "control-variation path pricer");
-
-        boost.shared_ptr<MonteCarloModel<MC,RNG,S>.path_generator_type> controlPG = 
-            this.controlPathGenerator();
-
-        this.mcModel_ =
-            boost.shared_ptr<MonteCarloModel<MC,RNG,S> >(
-                new MonteCarloModel<MC,RNG,S>(
-                       pathGenerator(), this.pathPricer(), MonteCarloModel<MC,RNG,S>.stats_type(),
-                       this.antitheticVariate_, controlPP,
-                       controlVariateValue, controlPG));
-    } else {
-        this.mcModel_ =
-            boost.shared_ptr<MonteCarloModel<MC,RNG,S> >(
-                new MonteCarloModel<MC,RNG,S>(
-                       pathGenerator(), this.pathPricer(), S(),
-                       this.antitheticVariate_));
-    }
-
-    if (requiredTolerance != Null<double>()) {
-        if (maxSamples != Null<int>())
-            this.value(requiredTolerance, maxSamples);
-        else
-            this.value(requiredTolerance);
-    } else {
-        this.valueWithSamples(requiredSamples);
+    public MCSimulation() {
+        throw new UnsupportedOperationException();
     }
 
 }
 
-    //! error estimated using the samples simulated so far
-    public MonteCarloModel<MC,RNG,S>.result_type errorEstimate() final {
-    return mcModel_.sampleAccumulator().errorEstimate();
-}
-
-    //! access to the sample accumulator for richer statistics
-    public final MonteCarloModel<MC,RNG,S>.stats_type& sampleAccumulator(void) final {
-    return mcModel_.sampleAccumulator();
-    }
-
-    protected mutable boost.shared_ptr<MonteCarloModel<MC,RNG,S> > mcModel_;
-    protected boolean antitheticVariate_, controlVariate_;
-}
-
-*/
 
 
+//template <template <class> class MC, class RNG, class S = Statistics>
+//class McSimulation {
+//  public:
+//    typedef typename MonteCarloModel<MC,RNG,S>::path_generator_type
+//        path_generator_type;
+//    typedef typename MonteCarloModel<MC,RNG,S>::path_pricer_type
+//        path_pricer_type;
+//    typedef typename MonteCarloModel<MC,RNG,S>::stats_type
+//        stats_type;
+//    typedef typename MonteCarloModel<MC,RNG,S>::result_type result_type;
+//
+//    virtual ~McSimulation() {}
+//    //! add samples until the required absolute tolerance is reached
+//    result_type value(Real tolerance,
+//                      Size maxSamples = QL_MAX_INTEGER,
+//                      Size minSamples = 1023) const;
+//    //! simulate a fixed number of samples
+//    result_type valueWithSamples(Size samples) const;
+//    //! error estimated using the samples simulated so far
+//    result_type errorEstimate() const;
+//    //! access to the sample accumulator for richer statistics
+//    const stats_type& sampleAccumulator(void) const;
+//    //! basic calculate method provided to inherited pricing engines
+//    void calculate(Real requiredTolerance,
+//                   Size requiredSamples,
+//                   Size maxSamples) const;
+//  protected:
+//    McSimulation(bool antitheticVariate,
+//                 bool controlVariate)
+//    : antitheticVariate_(antitheticVariate),
+//      controlVariate_(controlVariate) {}
+//    virtual boost::shared_ptr<path_pricer_type> pathPricer() const = 0;
+//    virtual boost::shared_ptr<path_generator_type> pathGenerator()
+//                                                               const = 0;
+//    virtual TimeGrid timeGrid() const = 0;
+//    virtual boost::shared_ptr<path_pricer_type> controlPathPricer() const {
+//        return boost::shared_ptr<path_pricer_type>();
+//    }
+//    virtual boost::shared_ptr<PricingEngine> controlPricingEngine() const {
+//        return boost::shared_ptr<PricingEngine>();
+//    }
+//    virtual result_type controlVariateValue() const {
+//        return Null<result_type>();
+//    }
+//    template <class Sequence>
+//    static Real maxError(const Sequence& sequence) {
+//        return *std::max_element(sequence.begin(), sequence.end());
+//    }
+//    static Real maxError(Real error) {
+//        return error;
+//    }
+//
+//    mutable boost::shared_ptr<MonteCarloModel<MC,RNG,S> > mcModel_;
+//    bool antitheticVariate_, controlVariate_;
+//};
+//
+//
+//// inline definitions
+//template <template <class> class MC, class RNG, class S>
+//inline typename McSimulation<MC,RNG,S>::result_type
+//    McSimulation<MC,RNG,S>::value(Real tolerance,
+//                                          Size maxSamples,
+//                                          Size minSamples) const {
+//    Size sampleNumber =
+//        mcModel_->sampleAccumulator().samples();
+//    if (sampleNumber<minSamples) {
+//        mcModel_->addSamples(minSamples-sampleNumber);
+//        sampleNumber = mcModel_->sampleAccumulator().samples();
+//    }
+//
+//    Size nextBatch;
+//    Real order;
+//    result_type error(mcModel_->sampleAccumulator().errorEstimate());
+//    while (maxError(error) > tolerance) {
+//        QL_REQUIRE(sampleNumber<maxSamples,
+//                   "max number of samples (" << maxSamples
+//                   << ") reached, while error (" << error
+//                   << ") is still above tolerance (" << tolerance << ")");
+//
+//        // conservative estimate of how many samples are needed
+//        order = maxError(error*error)/tolerance/tolerance;
+//        nextBatch =
+//            Size(std::max<Real>(sampleNumber*order*0.8-sampleNumber,
+//                                minSamples));
+//
+//        // do not exceed maxSamples
+//        nextBatch = std::min(nextBatch, maxSamples-sampleNumber);
+//        sampleNumber += nextBatch;
+//        mcModel_->addSamples(nextBatch);
+//        error = result_type(mcModel_->sampleAccumulator().errorEstimate());
+//    }
+//
+//    return result_type(mcModel_->sampleAccumulator().mean());
+//}
+//
+//
+//template <template <class> class MC, class RNG, class S>
+//inline typename McSimulation<MC,RNG,S>::result_type
+//    McSimulation<MC,RNG,S>::valueWithSamples(Size samples) const {
+//
+//    Size sampleNumber = mcModel_->sampleAccumulator().samples();
+//
+//    QL_REQUIRE(samples>=sampleNumber,
+//               "number of already simulated samples (" << sampleNumber
+//               << ") greater than requested samples (" << samples << ")");
+//
+//    mcModel_->addSamples(samples-sampleNumber);
+//
+//    return result_type(mcModel_->sampleAccumulator().mean());
+//}
+//
+//
+//template <template <class> class MC, class RNG, class S>
+//inline void McSimulation<MC,RNG,S>::calculate(Real requiredTolerance,
+//                                              Size requiredSamples,
+//                                              Size maxSamples) const {
+//
+//    QL_REQUIRE(requiredTolerance != Null<Real>() ||
+//               requiredSamples != Null<Size>(),
+//               "neither tolerance nor number of samples set");
+//
+//    //! Initialize the one-factor Monte Carlo
+//    if (this->controlVariate_) {
+//
+//        result_type controlVariateValue = this->controlVariateValue();
+//        QL_REQUIRE(controlVariateValue != Null<result_type>(),
+//                   "engine does not provide "
+//                   "control-variation price");
+//
+//        boost::shared_ptr<path_pricer_type> controlPP =
+//            this->controlPathPricer();
+//        QL_REQUIRE(controlPP,
+//                   "engine does not provide "
+//                   "control-variation path pricer");
+//
+//        this->mcModel_ =
+//            boost::shared_ptr<MonteCarloModel<MC,RNG,S> >(
+//                new MonteCarloModel<MC,RNG,S>(
+//                       pathGenerator(), this->pathPricer(), stats_type(),
+//                       this->antitheticVariate_, controlPP,
+//                       controlVariateValue));
+//    } else {
+//        this->mcModel_ =
+//            boost::shared_ptr<MonteCarloModel<MC,RNG,S> >(
+//                new MonteCarloModel<MC,RNG,S>(
+//                       pathGenerator(), this->pathPricer(), S(),
+//                       this->antitheticVariate_));
+//    }
+//
+//    if (requiredTolerance != Null<Real>()) {
+//        if (maxSamples != Null<Size>())
+//            this->value(requiredTolerance, maxSamples);
+//        else
+//            this->value(requiredTolerance);
+//    } else {
+//        this->valueWithSamples(requiredSamples);
+//    }
+//
+//}
+//
+//template <template <class> class MC, class RNG, class S>
+//inline typename McSimulation<MC,RNG,S>::result_type
+//    McSimulation<MC,RNG,S>::errorEstimate() const {
+//    return mcModel_->sampleAccumulator().errorEstimate();
+//}
+//
+//template <template <class> class MC, class RNG, class S>
+//inline const typename McSimulation<MC,RNG,S>::stats_type&
+//McSimulation<MC,RNG,S>::sampleAccumulator() const {
+//    return mcModel_->sampleAccumulator();
+//}

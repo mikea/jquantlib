@@ -44,6 +44,7 @@ import org.junit.Test;
 
 public class SABRInterpolationTest {
 
+    //TODO: uncomment when Minpack.lmdif becomes available
     @Ignore
     @Test
     public void testSABRInterpolationTest() {

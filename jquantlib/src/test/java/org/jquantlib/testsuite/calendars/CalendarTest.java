@@ -32,8 +32,9 @@ import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.NullCalendar;
+import org.jquantlib.time.calendars.Target;
 import org.jquantlib.time.calendars.UnitedStates;
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -59,40 +60,31 @@ public class CalendarTest {
         assertFalse(advancedDate.equals(d));
     }
 
-
-    /**
-     * @see <a href="http://bugs.jquantlib.org/view.php?id=356">issue 356</a>
-     */
-    @Ignore
     @Test
     public void testEndOfMonth() {
+        QL.info("Testing end-of-month calculation...");
 
-        final class Entry {
-            public Date date;
-            public boolean expected;
+        final Calendar c = new Target(); // any calendar would be OK
 
-            private Entry (final Date d, final boolean e) {
-                date = d;
-                expected = e;
+        Date eom;
+        final Date counter = Date.minDate();
+        final Date last = Date.maxDate().sub(new Period(2, TimeUnit.Months));
+
+        while (counter.le(last)) {
+            eom = c.endOfMonth(counter);
+            // check that eom is eom
+            if (!c.isEndOfMonth(eom)) {
+                Assert.fail(String.format("%s %s is not the last business day in %s according to %s",
+                        new Object[] { eom.weekday(), eom, eom.month(), eom.year(), c.name() }));
             }
-        }
-
-        final Entry[] entries = {
-                new Entry( new Date(28, 5, 2009), false),
-                new Entry( new Date(29, 5, 2009), true),
-                new Entry( new Date(30, 5, 2009), false),
-                new Entry( new Date(31, 5, 2009), false),
-                new Entry( new Date( 1, 6, 2009), false),
-                };
-
-        final Calendar unitedStatesCalendar = new UnitedStates(UnitedStates.Market.NYSE);
-        for (final Entry entry : entries) {
-            final boolean result = unitedStatesCalendar.isEndOfMonth(entry.date);
-            System.out.printf("%s is the last business day? %b\n", entry.date.isoDate(), result);
-            assertEquals(result,entry.expected);
+            // check that eom is in the same month as counter
+            if (eom.month()!=counter.month()) {
+                Assert.fail(String.format("%s is not the same month as %s",
+                        new Object[] { eom, counter }));
+            }
+            counter.addAssign(1);
         }
     }
-
 
     @Test
     public void testAdjust_ModifiedFollowing() {

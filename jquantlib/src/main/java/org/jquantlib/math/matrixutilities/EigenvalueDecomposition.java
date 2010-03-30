@@ -97,14 +97,14 @@ public class EigenvalueDecomposition {
         issymmetric = true;
         for (int j = 0; (j < n) & issymmetric; j++) {
             for (int i = 0; (i < n) & issymmetric; i++) {
-                issymmetric = (A.data[A.addr.op(i, j)] == A.data[A.addr.op(j, i)]);
+                issymmetric = (A.$[A.addr.op(i, j)] == A.$[A.addr.op(j, i)]);
             }
         }
 
         if (issymmetric) {
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
-                    V.data[V.addr.op(i, j)] = A.data[A.addr.op(i, j)];
+                    V.$[V.addr.op(i, j)] = A.$[A.addr.op(i, j)];
                 }
             }
 
@@ -120,7 +120,7 @@ public class EigenvalueDecomposition {
 
             for (int j = 0; j < n; j++) {
                 for (int i = 0; i < n; i++) {
-                    H.data[H.addr.op(i, j)] = A.data[A.addr.op(i, j)];
+                    H.$[H.addr.op(i, j)] = A.$[A.addr.op(i, j)];
                 }
             }
 
@@ -172,13 +172,13 @@ public class EigenvalueDecomposition {
         final Matrix D = new Matrix(n, n);
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                D.data[D.addr.op(i, j)] = 0.0;
+                D.$[D.addr.op(i, j)] = 0.0;
             }
-            D.data[D.addr.op(i, i)] = d[i];
+            D.$[D.addr.op(i, i)] = d[i];
             if (e[i] > 0) {
-                D.data[D.addr.op(i, i + 1)] = e[i];
+                D.$[D.addr.op(i, i + 1)] = e[i];
             } else if (e[i] < 0) {
-                D.data[D.addr.op(i, i - 1)] = e[i];
+                D.$[D.addr.op(i, i - 1)] = e[i];
             }
         }
         return D;
@@ -200,7 +200,7 @@ public class EigenvalueDecomposition {
         // Fortran subroutine in EISPACK.
 
         for (int j = 0; j < n; j++) {
-            d[j] = V.data[V.addr.op(n - 1, j)];
+            d[j] = V.$[V.addr.op(n - 1, j)];
         }
 
         // Householder reduction to tridiagonal form.
@@ -217,9 +217,9 @@ public class EigenvalueDecomposition {
             if (scale == 0.0) {
                 e[i] = d[i - 1];
                 for (int j = 0; j < i; j++) {
-                    d[j] = V.data[V.addr.op(i - 1, j)];
-                    V.data[V.addr.op(i, j)] = 0.0;
-                    V.data[V.addr.op(j, i)] = 0.0;
+                    d[j] = V.$[V.addr.op(i - 1, j)];
+                    V.$[V.addr.op(i, j)] = 0.0;
+                    V.$[V.addr.op(j, i)] = 0.0;
                 }
             } else {
 
@@ -245,11 +245,11 @@ public class EigenvalueDecomposition {
 
                 for (int j = 0; j < i; j++) {
                     f = d[j];
-                    V.data[V.addr.op(j, i)] = f;
-                    g = e[j] + V.data[V.addr.op(j, j)] * f;
+                    V.$[V.addr.op(j, i)] = f;
+                    g = e[j] + V.$[V.addr.op(j, j)] * f;
                     for (int k = j + 1; k <= i - 1; k++) {
-                        g += V.data[V.addr.op(k, j)] * d[k];
-                        e[k] += V.data[V.addr.op(k, j)] * f;
+                        g += V.$[V.addr.op(k, j)] * d[k];
+                        e[k] += V.$[V.addr.op(k, j)] * f;
                     }
                     e[j] = g;
                 }
@@ -266,10 +266,10 @@ public class EigenvalueDecomposition {
                     f = d[j];
                     g = e[j];
                     for (int k = j; k <= i - 1; k++) {
-                        V.data[V.addr.op(k, j)] -= (f * e[k] + g * d[k]);
+                        V.$[V.addr.op(k, j)] -= (f * e[k] + g * d[k]);
                     }
-                    d[j] = V.data[V.addr.op(i - 1, j)];
-                    V.data[V.addr.op(i, j)] = 0.0;
+                    d[j] = V.$[V.addr.op(i - 1, j)];
+                    V.$[V.addr.op(i, j)] = 0.0;
                 }
             }
             d[i] = h;
@@ -278,32 +278,32 @@ public class EigenvalueDecomposition {
         // Accumulate transformations.
 
         for (int i = 0; i < n - 1; i++) {
-            V.data[V.addr.op(n - 1, i)] = V.data[V.addr.op(i, i)];
-            V.data[V.addr.op(i, i)] = 1.0;
+            V.$[V.addr.op(n - 1, i)] = V.$[V.addr.op(i, i)];
+            V.$[V.addr.op(i, i)] = 1.0;
             final double h = d[i + 1];
             if (h != 0.0) {
                 for (int k = 0; k <= i; k++) {
-                    d[k] = V.data[V.addr.op(k, i + 1)] / h;
+                    d[k] = V.$[V.addr.op(k, i + 1)] / h;
                 }
                 for (int j = 0; j <= i; j++) {
                     double g = 0.0;
                     for (int k = 0; k <= i; k++) {
-                        g += V.data[V.addr.op(k, i + 1)] * V.data[V.addr.op(k, j)];
+                        g += V.$[V.addr.op(k, i + 1)] * V.$[V.addr.op(k, j)];
                     }
                     for (int k = 0; k <= i; k++) {
-                        V.data[V.addr.op(k, j)] -= g * d[k];
+                        V.$[V.addr.op(k, j)] -= g * d[k];
                     }
                 }
             }
             for (int k = 0; k <= i; k++) {
-                V.data[V.addr.op(k, i + 1)] = 0.0;
+                V.$[V.addr.op(k, i + 1)] = 0.0;
             }
         }
         for (int j = 0; j < n; j++) {
-            d[j] = V.data[V.addr.op(n - 1, j)];
-            V.data[V.addr.op(n - 1, j)] = 0.0;
+            d[j] = V.$[V.addr.op(n - 1, j)];
+            V.$[V.addr.op(n - 1, j)] = 0.0;
         }
-        V.data[V.addr.op(n - 1, n - 1)] = 1.0;
+        V.$[V.addr.op(n - 1, n - 1)] = 1.0;
         e[0] = 0.0;
     }
 
@@ -388,9 +388,9 @@ public class EigenvalueDecomposition {
                         // Accumulate transformation.
 
                         for (int k = 0; k < n; k++) {
-                            h = V.data[V.addr.op(k, i + 1)];
-                            V.data[V.addr.op(k, i + 1)] = s * V.data[V.addr.op(k, i)] + c * h;
-                            V.data[V.addr.op(k, i)] = c * V.data[V.addr.op(k, i)] - s * h;
+                            h = V.$[V.addr.op(k, i + 1)];
+                            V.$[V.addr.op(k, i + 1)] = s * V.$[V.addr.op(k, i)] + c * h;
+                            V.$[V.addr.op(k, i)] = c * V.$[V.addr.op(k, i)] - s * h;
                         }
                     }
                     p = -s * s2 * c3 * el1 * e[l] / dl1;
@@ -420,9 +420,9 @@ public class EigenvalueDecomposition {
                 d[k] = d[i];
                 d[i] = p;
                 for (int j = 0; j < n; j++) {
-                    p = V.data[V.addr.op(j, i)];
-                    V.data[V.addr.op(j, i)] = V.data[V.addr.op(j, k)];
-                    V.data[V.addr.op(j, k)] = p;
+                    p = V.$[V.addr.op(j, i)];
+                    V.$[V.addr.op(j, i)] = V.$[V.addr.op(j, k)];
+                    V.$[V.addr.op(j, k)] = p;
                 }
             }
         }
@@ -447,7 +447,7 @@ public class EigenvalueDecomposition {
 
             double scale = 0.0;
             for (int i = m; i <= high; i++) {
-                scale = scale + Math.abs(H.data[H.addr.op(i, m - 1)]);
+                scale = scale + Math.abs(H.$[H.addr.op(i, m - 1)]);
             }
             if (scale != 0.0) {
 
@@ -455,7 +455,7 @@ public class EigenvalueDecomposition {
 
                 double h = 0.0;
                 for (int i = high; i >= m; i--) {
-                    ort[i] = H.data[H.addr.op(i, m - 1)] / scale;
+                    ort[i] = H.$[H.addr.op(i, m - 1)] / scale;
                     h += ort[i] * ort[i];
                 }
                 double g = Math.sqrt(h);
@@ -471,26 +471,26 @@ public class EigenvalueDecomposition {
                 for (int j = m; j < n; j++) {
                     double f = 0.0;
                     for (int i = high; i >= m; i--) {
-                        f += ort[i] * H.data[H.addr.op(i, j)];
+                        f += ort[i] * H.$[H.addr.op(i, j)];
                     }
                     f = f / h;
                     for (int i = m; i <= high; i++) {
-                        H.data[H.addr.op(i, j)] -= f * ort[i];
+                        H.$[H.addr.op(i, j)] -= f * ort[i];
                     }
                 }
 
                 for (int i = 0; i <= high; i++) {
                     double f = 0.0;
                     for (int j = high; j >= m; j--) {
-                        f += ort[j] * H.data[H.addr.op(i, j)];
+                        f += ort[j] * H.$[H.addr.op(i, j)];
                     }
                     f = f / h;
                     for (int j = m; j <= high; j++) {
-                        H.data[H.addr.op(i, j)] -= f * ort[j];
+                        H.$[H.addr.op(i, j)] -= f * ort[j];
                     }
                 }
                 ort[m] = scale * ort[m];
-                H.data[H.addr.op(m, m - 1)] = scale * g;
+                H.$[H.addr.op(m, m - 1)] = scale * g;
             }
         }
 
@@ -498,24 +498,24 @@ public class EigenvalueDecomposition {
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                V.data[V.addr.op(i, j)] = (i == j ? 1.0 : 0.0);
+                V.$[V.addr.op(i, j)] = (i == j ? 1.0 : 0.0);
             }
         }
 
         for (int m = high - 1; m >= low + 1; m--) {
-            if (H.data[H.addr.op(m, m - 1)] != 0.0) {
+            if (H.$[H.addr.op(m, m - 1)] != 0.0) {
                 for (int i = m + 1; i <= high; i++) {
-                    ort[i] = H.data[H.addr.op(i, m - 1)];
+                    ort[i] = H.$[H.addr.op(i, m - 1)];
                 }
                 for (int j = m; j <= high; j++) {
                     double g = 0.0;
                     for (int i = m; i <= high; i++) {
-                        g += ort[i] * V.data[V.addr.op(i, j)];
+                        g += ort[i] * V.$[V.addr.op(i, j)];
                     }
                     // Double division avoids possible underflow
-                    g = (g / ort[m]) / H.data[H.addr.op(m, m - 1)];
+                    g = (g / ort[m]) / H.$[H.addr.op(m, m - 1)];
                     for (int i = m; i <= high; i++) {
-                        V.data[V.addr.op(i, j)] += g * ort[i];
+                        V.$[V.addr.op(i, j)] += g * ort[i];
                     }
                 }
             }
@@ -569,11 +569,11 @@ public class EigenvalueDecomposition {
         double norm = 0.0;
         for (int i = 0; i < nn; i++) {
             if (i < low | i > high) {
-                d[i] = H.data[H.addr.op(i, i)];
+                d[i] = H.$[H.addr.op(i, i)];
                 e[i] = 0.0;
             }
             for (int j = Math.max(i - 1, 0); j < nn; j++) {
-                norm = norm + Math.abs(H.data[H.addr.op(i, j)]);
+                norm = norm + Math.abs(H.$[H.addr.op(i, j)]);
             }
         }
 
@@ -586,11 +586,11 @@ public class EigenvalueDecomposition {
 
             int l = n;
             while (l > low) {
-                s = Math.abs(H.data[H.addr.op(l - 1, l - 1)]) + Math.abs(H.data[H.addr.op(l, l)]);
+                s = Math.abs(H.$[H.addr.op(l - 1, l - 1)]) + Math.abs(H.$[H.addr.op(l, l)]);
                 if (s == 0.0) {
                     s = norm;
                 }
-                if (Math.abs(H.data[H.addr.op(l, l - 1)]) < eps * s) {
+                if (Math.abs(H.$[H.addr.op(l, l - 1)]) < eps * s) {
                     break;
                 }
                 l--;
@@ -600,8 +600,8 @@ public class EigenvalueDecomposition {
             // One root found
 
             if (l == n) {
-                H.data[H.addr.op(n, n)] = H.data[H.addr.op(n, n)] + exshift;
-                d[n] = H.data[H.addr.op(n, n)];
+                H.$[H.addr.op(n, n)] = H.$[H.addr.op(n, n)] + exshift;
+                d[n] = H.$[H.addr.op(n, n)];
                 e[n] = 0.0;
                 n--;
                 iter = 0;
@@ -609,13 +609,13 @@ public class EigenvalueDecomposition {
                 // Two roots found
 
             } else if (l == n - 1) {
-                w = H.data[H.addr.op(n, n - 1)] * H.data[H.addr.op(n - 1, n)];
-                p = (H.data[H.addr.op(n - 1, n - 1)] - H.data[H.addr.op(n, n)]) / 2.0;
+                w = H.$[H.addr.op(n, n - 1)] * H.$[H.addr.op(n - 1, n)];
+                p = (H.$[H.addr.op(n - 1, n - 1)] - H.$[H.addr.op(n, n)]) / 2.0;
                 q = p * p + w;
                 z = Math.sqrt(Math.abs(q));
-                H.data[H.addr.op(n, n)] = H.data[H.addr.op(n, n)] + exshift;
-                H.data[H.addr.op(n - 1, n - 1)] = H.data[H.addr.op(n - 1, n - 1)] + exshift;
-                x = H.data[H.addr.op(n, n)];
+                H.$[H.addr.op(n, n)] = H.$[H.addr.op(n, n)] + exshift;
+                H.$[H.addr.op(n - 1, n - 1)] = H.$[H.addr.op(n - 1, n - 1)] + exshift;
+                x = H.$[H.addr.op(n, n)];
 
                 // Real pair
 
@@ -632,7 +632,7 @@ public class EigenvalueDecomposition {
                     }
                     e[n - 1] = 0.0;
                     e[n] = 0.0;
-                    x = H.data[H.addr.op(n, n - 1)];
+                    x = H.$[H.addr.op(n, n - 1)];
                     s = Math.abs(x) + Math.abs(z);
                     p = x / s;
                     q = z / s;
@@ -643,25 +643,25 @@ public class EigenvalueDecomposition {
                     // Row modification
 
                     for (int j = n - 1; j < nn; j++) {
-                        z = H.data[H.addr.op(n - 1, j)];
-                        H.data[H.addr.op(n - 1, j)] = q * z + p * H.data[H.addr.op(n, j)];
-                        H.data[H.addr.op(n, j)] = q * H.data[H.addr.op(n, j)] - p * z;
+                        z = H.$[H.addr.op(n - 1, j)];
+                        H.$[H.addr.op(n - 1, j)] = q * z + p * H.$[H.addr.op(n, j)];
+                        H.$[H.addr.op(n, j)] = q * H.$[H.addr.op(n, j)] - p * z;
                     }
 
                     // Column modification
 
                     for (int i = 0; i <= n; i++) {
-                        z = H.data[H.addr.op(i, n - 1)];
-                        H.data[H.addr.op(i, n - 1)] = q * z + p * H.data[H.addr.op(i, n)];
-                        H.data[H.addr.op(i, n)] = q * H.data[H.addr.op(i, n)] - p * z;
+                        z = H.$[H.addr.op(i, n - 1)];
+                        H.$[H.addr.op(i, n - 1)] = q * z + p * H.$[H.addr.op(i, n)];
+                        H.$[H.addr.op(i, n)] = q * H.$[H.addr.op(i, n)] - p * z;
                     }
 
                     // Accumulate transformations
 
                     for (int i = low; i <= high; i++) {
-                        z = V.data[V.addr.op(i, n - 1)];
-                        V.data[V.addr.op(i, n - 1)] = q * z + p * V.data[V.addr.op(i, n)];
-                        V.data[V.addr.op(i, n)] = q * V.data[V.addr.op(i, n)] - p * z;
+                        z = V.$[V.addr.op(i, n - 1)];
+                        V.$[V.addr.op(i, n - 1)] = q * z + p * V.$[V.addr.op(i, n)];
+                        V.$[V.addr.op(i, n)] = q * V.$[V.addr.op(i, n)] - p * z;
                     }
 
                     // Complex pair
@@ -681,12 +681,12 @@ public class EigenvalueDecomposition {
 
                 // Form shift
 
-                x = H.data[H.addr.op(n, n)];
+                x = H.$[H.addr.op(n, n)];
                 y = 0.0;
                 w = 0.0;
                 if (l < n) {
-                    y = H.data[H.addr.op(n - 1, n - 1)];
-                    w = H.data[H.addr.op(n, n - 1)] * H.data[H.addr.op(n - 1, n)];
+                    y = H.$[H.addr.op(n - 1, n - 1)];
+                    w = H.$[H.addr.op(n, n - 1)] * H.$[H.addr.op(n - 1, n)];
                 }
 
                 // Wilkinson's original ad hoc shift
@@ -694,9 +694,9 @@ public class EigenvalueDecomposition {
                 if (iter == 10) {
                     exshift += x;
                     for (int i = low; i <= n; i++) {
-                        H.data[H.addr.op(i, i)] -= x;
+                        H.$[H.addr.op(i, i)] -= x;
                     }
-                    s = Math.abs(H.data[H.addr.op(n, n - 1)]) + Math.abs(H.data[H.addr.op(n - 1, n - 2)]);
+                    s = Math.abs(H.$[H.addr.op(n, n - 1)]) + Math.abs(H.$[H.addr.op(n - 1, n - 2)]);
                     x = y = 0.75 * s;
                     w = -0.4375 * s * s;
                 }
@@ -713,7 +713,7 @@ public class EigenvalueDecomposition {
                         }
                         s = x - w / ((y - x) / 2.0 + s);
                         for (int i = low; i <= n; i++) {
-                            H.data[H.addr.op(i, i)] -= s;
+                            H.$[H.addr.op(i, i)] -= s;
                         }
                         exshift += s;
                         x = y = w = 0.964;
@@ -726,12 +726,12 @@ public class EigenvalueDecomposition {
 
                 int m = n - 2;
                 while (m >= l) {
-                    z = H.data[H.addr.op(m, m)];
+                    z = H.$[H.addr.op(m, m)];
                     r = x - z;
                     s = y - z;
-                    p = (r * s - w) / H.data[H.addr.op(m + 1, m)] + H.data[H.addr.op(m, m + 1)];
-                    q = H.data[H.addr.op(m + 1, m + 1)] - z - r - s;
-                    r = H.data[H.addr.op(m + 2, m + 1)];
+                    p = (r * s - w) / H.$[H.addr.op(m + 1, m)] + H.$[H.addr.op(m, m + 1)];
+                    q = H.$[H.addr.op(m + 1, m + 1)] - z - r - s;
+                    r = H.$[H.addr.op(m + 2, m + 1)];
                     s = Math.abs(p) + Math.abs(q) + Math.abs(r);
                     p = p / s;
                     q = q / s;
@@ -739,8 +739,8 @@ public class EigenvalueDecomposition {
                     if (m == l) {
                         break;
                     }
-                    if (Math.abs(H.data[H.addr.op(m, m - 1)]) * (Math.abs(q) + Math.abs(r)) < eps
-                            * (Math.abs(p) * (Math.abs(H.data[H.addr.op(m - 1, m - 1)]) + Math.abs(z) + Math.abs(H.data[H.addr.op(
+                    if (Math.abs(H.$[H.addr.op(m, m - 1)]) * (Math.abs(q) + Math.abs(r)) < eps
+                            * (Math.abs(p) * (Math.abs(H.$[H.addr.op(m - 1, m - 1)]) + Math.abs(z) + Math.abs(H.$[H.addr.op(
                                     m + 1, m + 1)])))) {
                         break;
                     }
@@ -748,9 +748,9 @@ public class EigenvalueDecomposition {
                 }
 
                 for (int i = m + 2; i <= n; i++) {
-                    H.data[H.addr.op(i, i - 2)] = 0.0;
+                    H.$[H.addr.op(i, i - 2)] = 0.0;
                     if (i > m + 2) {
-                        H.data[H.addr.op(i, i - 3)] = 0.0;
+                        H.$[H.addr.op(i, i - 3)] = 0.0;
                     }
                 }
 
@@ -759,9 +759,9 @@ public class EigenvalueDecomposition {
                 for (int k = m; k <= n - 1; k++) {
                     final boolean notlast = (k != n - 1);
                     if (k != m) {
-                        p = H.data[H.addr.op(k, k - 1)];
-                        q = H.data[H.addr.op(k + 1, k - 1)];
-                        r = (notlast ? H.data[H.addr.op(k + 2, k - 1)] : 0.0);
+                        p = H.$[H.addr.op(k, k - 1)];
+                        q = H.$[H.addr.op(k + 1, k - 1)];
+                        r = (notlast ? H.$[H.addr.op(k + 2, k - 1)] : 0.0);
                         x = Math.abs(p) + Math.abs(q) + Math.abs(r);
                         if (x != 0.0) {
                             p = p / x;
@@ -778,9 +778,9 @@ public class EigenvalueDecomposition {
                     }
                     if (s != 0) {
                         if (k != m) {
-                            H.data[H.addr.op(k, k - 1)] = -s * x;
+                            H.$[H.addr.op(k, k - 1)] = -s * x;
                         } else if (l != m) {
-                            H.data[H.addr.op(k, k - 1)] = -H.data[H.addr.op(k, k - 1)];
+                            H.$[H.addr.op(k, k - 1)] = -H.$[H.addr.op(k, k - 1)];
                         }
                         p = p + s;
                         x = p / s;
@@ -792,37 +792,37 @@ public class EigenvalueDecomposition {
                         // Row modification
 
                         for (int j = k; j < nn; j++) {
-                            p = H.data[H.addr.op(k, j)] + q * H.data[H.addr.op(k + 1, j)];
+                            p = H.$[H.addr.op(k, j)] + q * H.$[H.addr.op(k + 1, j)];
                             if (notlast) {
-                                p = p + r * H.data[H.addr.op(k + 2, j)];
-                                H.data[H.addr.op(k + 2, j)] = H.data[H.addr.op(k + 2, j)] - p * z;
+                                p = p + r * H.$[H.addr.op(k + 2, j)];
+                                H.$[H.addr.op(k + 2, j)] = H.$[H.addr.op(k + 2, j)] - p * z;
                             }
-                            H.data[H.addr.op(k, j)] = H.data[H.addr.op(k, j)] - p * x;
-                            H.data[H.addr.op(k + 1, j)] = H.data[H.addr.op(k + 1, j)] - p * y;
+                            H.$[H.addr.op(k, j)] = H.$[H.addr.op(k, j)] - p * x;
+                            H.$[H.addr.op(k + 1, j)] = H.$[H.addr.op(k + 1, j)] - p * y;
                         }
 
                         // Column modification
 
                         for (int i = 0; i <= Math.min(n, k + 3); i++) {
-                            p = x * H.data[H.addr.op(i, k)] + y * H.data[H.addr.op(i, k + 1)];
+                            p = x * H.$[H.addr.op(i, k)] + y * H.$[H.addr.op(i, k + 1)];
                             if (notlast) {
-                                p = p + z * H.data[H.addr.op(i, k + 2)];
-                                H.data[H.addr.op(i, k + 2)] = H.data[H.addr.op(i, k + 2)] - p * r;
+                                p = p + z * H.$[H.addr.op(i, k + 2)];
+                                H.$[H.addr.op(i, k + 2)] = H.$[H.addr.op(i, k + 2)] - p * r;
                             }
-                            H.data[H.addr.op(i, k)] = H.data[H.addr.op(i, k)] - p;
-                            H.data[H.addr.op(i, k + 1)] = H.data[H.addr.op(i, k + 1)] - p * q;
+                            H.$[H.addr.op(i, k)] = H.$[H.addr.op(i, k)] - p;
+                            H.$[H.addr.op(i, k + 1)] = H.$[H.addr.op(i, k + 1)] - p * q;
                         }
 
                         // Accumulate transformations
 
                         for (int i = low; i <= high; i++) {
-                            p = x * V.data[V.addr.op(i, k)] + y * V.data[V.addr.op(i, k + 1)];
+                            p = x * V.$[V.addr.op(i, k)] + y * V.$[V.addr.op(i, k + 1)];
                             if (notlast) {
-                                p = p + z * V.data[V.addr.op(i, k + 2)];
-                                V.data[V.addr.op(i, k + 2)] = V.data[V.addr.op(i, k + 2)] - p * r;
+                                p = p + z * V.$[V.addr.op(i, k + 2)];
+                                V.$[V.addr.op(i, k + 2)] = V.$[V.addr.op(i, k + 2)] - p * r;
                             }
-                            V.data[V.addr.op(i, k)] = V.data[V.addr.op(i, k)] - p;
-                            V.data[V.addr.op(i, k + 1)] = V.data[V.addr.op(i, k + 1)] - p * q;
+                            V.$[V.addr.op(i, k)] = V.$[V.addr.op(i, k)] - p;
+                            V.$[V.addr.op(i, k + 1)] = V.$[V.addr.op(i, k + 1)] - p * q;
                         }
                     } // (s != 0)
                 } // k loop
@@ -842,12 +842,12 @@ public class EigenvalueDecomposition {
 
             if (q == 0) {
                 int l = n;
-                H.data[H.addr.op(n, n)] = 1.0;
+                H.$[H.addr.op(n, n)] = 1.0;
                 for (int i = n - 1; i >= 0; i--) {
-                    w = H.data[H.addr.op(i, i)] - p;
+                    w = H.$[H.addr.op(i, i)] - p;
                     r = 0.0;
                     for (int j = l; j <= n; j++) {
-                        r = r + H.data[H.addr.op(i, j)] * H.data[H.addr.op(j, n)];
+                        r = r + H.$[H.addr.op(i, j)] * H.$[H.addr.op(j, n)];
                     }
                     if (e[i] < 0.0) {
                         z = w;
@@ -856,32 +856,32 @@ public class EigenvalueDecomposition {
                         l = i;
                         if (e[i] == 0.0) {
                             if (w != 0.0) {
-                                H.data[H.addr.op(i, n)] = -r / w;
+                                H.$[H.addr.op(i, n)] = -r / w;
                             } else {
-                                H.data[H.addr.op(i, n)] = -r / (eps * norm);
+                                H.$[H.addr.op(i, n)] = -r / (eps * norm);
                             }
 
                             // Solve real equations
 
                         } else {
-                            x = H.data[H.addr.op(i, i + 1)];
-                            y = H.data[H.addr.op(i + 1, i)];
+                            x = H.$[H.addr.op(i, i + 1)];
+                            y = H.$[H.addr.op(i + 1, i)];
                             q = (d[i] - p) * (d[i] - p) + e[i] * e[i];
                             t = (x * s - z * r) / q;
-                            H.data[H.addr.op(i, n)] = t;
+                            H.$[H.addr.op(i, n)] = t;
                             if (Math.abs(x) > Math.abs(z)) {
-                                H.data[H.addr.op(i + 1, n)] = (-r - w * t) / x;
+                                H.$[H.addr.op(i + 1, n)] = (-r - w * t) / x;
                             } else {
-                                H.data[H.addr.op(i + 1, n)] = (-s - y * t) / z;
+                                H.$[H.addr.op(i + 1, n)] = (-s - y * t) / z;
                             }
                         }
 
                         // Overflow control
 
-                        t = Math.abs(H.data[H.addr.op(i, n)]);
+                        t = Math.abs(H.$[H.addr.op(i, n)]);
                         if ((eps * t) * t > 1) {
                             for (int j = i; j <= n; j++) {
-                                H.data[H.addr.op(j, n)] = H.data[H.addr.op(j, n)] / t;
+                                H.$[H.addr.op(j, n)] = H.$[H.addr.op(j, n)] / t;
                             }
                         }
                     }
@@ -894,25 +894,25 @@ public class EigenvalueDecomposition {
 
                 // Last vector component imaginary so matrix is triangular
 
-                if (Math.abs(H.data[H.addr.op(n, n - 1)]) > Math.abs(H.data[H.addr.op(n - 1, n)])) {
-                    H.data[H.addr.op(n - 1, n - 1)] = q / H.data[H.addr.op(n, n - 1)];
-                    H.data[H.addr.op(n - 1, n)] = -(H.data[H.addr.op(n, n)] - p) / H.data[H.addr.op(n, n - 1)];
+                if (Math.abs(H.$[H.addr.op(n, n - 1)]) > Math.abs(H.$[H.addr.op(n - 1, n)])) {
+                    H.$[H.addr.op(n - 1, n - 1)] = q / H.$[H.addr.op(n, n - 1)];
+                    H.$[H.addr.op(n - 1, n)] = -(H.$[H.addr.op(n, n)] - p) / H.$[H.addr.op(n, n - 1)];
                 } else {
-                    cdiv(0.0, -H.data[H.addr.op(n - 1, n)], H.data[H.addr.op(n - 1, n - 1)] - p, q);
-                    H.data[H.addr.op(n - 1, n - 1)] = cdivr;
-                    H.data[H.addr.op(n - 1, n)] = cdivi;
+                    cdiv(0.0, -H.$[H.addr.op(n - 1, n)], H.$[H.addr.op(n - 1, n - 1)] - p, q);
+                    H.$[H.addr.op(n - 1, n - 1)] = cdivr;
+                    H.$[H.addr.op(n - 1, n)] = cdivi;
                 }
-                H.data[H.addr.op(n, n - 1)] = 0.0;
-                H.data[H.addr.op(n, n)] = 1.0;
+                H.$[H.addr.op(n, n - 1)] = 0.0;
+                H.$[H.addr.op(n, n)] = 1.0;
                 for (int i = n - 2; i >= 0; i--) {
                     double ra, sa, vr, vi;
                     ra = 0.0;
                     sa = 0.0;
                     for (int j = l; j <= n; j++) {
-                        ra = ra + H.data[H.addr.op(i, j)] * H.data[H.addr.op(j, n - 1)];
-                        sa = sa + H.data[H.addr.op(i, j)] * H.data[H.addr.op(j, n)];
+                        ra = ra + H.$[H.addr.op(i, j)] * H.$[H.addr.op(j, n - 1)];
+                        sa = sa + H.$[H.addr.op(i, j)] * H.$[H.addr.op(j, n)];
                     }
-                    w = H.data[H.addr.op(i, i)] - p;
+                    w = H.$[H.addr.op(i, i)] - p;
 
                     if (e[i] < 0.0) {
                         z = w;
@@ -922,42 +922,42 @@ public class EigenvalueDecomposition {
                         l = i;
                         if (e[i] == 0) {
                             cdiv(-ra, -sa, w, q);
-                            H.data[H.addr.op(i, n - 1)] = cdivr;
-                            H.data[H.addr.op(i, n)] = cdivi;
+                            H.$[H.addr.op(i, n - 1)] = cdivr;
+                            H.$[H.addr.op(i, n)] = cdivi;
                         } else {
 
                             // Solve complex equations
 
-                            x = H.data[H.addr.op(i, i + 1)];
-                            y = H.data[H.addr.op(i + 1, i)];
+                            x = H.$[H.addr.op(i, i + 1)];
+                            y = H.$[H.addr.op(i + 1, i)];
                             vr = (d[i] - p) * (d[i] - p) + e[i] * e[i] - q * q;
                             vi = (d[i] - p) * 2.0 * q;
                             if (vr == 0.0 & vi == 0.0) {
                                 vr = eps * norm * (Math.abs(w) + Math.abs(q) + Math.abs(x) + Math.abs(y) + Math.abs(z));
                             }
                             cdiv(x * r - z * ra + q * sa, x * s - z * sa - q * ra, vr, vi);
-                            H.data[H.addr.op(i, n - 1)] = cdivr;
-                            H.data[H.addr.op(i, n)] = cdivi;
+                            H.$[H.addr.op(i, n - 1)] = cdivr;
+                            H.$[H.addr.op(i, n)] = cdivi;
                             if (Math.abs(x) > (Math.abs(z) + Math.abs(q))) {
-                                H.data[H.addr.op(i + 1, n - 1)] = (-ra - w * H.data[H.addr.op(i, n - 1)] + q
-                                        * H.data[H.addr.op(i, n)])
+                                H.$[H.addr.op(i + 1, n - 1)] = (-ra - w * H.$[H.addr.op(i, n - 1)] + q
+                                        * H.$[H.addr.op(i, n)])
                                         / x;
-                                H.data[H.addr.op(i + 1, n)] = (-sa - w * H.data[H.addr.op(i, n)] - q * H.data[H.addr.op(i, n - 1)])
+                                H.$[H.addr.op(i + 1, n)] = (-sa - w * H.$[H.addr.op(i, n)] - q * H.$[H.addr.op(i, n - 1)])
                                         / x;
                             } else {
-                                cdiv(-r - y * H.data[H.addr.op(i, n - 1)], -s - y * H.data[H.addr.op(i, n)], z, q);
-                                H.data[H.addr.op(i + 1, n - 1)] = cdivr;
-                                H.data[H.addr.op(i + 1, n)] = cdivi;
+                                cdiv(-r - y * H.$[H.addr.op(i, n - 1)], -s - y * H.$[H.addr.op(i, n)], z, q);
+                                H.$[H.addr.op(i + 1, n - 1)] = cdivr;
+                                H.$[H.addr.op(i + 1, n)] = cdivi;
                             }
                         }
 
                         // Overflow control
 
-                        t = Math.max(Math.abs(H.data[H.addr.op(i, n - 1)]), Math.abs(H.data[H.addr.op(i, n)]));
+                        t = Math.max(Math.abs(H.$[H.addr.op(i, n - 1)]), Math.abs(H.$[H.addr.op(i, n)]));
                         if ((eps * t) * t > 1) {
                             for (int j = i; j <= n; j++) {
-                                H.data[H.addr.op(j, n - 1)] = H.data[H.addr.op(j, n - 1)] / t;
-                                H.data[H.addr.op(j, n)] = H.data[H.addr.op(j, n)] / t;
+                                H.$[H.addr.op(j, n - 1)] = H.$[H.addr.op(j, n - 1)] / t;
+                                H.$[H.addr.op(j, n)] = H.$[H.addr.op(j, n)] / t;
                             }
                         }
                     }
@@ -970,7 +970,7 @@ public class EigenvalueDecomposition {
         for (int i = 0; i < nn; i++) {
             if (i < low | i > high) {
                 for (int j = i; j < nn; j++) {
-                    V.data[V.addr.op(i, j)] = H.data[H.addr.op(i, j)];
+                    V.$[V.addr.op(i, j)] = H.$[H.addr.op(i, j)];
                 }
             }
         }
@@ -981,9 +981,9 @@ public class EigenvalueDecomposition {
             for (int i = low; i <= high; i++) {
                 z = 0.0;
                 for (int k = low; k <= Math.min(j, high); k++) {
-                    z = z + V.data[V.addr.op(i, k)] * H.data[H.addr.op(k, j)];
+                    z = z + V.$[V.addr.op(i, k)] * H.$[H.addr.op(k, j)];
                 }
-                V.data[V.addr.op(i, j)] = z;
+                V.$[V.addr.op(i, j)] = z;
             }
         }
     }

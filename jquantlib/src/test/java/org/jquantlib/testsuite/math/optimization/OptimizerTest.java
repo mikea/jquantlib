@@ -33,6 +33,7 @@ import org.jquantlib.math.optimization.EndCriteria;
 import org.jquantlib.math.optimization.LevenbergMarquardt;
 import org.jquantlib.math.optimization.NoConstraint;
 import org.jquantlib.math.optimization.OptimizationMethod;
+import org.jquantlib.math.optimization.Problem;
 import org.jquantlib.math.optimization.Simplex;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class OptimizerTest {
         // following block moved inside this method body
         final List<CostFunction> costFunctions_ = new ArrayList<CostFunction>();
         final List<Constraint> constraints_ = new ArrayList<Constraint>();
-        final List<List> initialValues_ = new ArrayList<List>();
+        final List<Array> initialValues_ = new ArrayList<Array>();
         final List<Integer> maxIterations_ = new ArrayList<Integer>();
         final List<Integer> maxStationaryStateIterations_ = new ArrayList<Integer>();
         final List<Double> rootEpsilons_ = new ArrayList<Double>();
@@ -89,7 +90,7 @@ public class OptimizerTest {
         // Set Constraint for optimizers: unconstrained problem
         constraints_.add(new NoConstraint());
         // Set initial guess for optimizer
-        final List initialValue = new ArrayDoubleList();
+        final Array initialValue = new Array();
         initialValue.add(-100.0);
         initialValues_.add(initialValue);
         // Set end criteria for optimizer
@@ -112,32 +113,32 @@ public class OptimizerTest {
         // Set expected results for optimizer
 
         for (int i=0; i<costFunctions_.size(); ++i) {
-            /*
-            Problem problem = new Problem(costFunctions_.get(i), constraints_.get(i), initialValues_.get(i));
+            final Problem problem = new Problem(costFunctions_.get(i), constraints_.get(i), initialValues_.get(i));
             for (int j=0; j<(optimizationMethods_.get(i)).size(); ++j) {
-                EndCriteria.CriteriaType endCriteriaResult = optimizationMethods_.get(i).get(j).minimize(problem, endCriterias_.get(i));
-            Array xMinCalculated = problem.currentValue();
-            Array yMinCalculated = problem.values(xMinCalculated);
+                final EndCriteria.Type endCriteriaResult = optimizationMethods_.get(i).get(j).minimize(problem, endCriterias_.get(i));
+            final Array xMinCalculated = problem.currentValue();
+            final Array yMinCalculated = problem.values(xMinCalculated);
             // Check optimizatin results vs known solution
             for (int k=0; k < xMinCalculated.size(); ++k) {
                 //if(Math.abs(yMinExpected_.get(k)- yMinCalculated.get(k))> functionEpsilons_.get(i)){
                 //if (std::fabs(yMinExpected_[k]- yMinCalculated[k]) > functionEpsilons_[i]) {
-                if (true) {*/
-                    /*fail*//*System.out.println("costFunction = " + String.valueOf(i) + "\n"
-                                  + "optimizer =  " +  j + "\n"
-                                  + "    x expected:    " +  xMinExpected_.get(k) + "\n"
-                                  + "    x calculated:  " +  xMinCalculated.get(k) + "\n"
-                                  + "    x difference:  " +  ((Double)xMinExpected_.get(k)- xMinCalculated.get(k)) + "\n"
-                                  + "    rootEpsilon:   " +  rootEpsilons_.get(i) + "\n"
-                                  + "    y expected:    " +  yMinExpected_.get(k) + "\n"
-                                  + "    y calculated:  " +  yMinCalculated.get(k) + "\n"
-                                  + "    y difference:  " +  ((Double)yMinExpected_.get(k)- yMinCalculated.get(k)) + "\n"
-                                  + "    functionEpsilon:   " +  functionEpsilons_.get(i) + "\n"
-                                  + "    endCriteriaResult:  " + endCriteriaResult);/*
+                if (true) {
+                    System.out.println(
+                            "costFunction = " + String.valueOf(i) + "\n"
+                          + "optimizer =  " +  j + "\n"
+                          + "    x expected:    " +  xMinExpected_.get(k) + "\n"
+                          + "    x calculated:  " +  xMinCalculated.get(k) + "\n"
+                          + "    x difference:  " +  ((Double)xMinExpected_.get(k)- xMinCalculated.get(k)) + "\n"
+                          + "    rootEpsilon:   " +  rootEpsilons_.get(i) + "\n"
+                          + "    y expected:    " +  yMinExpected_.get(k) + "\n"
+                          + "    y calculated:  " +  yMinCalculated.get(k) + "\n"
+                          + "    y difference:  " +  ((Double)yMinExpected_.get(k)- yMinCalculated.get(k)) + "\n"
+                          + "    functionEpsilon:   " +  functionEpsilons_.get(i) + "\n"
+                          + "    endCriteriaResult:  " + endCriteriaResult);
                     }
 
                 }
-            }*/
+            }
         }
     }
 
@@ -148,12 +149,13 @@ public class OptimizerTest {
             final double levenbergMarquardtXtol,
             final double levenbergMarquardtGtol){
         final List<OptimizationMethod> results = new ArrayList<OptimizationMethod>();
-        for(int i=0; i<optimizationMethodTypes.length; ++i)
+        for(int i=0; i<optimizationMethodTypes.length; ++i) {
             results.add(makeOptimizationMethod(optimizationMethodTypes[i],
                     simplexLambda,
                     levenbergMarquardtEpsfcn,
                     levenbergMarquardtXtol,
                     levenbergMarquardtGtol));
+        }
         return results;
     }
 
@@ -191,8 +193,9 @@ public class OptimizerTest {
             if (x.size() != 1)
                 throw new IllegalArgumentException("Independent variable must be 1 dimensional");
             double y = 0;
-            for (int i = 0; i <= polynominalDegree_; ++i)
+            for (int i = 0; i <= polynominalDegree_; ++i) {
                 y += coefficients_.get(i) * Math.pow(x.first(), i);
+            }
             return y;
         }
 
