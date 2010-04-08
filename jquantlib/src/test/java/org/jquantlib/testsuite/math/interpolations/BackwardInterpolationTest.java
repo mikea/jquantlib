@@ -39,9 +39,10 @@ public class BackwardInterpolationTest {
 
 	private static final Array x = new Array( new double[] { 0.0, 1.0, 2.0, 3.0, 4.0 });
 	private static final Array y = new Array( new double[] { 5.0, 4.0, 3.0, 2.0, 1.0 });
-	private static Interpolation interpolation;
-	private static int length;
-	private static double tolerance;
+
+	private final Interpolation interpolation;
+	private final int length;
+	private final double tolerance;
 
 	public BackwardInterpolationTest() {
 		QL.info("::::: "+this.getClass().getSimpleName()+" :::::");

@@ -65,14 +65,14 @@ public class FDAmericanEngine
     public FDAmericanEngine(
             final GeneralizedBlackScholesProcess process) {
         super(process, 100,100, false);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
     public FDAmericanEngine(
             final GeneralizedBlackScholesProcess process,
             final int timeSteps) {
         super(process, timeSteps, 100, false);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
     public FDAmericanEngine(
@@ -80,7 +80,7 @@ public class FDAmericanEngine
             final int timeSteps,
             final int gridPoints) {
         super(process, timeSteps, gridPoints, false);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
     public FDAmericanEngine(
@@ -89,7 +89,7 @@ public class FDAmericanEngine
             final int gridPoints,
             final boolean timeDependent) {
         super(process, timeSteps, gridPoints, timeDependent);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
 
@@ -99,10 +99,16 @@ public class FDAmericanEngine
 
 
     private class Impl extends OneAssetOption.EngineImpl {
+        private final FDAmericanEngine engine;
+
+        private Impl(final FDAmericanEngine engine) {
+            this.engine = engine;
+        }
+
         @Override
         public void calculate() {
             // calls FDEngineAdapter#calculate()
-            this.calculate();
+            engine.calculate();
         }
     }
 

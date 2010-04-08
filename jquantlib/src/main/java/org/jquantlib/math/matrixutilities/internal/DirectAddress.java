@@ -8,6 +8,7 @@ import org.jquantlib.lang.exceptions.LibraryException;
 
 public abstract class DirectAddress implements Address, Cloneable {
 
+    protected final double[] data;
     protected final int row0;
     protected final int row1;
     protected final Address chain;
@@ -29,12 +30,14 @@ public abstract class DirectAddress implements Address, Cloneable {
     //
 
     public DirectAddress(
+                final double[] data,
                 final int row0, final int row1,
                 final Address chain,
                 final int col0, final int col1,
                 final Set<Address.Flags> flags,
                 final boolean contiguous,
                 final int rows, final int cols) {
+        this.data = data;
         this.chain  = chain;
         this.contiguous = contiguous;
         this.flags  = (flags != null) ? flags : (chain != null) ? chain.flags() : EnumSet.noneOf(Address.Flags.class);
@@ -113,14 +116,14 @@ public abstract class DirectAddress implements Address, Cloneable {
 
 
     //
-    // Implements Cloneable
+    // implements Cloneable
     //
 
     @Override
     public DirectAddress clone() {
         try {
             return (DirectAddress) super.clone();
-        } catch (final CloneNotSupportedException e) {
+        } catch (final Exception e) {
             throw new LibraryException(e);
         }
     }

@@ -37,12 +37,14 @@ import org.jquantlib.math.interpolations.CubicInterpolation;
 import org.jquantlib.math.interpolations.ForwardFlatInterpolation;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.LinearInterpolation;
+import org.jquantlib.math.interpolations.SABRInterpolation;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.EndCriteria;
 import org.jquantlib.math.optimization.LevenbergMarquardt;
 import org.jquantlib.math.optimization.OptimizationMethod;
 import org.jquantlib.math.optimization.Simplex;
 import org.jquantlib.math.randomnumbers.SobolRsg;
+import org.jquantlib.termstructures.volatilities.Sabr;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -1078,16 +1080,15 @@ public class InterpolationTest {
         final double initialNu = 0.02;
         final double initialRho = 0.01;
         // calculate SABR vols and compare with input vols
-        for (final double strike : strikes) {
-// FIXME: solve dependencies and uncomment
-//            final double calculatedVol = sabrVolatility(strikes[i], forward, expiry,
-//                                                initialAlpha, initialBeta,
-//                                                initialNu, initialRho);
-//            assertFalse("failed to reproduce expected datum"
-//                    +"\n    expected value:   "+volatilities[i]
-//                    +"\n    calculated value: "+calculatedVol
-//                    +"\n    error:              "+Math.abs(calculatedVol-volatilities[i]),
-//                    Math.abs(volatilities[i]-calculatedVol) > tolerance);
+        for (int i=0; i<strikes.length; i++) {
+            final double calculatedVol = (new Sabr()).sabrVolatility(strikes[i], forward, expiry,
+                                                initialAlpha, initialBeta,
+                                                initialNu, initialRho);
+            assertFalse("failed to reproduce expected datum"
+                    +"\n    expected value:   "+volatilities[i]
+                    +"\n    calculated value: "+calculatedVol
+                    +"\n    error:              "+Math.abs(calculatedVol-volatilities[i]),
+                    Math.abs(volatilities[i]-calculatedVol) > tolerance);
         }
 
         // Test SABR calibration against input parameters
@@ -1118,29 +1119,29 @@ public class InterpolationTest {
               for (int k_b=0; k_b<isBetaFixed.length; ++k_b) {
                 for (int k_n=0; k_n<isNuFixed.length; ++k_n) {
                   for (int k_r=0; k_r<isRhoFixed.length; ++k_r) {
-//TODO: uncomment
-//                    final SABRInterpolation sabrInterpolation = new SABRInterpolation(
-//                            new Array(strikes), new Array(volatilities),
-//                            expiry, forward,
-//                            alphaGuess, betaGuess, nuGuess, rhoGuess,
-//                            isAlphaFixed[k_a], isBetaFixed[k_b],
-//                            isNuFixed[k_n], isRhoFixed[k_r],
-//                            vegaWeighted[i],
-//                            endCriteria, methods[j]);
-//                    sabrInterpolation.update();
-//
-//                    // Recover SABR calibration parameters
-//                    final boolean failed = false;
-//                    final double calibratedAlpha = sabrInterpolation.alpha();
-//                    final double calibratedBeta  = sabrInterpolation.beta();
-//                    final double calibratedNu    = sabrInterpolation.nu();
-//                    final double calibratedRho   = sabrInterpolation.rho();
+//FIXME: uncomment
+                    final SABRInterpolation sabrInterpolation = new SABRInterpolation(
+                            new Array(strikes), new Array(volatilities),
+                            expiry, forward,
+                            alphaGuess, betaGuess, nuGuess, rhoGuess,
+                            isAlphaFixed[k_a], isBetaFixed[k_b],
+                            isNuFixed[k_n], isRhoFixed[k_r],
+                            vegaWeighted[i],
+                            endCriteria, methods[j]);
+                    sabrInterpolation.update();
+
+                    // Recover SABR calibration parameters
+                    final boolean failed = false;
+                    final double calibratedAlpha = sabrInterpolation.alpha();
+                    final double calibratedBeta  = sabrInterpolation.beta();
+                    final double calibratedNu    = sabrInterpolation.nu();
+                    final double calibratedRho   = sabrInterpolation.rho();
 
                     // TODO: remove these declarations. Added just to make it compile.
-                    final double calibratedAlpha = Double.NaN;
-                    final double calibratedBeta  = Double.NaN;
-                    final double calibratedNu    = Double.NaN;
-                    final double calibratedRho   = Double.NaN;
+//                    final double calibratedAlpha = Double.NaN;
+//                    final double calibratedBeta  = Double.NaN;
+//                    final double calibratedNu    = Double.NaN;
+//                    final double calibratedRho   = Double.NaN;
                     // ---------------------------------------------------------------
 
                     double error;

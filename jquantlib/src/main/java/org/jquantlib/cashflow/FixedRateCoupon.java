@@ -82,7 +82,7 @@ public class FixedRateCoupon extends Coupon {
 	//
 
 	public InterestRate interestRate() {
-		return interestRate();
+		return rate;
 	}
 
 	//
@@ -101,10 +101,9 @@ public class FixedRateCoupon extends Coupon {
 
 	@Override
 	public double accruedAmount(final Date d) {
-		if (d.le(accrualStartDate) || d.gt(paymentDate)) {
-			return 0.0;
-		}
-		else {
+		if (d.le(accrualStartDate) || d.gt(paymentDate))
+            return 0.0;
+        else {
 			final Date minD = d.le(accrualEndDate) ? d : accrualEndDate;
 			return nominal()
 					* (rate.compoundFactor(accrualStartDate, minD,

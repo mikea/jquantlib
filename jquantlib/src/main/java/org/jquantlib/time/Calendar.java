@@ -120,12 +120,10 @@ public class Calendar {
      * Returns <tt>true</tt> if the date is a business day for the given market.
      */
     public boolean isBusinessDay(final Date d) /* @ReadOnly */{
-        if (impl.addedHolidays.contains(d)) {
+        if (impl.addedHolidays.contains(d))
             return false;
-        }
-        if (impl.removedHolidays.contains(d)) {
+        if (impl.removedHolidays.contains(d))
             return true;
-        }
         return impl.isBusinessDay(d);
     }
 
@@ -226,29 +224,25 @@ public class Calendar {
      * @note The input date is not modified
      */
     public Date adjust(final Date d, final BusinessDayConvention c) /* @ReadOnly */ {
-        if (c == BusinessDayConvention.Unadjusted) {
+        if (c == BusinessDayConvention.Unadjusted)
             return d.clone();
-        }
         final Date d1 = d.clone();
         if (c == BusinessDayConvention.Following || c == BusinessDayConvention.ModifiedFollowing) {
             while (isHoliday(d1)) {
                 d1.inc();
             }
             if (c == BusinessDayConvention.ModifiedFollowing) {
-                if (d1.month() != d.month()) {
+                if (d1.month() != d.month())
                     return adjust(d, BusinessDayConvention.Preceding);
-                }
             }
         } else if (c == BusinessDayConvention.Preceding || c == BusinessDayConvention.ModifiedPreceding) {
             while (isHoliday(d1)) {
                 d1.dec();
             }
-            if (c == BusinessDayConvention.ModifiedPreceding && d1.month() != d.month()) {
+            if (c == BusinessDayConvention.ModifiedPreceding && d1.month() != d.month())
                 return adjust(d, BusinessDayConvention.Following);
-            }
-        } else {
+        } else
             throw new LibraryException(UKNOWN_BUSINESS_DAY_CONVENTION);
-        }
         return d1;
     }
 
@@ -315,9 +309,9 @@ public class Calendar {
             final BusinessDayConvention c,
             final boolean endOfMonth) /* @ReadOnly */{
         QL.require(d != null && !d.isNull(), "null date");
-        if (n == 0) {
+        if (n == 0)
             return adjust(d, c);
-        } else if (unit == TimeUnit.Days) {
+        else if (unit == TimeUnit.Days) {
             final Date d1 = d.clone();
             if (n > 0) {
                 while (n > 0) {
@@ -344,9 +338,8 @@ public class Calendar {
             final Date d1 = d.add(new Period(n, unit));
 
             // we are sure the unit is Months or Years
-            if (endOfMonth && isEndOfMonth(d)) {
+            if (endOfMonth && isEndOfMonth(d))
                 return endOfMonth(d1);
-            }
 
             return adjust(d1, c);
         }
@@ -407,7 +400,7 @@ public class Calendar {
     //
 
     public static boolean eq(final Calendar c1, final Calendar c2) {
-        return (c1.empty() && c2.empty()) || (!c1.empty() && !c2.empty() && c1.name() == c2.name());
+        return (c1.empty() && c2.empty()) || (!c1.empty() && !c2.empty() && c1.name().equals(c2.name()));
     }
 
     public static boolean ne(final Calendar c1, final Calendar c2) {

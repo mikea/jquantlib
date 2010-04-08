@@ -23,6 +23,7 @@ package org.jquantlib.math.matrixutilities;
 import java.util.Set;
 
 import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.matrixutilities.internal.Address;
 
 /**
@@ -35,7 +36,7 @@ import org.jquantlib.math.matrixutilities.internal.Address;
  *
  * @author Richard Gomes
  */
-public abstract class Cells<T extends Address> {
+public abstract class Cells<T extends Address> implements Cloneable {
 
     //
     // private final static fields :: error messages
@@ -115,25 +116,25 @@ public abstract class Cells<T extends Address> {
     @Deprecated
     public double[] $;
 
-
-    /**
-     * This is a convenience method which returns a reference to the underlying data structure which keeps data
-     * relative to <code>this</code> object.
-     * <p>
-     * <b>The use of this method is highly discouraged by end-user applications.</b>
-     * <p>
-     * Note: this method is deprecated in order to remind application developers avoid its use.
-     * <p>
-     * This method makes sure that access to the underlying data can be done in a contiguous ways. This property is critical for
-     * certain algorithms which assume that a chunk of data can be acessed in a continuous way, typically copy, swap and sort.
-     *
-     * @return a reference to the underlying data. If you don't know what we are talking about, you'd better avoid this method.
-     */
-    @Deprecated
-    public final double[] data() /* @ReadOnly */{
-        QL.require(addr.isContiguous() && addr.base() == 0, UnsupportedOperationException.class, "must be contiguous");
-        return $;
-    }
+//XXX
+//    /**
+//     * This is a convenience method which returns a reference to the underlying data structure which keeps data
+//     * relative to <code>this</code> object.
+//     * <p>
+//     * <b>The use of this method is highly discouraged by end-user applications.</b>
+//     * <p>
+//     * Note: this method is deprecated in order to remind application developers avoid its use.
+//     * <p>
+//     * This method makes sure that access to the underlying data can be done in a contiguous ways. This property is critical for
+//     * certain algorithms which assume that a chunk of data can be acessed in a continuous way, typically copy, swap and sort.
+//     *
+//     * @return a reference to the underlying data. If you don't know what we are talking about, you'd better avoid this method.
+//     */
+//    @Deprecated
+//    public final double[] data() /* @ReadOnly */{
+//        QL.require(addr.isContiguous() && addr.base() == 0, UnsupportedOperationException.class, "must be contiguous");
+//        return $;
+//    }
 
 
     /**
@@ -185,35 +186,6 @@ public abstract class Cells<T extends Address> {
     // public methods
     //
 
-//TODO: implement hashCode and equals
-//
-//    @Override
-//    public int hashCode() {
-//        final int prime = 31;
-//        int result = 1;
-//        result = prime * result + cols;
-//        result = prime * result + rows;
-//        return result;
-//    }
-//
-//
-//    @Override
-//    public boolean equals(Object obj) {
-//        if (this == obj)
-//            return true;
-//        if (obj == null)
-//            return false;
-//        if (getClass() != obj.getClass())
-//            return false;
-//        Cells other = (Cells) obj;
-//        if (cols != other.cols)
-//            return false;
-//        if (rows != other.rows)
-//            return false;
-//        return true;
-//    }
-
-
     public final int rows()       { return rows; }
     public final int columns()    { return cols; }
     public final int cols()       { return cols; } // FIXME: remove this
@@ -225,12 +197,55 @@ public abstract class Cells<T extends Address> {
     }
 
     public void requireFlags(final Set<Address.Flags> required, final String variable) {
-
         if (required.contains(Address.Flags.FORTRAN) != addr.isFortran()) {
             final String name = (variable==null) ? "variable" : (this.getClass().getSimpleName() + " " + variable);
             final String message = String.format(FORTRAN_ADDRESSING_EXPECTED, name);
             QL.error(String.format(FORTRAN_ADDRESSING_EXPECTED, name));
         }
     }
+
+
+
+    //
+    // Overrides Object
+    //
+
+    @Override
+    public Cells clone() {
+        try {
+            return (Cells) super.clone();
+        } catch (final CloneNotSupportedException e) {
+            throw new LibraryException(e);
+        }
+    }
+
+
+//TODO: implement hashCode and equals
+//
+//        @Override
+//        public int hashCode() {
+//            final int prime = 31;
+//            int result = 1;
+//            result = prime * result + cols;
+//            result = prime * result + rows;
+//            return result;
+//        }
+
+//        @Override
+//        public boolean equals(Object obj) {
+//            if (this == obj)
+//                return true;
+//            if (obj == null)
+//                return false;
+//            if (getClass() != obj.getClass())
+//                return false;
+//            Cells other = (Cells) obj;
+//            if (cols != other.cols)
+//                return false;
+//            if (rows != other.rows)
+//                return false;
+//            return true;
+//        }
+
 
 }

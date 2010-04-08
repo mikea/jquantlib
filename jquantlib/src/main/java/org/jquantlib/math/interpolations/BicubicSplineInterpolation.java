@@ -89,15 +89,14 @@ public class BicubicSplineInterpolation extends AbstractInterpolation2D {
 
         @Override
         public void calculate() {
-            throw new UnsupportedOperationException();
-//            splines_ = new Interpolation[mz.rows()];
-//            for (int i=0; i<mz.rows(); i++) {
-//                splines_[i] = new CubicInterpolation(
-//                                vx, mz.rangeRow(i),
-//                                DerivativeApprox.Spline, false,
-//                                BoundaryCondition.SecondDerivative, 0.0,
-//                                BoundaryCondition.SecondDerivative, 0.0);
-//            }
+            splines_ = new Interpolation[mz.rows()];
+            for (int i=0; i<mz.rows(); i++) {
+                splines_[i] = new CubicInterpolation(
+                                vx, mz.rangeRow(i),
+                                DerivativeApprox.Spline, false,
+                                BoundaryCondition.SecondDerivative, 0.0,
+                                BoundaryCondition.SecondDerivative, 0.0);
+            }
         }
 
         @Override

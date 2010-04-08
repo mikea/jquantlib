@@ -81,14 +81,14 @@ public class FDDividendAmericanEngine
 
     public FDDividendAmericanEngine(final GeneralizedBlackScholesProcess process) {
         this(process, 100, 100, false);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
     public FDDividendAmericanEngine(
             final GeneralizedBlackScholesProcess process,
             final int timeSteps) {
         this(process, timeSteps, 100, false);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
     public FDDividendAmericanEngine(
@@ -96,7 +96,7 @@ public class FDDividendAmericanEngine
             final int timeSteps,
             final int gridPoints) {
         this(process, timeSteps, gridPoints, false);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
     public FDDividendAmericanEngine(
@@ -105,7 +105,7 @@ public class FDDividendAmericanEngine
             final int gridPoints,
             final boolean timeDependent) {
         super(process, timeSteps, gridPoints, timeDependent);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
     //
@@ -114,10 +114,17 @@ public class FDDividendAmericanEngine
 
 
     private class Impl extends DividendVanillaOption.EngineImpl {
+
+        private final FDDividendAmericanEngine engine;
+
+        private Impl(final FDDividendAmericanEngine engine) {
+            this.engine = engine;
+        }
+
         @Override
         public void calculate() {
             // calls FDEngineAdapter#calculate()
-            this.calculate();
+            engine.calculate();
         }
     }
 

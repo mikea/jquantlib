@@ -41,6 +41,7 @@ package org.jquantlib.math.matrixutilities;
 
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.jquantlib.QL;
@@ -62,7 +63,7 @@ import org.jquantlib.math.matrixutilities.internal.DirectArrayRowAddress;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q2_RESEMBLANCE, version = Version.V097, reviewers = { "Richard Gomes" })
-public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Algebra<Array> {
+public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Iterable<Double>, Algebra<Array> {
 
     //
     // public constructors
@@ -88,8 +89,8 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
      * @see Address.Flags
      */
     public Array(final Set<Address.Flags> flags) {
-        super(1, 1,
-              new DirectArrayRowAddress(0, null, 0, 0, flags, true, 1, 1));
+        super(1, 1, null);
+        this.addr = new DirectArrayRowAddress(this.$, 0, null, 0, 0, flags, true, 1, 1);
     }
 
 
@@ -113,8 +114,8 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
      * @see Address.Flags
      */
     public Array(final int size, final Set<Address.Flags> flags) {
-        super(1, size,
-              new DirectArrayRowAddress(0, null, 0, size-1, flags, true, 1, size));
+        super(1, size, null);
+        this.addr = new DirectArrayRowAddress(this.$, 0, null, 0, size-1, flags, true, 1, size);
     }
 
     /**
@@ -135,8 +136,8 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
      * @see Address.Flags
      */
     public Array(final double[] array, final Set<Address.Flags> flags) {
-        super(1, array.length,
-              new DirectArrayRowAddress(0, null, 0, array.length-1, flags, true, 1, array.length));
+        super(1, array.length, null);
+        this.addr = new DirectArrayRowAddress(this.$, 0, null, 0, array.length-1, flags, true, 1, array.length);
         System.arraycopy(array, 0, $, 0, this.size());
     }
 
@@ -160,8 +161,8 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
      * @see Address.Flags
      */
     public Array(final double[] array, final int size, final Set<Address.Flags> flags) {
-        super(1, size,
-              new DirectArrayRowAddress(0, null, 0, size-1, flags, true, 1, size));
+        super(1, size, null);
+        this.addr = new DirectArrayRowAddress(this.$, 0, null, 0, size-1, flags, true, 1, size);
         System.arraycopy(array, 0, $, 0, this.size());
     }
 
@@ -183,9 +184,10 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
      * @see Address.Flags
      */
     public Array(final Array array, final Set<Address.Flags> flags) {
-        super(1, array.size(), new DirectArrayRowAddress(0, null, 0, array.size(), array.flags(), true, 1, array.size()));
+        super(1, array.size(), null);
+        this.addr = new DirectArrayRowAddress(this.$, 0, null, 0, array.size(), array.flags(), true, 1, array.size());
         if (array.addr.isContiguous()) {
-            final int begin = array.addr.col0()+array.offset();
+            final int begin = array.addr.col0()+(addr.isFortran() ? 1 : 0);
             System.arraycopy(array.$, begin, $, 0, this.size());
         } else {
             for (int i=0; i<array.size(); i++) {
@@ -209,12 +211,24 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
 
 
     //
-    // Overrides Object
+    // implements Cloneable
     //
 
     @Override
     public Array clone() {
-        return new Array(this, this.flags());
+        //XXX return new Array(this, this.flags());
+        final Array clone = (Array) super.clone();
+        clone.$ = new double[this.size()];
+        clone.addr = new DirectArrayRowAddress(clone.$, 0, null, 0, this.size(), this.flags(), true, 1, this.size());
+        if (this.addr.isContiguous()) {
+            final int begin = this.addr.col0()+(addr.isFortran() ? 1 : 0);
+            System.arraycopy(this.$, begin, clone.$, 0, this.size());
+        } else {
+            for (int i=0; i<this.size(); i++) {
+                clone.$[i] = this.get(i);
+            }
+        }
+        return clone;
     }
 
 
@@ -238,26 +252,21 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
         return addr.op(index);
     }
 
-    public int offset() {
-       return addr.isFortran() ? 1 : 0;
+    public int begin() {
+        return addr.isFortran() ? 1 : 0;
     }
 
-    public int begin() {
-        return offset();
-     }
-
     public int end() {
-        return size() + offset();
-     }
+        return size() + (addr.isFortran() ? 1 : 0);
+    }
 
     public double first() {
-        return $[_(offset())];
+        return $[_(addr.isFortran() ? 1 : 0)];
     }
 
     public double last() {
         return $[_(end() - 1)];
     }
-
 
     /**
      * Retrieves an element of <code>this</code> Matrix
@@ -407,7 +416,7 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
         final Address.ArrayAddress.ArrayOffset toff = this.addr.offset();
         final Address.ArrayAddress.ArrayOffset aoff = another.addr.offset();
         for (int i=0; i<size(); i++) {
-            $[toff.op()] /= another.$[aoff.op()];
+            this.$[toff.op()] /= another.$[aoff.op()];
             toff.nextIndex();
             aoff.nextIndex();
         }
@@ -1058,6 +1067,15 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
     }
 
 
+    //
+    // implements Iterable<Double>
+    //
+
+    @Override
+    public Iterator<Double> iterator() {
+        return this.addr.offset();
+    }
+
 
     //
     // private inner classes
@@ -1075,7 +1093,7 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Alg
             super(1,
                   col1-col0,
                   data,
-                  new DirectArrayRowAddress(row0, chain, col0, col1, null, true, rows, cols));
+                  new DirectArrayRowAddress(data, row0, chain, col0, col1, null, true, rows, cols));
         }
     }
 

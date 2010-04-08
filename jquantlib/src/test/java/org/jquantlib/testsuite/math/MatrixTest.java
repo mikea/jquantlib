@@ -457,7 +457,7 @@ public class MatrixTest {
         final int offset = m.offset();
         for (int row=offset; row<m.rows()+offset; row++) {
             for (int col=offset; col<m.cols()+offset; col++) {
-                if (m.get(row, col) != (col-offset+1)*2.5) {
+                if (!Closeness.isClose(m.get(row, col), (col-offset+1)*2.5)) {
                     fail("mulAssign failed");
                 }
             }
@@ -487,7 +487,7 @@ public class MatrixTest {
         final int offset = m.offset();
         for (int row=offset; row<m.rows()+offset; row++) {
             for (int col=offset; col<m.cols()+offset; col++) {
-                if (m.get(row, col) != (col-offset+1)/2.5) {
+                if (!Closeness.isClose(m.get(row, col), (col-offset+1)/2.5)) {
                     fail("divAssign failed");
                 }
             }
@@ -607,7 +607,7 @@ public class MatrixTest {
 
         for (int row=0; row<m.rows(); row++) {
             for (int col=0; col<m.cols(); col++) {
-                if (m.get(row, col) != (col+1)*2.5) {
+                if (!Closeness.isClose(m.get(row, col), (col+1)*2.5)) {
                     fail("'mul' failed");
                 }
             }
@@ -640,7 +640,7 @@ public class MatrixTest {
             fail("'mul' failed");
         }
 
-        final int offset = a.offset();
+        final int offset = a.flags().contains(Address.Flags.FORTRAN) ? 1 : 0;
         for (int col=offset; col<a.cols()+offset; col++) {
             if (a.get(col) != 10.0) {
                 fail("'mul' failed");
@@ -709,7 +709,7 @@ public class MatrixTest {
 
         for (int row=0; row<m.rows(); row++) {
             for (int col=0; col<m.cols(); col++) {
-                if (m.get(row, col) != (col+1)/2.5) {
+                if (!Closeness.isClose(m.get(row, col), (col+1)/2.5)) {
                     fail("'div' failed");
                 }
             }

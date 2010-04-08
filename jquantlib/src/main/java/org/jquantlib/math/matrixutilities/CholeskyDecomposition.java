@@ -38,6 +38,7 @@ import org.jquantlib.lang.exceptions.LibraryException;
  * @note  This class is adapted from JAMA
  * @see <a href="http://math.nist.gov/javanumerics/jama/">JAMA</a>
  */
+// FIXME: http://bugs.jquantlib.org/view.php?id=340
 @QualityAssurance(quality = Quality.Q1_TRANSLATION, version = Version.OTHER, reviewers = { "Richard Gomes" })
 public class CholeskyDecomposition {
 
@@ -88,7 +89,7 @@ public class CholeskyDecomposition {
                 isspd = isspd & (A.$[A.addr.op(k, j)] == A.$[A.addr.op(j, k)]);
             }
             d = A.$[A.addr.op(j, j)] - d;
-            isspd = isspd & (d > 0.0);
+            isspd = isspd && (d > 0.0); //FINDBUGS:: NS_DANGEROUS_NON_SHORT_CIRCUIT (solved)
             L.$[L.addr.op(j, j)] = Math.sqrt(Math.max(d, 0.0));
             for (int k = j + 1; k < n; k++) {
                 L.$[L.addr.op(j, k)] = 0.0;

@@ -93,13 +93,14 @@ public class JumpDiffusionEngine extends VanillaOption.EngineImpl {
     //
 
     final private Merton76Process process;
-    final private VanillaOption.ArgumentsImpl a;
-    final private VanillaOption.ResultsImpl   r;
+    final private VanillaOption.ArgumentsImpl A;
+    final private VanillaOption.ResultsImpl   R;
+
     private final Option.GreeksImpl greeks;
     private final Option.MoreGreeksImpl moreGreeks;
 
-    private final double relativeAccuracy_;
-    private final int maxIterations_;
+    private final double relativeAccuracy;
+    private final int maxIterations;
 
 
     public JumpDiffusionEngine(
@@ -117,12 +118,12 @@ public class JumpDiffusionEngine extends VanillaOption.EngineImpl {
             final Merton76Process process,
             final double relativeAccuracy,
             final int maxIterations) {
-        this.maxIterations_ = maxIterations;
-        this.relativeAccuracy_ = relativeAccuracy;
-        this.a = (VanillaOption.ArgumentsImpl)arguments;
-        this.r = (VanillaOption.ResultsImpl)results;
-        this.greeks = r.greeks();
-        this.moreGreeks = r.moreGreeks();
+        this.maxIterations = maxIterations;
+        this.relativeAccuracy = relativeAccuracy;
+        this.A = (VanillaOption.ArgumentsImpl)arguments;
+        this.R = (VanillaOption.ResultsImpl)results;
+        this.greeks = R.greeks();
+        this.moreGreeks = R.moreGreeks();
         this.process = process;
         this.process.addObserver(this);
     }
@@ -139,13 +140,13 @@ public class JumpDiffusionEngine extends VanillaOption.EngineImpl {
         final double /* @Real */lambda = (k + 1.0) * process.jumpIntensity().currentLink().value();
 
         // dummy strike
-        final double /* @Real */variance = process.blackVolatility().currentLink().blackVariance(a.exercise.lastDate(), 1.0);
+        final double /* @Real */variance = process.blackVolatility().currentLink().blackVariance(A.exercise.lastDate(), 1.0);
 
         final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
         final Calendar volcal = process.blackVolatility().currentLink().calendar();
         final Date volRefDate = process.blackVolatility().currentLink().referenceDate();
-        final double /* @Time */t = voldc.yearFraction(volRefDate, a.exercise.lastDate());
-        final double /* @Rate */riskFreeRate = -Math.log(process.riskFreeRate().currentLink().discount(a.exercise.lastDate())) / t;
+        final double /* @Time */t = voldc.yearFraction(volRefDate, A.exercise.lastDate());
+        final double /* @Rate */riskFreeRate = -Math.log(process.riskFreeRate().currentLink().discount(A.exercise.lastDate())) / t;
         final Date rateRefDate = process.riskFreeRate().currentLink().referenceDate();
 
         final PoissonDistribution p = new PoissonDistribution(lambda * t);
@@ -164,14 +165,14 @@ public class JumpDiffusionEngine extends VanillaOption.EngineImpl {
 
         final VanillaOption.ArgumentsImpl baseArguments = (VanillaOption.ArgumentsImpl) baseEngine.getArguments();
 
-        baseArguments.payoff = a.payoff;
-        baseArguments.exercise = a.exercise;
+        baseArguments.payoff = A.payoff;
+        baseArguments.exercise = A.exercise;
 
         baseArguments.validate();
 
         final VanillaOption.ResultsImpl baseResults = (VanillaOption.ResultsImpl) baseEngine.getResults();
 
-        r.value = 0.0;
+        R.value = 0.0;
         greeks.delta = 0.0;
         greeks.gamma = 0.0;
         greeks.theta = 0.0;
@@ -180,29 +181,23 @@ public class JumpDiffusionEngine extends VanillaOption.EngineImpl {
         greeks.dividendRho = 0.0;
 
 
-        //FIXME: rename R to r
-        double /* @Real */R, v, weight, lastContribution = 1.0;
-        double /* @Real */theta_correction;
-
-        // TODO: code review :: please verify against QL/C++ code
-        // Haug arbitrary criterium is:
-        // for (i=0; i<11; i++) {
+        double /* @Real */ r, v, weight, lastContribution = 1.0;
+        double /* @Real */ theta_correction;
 
         int i;
-        for (i = 0; lastContribution > relativeAccuracy_ && i < maxIterations_; i++) {
-
+        for (i = 0; lastContribution > relativeAccuracy && i < maxIterations || i < (int)(lambda*t); i++) {
 
             // constant vol/rate assumption. It should be relaxed
             v = Math.sqrt((variance + i * jumpSquareVol) / t);
-            R = riskFreeRate - process.jumpIntensity().currentLink().value() * k + i * muPlusHalfSquareVol / t;
-            riskFreeTS.linkTo(new FlatForward(rateRefDate, R, voldc));
+            r = riskFreeRate - process.jumpIntensity().currentLink().value() * k + i * muPlusHalfSquareVol / t;
+            riskFreeTS.linkTo(new FlatForward(rateRefDate, r, voldc));
             volTS.linkTo(new BlackConstantVol(rateRefDate, volcal, v, voldc));
 
             baseArguments.validate();
             baseEngine.calculate();
 
             weight = p.op(i);
-            r.value += weight * baseResults.value;
+            R.value += weight * baseResults.value;
             greeks.delta += weight * baseResults.greeks().delta;
             greeks.gamma += weight * baseResults.greeks().gamma;
             greeks.vega += weight * (Math.sqrt(variance / t) / v) * baseResults.greeks().vega;
@@ -217,7 +212,7 @@ public class JumpDiffusionEngine extends VanillaOption.EngineImpl {
             greeks.rho += weight * baseResults.greeks().rho;
             greeks.dividendRho += weight * baseResults.greeks().dividendRho;
 
-            lastContribution = Math.abs(baseResults.value / (Math.abs(r.value) > Constants.QL_EPSILON ? r.value : 1.0));
+            lastContribution = Math.abs(baseResults.value / (Math.abs(R.value) > Constants.QL_EPSILON ? R.value : 1.0));
 
             lastContribution = Math.max(lastContribution,
                     Math.abs(baseResults.greeks().delta / (Math.abs(greeks.delta) > Constants.QL_EPSILON ? greeks.delta : 1.0)));
@@ -240,7 +235,7 @@ public class JumpDiffusionEngine extends VanillaOption.EngineImpl {
             lastContribution *= weight;
         }
 
-        QL.ensure(i < maxIterations_ , "accuracy not reached"); // QA:[RG]::verified // TODO: message
+        QL.ensure(i < maxIterations , "accuracy not reached"); // QA:[RG]::verified // TODO: message
     }
 
 }

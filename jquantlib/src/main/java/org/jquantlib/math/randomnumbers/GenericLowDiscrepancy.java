@@ -41,6 +41,7 @@ package org.jquantlib.math.randomnumbers;
 
 import java.lang.reflect.Constructor;
 
+import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 
@@ -80,8 +81,7 @@ public class GenericLowDiscrepancy<RSG extends UniformRandomSequenceGenerator, I
     protected InverseCumulativeRsg<RSG, IC> makeSequenceGenerator(
             final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
 
-        if (System.getProperty("EXPERIMENTAL")==null)
-            throw new UnsupportedOperationException("Work in progress");
+        QL.validateExperimentalMode();
 
         // instantiate a RandomSequenceGenerator given its generic type (first generic parameter)
         final RSG rsg;

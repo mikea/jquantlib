@@ -136,8 +136,8 @@ public class DiscreteAveragingAsianOption extends OneAssetOption {
         public void validate() /*@ReadOnly*/{
             super.validate();
             QL.require(averageType!=null , "unspecified average type"); // QA:[RG]::verified // TODO: message
-            QL.require(pastFixings!=Constants.NULL_INTEGER , "null past-fixing number"); // QA:[RG]::verified // TODO: message
-            QL.require(runningAccumulator != Constants.NULL_REAL , "null running product"); // QA:[RG]::verified // TODO: message
+            QL.require(pastFixings!=Constants.NULL_INTEGER, "null past-fixing number"); // QA:[RG]::verified // TODO: message
+            QL.require(!Double.isNaN(runningAccumulator), "null running product"); // QA:[RG]::verified // TODO: message
 
             // TODO: code review :: please verify against QL/C++ code
             switch (averageType) {

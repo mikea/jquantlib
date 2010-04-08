@@ -15,7 +15,9 @@ public class QL {
      * @param message is a message emitted.
      * @throws a LibraryException if the condition is not met
      */
-    public static void require(final boolean condition, final String message) {
+    public static void require(
+            final boolean condition,
+            final String message) throws RuntimeException {
         if (!condition)
             throw new LibraryException(message);
     }
@@ -28,7 +30,10 @@ public class QL {
      * @param message is a message emitted.
      * @throws a LibraryException if the condition is not met
      */
-    public static void require(final boolean condition, final Class<? extends RuntimeException> klass, final String message) {
+    public static void require(
+            final boolean condition,
+            final Class<? extends RuntimeException> klass,
+            final String message) throws RuntimeException {
         if (!condition) {
             try {
                 final Constructor<? extends RuntimeException> c = klass.getConstructor(String.class);
@@ -61,7 +66,9 @@ public class QL {
      * @param message is a message emitted.
      * @throws a LibraryException if the condition is not met
      */
-    public static void ensure(final boolean condition, final String message) {
+    public static void ensure(
+            final boolean condition,
+            final String message) throws RuntimeException {
         if (!condition)
             throw new LibraryException(message);
     }

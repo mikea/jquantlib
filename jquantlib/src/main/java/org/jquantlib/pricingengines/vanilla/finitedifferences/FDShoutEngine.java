@@ -63,14 +63,14 @@ public class FDShoutEngine
     public FDShoutEngine(
             final GeneralizedBlackScholesProcess process) {
         super(process, 100,100, false);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
     public FDShoutEngine(
             final GeneralizedBlackScholesProcess process,
             final int timeSteps) {
         super(process, timeSteps, 100, false);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
     public FDShoutEngine(
@@ -78,7 +78,7 @@ public class FDShoutEngine
             final int timeSteps,
             final int gridPoints) {
         super(process, timeSteps, gridPoints, false);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
     public FDShoutEngine(
@@ -87,7 +87,7 @@ public class FDShoutEngine
             final int gridPoints,
             final boolean timeDependent) {
         super(process, timeSteps, gridPoints, timeDependent);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
     //
@@ -96,10 +96,17 @@ public class FDShoutEngine
 
 
     private class Impl extends VanillaOption.EngineImpl {
+
+        private final FDShoutEngine engine;
+
+        private Impl(final FDShoutEngine engine) {
+            this.engine = engine;
+        }
+
         @Override
         public void calculate() {
             // calls FDEngineAdapter#calculate()
-            this.calculate();
+            engine.calculate();
         }
     }
 

@@ -88,6 +88,7 @@ import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.DateGeneration.Rule;
 import org.jquantlib.time.calendars.Brazil;
 import org.jquantlib.time.calendars.NullCalendar;
+import org.jquantlib.time.calendars.Target;
 import org.jquantlib.time.calendars.UnitedStates;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -269,15 +270,16 @@ public class BondTest {
 
 		QL.info("Testing bond price/yield calculation against cached values...");
 
-        final Calendar calendar = new org.jquantlib.time.calendars.Target();
+        //final Calendar calendar = new Target();
         // final Date today = calendar.adjust(Date.todaysDate());
+        // final Date today = calendar.adjust(new Date(6,Month.June,2007));
+        final Date today = new Date(22,Month.November,2004);
+        final Settings settings = new Settings();
+        settings.setEvaluationDate(today);
+
         final double faceAmount = 1000000.0;
 
-	    // with implicit settlement calculation:
-
-	    final Date today = new Date(22, Month.November, 2004);
-	    final Settings settings = new Settings();
-	    settings.setEvaluationDate(today);
+        // with implicit settlement calculation:
 
 	    final Calendar bondCalendar = new NullCalendar();
 	    final DayCounter bondDayCount = new ActualActual(ActualActual.Convention.ISMA);
@@ -470,14 +472,14 @@ public class BondTest {
 
 	    QL.info("Testing zero-coupon bond prices against cached values...");
 
-        final Calendar calendar = new org.jquantlib.time.calendars.Target();
-        // final Date today = calendar.adjust(Date.todaysDate());
-        final double faceAmount = 1000000.0;
-
-	    final Date today = new Date(22,Month.November,2004);
-
+        final Calendar calendar = new Target();
+        final Date today = calendar.adjust(Date.todaysDate());
+        // final Date today = calendar.adjust(new Date(6,Month.June,2007));
+	    // final Date today = new Date(22,Month.November,2004);
 	    final Settings settings = new Settings();
 	    settings.setEvaluationDate(today);
+
+        final double faceAmount = 1000000.0;
 
 	    final int settlementDays = 1;
 
@@ -551,13 +553,14 @@ public class BondTest {
 
 	    QL.info("Testing fixed-coupon bond prices against cached values...");
 
-        final Calendar calendar = new org.jquantlib.time.calendars.Target();
-        // final Date today = calendar.adjust(Date.todaysDate());
-        final double faceAmount = 1000000.0;
+        final Calendar calendar = new Target();
+        final Date today = calendar.adjust(Date.todaysDate());
+        // final Date today = calendar.adjust(new Date(6,Month.June,2007));
+        // final Date today = new Date(22,Month.November,2004);
+        final Settings settings = new Settings();
+        settings.setEvaluationDate(today);
 
-	    final Date today = new Date(22,Month.November,2004);
-	    final Settings settings = new Settings();
-	    settings.setEvaluationDate(today);
+        final double faceAmount = 1000000.0;
 
 	    final int settlementDays = 1;
 
@@ -767,16 +770,17 @@ public class BondTest {
 	@Test
 	public void testBrazilianCached() {
 
-	    QL.info(
-	        "Testing Brazilian public bond prices against cached values...");
+	    QL.info("Testing Brazilian public bond prices against cached values...");
 
-        final Calendar calendar = new org.jquantlib.time.calendars.Target();
+        final Calendar calendar = new Target();
         // final Date today = calendar.adjust(Date.todaysDate());
-        // final double faceAmount = 1000000.0;
-
-	    final Date today = new Date(6,Month.June,2007);
+	    final Date today = calendar.adjust(new Date(6,Month.June,2007));
 	    final Settings settings = new Settings();
 	    settings.setEvaluationDate(today);
+
+        //final double faceAmount = 1000000.0;
+        final double faceAmount = 1000.0;
+        final int settlementDays = 1;
 
 	    // NTN-F maturity dates
 	    final Date [] maturityDates = new Date[6];
@@ -805,8 +809,6 @@ public class BondTest {
 	    prices[4] = 1028.33383817;
 	    prices[5] = 1026.19716497;
 
-	    final int settlementDays = 1;
-	    final double faceAmount = 1000.0;
 
 	    // The tolerance is high because Andima truncate yields
 	    final double tolerance = 1.0e-4;

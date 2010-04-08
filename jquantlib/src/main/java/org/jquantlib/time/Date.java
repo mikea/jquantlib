@@ -612,7 +612,11 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     @Override
     public Date clone() {
-        return new Date(serialNumber);
+        try {
+            return (Date) super.clone();
+        } catch (final CloneNotSupportedException e) {
+            throw new LibraryException(e);
+        }
     }
 
 

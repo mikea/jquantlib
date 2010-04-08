@@ -89,15 +89,17 @@ public class ConvergenceStatistics {
         }
     }
 
-    void addSequence(final double data [], final int begin, final int length) {
-        for (int i = 0; i<length; ++i)
-            add(data[begin + i]);
+    void addSequence(final double data []) {
+        for (final double element : data) {
+            add(element);
+        }
     }
 
 
-    public void addSequence(final double [] data, int beginData, final double [] weight, int beginWeight, final int lenght){
-        for (final int i= 0;i<lenght; ++beginData, ++beginWeight)
-            add(data[beginData+i],weight[beginWeight + i]);
+    public void addSequence(final double [] data, final double [] weight) {
+        for (int i= 0; i<data.length; i++) {
+            add(data[i], weight[i]);
+        }
     }
 
     public void reset(){

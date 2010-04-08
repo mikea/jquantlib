@@ -28,7 +28,10 @@ import static org.junit.Assert.fail;
 import java.util.EnumSet;
 import java.util.Set;
 
+import junit.framework.Assert;
+
 import org.jquantlib.QL;
+import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.functions.GreaterThanPredicate;
 import org.jquantlib.math.functions.Square;
@@ -139,6 +142,33 @@ public class ArrayTest {
     private void toJava(final Array a) {
         System.out.println(a.toString());
     }
+
+
+    @Test
+    public void iterator() {
+        iterator(jFlags, jFlags);
+        iterator(jFlags, fFlags);
+        iterator(fFlags, jFlags);
+        iterator(fFlags, fFlags);
+    }
+
+    private void iterator(final Set<Address.Flags> flagsA, final Set<Address.Flags> flagsB) {
+        final Array aA = new Array(new double[] { 1.0, -2.0, -3.0, 5.0, -9.0, -11.0, -12.0 }, flagsA);
+        final Array aB = new Array(new double[] { 1.0, -2.0, -3.0, 5.0, -9.0, -11.0, -12.0 }, flagsB);
+        iterator(aA, aB);
+        iterator(range(augmented(aA)), range(augmented(aB)));
+        iterator(range(augmented(range(augmented(aA)))), range(augmented(range(augmented(aB)))));
+    }
+
+    private void iterator(final Array aA, final Array aB) {
+        int pos = aB.begin();
+        for (final double d : aA) {
+            Assert.assertTrue("iterator failed", d == aB.get(pos));
+            pos++;
+        }
+    }
+
+
 
 
     @Test
@@ -512,7 +542,7 @@ public class ArrayTest {
         final int begin = a.begin();
         final int end = a.end();
         for (int i=begin; i<end; i++) {
-            if (a.get(i) != 2) {
+            if (!Closeness.isClose(a.get(i), 2.0)) {
                 fail("'divAssign' failed");
             }
         }

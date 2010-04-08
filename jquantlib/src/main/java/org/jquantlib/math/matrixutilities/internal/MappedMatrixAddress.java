@@ -3,37 +3,42 @@ package org.jquantlib.math.matrixutilities.internal;
 import java.util.EnumSet;
 import java.util.Set;
 
+import org.jquantlib.lang.exceptions.LibraryException;
+
 
 public class MappedMatrixAddress extends MappedAddress implements Address.MatrixAddress {
 
     public MappedMatrixAddress(
+            final double[] data,
             final int[] ridx,
             final Address.MatrixAddress chain,
             final int col0, final int col1,
             final Set<Address.Flags> flags,
             final boolean contiguous,
             final int rows, final int cols) {
-        super(ridx, chain, col0, col1, flags, contiguous, rows, cols);
+        super(data, ridx, chain, col0, col1, flags, contiguous, rows, cols);
     }
 
     public MappedMatrixAddress(
+            final double[] data,
             final int row0, final int row1,
             final Address.MatrixAddress chain,
             final int[] cidx,
             final Set<Address.Flags> flags,
             final boolean contiguous,
             final int rows, final int cols) {
-        super(row0, row1, chain, cidx, flags, contiguous, rows, cols);
+        super(data, row0, row1, chain, cidx, flags, contiguous, rows, cols);
     }
 
     public MappedMatrixAddress(
+            final double[] data,
             final int[] ridx,
             final Address.MatrixAddress chain,
             final int[] cidx,
             final Set<Address.Flags> flags,
             final boolean contiguous,
             final int rows, final int cols) {
-        super(ridx, chain, cidx, flags, contiguous, rows, cols);
+        super(data, ridx, chain, cidx, flags, contiguous, rows, cols);
     }
 
     //
@@ -43,13 +48,13 @@ public class MappedMatrixAddress extends MappedAddress implements Address.Matrix
     @Override
     public MatrixAddress toFortran() {
         return isFortran() ? this :
-            new DirectMatrixAddress(row0, row1, this.chain, col0, col1, EnumSet.of(Address.Flags.FORTRAN), contiguous, rows, cols);
+            new DirectMatrixAddress(data, row0, row1, this.chain, col0, col1, EnumSet.of(Address.Flags.FORTRAN), contiguous, rows, cols);
     }
 
     @Override
     public MatrixAddress toJava() {
         return isFortran() ?
-            new DirectMatrixAddress(row0+1, row1+1, this.chain, col0+1, col1+1, EnumSet.noneOf(Address.Flags.class), contiguous, rows, cols)
+            new DirectMatrixAddress(data, row0+1, row1+1, this.chain, col0+1, col1+1, EnumSet.noneOf(Address.Flags.class), contiguous, rows, cols)
             : this;
     }
 
@@ -74,8 +79,12 @@ public class MappedMatrixAddress extends MappedAddress implements Address.Matrix
     //
 
     @Override
-    public DirectMatrixAddress clone() {
-        return new DirectMatrixAddress(row0, row1, chain, col0, col1, flags, contiguous, rows, cols);
+    public MappedMatrixAddress clone() {
+        try {
+            return (MappedMatrixAddress) super.clone();
+        } catch (final Exception e) {
+            throw new LibraryException(e);
+        }
     }
 
 

@@ -79,9 +79,9 @@ public class ExtendedLeisenReimer extends ExtendedBinomialTree /*<T>*/ {
            final int steps,
            final double strike) {
 
-       super(process, end, (steps%2==1 ? steps : steps+1));
+       super(process, end, (steps%2!=0 ? steps : steps+1));
        this.end = end;
-       this.oddSteps = steps%2==1 ? steps : steps+1;
+       this.oddSteps = steps%2!=0 ? steps : steps+1;
        this.strike = strike;
 
         QL.require(strike>0.0, "strike must be positive");

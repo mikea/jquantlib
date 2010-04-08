@@ -2,7 +2,7 @@
  Copyright (C) 2007 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -58,26 +58,25 @@ import org.jquantlib.time.TimeGrid;
  * This class generates normalized (i.e., unit-variance) paths as sequences of variations. In order to obtain the actual path of the
  * underlying, the returned variations must be multiplied by the integrated variance (including time) over the corresponding time
  * step.
- * 
+ *
  * @author Richard Gomes
  */
 public class BrownianBridge {
 
-    private/* @NonNegative */int size_;
-    private/* @Time */double[] t_;
-    private/* @Real */double[] sqrtdt_;
-    private/* @NonNegative */int[] bridgeIndex_, leftIndex_, rightIndex_;
-    private/* @Real */double[] leftWeight_, rightWeight_, stdDev_;
+    private final /* @NonNegative */int size_;
+    private final /* @Time */double[] t_;
+    private final /* @Real */double[] sqrtdt_;
+    private final /* @NonNegative */int[] bridgeIndex_, leftIndex_, rightIndex_;
+    private final /* @Real */double[] leftWeight_, rightWeight_, stdDev_;
 
     /**
      * unit-time path
-     * 
+     *
      * @param steps
      */
     public BrownianBridge(final/* @NonNegative */int steps) {
-        if (System.getProperty("EXPERIMENTAL")==null) {
+        if (System.getProperty("EXPERIMENTAL")==null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         this.size_ = steps;
         this.t_ = new double[this.size_];
         this.sqrtdt_ = new double[this.size_];
@@ -91,16 +90,16 @@ public class BrownianBridge {
         this.stdDev_ = new double[this.size_];
 
         for (int i = 0; i < size_; ++i) {
-            t_[i] = new /* @Time */Double(i + 1);
+            t_[i] = /* @Time */ (i + 1);
         }
         initialize();
     }
 
     /**
      * generic times
-     * 
+     *
      * @note the starting time of the path is assumed to be 0 and must not be included
-     * 
+     *
      * @param times
      */
     public BrownianBridge(final/* @Time */double[] times) {
@@ -121,7 +120,7 @@ public class BrownianBridge {
 
     /**
      * generic times
-     * 
+     *
      * @param timeGrid
      */
     public BrownianBridge(final TimeGrid timeGrid) {
@@ -146,14 +145,15 @@ public class BrownianBridge {
     private void initialize() {
 
         sqrtdt_[0] = Math.sqrt(t_[0]);
-        for (int i = 1; i < size_; ++i)
+        for (int i = 1; i < size_; ++i) {
             sqrtdt_[i] = Math.sqrt(t_[i] - t_[i - 1]);
+        }
 
         // map is used to indicate which points are already constructed.
         // If map[i] is zero, path point i is yet unconstructed.
         // map[i]-1 is the index of the variate that constructs
         // the path point # i.
-        int[] map = new int[size_];
+        final int[] map = new int[size_];
         Arrays.fill(map, 0);
 
         // The first point in the construction is the global step.
@@ -166,14 +166,16 @@ public class BrownianBridge {
         leftWeight_[0] = rightWeight_[0] = 0.0;
         for (int j = 0, i = 1; i < size_; ++i) {
             // Find the next unpopulated entry in the map.
-            while (map[j] != 0)
+            while (map[j] != 0) {
                 ++j;
+            }
             int k = j;
             // Find the next populated entry in the map from there.
-            while (map[k] == 0)
+            while (map[k] == 0) {
                 ++k;
+            }
             // l-1 is now the index of the point to be constructed next.
-            int l = j + ((k - 1 - j) >> 1);
+            final int l = j + ((k - 1 - j) >> 1);
             map[l] = i;
             // The i-th Gaussian variate will be used to set point l-1.
             bridgeIndex_[i] = l;
@@ -189,8 +191,9 @@ public class BrownianBridge {
                 stdDev_[i] = Math.sqrt(t_[l] * (t_[k] - t_[l]) / t_[k]);
             }
             j = k + 1;
-            if (j >= size_)
+            if (j >= size_) {
                 j = 0; // wrap around
+            }
         }
     }
 
@@ -207,13 +210,13 @@ public class BrownianBridge {
      */
     //
     //TODO: Improve this method.
-    // This method in particular presents a very weak interface which is 
+    // This method in particular presents a very weak interface which is
     // potentially risky for critical systems due to the possibility of failure.
-    // The point is that we have possibilities of NullPointerException and 
+    // The point is that we have possibilities of NullPointerException and
     // ArrayIndexOutOfBoundsException which can be easily avoided.
     // -- Richard Gomes
     //
-    public void transform(final double[] input, double[] output) /* @ReadOnly */{
+    public void transform(final double[] input, final double[] output) /* @ReadOnly */{
         if (input == null || input.length == 0)
             throw new IllegalArgumentException("invalid sequence");
         if (input.length != size_)
@@ -221,9 +224,9 @@ public class BrownianBridge {
         // We use output to store the path...
         output[size_ - 1] = stdDev_[0] * input[0];
         for (int i = 1; i < size_; ++i) {
-            int j = leftIndex_[i];
-            int k = rightIndex_[i];
-            int l = bridgeIndex_[i];
+            final int j = leftIndex_[i];
+            final int k = rightIndex_[i];
+            final int l = bridgeIndex_[i];
             if (j != 0) {
                 output[l] = leftWeight_[i] * output[j - 1] + rightWeight_[i] * output[k] + stdDev_[i] * input[i];
             } else {

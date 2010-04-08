@@ -170,11 +170,10 @@ public class CashFlows {
             }
         }
 
-        if (npvDate.isNull()) {
+        if (npvDate.isNull())
             return totalNPV;
-        } else {
+        else
             return totalNPV / discountCurve.currentLink().discount(npvDate);
-        }
     }
 
     public double npv(
@@ -219,19 +218,19 @@ public class CashFlows {
     }
 
     public double bps (final Leg cashflows, final Handle <YieldTermStructure> discountCurve,
-                       Date settlementDate)
+                       final Date settlementDate)
     {
         // default variable of npv date
         return bps (cashflows, discountCurve, settlementDate, settlementDate);
     }
 
     public double bps (final Leg cashflows, final Handle <YieldTermStructure> discountCurve,
-                       Date settlementDate, Date npvDate)
+                       final Date settlementDate, final Date npvDate)
     {
         // default variable of ex-dividend days
         return bps (cashflows, discountCurve, settlementDate, npvDate, 0);
     }
-                           
+
 
     /*
      * Acutal BPS Functions ported from quantlib
@@ -244,7 +243,7 @@ public class CashFlows {
      * the rate paid by the cash flows. The change for each coupon is discounted
      * according to the given term structure.
      */
-    public double bps(final Leg cashflows, final Handle<YieldTermStructure> discountCurve, 
+    public double bps(final Leg cashflows, final Handle<YieldTermStructure> discountCurve,
                       final Date settlementDate, final Date npvDate, final int exDividendDays) {
 
         Date date = settlementDate;
@@ -273,7 +272,7 @@ public class CashFlows {
         {
             settlementDate = new Settings().evaluationDate();
         }
-        final YieldTermStructure flatRate = new FlatForward(settlementDate, irr.rate(), 
+        final YieldTermStructure flatRate = new FlatForward(settlementDate, irr.rate(),
                     irr.dayCounter(), irr.compounding(), irr.frequency());
         return bps(cashflows, new Handle<YieldTermStructure>(flatRate), settlementDate, settlementDate);
      }
@@ -443,9 +442,8 @@ public class CashFlows {
             }
         }
 
-        if (P == 0.0) {
+        if (P == 0.0)
             return 0.0; // no cashflows
-        }
         return d2Pdy2 / P;
     }
 
@@ -476,10 +474,9 @@ public class CashFlows {
             }
         }
 
-        if (P == 0.0) {
+        if (P == 0.0)
             // no cashflows
             return 0.0;
-        }
 
         return tP / P;
     }
@@ -515,10 +512,9 @@ public class CashFlows {
             }
         }
 
-        if (P == 0.0) {
+        if (P == 0.0)
             // no cashflows
             return 0.0;
-        }
         return -dPdy / P;
     }
 
@@ -532,13 +528,12 @@ public class CashFlows {
     }
 
     private int sign(final double x) {
-        if (x == 0) {
+        if (x == 0)
             return 0;
-        } else if (x > 0) {
+        else if (x > 0)
             return 1;
-        } else {
+        else
             return -1;
-        }
     }
 
     final public int previousCashFlow(final Leg leg) {
@@ -550,9 +545,8 @@ public class CashFlows {
             refDate = new Settings().evaluationDate();
         }
 
-        if (!(leg.get(0).hasOccurred(refDate))) {
+        if (!(leg.get(0).hasOccurred(refDate)))
             return leg.size();
-        }
 
         final int i = nextCashFlowIndex(leg, refDate);
         final Date beforeLastPaymentDate = leg.get(i - 1).date();// (*--i)->date()-1;
@@ -590,9 +584,8 @@ public class CashFlows {
         }
         for (int i = 0; i < cashFlows.size(); ++i) {
             // the first coupon paying after d is the one we're after
-            if (!cashFlows.get(i).hasOccurred(settlement)) {
+            if (!cashFlows.get(i).hasOccurred(settlement))
                 return cashFlows.get(i);
-            }
         }
         return null;// cashFlows.get(cashFlows.size());
     }
@@ -611,9 +604,8 @@ public class CashFlows {
         }
         for (int i = 0; i < cashFlows.size(); ++i) {
             // the first coupon paying after d is the one we're after
-            if (!cashFlows.get(i).hasOccurred(settlement)) {
+            if (!cashFlows.get(i).hasOccurred(settlement))
                 return i;
-            }
         }
         return cashFlows.size();
     }
@@ -648,9 +640,8 @@ public class CashFlows {
 
     // utility functions
     final public double couponRate(final Leg leg, final Leg iteratorLeg, final int iteratorIndex) {
-        if (iteratorLeg.size() <= iteratorIndex) {
+        if (iteratorLeg.size() <= iteratorIndex)
             return 0.0;
-        }
 
         final Date paymentDate = iteratorLeg.get(iteratorIndex).date();
         boolean firstCouponFound = false;
@@ -660,19 +651,20 @@ public class CashFlows {
         /* @Rate */double result = 0.0;
 
         for (int i = iteratorIndex; i < leg.size(); i++) {
-            if (iteratorLeg.get(i).date().eq(paymentDate)) {
-                final Coupon cp = (Coupon) (iteratorLeg.get(i));
-                if (cp != null) {
+            final CashFlow cf = iteratorLeg.get(i);
+            if (cf.date().eq(paymentDate)) {
+                if (cf instanceof Coupon) {
+                    final Coupon cp = (Coupon) cf;
                     if (firstCouponFound) {
                         QL.require(nominal == cp.nominal() && accrualPeriod == cp.accrualPeriod() && dc == cp.dayCounter() , "cannot aggregate two different coupons");  // QA:[RG]::verified // TODO: message
+                    } else {
+                        firstCouponFound = true;
+                        nominal = cp.nominal();
+                        accrualPeriod = cp.accrualPeriod();
+                        dc = cp.dayCounter();
                     }
-                } else {
-                    firstCouponFound = true;
-                    nominal = cp.nominal();
-                    accrualPeriod = cp.accrualPeriod();
-                    dc = cp.dayCounter();
+                    result += cp.rate();
                 }
-                result += cp.rate();
             }
         }
         QL.ensure((firstCouponFound) , "next cashflow (" + paymentDate + ") is not a coupon"); // QA:[RG]::verified // TODO: message
@@ -775,11 +767,10 @@ public class CashFlows {
         }
 
         public double result() {
-            if (npvDate.isNull()) {
+            if (npvDate.isNull())
                 return result;
-            } else {
+            else
                 return result / termStructure.currentLink().discount(npvDate);
-            }
         }
 
         //
@@ -808,18 +799,14 @@ public class CashFlows {
         @Override
         public Visitor<Object> getVisitor(final Class<? extends Object> klass) {
 
-            //FIXME 
-            //Coupon is a Cashflow, therfore any Coupon types will never get to the CashflowVisitor. 
+            //FIXME
+            //Coupon is a Cashflow, therfore any Coupon types will never get to the CashflowVisitor.
             //This may be fine for now, but could become problematic if other types are introduced.
-            
+
             if (Coupon.class.isAssignableFrom (klass))
-            {
                 return new CouponVisitor();
-            }
             if (CashFlow.class.isAssignableFrom (klass))
-            {
                 return new CashFlowVisitor();
-            }
             throw new LibraryException(UNKNOWN_VISITABLE); // QA:[RG]::verified
         }
     }

@@ -184,7 +184,7 @@ public class QRDecomposition {
             final Array d) {
 
         QL.require(b.size() == m, "dimensions of A and b don't match");
-        QL.require(d.size() == n || d.empty(), "dimensions of A and d don't match");
+        QL.require(d != null && !d.empty() && d.size() == n, "dimensions of A and d don't match");
 
         final Matrix aT = A.transpose();
         final Matrix rT = R.transpose();

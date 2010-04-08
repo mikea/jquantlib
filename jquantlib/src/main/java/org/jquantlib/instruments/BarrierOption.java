@@ -190,8 +190,8 @@ public class BarrierOption extends OneAssetOption {
                 throw new LibraryException(UNKNOWN_TYPE); // QA:[RG]::verified
           }
 
-          QL.require(barrier != Constants.NULL_REAL, "no barrier given"); // TODO: message
-          QL.require(rebate != Constants.NULL_REAL, "no rebate given"); // TODO: message
+          QL.require(!Double.isNaN(barrier), "no barrier given"); // TODO: message
+          QL.require(!Double.isNaN(rebate), "no rebate given"); // TODO: message
         }
     }
 

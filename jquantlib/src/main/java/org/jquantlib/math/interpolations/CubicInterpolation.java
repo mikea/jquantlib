@@ -43,6 +43,7 @@ package org.jquantlib.math.interpolations;
 import java.util.Arrays;
 
 import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.math.Closeness;
 import org.jquantlib.math.interpolations.factories.Cubic;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator;
@@ -400,7 +401,7 @@ public class CubicInterpolation extends AbstractInterpolation {
                         } else {
                             correction = 0.0;
                         }
-                        if (correction!=tmp[i]) {
+                        if (!Closeness.isClose(correction, tmp[i])) {
                             tmp[i] = correction;
                             ma_[i] = true;
                         }
@@ -410,7 +411,7 @@ public class CubicInterpolation extends AbstractInterpolation {
                         } else {
                             correction = 0.0;
                         }
-                        if (correction!=tmp[i]) {
+                        if (!Closeness.isClose(correction, tmp[i])) {
                             tmp[i] = correction;
                             ma_[i] = true;
                         }
@@ -443,7 +444,7 @@ public class CubicInterpolation extends AbstractInterpolation {
                         } else {
                             correction = 0.0;
                         }
-                        if (correction!=tmp[i]) {
+                        if (!Closeness.isClose(correction, tmp[i])) {
                             tmp[i] = correction;
                             ma_[i] = true;
                         }

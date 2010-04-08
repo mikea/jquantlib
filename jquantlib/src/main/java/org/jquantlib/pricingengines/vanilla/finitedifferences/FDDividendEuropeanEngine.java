@@ -91,7 +91,7 @@ public class FDDividendEuropeanEngine
             final int gridPoints,
             final boolean timeDependent) {
         super(process, timeSteps, gridPoints, timeDependent);
-        super.impl = new Impl();
+        super.impl = new Impl(this);
     }
 
 
@@ -100,10 +100,17 @@ public class FDDividendEuropeanEngine
     //
 
     private class Impl extends DividendVanillaOption.EngineImpl {
+
+        private final FDDividendEuropeanEngine engine;
+
+        private Impl(final FDDividendEuropeanEngine engine) {
+            this.engine = engine;
+        }
+
         @Override
         public void calculate() {
             // calls FDEngineAdapter#calculate()
-            this.calculate();
+            engine.calculate();
         }
     }
 

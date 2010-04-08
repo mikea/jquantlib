@@ -4,8 +4,11 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 
+import org.jquantlib.lang.exceptions.LibraryException;
+
 public abstract class MappedAddress implements Address {
 
+    protected final double[] data;
     protected final int row0;
     protected final int row1;
     protected final Address chain;
@@ -29,39 +32,43 @@ public abstract class MappedAddress implements Address {
     //
 
     public MappedAddress(
+            final double[] data,
             final int row0, final int row1,
             final Address chain,
             final int[] cidx,
             final Set<Address.Flags> flags,
             final boolean contiguous,
             final int rows, final int cols) {
-        this(makeIndex(row0, row1), chain, cidx, flags, contiguous, rows, cols);
+        this(data, makeIndex(row0, row1), chain, cidx, flags, contiguous, rows, cols);
     }
 
 
     public MappedAddress(
+            final double[] data,
             final int[] ridx,
             final Address chain,
             final int col0, final int col1,
             final Set<Address.Flags> flags,
             final boolean contiguous,
             final int rows, final int cols) {
-        this(ridx, chain, makeIndex(col0, col1), flags, contiguous, rows, cols);
+        this(data, ridx, chain, makeIndex(col0, col1), flags, contiguous, rows, cols);
     }
 
 
     public MappedAddress(
+            final double[] data,
             final int[] ridx,
             final Address chain,
             final int[] cidx,
             final Set<Address.Flags> flags,
             final boolean contiguous,
             final int rows, final int cols) {
+        this.data = data;
         this.chain = chain;
         this.offset = isFortran() ? 1 : 0;
 
         // obtain contiguous flag from chained address mapping
-        boolean contiguous_ = contiguous & chain.isContiguous();
+        boolean contiguous_ = contiguous & (chain==null || chain.isContiguous());
 
         // clone indexes and apply offset
         this.ridx  = ridx.clone();
@@ -114,6 +121,20 @@ public abstract class MappedAddress implements Address {
 
 
     //
+    // implements Cloneable
+    //
+
+    @Override
+    public MappedAddress clone() {
+        try {
+            return (MappedAddress) super.clone();
+        } catch (final Exception e) {
+            throw new LibraryException(e);
+        }
+    }
+
+
+
     // implements Address
     //
 
@@ -126,12 +147,6 @@ public abstract class MappedAddress implements Address {
     public boolean isFortran() {
         return flags!=null && flags.contains(Address.Flags.FORTRAN);
     }
-
-//XXX
-//    @Override
-//    public int off() {
-//        return offset;
-//    }
 
     @Override
     public Set<Address.Flags> flags() {

@@ -129,7 +129,7 @@ public class LUDecomposition {
 
             // Compute multipliers.
 
-            if (j < m & LU.$[LU.addr.op(j, j)] != 0.0) {
+            if (j < m && LU.$[LU.addr.op(j, j)] != 0.0) { //FINDBUGS:: NS_DANGEROUS_NON_SHORT_CIRCUIT (solved)
                 for (int i = j + 1; i < m; i++) {
                     LU.$[LU.addr.op(i, j)] /= LU.$[LU.addr.op(j, j)];
                 }

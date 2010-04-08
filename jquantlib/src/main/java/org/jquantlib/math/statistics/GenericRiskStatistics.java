@@ -111,7 +111,7 @@ public class GenericRiskStatistics {
         // TODO: code review :: please verify against QL/C++ code
         final int n = result.getSecond().intValue();
         QL.require(n >= 2 , unsufficient_samples_under_target); // QA:[RG]::verified
-        return (new Double(n)/(new Double(n)-1.0))*x;
+        return (n/(n-1.0))*x;
     }
 
     //! potential upside (the reciprocal of VAR) at a given percentile

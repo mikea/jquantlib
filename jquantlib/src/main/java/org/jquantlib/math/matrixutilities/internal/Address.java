@@ -1,5 +1,6 @@
 package org.jquantlib.math.matrixutilities.internal;
 
+import java.util.ListIterator;
 import java.util.Set;
 
 public interface Address {
@@ -108,7 +109,7 @@ public interface Address {
 //         * <p>
 //         * This feature is particularly important in 2 situations:
 //         * <li>Implement Matrix transposition in constant time by simply changing the address mapping as opposed
-//         * to performing the actual transposition of all elements of it;</li>
+//         * to performing an actual transposition of all elements, possibly employing very expensive copy of elements;</li>
 //         * <li>Increase performance when a Matrix is mostly used as a set of column arrays. As columns are mapped
 //         * internally as rows, the processor will show better performance due to memory caching of adjacent elements</li>
 //         * <p>
@@ -141,10 +142,8 @@ public interface Address {
         public ArrayOffset offset();
         public ArrayOffset offset(int index);
 
-        public interface ArrayOffset extends Offset {
+        public interface ArrayOffset extends Offset, ListIterator<Double> {
             public void setIndex(final int index);
-            public void nextIndex();
-            public void prevIndex();
         }
     }
 

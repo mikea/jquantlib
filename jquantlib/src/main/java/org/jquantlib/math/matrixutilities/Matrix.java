@@ -186,7 +186,8 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
      * @see Address.Flags
      */
     public Matrix(final Set<Address.Flags> flags) {
-        super(1, 1, new DirectMatrixAddress(0, 1, null, 0, 1, flags, true, 1, 1));
+        super(1, 1, null);
+        super.addr = new DirectMatrixAddress(this.$, 0, 1, null, 0, 1, flags, true, 1, 1);
     }
 
 
@@ -212,7 +213,8 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
      * @see Address.Flags
      */
     public Matrix(final int rows, final int cols, final Set<Address.Flags> flags) {
-        super(rows, cols, new DirectMatrixAddress(0, rows, null, 0, cols, flags, true, rows, cols));
+        super(rows, cols, null);
+        this.addr = new DirectMatrixAddress(this.$, 0, rows, null, 0, cols, flags, true, rows, cols);
     }
 
 
@@ -231,8 +233,8 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
      * @param data
      */
     public Matrix(final double[][] data, final Set<Address.Flags> flags) {
-        super(data.length, data[0].length,
-              new DirectMatrixAddress(0, data.length, null, 0, data[0].length, flags, true, data.length, data[0].length));
+        super(data.length, data[0].length, null);
+        this.addr = new DirectMatrixAddress(this.$, 0, data.length, null, 0, data[0].length, flags, true, data.length, data[0].length);
         for (int row=0; row<data.length; row++) {
             System.arraycopy(data[row], 0, this.$, row*this.cols, this.cols);
         }
@@ -1060,7 +1062,7 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
 
 
     //
-    // overrides Object
+    // implements Cloneable
     //
 
     /**
@@ -1068,8 +1070,17 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
      */
     @Override
     public Matrix clone() {
-        return new Matrix(this);
+        //XXX return new Matrix(this);
+        final Matrix clone = (Matrix)super.clone();
+        clone.$ = copyData(this);
+        clone.addr = new DirectMatrixAddress(clone.$, 0, this.rows, null, 0, this.cols, this.flags(), true, this.rows, this.cols);
+        return clone;
     }
+
+
+    //
+    // overrides Object
+    //
 
     @Override
     // TODO: implement equals() with a near-linear approach
@@ -1152,7 +1163,7 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
             final int cols) {
             super(1, col1-col0,
                   data,
-                  new DirectArrayRowAddress(row, chain, col0, col1, null, true, rows, cols));
+                  new DirectArrayRowAddress(data, row, chain, col0, col1, null, true, rows, cols));
         }
     }
 
@@ -1169,7 +1180,7 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
                 final int cols) {
             super(row1-row0, 1,
                   data,
-                  new DirectArrayColAddress(row0, row1, chain, col, null, true, rows, cols));
+                  new DirectArrayColAddress(data, row0, row1, chain, col, null, true, rows, cols));
         }
     }
 
@@ -1188,7 +1199,7 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
             final int cols) {
             super(row1-row0, col1-col0,
                   data,
-                  new DirectMatrixAddress(row0, row1, chain, col0, col1, null, true, rows, cols));
+                  new DirectMatrixAddress(data, row0, row1, chain, col0, col1, null, true, rows, cols));
         }
 
         public RangeMatrix(
@@ -1201,7 +1212,7 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
             final int cols) {
             super(ridx.length, col1-col0,
                   data,
-                  new MappedMatrixAddress(ridx, chain, col0, col1, null, true, rows, cols));
+                  new MappedMatrixAddress(data, ridx, chain, col0, col1, null, true, rows, cols));
         }
 
         public RangeMatrix(
@@ -1214,7 +1225,7 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
             final int cols) {
             super(row1-row0, cidx.length,
                   data,
-                  new MappedMatrixAddress(row0, row1, chain, cidx, null, true, rows, cols));
+                  new MappedMatrixAddress(data, row0, row1, chain, cidx, null, true, rows, cols));
         }
 
         public RangeMatrix(
@@ -1226,7 +1237,7 @@ public class Matrix extends Cells<Address.MatrixAddress> implements Cloneable {
             final int cols) {
             super(ridx.length, cidx.length,
                   data,
-                  new MappedMatrixAddress(ridx, chain, cidx, null, true, rows, cols));
+                  new MappedMatrixAddress(data, ridx, chain, cidx, null, true, rows, cols));
         }
     }
 

@@ -41,6 +41,7 @@
 package org.jquantlib.math;
 
 import org.jquantlib.QL;
+import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.functions.Identity;
 import org.jquantlib.math.interpolations.CubicInterpolation;
 import org.jquantlib.math.interpolations.NaturalCubicInterpolation;
@@ -53,7 +54,7 @@ import org.jquantlib.math.matrixutilities.Array;
  *
  * @author Dominik Holenstein
  */
-public class SampledCurve {
+public class SampledCurve implements Cloneable {
 
     //
     // private fields
@@ -95,8 +96,12 @@ public class SampledCurve {
 
     @Override
     public SampledCurve clone() {
-        final SampledCurve result = new SampledCurve(this);
-        return result;
+        //XXX final SampledCurve result = new SampledCurve(this);
+        try {
+            return (SampledCurve) super.clone();
+        } catch (final CloneNotSupportedException e) {
+            throw new LibraryException(e);
+        }
     }
 
     public int size() {
@@ -162,21 +167,19 @@ public class SampledCurve {
     public double valueAtCenter() /* @Readonly */{
         QL.require(!empty() , "empty sampled curve"); // QA:[RG]::verified // TODO: message
         final int jmid = size() / 2;
-        if (size() % 2 != 0) {
+        if (size() % 2 != 0)
             return values.get(jmid);
-        } else {
+        else
             return (values.get(jmid) + values.get(jmid - 1)) / 2.0;
-        }
     }
 
     public double firstDerivativeAtCenter() /* @Readonly */{
         QL.require(size() >= 3 , "the size of the curve must be at least 3"); // QA:[RG]::verified // TODO: message
         final int jmid = size() / 2;
-        if (size() % 2 != 0) {
+        if (size() % 2 != 0)
             return (values.get(jmid + 1) - values.get(jmid - 1)) / (grid.get(jmid + 1) - grid.get(jmid - 1));
-        } else {
+        else
             return (values.get(jmid) - values.get(jmid - 1)) / (grid.get(jmid) - grid.get(jmid - 1));
-        }
     }
 
     public double secondDerivativeAtCenter() /* @Readonly */{

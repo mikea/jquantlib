@@ -47,6 +47,7 @@ package org.jquantlib.cashflow;
 
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeTokenTree;
@@ -120,7 +121,7 @@ CappedFlooredCouponType
             }
             if (Detail.get(gearings, i, 1.0) == 0.0) {
                 add(new FixedRateCoupon(
-                        Detail.get(nominals, i, new Double(1.0)),
+                        Detail.get(nominals, i, 1.0),
                         paymentDate,
                         Detail.effectiveFixedRate(spreads, caps, floors, i),
                         paymentDayCounter, start, end, refStart, refEnd));
@@ -173,23 +174,21 @@ CappedFlooredCouponType
                 final Class<?> cfcklass = new TypeTokenTree(this.getClass()).getElement(2);
                 CappedFlooredCouponType cfctc;
                 try {
-                    /*
-                    CappedFlooredIborCoupon cpn = new CappedFlooredIborCoupon(
+                    final CappedFlooredIborCoupon cpn = new CappedFlooredIborCoupon(
                             paymentDate,
-                            Detail.get(nominals,i, (double) 1.0),
+                            Detail.get(nominals,i, 1.0),
                             start,
                             end,
-                            (int) Detail.get(fixingDays, i, (int) index.fixingDays()),
+                            (int) Detail.get(fixingDays, i, index.fixingDays()),
                             (IborIndex) index,
-                            Detail.get(gearings, i, (double) 1.0),
-                            Detail.get(spreads, i, (double) 0.0),
+                            Detail.get(gearings, i, 1.0),
+                            Detail.get(spreads, i, 0.0),
                             Detail.get(caps, i, Double.MAX_VALUE),
                             Detail.get(floors, i, Double.MIN_VALUE),
                             refStart,
                             refEnd,
                             paymentDayCounter,
                             isInArrears);
-                     */
                     // FIXME: not finished yet!!!!!!!!!!!!!!
                     cfctc = (CappedFlooredCouponType) cfcklass.getConstructor(
                             Date.class, // paymentdate
@@ -271,13 +270,12 @@ CappedFlooredCouponType
                 final Array v,
                 final int i,
                 final double defaultValue) {
-            if (v == null || v.empty()) {
+            if (v == null || v.empty())
                 return defaultValue;
-            } else if (i < v.size()) {
+            else if (i < v.size())
                 return v.get(i);
-            } else {
+            else
                 return v.get(v.size() - 1);
-            }
         }
 
         public static /* @Rate */ double effectiveFixedRate(
@@ -287,11 +285,11 @@ CappedFlooredCouponType
                 final /* @Size */ int i) {
             /* @Rate */double result = get(spreads, i, Constants.NULL_REAL);
             final /* @Rate */ double floor = get(floors, i, Constants.NULL_REAL);
-            if (floor != Constants.NULL_REAL) {
+            if (!Double.isNaN(floor)) {
                 result = Math.max(floor, result);
             }
             /* @Rate */final double cap = get(caps, i, Constants.NULL_REAL);
-            if (cap != Constants.NULL_REAL) {
+            if (!Double.isNaN(cap)) {
                 result = Math.min(cap, result);
             }
             return result;

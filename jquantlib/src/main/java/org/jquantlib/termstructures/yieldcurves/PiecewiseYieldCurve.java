@@ -314,17 +314,16 @@ public class PiecewiseYieldCurve<
             final DayCounter dayCounter,
             final Class<?> classI,
             final Class<?> classT) {
-        if (classT == Discount.class) {
+        if (classT == Discount.class)
             return new InterpolatedDiscountCurve(referenceDate, dayCounter, classI);
-        } else if (classT == ForwardRate.class) {
+        else if (classT == ForwardRate.class)
             //TODO: this.baseCurve = new InterpolatedForwardCurve(referenceDate, dayCounter, classI);
             throw new UnsupportedOperationException();
-        } else if (classT == ZeroYield.class) {
+        else if (classT == ZeroYield.class)
             //TODO: this.baseCurve = new InterpolatedZeroCurve(referenceDate, dayCounter, classI);
             throw new UnsupportedOperationException();
-        } else {
+        else
             throw new LibraryException("only Discount, ForwardRate and ZeroYield are supported"); // TODO: message
-        }
     }
 
     static private Traits.Curve constructBaseClass(
@@ -332,17 +331,16 @@ public class PiecewiseYieldCurve<
             final Calendar calendar,
             final DayCounter dayCounter,
             final Class<?> classT) {
-        if (classT == Discount.class) {
+        if (classT == Discount.class)
             return new InterpolatedDiscountCurve(settlementDays, calendar, dayCounter, classT);
-        } else if (classT == ForwardRate.class) {
+        else if (classT == ForwardRate.class)
             //TODO: this.baseCurve = new InterpolatedForwardCurve(settlementDays, calendar, dayCounter, classT);
             throw new UnsupportedOperationException();
-        } else if (classT == ZeroYield.class) {
+        else if (classT == ZeroYield.class)
             //TODO: this.baseCurve = new InterpolatedZeroCurve(settlementDays, calendar, dayCounter, classT);
             throw new UnsupportedOperationException();
-        } else {
+        else
             throw new LibraryException("only Discount, ForwardRate and ZeroYield are supported"); // TODO: message
-        }
     }
 
     static private Traits constructTraits(final Class<?> classT) {
@@ -483,7 +481,7 @@ public class PiecewiseYieldCurve<
     @Override
     public void update() {
         baseCurve.update();
-        this.update();
+        super.update();
         if (baseCurve.referenceDate() != latestReference) {
             setJumps();
         }

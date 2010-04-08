@@ -237,7 +237,7 @@ public class SVD {
 
         if (wantv) {
             for (int k = n - 1; k >= 0; k--) {
-                if ((k < nrt) & (e[k] != 0.0)) {
+                if ((k < nrt) && (e[k] != 0.0)) { //FINDBUGS:: NS_DANGEROUS_NON_SHORT_CIRCUIT (solved)
                     for (int j = k + 1; j < nu; j++) {
                         double t = 0;
                         for (int i = k + 1; i < n; i++) {
