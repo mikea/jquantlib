@@ -130,21 +130,23 @@ public abstract class InterestRateIndex extends Index implements Observer {
         final Date today = new Settings().evaluationDate();
         final boolean enforceTodaysHistoricFixings = new Settings().isEnforcesTodaysHistoricFixings();
 
-        if (fixingDate.lt(today) || (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing))
+        if (fixingDate.lt(today) || (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing)) {
             // must have been fixed
             try {
-                return IndexManager.getInstance().get(name()).find(fixingDate);
+                return IndexManager.getInstance().get(name()).get(fixingDate);
             } catch (final Exception e) {
                 throw new LibraryException("Missing fixing for " + fixingDate, e);
             }
+        }
 
-        if ((fixingDate.equals(today)) && !forecastTodaysFixing)
+        if ((fixingDate.equals(today)) && !forecastTodaysFixing) {
             // might have been fixed
             try {
-                return IndexManager.getInstance().get(name()).find(fixingDate);
+                return IndexManager.getInstance().get(name()).get(fixingDate);
             } catch (final Exception e) {
                 ; // fall through and forecast
             }
+        }
         // forecast
         return forecastFixing(fixingDate);
     }
@@ -158,14 +160,16 @@ public abstract class InterestRateIndex extends Index implements Observer {
     public String name() {
         final StringBuilder builder = new StringBuilder(familyName);
         if (tenor.units() == TimeUnit.Days) {
-            if (fixingDays == 0)
+            if (fixingDays == 0) {
                 builder.append("ON");
-            else if (fixingDays == 2)
+            } else if (fixingDays == 2) {
                 builder.append("SN");
-            else
+            } else {
                 builder.append("TN");
-        } else
+            }
+        } else {
             builder.append(tenor.getShortFormat());
+        }
         builder.append(dayCounter.name());
         return builder.toString();
     }

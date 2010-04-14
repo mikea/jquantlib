@@ -105,7 +105,7 @@ public class DayCounter {
 	 * @param dateEnd is the ending Date
 	 * @return the number of days between two dates.
 	 */
-	public int dayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
+	public long dayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
         QL.require(impl != null, NO_IMPLEMENTATION_PROVIDED);
         return impl.dayCount(dateStart, dateEnd);
 	}
@@ -139,14 +139,14 @@ public class DayCounter {
     /**
      * Returns <tt>true</tt> if <code>this</code> and <code>other</code> belong to the same derived class.
      */
-    boolean eq(final DayCounter another) {
+    public boolean eq(final DayCounter another) {
         return equals(another);
     }
 
     /**
      * @return the negation of {@link DayCounter#eq(DayCounter)}
      */
-    boolean ne(final DayCounter another) {
+    public boolean ne(final DayCounter another) {
         return !equals(another);
     }
 
@@ -213,7 +213,7 @@ public class DayCounter {
 	     * @param dateEnd is the ending Date
 	     * @return the period between two dates as a fraction of year
 	     */
-	    protected int dayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
+	    protected long dayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
 	        return dateEnd.sub(dateStart);
 	    }
 

@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Rajiv Chauhan
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -39,6 +39,8 @@
 
 package org.jquantlib.model.volatility;
 
+import java.util.Iterator;
+
 import org.jquantlib.time.Date;
 import org.jquantlib.time.TimeSeries;
 
@@ -46,29 +48,28 @@ import org.jquantlib.time.TimeSeries;
  * Simple Local Estimator volatility model
  * <p>
  * Volatilities are assumed to be expressed on an annual basis.
- * 
+ *
  * @author Rajiv Chauhan
  * @author Anand Mani
  */
 public class SimpleLocalEstimator {
 
 	private final /* @Real */ double yearFraction ;
-    
+
     public SimpleLocalEstimator(final /*@Real*/ double y) {
         this.yearFraction = y;
     }
-    
-    public TimeSeries<Double> calculate(final TimeSeries<Double> quoteSeries) {
-        final Date[] dates = quoteSeries.dates();
-        final /*@Volatility*/ double[] values = quoteSeries.values();
+
+    public TimeSeries<Double> calculate(final TimeSeries<Double> quotes) {
+        final Iterator<Date> dates = quotes.navigableKeySet().iterator();
         final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
-    	double prev = Double.NaN;
-    	double cur  = Double.NaN;
-    	for (int i = 1; i < values.length; i++) {
-    		cur = values[i] ;
-    		prev = values[i-1];
-    		double s = Math.abs(Math.log(cur/prev))/Math.sqrt(yearFraction) ;
-    		retval.add(dates[i], s);
+    	double prev = quotes.get(dates.next());
+    	while (dates.hasNext()) {
+    	    final Date date = dates.next();
+            final double curr = quotes.get(date) ;
+            final double value = Math.abs(Math.log(curr/prev))/Math.sqrt(yearFraction) ;
+            retval.put(date, value);
+            prev = curr;
     	}
         return retval;
     }

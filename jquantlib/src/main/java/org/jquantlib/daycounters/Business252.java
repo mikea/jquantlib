@@ -75,7 +75,7 @@ public class Business252 extends DayCounter {
         }
 
         @Override
-        public int dayCount(final Date d1, final Date d2) {
+        public long dayCount(final Date d1, final Date d2) {
         	return calendar.businessDaysBetween(d1, d2);
         }
 

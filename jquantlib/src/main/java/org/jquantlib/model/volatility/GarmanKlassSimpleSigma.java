@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Anand Mani
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -42,12 +42,12 @@ package org.jquantlib.model.volatility;
 import org.jquantlib.math.IntervalPrice;
 
 /**
- * 
+ *
  * Volatilities are assumed to be expressed on an annual basis.
- * 
+ *
  * @author Anand Mani
  */
-public class GarmanKlassSimpleSigma extends GarmanKlassAbstract {
+public class GarmanKlassSimpleSigma<K> extends GarmanKlassAbstract<K> {
 
 	public GarmanKlassSimpleSigma(final double y) {
 		super(y);
@@ -55,7 +55,7 @@ public class GarmanKlassSimpleSigma extends GarmanKlassAbstract {
 
 	@Override
 	protected double calculatePoint(final IntervalPrice p) {
-		double c = Math.log(p.close() / p.open());
+		final double c = Math.log(p.close() / p.open());
 		return c * c;
 	}
 

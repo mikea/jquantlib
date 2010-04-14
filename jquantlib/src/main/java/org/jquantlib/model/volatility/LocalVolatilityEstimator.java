@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Richard Gomes
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -39,9 +39,9 @@
 
 package org.jquantlib.model.volatility;
 
-import org.jquantlib.time.TimeSeries;
+import org.jquantlib.time.Series;
 
-public interface LocalVolatilityEstimator<T> {
+public interface LocalVolatilityEstimator<K,V> {
 
-    TimeSeries<Double> calculate(final TimeSeries<T> quoteSeries) ;
+    Series<K,Double> calculate(final Series<K,V> quoteSeries) ;
 }

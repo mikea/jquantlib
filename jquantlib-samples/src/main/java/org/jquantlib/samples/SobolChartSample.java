@@ -15,7 +15,7 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.RefineryUtilities;
 import org.jquantlib.QL;
-import org.jquantlib.math.randomnumbers.SobolRSG;
+import org.jquantlib.math.randomnumbers.SobolRsg;
 
 public class SobolChartSample implements Runnable {
 
@@ -40,7 +40,7 @@ public class SobolChartSample implements Runnable {
 
     private class SobolChartFrame extends ApplicationFrame {
 
-        private final SobolRSG sobol;
+        private final SobolRsg sobol;
         private final int samples;
         private final int dimension;
         private final int seed;
@@ -54,7 +54,7 @@ public class SobolChartSample implements Runnable {
             this.samples = samples;
             this.dimension = 5;
             this.seed = 42;
-            this.sobol = new SobolRSG(this.dimension, this.seed);
+            this.sobol = new SobolRsg(this.dimension, this.seed);
 
             final JFreeChart chart = createDefaultChart();
             final ChartPanel panel = new ChartPanel(chart, true, true, true, false, true);

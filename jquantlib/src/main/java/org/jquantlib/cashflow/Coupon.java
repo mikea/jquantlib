@@ -120,7 +120,7 @@ public abstract class Coupon extends CashFlow {
                 refPeriodEnd);
     }
 
-    public int accrualDays() {
+    public long accrualDays() {
         return dayCounter().dayCount(accrualStartDate,
                 accrualEndDate);
     }

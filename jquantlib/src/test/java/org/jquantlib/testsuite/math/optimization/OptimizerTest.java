@@ -25,7 +25,6 @@ package org.jquantlib.testsuite.math.optimization;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.CostFunction;
@@ -73,7 +72,7 @@ public class OptimizerTest {
         final double b = 1;
         final double c = 1;
 
-        final List coefficients = new ArrayDoubleList();
+        final List<Double> coefficients = new ArrayList<Double>();
         coefficients.add(c);
         coefficients.add(b);
         coefficients.add( a);
@@ -82,8 +81,8 @@ public class OptimizerTest {
 
 
         //List<Array> yMinExpected_ = new ArrayList<Array>();
-        final List xMinExpected_ = new ArrayDoubleList();
-        final List yMinExpected_ = new ArrayDoubleList();
+        final List<Double> xMinExpected_ = new ArrayList<Double>();
+        final List<Double> yMinExpected_ = new ArrayList<Double>();
         xMinExpected_.add(xMinExpected[xMinExpected.length-1]);
         yMinExpected_.add(xMinExpected[yMinExpected.length-1]);
         costFunctions_.add(new OneDimensionalPolynomDegreeN(coefficients));
@@ -183,7 +182,7 @@ public class OptimizerTest {
         private final List<Double> coefficients_;
         private final int polynominalDegree_;
 
-        public OneDimensionalPolynomDegreeN(final List coefficients) {
+        public OneDimensionalPolynomDegreeN(final List<Double> coefficients) {
             this.coefficients_ = coefficients;
             this.polynominalDegree_ = coefficients.size() - 1;
         }

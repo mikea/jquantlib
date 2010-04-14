@@ -2,7 +2,7 @@
  Copyright (C) 2007 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -31,14 +31,17 @@ import org.jquantlib.util.ObservableValue;
 //FIXME: code review
 public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> {
 
-    private static final long serialVersionUID = 1L;
-	/**
+    private static final long serialVersionUID = -9204254124065694863L;
+
+    /**
      * @see <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The "Double-Checked Locking is Broken" Declaration </a>
      */
     private static volatile IndexManager instance;
 
-	private IndexManager(){}
-	
+	private IndexManager() {
+	    // noone can directly instantiate
+	}
+
 	public static IndexManager getInstance() {
 		if (instance == null) {
 			synchronized (IndexManager.class) {
@@ -49,8 +52,8 @@ public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> 
 		}
 		return instance;
 	}
-	
-	public Observable notifier(String name) {
+
+	public Observable notifier(final String name) {
 	    TimeSeries<Double> value = super.get(name);
 		if (value == null){
 			value = new TimeSeries<Double>(){ /* anonymous class */ };
@@ -59,10 +62,10 @@ public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> 
 		return new ObservableValue<TimeSeries<Double>>(value);
 	}
 
-	public void clearHistory(String name){
+	public void clearHistory(final String name){
 		super.remove(name);
 	}
-      
+
 	public void clearHistories(){
 		super.clear();
 	}

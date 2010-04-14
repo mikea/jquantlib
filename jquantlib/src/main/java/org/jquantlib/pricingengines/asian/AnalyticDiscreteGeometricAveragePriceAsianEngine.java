@@ -40,9 +40,9 @@
 
 package org.jquantlib.pricingengines.asian;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
@@ -121,11 +121,10 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         double runningLog;
         int pastFixings;
         if (a.averageType == AverageType.Geometric) {
-            if (!(a.runningAccumulator>0.0)) {
+            if (!(a.runningAccumulator>0.0))
                 throw new IllegalArgumentException(
                         "positive running product required: "
                         + a.runningAccumulator + " not allowed");
-            }
             runningLog = Math.log(a.runningAccumulator);
             pastFixings = a.pastFixings;
         } else {  // it is being used as control variate
@@ -139,7 +138,7 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
         final DayCounter voldc = process.blackVolatility().currentLink().dayCounter();
 
         // TODO: consider double[] instead
-        final List<Double> fixingTimes = new ArrayDoubleList();
+        final List<Double> fixingTimes = new ArrayList<Double>();
         /*@Size*/ int i;
         for (i=0; i<a.fixingDates.size(); i++) {
             if (a.fixingDates.get(i).ge(referenceDate)) {

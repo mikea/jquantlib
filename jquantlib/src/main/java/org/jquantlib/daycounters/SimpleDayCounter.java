@@ -68,7 +68,7 @@ public class SimpleDayCounter extends DayCounter {
         }
 
         @Override
-        protected int dayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
+        protected long dayCount(final Date dateStart, final Date dateEnd) /* @ReadOnly */ {
             return fallback.dayCount(dateStart, dateEnd);
         }
 
@@ -87,11 +87,10 @@ public class SimpleDayCounter extends DayCounter {
                     // e.g., Aug 30 -> Feb 28 ?
                     (dm1 > dm2 && Date.isEndOfMonth(dateEnd)) ||
                     // e.g., Feb 28 -> Aug 30 ?
-                    (dm1 < dm2 && Date.isEndOfMonth(dateStart))) {
+                    (dm1 < dm2 && Date.isEndOfMonth(dateStart)))
                 return (yy2 - yy1) + (mm2 - mm1) / 12.0;
-            } else {
+            else
                 return fallback.yearFraction(dateStart, dateEnd, refPeriodStart, refPeriodEnd);
-            }
         }
 
     }

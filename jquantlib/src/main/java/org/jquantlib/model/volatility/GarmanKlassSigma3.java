@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Anand Mani
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -41,7 +41,7 @@ package org.jquantlib.model.volatility;
 /**
  * @author Anand Mani
  */
-public class GarmanKlassSigma3 extends GarmanKlassOpenClose<ParkinsonSigma> {
+public class GarmanKlassSigma3<K> extends GarmanKlassOpenClose<K,ParkinsonSigma<K>> {
 
 	public GarmanKlassSigma3(final double y, final double marketOpenFraction) {
 		super(y, marketOpenFraction, 0.17);

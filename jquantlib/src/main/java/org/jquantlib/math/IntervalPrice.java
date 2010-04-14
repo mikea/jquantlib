@@ -42,8 +42,7 @@ package org.jquantlib.math;
 import java.util.Iterator;
 
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.time.Date;
-import org.jquantlib.time.TimeSeries;
+import org.jquantlib.time.Series;
 
 /**
  * Interval Price
@@ -69,8 +68,10 @@ public class IntervalPrice {
     //
 
     public IntervalPrice(
-            final /*@Real*/ double open, final /*@Real*/ double close,
-            final /*@Real*/ double high, final /*@Real*/ double low) {
+            final /*@Real*/ double open,
+            final /*@Real*/ double close,
+            final /*@Real*/ double high,
+            final /*@Real*/ double low) {
         setValues(open, close, high, low);
     }
 
@@ -144,40 +145,50 @@ public class IntervalPrice {
     // public static methods
     //
 
+    public static <K> Series<K, IntervalPrice> makeSeries(
+            final K[] date,
+            final double[] open,
+            final double[] close,
+            final double[] high,
+            final double[] low) {
 
-    public static TimeSeries<IntervalPrice> makeSeries(
-            final Date[] d, final double[] open, final double[] close, final double[] high, final double[] low) {
-
-        final int dsize = d.length;
+        final int dsize = date.length;
         if (open.length != dsize || close.length != dsize || high.length != dsize || low.length != dsize)
             throw new LibraryException("array sizes mismatch"); // QA:[RG]::verified
 
-        final TimeSeries<IntervalPrice> retval = new TimeSeries<IntervalPrice>();
-        for (int i=0; i< dsize; i++)
-            retval.add(d[i], new IntervalPrice(open[i], close[i], high[i], low[i]));
+        final Series<K, IntervalPrice> retval = new Series<K, IntervalPrice>();
+        for (int i=0; i< dsize; i++) {
+            retval.put(date[i], new IntervalPrice(open[i], close[i], high[i], low[i]));
+        }
 
         return retval;
     }
 
-    public static double[] extractValues(final TimeSeries<IntervalPrice> ts, final IntervalPrice.Type type)  {
+    public static <K> double[] extractValues(
+            final Series<K, IntervalPrice> ts,
+            final IntervalPrice.Type type)  {
         final double[] result = new double[ts.size()];
-        final Iterator<IntervalPrice> it = ts.valuesIntervalPrice().iterator();
-
-        for (int i=0; i<ts.size(); i++)
+        final Iterator<IntervalPrice> it = ts.values().iterator();
+        for (int i=0; i<ts.size(); i++) {
             result[i] = it.next().value(type);
+        }
         return result;
     }
 
-    public static TimeSeries<Double> extractComponent(final TimeSeries<IntervalPrice> ts, final IntervalPrice.Type type) {
-        final Date[] dates = ts.dates();
-        final double[] values = extractValues(ts, type);
-        return new TimeSeries<Double>(dates, values) { /* anonymous */ };
+    public static <K> Series<K, Double> extractComponent(
+            final Series<K, IntervalPrice> ts,
+            final IntervalPrice.Type type) {
+        final Series<K, Double> result = new Series<K, Double>() { /* anonymous */ };
+        for (final K date : ts.keySet()) {
+            final IntervalPrice prices = ts.get(date);
+            result.put(date, prices.value(type));
+        }
+        return result;
     }
 
 
-
     //
-    // public inner classes
+    // public inner enums
     //
 
     public enum Type {

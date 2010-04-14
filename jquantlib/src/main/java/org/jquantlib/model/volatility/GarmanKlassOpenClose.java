@@ -39,14 +39,12 @@
 
 package org.jquantlib.model.volatility;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.IntervalPrice;
-import org.jquantlib.time.Date;
-import org.jquantlib.time.TimeSeries;
+import org.jquantlib.time.Series;
 
 /**
  * This template factors out common functionality found in classes which rely on the difference between the previous day's close
@@ -55,7 +53,7 @@ import org.jquantlib.time.TimeSeries;
  * @author Anand Mani
  * @author Richard Gomes
  */
-public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements LocalVolatilityEstimator<IntervalPrice> {
+public class GarmanKlassOpenClose<K, T extends GarmanKlassAbstract<K>> implements LocalVolatilityEstimator<K,IntervalPrice> {
 
     //
     // private fields
@@ -86,22 +84,18 @@ public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements Loca
     //
 
     @Override
-    public TimeSeries<Double> calculate(final TimeSeries<IntervalPrice> quoteSeries) {
-        final Date[] dates = quoteSeries.dates();
-        final Collection<IntervalPrice> values = quoteSeries.valuesIntervalPrice();
-        final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
-        // obtain first IntervalPrice
-        final Iterator<IntervalPrice> it = values.iterator();
-        if (!it.hasNext()) return retval;
-        // process remaining IntervalPrices
-        IntervalPrice prev = it.next();
-        for (int i=1; it.hasNext(); i++) {
-            final IntervalPrice curr = it.next();
+    public Series<K,Double> calculate(final Series<K,IntervalPrice> quotes) {
+        final Iterator<K> it = quotes.navigableKeySet().iterator();
+        final Series<K,Double> retval = new Series<K,Double>() { /* anonymous */ };
+        K date = it.next();
+        IntervalPrice prev = quotes.get(date);
+        while (it.hasNext()) {
+            date = it.next();
+            final IntervalPrice curr = quotes.get(date);
             final double c0 = Math.log(prev.close());
             final double o1 = Math.log(curr.open());
             final double sigma2 = this.a * (o1 - c0) * (o1 - c0) / this.f + (1 - this.a) * delegate.calculatePoint(curr) / (1 - this.f);
-            final double s = Math.sqrt(sigma2 / delegate.getYearFraction());
-            retval.add(dates[i], s);
+            retval.put(date, Math.sqrt(sigma2 / delegate.getYearFraction()) );
             prev = curr;
         }
         return retval;

@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -25,12 +25,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.math.matrixutilities.Array;
 
 /**
  * @author Srinivas Hasti
- * 
+ *
  */
 // Code Review; Is this the best way ? Code duplication of FiniteDifferenceModel
 public class StandardSystemFiniteDifferenceModel {
@@ -44,8 +43,8 @@ public class StandardSystemFiniteDifferenceModel {
 			ParallelEvolver<TridiagonalOperator, CrankNicolson<TridiagonalOperator>> {
 
 		public StandardSystemFiniteDifferenceModelParallelEvolver(
-				List<TridiagonalOperator> L,
-				BoundaryConditionSet<BoundaryCondition<TridiagonalOperator>> bcs) {
+				final List<TridiagonalOperator> L,
+				final BoundaryConditionSet<BoundaryCondition<TridiagonalOperator>> bcs) {
 			super(L, bcs);
 		}
 	}
@@ -57,8 +56,8 @@ public class StandardSystemFiniteDifferenceModel {
 		this.evolver = new StandardSystemFiniteDifferenceModelParallelEvolver(
 				L, bcs);
 		// This takes care of removing duplicates
-		Set<Double> times = new HashSet(stoppingTimes);
-		this.stoppingTimes = new ArrayDoubleList(times);
+		final Set<Double> times = new HashSet(stoppingTimes);
+		this.stoppingTimes = new ArrayList<Double>(times);
 		// Now sort
 		Collections.sort(stoppingTimes);
 	}
@@ -97,12 +96,13 @@ public class StandardSystemFiniteDifferenceModel {
 			throw new IllegalStateException("trying to roll back from " + from
 					+ " to " + to);
 
-		/* @Time */double dt = (from - to) / steps;
+		/* @Time */final double dt = (from - to) / steps;
 		double t = from;
 		evolver.setStep(dt);
 
 		for (int i = 0; i < steps; ++i, t -= dt) {
-			/* Time */double now = t, next = t - dt;
+			/* Time */double now = t;
+            final double next = t - dt;
 			boolean hit = false;
 			for (int j = stoppingTimes.size() - 1; j >= 0; --j) {
 				if (next <= stoppingTimes.get(j) && stoppingTimes.get(j) < now) {
@@ -112,8 +112,9 @@ public class StandardSystemFiniteDifferenceModel {
 					// perform a small step to stoppingTimes_[j]...
 					evolver.setStep(now - stoppingTimes.get(j));
 					a = evolver.step(a, now);
-					if (condition != null)
-						condition.applyTo(a, stoppingTimes.get(j));
+					if (condition != null) {
+                        condition.applyTo(a, stoppingTimes.get(j));
+                    }
 					// ...and continue the cycle
 					now = stoppingTimes.get(j);
 				}
@@ -125,8 +126,9 @@ public class StandardSystemFiniteDifferenceModel {
 				if (now > next) {
 					evolver.setStep(now - next);
 					a = evolver.step(a, now);
-					if (condition != null)
-						condition.applyTo(a, next);
+					if (condition != null) {
+                        condition.applyTo(a, next);
+                    }
 				}
 				// ...and in any case, we have to reset the
 				// evolver to the default step.
@@ -135,11 +137,12 @@ public class StandardSystemFiniteDifferenceModel {
 				// if we didn't, the evolver is already set to the
 				// default step, which is ok for us.
 				a = evolver.step(a, now);
-				if (condition != null)
-					condition.applyTo(a, next);
+				if (condition != null) {
+                    condition.applyTo(a, next);
+                }
 			}
 		}
-		
+
 		return a;
 	}
 }

@@ -164,7 +164,7 @@ public abstract class CRRDividendOptionHelper extends DividendVanillaOption {
         this.stochProcess = new BlackScholesMertonProcess(new Handle<Quote>(spot), qTS, rTS, volTS);
 
         // obtain a pricing engine and assign to this option :: 3 intervals a day
-        final int timeSteps = exercise.lastDate().sub(referenceDate) * 3;
+        final int timeSteps = (int) (exercise.lastDate().sub(referenceDate) * 3);
         final PricingEngine engine = new BinomialDividendVanillaEngine<CoxRossRubinstein>(stochProcess, timeSteps) { /* anonymous */ };
 
         // assign the pricing engine to this option

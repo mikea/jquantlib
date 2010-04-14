@@ -255,7 +255,7 @@ public class HelloOptions implements Runnable {
         final Exercise americanExercise = new AmericanExercise(settlementDate, maturityDate);
         final VanillaOption americanOption = new VanillaOption(payoff, americanExercise);
         // obtain a pricing engine and assign to this option :: 3 intervals a day
-        final int timeSteps = maturityDate.sub(settlementDate) * 3;
+        final int timeSteps = (int) (maturityDate.sub(settlementDate) * 3);
         final PricingEngine americanEngine = new BinomialVanillaEngine<CoxRossRubinstein>(bsmProcess, timeSteps) { /* anonymous class */ };
         americanOption.setPricingEngine(americanEngine);
 

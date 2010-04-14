@@ -37,9 +37,9 @@
 
 package org.jquantlib.pricingengines.vanilla;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.instruments.DiscretizedAsset;
 import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.lang.exceptions.LibraryException;
@@ -81,12 +81,13 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
         this.a = (VanillaOption.ArgumentsImpl) arguments;
         this.process = process;
         final int size = a.exercise.size();
-        this.stoppingTimes = new ArrayDoubleList();
+        this.stoppingTimes = new ArrayList<Double>();
         for (int i = 0; i < size; ++i) {
             stoppingTimes.add(i, process.time(a.exercise.date(i)));
-            if (!grid.empty())
+            if (!grid.empty()) {
                 // adjust to the given grid
                 stoppingTimes.add(i, grid.closestTime(stoppingTimes.get(i)));
+            }
         }
     }
 
@@ -97,8 +98,9 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
 
     private void applySpecificCondition() {
         final Array grid = method().grid(time());
-        for (int j = 0; j < values.size(); j++)
+        for (int j = 0; j < values.size(); j++) {
             values.set(j, Math.max(values.get(j), a.payoff.get(grid.get(j))));
+        }
     }
 
 
@@ -122,17 +124,20 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
         final double now = time();
         switch (a.exercise.type()) {
         case American:
-            if (now <= stoppingTimes.get(1) && now >= stoppingTimes.get(0))
+            if (now <= stoppingTimes.get(1) && now >= stoppingTimes.get(0)) {
                 applySpecificCondition();
+            }
             break;
         case European:
-            if (isOnTime(stoppingTimes.get(0)))
+            if (isOnTime(stoppingTimes.get(0))) {
                 applySpecificCondition();
+            }
             break;
         case Bermudan:
             for (int i = 0; i < stoppingTimes.size(); i++)
-                if (isOnTime(stoppingTimes.get(i)))
+                if (isOnTime(stoppingTimes.get(i))) {
                     applySpecificCondition();
+                }
             break;
         default:
             throw new LibraryException("invalid option type"); // QA:[RG]::verified

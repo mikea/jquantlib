@@ -148,28 +148,26 @@ public class IborCoupon extends FloatingRateCoupon {
     @Override
     public double indexFixing() {
         final Settings settings = new Settings();
-        if (settings.isUseIndexedCoupon()) {
+        if (settings.isUseIndexedCoupon())
             return index_.fixing(fixingDate());
-        }
-        if (isInArrears()) {
+        if (isInArrears())
             return index_.fixing(fixingDate());
-        } else {
+        else {
             final Handle<YieldTermStructure> termStructure = index_.termStructure();
             QL.require(termStructure != null , NULL_TERM_STRUCTURE);  // QA:[RG]::verified
             final Date today = settings.evaluationDate();
             final Date fixing_date = fixingDate();
             final IndexManager indexManager = IndexManager.getInstance();
             if (fixing_date.lt(today)) {
-                final double pastFixing = indexManager.get (index_.name()).find(fixing_date);
+                final double pastFixing = indexManager.get (index_.name()).get(fixing_date);
                 QL.require(!Double.isNaN(pastFixing), "Missing fixing"); // TODO: message
                 return pastFixing;
             }
             if (fixing_date.equals(today)) {
                 try {
-                    final double pastFixing = indexManager.get(index_.name()).find(fixing_date);
-                    if (! Double.isNaN (pastFixing)) {
+                    final double pastFixing = indexManager.get(index_.name()).get(fixing_date);
+                    if (! Double.isNaN (pastFixing))
                         return pastFixing;
-                    }
                 } catch (final Exception e) {
                     ; // fall through and forecast
                 }

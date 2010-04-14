@@ -112,7 +112,7 @@ public class Thirty360 extends DayCounter {
         }
 
         @Override
-        protected int dayCount(final Date d1, final Date d2) /* @ReadOnly */ {
+        protected long dayCount(final Date d1, final Date d2) /* @ReadOnly */ {
             final int dd1 = d1.dayOfMonth();
             int dd2 = d2.dayOfMonth();
             final int mm1 = d1.month().value();
@@ -156,7 +156,7 @@ public class Thirty360 extends DayCounter {
         }
 
         @Override
-        protected int dayCount(final Date d1, final Date d2) /* @ReadOnly */ {
+        protected long dayCount(final Date d1, final Date d2) /* @ReadOnly */ {
             final int dd1 = d1.dayOfMonth();
             final int dd2 = d2.dayOfMonth();
             final int mm1 = d1.month().value();
@@ -191,7 +191,7 @@ public class Thirty360 extends DayCounter {
         }
 
         @Override
-        protected int dayCount(final Date d1, final Date d2) /* @ReadOnly */ {
+        protected long dayCount(final Date d1, final Date d2) /* @ReadOnly */ {
             int dd1 = d1.dayOfMonth();
             int dd2 = d2.dayOfMonth();
             final int mm1 = d1.month().value();

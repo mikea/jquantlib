@@ -22,7 +22,9 @@ When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.model;
 
-import org.joda.primitives.list.impl.ArrayDoubleList;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
@@ -63,8 +65,8 @@ public class TermStructureFittingParameter extends Parameter {
         // private fields
         //
 
-        private final ArrayDoubleList times;
-        private final ArrayDoubleList values;
+        private final List<Double> times;
+        private final List<Double> values;
         private final Handle<YieldTermStructure> termStructure;
 
 
@@ -73,8 +75,8 @@ public class TermStructureFittingParameter extends Parameter {
         //
 
         public NumericalImpl(final Handle<YieldTermStructure> termStructure) {
-            this.times  = new ArrayDoubleList();
-            this.values = new ArrayDoubleList();
+            this.times  = new ArrayList<Double>();
+            this.values = new ArrayList<Double>();
             this.termStructure = termStructure;
         }
 
@@ -97,7 +99,7 @@ public class TermStructureFittingParameter extends Parameter {
         public double value(final Array  ref, /* @Time */ final double t) /* @ReadOnly */ {
             final int index = times.indexOf(t);
             QL.require(index > -1, "fitting parameter not set!"); // TODO: message
-            return values.getDouble(index);
+            return values.get(index);
         }
 
         public final Handle<YieldTermStructure> termStructure() /* @ReadOnly */ {

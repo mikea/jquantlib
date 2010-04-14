@@ -27,7 +27,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.joda.primitives.list.impl.ArrayDoubleList;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.matrixutilities.Array;
@@ -44,7 +43,7 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
         this.evolver = getEvolver(L, bcs);
         // This takes care of removing duplicates
         final Set<Double> times = new HashSet<Double>(stoppingTimes);
-        this.stoppingTimes = new ArrayDoubleList(times);
+        this.stoppingTimes = new ArrayList<Double>(times);
         // Now sort
         Collections.sort(stoppingTimes);
     }
@@ -57,7 +56,7 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
         this.evolver = evolver;
         // This takes care of removing duplicates
         final Set<Double> times = new HashSet<Double>(stoppingTimes);
-        this.stoppingTimes = new ArrayDoubleList(times);
+        this.stoppingTimes = new ArrayList<Double>(times);
         // Now sort
         Collections.sort(stoppingTimes);
     }
@@ -98,8 +97,9 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
                     // perform a small step to stoppingTimes_[j]...
                     evolver.setStep(now - stoppingTimes.get(j));
                     a = evolver.step(a, now);
-                    if (condition != null)
+                    if (condition != null) {
                         condition.applyTo(a, stoppingTimes.get(j));
+                    }
                     // ...and continue the cycle
                     now = stoppingTimes.get(j);
                 }
@@ -110,8 +110,9 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
                 if (now > next) {
                     evolver.setStep(now - next);
                     a = evolver.step(a, now);
-                    if (condition != null)
+                    if (condition != null) {
                         condition.applyTo(a, next);
+                    }
                 }
                 // ...and in any case, we have to reset the
                 // evolver to the default step.
@@ -120,8 +121,9 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
                 // if we didn't, the evolver is already set to the
                 // default step, which is ok for us.
                 a = evolver.step(a, now);
-                if (condition != null)
+                if (condition != null) {
                     condition.applyTo(a, next);
+                }
             }
         }
         return a;

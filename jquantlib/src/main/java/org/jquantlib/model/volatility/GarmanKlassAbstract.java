@@ -1,8 +1,8 @@
 /*
  Copyright (C) 2008 Anand Mani
- 
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -39,11 +39,10 @@
 
 package org.jquantlib.model.volatility;
 
-import java.util.Collection;
+import java.util.Iterator;
 
 import org.jquantlib.math.IntervalPrice;
-import org.jquantlib.time.Date;
-import org.jquantlib.time.TimeSeries;
+import org.jquantlib.time.Series;
 
 /**
  * Garman-Klass volatility model
@@ -53,10 +52,10 @@ import org.jquantlib.time.TimeSeries;
  * http://www.fea.com/resources/pdf/a_estimation_of_security_price.pdf
  * <p>
  * Volatilities are assumed to be expressed on an annual basis.
- * 
+ *
  * @author Anand Mani
  */
-public abstract class GarmanKlassAbstract implements LocalVolatilityEstimator<IntervalPrice> {
+public abstract class GarmanKlassAbstract<K> implements LocalVolatilityEstimator<K,IntervalPrice> {
 
 	private final double yearFraction;
 
@@ -65,14 +64,13 @@ public abstract class GarmanKlassAbstract implements LocalVolatilityEstimator<In
 	}
 
 	@Override
-	public TimeSeries<Double> calculate(TimeSeries<IntervalPrice> quoteSeries) {
-		final Date[] dates = quoteSeries.dates();
-		final Collection<IntervalPrice> values = quoteSeries.valuesIntervalPrice();
-		final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };	
-		int i = 0;
-		for (IntervalPrice curr : values) {
-			double s = Math.sqrt(Math.abs(calculatePoint(curr)) / yearFraction);
-			retval.add(dates[i++], s);
+	public Series<K,Double> calculate(final Series<K,IntervalPrice> quotes) {
+        final Iterator<K> it = quotes.navigableKeySet().iterator();
+		final Series<K,Double> retval = new Series<K,Double>() { /* anonymous */ };
+		while (it.hasNext()) {
+		    final K date = it.next();
+		    final IntervalPrice curr = quotes.get(date);
+            retval.put(date, Math.sqrt(Math.abs(calculatePoint(curr)) / yearFraction) );
 		}
 		return retval;
 	}

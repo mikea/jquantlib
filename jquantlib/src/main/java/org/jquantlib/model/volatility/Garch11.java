@@ -39,6 +39,8 @@
 
 package org.jquantlib.model.volatility;
 
+import java.util.Iterator;
+
 import org.jquantlib.QL;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.TimeSeries;
@@ -51,7 +53,7 @@ import org.jquantlib.time.TimeSeries;
  * @author Rajiv Chauhan
  */
 //TODO : Test cases
-public class Garch11 implements VolatilityCompositor{
+public class Garch11 implements VolatilityCompositor {
 
 	private /* @Real */ double alpha ;
 	private /* @Real */ double beta ;
@@ -80,34 +82,36 @@ public class Garch11 implements VolatilityCompositor{
 	}
 
 	protected double costFunction (final TimeSeries<Double> vs, final double alpha, final double beta, final double omega) {
-		double retValue = 0.0;
 		final TimeSeries<Double> test = calculate(vs, alpha, beta, omega);
-		final /* @Volatility */ double[] testValues = test.values();
-		final /* @Volatility */ double[] quoteValues = vs.values();
-		QL.require(testValues.length == quoteValues.length, "quote and test values do not match"); // TODO: message
-		double v = 0;
-		double u2 = 0 ;
-		for (int i = 0; i < testValues.length; i++) {
-			v  = testValues[i] * testValues[i];
-			u2 = quoteValues[i] * quoteValues[i];
-			retValue += 2.0 * Math.log(v) + u2/(v*v) ;
-		}
-		return retValue ;
+        QL.require(test.size() == vs.size(), "quote and test values do not match"); // TODO: message
+        final Iterator<Date> dates = test.navigableKeySet().iterator();
+	    double retval = 0.0;
+	    while (dates.hasNext()) {
+	        final Date date = dates.next();
+	        double v = test.get(date);
+	        double u = vs.get(date);
+	        v *= v;
+	        u *= u;
+            retval += 2.0 * Math.log(v) + u/(v*v) ;
+	    }
+		return retval ;
 	}
 
 	private TimeSeries<Double> calculate(final TimeSeries<Double> vs, final double alpha, final double beta, final double omega) {
-        final Date[] dates = vs.dates();
-        final /* @Volatility */ double[] values = vs.values();
+        final Iterator<Date> dates = vs.navigableKeySet().iterator();
 		final TimeSeries<Double> retValue = new TimeSeries<Double>() { /* anonymous */ };
-        final double zerothDayValue = values[0];
-		retValue.add (dates[0], zerothDayValue) ;
+
+		Date date = dates.next();
+		final double zerothDayValue = vs.get(date);
+		retValue.put(date, zerothDayValue) ;
 
 		double u = 0;
         double sigma2 = zerothDayValue * zerothDayValue ;
-        for (int i = 1; i < dates.length; i++) {
-        	u = values[i];
-        	sigma2 = (omega * u * u) + (beta * sigma2) ;
-        	retValue.add(dates[i], Math.sqrt(sigma2)) ;
+        while (dates.hasNext()) {
+            date = dates.next();
+            u = vs.get(date);
+            sigma2 = (omega * u * u) + (beta * sigma2) ;
+            retValue.put(date, Math.sqrt(sigma2)) ;
         }
 		return retValue ;
 	}

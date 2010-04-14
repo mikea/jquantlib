@@ -41,7 +41,7 @@ import org.jquantlib.util.Observer;
  */
 public class Date implements Observable, Comparable<Date>, Cloneable {
 
-    private /* @NonNegative */int serialNumber;
+    private /* @NonNegative */ long serialNumber;
 
     static final int monthLength[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
@@ -213,7 +213,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * @param serialNumber
      * @return
      */
-    public Date(final int serialNumber) {
+    public Date(final long serialNumber) {
         this.serialNumber = serialNumber;
     }
 
@@ -245,8 +245,8 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     //
 
     public Weekday weekday() /* @ReadOnly */ {
-        final int w = serialNumber % 7;
-        return Weekday.valueOf(w == 0 ? 7 : w);
+        final int w = (int) (serialNumber % 7);
+        return Weekday.valueOf(w == 0L ? 7 : w);
     }
 
     public int dayOfMonth() /* @ReadOnly */ {
@@ -259,7 +259,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * @return
      */
     public int dayOfYear() /* @ReadOnly */ {
-        return serialNumber - yearOffset(year());
+        return (int) (serialNumber - yearOffset(year()));
     }
 
     public Month month() /* @ReadOnly */ {
@@ -276,14 +276,14 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     }
 
     public int year() /* @ReadOnly */ {
-        int y = (serialNumber / 365) + 1900;
+        int y = (int) (serialNumber / 365) + 1900;
         if (serialNumber <= yearOffset(y)) {
             --y;
         }
         return y;
     }
 
-    public int serialNumber() /* @ReadOnly */ {
+    public long serialNumber() /* @ReadOnly */ {
         return this.serialNumber;
     }
 
@@ -431,7 +431,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     /**
      * Difference in days between dates
      */
-    public int sub(final Date another) {
+    public long sub(final Date another) {
         return serialNumber - another.serialNumber;
     }
 
@@ -587,7 +587,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     @Override
     public int hashCode() {
-        return this.serialNumber;
+        return (int) this.serialNumber;
     }
 
     @Override
@@ -637,7 +637,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * @see
      */
     //TODO: consider @PackagePrivate
-    protected final int todaysSerialNumber() {
+    protected final long todaysSerialNumber() {
         final java.util.Calendar cal = java.util.Calendar.getInstance();
         final int d = cal.get(java.util.Calendar.DAY_OF_MONTH);
         final int m = cal.get(java.util.Calendar.MONTH);
@@ -656,7 +656,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * @see inner class DateProxy in {@link Settings}
      */
     //TODO: consider @PackagePrivate
-    protected final Date assign(final int serialNumber) {
+    protected final Date assign(final long serialNumber) {
         this.serialNumber = serialNumber;
         return this;
     }
@@ -673,10 +673,10 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     }
 
 
-    private int advance(final Date date, final int n, final TimeUnit units) {
+    private long advance(final Date date, final int n, final TimeUnit units) {
         switch (units) {
         case Days:
-            return (n+date.serialNumber);
+            return (n + date.serialNumber);
         case Weeks:
             return (7 * n + date.serialNumber);
         case Months: {
@@ -697,7 +697,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             if (d > length) {
                 d = length;
             }
-            final int result = fromDMY(d, m, y);
+            final long result = fromDMY(d, m, y);
             //QL.debug("{}", result);
             return result;
         }
@@ -711,7 +711,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
                 d = 28;
             }
 
-            final int result = fromDMY(d, m, y);
+            final long result = fromDMY(d, m, y);
             //QL.debug("{}", result);
             return result;
         }
@@ -762,8 +762,8 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * @param y
      * @return
      */
-    public static final boolean isLeap(final int y) {
-        return yearIsLeap[y - 1900];
+    public static final boolean isLeap(final int year) {
+        return yearIsLeap[year - 1900];
     }
 
     /**
@@ -884,11 +884,11 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     // private static methods
     //
 
-    static private int minimumSerialNumber() {
+    static private long minimumSerialNumber() {
         return 367;       // Jan 1st, 1901
     }
 
-    static private int maximumSerialNumber() {
+    static private long maximumSerialNumber() {
         return 109574;    // Dec 31st, 2199
     }
 
@@ -900,14 +900,14 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * @param y is the year as a number
      * @return
      */
-    private static final int fromDMY(final int d, final int m, final int y) {
+    private static final long fromDMY(final int d, final int m, final int y) {
         QL.require(y >= 1900 && y <= 2199 , "year out of bound. It must be in [1901,2199]"); // QA:[RG]::verified // TODO: message
         QL.require(m > 0 && m < 13 , "month outside JANUARY-December range [1,12]"); // QA:[RG]::verified // TODO: message
         final boolean leap = isLeap(y);
         final int len = monthLength(m, leap);
         final int offset = monthOffset(m, leap);
         QL.ensure(d > 0 && d <= len , "day outside month day-range"); // QA:[RG]::verified // TODO: message
-        final int result = d + offset + yearOffset(y);
+        final long result = d + offset + yearOffset(y);
         return result;
     }
 
@@ -941,8 +941,8 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      *            is the desired year
      * @return the offset of a certain year
      */
-    private static final int yearOffset(final int y) {
-        return yearOffset[y - 1900];
+    private static final long yearOffset(final int year) {
+        return yearOffset[year - 1900];
     }
 
 	/**

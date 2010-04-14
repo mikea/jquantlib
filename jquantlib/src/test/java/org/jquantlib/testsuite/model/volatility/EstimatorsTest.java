@@ -66,7 +66,10 @@ public class EstimatorsTest {
 
         final double[] values = new double[] { 1.2, 2.3, 0.3, 2.0, 2.5 };
 
-        this.ts = new TimeSeries<Double>(dates, values) { /* anonymous */ };
+        this.ts = new TimeSeries<Double>() { /* anonymous */ };
+        for (int i=0; i<dates.length; i++) {
+            ts.put(dates[i], values[i]);
+        }
     }
 
     @Test
@@ -78,10 +81,10 @@ public class EstimatorsTest {
 
     @Test
     public void testCECalculate() {
-        final SimpleLocalEstimator sle = new SimpleLocalEstimator(1/360.0);
-        final TimeSeries<Double> locale = sle.calculate(ts);
-        final VolatilityCompositor ce = new ConstantEstimator(1);
-        final TimeSeries<Double> value = ce.calculate(locale);
+        final SimpleLocalEstimator       sle = new SimpleLocalEstimator(1/360.0);
+        final TimeSeries<Double>      locale = sle.calculate(ts);
+        final VolatilityCompositor        ce = new ConstantEstimator(1);
+        final TimeSeries<Double>       value = ce.calculate(locale);
         assertNotNull(value) ;
     }
 
