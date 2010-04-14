@@ -41,7 +41,7 @@ package org.jquantlib.model.volatility;
 /**
  * @author Anand Mani
  */
-public class GarmanKlassSigma6<K> extends GarmanKlassOpenClose<K,GarmanKlassSigma4<K>> {
+public class GarmanKlassSigma6 extends GarmanKlassOpenClose<GarmanKlassSigma4> {
 
     public GarmanKlassSigma6(final double y, final double marketOpenFraction) {
 		super(y, marketOpenFraction, 0.012);

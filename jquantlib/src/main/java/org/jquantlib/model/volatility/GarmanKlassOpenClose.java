@@ -44,7 +44,8 @@ import java.util.Iterator;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.IntervalPrice;
-import org.jquantlib.time.Series;
+import org.jquantlib.time.Date;
+import org.jquantlib.time.TimeSeries;
 
 /**
  * This template factors out common functionality found in classes which rely on the difference between the previous day's close
@@ -53,7 +54,7 @@ import org.jquantlib.time.Series;
  * @author Anand Mani
  * @author Richard Gomes
  */
-public class GarmanKlassOpenClose<K, T extends GarmanKlassAbstract<K>> implements LocalVolatilityEstimator<K,IntervalPrice> {
+public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements LocalVolatilityEstimator<IntervalPrice> {
 
     //
     // private fields
@@ -84,10 +85,10 @@ public class GarmanKlassOpenClose<K, T extends GarmanKlassAbstract<K>> implement
     //
 
     @Override
-    public Series<K,Double> calculate(final Series<K,IntervalPrice> quotes) {
-        final Iterator<K> it = quotes.navigableKeySet().iterator();
-        final Series<K,Double> retval = new Series<K,Double>() { /* anonymous */ };
-        K date = it.next();
+    public TimeSeries<Double> calculate(final TimeSeries<IntervalPrice> quotes) {
+        final Iterator<Date> it = quotes.navigableKeySet().iterator();
+        final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
+        Date date = it.next();
         IntervalPrice prev = quotes.get(date);
         while (it.hasNext()) {
             date = it.next();

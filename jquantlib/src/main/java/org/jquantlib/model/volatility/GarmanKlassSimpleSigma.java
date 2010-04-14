@@ -47,7 +47,7 @@ import org.jquantlib.math.IntervalPrice;
  *
  * @author Anand Mani
  */
-public class GarmanKlassSimpleSigma<K> extends GarmanKlassAbstract<K> {
+public class GarmanKlassSimpleSigma extends GarmanKlassAbstract {
 
 	public GarmanKlassSimpleSigma(final double y) {
 		super(y);

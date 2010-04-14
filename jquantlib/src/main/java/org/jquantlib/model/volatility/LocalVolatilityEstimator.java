@@ -39,9 +39,9 @@
 
 package org.jquantlib.model.volatility;
 
-import org.jquantlib.time.Series;
+import org.jquantlib.time.TimeSeries;
 
-public interface LocalVolatilityEstimator<K,V> {
+public interface LocalVolatilityEstimator<V> {
 
-    Series<K,Double> calculate(final Series<K,V> quoteSeries) ;
+    TimeSeries<Double> calculate(final TimeSeries<V> quoteSeries) ;
 }
