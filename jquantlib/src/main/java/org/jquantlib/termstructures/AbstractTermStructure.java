@@ -135,15 +135,15 @@ public abstract class AbstractTermStructure implements TermStructure {
      */
     private final boolean moving;
 
-    /**
-     * This private field is automatically initialized by constructors.
-     * In the specific case of Case 2, the corresponding constructor
-     * picks up it's value from {@link Settings} singleton. This procedure
-     * caches values from the singleton, intending to avoid contention in
-     * heavily multi-threaded environments. In this specific case this class
-     * observes date changes in order to update this variable.
-     */
-    private final Date today;
+//    /**
+//     * This private field is automatically initialized by constructors.
+//     * In the specific case of Case 2, the corresponding constructor
+//     * picks up it's value from {@link Settings} singleton. This procedure
+//     * caches values from the singleton, intending to avoid contention in
+//     * heavily multi-threaded environments. In this specific case this class
+//     * observes date changes in order to update this variable.
+//     */
+//    private final Date today;
 
 
     //
@@ -194,7 +194,6 @@ public abstract class AbstractTermStructure implements TermStructure {
         // When Case 1 or Case 3
         this.moving = false;
         this.updated = true;
-        this.today = null;
 
         // initialize reference date without any observers
         this.referenceDate = null;
@@ -236,13 +235,9 @@ public abstract class AbstractTermStructure implements TermStructure {
         // When Case 1 or Case 3
         this.moving = false;
         this.updated = true;
-        this.today = null;
 
         // initialize reference date with this class as observer
         this.referenceDate = referenceDate;
-        this.referenceDate.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.referenceDate);
     }
 
     /**
@@ -280,13 +275,12 @@ public abstract class AbstractTermStructure implements TermStructure {
         // When Case 2
         this.moving = true;
         this.updated = false;
-        this.today = new Settings().evaluationDate();
-        this.today.addObserver(this);
-        //XXX:registerWith
-        //registerWith(today);
 
-        // initialize reference date without any observers
-        this.referenceDate = null;
+        // observes date changes
+        final Date today = new Settings().evaluationDate();
+        today.addObserver(this);
+
+        this.referenceDate = calendar.advance(today, settlementDays, TimeUnit.Days);
     }
 
 
@@ -418,8 +412,9 @@ public abstract class AbstractTermStructure implements TermStructure {
     @Override
     //XXX::OBS public void update(final Observable o, final Object arg) {
     public void update() {
-        if (moving)
+        if (moving) {
             updated = false;
+        }
         notifyObservers();
     }
 

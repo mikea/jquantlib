@@ -68,12 +68,15 @@ public class Merton76Process extends StochasticProcess1D {
     // public constructors
     //
 
-    public Merton76Process(final Handle< ? extends Quote > stateVariable, final Handle<YieldTermStructure> dividendTS,
-            final Handle<YieldTermStructure> riskFreeTS, final Handle<BlackVolTermStructure> blackVolTS,
-            final Handle<? extends Quote> jumpInt, final Handle<? extends Quote> logJMean, final Handle<? extends Quote> logJVol) {
+    public Merton76Process(
+            final Handle< ? extends Quote > stateVariable,
+            final Handle<YieldTermStructure> dividendTS,
+            final Handle<YieldTermStructure> riskFreeTS,
+            final Handle<BlackVolTermStructure> blackVolTS,
+            final Handle<? extends Quote> jumpInt,
+            final Handle<? extends Quote> logJMean,
+            final Handle<? extends Quote> logJVol) {
 
-        // FIXME allow discretisation as parameter...
-        super(new EulerDiscretization());
         this.blackProcess = new BlackScholesMertonProcess(stateVariable, dividendTS, riskFreeTS, blackVolTS, new EulerDiscretization());
         this.jumpIntensity = jumpInt;
         this.logJumpVolatility = logJVol;

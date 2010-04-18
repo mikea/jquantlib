@@ -239,9 +239,8 @@ public abstract class LocalVolTermStructure extends VolatilityTermStructure impl
         final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
         if (v1 != null) {
             v1.visit(this);
-        } else {
+        } else
             throw new LibraryException("not a local-volatility term structure visitor"); // QA:[RG]::verified // TODO: message
-        }
     }
 
 }

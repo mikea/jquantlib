@@ -203,8 +203,9 @@ public abstract class BlackVolTermStructure extends VolatilityTermStructure impl
      * Present (a.k.a spot) volatility
      */
     public final /*@Volatility*/ double blackVol(final Date maturity, final /*@Real*/ double strike, final boolean extrapolate) {
-        /*@Time*/ final double t = super.timeFromReference(maturity);
-        checkRange(t, strike, extrapolate);
+        checkRange(maturity, extrapolate);
+        checkStrike(strike, extrapolate);
+        /*@Time*/ final double t = timeFromReference(maturity);
         return blackVolImpl(t, strike);
     }
 
@@ -219,7 +220,8 @@ public abstract class BlackVolTermStructure extends VolatilityTermStructure impl
      * Present (a.k.a spot) volatility
      */
     public final /*@Volatility*/ double blackVol(final /*@Time*/ double maturity, final /*@Real*/ double strike, final boolean extrapolate) {
-        checkRange(maturity, strike, extrapolate);
+        checkRange(maturity, extrapolate);
+        checkStrike(strike, extrapolate);
         return blackVolImpl(maturity, strike);
     }
 
@@ -234,8 +236,9 @@ public abstract class BlackVolTermStructure extends VolatilityTermStructure impl
      * Present (a.k.a spot) variance
      */
     public final /*@Variance*/ double blackVariance(final Date maturity, final /*@Real*/ double strike, final boolean extrapolate) {
-        /*@Time*/ final double t = super.timeFromReference(maturity);
-        checkRange(t, strike, extrapolate);
+        checkRange(maturity, extrapolate);
+        checkStrike(strike, extrapolate);
+        /*@Time*/ final double t = timeFromReference(maturity);
         return blackVarianceImpl(t, strike);
     }
 
@@ -250,15 +253,11 @@ public abstract class BlackVolTermStructure extends VolatilityTermStructure impl
      * Present (a.k.a spot) variance
      */
     public final /*@Variance*/ double blackVariance(final /*@Time*/ double maturity, final /*@Real*/ double strike, final boolean extrapolate) {
-        checkRange(maturity, strike, extrapolate);
+        checkRange(maturity, extrapolate);
+        checkStrike(strike, extrapolate);
         return blackVarianceImpl(maturity, strike);
     }
 
-
-    private final void checkRange(final /*@Time*/ double time, final /*@Real*/ double strike, final boolean extrapolate) {
-        super.checkRange(time, extrapolate);
-        QL.require(extrapolate || allowsExtrapolation() || (strike >= minStrike()) && (strike <= maxStrike()) , "strike is outside curve domain"); // QA:[RG]::verified // TODO: message
-    }
 
     /**
      * Future (a.k.a. forward) volatility
@@ -289,7 +288,8 @@ public abstract class BlackVolTermStructure extends VolatilityTermStructure impl
         /*@Time*/ final double t1 = time1;
         /*@Time*/ final double t2 = time2;
         QL.require(t1 <= t2 , "t1 later than t2"); // QA:[RG]::verified // TODO: message
-        checkRange(time2, strike, extrapolate);
+        checkRange(time2, extrapolate);
+        checkStrike(strike, extrapolate);
         if (t1==t2) {
             if (t1==0.0) {
                 /*@Time*/ final double epsilon = 1.0e-5;
@@ -339,7 +339,8 @@ public abstract class BlackVolTermStructure extends VolatilityTermStructure impl
         /*@Time*/ final double t1 = time1;
         /*@Time*/ final double t2 = time2;
         QL.require(t1<=t2 , "t1 later than t2"); // QA:[RG]::verified // TODO: message
-        checkRange(time2, strike, extrapolate);
+        checkRange(time2, extrapolate);
+        checkStrike(strike, extrapolate);
         /*@Variance*/ final double v1 = blackVarianceImpl(time1, strike);
         /*@Variance*/ final double v2 = blackVarianceImpl(time2, strike);
         QL.require(v2 >= v1 , "variances must be non-decreasing"); // QA:[RG]::verified // TODO: message
@@ -355,9 +356,8 @@ public abstract class BlackVolTermStructure extends VolatilityTermStructure impl
         final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
         if (v1 != null) {
             v1.visit(this);
-        } else {
+        } else
             throw new LibraryException("not a Black-volatility term structure visitor"); // QA:[RG]::verified // TODO: message
-        }
     }
 
 }

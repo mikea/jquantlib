@@ -101,35 +101,34 @@ public class GeneralizedBlackScholesProcess extends StochasticProcess1D {
             final Handle<BlackVolTermStructure> blackVolTS,
             final StochasticProcess1D.Discretization1D discretization) {
         super(discretization);
+        this.localVolatility = new RelinkableHandle<LocalVolTermStructure>();
+//XXX :: remove
+//
+//                this.localVolatility = new RelinkableHandle<LocalVolTermStructure>(
+//                        new LocalVolTermStructure() {
+//                            @Override
+//                            protected double localVolImpl(final double t, final double strike) {
+//                                throw new UnsupportedOperationException();
+//                            }
+//                            @Override
+//                            public double maxStrike() {
+//                                throw new UnsupportedOperationException();
+//                            }
+//                            @Override
+//                            public double minStrike() {
+//                                throw new UnsupportedOperationException();
+//                            }
+//                            @Override
+//                            public Date maxDate() {
+//                                throw new UnsupportedOperationException();
+//                            }
+//                        }
+//                );
+
         this.x0 = x0;
         this.riskFreeRate = riskFreeTS;
         this.dividendYield = dividendTS;
         this.blackVolatility = blackVolTS;
-
-        // this.localVolatility = new RelinkableHandle<LocalVolTermStructure>(LocalVolTermStructure.class); //FIXME::RG::Handle
-
-        this.localVolatility = new RelinkableHandle<LocalVolTermStructure>(
-                new LocalVolTermStructure() {
-                    @Override
-                    protected double localVolImpl(final double t, final double strike) {
-                        throw new UnsupportedOperationException();
-                    }
-                    @Override
-                    public double maxStrike() {
-                        throw new UnsupportedOperationException();
-                    }
-                    @Override
-                    public double minStrike() {
-                        throw new UnsupportedOperationException();
-                    }
-                    @Override
-                    public Date maxDate() {
-                        throw new UnsupportedOperationException();
-                    }
-                }
-        );
-
-
         this.updated = false;
 
         this.x0.addObserver(this);

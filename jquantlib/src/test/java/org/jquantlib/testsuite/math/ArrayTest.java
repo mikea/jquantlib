@@ -67,7 +67,7 @@ public class ArrayTest {
             result.set(j, array.get(i));
         }
         result.set(end+1, Math.random());
-        System.out.println(result);
+        // System.out.println(result);
         return result;
     }
 
@@ -104,7 +104,8 @@ public class ArrayTest {
     }
 
     private void testToString(final Array a) {
-        System.out.println(a.toString());
+        final String result = a.toString();
+        System.out.println(result);
     }
 
 
@@ -122,7 +123,8 @@ public class ArrayTest {
     }
 
     private void toFortran(final Array a) {
-        System.out.println(a.toString());
+        final Array result = a.toFortran();
+        System.out.println(result);
     }
 
 
@@ -140,7 +142,8 @@ public class ArrayTest {
     }
 
     private void toJava(final Array a) {
-        System.out.println(a.toString());
+        final Array result = a.toJava();
+        System.out.println(result);
     }
 
 

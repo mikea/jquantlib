@@ -101,11 +101,10 @@ public class DayCountersTest {
         }
 
         private String dumpDate(final Date date) {
-            if (date == null) {
+            if (date == null)
                 return "null";
-            } else {
+            else
                 return date.isoDate().toString();
-            }
         }
 
 
@@ -332,7 +331,7 @@ public class DayCountersTest {
             final Date start = testDates[i-1];
             final Date end = testDates[i];
             /*@Time*/ final double  calculated = dayCounter.yearFraction(start, end);
-            System.out.println(calculated);
+            // System.out.println(calculated);
             assertFalse(dayCounter.getClass().getName()
                     +"\n from "+start
                     +"\n to "+end

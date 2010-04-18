@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.QL;
+import org.jquantlib.quotes.RelinkableHandle;
+import org.jquantlib.testsuite.util.Flag;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.DateParser;
 import org.jquantlib.time.IMM;
@@ -231,6 +233,93 @@ public class DatesTest {
         assertEquals(lowerBound, expectedLowerBound);
         assertEquals(upperBound, expectedUpperBound);
 
+    }
+
+    @Test
+    public void testNotificationSubAssign() {
+
+        QL.info("Testing observability of dates using operation Date#subAssign()");
+
+        final Date me = Date.todaysDate();
+        final Flag f = new Flag();
+        me.addObserver(f);
+        me.subAssign(1);
+        if (!f.isUp()) {
+            fail("Observer was not notified of date change");
+        }
+    }
+
+    @Test
+    public void testNotificationSub() {
+
+        QL.info("Testing observability of dates using operation Date#sub()");
+
+        final Date me = Date.todaysDate();
+        final Flag f = new Flag();
+        me.addObserver(f);
+        me.sub(1);
+        if (f.isUp()) {
+            fail("Observer was notified of date change whilst it was not expected");
+        }
+    }
+
+    @Test
+    public void testNotificationHandle() {
+
+        QL.info("Testing notification of date handles...");
+
+        final Date me1 = Date.todaysDate();
+        final RelinkableHandle<Date> h = new RelinkableHandle<Date>(me1);
+
+        final Flag f = new Flag();
+        h.addObserver(f);
+
+        final Date weekAgo = Date.todaysDate().sub(7);
+        final Date me2 = weekAgo;
+
+        h.linkTo(me2);
+        if (!f.isUp()) {
+            fail("Observer was not notified of date change");
+        }
+
+        if (h.currentLink() != weekAgo) {
+            fail("Failed to hard link to another object");
+        }
+
+    }
+
+    @Test
+    public void testNotificationHandleSubAssign() {
+
+        QL.info("Testing notification of date handles using operation Date#subAssign().");
+
+        final Date me1 = Date.todaysDate();
+        final RelinkableHandle<Date> h = new RelinkableHandle<Date>(me1);
+
+        final Flag f = new Flag();
+        h.addObserver(f);
+
+        me1.subAssign(1);
+        if (!f.isUp()) {
+            fail("Observer was not notified of date change");
+        }
+    }
+
+    @Test
+    public void testNotificationHandleSub() {
+
+        QL.info("Testing ntification of date handles using operation Date#sub().");
+
+        final Date me1 = Date.todaysDate();
+        final RelinkableHandle<Date> h = new RelinkableHandle<Date>(me1);
+
+        final Flag f = new Flag();
+        h.addObserver(f);
+
+        me1.sub(1);
+        if (f.isUp()) {
+            fail("Observer was notified of date change whilst it was not expected");
+        }
     }
 
 }

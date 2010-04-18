@@ -105,9 +105,9 @@ public class MatrixTest {
 
         final Matrix matrices[] = { M1, M2, M3, M4, M5 };
 
-        for (final Matrix m : matrices) {
-            System.out.println(m);
-        }
+//        for (final Matrix m : matrices) {
+//            System.out.println(m);
+//        }
     }
 
     @Test
@@ -155,9 +155,9 @@ public class MatrixTest {
 
         final Matrix matrices[] = { M1, M2, M3, M4, M5 };
 
-        for (final Matrix m : matrices) {
-            System.out.println(m.toFortran());
-        }
+//        for (final Matrix m : matrices) {
+//            System.out.println(m.toFortran());
+//        }
     }
 
 
@@ -206,9 +206,9 @@ public class MatrixTest {
 
         final Matrix matrices[] = { M1, M2, M3, M4, M5 };
 
-        for (final Matrix m : matrices) {
-            System.out.println(m.toJava());
-        }
+//        for (final Matrix m : matrices) {
+//            System.out.println(m.toJava());
+//        }
     }
 
 
@@ -860,22 +860,22 @@ public class MatrixTest {
         final double tol = 1.0e-12;
 
         final Matrix A = new Matrix(m);
-        System.out.println("A = "+A.toString());
+        // System.out.println("A = "+A.toString());
 
         final Matrix invA = A.inverse();
-        System.out.println("invA = "+invA.toString());
+        // System.out.println("invA = "+invA.toString());
 
         final Matrix I1 = invA.mul(A);
-        System.out.println("I1 = "+I1.toString());
+        // System.out.println("I1 = "+I1.toString());
 
         final Matrix I2 = A.mul(invA);
-        System.out.println("I2 = "+I2.toString());
+        // System.out.println("I2 = "+I2.toString());
 
         final Matrix eins = new Identity(A.rows());
-        System.out.println("eins = "+eins.toString());
+        // System.out.println("eins = "+eins.toString());
 
         final double d = norm(I1.sub(eins));
-        System.out.println("d = "+String.valueOf(d));
+        // System.out.println("d = "+String.valueOf(d));
 
         if (d > tol) {
             fail("inverse(A)*A does not recover unit matrix");
@@ -914,81 +914,81 @@ public class MatrixTest {
         // { 1.0,  0.9,  0.7 }
 
         array = mA.rangeRow(0, 0, 1);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==1);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 1.0));
 
         array = mA.rangeRow(0, 0, 2);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==2);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 1.9));
 
         array = mA.rangeRow(0, 0, 3);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==3);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 2.6));
 
         array = mA.rangeRow(0, 1, 3);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==2);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 1.6));
 
         array = mA.rangeRow(0, 2, 3);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==1);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 0.7));
 
         // { 0.8,  2.0,  3.2 }
 
         array = mA.rangeRow(1, 0, 1);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==1);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 0.8));
 
         array = mA.rangeRow(1, 0, 2);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==2);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 2.8));
 
         array = mA.rangeRow(1, 0, 3);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==3);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 6.0));
 
         array = mA.rangeRow(1, 1, 3);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==2);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 5.2));
 
         array = mA.rangeRow(1, 2, 3);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==1);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 3.2));
 
         // { 0.6,  3.1,  5.0 }
 
         array = mA.rangeRow(2, 0, 1);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==1);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 0.6));
 
         array = mA.rangeRow(2, 0, 2);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==2);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 3.7));
 
         array = mA.rangeRow(2, 0, 3);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==3);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 8.7));
 
         array = mA.rangeRow(2, 1, 3);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==2);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 8.1));
 
         array = mA.rangeRow(2, 2, 3);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeRow_FAILED, array.size()==1);
         assertTrue(RangeRow_FAILED, Closeness.isClose(array.accumulate(), 5.0));
 
@@ -1067,7 +1067,7 @@ public class MatrixTest {
             array = mA.rangeRow(-1);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1076,7 +1076,7 @@ public class MatrixTest {
             array = mA.rangeRow(0, -1);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1085,7 +1085,7 @@ public class MatrixTest {
             array = mA.rangeRow(0, 0, -1);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1094,7 +1094,7 @@ public class MatrixTest {
             array = mA.rangeRow(0, -1, 0);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1103,7 +1103,7 @@ public class MatrixTest {
             array = mA.rangeRow(0, -1, -1);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1112,7 +1112,7 @@ public class MatrixTest {
             array = mA.rangeRow(0, 0, 4);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1121,7 +1121,7 @@ public class MatrixTest {
             array = mA.rangeRow(0, 4, 0);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1130,7 +1130,7 @@ public class MatrixTest {
             array = mA.rangeRow(0, 4, 4);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1163,7 +1163,7 @@ public class MatrixTest {
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 1.0));
 
         array = mA.rangeCol(0, 0, 2);
-        System.out.println(array.toString());
+        // System.out.println(array.toString());
         assertTrue(RangeCol_FAILED, array.size()==2);
         assertTrue(RangeCol_FAILED, Closeness.isClose(array.accumulate(), 1.8));
 
@@ -1298,7 +1298,7 @@ public class MatrixTest {
             array = mA.rangeCol(-1);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1307,7 +1307,7 @@ public class MatrixTest {
             array = mA.rangeCol(0, -1);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1316,7 +1316,7 @@ public class MatrixTest {
             array = mA.rangeCol(0, 0, -1);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1325,7 +1325,7 @@ public class MatrixTest {
             array = mA.rangeCol(0, -1, 0);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1334,7 +1334,7 @@ public class MatrixTest {
             array = mA.rangeCol(0, -1, -1);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1343,7 +1343,7 @@ public class MatrixTest {
             array = mA.rangeCol(0, 0, 4);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1352,7 +1352,7 @@ public class MatrixTest {
             array = mA.rangeCol(0, 4, 0);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1361,7 +1361,7 @@ public class MatrixTest {
             array = mA.rangeCol(0, 4, 4);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1395,7 +1395,7 @@ public class MatrixTest {
         Matrix matrix;
 
         matrix = mA.range(1, 4, 1, 4);
-        System.out.println(matrix.toString());
+        // System.out.println(matrix.toString());
         testRangeRow(matrix);
 
 // test range() backwards
@@ -1407,7 +1407,7 @@ public class MatrixTest {
             matrix = mA.range(-1, 3, 1, 3);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1416,7 +1416,7 @@ public class MatrixTest {
             matrix = mA.range(1, -1, 1, 3);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1425,7 +1425,7 @@ public class MatrixTest {
             matrix = mA.range(1, 3, -1, 3);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1434,7 +1434,7 @@ public class MatrixTest {
             matrix = mA.range(1, 3, 1, -1);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1443,7 +1443,7 @@ public class MatrixTest {
             matrix = mA.range(1, 6, 1, 4);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1452,7 +1452,7 @@ public class MatrixTest {
             matrix = mA.range(1, 4, 4, 1);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1461,7 +1461,7 @@ public class MatrixTest {
             matrix = mA.range(4, 1, 1, 4);
             fail(MISSING_EXCEPTION);
         } catch (final ArrayIndexOutOfBoundsException e) {
-            System.out.println(TEST_SUCCEEDED);
+            // System.out.println(TEST_SUCCEEDED);
         } catch (final Exception e) {
             fail(WRONG_EXCEPTION);
         }
@@ -1693,11 +1693,11 @@ public class MatrixTest {
             final Matrix mul2;
             double norm;
 
-            System.out.println("///////////////////////////////////////////////");
+            // System.out.println("///////////////////////////////////////////////");
 
-            System.out.println("Matrix A = "+A.toString());
+            // System.out.println("Matrix A = "+A.toString());
 
-            System.out.println("// QR decomposition with column pivoting");
+            // System.out.println("// QR decomposition with column pivoting");
             qr = new Matrix(A).qr(true);
             R = qr.R();
             Q = qr.Q();
@@ -1713,7 +1713,7 @@ public class MatrixTest {
 
 
 
-            System.out.println("// QR decomposition without column pivoting");
+            // System.out.println("// QR decomposition without column pivoting");
             qr = new Matrix(A).qr();
             // norm(Q*R - A)
             R = qr.R();

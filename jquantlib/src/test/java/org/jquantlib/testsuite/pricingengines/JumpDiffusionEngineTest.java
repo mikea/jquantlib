@@ -29,7 +29,6 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.time.Date;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class JumpDiffusionEngineTest {
@@ -288,7 +287,6 @@ public class JumpDiffusionEngineTest {
     }
 
 
-    @Ignore
     @Test
     public void testGreeks() {
         QL.info("Testing jump-diffusion option greeks...");
@@ -322,6 +320,8 @@ public class JumpDiffusionEngineTest {
         final double jV[] = { 0.01, 0.25 };
 
         final DayCounter dc = new Actual360();
+        new Settings().setEvaluationDate(Date.todaysDate());
+        final Date today = new Settings().evaluationDate();
 
         final SimpleQuote           spot  = new SimpleQuote(0.0);
         final SimpleQuote           qRate = new SimpleQuote(0.0);
@@ -334,8 +334,6 @@ public class JumpDiffusionEngineTest {
         final SimpleQuote jumpIntensity = new SimpleQuote(0.0);
         final SimpleQuote meanLogJump   = new SimpleQuote(0.0);
         final SimpleQuote jumpVol       = new SimpleQuote(0.0);
-
-        StrikedTypePayoff payoff = null;
 
         final Merton76Process stochProcess = new Merton76Process(
                 new Handle<Quote>(spot),
@@ -350,8 +348,6 @@ public class JumpDiffusionEngineTest {
         // A tolerance of 1.0e-08 is usually sufficient to get reasonable results
         final PricingEngine engine = new JumpDiffusionEngine(stochProcess, 1e-08);
 
-        final Date today = new Settings().evaluationDate();
-
         for (final Type type : types) {
             for (final double strike : strikes) {
                 for (final double element : jInt) {
@@ -365,6 +361,7 @@ public class JumpDiffusionEngineTest {
                                 final Exercise exercise = new EuropeanExercise(exDate);
 
                                 for (int kk = 0; kk < 1; kk++) {
+                                    StrikedTypePayoff payoff = null;
                                     // option to check
                                     if (kk == 0) {
                                         payoff = new PlainVanillaPayoff(type, strike);
@@ -441,21 +438,30 @@ public class JumpDiffusionEngineTest {
                                                         value_m = option.NPV();
                                                         new Settings().setEvaluationDate(tomorrow);
                                                         value_p = option.NPV();
+                                                        new Settings().setEvaluationDate(today);
                                                         expected.put("theta", (value_p - value_m) / dT);
 
-                                                        new Settings().setEvaluationDate(today);
-
-                                                        // compare
                                                         // compare
                                                         for (final Entry<String, Double> it : calculated.entrySet()) {
-
                                                             final String greek = it.getKey();
                                                             final double expct = expected.get(greek);
                                                             final double calcl = calculated.get(greek);
                                                             final double tol = tolerance.get(greek);
 
-                                                            final double error = Utilities.relativeError(expct, calcl, u);
+                                                            final double error = Math.abs(expct-calcl);
                                                             if (error > tol) {
+
+                                                                // System.err.println("type="+type.toString());
+                                                                // System.err.println("strike="+strike);
+                                                                // System.err.println("element ="+element);
+                                                                // System.err.println("element2="+element2);
+                                                                // System.err.println("element3="+element3);
+                                                                // System.err.println("residualTime="+residualTime);
+                                                                // System.err.println("u="+u);
+                                                                // System.err.println("q="+q);
+                                                                // System.err.println("r="+r);
+                                                                // System.err.println("v="+v);
+
                                                                 // TODO improve error message
                                                                 // REPORT_FAILURE(greek, payoff, exercise, u, q, r, today, v, expct,
                                                                 // calcl, error, tol);

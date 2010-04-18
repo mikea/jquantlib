@@ -55,7 +55,6 @@ public class FlatForwardInterpolationTest  {
 		for(int i=0; i<length; i++){
 			final double d = x.get(i);
 			final double calculated = interpolation.op(d);
-			System.out.println(calculated);
 			final double expected = y.get(i);
 			assertFalse("failed to reproduce "+i+" datum"
 						+"\n expected:     "+expected
