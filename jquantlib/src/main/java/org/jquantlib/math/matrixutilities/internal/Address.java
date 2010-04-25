@@ -1,8 +1,53 @@
+/*
+JQuantLib is Copyright (c) 2007, Richard Gomes
+
+All rights reserved.
+
+This source code is release under the BSD License.
+
+JQuantLib includes code taken from QuantLib.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+    Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimer.
+
+    Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+    Neither the names of the copyright holders nor the names of the QuantLib
+    Group and its contributors may be used to endorse or promote products
+    derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+*/
 package org.jquantlib.math.matrixutilities.internal;
 
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
+
+/**
+ * This is the main interface responsible for {@link Matrix} and {@link Array} accessors
+ *
+ * @author Richard Gomes
+ */
 public interface Address {
 
     public static final String INVALID_BACKWARD_INDEXING = "invalid backward indexing";
@@ -126,10 +171,21 @@ public interface Address {
     // public inner interfaces
     //
 
+    /**
+     * This is the main interface responsible for generation of Iterators associated to
+     * classes {@link Matrix} and  {@link Array}
+     *
+     * @see ListIterator
+     */
     public interface Offset {
         public abstract int op();
     }
 
+    /**
+     * This interface defines {@link Array} accessors
+     *
+     * @author Richard Gomes
+     */
     public interface ArrayAddress extends Cloneable, Address {
 
         public ArrayAddress clone();
@@ -142,11 +198,21 @@ public interface Address {
         public ArrayOffset offset();
         public ArrayOffset offset(int index);
 
+        /**
+         * This interface defines Iterators associated to class {@link Array}
+         *
+         * @see ListIterator
+         */
         public interface ArrayOffset extends Offset, ListIterator<Double> {
             public void setIndex(final int index);
         }
     }
 
+    /**
+     * This interface defines {@link Matrix} accessors
+     *
+     * @author Richard Gomes
+     */
     public interface MatrixAddress extends Cloneable, Address {
 
         public MatrixAddress clone();
@@ -159,6 +225,11 @@ public interface Address {
         public MatrixOffset offset();
         public MatrixOffset offset(final int row, final int col);
 
+        /**
+         * This interface defines Iterators associated to class {@link Matrix}
+         *
+         * @see ListIterator
+         */
         public interface MatrixOffset extends Offset {
             public void setRow(final int row);
             public void setCol(final int col);

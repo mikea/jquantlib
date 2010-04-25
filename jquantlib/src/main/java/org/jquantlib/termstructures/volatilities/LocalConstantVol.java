@@ -55,6 +55,8 @@ import org.jquantlib.time.calendars.NullCalendar;
  * constant local volatility (no time/asset dependence). Local volatility and
  * Black volatility are the same when volatility is at most time dependent, so
  * this class is basically a proxy for BlackVolatilityTermStructure.
+ *
+ * @author Richard Gomes
  */
 public class LocalConstantVol extends LocalVolTermStructure {
 

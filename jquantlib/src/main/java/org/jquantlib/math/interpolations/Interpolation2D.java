@@ -45,9 +45,9 @@ import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 
 /**
- * Base class for 2-D interpolations.
+ * Interface for 2-D interpolations.
  * <p>
- * Classes derived from this class will provide interpolated
+ * Classes implementing this interface will provide interpolated
  * values from two sequences of length {@latex$ N } and {@latex$ M },
  * representing the discretized values of the {@latex$ x } and {@latex$ y }
  * variables, and a {@latex$ N \times M } matrix representing

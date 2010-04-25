@@ -1,3 +1,45 @@
+/*
+ Copyright (C) 2007 Ueli Hofstetter
+
+ This source code is release under the BSD License.
+
+ This file is part of JQuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://jquantlib.org/
+
+ JQuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the JQuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <jquant-devel@lists.sourceforge.net>. The license is also available online at
+ <http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+
+ JQuantLib is based on QuantLib. http://quantlib.org/
+ When applicable, the original copyright notice follows this notice.
+ */
+
+/*
+ Copyright (C) 2001, 2002, 2003 Sadruddin Rejeb
+ Copyright (C) 2006 Ferdinando Ametrano
+ Copyright (C) 2006 Fran�ois du Vignaud
+ Copyright (C) 2006, 2007 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.instruments;
 
 import java.util.List;
@@ -14,22 +56,13 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.Date;
 
-
-//\test
-//- the correctness of the returned value is tested by checking
-//that the price of a cap (resp. floor) decreases
-//(resp. increases) with the strike rate.
-//- the relationship between the values of caps, floors and the
-//resulting collars is checked.
-//- the put-call parity between the values of caps, floors and
-//swaps is checked.
-//- the correctness of the returned implied volatility is tested
-//by using it for reproducing the target value.
-//- the correctness of the returned value is tested by checking
-//it against a known good value.
-
-// TODO: code review :: please verify against QL/C++ code
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+/**
+ * Base class for cap-like instruments
+ *
+ * @category instruments
+ *
+ * @author Ueli Hofstetter
+ */
 public class CapFloor extends Instrument {
 
     public enum Type { Cap, Floor, Collar };
@@ -48,9 +81,8 @@ public class CapFloor extends Instrument {
             final Handle<YieldTermStructure> termStructure,
             final PricingEngine engine){
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         this.type_ = type;
         this.floatingLeg_ = floatingLeg;
@@ -98,9 +130,8 @@ public class CapFloor extends Instrument {
             final Handle<YieldTermStructure> termStructure,
             final PricingEngine engine){
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         this.type_ = type;
         this.floatingLeg_ = floatingLeg;
@@ -121,9 +152,8 @@ public class CapFloor extends Instrument {
             while (floorRates_.size() < floatingLeg_.size()) {
                 floorRates_.add(floorRates_.get(floorRates_.size()-1));
             }
-        } else {
+        } else
             throw new LibraryException("only Cap/Floor types allowed in this constructor"); // QA:[RG]::verified // TODO: message
-        }
 
         final Date evaluationDate = new Settings().evaluationDate();
         for (final CashFlow cashFlow : floatingLeg_) {
@@ -491,8 +521,5 @@ public class CapFloor extends Instrument {
     //        : public GenericEngine<CapFloor::arguments, CapFloor::results> {};
     //
     //    std::ostream& operator<<(std::ostream&, CapFloor::Type);
-
-
-
 
 }

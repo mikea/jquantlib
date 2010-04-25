@@ -1,6 +1,5 @@
 /*
- Copyright (C)
- 2009 Ueli Hofstetter
+ Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
 
@@ -20,14 +19,36 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+
+/*
+ Copyright (C) 2003, 2004, 2007 Ferdinando Ametrano
+ Copyright (C) 2006 Yiping Chen
+ Copyright (C) 2007 Neil Firth
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.math.matrixutilities;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Closeness;
 
-// TODO: OSGi :: remove statics
 // TODO: code review :: please verify against QL/C++ code
+/**
+ * @author Ueli Hofstetter
+ */
 public class PseudoSqrt {
 
     private final static String unknown_salvaging_algorithm = "unknown salvaging algorithm";
@@ -88,6 +109,9 @@ public class PseudoSqrt {
             final int componentRetainedPercentage,
             final SalvagingAlgorithm sa){
 
+
+        QL.validateExperimentalMode();
+
         QL.require(matrix.rows == matrix.columns(), Cells.MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
         QL.require(checkSymmetry(matrix), Cells.MATRIX_MUST_BE_SYMMETRIC); // QA:[RG]::verified
         QL.require(componentRetainedPercentage>0.0, "no eigenvalues retained"); // QA:[RG]::verified // TODO: message
@@ -110,8 +134,9 @@ public class PseudoSqrt {
             break;
         case Spectral:
             // negative eigenvalues set to zero
-            for (int i=0; i<size; ++i)
+            for (int i=0; i<size; ++i) {
                 eigenValues.set(i,Math.max(eigenValues.get(i), 0.0));
+            }
             break;
         case Higham:
             final int maxIterations = 40;
@@ -126,9 +151,10 @@ public class PseudoSqrt {
 
         // factor reduction
         double enough = componentRetainedPercentage * eigenValues.accumulate();
-        if (componentRetainedPercentage == 1.0)
+        if (componentRetainedPercentage == 1.0) {
             // numerical glitches might cause some factors to be discarded
             enough *= 1.1;
+        }
         // retain at least one factor
         double components = eigenValues.first();
         int retainedFactors = 1;
@@ -140,8 +166,9 @@ public class PseudoSqrt {
         retainedFactors=Math.min(retainedFactors, maxRank);
 
         final Matrix diagonal = new Matrix(size, retainedFactors);
-        for (int i=0; i<retainedFactors; ++i)
+        for (int i=0; i<retainedFactors; ++i) {
             diagonal.set(i,i, Math.sqrt(eigenValues.get(i)));
+        }
         // TODO: code review:: compare against C++ code
         final Matrix result = jd.eigenvectors().mul(jd.eigenvectors()).mul(diagonal);
 
@@ -151,6 +178,9 @@ public class PseudoSqrt {
 
 
     public static void normalizePseudoRoot(final Matrix matrix, final Matrix pseudo) {
+
+        QL.validateExperimentalMode();
+
         final int size = matrix.rows;
 
         if (size != pseudo.rows)
@@ -162,12 +192,14 @@ public class PseudoSqrt {
         // row normalization
         for (int i=0; i<size; ++i) {
             double norm = 0.0;
-            for (int j=0; j<pseudoCols; ++j)
+            for (int j=0; j<pseudoCols; ++j) {
                 norm += pseudo.get(i, j)*pseudo.get(j, i);
+            }
             if (norm>0.0) {
                 final double normAdj = Math.sqrt(matrix.get(i,i)/norm);
-                for (int j=0; j<pseudoCols; ++j)
+                for (int j=0; j<pseudoCols; ++j) {
                     pseudo.set(i, j, pseudo.get(i, j) * normAdj);
+                }
             }
         }
     }
@@ -390,6 +422,9 @@ public class PseudoSqrt {
 
      */
     public static Matrix pseudoSqrt(final Matrix matrix, final SalvagingAlgorithm sa) {
+
+        QL.validateExperimentalMode();
+
         QL.require(matrix.rows() == matrix.columns(), Cells.MATRIX_MUST_BE_SQUARE); // QA:[RG]::verified
         QL.require(checkSymmetry(matrix), Cells.MATRIX_MUST_BE_SYMMETRIC); // QA:[RG]::verified
 
@@ -413,8 +448,9 @@ public class PseudoSqrt {
             break;
         case Spectral:
             // negative eigenvalues set to zero
-            for (int i=0; i<size; i++)
+            for (int i=0; i<size; i++) {
                 diagonal.set(i, i, Math.sqrt(Math.max((jd.eigenvalues().get(i)), 0.0)));
+            }
             if(true)
                 throw new UnsupportedOperationException("work in progress");
             //result = jd.eigenvectors() * diagonal;
@@ -425,8 +461,9 @@ public class PseudoSqrt {
             negative=false;
             for (int i=0; i<size; ++i){
                 diagonal.set(i, i, Math.sqrt(Math.max(jd.eigenvalues().get(i), 0.0)));
-                if (jd.eigenvalues().get(i)<0.0)
+                if (jd.eigenvalues().get(i)<0.0) {
                     negative=true;
+                }
             }
             if(true)
                 throw new UnsupportedOperationException("work in progress");
@@ -442,8 +479,9 @@ public class PseudoSqrt {
             negative=false;
             for (int i=0; i<size; ++i){
                 diagonal.set(i, i, Math.sqrt(Math.max(jd.eigenvalues().get(i), 0.0)));
-                if (jd.eigenvalues().get(i)<0.0)
+                if (jd.eigenvalues().get(i)<0.0) {
                     negative=true;
+                }
             }
             if(true)
                 throw new UnsupportedOperationException("work in progress");
@@ -560,10 +598,11 @@ const Disposable<Matrix> rankReducedSqrt(const Matrix& matrix,
 
     private static boolean checkSymmetry(final Matrix matrix) {
         final int size = matrix.rows;
-        for (int i=0; i<size; ++i)
+        for (int i=0; i<size; ++i) {
             for (int j=0; j<i; ++j)
                 if (Closeness.isClose(matrix.get(i, j), matrix.get(j, i)))
                     return false;
+        }
         return true;
     }
 

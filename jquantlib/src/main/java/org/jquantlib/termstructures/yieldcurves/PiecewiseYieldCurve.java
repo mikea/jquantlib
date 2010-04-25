@@ -244,10 +244,10 @@ public class PiecewiseYieldCurve<
         this.bootstrap = constructBootstrap(classB);
 
 
-        this.instruments = instruments;
-        this.jumps = jumps;
+        this.instruments = instruments; // TODO: clone() ?
+        this.jumps = jumps; // TODO: clone() ?
         this.nJumps = jumps.length;
-        this.jumpDates_ = jumpDates;
+        this.jumpDates_ = jumpDates; // TODO: clone() ?
         this.jumpTimes = new double[jumpDates.length];
         this.accuracy = accuracy;
 
@@ -292,10 +292,10 @@ public class PiecewiseYieldCurve<
         this.interpolator = constructInterpolator(classI);
         this.bootstrap = constructBootstrap(classB);
 
-        this.instruments = instruments;
-        this.jumps = jumps;
+        this.instruments = instruments; // TODO: clone() ?
+        this.jumps = jumps; // TODO: clone() ?
         this.nJumps = jumps.length;
-        this.jumpDates_ = jumpDates;
+        this.jumpDates_ = jumpDates; // TODO: clone() ?
         this.jumpTimes = new double[jumpDates.length];
         this.accuracy = accuracy;
 
@@ -371,7 +371,7 @@ public class PiecewiseYieldCurve<
         if (Bootstrap.class.isAssignableFrom(classB)) {
             try {
                 final Constructor<Bootstrap> c = (Constructor<Bootstrap>) classB.getConstructor(Class.class);
-                return c.newInstance(new Object[] { PiecewiseCurve.class });
+                return c.newInstance(PiecewiseCurve.class);
             } catch (final Exception e) {
                 throw new LibraryException("could not instantiate Bootstrap", e); // TODO: message
             }

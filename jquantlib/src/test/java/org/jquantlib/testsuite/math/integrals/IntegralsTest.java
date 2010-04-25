@@ -21,7 +21,7 @@ import org.junit.Test;
 
 public class IntegralsTest {
 
-    final private /*@Real*/ double tolerance = 1.0e-6;
+    final private static double tolerance = 1.0e-6;
 
     private void testSingle(
             final Integrator integrator,

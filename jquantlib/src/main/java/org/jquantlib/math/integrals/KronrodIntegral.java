@@ -1,9 +1,9 @@
 /*
- Copyright (C) 
+ Copyright (C)
  2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -16,18 +16,18 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
 package org.jquantlib.math.integrals;
 
 public abstract class KronrodIntegral extends Integrator {
-    
-    public KronrodIntegral(double absoluteAccuracy, int maxEvaluations){
+
+    public KronrodIntegral(final double absoluteAccuracy, final int maxEvaluations){
         super(absoluteAccuracy, maxEvaluations);
     }
-    
+
     /*
      * Gauss-Kronrod-Patterson quadrature coefficients for use in quadpack
      * routine qng. These coefficients were calculated with 101 decimal digit
@@ -35,7 +35,7 @@ public abstract class KronrodIntegral extends Integrator {
      */
 
     /* x1, abscissae common to the 10-, 21-, 43- and 87-point rule */
-    protected static final double x1[] = { 
+    final double x1[] = {
             0.973906528517171720077964012084452,
             0.865063366688984510732096688423493,
             0.679409568299024406234327365114874,
@@ -43,7 +43,7 @@ public abstract class KronrodIntegral extends Integrator {
             0.148874338981631210884826001129720 };
 
     /* w10, weights of the 10-point formula */
-    protected static final double w10[] = { 
+    final double w10[] = {
             0.066671344308688137593568809893332,
             0.149451349150580593145776339657697,
             0.219086362515982043995534934228163,
@@ -51,7 +51,7 @@ public abstract class KronrodIntegral extends Integrator {
             0.295524224714752870173892994651338 };
 
     /* x2, abscissae common to the 21-, 43- and 87-point rule */
-    protected static final double x2[] = { 
+    final double x2[] = {
             0.995657163025808080735527280689003,
             0.930157491355708226001207180059508,
             0.780817726586416897063717578345042,
@@ -59,7 +59,7 @@ public abstract class KronrodIntegral extends Integrator {
             0.294392862701460198131126603103866 };
 
     /* w21a, weights of the 21-point formula for abscissae x1 */
-    protected static final double w21a[] = { 
+    final double w21a[] = {
             0.032558162307964727478818972459390,
             0.075039674810919952767043140916190,
             0.109387158802297641899210590325805,
@@ -67,7 +67,7 @@ public abstract class KronrodIntegral extends Integrator {
             0.147739104901338491374841515972068 };
 
     /* w21b, weights of the 21-point formula for abscissae x2 */
-    protected static final double w21b[] = { 
+    final double w21b[] = {
             0.011694638867371874278064396062192,
             0.054755896574351996031381300244580,
             0.093125454583697605535065465083366,
@@ -76,7 +76,7 @@ public abstract class KronrodIntegral extends Integrator {
             0.149445554002916905664936468389821 };
 
     /* x3, abscissae common to the 43- and 87-point rule */
-    protected static final double x3[] = { 
+    final double x3[] = {
             0.999333360901932081394099323919911,
             0.987433402908088869795961478381209,
             0.954807934814266299257919200290473,
@@ -90,7 +90,7 @@ public abstract class KronrodIntegral extends Integrator {
             0.074650617461383322043914435796506 };
 
     /* w43a, weights of the 43-point formula for abscissae x1, x3 */
-    protected static final double w43a[] = { 
+    final double w43a[] = {
             0.016296734289666564924281974617663,
             0.037522876120869501461613795898115,
             0.054694902058255442147212685465005,
@@ -103,7 +103,7 @@ public abstract class KronrodIntegral extends Integrator {
             0.071387267268693397768559114425516 };
 
     /* w43b, weights of the 43-point formula for abscissae x3 */
-    protected static final double w43b[] = { 
+    final double w43b[] = {
             0.001844477640212414100389106552965,
             0.010798689585891651740465406741293,
             0.021895363867795428102523123075149,
@@ -118,7 +118,7 @@ public abstract class KronrodIntegral extends Integrator {
             0.074722147517403005594425168280423 };
 
     /* x4, abscissae of the 87-point rule */
-    protected static final double x4[] = { 
+    final double x4[] = {
             0.999902977262729234490529830591582,
             0.997989895986678745427496322365960,
             0.992175497860687222808523352251425,
@@ -143,7 +143,7 @@ public abstract class KronrodIntegral extends Integrator {
             0.037352123394619870814998165437704 };
 
     /* w87a, weights of the 87-point formula for abscissae x1, x2, x3 */
-    protected static final double w87a[] = { 
+    final double w87a[] = {
             0.008148377384149172900002878448190,
             0.018761438201562822243935059003794,
             0.027347451050052286161582829741283,
@@ -167,7 +167,7 @@ public abstract class KronrodIntegral extends Integrator {
             0.037253875503047708539592001191226 };
 
     /* w87b, weights of the 87-point formula for abscissae x4 */
-    protected static final double w87b[] = { 
+    final double w87b[] = {
             0.000274145563762072350016527092881,
             0.001807124155057942948341311753254,
             0.004096869282759164864458070683480,

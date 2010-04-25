@@ -54,6 +54,8 @@ import org.jquantlib.time.calendars.Target;
  * This abstract class defines the interface of concrete rate structures which will be derived from this one.
  * <p>
  * Rates are assumed to be annual continuous compounding.
+ *
+ * @author Richard Gomes
  */
 // TODO: add derived class ParSwapTermStructure similar to ZeroYieldTermStructure, DiscountStructure, ForwardRateStructure
 // TODO: observability against evaluation date changes is checked.
@@ -299,9 +301,8 @@ abstract public class AbstractYieldTermStructure extends AbstractTermStructure i
             /*@DiscountFactor*/ final double discount2 = discount(d2, extrapolate);
             /*@CompoundFactor*/ final double compound = discount1 / discount2;
             return InterestRate.impliedRate(compound, d1, d2, dayCounter, comp, freq);
-        } else {
+        } else
             throw new LibraryException("d1 later than d2"); // QA:[RG]::verified // TODO: message
-        }
     }
 
     /* (non-Javadoc)

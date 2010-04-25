@@ -23,12 +23,12 @@
 package org.jquantlib.samples;
 
 import org.jquantlib.QL;
+import org.jquantlib.samples.util.StopClock;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.util.StopClock;
 
 /**
  *

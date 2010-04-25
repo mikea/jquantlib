@@ -45,7 +45,11 @@ import org.jquantlib.math.Ops;
 
 /**
  * @author Dominik Holenstein
+ *
+ * @deprecated
  */
+@Deprecated
+//XXX: remove this class
 public class GaussKronrodPatterson extends Integrator {
 
     //

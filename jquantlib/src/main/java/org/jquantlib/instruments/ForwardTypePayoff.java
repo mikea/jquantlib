@@ -44,6 +44,8 @@ import org.jquantlib.lang.exceptions.LibraryException;
 
 /**
  * Class for forward type payoffs
+ *
+ * @author John Martin
  */
 public class ForwardTypePayoff extends Payoff {
 
@@ -103,13 +105,12 @@ public class ForwardTypePayoff extends Payoff {
 
     @Override
     public final double get (final double price) {
-        if (type == Position.Long) {
+        if (type == Position.Long)
             return price - strike;
-        } else if (type == Position.Short) {
+        else if (type == Position.Short)
             return strike - price;
-        } else {
+        else
             throw new LibraryException (" Unknown Forward Type ");
-        }
     }
 
     @Override

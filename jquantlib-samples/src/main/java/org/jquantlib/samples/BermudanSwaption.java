@@ -26,10 +26,10 @@ import static org.jquantlib.time.Month.February;
 
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
+import org.jquantlib.samples.util.StopClock;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Weekday;
-import org.jquantlib.util.StopClock;
 
 /**
  * This example prices a few bermudan swaptions using different short-rate models calibrated to market swaptions.

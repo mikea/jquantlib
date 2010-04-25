@@ -29,7 +29,7 @@ public class ProjectedCostFunction extends CostFunction {
     private final Array fixedParameters;
     private final Array actualParameters;
     private final boolean [] parametersFreedoms_;
-    private CostFunction costFunction;
+    private final CostFunction costFunction;
 
 
     public ProjectedCostFunction(final CostFunction costFunction, final Array parameterValues, final boolean [] parametersFreedoms) {
@@ -39,14 +39,15 @@ public class ProjectedCostFunction extends CostFunction {
         // TODO: code review :: use of clone()
         this.fixedParameters  = parameterValues.clone();
         this.actualParameters = parameterValues.clone();
-        this.parametersFreedoms_ = parametersFreedoms;
+        this.parametersFreedoms_ = parametersFreedoms; // TODO: clone() ?
         this.costFunction = costFunction;
 
         if (fixedParameters.size() != parametersFreedoms_.length)
             throw new IllegalArgumentException("fixedParameters_.size()!=parametersFreedoms_.size()");
         for(int i = 0; i<parametersFreedoms_.length; i++){
-            if(!parametersFreedoms_[i])
+            if(!parametersFreedoms_[i]) {
                 numberOfFreeParameters++;
+            }
             if(!(numberOfFreeParameters>0))
                 throw new ArithmeticException("numberOfFreeParameters==0");
         }
@@ -57,8 +58,9 @@ public class ProjectedCostFunction extends CostFunction {
             throw new IllegalArgumentException("parametersValues.size()!=numberOfFreeParameters");
         int i = 0;
         for(int j = 0; j<actualParameters.size(); j++)
-            if(!parametersFreedoms_[j])
+            if(!parametersFreedoms_[j]) {
                 actualParameters.set(j, parametersValues.get(i++));
+            }
     }
 
     @Override
@@ -81,8 +83,9 @@ public class ProjectedCostFunction extends CostFunction {
         final Array projectedParameters = new Array(numberOfFreeParameters);
         int i = 0;
         for(int j=0; j<parametersFreedoms_.length; j++)
-            if(!parametersFreedoms_[j])
+            if(!parametersFreedoms_[j]) {
                 projectedParameters.set(i++,parameters.get(j));
+            }
         return projectedParameters;
     }
 
@@ -94,8 +97,9 @@ public class ProjectedCostFunction extends CostFunction {
         final Array y = fixedParameters.clone();
         int i = 0;
         for(int j = 0; j<y.size(); j++)
-            if(!parametersFreedoms_[j])
+            if(!parametersFreedoms_[j]) {
                 y.set(j, projectedParameters.get(i++));
+            }
         return y;
     }
 }

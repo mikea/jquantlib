@@ -96,6 +96,7 @@ import org.jquantlib.processes.StochasticProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.samples.util.StopClock;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
@@ -106,7 +107,6 @@ import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
-import org.jquantlib.util.StopClock;
 
 /**
  * Calculates equity option values using HullWhite process and Cox-Ross-Rubinstein engine
@@ -123,9 +123,8 @@ public class CoxRossWithHullWhite implements Runnable {
 
     public void run() {
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 
@@ -208,7 +207,7 @@ public class CoxRossWithHullWhite implements Runnable {
 //        europeanOption.setPricingEngine(new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(hwProcess, timeSteps){} );
 //        bermudanOption.setPricingEngine(new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(hwProcess, timeSteps){} );
 //        americanOption.setPricingEngine(new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(hwProcess, timeSteps){} );
-//        System.out.printf(fmt, new Object[] { method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() } );
+//        System.out.printf(fmt, method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() );
 //
 //
 //        clock.stopClock();

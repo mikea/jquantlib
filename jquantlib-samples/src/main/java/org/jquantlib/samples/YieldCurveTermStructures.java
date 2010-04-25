@@ -5,6 +5,7 @@ import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.samples.util.StopClock;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
@@ -15,7 +16,6 @@ import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.calendars.UnitedStates;
 import org.jquantlib.time.calendars.UnitedStates.Market;
-import org.jquantlib.util.StopClock;
 
 /**
  * This class explores the functionalities provided by yield termstructures.The different types
@@ -41,9 +41,9 @@ public class YieldCurveTermStructures implements Runnable {
 
     public void run() {
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+//        if (System.getProperty("EXPERIMENTAL") == null) {
+//            throw new UnsupportedOperationException("Work in progress");
+//        }
 
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 

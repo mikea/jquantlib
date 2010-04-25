@@ -32,17 +32,16 @@ public class FixedRateLeg extends Leg {
     }
 
     public FixedRateLeg withNotionals(final double[]/*List<Double>*/ notionals) {
-        this.notionals_ = notionals;
+        this.notionals_ = notionals; // TODO: clone() ?
         return this;
     }
 
     public FixedRateLeg withCouponRates(/* @Rate */final double couponRate) {
         couponRates_ = new InterestRate[]{new InterestRate(couponRate, paymentDayCounter_, Compounding.Simple)};
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
-        
+
         //        couponRates_.clear();
         //        couponRates_.set(0, new InterestRate(couponRate, paymentDayCounter_, Compounding.SIMPLE));
         return this;
@@ -62,7 +61,7 @@ public class FixedRateLeg extends Leg {
     }
 
     public FixedRateLeg withCouponRates(final InterestRate [] couponRates) {
-        couponRates_ = couponRates;
+        couponRates_ = couponRates; // TODO: clone() ?
         return this;
     }
 

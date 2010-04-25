@@ -25,7 +25,7 @@ import org.jquantlib.math.matrixutilities.Array;
 
 public class LineSearch {
 
-    private final String cant_update_linesearch = "can't update linesearch";
+    private final static String CANNOT_UPDATE_LINESEARCH = "cannot update linesearch";
 
     // current values of the search direction
     protected Array searchDirection_;

@@ -47,9 +47,10 @@ import org.jquantlib.lang.exceptions.LibraryException;
 
 /**
  * Day's serial number MOD 7
- *
  * <p>
  * WEEKDAY Excel function is the same except for Sunday = 7.
+ *
+ * @author Richard Gomes
  */
 public enum Weekday {
     Sunday(1), Monday(2), Tuesday(3), Wednesday(4), Thursday(5), Friday(6), Saturday(7);
@@ -90,7 +91,7 @@ public enum Weekday {
 
     /**
      * Returns the week day as a number where Sunday (1) till Saturday (7)
-     * 
+     *
      * @return the week day as a number where Sunday (1) till Saturday (7)
      */
     public int value() {

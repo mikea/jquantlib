@@ -51,6 +51,11 @@ import org.jquantlib.util.TypedVisitable;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
+/**
+ * Local volatility term structure base class
+ *
+ * @author Richard Gomes
+ */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class LocalVolTermStructure extends VolatilityTermStructure implements TypedVisitable<TermStructure> {
 

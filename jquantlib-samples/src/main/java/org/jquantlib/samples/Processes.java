@@ -33,6 +33,7 @@ import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.samples.util.StopClock;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.Compounding;
@@ -43,7 +44,6 @@ import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.calendars.UnitedStates;
 import org.jquantlib.time.calendars.UnitedStates.Market;
-import org.jquantlib.util.StopClock;
 
 /**
  * This class explores StochasticProcess1D(GeneralizedBlackScholesProcess)/LinearDiscretization(EulerDiscretization)

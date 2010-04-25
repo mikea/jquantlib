@@ -5,6 +5,9 @@ import java.util.Comparator;
 
 import org.jquantlib.cashflow.CashFlow;
 
+/**
+ * @author Ueli Hofstetter
+ */
 public class EarlierThanCashFlowComparator implements Comparator<CashFlow>, Serializable  {
 
 	/**

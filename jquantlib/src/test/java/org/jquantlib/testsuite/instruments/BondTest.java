@@ -90,7 +90,6 @@ import org.jquantlib.time.calendars.Brazil;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.time.calendars.UnitedStates;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class BondTest {
@@ -100,7 +99,6 @@ public class BondTest {
 	}
 
 
-	@Ignore
 	@Test
 	//FIXME: http://bugs.jquantlib.org/view.php?id=472
 	public void testYield() {
@@ -135,14 +133,17 @@ public class BondTest {
 							final Date issue = dated;
 							final Date maturity = calendar.advance(issue, lengths[j], TimeUnit.Years);
 
-							final Schedule sch = new Schedule(dated,
-									maturity, new
-									Period(frequencies[l]),
+							final Schedule sch = new Schedule(
+							        dated,
+									maturity,
+									new Period(frequencies[l]),
 									calendar,
 									accrualConvention,
 									accrualConvention,
 									DateGeneration.Rule.Backward,
-									false, new Date(), new Date());
+									false,
+									new Date(),
+									new Date());
 
 
 							final FixedRateBond bond = new FixedRateBond(settlementDays, faceAmount, sch,

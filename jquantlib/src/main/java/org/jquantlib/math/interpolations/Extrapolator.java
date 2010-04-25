@@ -2,7 +2,7 @@
  Copyright (C) 2008 Richard Gomes
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,7 +15,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -39,27 +39,32 @@
 
 package org.jquantlib.math.interpolations;
 
+/**
+ * Interface for classes possibly allowing extrapolation
+ *
+ * @author Richard Gomes
+ */
 public interface Extrapolator {
 
 	/**
 	 * enable extrapolation in subsequent calls
-	 * 
+	 *
 	 * @category modifiers
 	 */
     public void enableExtrapolation();
 
     /**
      * disable extrapolation in subsequent calls
-     * 
+     *
      * @category modifiers
      */
     public void disableExtrapolation();
-    
+
     /**
      * tells whether extrapolation is enabled
-     * 
+     *
      * @category inspectors
      */
     public boolean allowsExtrapolation();
-    
+
 }

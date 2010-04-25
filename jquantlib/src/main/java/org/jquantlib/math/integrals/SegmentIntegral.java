@@ -53,6 +53,7 @@ import org.jquantlib.math.Ops;
  * } where {@latex$ x_0 = a }, {@latex$ x_N = b }, and {@latex$ x_i = a+i \Delta x } with
  * {@latex$ \Delta x = (b-a)/N }.
  *
+ * @author Richard Gomes
  */
 //TODO: Add test case.
 //TEST the correctness of the result is tested by checking it against known good values.

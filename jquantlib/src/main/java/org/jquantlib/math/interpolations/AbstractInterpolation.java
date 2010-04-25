@@ -48,7 +48,15 @@ import org.jquantlib.Settings;
 import org.jquantlib.math.matrixutilities.Array;
 
 
-
+/** Abstract base class for 1-D interpolations.
+ * <p>
+ * Classes derived from this class will provide interpolated
+ * values from two sequences of equal length, representing
+ * discretized values of a variable and a function of the former,
+ * respectively.
+ *
+ * @author Richard Gomes
+*/
 public abstract class AbstractInterpolation implements Interpolation {
 
     protected Impl impl;

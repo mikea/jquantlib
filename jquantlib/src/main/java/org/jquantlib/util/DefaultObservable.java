@@ -55,8 +55,8 @@ import org.jquantlib.QL;
  */
 public class DefaultObservable implements Observable {
 
-    final private String OBSERVABLE_IS_NULL = "observable is null";
-    final private String CANNOT_NOTIFY_OBSERVERS = "could not notify one or more observers";
+    final private static String OBSERVABLE_IS_NULL = "observable is null";
+    final private static String CANNOT_NOTIFY_OBSERVERS = "could not notify one or more observers";
 
     //
     // private final fields
@@ -105,7 +105,7 @@ public class DefaultObservable implements Observable {
 
     public void notifyObservers(final Object arg) {
         boolean successful = true;
-        for (final Observer observer : observers)
+        for (final Observer observer : observers) {
             try {
                 wrappedNotify(observer, observable, arg);
             } catch (final Exception e) {
@@ -118,6 +118,7 @@ public class DefaultObservable implements Observable {
                 // exception if something bad happened.
                 successful = false;
             }
+        }
         QL.ensure(successful, CANNOT_NOTIFY_OBSERVERS);
     }
 

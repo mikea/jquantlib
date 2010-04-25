@@ -29,6 +29,7 @@ import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.samples.util.StopClock;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.BlackVolatilityTermStructure;
@@ -43,7 +44,6 @@ import org.jquantlib.termstructures.volatilities.BlackVarianceSurface.Extrapolat
 import org.jquantlib.time.Date;
 import org.jquantlib.time.calendars.UnitedStates;
 import org.jquantlib.time.calendars.UnitedStates.Market;
-import org.jquantlib.util.StopClock;
 
 /**
  *
@@ -103,15 +103,15 @@ public class VolatilityTermStructures implements Runnable {
 
         //Calculating blackVolatility using maturity as 10 days after today and strike as 20
         Double volatility1 = constantVolatility.blackVol(date10.clone(), 20);
-        System.out.println("BlackVolatility-->"+volatility1);
+        System.out.println("BlackVolatility = "+volatility1);
 
         //Calculating blackVolatility using maturity as 20 days after today and strike as 30
         Double volatility2 = constantVolatility.blackVol(date20.clone(), 30);
-        System.out.println("BlackVolatility-->"+volatility2);
+        System.out.println("BlackVolatility = "+volatility2);
 
         //Calculating blackVolatility using maturity as 30 days after today and strike as 40
         Double volatility3 = constantVolatility.blackVol(date30.clone(), 40);
-        System.out.println("BlackVolatility-->"+volatility3);
+        System.out.println("BlackVolatility = "+volatility3);
 
         //The volatilities calculated above are same as it's constant volatility termstructure
         if(volatility1.equals(volatility2) && volatility2.equals(volatility3)){
@@ -120,15 +120,15 @@ public class VolatilityTermStructures implements Runnable {
 
         //Calculating blackForwardVolatility between 10 days after today and 15 days after today with strike as 20
         Double forwardVolatility1 = constantVolatility.blackForwardVol(date10.clone(), date15.clone(), 20, true);
-        System.out.println("BlackForwardVolatility-->"+forwardVolatility1);
+        System.out.println("BlackForwardVolatility = "+forwardVolatility1);
 
         //Calculating blackForwardVolatility between 20 days after today and 25 days after today with strike as 40
         Double forwardVolatility2 = constantVolatility.blackForwardVol(date10.clone(), date15.clone(), 20, true);
-        System.out.println("BlackForwardVolatility-->"+forwardVolatility2);
+        System.out.println("BlackForwardVolatility = "+forwardVolatility2);
 
         //Calculating blackForwardVolatility between 27 days after today and 35 days after today with strike as 60
         Double forwardVolatility3 = constantVolatility.blackForwardVol(date27.clone(), date35.clone(), 60, true);
-        System.out.println("BlackForwardVolatility-->"+forwardVolatility3);
+        System.out.println("BlackForwardVolatility = "+forwardVolatility3);
 
         //The volatilities calculated above are same as it's constant volatility termstructure
         if(forwardVolatility1.equals(forwardVolatility2) && forwardVolatility2.equals(forwardVolatility3)){
@@ -138,10 +138,10 @@ public class VolatilityTermStructures implements Runnable {
         }
 
         //Calculating blackVariance
-        System.out.println("BlackVariance-->"+constantVolatility.blackVariance(date10.clone(), 20));
+        System.out.println("BlackVariance = "+constantVolatility.blackVariance(date10.clone(), 20));
 
         //Calculating blackForwardVariance
-        System.out.println("BlackForwardVariance-->"+constantVolatility.blackForwardVariance(date10.clone(), date15.clone(), 20, true));
+        System.out.println("BlackForwardVariance = "+constantVolatility.blackForwardVariance(date10.clone(), date15.clone(), 20, true));
 
         //As BlackConstantVol termstructure has been initialized using relinkable handle so lets change the observable SimpleQuote of this handle
         //and see the change getting reflected to all the calculations done above.
@@ -150,14 +150,14 @@ public class VolatilityTermStructures implements Runnable {
 
         //Calculating blackVolatility using maturity as 10 days after today and strike as 20
         volatility1 = constantVolatility.blackVol(date10.clone(), 20);
-        System.out.println("BlackVolatility-->"+volatility1);
+        System.out.println("BlackVolatility = "+volatility1);
 
         //Calculating blackVolatility using maturity as 20 days after today and strike as 30
         volatility2 = constantVolatility.blackVol(date20.clone(), 30);
-        System.out.println("BlackVolatility-->"+volatility2);
+        System.out.println("BlackVolatility = "+volatility2);
 
         volatility3 = constantVolatility.blackVol(date30.clone(), 40);
-        System.out.println("BlackVolatility-->"+volatility3);
+        System.out.println("BlackVolatility = "+volatility3);
 
         //The volatilities calculated above are same as it's constant volatility termstructure
         if(volatility1.equals(volatility2) && volatility2.equals(volatility3)){
@@ -166,15 +166,15 @@ public class VolatilityTermStructures implements Runnable {
 
         //Calculating blackForwardVolatility between 10 days after today and 15 days after today with strike as 20
         forwardVolatility1 = constantVolatility.blackForwardVol(date10.clone(), date15.clone(), 20, true);
-        System.out.println("BlackForwardVolatility-->"+forwardVolatility1);
+        System.out.println("BlackForwardVolatility = "+forwardVolatility1);
 
         //Calculating blackForwardVolatility between 20 days after today and 25 days after today with strike as 40
         forwardVolatility2 = constantVolatility.blackForwardVol(date10.clone(), date15.clone(), 20, true);
-        System.out.println("BlackForwardVolatility-->"+forwardVolatility2);
+        System.out.println("BlackForwardVolatility = "+forwardVolatility2);
 
         //Calculating blackForwardVolatility between 27 days after today and 35 days after today with strike as 60
         forwardVolatility3 = constantVolatility.blackForwardVol(date27.clone(), date35.clone(), 60, true);
-        System.out.println("BlackForwardVolatility-->"+forwardVolatility3);
+        System.out.println("BlackForwardVolatility = "+forwardVolatility3);
 
         //The volatilities calculated above are same as it's constant volatility termstructure
         if(forwardVolatility1.equals(forwardVolatility2) && forwardVolatility2.equals(forwardVolatility3)){
@@ -184,10 +184,10 @@ public class VolatilityTermStructures implements Runnable {
         }
 
         //Calculating blackVariance
-        System.out.println("BlackVariance-->"+constantVolatility.blackVariance(date10.clone(), 20));
+        System.out.println("BlackVariance = "+constantVolatility.blackVariance(date10.clone(), 20));
 
         //Calculating blackForwardVariance
-        System.out.println("BlackForwardVariance-->"+constantVolatility.blackForwardVariance(date10.clone(), date15.clone(), 20, true));
+        System.out.println("BlackForwardVariance = "+constantVolatility.blackForwardVariance(date10.clone(), date15.clone(), 20, true));
 
         System.out.println("//===============================BlackVarianceCurve================================");
 
@@ -208,35 +208,35 @@ public class VolatilityTermStructures implements Runnable {
 
         //Calculating blackVolatility using maturity as 12 days after today and strike as 20
         volatility1 = varianceCurve.blackVol(date12.clone(), 20);
-        System.out.println("Interpolated BlackVolatility on BlackVarianceCurve-->"+volatility1);
+        System.out.println("Interpolated BlackVolatility on BlackVarianceCurve = "+volatility1);
 
         //Calculating blackVolatility using maturity as 22 days after today and strike as 30
         volatility2 = varianceCurve.blackVol(date22.clone(), 30);
-        System.out.println("Interpolated BlackVolatility on BlackVarianceCurve-->"+volatility2);
+        System.out.println("Interpolated BlackVolatility on BlackVarianceCurve = "+volatility2);
 
         //Calculating blackVolatility using maturity as 32 days after today and strike as 40
         volatility3 = varianceCurve.blackVol(date32.clone(), 40);
-        System.out.println("Interpolated BlackVolatility on BlackVarianceCurve-->"+volatility3);
+        System.out.println("Interpolated BlackVolatility on BlackVarianceCurve = "+volatility3);
 
 
         //Calculating blackForwardVolatility between 12 days after today and 16 days after today with strike as 20
         forwardVolatility1 = varianceCurve.blackForwardVol(date12.clone(), date16.clone(), 20, true);
-        System.out.println("Interpolated BlackForwardVolatility on BlackVarianceCurve-->"+forwardVolatility1);
+        System.out.println("Interpolated BlackForwardVolatility on BlackVarianceCurve = "+forwardVolatility1);
 
         //Calculating blackForwardVolatility between 22 days after today and 26 days after today with strike as 40
         forwardVolatility2 = varianceCurve.blackForwardVol(date22.clone(), date26.clone(), 40, true);
-        System.out.println("Interpolated BlackForwardVolatility on BlackVarianceCurve-->"+forwardVolatility2);
+        System.out.println("Interpolated BlackForwardVolatility on BlackVarianceCurve = "+forwardVolatility2);
 
         //Calculating blackForwardVolatility between 27 days after today and 35 days after today with strike as 60
         forwardVolatility3 = varianceCurve.blackForwardVol(date27.clone(), date35.clone(), 60, true);
-        System.out.println("Interpolated BlackForwardVolatility on BlackVarianceCurve-->"+forwardVolatility3);
+        System.out.println("Interpolated BlackForwardVolatility on BlackVarianceCurve = "+forwardVolatility3);
 
 
         //Calculating blackVariance using maturity as 12 days after today and strike as 20
-        System.out.println("Interpolated BlackVariance on BlackVarianceCurve-->"+varianceCurve.blackVariance(date12.clone(), 20));
+        System.out.println("Interpolated BlackVariance on BlackVarianceCurve = "+varianceCurve.blackVariance(date12.clone(), 20));
 
         //Calculating blackForwardVariance between 12 days after today and 16 days after today with strike as 20
-        System.out.println("Interpolated BlackForwardVariance on BlackVarianceCurve-->"+varianceCurve.blackForwardVariance(date12.clone(), date16.clone(), 20, true));
+        System.out.println("Interpolated BlackForwardVariance on BlackVarianceCurve = "+varianceCurve.blackForwardVariance(date12.clone(), date16.clone(), 20, true));
 
         System.out.println("//===============================BlackVarianceSurface================================");
 
@@ -273,35 +273,35 @@ public class VolatilityTermStructures implements Runnable {
         //and maturities lying between the points as mentioned by strikesAxis and dateAxis.
         //Calculating blackVolatility using maturity as 12 days after today and strike as 18
         volatility1 = varianceSurface.blackVol(date12.clone(), 18);
-        System.out.println("Interpolated BlackVolatility on BlackVarianceSurface-->"+volatility1);
+        System.out.println("Interpolated BlackVolatility on BlackVarianceSurface = "+volatility1);
 
         //Calculating blackVolatility using maturity as 22 days after today and strike as 33
         volatility2 = varianceSurface.blackVol(date22.clone(), 33);
-        System.out.println("Interpolated BlackVolatility on BlackVarianceSurface-->"+volatility2);
+        System.out.println("Interpolated BlackVolatility on BlackVarianceSurface = "+volatility2);
 
         //Calculating blackVolatility using maturity as 32 days after today and strike as 45
         volatility3 = varianceSurface.blackVol(date32.clone(), 45);
-        System.out.println("Interpolated BlackVolatility on BlackVarianceSurface-->"+volatility3);
+        System.out.println("Interpolated BlackVolatility on BlackVarianceSurface = "+volatility3);
 
 
         //Calculating blackForwardVolatility between 12 days after today and 16 days after today with strike as 20
         forwardVolatility1 = varianceSurface.blackForwardVol(date12.clone(), date16.clone(), 20, true);
-        System.out.println("Interpolated BlackForwardVolatility on BlackVarianceSurface-->"+forwardVolatility1);
+        System.out.println("Interpolated BlackForwardVolatility on BlackVarianceSurface = "+forwardVolatility1);
 
         //Calculating blackForwardVolatility between 22 days after today and 26 days after today with strike as 40
         forwardVolatility2 = varianceSurface.blackForwardVol(date22.clone(), date26.clone(), 40, true);
-        System.out.println("Interpolated BlackForwardVolatility on BlackVarianceSurface-->"+forwardVolatility2);
+        System.out.println("Interpolated BlackForwardVolatility on BlackVarianceSurface = "+forwardVolatility2);
 
         //Calculating blackForwardVolatility between 27 days after today and 35 days after today with strike as 50
         forwardVolatility3 = varianceSurface.blackForwardVol(date27.clone(), date35.clone(), 50, true);
-        System.out.println("Interpolated BlackForwardVolatility on BlackVarianceSurface-->"+forwardVolatility3);
+        System.out.println("Interpolated BlackForwardVolatility on BlackVarianceSurface = "+forwardVolatility3);
 
 
         //Calculating blackVariance using maturity as 12 days after today and strike as 20
-        System.out.println("Interpolated BlackVariance on BlackVarianceSurface-->"+varianceSurface.blackVariance(date12.clone(), 20));
+        System.out.println("Interpolated BlackVariance on BlackVarianceSurface = "+varianceSurface.blackVariance(date12.clone(), 20));
 
         //Calculating blackForwardVariance between 12 days after today and 16 days after today with strike as 20
-        System.out.println("Interpolated BlackForwardVariance on BlackVarianceSurface-->"+varianceSurface.blackForwardVariance(date12.clone(), date16.clone(), 20, true));
+        System.out.println("Interpolated BlackForwardVariance on BlackVarianceSurface = "+varianceSurface.blackForwardVariance(date12.clone(), date16.clone(), 20, true));
 
         System.out.println("//================================ImpliedVolTermStructure=============================");
 
@@ -325,14 +325,14 @@ public class VolatilityTermStructures implements Runnable {
         volatility2 = varianceCurve.blackVol(date22.clone(), 30);
         final double impliedVolatility2 = impliedVolTermStructure.blackVol(date22.clone(), 30);
         if(volatility2 == impliedVolatility2){
-            System.out.println("Interpolated BlackVolatility on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = -->"+volatility2);
+            System.out.println("Interpolated BlackVolatility on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = "+volatility2);
         }
 
         //Calculating blackVolatility using maturity as 32 days after today and strike as 40
         volatility3 = varianceCurve.blackVol(date32.clone(), 40);
         final double impliedVolatility3 = impliedVolTermStructure.blackVol(date32.clone(), 40);
         if(volatility3 == impliedVolatility3){
-            System.out.println("Interpolated BlackVolatility on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = -->"+volatility3);
+            System.out.println("Interpolated BlackVolatility on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = "+volatility3);
         }
 
 
@@ -340,21 +340,21 @@ public class VolatilityTermStructures implements Runnable {
         forwardVolatility1 = varianceCurve.blackForwardVol(date12.clone(), date16.clone(), 20, true);
         final double impliedForwardVolatility1 = impliedVolTermStructure.blackForwardVol(date12.clone(), date16.clone(), 20, true);
         if(forwardVolatility1 == impliedForwardVolatility1){
-            System.out.println("Interpolated BlackForwardVolatility on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = -->"+forwardVolatility1);
+            System.out.println("Interpolated BlackForwardVolatility on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = "+forwardVolatility1);
         }
 
         //Calculating blackForwardVolatility between 22 days after today and 26 days after today with strike as 40
         forwardVolatility2 = varianceCurve.blackForwardVol(date22.clone(), date26.clone(), 40, true);
         final double impliedForwardVolatility2 = impliedVolTermStructure.blackForwardVol(date22.clone(), date26.clone(), 40, true);
         if(forwardVolatility2 == impliedForwardVolatility2){
-            System.out.println("Interpolated BlackForwardVolatility on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = -->"+forwardVolatility2);
+            System.out.println("Interpolated BlackForwardVolatility on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = "+forwardVolatility2);
         }
 
         //Calculating blackForwardVolatility between 27 days after today and 35 days after today with strike as 60
         forwardVolatility3 = varianceCurve.blackForwardVol(date27.clone(), date35.clone(), 60, true);
         final double impliedForwardVolatility3 = impliedVolTermStructure.blackForwardVol(date27.clone(), date35.clone(), 60, true);
         if(forwardVolatility3 == impliedForwardVolatility3){
-            System.out.println("Interpolated BlackForwardVolatility on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = -->"+forwardVolatility3);
+            System.out.println("Interpolated BlackForwardVolatility on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = "+forwardVolatility3);
         }
 
 
@@ -362,14 +362,14 @@ public class VolatilityTermStructures implements Runnable {
         final double variance = varianceCurve.blackVariance(date12.clone(), 20);
         final double impliedVariance = impliedVolTermStructure.blackVariance(date12.clone(), 20);
         if(variance == impliedVariance){
-            System.out.println("Interpolated BlackVariance on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = -->"+varianceCurve.blackVariance(date12.clone(), 20));
+            System.out.println("Interpolated BlackVariance on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = "+varianceCurve.blackVariance(date12.clone(), 20));
         }
 
         //Calculating blackForwardVariance between 12 days after today and 16 days after today with strike as 20
         final double forwardVariance = varianceCurve.blackForwardVariance(date12.clone(), date16.clone(), 20, true);
         final double impliedForwardVariance = impliedVolTermStructure.blackForwardVariance(date12.clone(), date16.clone(), 20, true);
         if(forwardVariance == impliedForwardVariance){
-            System.out.println("Interpolated BlackForwardVariance on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = -->"+varianceCurve.blackForwardVariance(date12.clone(), date16.clone(), 20, true));
+            System.out.println("Interpolated BlackForwardVariance on BlackVarianceCurve is same for varianceCurve and ImpliedVolTermStructure derived on it and = "+varianceCurve.blackForwardVariance(date12.clone(), date16.clone(), 20, true));
         }
 
         System.out.println("//================================LocalConstantVol=======================================");
@@ -402,19 +402,19 @@ public class VolatilityTermStructures implements Runnable {
 
         //Calculating blackVolatility using maturity as 12 days after today and strike as 20
         volatility1 = localVolatilityCurve.localVol(date12.clone(), 20,true);
-        System.out.println("Interpolated BlackVolatility on LocalVolCurve-->"+volatility1);
+        System.out.println("Interpolated BlackVolatility on LocalVolCurve = "+volatility1);
 
         //Calculating blackVolatility using maturity as 22 days after today and strike as 30
         volatility2 = localVolatilityCurve.localVol(date22.clone(), 30,true);
-        System.out.println("Interpolated BlackVolatility on LocalVolCurve-->"+volatility2);
+        System.out.println("Interpolated BlackVolatility on LocalVolCurve = "+volatility2);
 
         //Calculating blackVolatility using maturity as 32 days after today and strike as 40
         volatility3 = localVolatilityCurve.localVol(date32.clone(), 40,true);
-        System.out.println("Interpolated BlackVolatility on LocalVolCurve-->"+volatility3);
+        System.out.println("Interpolated BlackVolatility on LocalVolCurve = "+volatility3);
 
 
-        System.out.println("//================================LocalVolSurface========================================");
         //TODO
+        // System.out.println("//================================LocalVolSurface========================================");
 
         clock.stopClock();
         clock.log();

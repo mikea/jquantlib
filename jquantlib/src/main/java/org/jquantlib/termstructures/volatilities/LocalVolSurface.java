@@ -60,6 +60,8 @@ import org.jquantlib.util.Visitor;
  * Jim Gatheral, Fall Term, 2003
  *
  * @see <a href="http://www.math.nyu.edu/fellows_fin_math/gatheral/Lecture1_Fall02.pdf">This article</a>
+ *
+ * @author Richard Gomes
  */
 // TODO: this class is untested, probably unreliable.
 public class LocalVolSurface extends LocalVolTermStructure {
@@ -215,10 +217,11 @@ public class LocalVolSurface extends LocalVolTermStructure {
     @Override
     public void accept(final TypedVisitor<TermStructure> v) {
         final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null)
+        if (v1 != null) {
             v1.visit(this);
-        else
+        } else {
             super.accept(v);
+        }
     }
 
 }

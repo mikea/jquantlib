@@ -44,6 +44,8 @@ package org.jquantlib.instruments;
 
 /**
  * Intermediate class for typed payoffs (CALL/PUT) with a fixed strike price
+ *
+ * @author Richard Gomes
  */
 public abstract class StrikedTypePayoff extends TypePayoff {
 

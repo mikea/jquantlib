@@ -55,7 +55,7 @@ package org.jquantlib.samples;
 import org.jquantlib.QL;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.samples.util.ReplicationError;
-import org.jquantlib.util.StopClock;
+import org.jquantlib.samples.util.StopClock;
 
 
 // FIXME :: This class needs code review ::

@@ -13,7 +13,7 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
@@ -43,9 +43,9 @@ import org.jquantlib.time.TimeGrid;
 
 /**
  * Single-factor random walk
- * 
+ *
  * @note The path includes the initial asset value as its first point.
- * 
+ *
  * @author Richard Gomes
  */
 
@@ -60,7 +60,7 @@ public class Path {
     /**
      * This field represents the {@link TimeGrid} held by this Path.
      * <p>
-     * This field can has public read access via getter 
+     * This field can has public read access via getter
      * but can only be written by friend classes (same package)
      */
     private TimeGrid timeGrid_;
@@ -68,12 +68,12 @@ public class Path {
     /**
      * This field represents contains a double[] held by this Path.
      * <p>
-     * This field can has public read access via getter 
+     * This field can has public read access via getter
      * but can only be written by friend classes (same package)
      */
     private double[] values_;
-    
-    
+
+
     //
     // public getters
     //
@@ -93,8 +93,8 @@ public class Path {
     //
     // package private setters
     //
-    
-    /*@PackagePrivate*/ void setTimeGrid_(TimeGrid timeGrid_) {
+
+    /*@PackagePrivate*/ void setTimeGrid_(final TimeGrid timeGrid_) {
         this.timeGrid_ = timeGrid_;
     }
 
@@ -105,8 +105,8 @@ public class Path {
     /*@PackagePrivate*/ void setValues_(final int i, final double value) {
         this.values_[i] = value;
     }
-    
-    
+
+
     //
     // public constructors
     //
@@ -114,35 +114,34 @@ public class Path {
     public Path(final TimeGrid timeGrid) {
         this(timeGrid, null);
     }
-    
+
     public Path(final TimeGrid timeGrid, final double[] values) {
-        if (System.getProperty("EXPERIMENTAL")==null) {
+        if (System.getProperty("EXPERIMENTAL")==null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         this.timeGrid_ = timeGrid;
         if (values == null || values.length == 0) {
             values_ = new double[timeGrid_.size()];
         } else {
-            this.values_   = values;    
+            this.values_ = values; // TODO: clone() ?
         }
         if (values_.length != timeGrid_.size())
             throw new IllegalArgumentException("different number of times and asset values"); // FIXME: message
     }
 
-    
+
     //
     // public methods
     //
-    
+
     public boolean empty() /* @ReadOnly */{
         return timeGrid_.empty();
     }
 
     public/* @NonNegative */int length() /* @ReadOnly */{
         return timeGrid_.size();
-    }    
-    
-    public/* @Time */double time(/* @NonNegative */int i) /* @ReadOnly */{
+    }
+
+    public/* @Time */double time(/* @NonNegative */final int i) /* @ReadOnly */{
         return timeGrid_.get(i);
     }
 
@@ -163,11 +162,11 @@ public class Path {
 
 //
 //XXX
-//    
+//
 //    //
 //    // read-only versions of get, at, value, front and back
 //    //
-//    
+//
 //    public/* @Real */double get(/* @NonNegative */int i) /* @ReadOnly */{
 //        return values_.get(i);
 //    }
@@ -189,11 +188,11 @@ public class Path {
 //    }
 //
 //
-//    
+//
 //    //
 //    // read-write versions of get, at, value, front and back
 //    //
-//    
+//
 //    public DoubleReference getReference(/*@NonNegative*/ int i) {
 //        return values_.getReference(i);
 //    }

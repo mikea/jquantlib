@@ -61,6 +61,8 @@ import org.jquantlib.lang.exceptions.LibraryException;
  * A calendar should be defined for specific exchange holiday schedule or for
  * general country holiday schedule. Legacy city holiday schedule calendars will
  * be moved to the exchange/country convention.
+ *
+ * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Zahid Hussain", "Richard Gomes" })
 public class Calendar {

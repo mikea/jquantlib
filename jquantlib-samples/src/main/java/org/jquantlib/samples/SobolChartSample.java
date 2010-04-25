@@ -24,6 +24,9 @@ public class SobolChartSample implements Runnable {
     }
 
     public void run() {
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
+
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 
         final SobolChartFrame frame = new SobolChartFrame("Sobol Chart Sample");

@@ -1,6 +1,5 @@
 /*
- Copyright (C)
- 2009 Ueli Hofstetter
+ Copyright (C) 2009 Ueli Hofstetter
 
  This source code is release under the BSD License.
 
@@ -20,18 +19,39 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+
+/*
+ Copyright (C) 2007 Francois du Vignaud
+ Copyright (C) 2003 Niels Elken Sonderby
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.math.integrals;
 
 import org.jquantlib.QL;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.Ops;
 
-//! Integral of a 1-dimensional function using the Gauss-Kronrod methods
-/*! This class provide a non-adaptive integration procedure which
+/**
+ * Integral of a 1-dimensional function using the Gauss-Kronrod methods
+ * <p>
+ * This class provide a non-adaptive integration procedure which
  uses fixed Gauss-Kronrod abscissae to sample the integrand at
  a maximum of 87 points.  It is provided for fast integration
  of smooth functions.
-
+<p>
  This function applies the Gauss-Kronrod 10-point, 21-point, 43-point
  and 87-point integration rules in succession until an estimate of the
  integral of f over (a, b) is achieved within the desired absolute and
@@ -41,6 +61,8 @@ import org.jquantlib.math.Ops;
  Gauss-Kronrod rules are designed in such a way that each rule uses
  all the results of its predecessors, in order to minimize the total
  number of function evaluations.
+
+ * @author Ueli Hofstetter
  */
 public class GaussKronrodNonAdaptive extends KronrodIntegral {
 

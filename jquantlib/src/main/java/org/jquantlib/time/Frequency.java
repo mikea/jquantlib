@@ -46,6 +46,8 @@ import org.jquantlib.lang.exceptions.LibraryException;
 
 /**
  * Frequency of events
+ *
+ * @author Richard Gomes
  */
 // TODO: document methods
 public enum Frequency {

@@ -57,6 +57,11 @@ import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 
+/**
+ * This class provides a more comfortable way to instantiate standard market swap.
+ *
+ * @author John Martin
+ */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 // TODO: consider refactoring this class and make it an inner class
 public class MakeVanillaSwap {

@@ -21,6 +21,7 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.samples.util.StopClock;
 import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -37,7 +38,6 @@ import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.time.calendars.UnitedStates;
-import org.jquantlib.util.StopClock;
 
 public class Bonds implements Runnable {
 
@@ -46,6 +46,9 @@ public class Bonds implements Runnable {
     }
 
     public void run() {
+
+        if (System.getProperty("EXPERIMENTAL") == null)
+            throw new UnsupportedOperationException("Work in progress");
 
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 

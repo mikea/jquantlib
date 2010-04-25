@@ -47,8 +47,10 @@ import org.jquantlib.math.matrixutilities.Array;
 /**
  * Interface for 1-D interpolations.
  * <p>
- * Classes which implement this interface will provide interpolated values from two sequences of equal length, representing
- * discretized values of a variable and a function of the former, respectively.
+ * Classes implementing from this interface will provide interpolated
+ * values from two sequences of equal length, representing
+ * discretized values of a variable and a function of the former,
+ * respectively.
  *
  * @author Richard Gomes
  */

@@ -16,7 +16,6 @@ import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
-import org.jquantlib.util.StopClock;
 import org.junit.Test;
 
 public class CRRDividendOptionTest implements Runnable {
@@ -83,11 +82,9 @@ public class CRRDividendOptionTest implements Runnable {
 
     @Test
     public void testEuropeanDividendOption() {
-        if (!quiet)
+        if (!quiet) {
             QL.info("::::: " + this.getClass().getSimpleName() + " ::::: European Dividend Option :::::");
-
-        final StopClock clock = new StopClock();
-        clock.startClock();
+        }
 
         new Settings().setEvaluationDate(today);
 
@@ -107,8 +104,6 @@ public class CRRDividendOptionTest implements Runnable {
         // market price: simply guess something 10% higher than theoretical
         // final double ivol = option.impliedVolatility(value*1.10);
 
-        clock.stopClock();
-
         if (!quiet) {
             QL.info(String.format("value       = %13.9f", value));
             QL.info(String.format("delta       = %13.9f", delta));
@@ -117,17 +112,14 @@ public class CRRDividendOptionTest implements Runnable {
             QL.info(String.format("vega        = %13.9f", vega));
             QL.info(String.format("rho         = %13.9f", rho));
             // QL.info(String.format("implied vol = %13.9f", ivol));
-            clock.log();
         }
     }
 
     @Test
     public void testAmericanDividendOption() {
-        if (!quiet)
+        if (!quiet) {
             QL.info("::::: " + this.getClass().getSimpleName() + " ::::: American Dividend Option :::::");
-
-        final StopClock clock = new StopClock();
-        clock.startClock();
+        }
 
         new Settings().setEvaluationDate(today);
 
@@ -147,8 +139,6 @@ public class CRRDividendOptionTest implements Runnable {
         // market price: simply guess something 10% higher than theoretical
         //FIXME final double ivol = option.impliedVolatility(value*1.10);
 
-        clock.stopClock();
-
         if (!quiet) {
             QL.info(String.format("value       = %13.9f", value));
             QL.info(String.format("delta       = %13.9f", delta));
@@ -157,7 +147,6 @@ public class CRRDividendOptionTest implements Runnable {
             QL.info(String.format("vega        = %13.9f", vega));
             QL.info(String.format("rho         = %13.9f", rho));
             // QL.info(String.format("implied vol = %13.9f", ivol));
-            clock.log();
         }
     }
 

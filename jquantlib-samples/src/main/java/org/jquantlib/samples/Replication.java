@@ -37,6 +37,7 @@ import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.samples.util.StopClock;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
@@ -44,7 +45,6 @@ import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.calendars.NullCalendar;
-import org.jquantlib.util.StopClock;
 
 public class Replication implements Runnable {
 

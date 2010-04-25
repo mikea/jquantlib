@@ -131,30 +131,34 @@ public class OperatorTest {
 
     public void outputDiagonals(final TridiagonalOperator op) {
         QL.info("\n");
-        String str = "[";
+
+        StringBuilder sb;
+        sb = new StringBuilder();
+        sb.append("[ ");
         Array data = op.lowerDiagonal();
         for(int i = 0; i < data.size(); i++) {
-            str += String.format(" %.4f ", data.get(i));
+            sb.append(String.format(" %.4f ", data.get(i)));
         }
-        str += "]";
-        QL.info(str);
+        sb.append(" ]");
+        QL.info(sb.toString());
 
-        str = "[";
+        sb = new StringBuilder();
+        sb.append("[ ");
         data = op.diagonal();
         for(int i = 0; i < data.size(); i++) {
-            str += String.format(" %.4f ", data.get(i));
+            sb.append(String.format(" %.4f ", data.get(i)));
         }
-        str += "]";
-        QL.info(str);
+        sb.append(" ]");
+        QL.info(sb.toString());
 
-        str = "[";
+        sb = new StringBuilder();
+        sb.append("[ ");
         data = op.upperDiagonal();
         for(int i = 0; i < data.size(); i++) {
-            str += String.format(" %.4f ", data.get(i));
+            sb.append(String.format(" %.4f ", data.get(i)));
         }
-        str += "]";
-        QL.info(str);
-
+        sb.append(" ]");
+        QL.info(sb.toString());
     }
 
     @Test

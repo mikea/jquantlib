@@ -91,12 +91,10 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     //
 
     static private Interpolator constructInterpolator(final Class<?> klass) {
-        if (klass==null) {
+        if (klass==null)
             throw new LibraryException("null interpolator"); // TODO: message
-        }
-        if (!Interpolator.class.isAssignableFrom(klass)) {
+        if (!Interpolator.class.isAssignableFrom(klass))
             throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
-        }
 
         try {
             return (Interpolator) klass.newInstance();
@@ -121,9 +119,8 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
         QL.validateExperimentalMode();
 
         this.classI = new TypeTokenTree(this.getClass()).getElement(0);
-        if (classI != interpolator.getClass()) {
+        if (classI != interpolator.getClass())
             throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
-        }
         this.interpolator = interpolator;
     }
 
@@ -175,9 +172,8 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
         QL.validateExperimentalMode();
 
         this.classI = new TypeTokenTree(this.getClass()).getElement(0);
-        if (classI != interpolator.getClass()) {
+        if (classI != interpolator.getClass())
             throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
-        }
         this.interpolator = interpolator;
     }
 
@@ -212,17 +208,16 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
         QL.validateExperimentalMode();
 
         this.classI = new TypeTokenTree(this.getClass()).getElement(0);
-        if (classI != interpolator.getClass()) {
+        if (classI != interpolator.getClass())
             throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
-        }
 
         QL.require (dates.length != 0, " Dates cannot be empty"); // TODO: message
         QL.require (discounts.length != 0, "Discounts cannot be empty"); // TODO: message
         QL.require (dates.length == data.length, "Dates must be the same size as Discounts"); // TODO: message
         QL.require (data[0] == 1.0, "Initial discount factor must be 1.0"); // TODO: message
 
-        this.dates = dates;
-        this.data = discounts;
+        this.dates = dates; // TODO: clone() ?
+        this.data = discounts; // TODO: clone() ?
         this.interpolator = interpolator;
 
         this.times = new double[dates.length];

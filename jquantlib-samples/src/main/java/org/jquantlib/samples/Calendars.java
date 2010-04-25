@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.QL;
+import org.jquantlib.samples.util.StopClock;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
@@ -33,7 +34,6 @@ import org.jquantlib.time.calendars.JointCalendar;
 import org.jquantlib.time.calendars.UnitedStates;
 import org.jquantlib.time.calendars.JointCalendar.JointCalendarRule;
 import org.jquantlib.time.calendars.UnitedStates.Market;
-import org.jquantlib.util.StopClock;
 
 /**
  * This class explores the functionalities provided by Calendar interface.
@@ -49,10 +49,6 @@ public class Calendars implements Runnable {
     }
 
     public void run() {
-
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
 
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 

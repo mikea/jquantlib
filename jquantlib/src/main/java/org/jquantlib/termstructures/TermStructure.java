@@ -46,6 +46,11 @@ import org.jquantlib.time.Date;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
+/**
+ * Interface for term structures
+ *
+ * @author Richard Gomes
+ */
 public abstract interface TermStructure extends Extrapolator, Observer, Observable {
 
     /**

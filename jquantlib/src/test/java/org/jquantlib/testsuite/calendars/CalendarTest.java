@@ -74,13 +74,12 @@ public class CalendarTest {
             eom = c.endOfMonth(counter);
             // check that eom is eom
             if (!c.isEndOfMonth(eom)) {
-                Assert.fail(String.format("%s %s is not the last business day in %s according to %s",
-                        new Object[] { eom.weekday(), eom, eom.month(), eom.year(), c.name() }));
+                Assert.fail(String.format("%s %s %s is not the last business day in %s according to %s",
+                        eom.weekday(), eom.dayOfMonth(), eom.month(), eom.year(), c.name() ));
             }
             // check that eom is in the same month as counter
             if (eom.month()!=counter.month()) {
-                Assert.fail(String.format("%s is not the same month as %s",
-                        new Object[] { eom, counter }));
+                Assert.fail(String.format("%s is not the same month as %s", eom, counter ));
             }
             counter.addAssign(1);
         }

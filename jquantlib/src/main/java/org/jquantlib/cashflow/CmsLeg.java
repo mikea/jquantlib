@@ -58,8 +58,8 @@ import org.jquantlib.time.Schedule;
  */
 public class CmsLeg {
 
-    private Schedule schedule_;
-    private SwapIndex swapIndex_;
+    private final Schedule schedule_;
+    private final SwapIndex swapIndex_;
     private/* @Real */Array notionals_;
     private DayCounter paymentDayCounter_;
     private BusinessDayConvention paymentAdjustment_;
@@ -71,7 +71,7 @@ public class CmsLeg {
 
     public CmsLeg(final Schedule schedule, final SwapIndex swapIndex) {
         QL.validateExperimentalMode();
-        
+
         schedule_ = (schedule);
         swapIndex_ = (swapIndex);
         paymentAdjustment_ = (BusinessDayConvention.Following);
@@ -79,7 +79,7 @@ public class CmsLeg {
         zeroPayments_ = (false);
     }
 
-    public CmsLeg withNotionals(/* Real */double notional) {
+    public CmsLeg withNotionals(/* Real */final double notional) {
         notionals_ = new Array(1).fill(notional);
         return this;
     }
@@ -94,22 +94,22 @@ public class CmsLeg {
         return this;
     }
 
-    public CmsLeg withPaymentAdjustment(BusinessDayConvention convention) {
+    public CmsLeg withPaymentAdjustment(final BusinessDayConvention convention) {
         paymentAdjustment_ = convention;
         return this;
     }
 
-    public CmsLeg withFixingDays(/* Natural */int fixingDays) {
+    public CmsLeg withFixingDays(/* Natural */final int fixingDays) {
         fixingDays_ = new int[] { fixingDays };
         return this;
     }
 
     public CmsLeg withFixingDays(final int[] fixingDays) {
-        fixingDays_ = fixingDays;
+        fixingDays_ = fixingDays; // TODO: clone() ?
         return this;
     }
 
-    public CmsLeg withGearings(/* Real */double gearing) {
+    public CmsLeg withGearings(/* Real */final double gearing) {
         gearings_ = new Array(1).fill(gearing);
         return this;
     }
@@ -119,7 +119,7 @@ public class CmsLeg {
         return this;
     }
 
-    public CmsLeg withSpreads(/* Spread */double spread) {
+    public CmsLeg withSpreads(/* Spread */final double spread) {
         spreads_ = new Array(1).fill(spread);
         return this;
     }
@@ -129,7 +129,7 @@ public class CmsLeg {
         return this;
     }
 
-    public CmsLeg withCaps(/* @Rate */double cap) {
+    public CmsLeg withCaps(/* @Rate */final double cap) {
         caps_ = new Array(1).fill(cap);
         return this;
     }
@@ -139,7 +139,7 @@ public class CmsLeg {
         return this;
     }
 
-    public CmsLeg withFloors(/* @Rate */double floor) {
+    public CmsLeg withFloors(/* @Rate */final double floor) {
         floors_ = new Array(1).fill(floor);
         return this;
     }
@@ -149,12 +149,12 @@ public class CmsLeg {
         return this;
     }
 
-    public CmsLeg inArrears(boolean flag) {
+    public CmsLeg inArrears(final boolean flag) {
         inArrears_ = flag;
         return this;
     }
 
-    public CmsLeg withZeroPayments(boolean flag) {
+    public CmsLeg withZeroPayments(final boolean flag) {
         zeroPayments_ = flag;
         return this;
     }
@@ -162,14 +162,14 @@ public class CmsLeg {
     public Leg Leg() {
         throw new UnsupportedOperationException ("Work in progress");
         // FIXME
-        
+
         /*
     	final Leg cashflows = new FloatingLeg <SwapIndex, CmsCoupon, CappedFlooredCmsCoupon>
-          (notionals_, schedule_, swapIndex_, paymentDayCounter_, 
-           paymentAdjustment_, fixingDays_, gearings_, spreads_, 
+          (notionals_, schedule_, swapIndex_, paymentDayCounter_,
+           paymentAdjustment_, fixingDays_, gearings_, spreads_,
            caps_, floors_, inArrears_, zeroPayments_) {};
-      
-        PricerSetter.setCouponPricer (cashflows, new CmsCouponPricer 
+
+        PricerSetter.setCouponPricer (cashflows, new CmsCouponPricer
                                     (new Handle <OptionletVolatilityStructure ()));
         */
         //return new Leg();

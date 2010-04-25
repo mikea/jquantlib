@@ -34,6 +34,8 @@ import org.jquantlib.time.Date;
  * sequence of operations defined by the enclosing thread.
  *
  * @see ThreadLocal
+ *
+ * @author Richard Gomes
  */
 public class Settings {
 
@@ -212,8 +214,9 @@ public class Settings {
         }
 
         private DateProxy value() /* @ReadOnly */ {
-            if (isNull())
+            if (isNull()) {
                 super.assign(todaysSerialNumber());
+            }
             return this;
         }
 

@@ -368,7 +368,7 @@ public class Money implements Cloneable {
     @Override
     public String toString() {
         final Currency currency = currency();
-        return String.format(currency.format(), new Object[] { rounded().value_, currency.code(), currency.symbol() } );
+        return String.format(currency.format(), rounded().value_, currency.code(), currency.symbol() );
     }
 
 

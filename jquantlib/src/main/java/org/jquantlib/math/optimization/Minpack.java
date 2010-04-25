@@ -1,9 +1,3 @@
-package org.jquantlib.math.optimization;
-
-import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.math.matrixutilities.Matrix;
-import org.jquantlib.math.matrixutilities.internal.Address;
-
 /*
  Copyright (C) 2010 Richard Gomes
 
@@ -22,10 +16,96 @@ import org.jquantlib.math.matrixutilities.internal.Address;
 
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
+*/
+
+/*
+The original Fortran version is Copyright (C) 1999 University of Chicago.
+All rights reserved.
+<p>
+Redistribution and use in source and binary forms, with or
+without modification, are permitted provided that the
+following conditions are met:
+<p>
+1. Redistributions of source code must retain the above
+copyright notice, this list of conditions and the following
+disclaimer.
+<p>
+2. Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following
+disclaimer in the documentation and/or other materials
+provided with the distribution.
+<p>
+3. The end-user documentation included with the
+redistribution, if any, must include the following
+acknowledgment:
+<p>
+   <i>This product includes software developed by the
+   University of Chicago, as Operator of Argonne National
+   Laboratory.</i>
+<p>
+Alternately, this acknowledgment may appear in the software
+itself, if and wherever such third-party acknowledgments
+normally appear.
+<p>
+4. WARRANTY DISCLAIMER. THE SOFTWARE IS SUPPLIED "AS IS"
+WITHOUT WARRANTY OF ANY KIND. THE COPYRIGHT HOLDER, THE
+UNITED STATES, THE UNITED STATES DEPARTMENT OF ENERGY, AND
+THEIR EMPLOYEES: (1) DISCLAIM ANY WARRANTIES, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES
+OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE
+OR NON-INFRINGEMENT, (2) DO NOT ASSUME ANY LEGAL LIABILITY
+OR RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR
+USEFULNESS OF THE SOFTWARE, (3) DO NOT REPRESENT THAT USE OF
+THE SOFTWARE WOULD NOT INFRINGE PRIVATELY OWNED RIGHTS, (4)
+DO NOT WARRANT THAT THE SOFTWARE WILL FUNCTION
+UNINTERRUPTED, THAT IT IS ERROR-FREE OR THAT ANY ERRORS WILL
+BE CORRECTED.
+<p>
+5. LIMITATION OF LIABILITY. IN NO EVENT WILL THE COPYRIGHT
+HOLDER, THE UNITED STATES, THE UNITED STATES DEPARTMENT OF
+ENERGY, OR THEIR EMPLOYEES: BE LIABLE FOR ANY INDIRECT,
+INCIDENTAL, CONSEQUENTIAL, SPECIAL OR PUNITIVE DAMAGES OF
+ANY KIND OR NATURE, INCLUDING BUT NOT LIMITED TO LOSS OF
+PROFITS OR LOSS OF DATA, FOR ANY REASON WHATSOEVER, WHETHER
+SUCH LIABILITY IS ASSERTED ON THE BASIS OF CONTRACT, TORT
+(INCLUDING NEGLIGENCE OR STRICT LIABILITY), OR OTHERWISE,
+EVEN IF ANY OF SAID PARTIES HAS BEEN WARNED OF THE
+POSSIBILITY OF SUCH LOSS OR DAMAGES.
+<p>
+<p>
+<p>
+C translation Copyright (C) Steve Moshier
+<p>
+What you see here may be used freely but it comes with no support
+or guarantee.
+*/
+
+package org.jquantlib.math.optimization;
+
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.math.matrixutilities.Matrix;
+import org.jquantlib.math.matrixutilities.internal.Address;
+
+
+/**
+ * This class provides linear algebra optimization algorithms.
+ * <p>
+ * The original Fortran version is Copyright (C) 1999 University of Chicago. All rights reserved.<br/>
+ * C translation :: Copyright (C) Steve Moshier<br/>
+ * Adapted to JQuantLib :: Copyright (C) 2010 Richard Gomes
+ * <p>
+ * Brief history:<br/>
+ * Original sources were developed in FORTRAN language.<br/>
+ * Later sources were translated to C language.<br>
+ * Finally we made this very crude (and certainly insufficient) adaptation to work with JQuantLib/Java.
+ * <p>
+ * Ideally, these sources should be ready to smoothly work with classes {@link Matrix} and {@link Array}.
+ * At the moment, we require that underlying data structures are accessed directly, which is clearly very
+ * far from ideal because it breaks the paradigm offered by interface {@link Address}.
+ *
+ * @author Richard Gomes
  */
-
 public class Minpack {
-
 
 
     public static void qrfac(
@@ -42,88 +122,6 @@ public class Minpack {
     }
 
 
-
-
-
-
-    /**
-     * This class provides linear algebra optimization algorithms.
-     * <p>
-     * The original Fortran version is Copyright (C) 1999 University of Chicago. All rights reserved.<br/>
-     * C translation :: Copyright (C) Steve Moshier<br/>
-     * Adapted to JQuantLib :: Copyright (C) 2010 Richard Gomes
-     * <p>
-     * Brief history:<br/>
-     * Original sources were developed in FORTRAN language.<br/>
-     * Later sources were translated to C language.<br>
-     * Finally we made this very crude (and certainly insufficient) adaptation to work with JQuantLib/Java.
-     * <p>
-     * Ideally, these sources should be ready to smoothly work with classes {@link Matrix} and {@link Array}.
-     * At the moment, we require that underlying data structures are accessed directly, which is clearly very
-     * far from ideal because it breaks the paradigm offered by interface {@link Address}.
-     */
-
-    /*
-    The original Fortran version is Copyright (C) 1999 University of Chicago.
-    All rights reserved.
-    <p>
-    Redistribution and use in source and binary forms, with or
-    without modification, are permitted provided that the
-    following conditions are met:
-    <p>
-    1. Redistributions of source code must retain the above
-    copyright notice, this list of conditions and the following
-    disclaimer.
-    <p>
-    2. Redistributions in binary form must reproduce the above
-    copyright notice, this list of conditions and the following
-    disclaimer in the documentation and/or other materials
-    provided with the distribution.
-    <p>
-    3. The end-user documentation included with the
-    redistribution, if any, must include the following
-    acknowledgment:
-    <p>
-       <i>This product includes software developed by the
-       University of Chicago, as Operator of Argonne National
-       Laboratory.</i>
-    <p>
-    Alternately, this acknowledgment may appear in the software
-    itself, if and wherever such third-party acknowledgments
-    normally appear.
-    <p>
-    4. WARRANTY DISCLAIMER. THE SOFTWARE IS SUPPLIED "AS IS"
-    WITHOUT WARRANTY OF ANY KIND. THE COPYRIGHT HOLDER, THE
-    UNITED STATES, THE UNITED STATES DEPARTMENT OF ENERGY, AND
-    THEIR EMPLOYEES: (1) DISCLAIM ANY WARRANTIES, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO ANY IMPLIED WARRANTIES
-    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE
-    OR NON-INFRINGEMENT, (2) DO NOT ASSUME ANY LEGAL LIABILITY
-    OR RESPONSIBILITY FOR THE ACCURACY, COMPLETENESS, OR
-    USEFULNESS OF THE SOFTWARE, (3) DO NOT REPRESENT THAT USE OF
-    THE SOFTWARE WOULD NOT INFRINGE PRIVATELY OWNED RIGHTS, (4)
-    DO NOT WARRANT THAT THE SOFTWARE WILL FUNCTION
-    UNINTERRUPTED, THAT IT IS ERROR-FREE OR THAT ANY ERRORS WILL
-    BE CORRECTED.
-    <p>
-    5. LIMITATION OF LIABILITY. IN NO EVENT WILL THE COPYRIGHT
-    HOLDER, THE UNITED STATES, THE UNITED STATES DEPARTMENT OF
-    ENERGY, OR THEIR EMPLOYEES: BE LIABLE FOR ANY INDIRECT,
-    INCIDENTAL, CONSEQUENTIAL, SPECIAL OR PUNITIVE DAMAGES OF
-    ANY KIND OR NATURE, INCLUDING BUT NOT LIMITED TO LOSS OF
-    PROFITS OR LOSS OF DATA, FOR ANY REASON WHATSOEVER, WHETHER
-    SUCH LIABILITY IS ASSERTED ON THE BASIS OF CONTRACT, TORT
-    (INCLUDING NEGLIGENCE OR STRICT LIABILITY), OR OTHERWISE,
-    EVEN IF ANY OF SAID PARTIES HAS BEEN WARNED OF THE
-    POSSIBILITY OF SUCH LOSS OR DAMAGES.
-    <p>
-    <p>
-    <p>
-    C translation Copyright (C) Steve Moshier
-    <p>
-    What you see here may be used freely but it comes with no support
-    or guarantee.
-    */
     private static class MinpackC {
 
         private static final double MACHEP = 1.2e-16; // resolution of arithmetic

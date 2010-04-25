@@ -41,6 +41,7 @@
 
 package org.jquantlib.exercise;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.jquantlib.QL;
@@ -92,8 +93,10 @@ public class BermudanExercise extends EarlyExercise {
 			super.type = Exercise.Type.European;
 			super.payoffAtExpiry = false;
 		}
-		for (final Date date : dates)
+		for (final Date date : dates) {
             super.dates.add(date);
+        }
+		Arrays.sort(dates);
 	}
 
 }

@@ -52,6 +52,7 @@ import org.jquantlib.processes.BlackScholesMertonProcess;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.samples.util.StopClock;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.volatilities.BlackConstantVol;
@@ -65,7 +66,6 @@ import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
-import org.jquantlib.util.StopClock;
 
 /**
  * This example evaluates convertible bond prices.
@@ -83,9 +83,8 @@ public class ConvertibleBonds implements Runnable {
 
     public void run() {
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 
@@ -243,43 +242,43 @@ public class ConvertibleBonds implements Runnable {
         engine = new BinomialConvertibleEngine<JarrowRudd>(stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
-        System.out.printf(fmt, new Object[] { method, europeanBond.NPV(), americanBond.NPV() });
+        System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
         method = "Cox-Ross-Rubinstein";
         engine = new BinomialConvertibleEngine<CoxRossRubinstein>(stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
-        System.out.printf(fmt, new Object[] { method, europeanBond.NPV(), americanBond.NPV() });
+        System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
         method = "Additive equiprobabilities";
         engine = new BinomialConvertibleEngine<AdditiveEQPBinomialTree>(stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
-        System.out.printf(fmt, new Object[] { method, europeanBond.NPV(), americanBond.NPV() });
+        System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
         method = "Trigeorgis";
         engine = new BinomialConvertibleEngine<Trigeorgis>(stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
-        System.out.printf(fmt, new Object[] { method, europeanBond.NPV(), americanBond.NPV() });
+        System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
         method = "Tian";
         engine = new BinomialConvertibleEngine<Tian>(stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
-        System.out.printf(fmt, new Object[] { method, europeanBond.NPV(), americanBond.NPV() });
+        System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
         method = "Leisen-Reimer";
         engine = new BinomialConvertibleEngine<LeisenReimer>(stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
-        System.out.printf(fmt, new Object[] { method, europeanBond.NPV(), americanBond.NPV() });
+        System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
         method = "Joshi";
         engine = new BinomialConvertibleEngine<Joshi4>(stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
-        System.out.printf(fmt, new Object[] { method, europeanBond.NPV(), americanBond.NPV() });
+        System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
 
         clock.stopClock();
