@@ -19,6 +19,24 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+
+/*
+ Copyright (C) 2005 Joseph Wang
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.methods.finitedifferences;
 
 import org.jquantlib.lang.exceptions.LibraryException;
@@ -26,7 +44,13 @@ import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
 
-//
+/**
+ * General class for one dimensional PDE's
+ *
+ * @author Srinivas Hasti
+ *
+ * @param <T>
+ */
 public abstract class PdeConstantCoeff<T extends Pde> extends PdeSecondOrderParabolic {
     /* Real*/private final double diffusion;
     /* Real*/private final double drift;

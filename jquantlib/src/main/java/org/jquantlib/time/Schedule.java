@@ -315,7 +315,7 @@ public class Schedule {
                 if (rule_ == DateGeneration.Rule.Twentieth ||
                     rule_ == DateGeneration.Rule.TwentiethIMM) {
                     dates_.add(nextTwentieth(terminationDate, rule_));
-                    isRegular_.add(new Boolean(true));
+                    isRegular_.add(Boolean.valueOf(true));
                 } else {
                     dates_.add(terminationDate);
                     isRegular_.add(Boolean.valueOf(false));

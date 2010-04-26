@@ -145,21 +145,26 @@ public class BondTest {
 									new Date(),
 									new Date());
 
-
-							final FixedRateBond bond = new FixedRateBond(settlementDays, faceAmount, sch,
+							final FixedRateBond bond = new FixedRateBond(
+							        settlementDays,
+							        faceAmount,
+							        sch,
 									new double[] { coupons[k] }, bondDayCount, paymentConvention, redemption, issue);
 
 							for (int m = 0; m < (yields).length; m++) {
-
-								final double price = bond.cleanPrice(
-										yields[m], bondDayCount, compounding[n], frequencies[l]);
+								final double price = bond.cleanPrice(yields[m], bondDayCount, compounding[n], frequencies[l]);
 								final double calculated = bond.yield(
-										price, bondDayCount, compounding[n], frequencies[l], new Date(), tolerance, maxEvaluations);
+								        price,
+								        bondDayCount,
+								        compounding[n],
+								        frequencies[l],
+								        new Date(),
+								        tolerance,
+								        maxEvaluations);
 
 								if (Math.abs(yields[m] - calculated) > tolerance) {
 									// the difference might not matter
-									final double price2 = bond.cleanPrice(calculated, bondDayCount, compounding[n],
-											frequencies[l]);
+									final double price2 = bond.cleanPrice(calculated, bondDayCount, compounding[n], frequencies[l]);
 									if (Math.abs(price - price2) / price > tolerance) {
 			                            fail(
 										        "yield recalculation failed:\n" + "    issue:     " + issue + "\n"

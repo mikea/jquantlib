@@ -41,6 +41,9 @@ package org.jquantlib.model.volatility;
 
 import org.jquantlib.time.TimeSeries;
 
+/**
+ * @author Rajiv Chauhan
+ */
 public interface VolatilityCompositor {
 
 	public void calibrate(final TimeSeries<Double> timeSeries);

@@ -41,6 +41,13 @@ package org.jquantlib.model.volatility;
 
 import org.jquantlib.time.TimeSeries;
 
+/**
+ * Volatility term structures
+ *
+ * @author Richard Gomes
+ *
+ * @param <V>
+ */
 public interface LocalVolatilityEstimator<V> {
 
     TimeSeries<Double> calculate(final TimeSeries<V> quoteSeries) ;

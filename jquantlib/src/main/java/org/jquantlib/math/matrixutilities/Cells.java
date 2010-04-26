@@ -116,25 +116,6 @@ public abstract class Cells<T extends Address> implements Cloneable {
     @Deprecated
     public double[] $;
 
-//XXX
-//    /**
-//     * This is a convenience method which returns a reference to the underlying data structure which keeps data
-//     * relative to <code>this</code> object.
-//     * <p>
-//     * <b>The use of this method is highly discouraged by end-user applications.</b>
-//     * <p>
-//     * Note: this method is deprecated in order to remind application developers avoid its use.
-//     * <p>
-//     * This method makes sure that access to the underlying data can be done in a contiguous ways. This property is critical for
-//     * certain algorithms which assume that a chunk of data can be acessed in a continuous way, typically copy, swap and sort.
-//     *
-//     * @return a reference to the underlying data. If you don't know what we are talking about, you'd better avoid this method.
-//     */
-//    @Deprecated
-//    public final double[] data() /* @ReadOnly */{
-//        QL.require(addr.isContiguous() && addr.base() == 0, UnsupportedOperationException.class, "must be contiguous");
-//        return $;
-//    }
 
 
     /**

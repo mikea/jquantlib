@@ -2,7 +2,7 @@
  Copyright (C) 2008 Srinivas Hasti
 
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,20 +15,42 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+
+/*
+Copyright (C) 2005 Joseph Wang
+
+This file is part of QuantLib, a free-software/open-source library
+for financial quantitative analysts and developers - http://quantlib.org/
+
+QuantLib is free software: you can redistribute it and/or modify it
+under the terms of the QuantLib license.  You should have received a
+copy of the license along with this program; if not, please email
+<quantlib-dev@lists.sf.net>. The license is also available online at
+<http://quantlib.org/license.shtml>.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
 package org.jquantlib.methods.finitedifferences;
 
 import org.jquantlib.math.TransformedGrid;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.finitedifferences.TridiagonalOperator.TimeSetter;
 
+/**
+ * @author Srinivas Hasti
+ *
+ * @param <T>
+ */
 public class GenericTimeSetter<T extends PdeSecondOrderParabolic> implements TimeSetter {
-    private TransformedGrid grid;
-    private T pde;
-   
+    private final TransformedGrid grid;
+    private final T pde;
+
     /**
      * Signature of this method is different because
      * TypeTokens doesn't work when type token is
@@ -39,18 +61,18 @@ public class GenericTimeSetter<T extends PdeSecondOrderParabolic> implements Tim
      *         B<T> b = new B<T>(): //Its not possible to determine T inside B class
      *      }
      *   }
-     * 
+     *
      * @param grid
      * @param process
      */
-    public GenericTimeSetter(Array grid, T pde) {
+    public GenericTimeSetter(final Array grid, final T pde) {
         this.grid = pde.applyGridType(grid);
         this.pde = pde;
     }
-    
+
 
     @Override
-    public void setTime(double t, TridiagonalOperator l) {
+    public void setTime(final double t, final TridiagonalOperator l) {
         pde.generateOperator(t, grid, l);
     }
 

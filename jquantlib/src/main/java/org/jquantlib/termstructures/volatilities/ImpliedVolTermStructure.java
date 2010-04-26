@@ -58,6 +58,8 @@ import org.jquantlib.util.Visitor;
  *
  * @note It doesn't make financial sense to have an asset-dependent implied Volatility Term Structure.
  *       This class should be used with term structures that are time dependent only.
+ *
+ * @author Richard Gomes
  */
 public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
 

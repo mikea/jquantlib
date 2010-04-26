@@ -41,6 +41,9 @@ package org.jquantlib.model.volatility;
 
 import org.jquantlib.math.IntervalPrice;
 
+/**
+ * @author Anand Mani
+ */
 public class ParkinsonSigma extends GarmanKlassAbstract {
 
 	public ParkinsonSigma(final double y) {

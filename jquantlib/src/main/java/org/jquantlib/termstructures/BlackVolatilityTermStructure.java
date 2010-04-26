@@ -52,9 +52,10 @@ import org.jquantlib.util.Visitor;
  * programmer to implement only the method
  * {@link BlackVolTermStructure#blackVolImpl(double, double)} in derived
  * classes.
- *
  * <p>
  * Volatility is assumed to be expressed on an annual basis.
+ *
+ * @author Richard Gomes
  */
 abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure {
 

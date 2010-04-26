@@ -342,10 +342,9 @@ public class Bond extends Instrument {
             //FIXME: check that settlementDate() returns a new DateInsatence
             date = settlementDate();
         }
-        if (date.gt(notionalSchedule_.get(notionalSchedule_.size()-1))) {
+        if (date.gt(notionalSchedule_.get(notionalSchedule_.size()-1)))
             // after maturity
             return 0.0;
-        }
 
         // After the check above, d is between the schedule
         // boundaries.  We search starting from the second notional
@@ -359,20 +358,19 @@ public class Bond extends Instrument {
             index = - (index + 1);
         }
 
-        if (date.le(notionalSchedule_.get(index))) {
+        if (date.le(notionalSchedule_.get(index)))
             // no doubt about what to return
             //return notionals_[index-1];
             return notionals_.get(index-1);
-        } else {
-            if (new Settings().isTodaysPayments()) {
+        else {
+            if (new Settings().isTodaysPayments())
                 // We consider today's payment as pending; the bond still
                 // has the previous notional
                 return notionals_.get(index-1);
-            } else {
+            else
                 // today's payment has occurred; the bond already changed
                 // notional.
             	return notionals_.get(index);
-            }
         }
     }
 
@@ -405,11 +403,10 @@ public class Bond extends Instrument {
     }
 
     public Date maturityDate() {
-        if (maturityDate_.equals(new Date())) {
+        if (maturityDate_.equals(new Date()))
             return maturityDate_;
-        } else {
+        else
             return cashflows().get(cashflows().size() - 1).date();
-        }
 
     }
 
@@ -463,17 +460,14 @@ public class Bond extends Instrument {
         // ...but the bond won't be traded until the issue date (if given.)
 
 
-        if (issueDate_.isNull()){
+        if (issueDate_.isNull())
             return settlement;
-        }
-        else if (issueDate_.ge(settlement)){
+        else if (issueDate_.ge(settlement))
             //settlement is already a copy. In case issueDate will be returned we have to copy it.
             //FIXME: this should be by a helper method/ copy constructor!!
             return issueDate_.clone();
-        }
-        else{
+        else
             return settlement;
-        }
     }
 
     /**
@@ -492,7 +486,8 @@ public class Bond extends Instrument {
         }
         final CashFlow cf = CashFlows.getInstance().nextCashFlow(cashflows_, settlement);
 
-        if (cf==null) {return 0.0;}
+        if (cf==null)
+            return 0.0;
 
         final Date paymentDate = cf.date();
         boolean firstCouponFound = false;
@@ -681,11 +676,14 @@ public class Bond extends Instrument {
      * @param maxEvaluations
      * @return
      */
-    public/* @Real */double yield(/* @Real */final double cleanPrice,
-            final DayCounter dc, final Compounding comp, final Frequency freq,
+    public/* @Real */double yield(
+            final /* @Real */ double cleanPrice,
+            final DayCounter dc,
+            final Compounding comp,
+            final Frequency freq,
             Date settlementDate,
-            /* @Real */final double accuracy,
-            /* @Size */final int maxEvaluations) {
+            final /* @Real */ double accuracy,
+            final /* @Size */ int maxEvaluations) {
         if (settlementDate.isNull()) {
             settlementDate = settlementDate();
         }
@@ -693,7 +691,9 @@ public class Bond extends Instrument {
         final Brent solver = new Brent();
         final double dirtyPrice = cleanPrice + accruedAmount(settlementDate);
         solver.setMaxEvaluations(maxEvaluations);
-        final YieldFinder objective = new YieldFinder(notional(settlementDate), this.cashflows_,
+        final YieldFinder objective = new YieldFinder(
+                notional(settlementDate),
+                this.cashflows_,
                 dirtyPrice,
                 dc, comp, freq,
                 settlementDate);
@@ -806,10 +806,8 @@ public class Bond extends Instrument {
             settlement = settlementDate();
         }
 
-        if (engine==null) {
+        if (engine==null)
             throw new LibraryException("null pricing engine"); //// TODO: message
-
-        }
         //FIXME: DiscontingBondEngine
         QL.require(DiscountingBondEngine.class.isAssignableFrom(engine.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
         final DiscountingBondEngine discountingBondEngine = (DiscountingBondEngine)engine;

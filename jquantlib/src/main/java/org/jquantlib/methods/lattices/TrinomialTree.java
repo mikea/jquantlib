@@ -21,6 +21,25 @@
  When applicable, the original copyright notice follows this notice.
  */
 
+/*
+ Copyright (C) 2001, 2002, 2003 Sadruddin Rejeb
+ Copyright (C) 2005 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
+
 package org.jquantlib.methods.lattices;
 
 import java.util.Vector;
@@ -28,6 +47,18 @@ import java.util.Vector;
 import org.jquantlib.processes.StochasticProcess1D;
 import org.jquantlib.time.TimeGrid;
 
+/**
+ * Recombining trinomial tree class
+ * <p>
+ * This class defines a recombining trinomial tree approximating a 1-D stochastic process.
+ *
+ * @warning The diffusion term of the SDE must be independent of the underlying process.
+ *
+ * @category lattices
+ *
+ * @author Srinivas Hasti
+ * @author Tim Swetonic
+*/
 //TODO: http://bugs.jquantlib.org/view.php?id=394
 public class TrinomialTree extends Tree {
 
@@ -68,9 +99,11 @@ public class TrinomialTree extends Tree {
 				final double m = process.expectation(t, x, dt);
 				int temp = (int) Math.floor((m - x0_) / dx_.get(i + 1) + 0.5);
 
-				if (isPositive)
-                    while (x0_ + (temp - 1) * dx_.get(i + 1) <= 0)
+				if (isPositive) {
+                    while (x0_ + (temp - 1) * dx_.get(i + 1) <= 0) {
                         temp++;
+                    }
+                }
 
 				final double e = m - (x0_ + temp * dx_.get(i + 1));
 				final double e2 = e * e;

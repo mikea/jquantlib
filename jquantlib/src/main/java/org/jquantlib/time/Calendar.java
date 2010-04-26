@@ -56,7 +56,6 @@ import org.jquantlib.lang.exceptions.LibraryException;
  * This class provides methods for determining whether a date is a business day
  * or a holiday for a given market, and for incrementing/decrementing a date of
  * a given number of business days.
- *
  * <p>
  * A calendar should be defined for specific exchange holiday schedule or for
  * general country holiday schedule. Legacy city holiday schedule calendars will

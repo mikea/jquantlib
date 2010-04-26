@@ -81,13 +81,6 @@ public class Settings {
 
 
 
-    //  /**
-    //   * Define this if you want to disable deprecated code.
-    //   */
-    //  private static final String DISABLE_DEPRECATED = "DISABLE_DEPRECATED";
-
-
-
     public boolean isNegativeRates() {
         final Object var = attrs.get().get(NEGATIVE_RATES);
         return var==null? false : (Boolean) var;
