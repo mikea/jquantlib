@@ -100,7 +100,8 @@ public class FDDividendOptionTest implements Runnable {
         final double rho    = option.rho();
 
         // market price: simply guess something 10% higher than theoretical
-        //FIXME final double ivol = option.impliedVolatility(value*1.10);
+        //FIXME
+        final double ivol = option.impliedVolatility(value*1.10);
 
         if (!quiet) {
             QL.info(String.format("value       = %13.9f", value));
@@ -109,7 +110,8 @@ public class FDDividendOptionTest implements Runnable {
             QL.info(String.format("theta       = %13.9f", theta));
             QL.info(String.format("vega        = %13.9f", vega));
             QL.info(String.format("rho         = %13.9f", rho));
-            // QL.info(String.format("implied vol = %13.9f", ivol));
+            //
+            QL.info(String.format("implied vol = %13.9f", ivol));
         }
     }
 
@@ -135,7 +137,8 @@ public class FDDividendOptionTest implements Runnable {
         final double rho   = option.rho();
 
         // market price: simply guess something 10% higher than theoretical
-        //FIXME final double ivol = option.impliedVolatility(value*1.10);
+        //FIXME
+        final double ivol = option.impliedVolatility(value*1.10);
 
         if (!quiet) {
             QL.info(String.format("value       = %13.9f", value));
@@ -144,7 +147,8 @@ public class FDDividendOptionTest implements Runnable {
             QL.info(String.format("theta       = %13.9f", theta));
             QL.info(String.format("vega        = %13.9f", vega));
             QL.info(String.format("rho         = %13.9f", rho));
-            // QL.info(String.format("implied vol = %13.9f", ivol));
+            //
+            QL.info(String.format("implied vol = %13.9f", ivol));
         }
     }
 
