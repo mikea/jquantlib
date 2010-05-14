@@ -42,6 +42,7 @@ package org.jquantlib.model.volatility;
 import java.util.Iterator;
 
 import org.jquantlib.QL;
+import org.jquantlib.lang.iterators.Iterables;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.TimeSeries;
 
@@ -84,27 +85,24 @@ public class Garch11 implements VolatilityCompositor {
 	protected double costFunction (final TimeSeries<Double> vs, final double alpha, final double beta, final double omega) {
 		final TimeSeries<Double> test = calculate(vs, alpha, beta, omega);
         QL.require(test.size() == vs.size(), "quote and test values do not match"); // TODO: message
-        final Iterator<Date> dates = test.navigableKeySet().iterator();
-	    double retval = 0.0;
-	    while (dates.hasNext()) {
-	        final Date date = dates.next();
-	        double v = test.get(date);
-	        double u = vs.get(date);
-	        v *= v;
-	        u *= u;
+        double retval = 0.0;
+        for (final Date date : Iterables.unmodifiableIterable(test.navigableKeySet())) {
+            double v = test.get(date);
+            double u = vs.get(date);
+            v *= v;
+            u *= u;
             retval += 2.0 * Math.log(v) + u/(v*v) ;
-	    }
+        }
 		return retval ;
 	}
 
 	private TimeSeries<Double> calculate(final TimeSeries<Double> vs, final double alpha, final double beta, final double omega) {
-        final Iterator<Date> dates = vs.navigableKeySet().iterator();
 		final TimeSeries<Double> retValue = new TimeSeries<Double>() { /* anonymous */ };
-
+        final Iterator<Date> dates = vs.navigableKeySet().iterator();
 		Date date = dates.next();
+
 		final double zerothDayValue = vs.get(date);
 		retValue.put(date, zerothDayValue) ;
-
 		double u = 0;
         double sigma2 = zerothDayValue * zerothDayValue ;
         while (dates.hasNext()) {

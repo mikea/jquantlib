@@ -86,8 +86,8 @@ public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements Loca
 
     @Override
     public TimeSeries<Double> calculate(final TimeSeries<IntervalPrice> quotes) {
-        final Iterator<Date> it = quotes.navigableKeySet().iterator();
         final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
+        final Iterator<Date> it = quotes.navigableKeySet().iterator();
         Date date = it.next();
         IntervalPrice prev = quotes.get(date);
         while (it.hasNext()) {

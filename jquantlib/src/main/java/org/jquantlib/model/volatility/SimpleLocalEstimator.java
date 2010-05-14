@@ -61,8 +61,8 @@ public class SimpleLocalEstimator {
     }
 
     public TimeSeries<Double> calculate(final TimeSeries<Double> quotes) {
-        final Iterator<Date> dates = quotes.navigableKeySet().iterator();
         final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
+        final Iterator<Date> dates = quotes.navigableKeySet().iterator();
     	double prev = quotes.get(dates.next());
     	while (dates.hasNext()) {
     	    final Date date = dates.next();

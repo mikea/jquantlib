@@ -24,12 +24,12 @@
 package org.jquantlib.time;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.NonNegative;
 import org.jquantlib.lang.annotation.Time;
+import org.jquantlib.lang.iterators.Iterables;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.matrixutilities.Array;
 
@@ -124,9 +124,10 @@ public class TimeGrid {
         }
 
         this.times = new Array(unique.size());
-        final Iterator<Double> it = unique.iterator();
-        for (int i=0; it.hasNext(); i++) {
-            this.times.set(i, it.next());
+        int i=0;
+        for (final double d : Iterables.unmodifiableIterable(unique.iterator())) {
+            this.times.set(i, d);
+            i++;
         }
         this.dt = this.times.adjacentDifference();
     }

@@ -66,10 +66,10 @@ import org.jquantlib.time.Schedule;
  */
 //TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class FloatingLeg<
-InterestRateIndexType extends InterestRateIndex,
-FloatingCouponType extends FloatingRateCoupon,
-CappedFlooredCouponType
-> extends Leg {
+                            InterestRateIndexType extends InterestRateIndex,
+                            FloatingCouponType extends FloatingRateCoupon,
+                            CappedFlooredCouponType
+                            > extends Leg {
 
     public FloatingLeg(
             final Array nominals,

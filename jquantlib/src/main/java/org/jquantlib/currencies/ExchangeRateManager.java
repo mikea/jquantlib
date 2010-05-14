@@ -41,7 +41,6 @@ package org.jquantlib.currencies;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jquantlib.QL;
@@ -67,6 +66,7 @@ import org.jquantlib.currencies.Europe.RONCurrency;
 import org.jquantlib.currencies.Europe.TRLCurrency;
 import org.jquantlib.currencies.Europe.TRYCurrency;
 import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.iterators.Iterables;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 
@@ -147,9 +147,8 @@ public class ExchangeRateManager {
      * getInstance().
      */
     private ExchangeRateManager() {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
         addKnownRates();
     }
 
@@ -209,33 +208,29 @@ public class ExchangeRateManager {
      * @return The exchange rate fulfilling all these properties. ExchangeRate
      */
     public ExchangeRate lookup(final Currency source, final Currency target, Date date, final ExchangeRate.Type type) {
-        if (source.equals(target)) {
+        if (source.equals(target))
             return new ExchangeRate(source, target, 1.0);
-        }
 
         if (date.isToday()) {
             date = new Settings().evaluationDate();
         }
 
-        if (type == ExchangeRate.Type.Direct) {
+        if (type == ExchangeRate.Type.Direct)
             return directLookup(source, target, date);
-        } else if (!source.triangulationCurrency().empty()) {
+        else if (!source.triangulationCurrency().empty()) {
             final Currency link = source.triangulationCurrency();
-            if (link.equals(target)) {
+            if (link.equals(target))
                 return directLookup(source, link, date);
-            } else {
+            else
                 return ExchangeRate.chain(directLookup(source, link, date), lookup(link, target, date));
-            }
         } else if (!target.triangulationCurrency().empty()) {
             final Currency link = target.triangulationCurrency();
-            if (source.equals(link)) {
+            if (source.equals(link))
                 return directLookup(link, target, date);
-            } else {
+            else
                 return ExchangeRate.chain(lookup(source, link, date), directLookup(link, target, date));
-            }
-        } else {
+        } else
             return smartLookup(source, target, date);
-        }
     }
 
     /**
@@ -366,9 +361,8 @@ public class ExchangeRateManager {
      * @return The found exchange rate. ExchangeRate
      */
     private ExchangeRate directLookup(final Currency source, final Currency target, final Date date) {
-        if (System.getProperty("EXPERIMENTAL") == null) {
+        if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
-        }
 
         ExchangeRate rate = null;
         QL.require(((rate = fetch(source, target, date)) != null) , "no direct conversion available");  // QA:[RG]::verified // TODO: message
@@ -395,9 +389,8 @@ public class ExchangeRateManager {
     private ExchangeRate smartLookup(final Currency source, final Currency target, final Date date, int[] forbidden) {
         // direct exchange rates are preferred.
         final ExchangeRate direct = fetch(source, target, date);
-        if (direct != null) {
+        if (direct != null)
             return direct;
-        }
 
         // if none is found, turn to smart lookup. The source currency
         // is forbidden to subsequent lookups in order to avoid cycles.
@@ -405,11 +398,10 @@ public class ExchangeRateManager {
         forbidden = new int[temp.length + 1];
         System.arraycopy(temp, 0, forbidden, 0, temp.length);
         forbidden[forbidden.length - 1] = (source.numericCode());
-        final Iterator keyIterator = data_.keySet().iterator();
-        while (keyIterator.hasNext()) {
+
+        for (final Object key : Iterables.unmodifiableIterable(data_.keySet())) {
             // we look for exchange-rate data which involve our source
             // currency...
-            final Object key = keyIterator.next();
             if (hashes((Integer) key, source) && !(data_.get(key).isEmpty())) {
                 // ...whose other currency is not forbidden...
                 final Entry e = data_.get(key).get(0);
@@ -465,9 +457,8 @@ public class ExchangeRateManager {
      */
     private int match(final int[] list, final int value) {
         for (int i = 0; i < list.length; i++) {
-            if (value == list[i]) {
+            if (value == list[i])
                 return i;
-            }
         }
         return -1;
     }
@@ -482,9 +473,8 @@ public class ExchangeRateManager {
     private int matchValidateAt(final List<Entry> rates, final Date date) {
         final Valid_at va = new Valid_at(date);
         for (int i = 0; i < rates.size(); i++) {
-            if (va.operator(rates.get(i))) {
+            if (va.operator(rates.get(i)))
                 return i;
-            }
         }
         return -1;
     }

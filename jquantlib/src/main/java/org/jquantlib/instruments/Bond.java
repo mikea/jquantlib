@@ -45,7 +45,6 @@ package org.jquantlib.instruments;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jquantlib.QL;
@@ -57,6 +56,7 @@ import org.jquantlib.cashflow.Leg;
 import org.jquantlib.cashflow.SimpleCashFlow;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.lang.exceptions.LibraryException;
+import org.jquantlib.lang.iterators.Iterables;
 import org.jquantlib.lang.reflect.ReflectConstants;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Constants;
@@ -501,9 +501,11 @@ public class Bond extends Instrument {
         // check that it isn't the same date. Also stop at the penultimate flow. The last flow
         // is not a Coupon
         final int startIndex = cashflows_.indexOf(cf);
-        for (final Iterator<CashFlow> iterator = cashflows_.listIterator(startIndex); iterator.hasNext();) {
-			final CashFlow flow = iterator.next();
-            if(!flow.date().eq(paymentDate) || ! iterator.hasNext()){break;}
+        for (final CashFlow flow : Iterables.unmodifiableIterable(cashflows_.listIterator(startIndex))) {
+            if (flow.date().ne(paymentDate)) {
+                break;
+            }
+            //TODO: code review: should the last element be excluded?
             final Coupon cp = (Coupon)flow;
             if (cp != null) {
                 if (firstCouponFound) {

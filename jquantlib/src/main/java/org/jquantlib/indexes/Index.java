@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jquantlib.QL;
+import org.jquantlib.lang.iterators.Iterables;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.Constants;
 import org.jquantlib.time.Calendar;
@@ -135,11 +136,9 @@ public abstract class Index implements Observable {
 		boolean validFixing;
 		boolean noInvalidFixing = true;
 		boolean noDuplicatedFixing = true;
-
 		final TimeSeries<Double> ts = IndexManager.getInstance().get(tag);
 
-		while (dates.hasNext()) {
-            final Date date = dates.next();
+		for (final Date date : Iterables.unmodifiableIterable(dates)) {
             final double value = values.next();
             validFixing = isValidFixingDate(date);
             final double currentValue = ts.get(date);

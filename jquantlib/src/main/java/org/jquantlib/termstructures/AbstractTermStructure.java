@@ -135,16 +135,6 @@ public abstract class AbstractTermStructure implements TermStructure {
      */
     private final boolean moving;
 
-//    /**
-//     * This private field is automatically initialized by constructors.
-//     * In the specific case of Case 2, the corresponding constructor
-//     * picks up it's value from {@link Settings} singleton. This procedure
-//     * caches values from the singleton, intending to avoid contention in
-//     * heavily multi-threaded environments. In this specific case this class
-//     * observes date changes in order to update this variable.
-//     */
-//    private final Date today;
-
 
     //
     // protected fields
