@@ -281,8 +281,7 @@
             <id>jquantlib</id>
             <name>JQuantLib Repository</name>
             <url>http://artifactory.jquantlib.org:8080/artifactory/repo/</url>
-            <releases>  <enabled>true</enabled>  </releases>
-            <snapshots> <enabled>true</enabled>  </snapshots>
+            <layout>default</layout>
         </repository>
         <repository>
             <id>maven2-repository.dev.java.net</id>
@@ -290,15 +289,6 @@
             <url>http://download.java.net/maven/2/</url>
             <layout>default</layout>
         </repository>
-        <!--
-        <repository>
-            <id>joda-primitives</id>
-            <name>joda-primitives</name>
-            <url>http://joda-primitives.sourceforge.net/repo/</url>
-            <releases>  <enabled>true</enabled>  </releases>
-            <snapshots> <enabled>true</enabled>  </snapshots>
-        </repository>
-        -->
     </repositories>
  
     <build>

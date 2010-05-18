@@ -39,7 +39,7 @@ public class CRRDividendOptionTest implements Runnable {
         new CRRDividendOptionTest().run();
     }
 
-    private boolean quiet = false;
+    private final boolean quiet = false;
 
 
     public CRRDividendOptionTest() {
@@ -68,14 +68,6 @@ public class CRRDividendOptionTest implements Runnable {
 
 
     public void run() {
-        // training session: allow JIT compile code
-        quiet = true;
-        for (int i=0; i<20; i++) {
-            testEuropeanDividendOption();
-            testAmericanDividendOption();
-        }
-
-        quiet = false;
         testEuropeanDividendOption();
         testAmericanDividendOption();
     }

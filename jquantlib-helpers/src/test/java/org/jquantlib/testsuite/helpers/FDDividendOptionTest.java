@@ -38,7 +38,7 @@ public class FDDividendOptionTest implements Runnable {
     final private List<Date> divDates;
     final private List<Double> divAmounts;
 
-    private boolean quiet = false;
+    private final boolean quiet = false;
 
 
     public FDDividendOptionTest() {
@@ -66,14 +66,6 @@ public class FDDividendOptionTest implements Runnable {
     }
 
     public void run() {
-        // training session: allow JIT compile code
-        quiet = true;
-        for (int i=0; i<20; i++) {
-            testEuropeanFDDividendOption();
-            testAmericanFDDividendOption();
-        }
-
-        quiet = false;
         testEuropeanFDDividendOption();
         testAmericanFDDividendOption();
     }
