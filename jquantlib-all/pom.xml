@@ -73,7 +73,7 @@
     
     <groupId>org.jquantlib</groupId>
     <artifactId>jquantlib-all</artifactId>
-    <version>0.1.3-SNAPSHOT</version>
+    <version>0.2.3</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
@@ -93,7 +93,7 @@
         <module>../jquantlib</module>
         <module>../jquantlib-helpers</module>
         <module>../jquantlib-samples</module>
-        <!-- module>../jquantlib-osgi</module-->
+        <module>../jquantlib-experimental</module>
     </modules>
 
     <properties>
