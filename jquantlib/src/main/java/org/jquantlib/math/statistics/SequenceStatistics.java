@@ -21,7 +21,7 @@
  */
 
 /*
- Copyright (C) 2003 RiskMap srl
+ Copyright (C) 2003, 2004, 2005, 2006, 2007 Ferdinando Ametrano
 
  This file is part of QuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://quantlib.org/
@@ -44,15 +44,19 @@ import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
 
 /**
- * This class is simply an equivalence to GenericRiskStatistics
+ * This class is simply an equivalence to GenericSequenceStatistics
  * 
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q4_UNIT, reviewers = { "Richard Gomes" }, version = Version.V097)
-public class Statistics extends RiskStatistics {
+public class SequenceStatistics extends GenericSequenceStatistics {
 
-	public Statistics() {
+	public SequenceStatistics() {
 		super();
+	}
+
+	public SequenceStatistics(int dimension) {
+		super(dimension);
 	}
 
 }

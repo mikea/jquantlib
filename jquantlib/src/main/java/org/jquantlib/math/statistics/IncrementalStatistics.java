@@ -19,6 +19,7 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+
 /*
  Copyright (C) 2003 Ferdinando Ametrano
  Copyright (C) 2000, 2001, 2002, 2003 RiskMap srl
@@ -39,80 +40,284 @@
 
 package org.jquantlib.math.statistics;
 
-import java.util.List;
-
 import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
+import org.jquantlib.math.Constants;
+import org.jquantlib.math.matrixutilities.Array;
 
 
 /**
  * Statistics tool based on incremental accumulation
  * <p>
- * It can accumulate a set of data and return statistics
- * (e.g: mean, variance, skewness, kurtosis, error estimation, etc.)
- *
- * @warning high moments are numerically unstable for high average/standardDeviation ratios.
- *
+ * It can accumulate a set of data and return statistics (e.g: mean,
+ * variance, skewness, kurtosis, error estimation, etc.)
+ * <p>
+ * @warning high moments are numerically unstable for high
+ *          average/standardDeviation ratios.
+ *          
  * @author Ueli Hofstetter
+ * @author Richard Gomes
  */
-public class IncrementalStatistics {
+@QualityAssurance(quality = Quality.Q4_UNIT, reviewers = { "Richard Gomes" }, version = Version.V097)
+public class IncrementalStatistics extends GenericRiskStatistics {
 
-    private static final String unsufficient_sample_weight = "sampleWeight_=0, unsufficient";
-    private static final String unsufficient_sample_number = "sample number <=1, unsufficient";
-    private static final String unsufficient_sample_number_2 = "sample number <=2, unsufficient";
-    private static final String unsufficient_sample_number_3 = "sample number <=3, unsufficient";
-    private static final String negative_variance = "negative variance";
-    private static final String empty_sample_set = "empty sample set";
-    private static final String max_number_of_samples_reached = "maximum number of samples reached";
+    private static final String UNSUFFICIENT_SAMPLE_WEIGHT    = "sampleWeight_=0, unsufficient";
+    private static final String UNSUFFICIENT_SAMPLE_NUMBER    = "sample number <=1, unsufficient";
+    private static final String UNSUFFICIENT_SAMPLE_NUMBER_2  = "sample number <=2, unsufficient";
+    private static final String UNSUFFICIENT_SAMPLE_NUMBER_3  = "sample number <=3, unsufficient";
+    private static final String NEGATIVE_VARIANCE             = "negative variance";
+    private static final String EMPTY_SAMPLE_SET              = "empty sample set";
+    private static final String MAX_NUMBER_OF_SAMPLES_REACHED = "maximum number of samples reached";
 
-    protected int sampleNumber_, downsideSampleNumber_;
-    protected double sampleWeight_, downsideSampleWeight_;
-    protected double sum_, quadraticSum_, downsideQuadraticSum_,
-    cubicSum_, fourthPowerSum_;
-    protected double min_, max_;
+    private static final String INCOMPATIBLE_ARRAY_SIZES = "incompatible array sizes";
 
+    
+    protected /*@Size*/ int sampleNumber_;
+    protected /*@Size*/ int downsideSampleNumber_;
+    protected /*@Real*/ double sampleWeight_, downsideSampleWeight_;
+    protected /*@Real*/ double sum_, quadraticSum_, downsideQuadraticSum_;
+    protected /*@Real*/ double cubicSum_, fourthPowerSum_;
+    protected /*@Real*/ double min_, max_;
 
 
     public IncrementalStatistics() {
-        if (System.getProperty("EXPERIMENTAL") == null)
-            throw new UnsupportedOperationException("Work in progress");
         reset();
     }
 
-    public void addSequence(
-            final List<Double> data,
-            final int beginData,
-            final List<Double> weight,
-            final int beginWeight,
-            final int lenght) {
-        for (int i = 0; i < lenght; i++)
-            add(data.get(beginData + i), weight.get(beginWeight + i));
+    
+    /**
+     * number of samples collected
+     */
+    // @Override
+    public /*@Size*/ int samples() /*@ReadOnly*/ {
+        return sampleNumber_;
     }
 
-    public void addSequence(
-            final List<Double> data,
-            final int beginData,
-            final int lenght) {
-        for (int i = 0; i < lenght; i++)
-            add(data.get(beginData + i));
+    /**
+     * sum of data weights
+     */
+    // @Override
+    public /*@Real*/ double weightSum() /*@ReadOnly*/ {
+        return sampleWeight_;
     }
 
-    public void add(
-            final double value,
-            final double weight) {
-        QL.require(weight >= 0.0, unsufficient_sample_weight); // QA:[RG]::verified
+    /**
+     * returns the mean, defined as
+     * {@latex[ \langle x \rangle = \frac{\sum w_i x_i}{\sum w_i}. }
+     */
+    // @Override
+    public /*@Real*/ double mean() /*@ReadOnly*/ {
+        QL.require(sampleWeight_>0.0, UNSUFFICIENT_SAMPLE_WEIGHT);
+        return sum_/sampleWeight_;
+    }
 
-        final int oldSamples = sampleNumber_;
+    /**
+     * returns the variance, defined as
+     * {@latex[ \frac{N}{N-1} \left\langle \left(
+     *      x-\langle x \rangle \right)^2 \right\rangle. }
+     */
+    // @Override
+    public /*@Real*/ double variance() /*@ReadOnly*/ {
+        QL.require(sampleWeight_>0.0, UNSUFFICIENT_SAMPLE_WEIGHT);
+        QL.require(sampleNumber_>1, UNSUFFICIENT_SAMPLE_NUMBER);
+
+        /*@Real*/ double m = mean();
+        /*@Real*/ double v = quadraticSum_/sampleWeight_;
+        v -= m*m;
+        v *= sampleNumber_/(sampleNumber_-1.0);
+
+        QL.ensure(v >= 0.0, NEGATIVE_VARIANCE);
+        return v;
+    }
+
+    
+    /**
+     * returns the standard deviation {@latex$ \sigma }, defined as the
+     * square root of the variance.
+     */
+    // @Override
+    public /*@Real*/ double standardDeviation() /*@ReadOnly*/ {
+        return Math.sqrt(variance());
+    }
+
+
+    /**
+     * returns the error estimate {@latex$ \epsilon }, defined as the
+     * square root of the ratio of the variance to the number of
+     * samples.
+     */
+    // @Override
+    public /*@Real*/ double errorEstimate() /*@ReadOnly*/ {
+        /*@Real*/ double var = variance();
+        QL.require(samples() > 0, EMPTY_SAMPLE_SET);
+        return Math.sqrt(var/samples());
+    }
+
+    /**
+     * returns the downside deviation, defined as the
+     * square root of the downside variance.
+     */
+    // @Override
+    public /*@Real*/ double downsideDeviation() /*@ReadOnly*/ {
+        return Math.sqrt(downsideVariance());
+    }
+
+    /**
+     * returns the downside variance, defined as
+     * {@latex[ \frac{N}{N-1} \times \frac{ \sum_{i=1}^{N}
+     *      \theta \times x_i^{2}}{ \sum_{i=1}^{N} w_i} },
+     *  where {@latex$ \theta } = 0 if x > 0 and
+     *  {@latex$ \theta } =1 if x <0
+     */
+    // @Override
+    public /*@Real*/ double downsideVariance() /*@ReadOnly*/ {
+        if (downsideSampleWeight_==0.0) {
+            QL.require(sampleWeight_>0.0, UNSUFFICIENT_SAMPLE_WEIGHT);
+            return 0.0;
+        }
+
+        QL.require(downsideSampleNumber_>1, "sample number below zero <=1, unsufficient");
+
+        return (downsideSampleNumber_/(downsideSampleNumber_-1.0))*
+            (downsideQuadraticSum_ /downsideSampleWeight_);
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * returns the skewness, defined as
+     * {@latex[ \frac{N^2}{(N-1)(N-2)} \frac{\left\langle \left(
+     *    x-\langle x \rangle \right)^3 \right\rangle}{\sigma^3}. }
+     *  The above evaluates to 0 for a Gaussian distribution.
+     */
+    // @Override
+    public /*@Real*/ double skewness() /*@ReadOnly*/ {
+        QL.require(sampleNumber_>2, UNSUFFICIENT_SAMPLE_NUMBER_2);
+        /*@Real*/ double s = standardDeviation();
+
+        if (s==0.0) return 0.0;
+
+        /*@Real*/ double m = mean();
+        /*@Real*/ double result = cubicSum_/sampleWeight_;
+        result -= 3.0*m*(quadraticSum_/sampleWeight_);
+        result += 2.0*m*m*m;
+        result /= s*s*s;
+        result *= sampleNumber_/(sampleNumber_-1.0);
+        result *= sampleNumber_/(sampleNumber_-2.0);
+        return result;
+    }
+
+    
+    /**
+     * returns the excess kurtosis, defined as
+     * {@latex[ \frac{N^2(N+1)}{(N-1)(N-2)(N-3)}
+     *      \frac{\left\langle \left(x-\langle x \rangle \right)^4
+     *      \right\rangle}{\sigma^4} - \frac{3(N-1)^2}{(N-2)(N-3)}. }
+     *  The above evaluates to 0 for a Gaussian distribution.
+     */
+    // @Override
+    public /*@Real*/ double kurtosis() /*@ReadOnly*/ {
+        QL.require(sampleNumber_>3, UNSUFFICIENT_SAMPLE_NUMBER_3);
+
+        /*@Real*/ double m = mean();
+        /*@Real*/ double v = variance();
+
+        /*@Real*/ double c = (sampleNumber_-1.0)/(sampleNumber_-2.0);
+        c *= (sampleNumber_-1.0)/(sampleNumber_-3.0);
+        c *= 3.0;
+
+        if (v==0) return c;
+
+        /*@Real*/ double result = fourthPowerSum_/sampleWeight_;
+        result -= 4.0*m*(cubicSum_/sampleWeight_);
+        result += 6.0*m*m*(quadraticSum_/sampleWeight_);
+        result -= 3.0*m*m*m*m;
+        result /= v*v;
+        result *= sampleNumber_/(sampleNumber_-1.0);
+        result *= sampleNumber_/(sampleNumber_-2.0);
+        result *= (sampleNumber_+1.0)/(sampleNumber_-3.0);
+
+
+        return result-c;
+    }
+
+    /**
+     * returns the minimum sample value
+     */
+    // @Override
+    public /*@Real*/ double min() /*@ReadOnly*/ {
+        QL.require(samples() > 0, EMPTY_SAMPLE_SET);
+        return min_;
+    }
+
+
+    /**
+     * returns the maximum sample value
+     */
+    // @Override
+    public /*@Real*/ double max() /*@ReadOnly*/ {
+        QL.require(samples() > 0, EMPTY_SAMPLE_SET);
+        return max_;
+    }
+
+    /**
+     * adds a sequence of data to the set, with default weight
+     */
+    // @Override
+    public void addSequence(final Array datum) {
+	    for (int i=0; i<datum.size(); i++) {
+	    	add(datum.get(i));
+	    }
+    }
+    
+    /**
+     * adds a sequence of data to the set, each with its weight
+     * <p>
+     * weights must be positive or null
+     */
+    // @Override
+    public void addSequence(final Array datum, final Array weights) {
+        QL.require(datum.size()==weights.size(), INCOMPATIBLE_ARRAY_SIZES);
+        for (int i=0; i<datum.size(); i++) {
+        	add(datum.get(i), weights.get(i));
+        }
+    }
+    
+    
+
+    /**
+     * adds a datum to the set, possibly with a weight
+     * <p>
+     * weight must be positive or null
+     */
+    // @Override
+    public void add(final /*@Real*/ double value) {
+    	add(value, 1.0);
+    }
+    
+    // @Override
+    public void add(final /*@Real*/ double value, final /*@Real*/ double weight) {
+        QL.require(weight>=0.0, "negative weight not allowed");
+
+        /*@Size*/ int oldSamples = sampleNumber_;
         sampleNumber_++;
-
-        QL.require(sampleNumber_ > oldSamples, max_number_of_samples_reached);
+        QL.ensure(sampleNumber_ > oldSamples, MAX_NUMBER_OF_SAMPLES_REACHED);
 
         sampleWeight_ += weight;
 
-        double temp = weight * value;
+        /*@Real*/ double temp = weight*value;
         sum_ += temp;
         temp *= value;
         quadraticSum_ += temp;
-        if (value < 0.0) {
+        if (value<0.0) {
             downsideQuadraticSum_ += temp;
             downsideSampleNumber_++;
             downsideSampleWeight_ += weight;
@@ -121,63 +326,23 @@ public class IncrementalStatistics {
         cubicSum_ += temp;
         temp *= value;
         fourthPowerSum_ += temp;
-        if (oldSamples == 0)
+        if (oldSamples == 0) {
             min_ = max_ = value;
-        else {
+        } else {
             min_ = Math.min(value, min_);
             max_ = Math.max(value, max_);
         }
     }
-
-    public void add(final double data) {
-        add(data, 1.0);
-    }
-
-    public double kurtosis() {
-        if (sampleNumber_ <= 3)
-            throw new IllegalArgumentException(unsufficient_sample_number_3);
-
-        final double m = mean();
-        final double v = variance();
-
-        double c = (sampleNumber_ - 1.0) / (sampleNumber_ - 2.0);
-        c *= (sampleNumber_ - 1.0) / (sampleNumber_ - 3.0);
-        c *= 3.0;
-
-        if (v == 0)
-            return c;
-        double result = fourthPowerSum_ / sampleWeight_;
-        result -= 4.0 * m * (cubicSum_ / sampleWeight_);
-        result += 6.0 * m * m * (quadraticSum_ / sampleWeight_);
-        result -= 3.0 * m * m * m * m;
-        result /= v * v;
-        result *= sampleNumber_ / (sampleNumber_ - 1.0);
-        result *= sampleNumber_ / (sampleNumber_ - 2.0);
-        result *= (sampleNumber_ + 1.0) / (sampleNumber_ - 3.0);
-        return result - c;
-    }
-
-    public double max() {
-        if (samples() <= 0)
-            throw new IllegalArgumentException(empty_sample_set);
-        return max_;
-    }
-
-    public double mean() {
-        if (sampleWeight_ <= 0.0)
-            throw new IllegalArgumentException(unsufficient_sample_weight);
-        return sum_ / sampleWeight_;
-    }
-
-    public double min() {
-        if (samples() <= 0)
-            throw new IllegalArgumentException(empty_sample_set);
-        return min_;
-    }
-
+        
+        
+        
+    /**
+     * resets the data to a null set
+     */
+    // @Override
     public void reset() {
-        min_ = Double.MAX_VALUE;
-        max_ = Double.MIN_VALUE;
+        min_ = Constants.DBL_MAX;
+        max_ = Constants.DBL_MIN;
         sampleNumber_ = 0;
         downsideSampleNumber_ = 0;
         sampleWeight_ = 0.0;
@@ -189,74 +354,18 @@ public class IncrementalStatistics {
         fourthPowerSum_ = 0.0;
     }
 
-    public int samples() {
-        return sampleNumber_;
-    }
 
-    public double skewness() {
-        if (sampleNumber_ <= 2)
-            throw new IllegalArgumentException(unsufficient_sample_number_2);
-        final double s = standardDeviation();
 
-        if (s == 0.0)
-            return 0.0;
+    
+    // IDEAS: 
+    // 1. remove // @Override from methods not compiling;
+    // 2. Split interface S in two, so that IncrementalStatistics implement only one of them whilst 
+    //    GeneralStatistics implement those two interfaces
+    
 
-        final double m = mean();
-        double result = cubicSum_ / sampleWeight_;
-        result -= 3.0 * m * (quadraticSum_ / sampleWeight_);
-        result += 2.0 * m * m * m;
-        result /= s * s * s;
-        result *= sampleNumber_ / (sampleNumber_ - 1.0);
-        result *= sampleNumber_ / (sampleNumber_ - 2.0);
-        return result;
-    }
-
-    public double standardDeviation() {
-        return Math.sqrt(variance());
-    }
-
-    public double variance() {
-        if (sampleWeight_ <= 0.0)
-            throw new IllegalArgumentException(unsufficient_sample_weight);
-        if (sampleNumber_ <= 1)
-            throw new IllegalArgumentException(unsufficient_sample_number);
-        final double m = mean();
-        double v = quadraticSum_ / sampleWeight_;
-        v -= m * m;
-        v *= sampleNumber_ / (sampleNumber_ - 1.0);
-
-        if (v < 0.0)
-            throw new IllegalArgumentException(negative_variance + v);
-
-        return v;
-
-    }
-
-    public double weightSum() {
-        return sampleWeight_;
-    }
-
-    public double downsideVariance() {
-        if (downsideSampleWeight_ == 0.0) {
-            if (sampleWeight_ <= 0.0)
-                throw new IllegalArgumentException(unsufficient_sample_weight);
-            return 0.0;
-        }
-        if (downsideSampleNumber_ <= 1)
-            throw new IllegalArgumentException(unsufficient_sample_number);
-
-        return (downsideSampleNumber_ / (downsideSampleNumber_ - 1.0)) * (downsideQuadraticSum_ / downsideSampleWeight_);
-    }
-
-    public double downsideDeviation() {
-        return Math.sqrt(downsideVariance());
-    }
-
-    public double errorEstimate() {
-        final double var = variance();
-        if (samples() <= 0)
-            throw new IllegalArgumentException(empty_sample_set);
-        return Math.sqrt(var / samples());
-    }
+//	public List<Pair<Double, Double>> data() {
+//	public Pair<Double, Integer> expectationValue(DoubleOp f,
+//	public double percentile(double y) {
+//	public double topPercentile(double y) {
 
 }

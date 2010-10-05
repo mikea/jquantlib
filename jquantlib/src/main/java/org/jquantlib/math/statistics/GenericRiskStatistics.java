@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2009 Ueli Hofstetter
+ Copyright (C) 2010 Richard Gomes
 
  This source code is release under the BSD License.
 
@@ -19,12 +20,33 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+
+/*
+ Copyright (C) 2003 RiskMap srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
+
 package org.jquantlib.math.statistics;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.math.Ops;
 import org.jquantlib.math.functions.Bind1st;
 import org.jquantlib.math.functions.Bind1stPredicate;
@@ -40,63 +62,74 @@ import org.jquantlib.math.functions.Square;
 import org.jquantlib.math.functions.TruePredicate;
 import org.jquantlib.util.Pair;
 
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-//FIXME: the class hierarchy is wrong :: mimic inheritence using delegate pattern (similar to TimeSeries?)
-public class GenericRiskStatistics {
+/**
+ * empirical-distribution risk measures
+ * <p>
+ * This class wraps a somewhat generic statistic tool and adds
+ * a number of risk measures (e.g.: value-at-risk, expected
+ * shortfall, etc.) based on the data distribution as reported by
+ * the underlying statistic tool.
+ * <p>
+ * @todo add historical annualized volatility
+ * 
+ * @author Ueli Hofstetter
+ * @author Richard Gomes
+ */
+@QualityAssurance(quality = Quality.Q4_UNIT, reviewers = { "Richard Gomes" }, version = Version.V097)
+public class GenericRiskStatistics extends GaussianStatistics {
 
-    private static final String no_data_below_the_target = "no data below the target";
-    private static final String empty_sample_set = "empty sample set";
-    private static final String unsufficient_samples_under_target = "samples under target <=1, unsufficient";
+	private static final String NO_DATA_BELOW_THE_TARGET = "no data below the target";
+    private static final String EMPTY_SAMPLE_SET = "empty sample set";
+    private static final String UNSUFFICIENT_SAMPLES_UNDER_TARGET = "samples under target <=1, unsufficient";
 
-    private Statistics statistics = null;
 
-    public GenericRiskStatistics(final Statistics statistics){
-        if (System.getProperty("EXPERIMENTAL") == null)
-            throw new UnsupportedOperationException("Work in progress");
-        this.statistics = statistics;
+
+    /**
+     * returns the variance of observations below the mean,
+     * {@latex[ \frac{N}{N-1}
+     *     \mathrm{E}\left[ (x-\langle x \rangle)^2 \;|\;
+     *                       x < \langle x \rangle \right]. }
+     *
+     * @see Markowitz (1959).
+     */
+    public /*@Real*/ double semiVariance() /*@ReadOnly*/ {
+        return regret(mean());
     }
 
-    /*! returns the variance of observations below the mean,
-        \f[ \frac{N}{N-1}
-            \mathrm{E}\left[ (x-\langle x \rangle)^2 \;|\;
-                              x < \langle x \rangle \right]. \f]
-
-        See Markowitz (1959).
+    /**
+     * returns the semi deviation, defined as the
+     * square root of the semi variance.
      */
-    public double semiVariance(){
-        return regret(statistics.mean());
-    }
-
-    /*! returns the semi deviation, defined as the
-        square root of the semi variance.
-     */
-    public double semiDeviation() {
+    public /*@Real*/ double semiDeviation() /*@ReadOnly*/ {
         return Math.sqrt(semiVariance());
     }
 
-    /*! returns the variance of observations below 0.0,
-        \f[ \frac{N}{N-1}
-            \mathrm{E}\left[ x^2 \;|\; x < 0\right]. \f]
+    /**
+     * returns the variance of observations below 0.0,
+     * {@latex[ \frac{N}{N-1}
+     *     \mathrm{E}\left[ x^2 \;|\; x < 0\right]. }
      */
-    public double downsideVariance(){
+    public /*@Real*/ double downsideVariance() /*@ReadOnly*/ {
         return regret(0.0);
     }
 
-    /*! returns the downside deviation, defined as the
-        square root of the downside variance.
+    /**
+     * returns the downside deviation, defined as the
+     * square root of the downside variance.
      */
-    public double downsideDeviation(){
+    public /*@Real*/ double downsideDeviation() /*@ReadOnly*/ {
         return Math.sqrt(downsideVariance());
     }
 
-    /*! returns the variance of observations below target,
-        \f[ \frac{N}{N-1}
-            \mathrm{E}\left[ (x-t)^2 \;|\;
-                              x < t \right]. \f]
-
-        See Dembo and Freeman, "The Rules Of Risk", Wiley (2001).
+    /**
+     * returns the variance of observations below target,
+     * {@latex[ \frac{N}{N-1}
+     *      \mathrm{E}\left[ (x-t)^2 \;|\;
+     *                        x < t \right]. }
+     *
+     * @see Dembo and Freeman, "The Rules Of Risk", Wiley (2001).
      */
-    public double regret(final double target){
+    public /*@Real*/ double regret(final /*@Real*/ double target) /*@ReadOnly*/ {
         // average over the range below the target
 
         final List<Ops.DoubleOp> functions = new ArrayList<Ops.DoubleOp>();
@@ -105,98 +138,95 @@ public class GenericRiskStatistics {
         final Expression comp = new Expression(functions);
         final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);
 
-        final Pair<Double, Integer> result = statistics.expectationValue(comp, less);
-        final double x = result.getFirst();
+        final Pair<Double, Integer> result = expectationValue(comp, less);
+        final double x = result.first();
 
-        // TODO: code review :: please verify against QL/C++ code
-        final int n = result.getSecond().intValue();
-        QL.require(n >= 2 , unsufficient_samples_under_target); // QA:[RG]::verified
+        final int n = result.second().intValue();
+        QL.require(n >= 2 , UNSUFFICIENT_SAMPLES_UNDER_TARGET);
         return (n/(n-1.0))*x;
     }
 
-    //! potential upside (the reciprocal of VAR) at a given percentile
-    public double potentialUpside(final double centile){
-        QL.require(centile >= 0.9 && centile < 1.0 , "percentile out of range [0.9, 1.0)"); // QA:[RG]::verified // TODO: message
-        // potential upside must be a gain, i.e., floored at 0.0
-        return Math.max(statistics.percentile(centile), 0.0);
-    }
-
-    //! value-at-risk at a given percentile
-    public double valueAtRisk(final double centile){
-        QL.require(centile >= 0.9 && centile < 1.0 , "percentile out of range [0.9, 1.0)"); // QA:[RG]::verified // TODO: message
-        return - Math.min(statistics.percentile(1.0-centile), 0.0);
-    }
-
-    //! expected shortfall at a given percentile
-    /*! returns the expected loss in case that the loss exceeded
-        a VaR threshold,
-
-        \f[ \mathrm{E}\left[ x \;|\; x < \mathrm{VaR}(p) \right], \f]
-
-        that is the average of observations below the
-        given percentile \f$ p \f$.
-        Also know as conditional value-at-risk.
-
-        See Artzner, Delbaen, Eber and Heath,
-        "Coherent measures of risk", Mathematical Finance 9 (1999)
+    /**
+     * potential upside (the reciprocal of VAR) at a given percentile
      */
-    public double expectedShortfall(final double centile){
-        //Require...
-        if(centile<0.9 || centile>=1.0)
-            throw new IllegalArgumentException("percentile (" + centile + ") out of range [0.9, 1.0)");
-        //Ensure...
-        // TODO: code review :: please verify against QL/C++ code
-        if (statistics.getSampleSize() == 0){
-            //not sure whether to throw an exception
-            //throw new IllegalArgumentException(empty_sample_set);
-        }
+    public /*@Real*/ double potentialUpside(final /*@Real*/ double centile) /*@ReadOnly*/ {
+        QL.require(centile >= 0.9 && centile < 1.0 , "percentile out of range [0.9, 1.0)");
+        // potential upside must be a gain, i.e., floored at 0.0
+        return Math.max(percentile(centile), 0.0);
+    }
+
+    /**
+     * value-at-risk at a given percentile
+     */
+    public /*@Real*/ double valueAtRisk(final /*@Real*/ double centile) /*@ReadOnly*/ {
+        QL.require(centile >= 0.9 && centile < 1.0 , "percentile out of range [0.9, 1.0)");
+        return - Math.min(percentile(1.0-centile), 0.0);
+    }
+
+    /**
+     * expected shortfall at a given percentile
+     * <p>
+     * returns the expected loss in case that the loss exceeded
+     * a VaR threshold,
+     * <p>
+     * {@latex[ \mathrm{E}\left[ x \;|\; x < \mathrm{VaR}(p) \right], }
+     * <p>
+     * that is the average of observations below the given percentile \f$ p \f$.
+     * Also know as conditional value-at-risk.
+     * 
+     * @see Artzner, Delbaen, Eber and Heath, "Coherent measures of risk", Mathematical Finance 9 (1999)
+     */
+    public /*@Real*/ double expectedShortfall(final /*@Real*/ double centile) /*@ReadOnly*/ {
+        QL.require(centile>=0.9 && centile<1.0, "percentile out of range [0.9, 1.0)");
+        QL.ensure(samples() != 0, EMPTY_SAMPLE_SET);
+        
         final double target = -valueAtRisk(centile);
 
         final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);
-        final Pair<Double, Integer> result = statistics.expectationValue(new Identity(), less);
+        final Pair<Double, Integer> result = expectationValue(new Identity(), less);
 
-        final double x = result.getFirst();
-        final Integer N = result.getSecond();
+        final double x = result.first();
+        final Integer N = result.second();
 
-        if(N.intValue() ==  0.0)
-            throw new IllegalArgumentException(no_data_below_the_target);
+        QL.ensure(N != 0, NO_DATA_BELOW_THE_TARGET);
         // must be a loss, i.e., capped at 0.0 and negated
         return -Math.min(x, 0.0);
 
     }
 
-    /*! probability of missing the given target, defined as
-        \f[ \mathrm{E}\left[ \Theta \;|\; (-\infty,\infty) \right] \f]
-        where
-        \f[ \Theta(x) = \left\{
-            \begin{array}{ll}
-            1 & x < t \\
-            0 & x \geq t
-            \end{array}
-            \right. \f]
+    /**
+     * probability of missing the given target, defined as
+     * {@latex[ \mathrm{E}\left[ \Theta \;|\; (-\infty,\infty) \right] }
+     * where
+     * {@latex[ \Theta(x) = \left\{
+     *      \begin{array}{ll}
+     *      1 & x < t \\
+     *      0 & x \geq t
+     *      \end{array}
+     *      \right. }
      */
-    public double shortfall(final double target){
-        if (statistics.getSampleSize()==0)
-            throw new IllegalArgumentException(empty_sample_set);
+    public /*@Real*/ double shortfall(final /*@Real*/ double target) /*@ReadOnly*/ {
+    	QL.ensure(samples() != 0, EMPTY_SAMPLE_SET);
 
         final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);
-        return statistics.expectationValue(new Clipped(less, new Constant(1.0)), new TruePredicate()).getFirst();
+        return expectationValue(new Clipped(less, new Constant(1.0)), new TruePredicate()).first();
     }
 
-    /*! averaged shortfallness, defined as
-        \f[ \mathrm{E}\left[ t-x \;|\; x<t \right] \f]
+    /**
+     * averaged shortfallness, defined as
+     * {@latex[ \mathrm{E}\left[ t-x \;|\; x<t \right] }
      */
-    public double averageShortfall(final double target) {
+    public /*@Real*/ double averageShortfall(final /*@Real*/ double target) /*@ReadOnly*/ {
 
         final Ops.DoubleOp minus = new Bind1st(target, new Minus());
         final Ops.DoublePredicate less = new Bind1stPredicate(target, new LessThanPredicate());
-        final Pair<Double, Integer> result = statistics.expectationValue(minus, less);
+        final Pair<Double, Integer> result = expectationValue(minus, less);
 
-        final double x = result.getFirst();
-        //mmhh somewhere we have to change N to int
-        final Integer N = result.getSecond();
-        if(N.intValue()==0)
-            throw new IllegalArgumentException(no_data_below_the_target);
+        final double x = result.first();
+        final Integer N = result.second();
+        QL.ensure(N != 0, NO_DATA_BELOW_THE_TARGET);
         return x;
     }
+
+
 }

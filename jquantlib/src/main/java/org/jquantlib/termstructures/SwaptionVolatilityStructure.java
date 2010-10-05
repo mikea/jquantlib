@@ -92,7 +92,7 @@ public abstract class SwaptionVolatilityStructure extends AbstractTermStructure 
 
     protected double volatilityImpl(final Date optionDate, final Period swapTenor, final double strike) {
         final Pair<Double, Double> p = convertDates(optionDate, swapTenor);
-        return volatilityImpl(p.getFirst(), p.getSecond(), strike);
+        return volatilityImpl(p.first(), p.second(), strike);
     }
 
     public Date optionDateFromTenor(final Period optionTenor) {
@@ -118,7 +118,7 @@ public abstract class SwaptionVolatilityStructure extends AbstractTermStructure 
     public double blackVariance(final Date optionDate, final Period swapTenor, final double strike, final boolean extrapolate) {
         final double vol = volatility(optionDate, swapTenor, strike, extrapolate);
         final Pair<Double, Double> p = convertDates(optionDate, swapTenor);
-        return vol * vol * p.getFirst();
+        return vol * vol * p.first();
     }
 
     public double volatility(final Period optionTenor, final Period swapTenor, final double strike, final boolean extrapolate) {
@@ -130,7 +130,7 @@ public abstract class SwaptionVolatilityStructure extends AbstractTermStructure 
         final Date optionDate = optionDateFromTenor(optionTenor);
         final double vol = volatility(optionDate, swapTenor, strike, extrapolate);
         final Pair<Double, Double> p = convertDates(optionDate, swapTenor);
-        return vol * vol * p.getFirst();
+        return vol * vol * p.first();
     }
 
     public SmileSection smileSection(final Period optionTenor, final Period swapTenor) {

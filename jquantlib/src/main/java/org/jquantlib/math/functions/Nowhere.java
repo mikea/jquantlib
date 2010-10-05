@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2007 Richard Gomes
+ Copyright (C) 2010 Richard Gomes
 
  This source code is release under the BSD License.
 
@@ -19,32 +19,28 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
+package org.jquantlib.math.functions;
 
-package org.jquantlib.util;
+import org.jquantlib.math.Ops;
 
 /**
- * Mimicks std::pair
- * 
- * @see <a href="http://www.sgi.com/tech/stl/pair.html">std::pair</a> 
- * 
+ * A constant function
+ *
  * @author Richard Gomes
  */
-public class Pair<T1, T2> {
+public final class Nowhere implements Ops.DoublePredicate {
 
-	private final T1 first;
-	private final T2 second;
+    //
+    // implements Ops.DoublePredicate
+    //
 
-	public Pair(final T1 first, final T2 second) {
-		this.first = first;
-		this.second = second;
-	}
-
-	public T1 first() {
-		return first;
-	}
-
-	public T2 second() {
-		return second;
+    /**
+     * @param a is always discarded
+     * @return false
+     */
+	@Override
+	public boolean op(final double a) {
+		return false;
 	}
 
 }

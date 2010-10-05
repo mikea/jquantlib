@@ -1,10 +1,17 @@
 package org.jquantlib.math;
 
+
+/**
+ * This is an interim interface which will be replaced in future by an interface of same name from JSR-166y-extra
+ *
+ * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.Op.html">Op</a>
+ * @author Richard Gomes
+ */
 public interface Ops {
 
 
     /**
-     * This is a interim interface which will be replaced in future by an interface of same name from JSR-166y
+     * This is an interim method which will be replaced in future by a method of same name from JSR-166y-extra
      *
      * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.Op.html">Op</a>
      * @author Richard Gomes
@@ -15,7 +22,7 @@ public interface Ops {
 
 
     /**
-     * This is a interim interface which will be replaced in future by an interface of same name from JSR-166y
+     * This is an interim method which will be replaced in future by a method of same name from JSR-166y-extra
      *
      * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.DoubleOp.html">DoubleOp</a>
      * @author Richard Gomes
@@ -28,7 +35,7 @@ public interface Ops {
 
 
     /**
-     * This is a interim interface which will be replaced in future by an interface of same name from JSR-166y
+     * This is an interim method which will be replaced in future by a method of same name from JSR-166y-extra
      *
      * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.BinaryDoubleOp.html">BinaryDoubleOp</a>
      * @author Richard Gomes
@@ -40,7 +47,7 @@ public interface Ops {
 
 
     /**
-     * This is a interim interface which will be replaced in future by an interface of same name from JSR-166y
+     * This is an interim method which will be replaced in future by a method of same name from JSR-166y-extra
      *
      * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.IntToDouble.html">IntToDouble</a>
      * @author Richard Gomes
@@ -53,7 +60,7 @@ public interface Ops {
 
 
     /**
-     * This is a interim interface which will be replaced in future by an interface of same name from JSR-166y
+     * This is an interim method which will be replaced in future by a method of same name from JSR-166y-extra
      *
      * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/ObjectToDouble.html">ObjectToDouble</a>
      * @author Richard Gomes
@@ -65,7 +72,7 @@ public interface Ops {
 
 
     /**
-     * This is a interim interface which will be replaced in future by an interface of same name from JSR-166y
+     * This is an interim method which will be replaced in future by a method of same name from JSR-166y-extra
      *
      * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.DoublePredicate.html">DoublePredicate</a>
      * @author Richard Gomes
@@ -76,7 +83,7 @@ public interface Ops {
 
 
     /**
-     * This is a interim interface which will be replaced in future by an interface of same name from JSR-166y
+     * This is an interim method which will be replaced in future by a method of same name from JSR-166y-extra
      *
      * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.BinaryDoublePredicate.html">BinaryDoublePredicate</a>
      * @author Richard Gomes
@@ -86,8 +93,8 @@ public interface Ops {
     }
 
     /**
-     * This is a interim interface which will be replaced in future by an interface of same name from JSR-166y
-     * This interface replaced FunctionDouble.
+     * This is an interim method which will be replaced in future by a method of same name from JSR-166y-extra
+     * 
      * @see <a href="http://gee.cs.oswego.edu/dl/jsr166/dist/extra166ydocs/extra166y/Ops.DoubleGenerator.html">DoubleGenerator</a>
      * @author Zahid Hussain.
      */

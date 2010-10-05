@@ -49,9 +49,9 @@ import org.jquantlib.lang.annotation.QualityAssurance.Version;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q4_UNIT, reviewers = { "Richard Gomes" }, version = Version.V097)
-public class Statistics extends RiskStatistics {
+public class RiskStatistics extends GenericRiskStatistics {
 
-	public Statistics() {
+	public RiskStatistics() {
 		super();
 	}
 

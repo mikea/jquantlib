@@ -1,5 +1,6 @@
 /*
  Copyright (C) 2009 Ueli Hofstetter
+ Copyright (C) 2010 Richard Gomes
 
  This source code is release under the BSD License.
 
@@ -20,103 +21,129 @@
  When applicable, the original copyright notice follows this notice.
  */
 
+/*
+ Copyright (C) 2005 Gary Kennedy
+ Copyright (C) 2006 StatPro Italia srl
+
+ This file is part of QuantLib, a free-software/open-source library
+ for financial quantitative analysts and developers - http://quantlib.org/
+
+ QuantLib is free software: you can redistribute it and/or modify it
+ under the terms of the QuantLib license.  You should have received a
+ copy of the license along with this program; if not, please email
+ <quantlib-dev@lists.sf.net>. The license is also available online at
+ <http://quantlib.org/license.shtml>.
+
+ This program is distributed in the hope that it will be useful, but WITHOUT
+ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the license for more details.
+*/
 
 package org.jquantlib.math.statistics;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.util.Pair;
 
 
-/*! This class decorates another statistics class adding a
-convergence table calculation. The table tracks the
-convergence of the mean.
-
-It is possible to specify the number of samples at which the
-mean should be stored by mean of the second template
-parameter; the default is to store \f$ 2^{n-1} \f$ samples at
-the \f$ n \f$-th step. Any passed class must implement the
-following interface:
-\code
-Size initialSamples() const;
-Size nextSamples(Size currentSamples) const;
-\endcode
-as well as a copy constructor.
-
-\test results are tested against known good values.
-*/
+/**
+ * Statistics class with convergence table
+ * <p>
+ * This class decorates another statistics class adding a convergence table
+ * calculation. The table tracks the convergence of the mean.
+ * <p> 
+ * It is possible to specify the number of samples at which the mean should be
+ * stored by mean of the second template parameter; the default is to store \f$
+ * 2^{n-1} \f$ samples at the \f$ n \f$-th step. Any passed class must implement
+ * the following interface:
+ * <pre>
+ * public int initialSamples() @ReadOnly;
+ * public int nextSamples(int currentSamples) @ReadOnly;
+ * </pre>
+ * as well as a copy constructor.
+ *  
+ *  @author Ueli Hofstetter
+ *  @author Richard Gomes
+ */
+@QualityAssurance(quality = Quality.Q4_UNIT, reviewers = { "Richard Gomes" }, version = Version.V097)
 public class ConvergenceStatistics {
 
-    private Statistics statistics;
-    private final /*samplingRule*/ DoublingConvergenceSteps samplingRule_;
-    private List<Pair<Integer,Double>> table_;
-    private int nextSampleSize_;
-    private int sampleSize;
+	private final Statistics statistics;
+	private final DoublingConvergenceSteps samplingRule;
+	private final List<Pair<Integer, Double>> table;
+	private int nextSampleSize;
 
-    public ConvergenceStatistics(final Statistics T, final DoublingConvergenceSteps rule){
-        if (System.getProperty("EXPERIMENTAL") == null)
-            throw new UnsupportedOperationException("Work in progress");
-        this.statistics = T;
-        this.samplingRule_ = rule;
-        reset();
-    }
+	public ConvergenceStatistics() {
+		this(new DoublingConvergenceSteps());
+	}
 
-    public ConvergenceStatistics(final DoublingConvergenceSteps rule){
-        if (System.getProperty("EXPERIMENTAL") == null)
-            throw new UnsupportedOperationException("Work in progress");
-        this.samplingRule_ = rule;
-        reset();
-    }
+	public ConvergenceStatistics(final DoublingConvergenceSteps rule) {
+		this.statistics = new Statistics();
+		this.samplingRule = rule;
+		this.table = new ArrayList<Pair<Integer, Double>>();
+		reset();
+	}
 
-    public int initialSamples(){
-        return 1;
-    }
+	public int initialSamples() {
+		return 1;
+	}
 
-    public int nextSamples(final int current){
-        return 2*current + 1;
-    }
+	public int nextSamples(final int current) {
+		return 2 * current + 1;
+	}
 
+	public void add(final double value) {
+		add(value, 1.0);
+	}
 
-    public void add(final double value){
-        add(value, 1.0);
-    }
+	public void add(final double value, final double weight) {
+		this.statistics.add(value, weight);
+		if (this.statistics.samples() == nextSampleSize) {
+			table.add(new Pair<Integer, Double>(statistics.samples(),
+					statistics.mean()));
+			nextSampleSize = samplingRule.nextSamples(nextSampleSize);
+		}
+	}
 
-    public void add(final double value, final double weight){
-        this.statistics.add(value, weight);
-        if(this.statistics.samples() == nextSampleSize_){
-            table_.add(new Pair<Integer, Double>(statistics.samples(), statistics.mean()));
-            nextSampleSize_ = samplingRule_.nextSamples(nextSampleSize_);
-        }
-    }
+	public void addSequence(final double data[]) {
+		for (final double element : data) {
+			add(element);
+		}
+	}
 
-    void addSequence(final double data []) {
-        for (final double element : data) {
-            add(element);
-        }
-    }
+	public void addSequence(final double[] data, final double[] weight) {
+		for (int i = 0; i < data.length; i++) {
+			add(data[i], weight[i]);
+		}
+	}
 
+	public void reset() {
+		statistics.reset();
+		nextSampleSize = samplingRule.initialSamples();
+		table.clear();
+	}
 
-    public void addSequence(final double [] data, final double [] weight) {
-        for (int i= 0; i<data.length; i++) {
-            add(data[i], weight[i]);
-        }
-    }
+	public List<Pair<Integer, Double>> convergenceTable() {
+		return table;
+	}
 
-    public void reset(){
-        statistics.reset();
-        nextSampleSize_ = samplingRule_.initialSamples();
-        table_.clear();
-    }
+	
+	//
+	// private inner classes
+	//
 
-    public List<Pair<Integer,Double>> convergenceTable(){
-        return table_;
-    }
+	private static class DoublingConvergenceSteps {
+		public int initialSamples() /*@ReadOnly*/ {
+			return 1;
+		}
 
-    class DoublingConvergenceSteps {
-         public int initialSamples() { return 1; }
-         public int nextSamples(final int current) { return 2 * current + 1; }
-      };
-
-
+		public int nextSamples(final int current) /*@ReadOnly*/ {
+			return 2 * current + 1;
+		}
+	}
 
 }

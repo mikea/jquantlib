@@ -114,10 +114,10 @@ public class ExchangeRate {
                 throw new LibraryException("exchange rate not applicable"); // QA:[RG]::verified // TODO: message
             }
         case Derived:
-            if (amount.currency() == rateChain_.getFirst().source() || amount.currency() == rateChain_.getFirst().target()) {
-                return rateChain_.getSecond().exchange(rateChain_.getFirst().exchange(amount));
-            } else if (amount.currency() == rateChain_.getSecond().source() || amount.currency() == rateChain_.getSecond().target()) {
-                return rateChain_.getFirst().exchange(rateChain_.getSecond().exchange(amount));
+            if (amount.currency() == rateChain_.first().source() || amount.currency() == rateChain_.first().target()) {
+                return rateChain_.second().exchange(rateChain_.first().exchange(amount));
+            } else if (amount.currency() == rateChain_.second().source() || amount.currency() == rateChain_.second().target()) {
+                return rateChain_.first().exchange(rateChain_.second().exchange(amount));
             } else {
                 throw new LibraryException("exchange rate not applicable"); // QA:[RG]::verified // TODO: message
             }

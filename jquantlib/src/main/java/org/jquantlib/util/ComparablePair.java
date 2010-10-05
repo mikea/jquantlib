@@ -29,12 +29,12 @@ package org.jquantlib.util;
  * 
  * @author Richard Gomes
  */
-public class Pair<T1, T2> {
+public class ComparablePair<T1 extends Comparable<T1>, T2> implements Comparable<ComparablePair<T1, T2>> {
 
 	private final T1 first;
 	private final T2 second;
 
-	public Pair(final T1 first, final T2 second) {
+	public ComparablePair(final T1 first, final T2 second) {
 		this.first = first;
 		this.second = second;
 	}
@@ -45,6 +45,16 @@ public class Pair<T1, T2> {
 
 	public T2 second() {
 		return second;
+	}
+
+
+	//
+	// implements Comparable
+	//
+	
+	@Override
+	public int compareTo(ComparablePair<T1, T2> o) {
+		return this.first().compareTo(o.first());
 	}
 
 }
