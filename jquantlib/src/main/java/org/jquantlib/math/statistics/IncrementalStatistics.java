@@ -70,8 +70,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
     private static final String NEGATIVE_VARIANCE             = "negative variance";
     private static final String EMPTY_SAMPLE_SET              = "empty sample set";
     private static final String MAX_NUMBER_OF_SAMPLES_REACHED = "maximum number of samples reached";
-
-    private static final String INCOMPATIBLE_ARRAY_SIZES = "incompatible array sizes";
+    private static final String INCOMPATIBLE_ARRAY_SIZES      = "incompatible array sizes";
 
     
     protected /*@Size*/ int sampleNumber_;

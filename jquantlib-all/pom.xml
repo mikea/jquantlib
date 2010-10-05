@@ -93,7 +93,7 @@
         <module>../jquantlib</module>
         <module>../jquantlib-helpers</module>
         <module>../jquantlib-samples</module>
-        <module>../jquantlib-experimental</module>
+        <!-- module>../jquantlib-experimental</module -->
     </modules>
 
     <properties>

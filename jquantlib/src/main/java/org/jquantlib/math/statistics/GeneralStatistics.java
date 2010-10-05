@@ -93,7 +93,7 @@ import org.jquantlib.util.Pair;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q4_UNIT, reviewers = { "Richard Gomes" }, version = Version.V097)
-public abstract class GeneralStatistics /*implements S*/ {
+public abstract class GeneralStatistics {
 	
     private List<ComparablePair<Double, Double>> samples;
     private boolean sorted;

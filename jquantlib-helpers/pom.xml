@@ -36,9 +36,9 @@
         <relativePath>../jquantlib-all/pom.xml</relativePath>
     </parent>
 
-    <groupId>${project.parent.groupId}</groupId>
+    <groupId>org.jquantlib</groupId>
     <artifactId>jquantlib-helpers</artifactId>
-    <version>${project.parent.version}</version>
+    <version>0.2.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>

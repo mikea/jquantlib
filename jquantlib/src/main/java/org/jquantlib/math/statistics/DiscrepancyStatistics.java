@@ -48,7 +48,7 @@ import org.jquantlib.math.matrixutilities.Array;
 @QualityAssurance(quality = Quality.Q4_UNIT, reviewers = { "Richard Gomes" }, version = Version.V097)
 public class DiscrepancyStatistics extends SequenceStatistics {
 
-    private static final String dimension_not_allowed = "dimension==1 not allowed";
+    private static final String DIMENSION_NOT_ALLOWED = "dimension==1 not allowed";
 
         private /*@Real*/ double bdiscr_;
         private /*@Real*/ double ddiscr_;
@@ -161,7 +161,7 @@ public class DiscrepancyStatistics extends SequenceStatistics {
     public void reset(/*@Size*/ int dimension) {
         if (dimension == 0)           // if no size given,
             dimension = dimension_;   // keep the current one
-        QL.require(dimension != 1, "dimension==1 not allowed");
+        QL.require(dimension != 1, DIMENSION_NOT_ALLOWED);
 
         super.reset(dimension);
 

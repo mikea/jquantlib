@@ -32,13 +32,13 @@
     <parent>
         <groupId>org.jquantlib</groupId>
         <artifactId>jquantlib-all</artifactId>
-        <version>0.2.3</version>
+        <version>0.2.4-SNAPSHOT</version>
         <relativePath>../jquantlib-all/pom.xml</relativePath>
     </parent>
 
-    <groupId>${project.parent.groupId}</groupId>
+    <groupId>org.jquantlib</groupId>
     <artifactId>jquantlib-samples</artifactId>
-    <version>${project.parent.version}</version>
+    <version>0.2.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>

@@ -89,7 +89,7 @@ public class GenericSequenceStatistics {
     protected /*@Size*/ int dimension_;
     protected Statistics[] stats;
     protected Matrix quadraticSum;
-    private /*@Real*/ double[] results_;
+    private /*@Real*/ double[] results;
     
     
     public GenericSequenceStatistics() {
@@ -125,7 +125,7 @@ public class GenericSequenceStatistics {
         final Array m = mean();
         final /*@Real*/ double inv = 1.0/sampleWeight;
 
-        Matrix result = quadraticSum.mul(inv);
+        final Matrix result = quadraticSum.mul(inv);
         result.subAssign(m.outerProduct(m));
 
         result.mulAssign( sampleNumber/(sampleNumber-1.0) );
@@ -176,124 +176,124 @@ public class GenericSequenceStatistics {
     
     public Array mean() /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++) {
-            results_[i] = stats[i].mean();
+            results[i] = stats[i].mean();
         }
-        return new Array(results_);
+        return new Array(results);
     }
     
     public Array variance() /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++) {
-            results_[i] = stats[i].variance();
+            results[i] = stats[i].variance();
         }
-        return new Array(results_);
+        return new Array(results);
     }
     
     public Array standardDeviation() /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++) {
-            results_[i] = stats[i].standardDeviation();
+            results[i] = stats[i].standardDeviation();
         }
-        return new Array(results_);
+        return new Array(results);
     }
     
     public Array downsideVariance() /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++) {
-            results_[i] = stats[i].downsideVariance();
+            results[i] = stats[i].downsideVariance();
         }
-        return new Array(results_);
+        return new Array(results);
     }
     
     public Array downsideDeviation() /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++) {
-            results_[i] = stats[i].downsideDeviation();
+            results[i] = stats[i].downsideDeviation();
         }
-        return new Array(results_);
+        return new Array(results);
     }
     
     public Array semiVariance() /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++) {
-            results_[i] = stats[i].semiVariance();
+            results[i] = stats[i].semiVariance();
         }
-        return new Array(results_);
+        return new Array(results);
     }
     
     public Array semiDeviation() /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++) {
-            results_[i] = stats[i].semiDeviation();
+            results[i] = stats[i].semiDeviation();
         }
-        return new Array(results_);
+        return new Array(results);
     }
     
     public Array errorEstimate() /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++) {
-            results_[i] = stats[i].errorEstimate();
+            results[i] = stats[i].errorEstimate();
         }
-        return new Array(results_);
+        return new Array(results);
     }
     
     public Array skewness() /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++) {
-            results_[i] = stats[i].skewness();
+            results[i] = stats[i].skewness();
         }
-        return new Array(results_);
+        return new Array(results);
     }
     
     public Array kurtosis() /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++) {
-            results_[i] = stats[i].kurtosis();
+            results[i] = stats[i].kurtosis();
         }
-        return new Array(results_);
+        return new Array(results);
     }
     
     public Array min() /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++) {
-            results_[i] = stats[i].min();
+            results[i] = stats[i].min();
         }
-        return new Array(results_);
+        return new Array(results);
     }
     
     public Array max() /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++) {
-            results_[i] = stats[i].max();
+            results[i] = stats[i].max();
         }
-        return new Array(results_);
+        return new Array(results);
     }
     
     //-- single argument list
     
     public Array gaussianPercentile(/*@Real*/ double y) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].gaussianPercentile(y);
-        return new Array(results_);
+            results[i] = stats[i].gaussianPercentile(y);
+        return new Array(results);
     }
     
     public Array gaussianPotentialUpside(/*@Real*/ double percentile) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].gaussianPotentialUpside(percentile);
-        return new Array(results_);
+            results[i] = stats[i].gaussianPotentialUpside(percentile);
+        return new Array(results);
     }
     
     public Array gaussianValueAtRisk(/*@Real*/ double percentile) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].gaussianValueAtRisk(percentile);
-        return new Array(results_);
+            results[i] = stats[i].gaussianValueAtRisk(percentile);
+        return new Array(results);
     }
     
     public Array gaussianExpectedShortfall(/*@Real*/ double percentile) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].gaussianExpectedShortfall(percentile);
-        return new Array(results_);
+            results[i] = stats[i].gaussianExpectedShortfall(percentile);
+        return new Array(results);
     }
     
     public Array gaussianShortfall(/*@Real*/ double target) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].gaussianShortfall(target);
-        return new Array(results_);
+            results[i] = stats[i].gaussianShortfall(target);
+        return new Array(results);
     }
     
     public Array gaussianAverageShortfall(/*@Real*/ double target) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].gaussianAverageShortfall(target);
-        return new Array(results_);
+            results[i] = stats[i].gaussianAverageShortfall(target);
+        return new Array(results);
     }
     
 
@@ -301,44 +301,44 @@ public class GenericSequenceStatistics {
     
     public Array percentile(/*@Real*/ double y) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].percentile(y);
-        return new Array(results_);
+            results[i] = stats[i].percentile(y);
+        return new Array(results);
     }
     
     public Array potentialUpside(/*@Real*/ double percentile) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].potentialUpside(percentile);
-        return new Array(results_);
+            results[i] = stats[i].potentialUpside(percentile);
+        return new Array(results);
     }
     
     public Array valueAtRisk(/*@Real*/ double percentile) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].valueAtRisk(percentile);
-        return new Array(results_);
+            results[i] = stats[i].valueAtRisk(percentile);
+        return new Array(results);
     }
     
     public Array expectedShortfall(/*@Real*/ double percentile) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].expectedShortfall(percentile);
-        return new Array(results_);
+            results[i] = stats[i].expectedShortfall(percentile);
+        return new Array(results);
     }
     
     public Array regret(/*@Real*/ double target) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].regret(target);
-        return new Array(results_);
+            results[i] = stats[i].regret(target);
+        return new Array(results);
     }
     
     public Array shortfall(/*@Real*/ double target) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].shortfall(target);
-        return new Array(results_);
+            results[i] = stats[i].shortfall(target);
+        return new Array(results);
     }
     
     public Array averageShortfall(/*@Real*/ double target) /*@ReadOnly*/ {
         for (/*@Size*/ int i=0; i<dimension_; i++)
-            results_[i] = stats[i].averageShortfall(target);
-        return new Array(results_);
+            results[i] = stats[i].averageShortfall(target);
+        return new Array(results);
     }
     
 
@@ -360,7 +360,7 @@ public class GenericSequenceStatistics {
 				for (int i=0; i<dimension; i++) {
 					stats[i] = new Statistics();
 				}
-				results_ = new double[dimension];
+				results = new double[dimension];
 			}
 			quadraticSum = new Matrix(dimension_, dimension_);
 		} else {
@@ -368,7 +368,7 @@ public class GenericSequenceStatistics {
 		}
 	}
     
-	public void addSequence(final Array datum) {
+	public void add(final Array datum) {
 		add(datum, 1.0);
 	}
 
