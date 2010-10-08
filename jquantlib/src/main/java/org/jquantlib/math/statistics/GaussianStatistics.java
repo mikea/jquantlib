@@ -51,4 +51,10 @@ import org.jquantlib.lang.annotation.QualityAssurance.Version;
  * @author Richard Gomes
  */
 @QualityAssurance(quality = Quality.Q4_UNIT, reviewers = { "Richard Gomes" }, version = Version.V097)
-public abstract class GaussianStatistics extends GenericGaussianStatistics { }
+public abstract class GaussianStatistics extends GenericGaussianStatistics {
+
+	public GaussianStatistics() {
+		super();
+	} 
+	
+}

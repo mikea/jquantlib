@@ -82,14 +82,19 @@ public class IncrementalStatistics extends GenericRiskStatistics {
 
 
     public IncrementalStatistics() {
+    	super();
         reset();
     }
 
     
+    //
+    // public methods
+    //
+    
     /**
      * number of samples collected
      */
-    // @Override
+    @Override
     public /*@Size*/ int samples() /*@ReadOnly*/ {
         return sampleNumber_;
     }
@@ -97,7 +102,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
     /**
      * sum of data weights
      */
-    // @Override
+    @Override
     public /*@Real*/ double weightSum() /*@ReadOnly*/ {
         return sampleWeight_;
     }
@@ -106,7 +111,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
      * returns the mean, defined as
      * {@latex[ \langle x \rangle = \frac{\sum w_i x_i}{\sum w_i}. }
      */
-    // @Override
+    @Override
     public /*@Real*/ double mean() /*@ReadOnly*/ {
         QL.require(sampleWeight_>0.0, UNSUFFICIENT_SAMPLE_WEIGHT);
         return sum_/sampleWeight_;
@@ -117,7 +122,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
      * {@latex[ \frac{N}{N-1} \left\langle \left(
      *      x-\langle x \rangle \right)^2 \right\rangle. }
      */
-    // @Override
+    @Override
     public /*@Real*/ double variance() /*@ReadOnly*/ {
         QL.require(sampleWeight_>0.0, UNSUFFICIENT_SAMPLE_WEIGHT);
         QL.require(sampleNumber_>1, UNSUFFICIENT_SAMPLE_NUMBER);
@@ -136,7 +141,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
      * returns the standard deviation {@latex$ \sigma }, defined as the
      * square root of the variance.
      */
-    // @Override
+    @Override
     public /*@Real*/ double standardDeviation() /*@ReadOnly*/ {
         return Math.sqrt(variance());
     }
@@ -147,7 +152,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
      * square root of the ratio of the variance to the number of
      * samples.
      */
-    // @Override
+    @Override
     public /*@Real*/ double errorEstimate() /*@ReadOnly*/ {
         /*@Real*/ double var = variance();
         QL.require(samples() > 0, EMPTY_SAMPLE_SET);
@@ -158,7 +163,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
      * returns the downside deviation, defined as the
      * square root of the downside variance.
      */
-    // @Override
+    @Override
     public /*@Real*/ double downsideDeviation() /*@ReadOnly*/ {
         return Math.sqrt(downsideVariance());
     }
@@ -170,7 +175,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
      *  where {@latex$ \theta } = 0 if x > 0 and
      *  {@latex$ \theta } =1 if x <0
      */
-    // @Override
+    @Override
     public /*@Real*/ double downsideVariance() /*@ReadOnly*/ {
         if (downsideSampleWeight_==0.0) {
             QL.require(sampleWeight_>0.0, UNSUFFICIENT_SAMPLE_WEIGHT);
@@ -183,21 +188,13 @@ public class IncrementalStatistics extends GenericRiskStatistics {
             (downsideQuadraticSum_ /downsideSampleWeight_);
     }
 
-    
-    
-    
-    
-    
-    
-    
-    
     /**
      * returns the skewness, defined as
      * {@latex[ \frac{N^2}{(N-1)(N-2)} \frac{\left\langle \left(
      *    x-\langle x \rangle \right)^3 \right\rangle}{\sigma^3}. }
      *  The above evaluates to 0 for a Gaussian distribution.
      */
-    // @Override
+    @Override
     public /*@Real*/ double skewness() /*@ReadOnly*/ {
         QL.require(sampleNumber_>2, UNSUFFICIENT_SAMPLE_NUMBER_2);
         /*@Real*/ double s = standardDeviation();
@@ -222,7 +219,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
      *      \right\rangle}{\sigma^4} - \frac{3(N-1)^2}{(N-2)(N-3)}. }
      *  The above evaluates to 0 for a Gaussian distribution.
      */
-    // @Override
+    @Override
     public /*@Real*/ double kurtosis() /*@ReadOnly*/ {
         QL.require(sampleNumber_>3, UNSUFFICIENT_SAMPLE_NUMBER_3);
 
@@ -251,7 +248,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
     /**
      * returns the minimum sample value
      */
-    // @Override
+    @Override
     public /*@Real*/ double min() /*@ReadOnly*/ {
         QL.require(samples() > 0, EMPTY_SAMPLE_SET);
         return min_;
@@ -261,7 +258,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
     /**
      * returns the maximum sample value
      */
-    // @Override
+    @Override
     public /*@Real*/ double max() /*@ReadOnly*/ {
         QL.require(samples() > 0, EMPTY_SAMPLE_SET);
         return max_;
@@ -270,7 +267,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
     /**
      * adds a sequence of data to the set, with default weight
      */
-    // @Override
+    @Override
     public void addSequence(final Array datum) {
 	    for (int i=0; i<datum.size(); i++) {
 	    	add(datum.get(i));
@@ -282,7 +279,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
      * <p>
      * weights must be positive or null
      */
-    // @Override
+    @Override
     public void addSequence(final Array datum, final Array weights) {
         QL.require(datum.size()==weights.size(), INCOMPATIBLE_ARRAY_SIZES);
         for (int i=0; i<datum.size(); i++) {
@@ -297,12 +294,12 @@ public class IncrementalStatistics extends GenericRiskStatistics {
      * <p>
      * weight must be positive or null
      */
-    // @Override
+    @Override
     public void add(final /*@Real*/ double value) {
     	add(value, 1.0);
     }
     
-    // @Override
+    @Override
     public void add(final /*@Real*/ double value, final /*@Real*/ double weight) {
         QL.require(weight>=0.0, "negative weight not allowed");
 
@@ -338,7 +335,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
     /**
      * resets the data to a null set
      */
-    // @Override
+    @Override
     public void reset() {
         min_ = Constants.DBL_MAX;
         max_ = Constants.DBL_MIN;
@@ -352,19 +349,5 @@ public class IncrementalStatistics extends GenericRiskStatistics {
         cubicSum_ = 0.0;
         fourthPowerSum_ = 0.0;
     }
-
-
-
-    
-    // IDEAS: 
-    // 1. remove // @Override from methods not compiling;
-    // 2. Split interface S in two, so that IncrementalStatistics implement only one of them whilst 
-    //    GeneralStatistics implement those two interfaces
-    
-
-//	public List<Pair<Double, Double>> data() {
-//	public Pair<Double, Integer> expectationValue(DoubleOp f,
-//	public double percentile(double y) {
-//	public double topPercentile(double y) {
 
 }

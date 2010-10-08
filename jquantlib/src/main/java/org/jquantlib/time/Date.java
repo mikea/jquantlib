@@ -33,6 +33,7 @@ import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
 
+
 /**
  * Date class to represent time in days.
  *
@@ -43,7 +44,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     private /* @NonNegative */ long serialNumber;
 
-    static final int monthLength[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    private static final int monthLength[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
     private static final int monthLeapLength[] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
@@ -502,7 +503,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      *
      * @return
      */
-    public Object longDate() {
+    public java.util.Date longDate() {
         return new LongDate();
     }
 
@@ -513,7 +514,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      *
      * @return
      */
-    public Object shortDate() {
+    public java.util.Date shortDate() {
         return new ShortDate();
     }
 
@@ -524,7 +525,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      *
      * @return
      */
-    public Object isoDate() {
+    public java.util.Date isoDate() {
         return new ISODate();
     }
 
@@ -1012,7 +1013,12 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     /**
      * This class provides a long output formatter, e.g: September 18, 2009
      */
-    private final class LongDate {
+    private final class LongDate extends java.util.Date {
+
+        private LongDate() {
+            super((serialNumber-25569)*86400000L);
+        }
+
         @Override
         public final String toString() {
             if ( isNull() )
@@ -1030,7 +1036,12 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     /**
      * This class provides a short output formatter, e.g: 09/18/2009
      */
-    private final class ShortDate {
+    private final class ShortDate extends java.util.Date {
+
+        private ShortDate() {
+            super((serialNumber-25569)*86400000L);
+        }
+
         @Override
         public final String toString() {
             if ( isNull() )
@@ -1047,7 +1058,12 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     /**
      * This class provides an ISO date output formatter, e.g: 2009-09-18
      */
-    private final class ISODate {
+    private final class ISODate extends java.util.Date {
+
+        private ISODate() {
+            super((serialNumber-25569)*86400000L);
+        }
+
         @Override
         public final String toString() {
             if ( isNull() )

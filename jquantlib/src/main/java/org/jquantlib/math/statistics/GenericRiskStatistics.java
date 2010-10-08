@@ -83,7 +83,15 @@ public class GenericRiskStatistics extends GaussianStatistics {
     private static final String UNSUFFICIENT_SAMPLES_UNDER_TARGET = "samples under target <=1, unsufficient";
 
 
+	public GenericRiskStatistics() {
+		super();
+	}
 
+
+	//
+	// public methods
+	//
+	
     /**
      * returns the variance of observations below the mean,
      * {@latex[ \frac{N}{N-1}
@@ -147,7 +155,7 @@ public class GenericRiskStatistics extends GaussianStatistics {
     }
 
     /**
-     * potential upside (the reciprocal of VAR) at a given percentile
+     * potential upside (the reciprocal of VaR) at a given percentile
      */
     public /*@Real*/ double potentialUpside(final /*@Real*/ double centile) /*@ReadOnly*/ {
         QL.require(centile >= 0.9 && centile < 1.0 , "percentile out of range [0.9, 1.0)");

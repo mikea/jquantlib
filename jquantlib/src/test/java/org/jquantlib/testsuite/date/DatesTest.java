@@ -23,6 +23,7 @@
 package org.jquantlib.testsuite.date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -208,6 +209,35 @@ public class DatesTest {
                     + " year:          " + d.year());
         }
     }
+
+    @Test
+    public void javaDate() {
+        QL.info("Testing ISO dates against JQL dates...");
+
+        boolean success = true;
+        
+        final org.jquantlib.time.Date jqlDate = new org.jquantlib.time.Date(1, 1, 1901);
+        for (;;) {
+            final java.util.Date isoDate = jqlDate.isoDate();
+            int day   = jqlDate.dayOfMonth();
+            int month = jqlDate.month().value();
+            int year  = jqlDate.year();
+            if (year==2051) break;
+
+            boolean test = true;
+            test &= ( year  == (isoDate.getYear()  + 1900) ); 
+            test &= ( month == (isoDate.getMonth() + 1) ); 
+            test &= ( day   == (isoDate.getDate()) ); 
+            success &= test; 
+            
+            if (!test) {
+                QL.info(String.format("JQL Date = %s   :::   ISODate = %s", jqlDate.toString(), isoDate.toString()));
+            }
+            jqlDate.inc();
+        }
+        assertTrue("Conversion from JQuantLib date to JDK Date failed", success);
+    }
+
 
     @Test
     public void testLowerUpperBound() {

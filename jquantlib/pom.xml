@@ -59,11 +59,6 @@
     <dependencies>
         <!-- 'compile' scope dependencies -->
         <dependency>
-            <groupId>javolution</groupId>
-            <artifactId>javolution</artifactId>
-            <version>5.5.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.4.0</version>
