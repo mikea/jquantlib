@@ -74,20 +74,6 @@ import org.jquantlib.util.Pair;
  * It doesn't suffer the numerical instability problem of
  * IncrementalStatistics. The downside is that it stores all
  * samples, thus increasing the memory requirements.
- * <p>
- * <pre>
- * class GeneralStatistics
- * 
- * typedef GenericGaussianStatistics<GeneralStatistics> GaussianStatistics;
- *     typedef GenericRiskStatistics<GaussianStatistics> RiskStatistics;
- *         typedef RiskStatistics Statistics;
- *             typedef GenericSequenceStatistics<Statistics> SequenceStatistics;
- *             
- * class DiscrepancyStatistics : public SequenceStatistics
- *       
- * class IncrementalStatistics
- *     typedef GenericSequenceStatistics<IncrementalStatistics> SequenceStatisticsInc;
- * </pre>
  * 
  * @author Praneet Tiwari
  * @author Richard Gomes

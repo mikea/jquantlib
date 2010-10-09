@@ -212,7 +212,7 @@ public class DatesTest {
 
     @Test
     public void javaDate() {
-        QL.info("Testing ISO dates against JQL dates...");
+        QL.info("Testing JQL Date against JDK Date (java.util.Date)...");
 
         boolean success = true;
         

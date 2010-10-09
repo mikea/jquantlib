@@ -79,8 +79,8 @@ import org.jquantlib.util.Pair;
 public class GenericRiskStatistics extends GaussianStatistics {
 
 	private static final String NO_DATA_BELOW_THE_TARGET = "no data below the target";
-    private static final String EMPTY_SAMPLE_SET = "empty sample set";
-    private static final String UNSUFFICIENT_SAMPLES_UNDER_TARGET = "samples under target <=1, unsufficient";
+	private static final String EMPTY_SAMPLE_SET = "empty sample set";
+	private static final String UNSUFFICIENT_SAMPLES_UNDER_TARGET = "samples under target <=1, unsufficient";
 
 
 	public GenericRiskStatistics() {
@@ -91,150 +91,149 @@ public class GenericRiskStatistics extends GaussianStatistics {
 	//
 	// public methods
 	//
-	
-    /**
-     * returns the variance of observations below the mean,
-     * {@latex[ \frac{N}{N-1}
-     *     \mathrm{E}\left[ (x-\langle x \rangle)^2 \;|\;
-     *                       x < \langle x \rangle \right]. }
-     *
-     * @see Markowitz (1959).
-     */
-    public /*@Real*/ double semiVariance() /*@ReadOnly*/ {
-        return regret(mean());
-    }
 
-    /**
-     * returns the semi deviation, defined as the
-     * square root of the semi variance.
-     */
-    public /*@Real*/ double semiDeviation() /*@ReadOnly*/ {
-        return Math.sqrt(semiVariance());
-    }
+	/**
+	 * returns the variance of observations below the mean,
+	 * {@latex[ \frac{N}{N-1}
+	 *	 \mathrm{E}\left[ (x-\langle x \rangle)^2 \;|\;
+	 *					   x < \langle x \rangle \right]. }
+	 *
+	 * @see Markowitz (1959).
+	 */
+	public /*@Real*/ double semiVariance() /*@ReadOnly*/ {
+		return regret(mean());
+	}
 
-    /**
-     * returns the variance of observations below 0.0,
-     * {@latex[ \frac{N}{N-1}
-     *     \mathrm{E}\left[ x^2 \;|\; x < 0\right]. }
-     */
-    public /*@Real*/ double downsideVariance() /*@ReadOnly*/ {
-        return regret(0.0);
-    }
+	/**
+	 * returns the semi deviation, defined as the
+	 * square root of the semi variance.
+	 */
+	public /*@Real*/ double semiDeviation() /*@ReadOnly*/ {
+		return Math.sqrt(semiVariance());
+	}
 
-    /**
-     * returns the downside deviation, defined as the
-     * square root of the downside variance.
-     */
-    public /*@Real*/ double downsideDeviation() /*@ReadOnly*/ {
-        return Math.sqrt(downsideVariance());
-    }
+	/**
+	 * returns the variance of observations below 0.0,
+	 * {@latex[ \frac{N}{N-1}
+	 *	 \mathrm{E}\left[ x^2 \;|\; x < 0\right]. }
+	 */
+	public /*@Real*/ double downsideVariance() /*@ReadOnly*/ {
+		return regret(0.0);
+	}
 
-    /**
-     * returns the variance of observations below target,
-     * {@latex[ \frac{N}{N-1}
-     *      \mathrm{E}\left[ (x-t)^2 \;|\;
-     *                        x < t \right]. }
-     *
-     * @see Dembo and Freeman, "The Rules Of Risk", Wiley (2001).
-     */
-    public /*@Real*/ double regret(final /*@Real*/ double target) /*@ReadOnly*/ {
-        // average over the range below the target
+	/**
+	 * returns the downside deviation, defined as the
+	 * square root of the downside variance.
+	 */
+	public /*@Real*/ double downsideDeviation() /*@ReadOnly*/ {
+		return Math.sqrt(downsideVariance());
+	}
 
-        final List<Ops.DoubleOp> functions = new ArrayList<Ops.DoubleOp>();
-        functions.add(new Square());
-        functions.add(new Bind2nd(new Minus(), target));
-        final Expression comp = new Expression(functions);
-        final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);
+	/**
+	 * returns the variance of observations below target,
+	 * {@latex[ \frac{N}{N-1}
+	 *	  \mathrm{E}\left[ (x-t)^2 \;|\;
+	 *						x < t \right]. }
+	 *
+	 * @see Dembo and Freeman, "The Rules Of Risk", Wiley (2001).
+	 */
+	public /*@Real*/ double regret(final /*@Real*/ double target) /*@ReadOnly*/ {
+		// average over the range below the target
 
-        final Pair<Double, Integer> result = expectationValue(comp, less);
-        final double x = result.first();
+		final List<Ops.DoubleOp> functions = new ArrayList<Ops.DoubleOp>();
+		functions.add(new Square());
+		functions.add(new Bind2nd(new Minus(), target));
+		final Expression comp = new Expression(functions);
+		final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);
 
-        final int n = result.second().intValue();
-        QL.require(n >= 2 , UNSUFFICIENT_SAMPLES_UNDER_TARGET);
-        return (n/(n-1.0))*x;
-    }
+		final Pair<Double, Integer> result = expectationValue(comp, less);
+		final double x = result.first();
 
-    /**
-     * potential upside (the reciprocal of VaR) at a given percentile
-     */
-    public /*@Real*/ double potentialUpside(final /*@Real*/ double centile) /*@ReadOnly*/ {
-        QL.require(centile >= 0.9 && centile < 1.0 , "percentile out of range [0.9, 1.0)");
-        // potential upside must be a gain, i.e., floored at 0.0
-        return Math.max(percentile(centile), 0.0);
-    }
+		final int n = result.second().intValue();
+		QL.require(n >= 2 , UNSUFFICIENT_SAMPLES_UNDER_TARGET);
+		return (n/(n-1.0))*x;
+	}
 
-    /**
-     * value-at-risk at a given percentile
-     */
-    public /*@Real*/ double valueAtRisk(final /*@Real*/ double centile) /*@ReadOnly*/ {
-        QL.require(centile >= 0.9 && centile < 1.0 , "percentile out of range [0.9, 1.0)");
-        return - Math.min(percentile(1.0-centile), 0.0);
-    }
+	/**
+	 * potential upside (the reciprocal of VaR) at a given percentile
+	 */
+	public /*@Real*/ double potentialUpside(final /*@Real*/ double centile) /*@ReadOnly*/ {
+		QL.require(centile >= 0.9 && centile < 1.0 , "percentile out of range [0.9, 1.0)");
+		// potential upside must be a gain, i.e., floored at 0.0
+		return Math.max(percentile(centile), 0.0);
+	}
 
-    /**
-     * expected shortfall at a given percentile
-     * <p>
-     * returns the expected loss in case that the loss exceeded
-     * a VaR threshold,
-     * <p>
-     * {@latex[ \mathrm{E}\left[ x \;|\; x < \mathrm{VaR}(p) \right], }
-     * <p>
-     * that is the average of observations below the given percentile \f$ p \f$.
-     * Also know as conditional value-at-risk.
-     * 
-     * @see Artzner, Delbaen, Eber and Heath, "Coherent measures of risk", Mathematical Finance 9 (1999)
-     */
-    public /*@Real*/ double expectedShortfall(final /*@Real*/ double centile) /*@ReadOnly*/ {
-        QL.require(centile>=0.9 && centile<1.0, "percentile out of range [0.9, 1.0)");
-        QL.ensure(samples() != 0, EMPTY_SAMPLE_SET);
-        
-        final double target = -valueAtRisk(centile);
+	/**
+	 * value-at-risk at a given percentile
+	 */
+	public /*@Real*/ double valueAtRisk(final /*@Real*/ double centile) /*@ReadOnly*/ {
+		QL.require(centile >= 0.9 && centile < 1.0 , "percentile out of range [0.9, 1.0)");
+		return - Math.min(percentile(1.0-centile), 0.0);
+	}
 
-        final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);
-        final Pair<Double, Integer> result = expectationValue(new Identity(), less);
+	/**
+	 * expected shortfall at a given percentile
+	 * <p>
+	 * returns the expected loss in case that the loss exceeded
+	 * a VaR threshold,
+	 * <p>
+	 * {@latex[ \mathrm{E}\left[ x \;|\; x < \mathrm{VaR}(p) \right], }
+	 * <p>
+	 * that is the average of observations below the given percentile \f$ p \f$.
+	 * Also know as conditional value-at-risk.
+	 * 
+	 * @see Artzner, Delbaen, Eber and Heath, "Coherent measures of risk", Mathematical Finance 9 (1999)
+	 */
+	public /*@Real*/ double expectedShortfall(final /*@Real*/ double centile) /*@ReadOnly*/ {
+		QL.require(centile>=0.9 && centile<1.0, "percentile out of range [0.9, 1.0)");
+		QL.ensure(samples() != 0, EMPTY_SAMPLE_SET);
+		
+		final double target = -valueAtRisk(centile);
 
-        final double x = result.first();
-        final Integer N = result.second();
+		final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);
+		final Pair<Double, Integer> result = expectationValue(new Identity(), less);
 
-        QL.ensure(N != 0, NO_DATA_BELOW_THE_TARGET);
-        // must be a loss, i.e., capped at 0.0 and negated
-        return -Math.min(x, 0.0);
+		final double x = result.first();
+		final Integer N = result.second();
 
-    }
+		QL.ensure(N != 0, NO_DATA_BELOW_THE_TARGET);
+		// must be a loss, i.e., capped at 0.0 and negated
+		return -Math.min(x, 0.0);
 
-    /**
-     * probability of missing the given target, defined as
-     * {@latex[ \mathrm{E}\left[ \Theta \;|\; (-\infty,\infty) \right] }
-     * where
-     * {@latex[ \Theta(x) = \left\{
-     *      \begin{array}{ll}
-     *      1 & x < t \\
-     *      0 & x \geq t
-     *      \end{array}
-     *      \right. }
-     */
-    public /*@Real*/ double shortfall(final /*@Real*/ double target) /*@ReadOnly*/ {
-    	QL.ensure(samples() != 0, EMPTY_SAMPLE_SET);
+	}
 
-        final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);
-        return expectationValue(new Clipped(less, new Constant(1.0)), new TruePredicate()).first();
-    }
+	/**
+	 * probability of missing the given target, defined as
+	 * {@latex[ \mathrm{E}\left[ \Theta \;|\; (-\infty,\infty) \right] }
+	 * where
+	 * {@latex[ \Theta(x) = \left\{
+	 *	  \begin{array}{ll}
+	 *	  1 & x < t \\
+	 *	  0 & x \geq t
+	 *	  \end{array}
+	 *	  \right. }
+	 */
+	public /*@Real*/ double shortfall(final /*@Real*/ double target) /*@ReadOnly*/ {
+		QL.ensure(samples() != 0, EMPTY_SAMPLE_SET);
 
-    /**
-     * averaged shortfallness, defined as
-     * {@latex[ \mathrm{E}\left[ t-x \;|\; x<t \right] }
-     */
-    public /*@Real*/ double averageShortfall(final /*@Real*/ double target) /*@ReadOnly*/ {
+		final Ops.DoublePredicate less = new Bind2ndPredicate(new LessThanPredicate(), target);
+		return expectationValue(new Clipped(less, new Constant(1.0)), new TruePredicate()).first();
+	}
 
-        final Ops.DoubleOp minus = new Bind1st(target, new Minus());
-        final Ops.DoublePredicate less = new Bind1stPredicate(target, new LessThanPredicate());
-        final Pair<Double, Integer> result = expectationValue(minus, less);
+	/**
+	 * averaged shortfallness, defined as
+	 * {@latex[ \mathrm{E}\left[ t-x \;|\; x<t \right] }
+	 */
+	public /*@Real*/ double averageShortfall(final /*@Real*/ double target) /*@ReadOnly*/ {
 
-        final double x = result.first();
-        final Integer N = result.second();
-        QL.ensure(N != 0, NO_DATA_BELOW_THE_TARGET);
-        return x;
-    }
+		final Ops.DoubleOp minus = new Bind1st(target, new Minus());
+		final Ops.DoublePredicate less = new Bind1stPredicate(target, new LessThanPredicate());
+		final Pair<Double, Integer> result = expectationValue(minus, less);
 
+		final double x = result.first();
+		final Integer N = result.second();
+		QL.ensure(N != 0, NO_DATA_BELOW_THE_TARGET);
+		return x;
+	}
 
 }

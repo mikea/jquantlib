@@ -43,10 +43,12 @@ package org.jquantlib.math.statistics;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jquantlib.QL;
 
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.util.Pair;
 
 
@@ -71,6 +73,8 @@ import org.jquantlib.util.Pair;
  */
 @QualityAssurance(quality = Quality.Q4_UNIT, reviewers = { "Richard Gomes" }, version = Version.V097)
 public class ConvergenceStatistics {
+
+	private static final String INCOMPATIBLE_ARRAY_SIZES      = "incompatible array sizes";
 
 	private final Statistics statistics;
 	private final DoublingConvergenceSteps samplingRule;
@@ -109,16 +113,30 @@ public class ConvergenceStatistics {
 		}
 	}
 
-	public void addSequence(final double data[]) {
-		for (final double element : data) {
-			add(element);
-		}
+	public void addSequence(final double[] datum) {
+        for (int i=0; i<datum.length; i++) {
+        	add(datum[i]);
+        }
 	}
 
-	public void addSequence(final double[] data, final double[] weight) {
-		for (int i = 0; i < data.length; i++) {
-			add(data[i], weight[i]);
-		}
+	public void addSequence(final Array datum) {
+        for (int i=0; i<datum.size(); i++) {
+        	add(datum.get(i));
+        }
+	}
+
+	public void addSequence(final double[] datum, final double[] weights) {
+        QL.require(datum.length==weights.length, INCOMPATIBLE_ARRAY_SIZES);
+        for (int i=0; i<datum.length; i++) {
+        	add(datum[i], weights[i]);
+        }
+	}
+
+	public void addSequence(final Array datum, final Array weights) {
+        QL.require(datum.size()==weights.size(), INCOMPATIBLE_ARRAY_SIZES);
+        for (int i=0; i<datum.size(); i++) {
+        	add(datum.get(i), weights.get(i));
+        }
 	}
 
 	public void reset() {

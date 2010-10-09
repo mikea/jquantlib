@@ -65,11 +65,6 @@ public class StochasticProcessArray extends StochasticProcess {
         }
     }
 
-    //TODO: verify what method should survive: size() or getSize()
-    //    public int  size()  {
-    //        return processes_.size();
-    //    }
-
     @Override
     public Array initialValues()  {
         final double[] tmp = new double[size()];
