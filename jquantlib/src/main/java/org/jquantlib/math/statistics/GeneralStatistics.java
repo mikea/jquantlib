@@ -101,6 +101,27 @@ public abstract class GeneralStatistics {
     /**
      * adds a sequence of data to the set, with default weight
      */
+    public void addSequence(final double[] datum) {
+	    for (int i=0; i<datum.length; i++) {
+	    	add(datum[i]);
+	    }
+    }
+    
+    /**
+     * adds a sequence of data to the set, each with its weight
+     */
+    public void addSequence(
+    		final double[] datum, 
+    		final double[] weights) {
+        QL.require(datum.length==weights.length, INCOMPATIBLE_ARRAY_SIZES);
+        for (int i=0; i<datum.length; i++) {
+        	add(datum[i], weights[i]);
+        }
+    }
+
+    /**
+     * adds a sequence of data to the set, with default weight
+     */
     public void addSequence(final Array datum) {
 	    for (int i=0; i<datum.size(); i++) {
 	    	add(datum.get(i));

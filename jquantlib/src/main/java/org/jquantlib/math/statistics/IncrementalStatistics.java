@@ -268,6 +268,29 @@ public class IncrementalStatistics extends GenericRiskStatistics {
      * adds a sequence of data to the set, with default weight
      */
     @Override
+    public void addSequence(final double[] datum) {
+	    for (int i=0; i<datum.length; i++) {
+	    	add(datum[i]);
+	    }
+    }
+    
+    /**
+     * adds a sequence of data to the set, each with its weight
+     * <p>
+     * weights must be positive or null
+     */
+    @Override
+    public void addSequence(final double[] datum, final double[] weights) {
+        QL.require(datum.length==weights.length, INCOMPATIBLE_ARRAY_SIZES);
+        for (int i=0; i<datum.length; i++) {
+        	add(datum[i], weights[i]);
+        }
+    }
+
+    /**
+     * adds a sequence of data to the set, with default weight
+     */
+    @Override
     public void addSequence(final Array datum) {
 	    for (int i=0; i<datum.size(); i++) {
 	    	add(datum.get(i));
@@ -286,8 +309,7 @@ public class IncrementalStatistics extends GenericRiskStatistics {
         	add(datum.get(i), weights.get(i));
         }
     }
-    
-    
+
 
     /**
      * adds a datum to the set, possibly with a weight

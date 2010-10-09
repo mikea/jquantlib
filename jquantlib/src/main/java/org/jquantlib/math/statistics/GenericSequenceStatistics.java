@@ -347,14 +347,16 @@ public class GenericSequenceStatistics {
 		}
 	}
 
+    /**
+     * adds a sequence of data to the set, with default weight
+     */
 	public void add(final double[] datum) {
 		add(datum, 1.0);
 	}
 
-	public void add(final Array datum) {
-		add(datum, 1.0);
-	}
-
+    /**
+     * adds a sequence of data to the set, each with its weight
+     */
 	public void add(final double[] datum, final/* @Real */double weight) {
 		if (dimension_ == 0) {
 			// stat wasn't initialized yet
@@ -370,6 +372,16 @@ public class GenericSequenceStatistics {
 		}
 	}
 
+    /**
+     * adds a sequence of data to the set, with default weight
+     */
+	public void add(final Array datum) {
+		add(datum, 1.0);
+	}
+
+    /**
+     * adds a sequence of data to the set, each with its weight
+     */
 	public void add(final Array datum, final/* @Real */double weight) {
 		if (dimension_ == 0) {
 			// stat wasn't initialized yet
