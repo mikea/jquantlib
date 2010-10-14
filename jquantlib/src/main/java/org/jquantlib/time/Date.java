@@ -38,7 +38,6 @@ import org.jquantlib.util.Observer;
  * Date class to represent time in days.
  *
  * @author Richard Gomes
- *
  */
 public class Date implements Observable, Comparable<Date>, Cloneable {
 
@@ -64,7 +63,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     // e.g. for 1901 yearOffset[1] is 366, that is, December 31 1900
     private static final int yearOffset[] = {
         // 1900-1909
-        0,  366,  731, 1096, 1461, 1827, 2192, 2557, 2922, 3288,
+            0,  366,  731, 1096, 1461, 1827, 2192, 2557, 2922, 3288,
         // 1910-1919
          3653, 4018, 4383, 4749, 5114, 5479, 5844, 6210, 6575, 6940,
         // 1920-1929
@@ -241,6 +240,20 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     }
 
 
+    /**
+     * Allows interoperability with JDK Date
+     * <p>
+     * <b>NOTE</b>: Both java.util.Date and JQuantLib Date do not support time zones or high precision clocks.
+     * In other words, a day <i>always</i> has exactly 84,600 seconds, or 84,600,000 milliseconds.
+     * 
+     * @author Richard Gomes
+     */
+    public Date(final java.util.Date date) {
+    	this(25569+(date.getTime()/86400000L));
+    }
+    
+    
+    
     //
     // public methods :: inspectors
     //
@@ -669,7 +682,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
     //
 
     private void checkSerialNumber() {
-        QL.ensure(serialNumber >= minimumSerialNumber() && serialNumber <= maximumSerialNumber(),
+        QL.ensure((serialNumber >= minimumSerialNumber()) && (serialNumber <= maximumSerialNumber()),
         "Date's serial number is outside allowed range"); // QA:[RG]::verified // TODO: message
     }
 
@@ -693,7 +706,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
                 y -= 1;
             }
 
-            QL.ensure(y >= 1900 && y <= 2199 , "year out of bounds. It must be in [1901,2199]"); // QA:[RG]::verified // TODO: message
+            QL.ensure(y > 1900 && y <= 2199 , "year out of bounds. It must be in [1901,2199]"); // QA:[RG]::verified // TODO: message
             final int length = monthLength(m, isLeap(y));
             if (d > length) {
                 d = length;
@@ -707,7 +720,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             final int m = date.month().value();
             final int y = date.year() + n;
 
-            QL.ensure(y >= 1900 && y <= 2199 , "year out of bounds. It must be in [1901,2199]"); // QA:[RG]::verified // TODO: message
+            QL.ensure(y > 1900 && y <= 2199 , "year out of bounds. It must be in [1901,2199]"); // QA:[RG]::verified // TODO: message
             if (d == 29 && m == Month.February.value() && !isLeap(y)) {
                 d = 28;
             }
@@ -902,7 +915,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * @return
      */
     private static final long fromDMY(final int d, final int m, final int y) {
-        QL.require(y >= 1900 && y <= 2199 , "year out of bound. It must be in [1901,2199]"); // QA:[RG]::verified // TODO: message
+        QL.require(y > 1900 && y <= 2199 , "year out of bound. It must be in [1901,2199]"); // QA:[RG]::verified // TODO: message
         QL.require(m > 0 && m < 13 , "month outside JANUARY-December range [1,12]"); // QA:[RG]::verified // TODO: message
         final boolean leap = isLeap(y);
         final int len = monthLength(m, leap);
@@ -1012,6 +1025,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * This class provides a long output formatter, e.g: September 18, 2009
+     * <p>
+     * <b>NOTE</b>: Both java.util.Date and JQuantLib Date do not support time zones or high precision clocks.
+     * In other words, a day <i>always</i> has exactly 84,600 seconds, or 84,600,000 milliseconds.
      */
     private final class LongDate extends java.util.Date {
 
@@ -1035,6 +1051,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * This class provides a short output formatter, e.g: 09/18/2009
+     * <p>
+     * <b>NOTE</b>: Both java.util.Date and JQuantLib Date do not support time zones or high precision clocks.
+     * In other words, a day <i>always</i> has exactly 84,600 seconds, or 84,600,000 milliseconds.
      */
     private final class ShortDate extends java.util.Date {
 
@@ -1057,6 +1076,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     /**
      * This class provides an ISO date output formatter, e.g: 2009-09-18
+     * <p>
+     * <b>NOTE</b>: Both java.util.Date and JQuantLib Date do not support time zones or high precision clocks.
+     * In other words, a day <i>always</i> has exactly 84,600 seconds, or 84,600,000 milliseconds.
      */
     private final class ISODate extends java.util.Date {
 

@@ -20,13 +20,14 @@
  When applicable, the original copyright notice follows this notice.
  */
 
-package org.jquantlib.testsuite.date;
+package org.jquantlib.testsuite.time;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.jquantlib.QL;
@@ -211,8 +212,8 @@ public class DatesTest {
     }
 
     @Test
-    public void javaDate() {
-        QL.info("Testing JQL Date against JDK Date (java.util.Date)...");
+    public void testConvertionToJavaDate() {
+        QL.info("Testing convertion to Java Date...");
 
         boolean success = true;
         
@@ -222,7 +223,6 @@ public class DatesTest {
             int day   = jqlDate.dayOfMonth();
             int month = jqlDate.month().value();
             int year  = jqlDate.year();
-            if (year==2051) break;
 
             boolean test = true;
             test &= ( year  == (isoDate.getYear()  + 1900) ); 
@@ -233,9 +233,49 @@ public class DatesTest {
             if (!test) {
                 QL.info(String.format("JQL Date = %s   :::   ISODate = %s", jqlDate.toString(), isoDate.toString()));
             }
+
+            if (year==2199 && month==12 && day==31) break;
             jqlDate.inc();
         }
         assertTrue("Conversion from JQuantLib date to JDK Date failed", success);
+    }
+
+
+    @Test
+    public void testConvertionFromJavaDate() {
+        QL.info("Testing convertion from Java Date...");
+
+        // obtain 01-JAN-1901 first from JQL Date and then convert to Java Date
+        Date jqlDate = new Date(1, 1, 1901);
+        java.util.Date javaDate = jqlDate.isoDate();
+        
+        boolean success = true;
+        for (;;) {
+            int year  = javaDate.getYear()  + 1900;
+            int month = javaDate.getMonth() + 1;
+            int day   = javaDate.getDate();
+
+        	// obtain a JQL Date from a Java Date
+        	jqlDate = new Date(javaDate);
+
+        	// compare d,m,y
+            boolean test = true;
+            test &= ( jqlDate.year()          == year ); 
+            test &= ( jqlDate.month().value() == month ); 
+            test &= ( jqlDate.dayOfMonth()    == day ); 
+            success &= test; 
+
+            if (!test) {
+                QL.info(String.format("JQL Date = %s   :::   ISODate = %s", jqlDate.toString(), javaDate.toString()));
+            }
+
+            if (year==2199 && month==12 && day==31) break;
+
+            // Increment Java Date by 1 day
+            // Lets assume a day has *always* 86400 seconds, i.e: discard leap seconds and timezone info
+            javaDate = new java.util.Date(javaDate.getTime()+86400000);
+        }
+        assertTrue("Conversion from Java Date to JQuantLib date failed", success);
     }
 
 
