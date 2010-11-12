@@ -30,7 +30,6 @@ import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
-//import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.BootstrapHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
@@ -43,14 +42,11 @@ import org.jquantlib.util.Visitor;
 
 /**
  *  Rate helper for bootstrapping over IborIndex futures prices
- *  Refactored to make it sync with QL v0.9.7
  *
  * @author Srinivas Hasti
  * @author Neel Sheyal
  */
 
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-// TODO: code review :: please verify against QL/C++ code
 public class FraRateHelper extends RelativeDateRateHelper {
 
 	private Date fixingDate;
@@ -58,11 +54,19 @@ public class FraRateHelper extends RelativeDateRateHelper {
 	private final IborIndex iborIndex;
 	private final RelinkableHandle<YieldTermStructure> termStructureHandle = new RelinkableHandle<YieldTermStructure>(null);
 
-	public FraRateHelper(final Handle<Quote> rate,
+	
+	//
+	// public constructors
+	//
+	
+	public FraRateHelper(
+			final Handle<Quote> rate,
 			final/* @Natural */int monthsToStart,
 			final/* @Natural */int monthsToEnd,
-			final/* @Natural */int fixingDays, final Calendar calendar,
-			final BusinessDayConvention convention, final boolean endOfMonth,
+			final/* @Natural */int fixingDays, 
+			final Calendar calendar,
+			final BusinessDayConvention convention, 
+			final boolean endOfMonth,
 			final DayCounter dayCounter) {
 
 		super(rate);
@@ -81,11 +85,14 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		initializeDates();
 	}
 
-	public FraRateHelper(final/* @Rate */double rate,
+	public FraRateHelper(
+			final/* @Rate */double rate,
 			final/* @Natural */int monthsToStart,
 			final/* @Natural */int monthsToEnd,
-			final/* @Natural */int fixingDays, final Calendar calendar,
-			final BusinessDayConvention convention, final boolean endOfMonth,
+			final/* @Natural */int fixingDays, 
+			final Calendar calendar,
+			final BusinessDayConvention convention, 
+			final boolean endOfMonth,
 			final DayCounter dayCounter) {
 		
 		super(rate);
@@ -104,8 +111,10 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		initializeDates();
 	}
 
-	public FraRateHelper(final Handle<Quote> rate,
-			final/* @Natural */int monthsToStart, final IborIndex i) {
+	public FraRateHelper(
+			final Handle<Quote> rate,
+			final/* @Natural */int monthsToStart, 
+			final IborIndex i) {
 		
 		super(rate);
 		this.periodToStart = new Period(monthsToStart, TimeUnit.Months);
@@ -121,8 +130,10 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		initializeDates();
 	}
 
-	public FraRateHelper(final/* @Rate */double rate,
-			final/* @Natural */int monthsToStart, final IborIndex i) {
+	public FraRateHelper(
+			final/* @Rate */double rate,
+			final/* @Natural */int monthsToStart, 
+			final IborIndex i) {
 
 		super(rate);
 		this.periodToStart = new Period(monthsToStart, TimeUnit.Months);
@@ -138,10 +149,14 @@ public class FraRateHelper extends RelativeDateRateHelper {
 		initializeDates();
 	}
 
-	public FraRateHelper(final Handle<Quote> rate, final Period periodToStart,
+	public FraRateHelper(
+			final Handle<Quote> rate, 
+			final Period periodToStart,
 			final/* @Natural */int lengthInMonths,
-			final/* @Natural */int fixingDays, final Calendar calendar,
-			final BusinessDayConvention convention, final boolean endOfMonth,
+			final/* @Natural */int fixingDays, 
+			final Calendar calendar,
+			final BusinessDayConvention convention, 
+			final boolean endOfMonth,
 			final DayCounter dayCounter) {
 
 		super(rate);
@@ -159,10 +174,14 @@ public class FraRateHelper extends RelativeDateRateHelper {
 
 	}
 
-	public FraRateHelper(final/* @Rate */double rate, final Period periodToStart,
+	public FraRateHelper(
+			final/* @Rate */double rate, 
+			final Period periodToStart,
 			final/* @Natural */int lengthInMonths,
-			final/* @Natural */int fixingDays, final Calendar calendar,
-			final BusinessDayConvention convention, final boolean endOfMonth,
+			final/* @Natural */int fixingDays, 
+			final Calendar calendar,
+			final BusinessDayConvention convention, 
+			final boolean endOfMonth,
 			final DayCounter dayCounter) {
 
 		super(rate);
@@ -179,7 +198,9 @@ public class FraRateHelper extends RelativeDateRateHelper {
 
 	}
 
-	public FraRateHelper(final Handle<Quote> rate, final Period periodToStart,
+	public FraRateHelper(
+			final Handle<Quote> rate, 
+			final Period periodToStart,
 			final IborIndex i) {
 		
 		super(rate);
@@ -197,7 +218,9 @@ public class FraRateHelper extends RelativeDateRateHelper {
 
 	}
 
-	public FraRateHelper(final/* @Rate */double rate, final Period periodToStart,
+	public FraRateHelper(
+			final/* @Rate */double rate, 
+			final Period periodToStart,
 			final IborIndex i) {
 
 		super(rate);
@@ -215,8 +238,9 @@ public class FraRateHelper extends RelativeDateRateHelper {
 
 	}
 
+    
     //
-    // public methods
+    // implements BootstrapHelper
     //
 
     @Override
@@ -231,6 +255,10 @@ public class FraRateHelper extends RelativeDateRateHelper {
         termStructureHandle.linkTo(t, false);
         super.setTermStructure(t);
     }
+
+    //
+    // implements RelativeDateRateHelper
+    //
 
     @Override
     protected void initializeDates() {

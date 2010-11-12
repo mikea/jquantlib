@@ -143,7 +143,6 @@ public abstract class GeneralStatistics {
     /**
      * resets the data to a null set
      */
-    // @Override
     public void reset() {
     	samples = new ArrayList<ComparablePair<Double, Double>>();
         sorted = true;
@@ -159,46 +158,35 @@ public abstract class GeneralStatistics {
         }
     }
     
-    
-    //
-    // implements S
-    //
-    
-    // @Override
     public /*@Size*/ int samples() /*@ReadOnly*/ {
         return samples.size();
     }
 
-    // @Override
     public List<ComparablePair<Double, Double>> data() /*@ReadOnly*/ {
     	return Collections.unmodifiableList(samples);
     }
 
-    // @Override
     public /*@Real*/ double weightSum() /*@ReadOnly*/ {
         /*@Real*/ double result = 0.0;
-        for (ComparablePair<Double, Double> it : samples) {
+        for (final ComparablePair<Double, Double> it : samples) {
         	result += it.second();
         }
         return result;
     }
 
-
-    // @Override
     public /*@Real*/ double mean() /*@ReadOnly*/ {
-        /*@Size*/ int N = samples();
+        /*@Size*/ final int N = samples();
         QL.require(N != 0, "empty sample set");
         // eat our own dog food
         return expectationValue(new Identity(), new Everywhere()).first();
     }
 
-    // @Override
     public /*@Real*/ double variance() /*@ReadOnly*/ {
-        /*@Size*/ int N = samples();
+        /*@Size*/ final int N = samples();
         QL.require(N > 1, "sample number <=1, unsufficient");
         // Subtract the mean and square. Repeat on the whole range.
         // Hopefully, the whole thing will be inlined in a single loop.
-        /*@Real*/ double s2 = expectationValue(
+        /*@Real*/ final double s2 = expectationValue(
         		new ComposedFunction(
         				new Square(), new Bind2nd(
         						new Minus(), mean())),
@@ -206,62 +194,55 @@ public abstract class GeneralStatistics {
         return s2*N/(N-1.0);
     }
 
-    // @Override
     public /*@Real*/ double standardDeviation() /*@ReadOnly*/ {
         return Math.sqrt(variance());
     }
 
-    // @Override
     public /*@Real*/ double errorEstimate() /*@ReadOnly*/ {
         return Math.sqrt(variance()/samples());
     }
 
-    // @Override
     public /*@Real*/ double skewness() /*@ReadOnly*/ {
-        /*@Size*/ int N = samples();
+        /*@Size*/ final int N = samples();
         QL.require(N > 2, "sample number <=2, unsufficient");
 
-        /*@Real*/ double x = expectationValue(
+        /*@Real*/ final double x = expectationValue(
         		new ComposedFunction(
         				new Cube(), new Bind2nd(
         						new Minus(), mean())),
                                   new Everywhere()).first();
-        /*@Real*/ double sigma = standardDeviation();
+        /*@Real*/ final double sigma = standardDeviation();
 
         return (x/(sigma*sigma*sigma))*(N/(N-1.0))*(N/(N-2.0));
     }
 
-    // @Override
     public /*@Real*/ double kurtosis() /*@ReadOnly*/ {
-        /*@Size*/ int N = samples();
+        /*@Size*/ final int N = samples();
         QL.require(N > 3, "sample number <=3, unsufficient");
 
-        /*@Real*/ double x = expectationValue(
+        /*@Real*/ final double x = expectationValue(
         		new ComposedFunction(
         				new Fourth(), new Bind2nd(
         						new Minus(), mean())),
                                   new Everywhere()).first();
-        /*@Real*/ double sigma2 = variance();
+        /*@Real*/ final double sigma2 = variance();
 
-        /*@Real*/ double c1 = (N/(N-1.0)) * (N/(N-2.0)) * ((N+1.0)/(N-3.0));
-        /*@Real*/ double c2 = 3.0 * ((N-1.0)/(N-2.0)) * ((N-1.0)/(N-3.0));
+        /*@Real*/ final double c1 = (N/(N-1.0)) * (N/(N-2.0)) * ((N+1.0)/(N-3.0));
+        /*@Real*/ final double c2 = 3.0 * ((N-1.0)/(N-2.0)) * ((N-1.0)/(N-3.0));
 
         return c1*(x/(sigma2*sigma2))-c2;
     }
 
-    // @Override
     public /*@Real*/ double min() /*@ReadOnly*/ {
         QL.require(samples()>0, EMPTY_SAMPLE_SET);
         return Collections.min(samples).first();
     }
 
-    // @Override
     public /*@Real*/ double max() /*@ReadOnly*/ {
         QL.require(samples()>0, EMPTY_SAMPLE_SET);
         return Collections.max(samples).first();
     }
 
-    // @Override
     public final Pair<Double, Integer> expectationValue(final Ops.DoubleOp f, final Ops.DoublePredicate inRange) {
         double num = 0.0;
         double den = 0.0;
@@ -281,19 +262,18 @@ public abstract class GeneralStatistics {
             return new Pair<Double, Integer>(num/den, n);
     }
 
-    // @Override
     public /*@Real*/ double percentile(final /*@Real*/ double percent) /*@ReadOnly*/ {
         QL.require(percent > 0.0 && percent <= 1.0, "percentile must be in (0.0, 1.0]");
-        /*@Real*/ double sampleWeight = weightSum();
+        /*@Real*/ final double sampleWeight = weightSum();
         QL.require(sampleWeight>0.0, "empty sample set");
 
         sort();
 
-        int k = 0; int l = samples.size()-1;
+        int k = 0; final int l = samples.size()-1;
         
         /* the sum of weight is non null, therefore there's at least one sample */
         /*@Real*/ double integral = samples.get(k).second();
-        /*@Real*/ double target = percent*sampleWeight;
+        /*@Real*/ final double target = percent*sampleWeight;
         
         while (integral < target && k != l) {
         	k++;
@@ -302,19 +282,18 @@ public abstract class GeneralStatistics {
         return samples.get(k).first();
     }
 
-    // @Override
     public /*@Real*/ double topPercentile(final /*@Real*/ double percent) /*@ReadOnly*/ {
         QL.require(percent > 0.0 && percent <= 1.0, "percentile must be in (0.0, 1.0]");
-        /*@Real*/ double sampleWeight = weightSum();
+        /*@Real*/ final double sampleWeight = weightSum();
         QL.require(sampleWeight > 0.0, "empty sample set");
 
         sort();
 
-        int k = samples.size()-1; int l = 0;
+        int k = samples.size()-1; final int l = 0;
         
         /* the sum of weight is non null, therefore there's at least one sample */
         /*@Real*/ double integral = samples.get(k).second();
-        /*@Real*/ double target = percent*sampleWeight;
+        /*@Real*/ final double target = percent*sampleWeight;
         
         while (integral < target && k != l) {
         	k--;
@@ -323,13 +302,11 @@ public abstract class GeneralStatistics {
         return samples.get(k).first();
     }
     
-    // @Override
-    public void add(/*@Real*/ double value) {
+    public void add(/*@Real*/ final double value) {
     	add(value, 1.0);
     }
     
-    // @Override
-    public void add(/*@Real*/ double value, /*@Real*/ double weight) {
+    public void add(/*@Real*/ final double value, /*@Real*/ final double weight) {
         QL.require(weight>=0.0, NEGATIVE_WEIGHT_NOT_ALLOWED);
         samples.add(new ComparablePair<Double, Double>(value, weight));
         sorted = false;
