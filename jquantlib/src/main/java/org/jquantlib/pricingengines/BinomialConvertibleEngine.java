@@ -25,8 +25,8 @@ import java.lang.reflect.Constructor;
 
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.instruments.ConvertibleBondOption;
 import org.jquantlib.instruments.PlainVanillaPayoff;
+import org.jquantlib.instruments.bonds.ConvertibleBondOption;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.methods.lattices.BinomialTree;

@@ -39,8 +39,8 @@ package org.jquantlib.pricingengines.hybrid;
 
 import java.util.List;
 
-import org.jquantlib.instruments.ConvertibleBondOption;
 import org.jquantlib.instruments.DiscretizedAsset;
+import org.jquantlib.instruments.bonds.ConvertibleBondOption;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 import org.jquantlib.time.TimeGrid;
