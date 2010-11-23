@@ -49,6 +49,10 @@ import org.jquantlib.util.Visitor;
 
 public class FraRateHelper extends RelativeDateRateHelper {
 
+	
+	//
+	// private fields
+	//
 	private Date fixingDate;
 	private final Period periodToStart;
 	private final IborIndex iborIndex;
