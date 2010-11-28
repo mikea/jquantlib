@@ -62,10 +62,10 @@ import org.jquantlib.time.Schedule;
  * @category instruments
  *
  * @author John Nichol
+ * @author Zahid Hussain
  */
 //TEST: calculations are tested by checking results against cached values.
 public class FloatingRateBond extends Bond {
-
 	public FloatingRateBond(
 	        final int settlementDays,
 			final double faceAmount,
@@ -96,7 +96,7 @@ public class FloatingRateBond extends Bond {
 						.withFloors(floors)
 						.inArrears(inArrears).Leg();
 
-		addRedemptionsToCashflows(new double[] { redemption });
+		addRedemptionsToCashflows(new double[]{redemption});
 
 		QL.ensure(!cashflows().isEmpty(), "bond with no cashflows!");
 		QL.ensure(redemptions_.size() == 1, "multiple redemptions created");
@@ -109,76 +109,72 @@ public class FloatingRateBond extends Bond {
 			final Schedule schedule,
 			final IborIndex index,
 			final DayCounter accrualDayCounter) {
-		this(settlementDays, faceAmount, schedule,
-				index, accrualDayCounter, BusinessDayConvention.Following,
-				Constants.NULL_INTEGER, new Array(new double[] { 1.0 }),
-				new Array(new double[] { 0.0 }), new Array(), new Array(),
-				false, 100.0, new Date());
+		this(settlementDays, faceAmount, schedule,index, accrualDayCounter, 
+				BusinessDayConvention.Following, Constants.NULL_INTEGER, 
+				new Array(new double[] { 1.0 }), new Array(new double[] { 0.0 }), 
+				new Array(), new Array(), false, 100.0, new Date());
 
 	}
 
-	public FloatingRateBond(
-	        final int settlementDays,
-			final double faceAmount,
-			final Date startDate,
-			final Date maturityDate,
-			final Frequency couponFrequency,
-			final Calendar calendar,
-			final Handle<IborIndex> index,
-			final DayCounter accrualDayCounter,
-			final BusinessDayConvention accrualConvention,
-			final BusinessDayConvention paymentConvention,
-			final int fixingDays,
-			final Array gearings,
-			final Array spreads,
-			final Array caps,
-			final Array floors,
-			final boolean inArrears,
-			final double redemption,
-			final Date issueDate,
-			final Date stubDate,
-			final DateGeneration.Rule rule,
-			final boolean endOfMonth) {
-		
+	public FloatingRateBond(final int settlementDays,
+							final double faceAmount,
+							final Date startDate,
+							final Date maturityDate,
+							final Frequency couponFrequency,
+							final Calendar calendar,
+							final Handle<IborIndex> index,
+							final DayCounter accrualDayCounter,
+							final BusinessDayConvention accrualConvention,
+							final BusinessDayConvention paymentConvention,
+							final int fixingDays,
+							final Array gearings,
+							final Array spreads,
+							final Array caps,
+							final Array floors,
+							final boolean inArrears,
+							final double redemption,
+							final Date issueDate,
+							final Date stubDate,
+							final DateGeneration.Rule rule,
+							final boolean endOfMonth) {
 		super(settlementDays, calendar, issueDate);
 
 		maturityDate_ = maturityDate.clone();
 
 		Date firstDate = null, nextToLastDate = null;
 		switch (rule) {
-		case Backward:
-			firstDate = new Date();
-			nextToLastDate = stubDate;
-			break;
-		case Forward:
-			firstDate = stubDate;
-			nextToLastDate = new Date();
-			break;
-		case Zero:
-		case ThirdWednesday:
-		case Twentieth:
-		case TwentiethIMM:
-			QL.error("stub date (" + stubDate + ") not allowed with " +
+			case Backward:
+				firstDate = new Date();
+				nextToLastDate = stubDate;
+				break;
+			case Forward:
+				firstDate = stubDate;
+				nextToLastDate = new Date();
+				break;
+			case Zero:
+			case ThirdWednesday:
+			case Twentieth:
+			case TwentiethIMM:
+				QL.error("stub date (" + stubDate + ") not allowed with " +
 					rule + " DateGeneration::Rule");
-		default:
+			default:
 			QL.error("unknown DateGeneration::Rule (" + rule + ")");
 		}
 
-		final Schedule schedule = new Schedule(startDate, maturityDate_, new Period(couponFrequency),
-				calendar_, accrualConvention, accrualConvention,
-				rule, endOfMonth,
-				firstDate, nextToLastDate);
+		Schedule schedule = new Schedule(startDate, maturityDate_, new Period(couponFrequency),
+								calendar_, accrualConvention, accrualConvention,
+								rule, endOfMonth, firstDate, nextToLastDate);
 
 		cashflows_ = new IborLeg(schedule, index.currentLink())
-		.withNotionals(faceAmount)
-		.withPaymentDayCounter(accrualDayCounter)
-		.withPaymentAdjustment(paymentConvention)
-		.withFixingDays(fixingDays)
-		.withGearings(gearings)
-		.withSpreads(spreads)
-		.withCaps(caps)
-		.withFloors(floors)
-		.inArrears(inArrears).Leg();
+						.withNotionals(faceAmount)
+						.withPaymentDayCounter(accrualDayCounter)
+						.withPaymentAdjustment(paymentConvention)
+						.withFixingDays(fixingDays)
+						.withGearings(gearings)
+						.withSpreads(spreads)
+						.withCaps(caps)
+						.withFloors(floors)
+						.inArrears(inArrears).Leg();
 
 		addRedemptionsToCashflows(new double[] {redemption });
 

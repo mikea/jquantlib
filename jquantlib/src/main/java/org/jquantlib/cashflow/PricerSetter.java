@@ -66,7 +66,10 @@ public class PricerSetter implements TypedVisitor<Object> {
 
     @Override
     public Visitor<Object> getVisitor(final Class<? extends Object> klass) {
-        if (klass==CashFlow.class) {
+        if (klass==CashFlow.class ) {
+            return new CashFlowVisitor();
+        }
+        if ( klass == SimpleCashFlow.class) {
             return new CashFlowVisitor();
         }
         if (klass==Coupon.class) {
@@ -101,6 +104,12 @@ public class PricerSetter implements TypedVisitor<Object> {
     //
 
     private class CashFlowVisitor implements Visitor<Object> {
+        @Override
+        public void visit(final Object o) {
+            // nothing
+        }
+    }
+    private class SimpleCashFlowVisitor implements Visitor<Object> {
         @Override
         public void visit(final Object o) {
             // nothing

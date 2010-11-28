@@ -56,18 +56,26 @@ package org.jquantlib.testsuite.instruments;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.QL;
+import org.jquantlib.SavedSettings;
 import org.jquantlib.Settings;
+import org.jquantlib.cashflow.BlackIborCouponPricer;
 import org.jquantlib.cashflow.FixedRateLeg;
+import org.jquantlib.cashflow.IborCouponPricer;
 import org.jquantlib.cashflow.Leg;
+import org.jquantlib.cashflow.PricerSetter;
 import org.jquantlib.cashflow.SimpleCashFlow;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.Business252;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.Thirty360;
+import org.jquantlib.indexes.IborIndex;
+import org.jquantlib.indexes.ibor.USDLibor;
 import org.jquantlib.instruments.Bond;
 import org.jquantlib.instruments.bonds.FixedRateBond;
+import org.jquantlib.instruments.bonds.FloatingRateBond;
 import org.jquantlib.instruments.bonds.ZeroCouponBond;
+import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.bond.DiscountingBondEngine;
 import org.jquantlib.quotes.Handle;
@@ -75,6 +83,7 @@ import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.volatilities.optionlet.OptionletVolatilityStructure;
 import org.jquantlib.testsuite.util.Utilities;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
@@ -94,8 +103,25 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 public class BondTest {
+    private class CommonVars {
+        // common data
+        Calendar calendar;
+        Date today;
+        double /*Real*/ faceAmount;
 
-	public BondTest() {
+        // cleanup
+        SavedSettings backup = new SavedSettings();
+
+        // setup
+        public CommonVars() {
+            calendar = new Target();
+            today = calendar.adjust(Date.todaysDate());
+            new Settings().setEvaluationDate(today);
+            faceAmount = 1000000.0;
+        }
+    }
+
+    public BondTest() {
 		QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 	}
 
@@ -238,7 +264,7 @@ public class BondTest {
 						rate.setValue(yield);
 
 						final double price = bond.cleanPrice(yield, bondDayCount, Compounding.Continuous, frequency);
-						final double calculatedPrice = bond.getCleanPrice();
+						final double calculatedPrice = bond.cleanPrice();
 
 						if (Math.abs(price-calculatedPrice) > tolerance) {
 							fail(
@@ -350,7 +376,7 @@ public class BondTest {
 	                   + "\n    error:      " + (price-cachedPrice1a));
 	    }
 
-	    price = bond1.getCleanPrice();
+	    price = bond1.cleanPrice();
 	    if (Math.abs(price-cachedPrice1b) > tolerance) {
 	    	fail("failed to reproduce cached price:"
 	                   + "\n    calculated: " + price
@@ -396,7 +422,7 @@ public class BondTest {
 	                   + "\n    error:      " + (price-cachedPrice2a));
 	    }
 
-	    price = bond2.getCleanPrice();
+	    price = bond2.cleanPrice();
 	    if (Math.abs(price-cachedPrice2b) > tolerance) {
 	    	fail("failed to reproduce cached price:"
 	                   + "\n    calculated: " + price
@@ -509,7 +535,7 @@ public class BondTest {
 
 	    final double cachedPrice1 = 88.551726;
 
-	    double price = bond1.getCleanPrice();
+	    double price = bond1.cleanPrice();
 	    if (Math.abs(price-cachedPrice1) > tolerance) {
 	        fail("failed to reproduce cached price:\n"
 	                   + "    calculated: " + price + "\n"
@@ -528,7 +554,7 @@ public class BondTest {
 
 	    final double cachedPrice2 = 91.278949;
 
-	    price = bond2.getCleanPrice();
+	    price = bond2.cleanPrice();
 	    if (Math.abs(price-cachedPrice2) > tolerance) {
 	        fail("failed to reproduce cached price:\n"
 	                   + "    calculated: " + price + "\n"
@@ -547,7 +573,7 @@ public class BondTest {
 
 	    final double cachedPrice3 = 94.098006;
 
-	    price = bond3.getCleanPrice();
+	    price = bond3.cleanPrice();
 	    if (Math.abs(price-cachedPrice3) > tolerance) {
 	        fail("failed to reproduce cached price:\n"
 	                   + "    calculated: " + price + "\n"
@@ -594,7 +620,7 @@ public class BondTest {
 
 	    final double cachedPrice1 = 99.298100;
 
-	    double price = bond1.getCleanPrice();
+	    double price = bond1.cleanPrice();
 	    if (Math.abs(price-cachedPrice1) > tolerance) {
 	        fail("failed to reproduce cached price:\n"
 	                   + "    calculated: " + price + "\n"
@@ -616,7 +642,7 @@ public class BondTest {
 
 	    final double cachedPrice2 = 100.334149;
 
-	    price = bond2.getCleanPrice();
+	    price = bond2.cleanPrice();
 	    if (Math.abs(price-cachedPrice2) > tolerance) {
 	        fail("failed to reproduce cached price:\n"
 	                   + "    calculated: " + price + "\n"
@@ -642,7 +668,7 @@ public class BondTest {
 
 	    final double cachedPrice3 = 100.382794;
 
-	    price = bond3.getCleanPrice();
+	    price = bond3.cleanPrice();
 	    if (Math.abs(price-cachedPrice3) > tolerance) {
 	        fail("failed to reproduce cached price:\n"
 	                   + "    calculated: " + price + "\n"
@@ -652,128 +678,129 @@ public class BondTest {
 	}
 
 
-//	@Test
-//	public void testCachedFloating() {
-//
-//	    QL.info("Testing floating-rate bond prices against cached values...");
-//
-//	    CommonVars vars = new CommonVars();
-//
-//	    Date today = new Date(22,Month.November,2004);
-//	    Settings settings = new Settings();
-//	    settings.setEvaluationDate(today);
-//
-//	    int settlementDays = 1;
-//
-//		Handle<YieldTermStructure> riskFreeRate = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.025, new Actual360()));
-//		Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.03, new Actual360()));
-//
-//		IborIndex index = new USDLibor(new Period(6,TimeUnit.Months), riskFreeRate);
-//	    int fixingDays = 1;
-//
-//	    double tolerance = 1.0e-6;
-//
-//	    IborCouponPricer pricer = new BlackIborCouponPricer(new Handle<CapletVolatilityStructure>());
-//
-//	    // plain
-//
-//	    Schedule sch = new Schedule(new Date(30,Month.November,2004),
-//	                 new Date(30,Month.November,2008),
-//	                 new Period(Frequency.Semiannual),
-//	                 new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
-//	                 BusinessDayConvention.ModifiedFollowing, BusinessDayConvention.ModifiedFollowing,
-//	                 DateGeneration.Rule.Backward, false);
-//
-//	    FloatingRateBond bond1 = new FloatingRateBond(settlementDays, faceAmount, sch,
-//	                           index, new ActualActual(ActualActual.Convention.ISMA),
-//	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
-//	                           new Array(), new Array(),
-//	                           new Array(), new Array(),
-//	                           false,
-//	                           100.0, new Date(30,Month.November,2004));
-//
-//	    PricingEngine bondEngine = new DiscountingBondEngine(riskFreeRate);
-//	    bond1.setPricingEngine(bondEngine);
-//
-//	    PricerSetter.setCouponPricer(bond1.cashflows(),pricer);
-//
-//
-//	    double cachedPrice1 = 99.874645;
-////	    #if defined(QL_USE_INDEXED_COUPON)
-////	    Real cachedPrice1 = 99.874645;
-////	    #else
-////	    Real cachedPrice1 = 99.874646;
-////	    #endif
-//
-//
-//	    double price = bond1.getCleanPrice();
-//	    if (Math.abs(price-cachedPrice1) > tolerance) {
-//	        fail("failed to reproduce cached price:\n"
-//	                   + "    calculated: " + price + "\n"
-//	                   + "    expected:   " + cachedPrice1 + "\n"
-//	                   + "    error:      " + (price-cachedPrice1));
-//	    }
-//
-//	    // different risk-free and discount curve
-//
-//	    FloatingRateBond bond2 = new FloatingRateBond(settlementDays, faceAmount, sch,
-//	                           index, new ActualActual(ActualActual.Convention.ISMA),
-//	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
-//	                           new Array(), new Array(),
-//	                           new Array(), new Array(),
-//	                           false,
-//	                           100.0, new Date(30,Month.November,2004));
-//
-//	    PricingEngine bondEngine2 = new DiscountingBondEngine(discountCurve);
-//	    bond2.setPricingEngine(bondEngine2);
-//
-//	    PricerSetter.setCouponPricer(bond2.cashflows(),pricer);
-//
-////	    #if defined(QL_USE_INDEXED_COUPON)
-////	    Real cachedPrice2 = 97.955904;
-////	    #else
-////	    Real cachedPrice2 = 97.955904;
-////	    #endif
-//
-//	    double cachedPrice2 = 97.955904;
-//	    price = bond2.getCleanPrice();
-//	    if (Math.abs(price-cachedPrice2) > tolerance) {
-//	        fail("failed to reproduce cached price:\n"
-//	                   + "    calculated: " + price + "\n"
-//	                   + "    expected:   " + cachedPrice2 + "\n"
-//	                   + "    error:      " + (price-cachedPrice2));
-//	    }
-//
-//	    // varying spread
-//	    double [] spreads = new double[] { 0.001, 0.0012, 0.0014, 0.0016 };
-//
-//	    FloatingRateBond bond3 = new FloatingRateBond(settlementDays, faceAmount, sch,
-//	                           index, new ActualActual(ActualActual.Convention.ISMA),
-//	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
-//	                           new Array(), new Array(spreads),
-//	                           new Array(), new Array(),
-//	                           false,
-//	                           100.0, new Date(30,Month.November,2004));
-//
-//	    bond3.setPricingEngine(bondEngine2);
-//
-//	    PricerSetter.setCouponPricer(bond3.cashflows(),pricer);
-//
-////	    #if defined(QL_USE_INDEXED_COUPON)
-////	    Real cachedPrice3 = 98.495458;
-////	    #else
-////	    Real cachedPrice3 = 98.495459;
-////	    #endif
-//
-//	    double cachedPrice3 = 98.495458;
-//	    price = bond3.getCleanPrice();
-//	    if (Math.abs(price-cachedPrice3) > tolerance) {
-//	        fail("failed to reproduce cached price:\n"
-//	                   + "    calculated: " + price + "\n"
-//	                   + "    expected:   " + cachedPrice3 + "\n"
-//	                   + "    error:      " + (price-cachedPrice3));
-//	    }
-//	}
+	@Test
+	public void testCachedFloating() {
+
+	    QL.info("Testing floating-rate bond prices against cached values...");
+
+	    CommonVars vars = new CommonVars();
+
+	    Date today = new Date(22,Month.November,2004);
+	    Settings settings = new Settings();
+	    settings.setEvaluationDate(today);
+
+	    int settlementDays = 1;
+
+		Handle<YieldTermStructure> riskFreeRate = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.025, new Actual360()));
+		Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.03, new Actual360()));
+
+		IborIndex index = new USDLibor(new Period(6,TimeUnit.Months), riskFreeRate);
+	    int fixingDays = 1;
+
+	    double tolerance = 1.0e-6;
+
+	    IborCouponPricer pricer = new BlackIborCouponPricer(new Handle<OptionletVolatilityStructure>());
+
+	    // plain
+
+	    Schedule sch = new Schedule(new Date(30,Month.November,2004),
+	    							new Date(30,Month.November,2008),
+	    							new Period(Frequency.Semiannual),
+	    							new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
+	    							BusinessDayConvention.ModifiedFollowing, 
+	    							BusinessDayConvention.ModifiedFollowing,
+	    							DateGeneration.Rule.Backward, false);
+
+	    FloatingRateBond bond1 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
+	                           index, new ActualActual(ActualActual.Convention.ISMA),
+	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
+	                           new Array(), new Array(),
+	                           new Array(), new Array(),
+	                           false,
+	                           100.0, new Date(30,Month.November,2004));
+
+	    PricingEngine bondEngine = new DiscountingBondEngine(riskFreeRate);
+	    bond1.setPricingEngine(bondEngine);
+
+	    PricerSetter.setCouponPricer(bond1.cashflows(),pricer);
+
+
+	    double cachedPrice1 = 99.874645;
+//	    #if defined(QL_USE_INDEXED_COUPON)
+//	    Real cachedPrice1 = 99.874645;
+//	    #else
+//	    Real cachedPrice1 = 99.874646;
+//	    #endif
+
+
+	    double price = bond1.cleanPrice();
+	    if (Math.abs(price-cachedPrice1) > tolerance) {
+	        fail("failed to reproduce cached price:\n"
+	                   + "    calculated: " + price + "\n"
+	                   + "    expected:   " + cachedPrice1 + "\n"
+	                   + "    error:      " + (price-cachedPrice1));
+	    }
+
+	    // different risk-free and discount curve
+
+	    FloatingRateBond bond2 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
+	                           index, new ActualActual(ActualActual.Convention.ISMA),
+	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
+	                           new Array(), new Array(),
+	                           new Array(), new Array(),
+	                           false,
+	                           100.0, new Date(30,Month.November,2004));
+
+	    PricingEngine bondEngine2 = new DiscountingBondEngine(discountCurve);
+	    bond2.setPricingEngine(bondEngine2);
+
+	    PricerSetter.setCouponPricer(bond2.cashflows(),pricer);
+
+//	    #if defined(QL_USE_INDEXED_COUPON)
+//	    Real cachedPrice2 = 97.955904;
+//	    #else
+//	    Real cachedPrice2 = 97.955904;
+//	    #endif
+
+	    double cachedPrice2 = 97.955904;
+	    price = bond2.cleanPrice();
+	    if (Math.abs(price-cachedPrice2) > tolerance) {
+	        fail("failed to reproduce cached price:\n"
+	                   + "    calculated: " + price + "\n"
+	                   + "    expected:   " + cachedPrice2 + "\n"
+	                   + "    error:      " + (price-cachedPrice2));
+	    }
+
+	    // varying spread
+	    double [] spreads = new double[] { 0.001, 0.0012, 0.0014, 0.0016 };
+
+	    FloatingRateBond bond3 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
+	                           index, new ActualActual(ActualActual.Convention.ISMA),
+	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
+	                           new Array(), new Array(spreads),
+	                           new Array(), new Array(),
+	                           false,
+	                           100.0, new Date(30,Month.November,2004));
+
+	    bond3.setPricingEngine(bondEngine2);
+
+	    PricerSetter.setCouponPricer(bond3.cashflows(),pricer);
+
+//	    #if defined(QL_USE_INDEXED_COUPON)
+//	    Real cachedPrice3 = 98.495458;
+//	    #else
+//	    Real cachedPrice3 = 98.495459;
+//	    #endif
+
+	    double cachedPrice3 = 98.495458;
+	    price = bond3.cleanPrice();
+	    if (Math.abs(price-cachedPrice3) > tolerance) {
+	        fail("failed to reproduce cached price:\n"
+	                   + "    calculated: " + price + "\n"
+	                   + "    expected:   " + cachedPrice3 + "\n"
+	                   + "    error:      " + (price-cachedPrice3));
+	    }
+	}
 
 	@Test
 	public void testBrazilianCached() {

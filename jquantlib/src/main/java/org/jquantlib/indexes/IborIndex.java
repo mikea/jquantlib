@@ -56,13 +56,14 @@ import org.jquantlib.time.Period;
  * Base class for Inter-Bank-Offered-Rate indexes (e.g. %Libor, etc.)
  *
  * @author Srinivas Hasti
+ * @author Zahid Hussain
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class IborIndex extends InterestRateIndex {
 
-    private final BusinessDayConvention convention;
-    private final Handle<YieldTermStructure> handle;
-    private final boolean endOfMonth;
+    private final BusinessDayConvention convention_;
+    private final Handle<YieldTermStructure> termStructure_;
+    private final boolean endOfMonth_;
 
     public IborIndex(
             final String familyName,
@@ -73,15 +74,14 @@ public class IborIndex extends InterestRateIndex {
             final BusinessDayConvention convention,
             final boolean endOfMonth,
             final DayCounter dayCounter,
-            final Handle<YieldTermStructure> handle) {
-        super(familyName, tenor, fixingDays, fixingCalendar, currency, dayCounter);
-        this.convention = convention;
-        this.handle = handle;
-        this.endOfMonth = endOfMonth;
-        if (handle != null) {
-            handle.addObserver(this);
-            //XXX:registerWith
-            //registerWith(handle.getLink());
+            final Handle<YieldTermStructure> h) {
+        super(familyName, tenor, fixingDays, currency, fixingCalendar, dayCounter);
+
+        this.convention_ = convention;
+        this.termStructure_ = h;
+        this.endOfMonth_ = endOfMonth;
+        if (termStructure_ != null) {
+        	termStructure_.addObserver(this);
         }
     }
 
@@ -89,32 +89,29 @@ public class IborIndex extends InterestRateIndex {
             final String familyName,
             final Period tenor,
             final /*@Natural*/ int fixingDays,
-            final Calendar fixingCalendar,
             final Currency currency,
+            final Calendar fixingCalendar,
             final BusinessDayConvention convention,
             final boolean endOfMonth,
             final DayCounter dayCounter) {
-        super(familyName, tenor, fixingDays, fixingCalendar, currency, dayCounter);
-        this.convention = convention;
-        this.handle = null;
-        this.endOfMonth = endOfMonth;
+    	this(familyName, tenor, fixingDays, currency, fixingCalendar, 
+    		convention, endOfMonth, dayCounter, new Handle<YieldTermStructure>());
     }
 
 
-    public IborIndex clone(final Handle<YieldTermStructure> handle) {
+    public IborIndex clone(final Handle<YieldTermStructure> h) {
         final IborIndex clone = new IborIndex(
-                this.familyName(),
-                this.tenor(),
-                this.fixingDays(),
-                this.currency(),
-                this.fixingCalendar(),
-                this.convention,
-                this.endOfMonth,
-                this.dayCounter,
-                handle);
+                					this.familyName(),
+                					this.tenor(),
+                					this.fixingDays(),
+                					this.currency(),
+                					this.fixingCalendar(),
+                					this.businessDayConvention(),
+                					this.endOfMonth(),
+                					this.dayCounter(),
+                					h);
         return clone;
     }
-
 
 
     protected static BusinessDayConvention euriborConvention(final Period p) {
@@ -151,11 +148,11 @@ public class IborIndex extends InterestRateIndex {
      */
     @Override
     protected double forecastFixing(final Date fixingDate) {
-        QL.require(! handle.empty() , "no forecasting term structure set to " + name());  // QA:[RG]::verified // TODO: message
+        QL.require(! termStructure_.empty() , "no forecasting term structure set to " + name());  // QA:[RG]::verified // TODO: message
         final Date fixingValueDate = valueDate(fixingDate);
         final Date endValueDate = maturityDate(fixingValueDate);
-        final double fixingDiscount = handle.currentLink().discount(fixingValueDate);
-        final double endDiscount = handle.currentLink().discount(endValueDate);
+        final double fixingDiscount = termStructure_.currentLink().discount(fixingValueDate);
+        final double endDiscount = termStructure_.currentLink().discount(endValueDate);
         final double fixingPeriod = dayCounter().yearFraction(fixingValueDate, endValueDate);
         return (fixingDiscount / endDiscount - 1.0) / fixingPeriod;
     }
@@ -167,7 +164,7 @@ public class IborIndex extends InterestRateIndex {
      */
     @Override
     public Handle<YieldTermStructure> termStructure() {
-        return handle;
+        return termStructure_;
     }
 
     /*
@@ -177,15 +174,15 @@ public class IborIndex extends InterestRateIndex {
      */
     @Override
     public Date maturityDate(final Date valueDate) {
-        return fixingCalendar().advance(valueDate, tenor(), convention, endOfMonth);
+        return fixingCalendar().advance(valueDate, tenor_, convention_, endOfMonth_);
     }
 
     public BusinessDayConvention businessDayConvention() {
-        return convention;
+        return convention_;
     }
 
     public boolean endOfMonth() {
-        return endOfMonth;
+        return endOfMonth_;
     }
 
 }

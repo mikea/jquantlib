@@ -43,6 +43,9 @@ When applicable, the original copyright notice follows this notice.
 
 package org.jquantlib.cashflow;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.SwapIndex;
@@ -55,6 +58,7 @@ import org.jquantlib.time.Schedule;
  *
  * @author Ueli Hofstetter
  * @author John Martin
+ * @author Zahid Hussain
  */
 public class CmsLeg {
 
@@ -63,21 +67,30 @@ public class CmsLeg {
     private/* @Real */Array notionals_;
     private DayCounter paymentDayCounter_;
     private BusinessDayConvention paymentAdjustment_;
-    private int[] fixingDays_;
+    private Array fixingDays_;
     private Array gearings_;
     private/* @Spread */Array spreads_;
-    private/* @Rate */Array caps_, floors_;
-    private boolean inArrears_, zeroPayments_;
-
+    private/* @Rate */Array caps_;
+    private Array floors_;
+    private boolean inArrears_;
+    private boolean zeroPayments_;
+    
     public CmsLeg(final Schedule schedule, final SwapIndex swapIndex) {
-        QL.validateExperimentalMode();
+        //QL.validateExperimentalMode();
 
-        schedule_ = (schedule);
-        swapIndex_ = (swapIndex);
-        paymentAdjustment_ = (BusinessDayConvention.Following);
-        inArrears_ = (false);
-        zeroPayments_ = (false);
+        schedule_ = schedule;
+        swapIndex_ = swapIndex;
+        paymentAdjustment_ = BusinessDayConvention.Following;
+        inArrears_ = false;
+        zeroPayments_ = false;
+        
+        fixingDays_ = new Array();
+        gearings_ = new Array();
+        spreads_ = new Array();
+        caps_ = new Array();
+        floors_ = new Array();
     }
+
 
     public CmsLeg withNotionals(/* Real */final double notional) {
         notionals_ = new Array(1).fill(notional);
@@ -89,6 +102,7 @@ public class CmsLeg {
         return this;
     }
 
+    
     public CmsLeg withPaymentDayCounter(final DayCounter dayCounter) {
         paymentDayCounter_ = dayCounter;
         return this;
@@ -98,14 +112,14 @@ public class CmsLeg {
         paymentAdjustment_ = convention;
         return this;
     }
-
+    
     public CmsLeg withFixingDays(/* Natural */final int fixingDays) {
-        fixingDays_ = new int[] { fixingDays };
+        fixingDays_ = new Array(1).fill(fixingDays);
         return this;
     }
 
-    public CmsLeg withFixingDays(final int[] fixingDays) {
-        fixingDays_ = fixingDays; // TODO: clone() ?
+    public CmsLeg withFixingDays(Array fixingDays) {
+        fixingDays_ = fixingDays;
         return this;
     }
 
@@ -115,7 +129,7 @@ public class CmsLeg {
     }
 
     public CmsLeg withGearings(final Array gearings) {
-        gearings_ = gearings;
+        gearings_ = gearings.clone();
         return this;
     }
 
@@ -125,7 +139,7 @@ public class CmsLeg {
     }
 
     public CmsLeg withSpreads(final Array spreads) {
-        spreads_ = spreads;
+        spreads_ = spreads.clone();
         return this;
     }
 
@@ -135,7 +149,7 @@ public class CmsLeg {
     }
 
     public CmsLeg withCaps(final Array caps) {
-        caps_ = caps;
+        caps_ = caps.clone();
         return this;
     }
 
@@ -145,7 +159,7 @@ public class CmsLeg {
     }
 
     public CmsLeg withFloors(final Array floors) {
-        floors_ = floors;
+        floors_ = floors.clone();
         return this;
     }
 
@@ -159,20 +173,12 @@ public class CmsLeg {
         return this;
     }
 
+
     public Leg Leg() {
-        throw new UnsupportedOperationException ("Work in progress");
-        // FIXME
-
-        /*
-    	final Leg cashflows = new FloatingLeg <SwapIndex, CmsCoupon, CappedFlooredCmsCoupon>
-          (notionals_, schedule_, swapIndex_, paymentDayCounter_,
-           paymentAdjustment_, fixingDays_, gearings_, spreads_,
-           caps_, floors_, inArrears_, zeroPayments_) {};
-
-        PricerSetter.setCouponPricer (cashflows, new CmsCouponPricer
-                                    (new Handle <OptionletVolatilityStructure ()));
-        */
-        //return new Leg();
+        return new FloatingLeg<SwapIndex, CmsCoupon, CappedFlooredCmsCoupon>
+       						(notionals_, schedule_, swapIndex_, paymentDayCounter_,
+       							paymentAdjustment_, fixingDays_, gearings_, spreads_,
+       							caps_, floors_, inArrears_, zeroPayments_);
     }
 
 }

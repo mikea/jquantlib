@@ -53,7 +53,7 @@ public class Currency implements Cloneable {
      * reassigned to a valid currency before being used.
      */
     public Currency() {
-        QL.validateExperimentalMode();
+//        QL.validateExperimentalMode();// ZH: Enabled to test FloatingRateBond
     }
 
     //accessors

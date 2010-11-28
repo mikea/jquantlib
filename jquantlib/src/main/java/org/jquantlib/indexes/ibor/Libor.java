@@ -60,8 +60,11 @@ import org.jquantlib.time.calendars.JointCalendar.JointCalendarRule;
  * base class for all BBA LIBOR indexes but the EUR, O/N, and S/N ones
  *
  * LIBOR fixed by BBA.
+ * 
  *
  * @see <a href="http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414">http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1414</a>
+ * @author John Nichol
+ * @author Zahid Hussain
  */
 public class Libor extends IborIndex {
 
@@ -77,29 +80,6 @@ public class Libor extends IborIndex {
     // public constructors
     //
 
-    public Libor(
-            final String familyName,
-			final Period tenor,
-			final int settlementDays,
-			final Currency currency,
-			final Calendar financialCenterCalendar,
-			final DayCounter dayCounter) {
-		this(familyName, tenor, settlementDays,
-				currency, financialCenterCalendar, dayCounter,
-				new Handle<YieldTermStructure>(
-						new AbstractYieldTermStructure() {
-							@Override
-							protected double discountImpl(final double t) {
-								throw new UnsupportedOperationException();
-							}
-							@Override
-							public Date maxDate() {
-								throw new UnsupportedOperationException();
-							}
-						}
-				));
-	}
-
 	public Libor(
 	        final String familyName,
 			final Period tenor,
@@ -112,21 +92,55 @@ public class Libor extends IborIndex {
 		// UnitedKingdom::Exchange is the fixing calendar for
 		// a) all currencies but EUR
 		// b) all indexes but o/n and s/n
-		super(familyName, tenor, settlementDays,
-				currency, new UnitedKingdom(UnitedKingdom.Market.Exchange),
-				liborConvention(tenor), liborEOM(tenor), dayCounter, h);
+		super(familyName, tenor, settlementDays, currency, 
+			  new UnitedKingdom(UnitedKingdom.Market.Exchange),
+			  liborConvention(tenor), liborEOM(tenor), dayCounter, h);
 		financialCenterCalendar_ = financialCenterCalendar;
 		jointCalendar_ = new JointCalendar(new UnitedKingdom(UnitedKingdom.Market.Exchange),
-				financialCenterCalendar_,
+				financialCenterCalendar,
 				JointCalendarRule.JoinHolidays);
 		QL.require(this.tenor().units()!= TimeUnit.Days,
 				"for daily tenors (" + this.tenor() +
 						") dedicated DailyTenor constructor must be used");
 
-		QL.require(! currency.equals(new EURCurrency()),
-		"for EUR Libor dedicated EurLibor constructor must be used");
+		QL.require(!currency.equals(new EURCurrency()),
+			"for EUR Libor dedicated EurLibor constructor must be used");
 
 	}
+
+	public Libor(
+	        final String familyName,
+			final Period tenor,
+			final int settlementDays,
+			final Currency currency,
+			final Calendar financialCenterCalendar,
+			final DayCounter dayCounter) {
+	        	this(familyName,tenor,settlementDays,currency,financialCenterCalendar,
+	        			dayCounter,	new Handle<YieldTermStructure>());
+	        }
+//	public Libor(
+//            final String familyName,
+//			final Period tenor,
+//			final int settlementDays,
+//			final Currency currency,
+//			final Calendar financialCenterCalendar,
+//			final DayCounter dayCounter) {
+//		this(familyName, tenor, settlementDays,
+//				currency, financialCenterCalendar, dayCounter,
+//				new Handle<YieldTermStructure>(
+//						new AbstractYieldTermStructure() {
+//							@Override
+//							protected double discountImpl(final double t) {
+//								throw new UnsupportedOperationException();
+//							}
+//							@Override
+//							public Date maxDate() {
+//								throw new UnsupportedOperationException();
+//							}
+//						}
+//				));
+//	}
+
 
 
 	//
@@ -191,14 +205,14 @@ public class Libor extends IborIndex {
 
     private static BusinessDayConvention liborConvention(final Period p) {
         switch (p.units()) {
-        case Days:
-        case Weeks:
-            return BusinessDayConvention.Following;
-        case Months:
-        case Years:
-            return BusinessDayConvention.ModifiedFollowing;
-        default:
-            QL.error("invalid time units");
+	        case Days:
+	        case Weeks:
+	            return BusinessDayConvention.Following;
+	        case Months:
+	        case Years:
+	            return BusinessDayConvention.ModifiedFollowing;
+	        default:
+	            QL.error("invalid time units");
         }
         // Keep the compiler happy, can not reach here
         return null;
@@ -206,14 +220,14 @@ public class Libor extends IborIndex {
 
     private static boolean liborEOM(final Period p) {
         switch (p.units()) {
-        case Days:
-        case Weeks:
-            return false;
-        case Months:
-        case Years:
-            return true;
-        default:
-            QL.error("invalid time units");
+	        case Days:
+	        case Weeks:
+	            return false;
+	        case Months:
+	        case Years:
+	            return true;
+	        default:
+	            QL.error("invalid time units");
         }
         // Keep the compiler happy, can not reach here
         return false;

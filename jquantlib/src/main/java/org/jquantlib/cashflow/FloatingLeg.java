@@ -86,7 +86,7 @@ public class FloatingLeg<
             final boolean isZero) {
         super(schedule.size() - 1);
 
-        QL.validateExperimentalMode();
+//        QL.validateExperimentalMode();
 
 
         final int n = schedule.size() - 1;

@@ -81,7 +81,7 @@ public class ConvertibleBondOption extends OneAssetOption {
             final Date issueDate,
             final int settlementDays,
             final double redemption){
-    	super(new PlainVanillaPayoff(Option.Type.Call, bond.getFaceAmount()/100.0*redemption/conversionRatio),exercise);
+    	super(new PlainVanillaPayoff(Option.Type.Call, bond.faceAmount()/100.0*redemption/conversionRatio),exercise);
     	this.bond = bond;
     	this.conversionRatio = conversionRatio;
     	this.dividends =dividends;
