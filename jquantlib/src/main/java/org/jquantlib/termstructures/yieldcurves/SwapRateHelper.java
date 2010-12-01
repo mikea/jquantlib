@@ -1,6 +1,6 @@
 /*
  Copyright (C) 2008 Srinivas Hasti
-
+ Copyright (C) 2010 NeelSheyal
  This source code is release under the BSD License.
 
  This file is part of JQuantLib, a free-software/open-source library
@@ -22,8 +22,6 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-
-// FIXME: move to org.jquantlib.termstructures.yieldcurves
 
 
 import org.jquantlib.QL;
@@ -51,28 +49,35 @@ import org.jquantlib.util.Visitor;
  * Rate helper for bootstrapping over swap rates
  *
  * @author Richard Gomes
+ * @author Neel Sheyal
  */
-//TODO: use input SwapIndex to create the swap
+//
 public class SwapRateHelper extends RelativeDateRateHelper {
 
-    static final /*@Spread*/ double basisPoint = 1.0e-4;
+    private static final /*@Spread*/ double basisPoint = 1.0e-4;
 
-    protected Period tenor;
-    protected Calendar calendar;
-    protected BusinessDayConvention fixedConvention;
-    protected Frequency fixedFrequency;
-    protected DayCounter fixedDayCount;
-    protected IborIndex iborIndex;
+    protected final Period tenor;
+    protected final Calendar calendar;
+    protected final BusinessDayConvention fixedConvention;
+    protected final Frequency fixedFrequency;
+    protected final DayCounter fixedDayCount;
+    protected final IborIndex iborIndex;
     protected VanillaSwap swap;
     protected RelinkableHandle<YieldTermStructure> termStructureHandle = new RelinkableHandle <YieldTermStructure> (null);
-    protected Handle<Quote> spread;
-    protected Period fwdStart;
+    protected final Handle<Quote> spread;
+    protected final Period fwdStart;
 
 
     //
     // public constructors
     //
-
+    /**
+     * 
+     * @param rate
+     * @param swapIndex
+     * @param spread
+     * @param fwdStart
+     */
     public SwapRateHelper(
             final Handle<Quote> rate,
             final SwapIndex swapIndex,
@@ -96,6 +101,18 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         initializeDates();
     }
 
+    /**
+     * 
+     * @param rate
+     * @param tenor
+     * @param calendar
+     * @param fixedFrequency
+     * @param fixedConvention
+     * @param fixedDayCount
+     * @param iborIndex
+     * @param spread
+     * @param fwdStart
+     */
     public SwapRateHelper(
             final Handle<Quote> rate,
             final Period tenor,
@@ -124,6 +141,18 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         initializeDates();
     }
 
+    /**
+     * 
+     * @param rate
+     * @param tenor
+     * @param calendar
+     * @param fixedFrequency
+     * @param fixedConvention
+     * @param fixedDayCount
+     * @param iborIndex
+     * @param spread
+     * @param fwdStart
+     */
     public SwapRateHelper(
             final /*@Rate*/ double rate,
             final Period tenor,
@@ -152,6 +181,13 @@ public class SwapRateHelper extends RelativeDateRateHelper {
         initializeDates();
     }
 
+    /**
+     * 
+     * @param rate
+     * @param swapIndex
+     * @param spread
+     * @param fwdStart
+     */
     public SwapRateHelper(
             final /*@Rate*/ double rate,
             final SwapIndex swapIndex,
@@ -180,16 +216,16 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     // protected methods
     //
 
-    /* (non-Javadoc)
+    /** 
+     * 
      * @see org.jquantlib.termstructures.yield.RelativeDateRateHelper#initializeDates()
      */
     @Override
-    //TODO: solve macros
     protected void initializeDates() {
         // dummy ibor index with curve/swap arguments
         final IborIndex clonedIborIndex = iborIndex.clone(this.termStructureHandle);
 
-        // do not pass the spread here, as it might be a Quote i.e. it can dinamically change
+        // do not pass the spread here, as it might be a Quote i.e. it can dynamically change
         this.swap = new MakeVanillaSwap(tenor, clonedIborIndex, 0.0, fwdStart)
         .withFixedLegDayCount(fixedDayCount)
         .withFixedLegTenor(new Period(fixedFrequency))
@@ -205,10 +241,10 @@ public class SwapRateHelper extends RelativeDateRateHelper {
 
         // ...but due to adjustments, the last floating coupon might need a later date for fixing
         if (new Settings().isUseIndexedCoupon()) {
-            final FloatingRateCoupon lastFloating = (FloatingRateCoupon) swap.floatingLeg().last();
-            final Date fixingValueDate = iborIndex.valueDate(lastFloating.fixingDate());
-            final Date endValueDate = iborIndex.maturityDate(fixingValueDate);
-            latestDate = Date.max(latestDate, endValueDate);
+            final FloatingRateCoupon lastFloating = (FloatingRateCoupon) this.swap.floatingLeg().last();
+            final Date fixingValueDate = this.iborIndex.valueDate(lastFloating.fixingDate());
+            final Date endValueDate = this.iborIndex.maturityDate(fixingValueDate);
+            this.latestDate = Date.max(latestDate, endValueDate);
         }
     }
 
@@ -216,24 +252,24 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     /**
      * Do not set the relinkable handle as an observer.
      * Force recalculation when needed
+     * 
+     * @see org.jquantlib.termstructures.BootstrapHelper#setTermStructure
      *
      * @param t
      */
     @Override
     public void setTermStructure(final YieldTermStructure t) {
-        // TODO: code review :: please verify against QL/C++ code
-        // ---- termStructureHandle.linkTo( shared_ptr<YieldTermStructure>(t, no_deletion), false);
-        termStructureHandle.linkTo(t, false);
+        this.termStructureHandle.linkTo(t, false);
         super.setTermStructure(t);
     }
 
 
-    /* (non-Javadoc)
+    /** 
      * @see org.jquantlib.termstructures.BootstrapHelper#getImpliedQuote()
      */
     @Override
     public /*@Real*/ double impliedQuote() /* @ReadOnly */ {
-        QL.require(termStructure != null , "term structure not set"); // QA:[RG]::verified // TODO: message
+        QL.require(termStructure != null , "term structure not set");
 
         // we didn't register as observers - force calculation
         swap.recalculate();
@@ -248,15 +284,15 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     }
 
     public /*@Spread*/ double spread() /* @ReadOnly */ {
-        return spread.empty() ? 0.0 : spread.currentLink().value();
+        return this.spread.empty() ? 0.0 : spread.currentLink().value();
     }
 
     public VanillaSwap swap() /* @ReadOnly */ {
-        return swap;
+        return this.swap;
     }
 
     public final Period forwardStart() /* @ReadOnly */ {
-        return fwdStart;
+        return this.fwdStart;
     }
 
 
