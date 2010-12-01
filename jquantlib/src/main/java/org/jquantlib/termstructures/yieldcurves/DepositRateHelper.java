@@ -1,6 +1,7 @@
 /*
  Copyright (C) 2008 Richard Gomes
-
+ Copyright (C) 2010 Neel Sheyal
+ 
  This source code is release under the BSD License.
 
  This file is part of JQuantLib, a free-software/open-source library
@@ -22,7 +23,7 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-// FIXME: move to org.jquantlib.termstructures.yieldcurves
+
 
 import org.jquantlib.QL;
 import org.jquantlib.currencies.Currency;
@@ -31,28 +32,52 @@ import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
+import org.jquantlib.termstructures.BootstrapHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
+import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.Visitor;
 
 /**
+ * 
+ * Rate helper for bootstrapping over deposit rates
+ * 
  * @author Srinivas Hasti
+ * @author Neel Sheyal 
  */
-// TODO: code review :: please verify against QL/C++ code
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
+
 public class DepositRateHelper extends RelativeDateRateHelper {
 
+	//
+	// private fields 
+	//
+	private final static String TS_NOT_SET = "term structure not set";
     private Date fixingDate;
     private final IborIndex iborIndex;
     private final RelinkableHandle<YieldTermStructure> termStructureHandle = new RelinkableHandle <YieldTermStructure> (null);
 
+    //
+	// public constructors
+	//
+    
+    /**
+     * 
+     * @param rate
+     * @param tenor
+     * @param fixingDays
+     * @param calendar
+     * @param convention
+     * @param endOfMonth
+     * @param dayCounter
+     */
     public DepositRateHelper(
                 final Handle<Quote> rate,
                 final Period tenor,
-                /*@Natural*/ final int fixingDays,
+                final /*@Natural*/ int fixingDays,
                 final Calendar calendar,
                 final BusinessDayConvention convention,
                 final boolean endOfMonth,
@@ -68,10 +93,20 @@ public class DepositRateHelper extends RelativeDateRateHelper {
         initializeDates();
     }
 
+	/**
+	 * 
+	 * @param rate
+	 * @param tenor
+	 * @param fixingDays
+	 * @param calendar
+	 * @param convention
+	 * @param endOfMonth
+	 * @param dayCounter
+	 */
     public DepositRateHelper(
-                /*@Rate*/ final double  rate,
+                final /*@Rate*/ double  rate,
                 final Period tenor,
-                /*@Natural*/ final int fixingDays,
+                final  /*@Natural*/ int fixingDays,
                 final Calendar calendar,
                 final BusinessDayConvention convention,
                 final boolean endOfMonth,
@@ -83,12 +118,16 @@ public class DepositRateHelper extends RelativeDateRateHelper {
                       "no-fix", // never take fixing into account
                       tenor, fixingDays,
                       new Currency(), calendar, convention,
-                      endOfMonth, dayCounter, termStructureHandle);
+                      endOfMonth, dayCounter, this.termStructureHandle);
         initializeDates();
     }
 
-    public DepositRateHelper(
-                final Handle<Quote> rate,
+	/**
+	 * 
+	 * @param rate
+	 * @param iborIndex
+	 */
+	public DepositRateHelper(final Handle<Quote> rate,
                 final IborIndex iborIndex) {
         super(rate);
         QL.validateExperimentalMode();
@@ -97,12 +136,17 @@ public class DepositRateHelper extends RelativeDateRateHelper {
                       "no-fix", // never take fixing into account
                       iborIndex.tenor(), iborIndex.fixingDays(), new Currency(),
                       iborIndex.fixingCalendar(), iborIndex.businessDayConvention(),
-                      iborIndex.endOfMonth(), iborIndex.dayCounter(), termStructureHandle);
+                      iborIndex.endOfMonth(), iborIndex.dayCounter(), this.termStructureHandle);
         initializeDates();
     }
 
+    /**
+     * 
+     * @param rate
+     * @param IborIndex
+     */
     public DepositRateHelper(
-                /*@Rate*/ final double  rate,
+                final  /*@Rate*/ double  rate,
                 final IborIndex i) {
         super(rate);
         QL.validateExperimentalMode();
@@ -111,44 +155,62 @@ public class DepositRateHelper extends RelativeDateRateHelper {
                       "no-fix", // never take fixing into account
                       i.tenor(), i.fixingDays(), new Currency(),
                       i.fixingCalendar(), i.businessDayConvention(),
-                      i.endOfMonth(), i.dayCounter(), termStructureHandle);
+                      i.endOfMonth(), i.dayCounter(), this.termStructureHandle);
         initializeDates();
     }
 
 
-    /**
-     *
-     */
-    @Override
-    protected void initializeDates() {
-        earliestDate = iborIndex.fixingCalendar().advance(evaluationDate,
-                iborIndex.fixingDays(), TimeUnit.Days);
-        latestDate = iborIndex.maturityDate(earliestDate);
-        fixingDate = iborIndex.fixingDate(earliestDate);
-
-    }
+    //
+    // public methods 
+    //
 
     /**
-     *
+     * {@link RelativeDateRateHelper#impliedQuote()}
      */
-    @Override
-    public double impliedQuote() {
-        QL.require(termStructure != null , "term structure not set"); // QA:[RG]::verified // TODO: message
-        return iborIndex.fixing(fixingDate, true);
-    }
+	@Override
+	public double impliedQuote() {
+		QL.require(termStructure != null, DepositRateHelper.TS_NOT_SET);
+		return this.iborIndex.fixing(fixingDate, true);
+	}
+
+	/**
+	 * 
+	 * @param YieldTermStructure
+	 * {@link BootstrapHelper#setTermStructure(org.jquantlib.termstructures.TermStructure)}
+	 */
+	@Override
+	public void setTermStructure(final YieldTermStructure term) {
+		// no need to register---the index is not lazy
+		this.termStructureHandle.linkTo(term, false);
+		super.setTermStructure(term);
+	}
 
     /**
-     *
-     * @param termStructureHandle
+     * Overrides the abstract method defined in the super class: RelativeDateRateHelper
+     * {@link RelativeDateRateHelper#initializeDates()}
      */
-    @Override
-    public void setTermStructure (final YieldTermStructure term) {
+	@Override
+	protected void initializeDates() {
+		earliestDate = this.iborIndex.fixingCalendar().advance(evaluationDate,
+				this.iborIndex.fixingDays(), TimeUnit.Days);
 
-        termStructureHandle.linkTo(term, false);
-        super.setTermStructure (term);
+		this.latestDate = this.iborIndex.maturityDate(earliestDate);
+		this.fixingDate = this.iborIndex.fixingDate(earliestDate);
+
+	}
+
+	/**
+	 * implements TypedVisitable {@link BootstrapHelper#accept(TypedVisitor)}
+	 */
+	@Override
+    public void accept(final TypedVisitor<BootstrapHelper> v) {
+        final Visitor<BootstrapHelper> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
+        if (v1 != null) {
+            v1.visit(this);
+        } else {
+            super.accept(v);
+        }
     }
 
-
-    // FIXME: method accept is missing?
 
 }
