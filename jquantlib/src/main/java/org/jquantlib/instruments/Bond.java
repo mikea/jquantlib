@@ -80,7 +80,7 @@ import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Observer;
-import org.jquantlib.util.StdUtils;
+import org.jquantlib.util.Std;
 
 /**
  * Base bond class
