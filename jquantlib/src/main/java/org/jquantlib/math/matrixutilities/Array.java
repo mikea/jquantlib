@@ -75,7 +75,7 @@ public class Array extends Cells<Address.ArrayAddress> implements Cloneable, Ite
      * Builds an Array which contains only one element.
      */
     public Array() {
-        this(EnumSet.noneOf(Address.Flags.class));
+        this(0,EnumSet.noneOf(Address.Flags.class));
     }
 
 
