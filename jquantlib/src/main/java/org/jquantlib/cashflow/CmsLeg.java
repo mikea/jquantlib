@@ -43,10 +43,6 @@ When applicable, the original copyright notice follows this notice.
 
 package org.jquantlib.cashflow;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.SwapIndex;
 import org.jquantlib.math.matrixutilities.Array;
@@ -74,10 +70,9 @@ public class CmsLeg {
     private Array floors_;
     private boolean inArrears_;
     private boolean zeroPayments_;
-    
-    public CmsLeg(final Schedule schedule, final SwapIndex swapIndex) {
-        //QL.validateExperimentalMode();
 
+
+    public CmsLeg(final Schedule schedule, final SwapIndex swapIndex) {
         schedule_ = schedule;
         swapIndex_ = swapIndex;
         paymentAdjustment_ = BusinessDayConvention.Following;
@@ -119,7 +114,7 @@ public class CmsLeg {
     }
 
     public CmsLeg withFixingDays(Array fixingDays) {
-        fixingDays_ = fixingDays;
+        fixingDays_ = fixingDays.clone();
         return this;
     }
 
@@ -172,7 +167,6 @@ public class CmsLeg {
         zeroPayments_ = flag;
         return this;
     }
-
 
     public Leg Leg() {
         return new FloatingLeg<SwapIndex, CmsCoupon, CappedFlooredCmsCoupon>
