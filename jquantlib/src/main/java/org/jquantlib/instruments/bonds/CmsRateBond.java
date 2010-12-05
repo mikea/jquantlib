@@ -35,78 +35,10 @@ import org.jquantlib.time.Schedule;
 *
 * @author Zahid Hussain
 */
-//TODO: Work in progress
+//TODO: Write test case
 
 public class CmsRateBond extends Bond {
-/* cmsratebond.hpp file
- *       public:
-        CmsRateBond(Natural settlementDays,
-                    Real faceAmount,
-                    const Schedule& schedule,
-                    const boost::shared_ptr<SwapIndex>& index,
-                    const DayCounter& paymentDayCounter,
-                    BusinessDayConvention paymentConvention
-                                    = Following,
-                    Natural fixingDays = Null<Natural>(),
-                    const std::vector<Real>& gearings
-                                    = std::vector<Real>(1, 1.0),
-                    const std::vector<Spread>& spreads
-                                    = std::vector<Spread>(1, 0.0),
-                    const std::vector<Rate>& caps
-                                    = std::vector<Rate>(),
-                    const std::vector<Rate>& floors
-                                    = std::vector<Rate>(),
-                    bool inArrears = false,
-                    Real redemption = 100.0,
-                    const Date& issueDate = Date());
 
-  * cmsratebond.ccp file
-  * 
-    CmsRateBond::CmsRateBond(
-                           Natural settlementDays,
-                           Real faceAmount,
-                           const Schedule& schedule,
-                           const boost::shared_ptr<SwapIndex>& index,
-                           const DayCounter& paymentDayCounter,
-                           BusinessDayConvention paymentConvention,
-                           Natural fixingDays,
-                           const std::vector<Real>& gearings,
-                           const std::vector<Spread>& spreads,
-                           const std::vector<Rate>& caps,
-                           const std::vector<Rate>& floors,
-                           bool inArrears,
-                           Real redemption,
-                           const Date& issueDate)
-    : Bond(settlementDays, schedule.calendar(), issueDate) {
-
-        maturityDate_ = schedule.endDate();
-
-        cashflows_ = CmsLeg(schedule, index)
-            .withNotionals(faceAmount)
-            .withPaymentDayCounter(paymentDayCounter)
-            .withPaymentAdjustment(paymentConvention)
-            .withFixingDays(fixingDays)
-            .withGearings(gearings)
-            .withSpreads(spreads)
-            .withCaps(caps)
-            .withFloors(floors)
-            .inArrears(inArrears);
-
-        addRedemptionsToCashflows(std::vector<Real>(1, redemption));
-
-        QL_ENSURE(!cashflows().empty(), "bond with no cashflows!");
-        QL_ENSURE(redemptions_.size() == 1, "multiple redemptions created");
-
-        registerWith(index);
-    }
- */
-	/**Translation 
-	 * boost::shared_ptr<SwapIndex> --> SwapIndex
-	 * const std::vector<Real>  	--> Array
-	 * const std::vector<Spread>    --> Array
-	 * const std::vector<Rate>    --> Array
-	 * Spread = Rate = Real --> double
-	 */
 	public CmsRateBond(
             final /*Natural */ int settlementDays,
             final /*Real*/ double faceAmount,
@@ -141,6 +73,26 @@ public class CmsRateBond extends Bond {
 		QL.ensure(!cashflows().isEmpty(), "bond with no cashflows!");
 		QL.ensure(redemptions_.size() == 1, "multiple redemptions created");
 		index.addObserver(this);		
+	}
+	
+	public CmsRateBond(
+            final /*Natural */ int settlementDays,
+            final /*Real*/ double faceAmount,
+            final Schedule schedule,
+            final SwapIndex index,
+            final DayCounter paymentDayCounter) {
+		
+		this(settlementDays, faceAmount, schedule, index, paymentDayCounter,
+				BusinessDayConvention.Following, //default
+				0,								//default fixing days
+				new Array(1).fill(1.0),			//default gearings
+				new Array(1).fill(0.0), 		//default spread
+				new Array(), 					//default caps
+				new Array(), 					//default floor
+				false, 							//defaul in Arrears
+				100.0,							// default redemption
+				new Date() 						// default issue date
+				);
 	}
 
 }
