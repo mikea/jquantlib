@@ -31,6 +31,11 @@ import org.jquantlib.time.Date;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
+/**
+ * 
+ * @author Zahid Hussain
+ *
+ */
 // TODO: code review :: Please review this class! :S
 public class FixedRateCoupon extends Coupon {
 
@@ -101,13 +106,13 @@ public class FixedRateCoupon extends Coupon {
 
 	@Override
 	public double accruedAmount(final Date d) {
-		if (d.le(accrualStartDate) || d.gt(paymentDate))
+		if (d.le(accrualStartDate_) || d.gt(paymentDate_))
             return 0.0;
         else {
-			final Date minD = d.le(accrualEndDate) ? d : accrualEndDate;
+			final Date minD = d.le(accrualEndDate_) ? d : accrualEndDate_;
 			return nominal()
-					* (rate.compoundFactor(accrualStartDate, minD,
-							refPeriodStart, refPeriodEnd) - 1.0);
+					* (rate.compoundFactor(accrualStartDate_, minD,
+							refPeriodStart_, refPeriodEnd_) - 1.0);
 		}
 	}
 
@@ -118,8 +123,8 @@ public class FixedRateCoupon extends Coupon {
 	@Override
 	public double amount() {
 		return nominal()
-				* (rate.compoundFactor(accrualStartDate, accrualEndDate,
-						refPeriodStart, refPeriodEnd) - 1.0);
+				* (rate.compoundFactor(accrualStartDate_, accrualEndDate_,
+						refPeriodStart_, refPeriodEnd_) - 1.0);
 	}
 
 

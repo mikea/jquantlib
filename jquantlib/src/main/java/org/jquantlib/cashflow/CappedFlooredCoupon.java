@@ -150,12 +150,12 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
     @Override
     public void setPricer(final FloatingRateCouponPricer pricer) {
 
-        if (this.pricer != null) {
-            this.pricer.deleteObserver (this);
+        if (this.pricer_ != null) {
+            this.pricer_.deleteObserver (this);
         }
-        this.pricer = pricer;
-        if (this.pricer != null) {
-            this.pricer.addObserver (this);
+        this.pricer_ = pricer;
+        if (this.pricer_ != null) {
+            this.pricer_.addObserver (this);
         }
         update();
         underlying_.setPricer (pricer);
@@ -163,15 +163,15 @@ public class CappedFlooredCoupon extends FloatingRateCoupon {
 
     @Override
     public /*@Rate*/ double rate() /* @ReadOnly */ {
-        QL.require (underlying_.pricer != null, "pricer not set");
+        QL.require (underlying_.pricer_ != null, "pricer not set");
         final double swapletRate = underlying_.rate();
         double floorRate = 0.0;
         double capRate = 0.0;
         if (isFloored_) {
-            floorRate = underlying_.pricer.floorletRate(effectiveFloor());
+            floorRate = underlying_.pricer_.floorletRate(effectiveFloor());
         }
         if (isCapped_) {
-            capRate = underlying_.pricer.capletRate (effectiveCap());
+            capRate = underlying_.pricer_.capletRate (effectiveCap());
         }
         return swapletRate + floorRate - capRate;
     }

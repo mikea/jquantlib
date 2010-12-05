@@ -51,16 +51,16 @@ import org.jquantlib.time.Date;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
-
+/**
+ * 
+ * @author Zahid Hussain
+ *
+ */
 // TODO: code review :: please verify against QL/C++ code
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class IborCoupon extends FloatingRateCoupon {
 
     private final static String NULL_TERM_STRUCTURE = "null term structure set to par coupon";
-
-    //
-    // public constructors
-    //
 
     public IborCoupon(final Date paymentDate,
                       final double nominal,
@@ -180,7 +180,7 @@ public class IborCoupon extends FloatingRateCoupon {
 
             // end discount
             final Date nextFixingDate = index_.fixingCalendar()
-                .advance(accrualEndDate, -(fixingDays()), TimeUnit.Days);
+                .advance(accrualEndDate_, -(fixingDays()), TimeUnit.Days);
             final Date nextFixingValueDate = index_.fixingCalendar()
                 .advance (nextFixingDate, index_.fixingDays(), TimeUnit.Days);
             final double endDiscount = termStructure.currentLink().discount(nextFixingValueDate);

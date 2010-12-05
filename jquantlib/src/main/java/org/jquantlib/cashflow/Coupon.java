@@ -45,11 +45,11 @@ public abstract class Coupon extends CashFlow {
     //
 
     protected double nominal;
-    protected Date paymentDate;
-    protected Date accrualStartDate;
-    protected Date accrualEndDate;
-    protected Date refPeriodStart;
-    protected Date refPeriodEnd;
+    protected Date paymentDate_;
+    protected Date accrualStartDate_;
+    protected Date accrualEndDate_;
+    protected Date refPeriodStart_;
+    protected Date refPeriodEnd_;
 
 
     //
@@ -70,11 +70,11 @@ public abstract class Coupon extends CashFlow {
             final Date refPeriodStart,
             final Date refPeriodEnd){
         this.nominal = nominal;
-        this.paymentDate = paymentDate;
-        this.accrualStartDate = accrualStartDate;
-        this.accrualEndDate = accrualEndDate;
-        this.refPeriodStart = refPeriodStart;
-        this.refPeriodEnd = refPeriodEnd;
+        this.paymentDate_ = paymentDate.clone();
+        this.accrualStartDate_ = accrualStartDate.clone();
+        this.accrualEndDate_ = accrualEndDate.clone();
+        this.refPeriodStart_ = refPeriodStart.clone();
+        this.refPeriodEnd_ = refPeriodEnd.clone();
     }
 
 
@@ -98,31 +98,31 @@ public abstract class Coupon extends CashFlow {
     }
 
     public Date accrualStartDate(){
-        return accrualStartDate;
+        return accrualStartDate_;
     }
 
     public Date accrualEndDate(){
-        return accrualEndDate;
+        return accrualEndDate_;
     }
 
     public Date referencePeriodStart() {
-        return refPeriodStart;
+        return refPeriodStart_;
     }
 
     public Date referencePeriodEnd() {
-        return refPeriodEnd;
+        return refPeriodEnd_;
     }
 
     public double accrualPeriod() {
-        return dayCounter().yearFraction(accrualStartDate,
-                accrualEndDate,
-                refPeriodStart,
-                refPeriodEnd);
+        return dayCounter().yearFraction(accrualStartDate_,
+                accrualEndDate_,
+                refPeriodStart_,
+                refPeriodEnd_);
     }
 
     public long accrualDays() {
-        return dayCounter().dayCount(accrualStartDate,
-                accrualEndDate);
+        return dayCounter().dayCount(accrualStartDate_,
+                accrualEndDate_);
     }
 
 
@@ -132,7 +132,7 @@ public abstract class Coupon extends CashFlow {
 
     @Override
     public Date date() {
-        return paymentDate.clone();
+        return paymentDate_.clone();
     }
 
 

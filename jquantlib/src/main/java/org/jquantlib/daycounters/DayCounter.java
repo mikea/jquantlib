@@ -86,7 +86,7 @@ public class DayCounter {
      * Returns whether or not the day counter is initialized
      */
     public boolean empty() /* @ReadOnly */ {
-        return impl != null;
+        return impl == null;
     }
 
     /**

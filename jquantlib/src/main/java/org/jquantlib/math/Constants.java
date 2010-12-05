@@ -166,7 +166,8 @@ final public class Constants {
     public final static double QL_EPSILON           =   Math.ulp(1.0);
 
     public static final int    NULL_INTEGER         =   Integer.MAX_VALUE;
-    public static final double NULL_REAL            =   Double.NaN;  // TODO: http://bugs.jquantlib.org/view.php?id=298
+    public static final double NULL_REAL            =   Double.MAX_VALUE;  // QL define as max double: std::numeric_limits<float>::max)
+    public static final double NULL_RATE            =   NULL_REAL;
     public static final double NULL_TIME            =   NULL_REAL;
 
     public static final double DBL_MIN              =   Double.MIN_VALUE;

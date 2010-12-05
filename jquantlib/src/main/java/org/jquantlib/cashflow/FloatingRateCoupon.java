@@ -52,6 +52,7 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Date;
+import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Observer;
 import org.jquantlib.util.TypedVisitor;
@@ -60,57 +61,17 @@ import org.jquantlib.util.Visitor;
 /**
  *
  * @author Ueli Hofstetter
+ * @author Zahid Hussain
  */
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-// TODO: code review :: Please review this class! :S
 public class FloatingRateCoupon extends Coupon implements Observer {
 
-    private static final String null_gearing = "Null gearing: degenerate Floating Rate Coupon not admitted";
-    private static final String no_adequate_pricer_given = "no adequate pricer given";
-    private static final String pricer_not_set = "pricer not set";
-
-
-    //
-    // private final fields
-    //
-
-
-    private final DayCounter dayCounter;
-    private int fixingDays; // FIXME - JM:: should be final
-    private final double spread;
-    private final boolean isInArrears;
-
-
-    //
-    // private fields
-    //
-
-    /**
-     * convexity adjustment for the given index fixing
-     */
-    // TODO: what's the need of it?
-    //XXX private double convexityAdjustmentImpl;
-
-    protected FloatingRateCouponPricer pricer;
-
-    //TODO: code review :: please verify comment below against QL/C++ code
-    //XXX (Rate fixing) const;
-
-
-    //
-    // protected fields
-    //
-
-    //TODO: code review :: please verify against QL/C++ code
-    protected final double gearing_;
-
-    //TODO: code review :: please verify against QL/C++ code
-    protected final InterestRateIndex index_;
-
-
-    //
-    // public constructors
-    //
+    protected InterestRateIndex index_;
+    protected DayCounter dayCounter_;
+    protected int fixingDays_;
+    protected double gearing_;
+    protected double spread_;
+    protected boolean isInArrears_;
+    protected FloatingRateCouponPricer pricer_;
 
     public FloatingRateCoupon(
             final Date paymentDate,
@@ -127,166 +88,114 @@ public class FloatingRateCoupon extends Coupon implements Observer {
             final boolean isInArrears) {
         super(nominal, paymentDate, startDate, endDate, refPeriodStart, refPeriodEnd);
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
-
-        // TODO: code review :: please verify against QL/C++ code
-        QL.require(gearing > 0 , null_gearing); // QA:[RG]::verified
-
         this.index_ = index;
-        this.fixingDays = (fixingDays == 0 ? index.fixingDays() : fixingDays);
+        this.dayCounter_ = dayCounter;
+        this.fixingDays_ = fixingDays == 0 ? index.fixingDays() : fixingDays;
         this.gearing_ = gearing;
-        this.spread = spread;
-        this.isInArrears = isInArrears;
+        this.spread_ = spread;
+        this.isInArrears_ = isInArrears;
+        
+        QL.require(gearing != 0 , "Null gearing not allowed");
 
-        if (dayCounter != null) {
-            this.dayCounter = dayCounter;
-        } else {
-            this.dayCounter = index_.dayCounter();
-        }
+        if (dayCounter_.empty())
+            dayCounter_ = index.dayCounter();
 
-        final Date evaluationDate = new Settings().evaluationDate();
-
-        // TODO: code review :: please verify against QL/C++ code
-        // seems like we should have this.evaluationDate
-
+        Date evaluationDate = new Settings().evaluationDate();
         this.index_.addObserver(this);
         evaluationDate.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.index_);
-        //registerWith(evaluationDate);
     }
 
-
-    //
-    // public methods
-    //
-
-    // TODO: code review :: please verify against QL/C++ code
     public void setPricer(final FloatingRateCouponPricer pricer){
-        QL.require(pricer != null , no_adequate_pricer_given);
-
-        if (this.pricer != null) {
-            this.pricer.deleteObserver(this);
+        if (pricer_ != null) {
+        	pricer_.deleteObserver(this);
         }
-            //XXX:registerWith
-            //unregisterWith(this.pricer);
-        this.pricer = pricer;
-        this.pricer.addObserver(this);
-        //XXX:registerWith
-        //registerWith(this.pricer);
+        pricer_ = pricer;
+        if ( pricer_ != null ) {
+        	pricer_.addObserver(this);
+        }
         update();
     }
-
-    @Override
-    public double amount(){
+    
+    public FloatingRateCouponPricer pricer() {
+        return pricer_;
+    }
+    
+    public double amount() {
         return rate() * accrualPeriod() * nominal();
     }
 
-    public double price(final Handle<YieldTermStructure> discountingCurve){
-        return amount()*discountingCurve.currentLink().discount(date());
+    public /*Real*/ double accruedAmount(final Date d) {
+    	
+        if (d.le(accrualStartDate_) || d.gt(paymentDate_)) {
+            return 0.0;
+        } else {
+            return nominal() * rate() *
+                dayCounter().yearFraction(accrualStartDate_,
+                                          Date.min(d,accrualEndDate_),
+                                          refPeriodStart_,
+                                          refPeriodEnd_);
+        }
     }
 
-    public InterestRateIndex index()  {
+    public double price(final Handle<YieldTermStructure> yts) {
+        return amount() * yts.currentLink().discount(date());
+    }
+
+    public DayCounter dayCounter() {
+        return dayCounter_;
+    }
+    
+    public InterestRateIndex index() {
         return index_;
     }
 
     public int fixingDays() {
-        return fixingDays;
+        return fixingDays_;
     }
-
-
 
     public Date fixingDate() {
         // if isInArrears_ fix at the end of period
-        final Date refDate = isInArrears ? accrualEndDate : accrualStartDate;
-        // FIXME: "isInArrears" : not specified in original implementation
-        return index_.fixingCalendar().advance(refDate, -fixingDays, TimeUnit.Days, BusinessDayConvention.Preceding, isInArrears);
+        Date refDate = isInArrears_ ? accrualEndDate_ : accrualStartDate_;
+        return index_.fixingCalendar().advance(refDate, new Period(-fixingDays_, TimeUnit.Days), BusinessDayConvention.Preceding);
     }
 
-    public double gearing()  {
+
+    public double gearing() {
         return gearing_;
     }
-
     public double spread() {
-        return spread;
+        return spread_;
     }
-
-    public double indexFixing()  {
+    
+    public /*Rate*/ double indexFixing() {
         return index_.fixing(fixingDate());
     }
 
-    public double adjustedFixing(){
+    public /*Rate*/ double rate() {
+        QL.require(pricer_ != null, "pricer not set");
+        pricer_.initialize(this);
+        return pricer_.swapletRate();
+    }
+
+    public /*Rate*/ double adjustedFixing()  {
         return (rate()-spread())/gearing();
     }
 
-    // TODO: code review :: Please review this method! What's the need of it???
-    public double convexityAdjustmentImpl(final double f)  {
+    public boolean isInArrears() {
+        return isInArrears_;
+    }
+    
+    public /*Rate*/ double convexityAdjustmentImpl(double /*Rate*/ f) {
         return (gearing() == 0.0 ? 0.0 : adjustedFixing()-f);
     }
-
-    public double convexityAdjustment() {
+    
+    public /*Rate*/ double convexityAdjustment() {
         return convexityAdjustmentImpl(indexFixing());
     }
-
-    public boolean isInArrears(){
-        return isInArrears;
-    }
-
-    // FIXME move up the stack to specifiy fixing array
-    // for now use this function will refactor jan 2010
-    public void setFixingDays(final int fixingDays) {
-        this.fixingDays = fixingDays;
-    }
-
-    //
-    // Overrides Coupon
-    //
-
-    @Override
-    public DayCounter dayCounter() {
-        return dayCounter;
-    }
-
-    @Override
-    public  double rate() {
-        QL.require(this.pricer != null, pricer_not_set);
-        // TODO: code review :: please verify against QL/C++ code
-        this.pricer.initialize(this);
-        return this.pricer.swapletRate();
-    }
-
-    @Override
-    public double accruedAmount(final Date date) {
-        // TODO: code review :: please verify against QL/C++ code
-        throw new UnsupportedOperationException();
-    }
-
-
-    //
-    // implements Observer
-    //
-
-    @Override
+    
     public void update() {
         notifyObservers();
     }
-    //XXX:registerWith
-    //    @Override
-    //    public void registerWith(final Observable o) {
-    //        o.addObserver(this);
-    //    }
-    //
-    //    @Override
-    //    public void unregisterWith(final Observable o) {
-    //        o.deleteObserver(this);
-    //    }
-
-
-    //
-    // implements TypedVisitable
-    //
 
     @Override
     public void accept(final TypedVisitor<Object> v) {
@@ -297,5 +206,4 @@ public class FloatingRateCoupon extends Coupon implements Observer {
             super.accept(v) ;
         }
     }
-
 }
