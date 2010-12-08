@@ -81,7 +81,8 @@ public class ConvertibleFixedCouponBond extends ConvertibleBond {
         this.cashflows_ = new FixedRateLeg(schedule,dayCounter)
             .withNotionals(100.0)
             .withCouponRates(coupons)
-            .withPaymentAdjustment(schedule.businessDayConvention());
+            .withPaymentAdjustment(schedule.businessDayConvention())
+            .Leg();
 
         addRedemptionsToCashflows(new double[] { redemption });
 

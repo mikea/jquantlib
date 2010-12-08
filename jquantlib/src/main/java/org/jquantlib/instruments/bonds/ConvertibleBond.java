@@ -48,6 +48,7 @@ public class ConvertibleBond extends Bond {
     protected Handle<Quote> creditSpread;
     protected Option option;
 
+    
     public ConvertibleBond(
             final Exercise exercise,
             final double conversionRatio,
@@ -88,7 +89,7 @@ public class ConvertibleBond extends Bond {
     @Override
     protected void performCalculations() /* @ReadOnly */ {
         option.setPricingEngine(engine);
-        NPV = option.NPV();
+        NPV = this.settlementValue_ = option.NPV();
         errorEstimate = Constants.NULL_REAL;
     }
 
