@@ -45,11 +45,10 @@ public class BermudanSwaption implements Runnable {
         new BermudanSwaption().run();
     }
 
+    @Override
     public void run() {
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        QL.validateExperimentalMode();
 
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 

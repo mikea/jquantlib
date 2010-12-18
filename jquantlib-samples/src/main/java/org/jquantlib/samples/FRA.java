@@ -49,8 +49,8 @@ package org.jquantlib.samples;
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.ActualActual;
-import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.ActualActual.Convention;
+import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.Euribor365;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
@@ -70,11 +70,10 @@ public class FRA implements Runnable {
         new FRA().run();
     }
 
+    @Override
     public void run() {
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        QL.validateExperimentalMode();
 
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 

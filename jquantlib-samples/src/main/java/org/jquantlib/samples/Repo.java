@@ -1,14 +1,16 @@
 package org.jquantlib.samples;
 
+import org.jquantlib.QL;
+
 public class Repo implements Runnable {
 
     public static void main(final String[] args) {
         new Repo().run();
     }
 
+    @Override
     public void run() {
-        throw new UnsupportedOperationException("Work in progress");
-        // QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
+        QL.validateExperimentalMode();
     }
 
 }
