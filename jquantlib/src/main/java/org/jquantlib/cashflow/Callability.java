@@ -60,9 +60,7 @@ public class Callability extends Event {
         this.type=type;
         this.date=date;
 
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+        QL.validateExperimentalMode();
 	}
 
 	@Override
@@ -73,18 +71,8 @@ public class Callability extends Event {
 	public Price price(){
 		return price;
 	}
-	
-	@Deprecated
-	public Price getPrice(){
-		return price;
-	}
 
 	public Type type(){
-		return type;
-	}
-	
-	@Deprecated
-	public Type getType(){
 		return type;
 	}
 

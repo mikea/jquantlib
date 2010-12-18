@@ -32,17 +32,13 @@ import org.jquantlib.time.Date;
 
 public class SoftCallability extends Callability {
 
-	private double trigger;
+	private final double trigger;
 	
-	public SoftCallability(final Price price, final Date date, double trigger){
+	public SoftCallability(final Price price, final Date date, final double trigger){
 		super(price, Callability.Type.Call, date);
 		this.trigger = trigger;
 	}
 	
-	@Deprecated
-	public double getTrigger(){
-		return trigger;
-	}
 	public double trigger(){
 		return trigger;
 	}

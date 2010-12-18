@@ -63,7 +63,7 @@ import org.jquantlib.time.Schedule;
 //TODO: Work in progress
 public class ConvertibleBondOption extends OneAssetOption {
 
-	private final ConvertibleBond bond_;
+    private final ConvertibleBond bond_;
     private double conversionRatio_;
     private CallabilitySchedule callability_;
     private DividendSchedule  dividends_;
@@ -76,39 +76,39 @@ public class ConvertibleBondOption extends OneAssetOption {
     private double redemption_;
 
     public ConvertibleBondOption(final ConvertibleBond bond,
-            					 final Exercise exercise,
-            					 double conversionRatio,
-            					 final DividendSchedule dividends,
-            					 final CallabilitySchedule callability,
-            					 final Handle<Quote> creditSpread,
-            					 final Leg cashflows,
-            					 final DayCounter dayCounter,
-            					 final Schedule schedule,
-            					 final Date issueDate,
-            					 int  settlementDays,
-            					 double redemption) {
-    	super(new PlainVanillaPayoff(Option.Type.Call,bond.faceAmount()/100.0 * redemption/conversionRatio), exercise);
-    	this.bond_ = bond;
-    	this.conversionRatio_ = conversionRatio;
-    	this.callability_ = callability;
-    	this.dividends_ = dividends;
-    	this.creditSpread_ = creditSpread;
-    	this.cashflows_ = cashflows;
-    	this.dayCounter_ = dayCounter;
-    	this.issueDate_ = issueDate;
-    	this.schedule_ = schedule;
-    	this.settlementDays_ = settlementDays;
-    	this.redemption_ = redemption;
+                                 final Exercise exercise,
+                                 double conversionRatio,
+                                 final DividendSchedule dividends,
+                                 final CallabilitySchedule callability,
+                                 final Handle<Quote> creditSpread,
+                                 final Leg cashflows,
+                                 final DayCounter dayCounter,
+                                 final Schedule schedule,
+                                 final Date issueDate,
+                                 int  settlementDays,
+                                 double redemption) {
+        super(new PlainVanillaPayoff(Option.Type.Call,bond.faceAmount()/100.0 * redemption/conversionRatio), exercise);
+        this.bond_ = bond;
+        this.conversionRatio_ = conversionRatio;
+        this.callability_ = callability;
+        this.dividends_ = dividends;
+        this.creditSpread_ = creditSpread;
+        this.cashflows_ = cashflows;
+        this.dayCounter_ = dayCounter;
+        this.issueDate_ = issueDate;
+        this.schedule_ = schedule;
+        this.settlementDays_ = settlementDays;
+        this.redemption_ = redemption;
     }
 
     public void setupArguments(PricingEngine.Arguments args) {
 
         super.setupArguments(args);
         
-		QL.require(ConvertibleBondOption.ArgumentsImpl.class.isAssignableFrom(args.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
-		ConvertibleBondOption.ArgumentsImpl moreArgs = args instanceof ConvertibleBondOption.ArgumentsImpl 
-														? (ConvertibleBondOption.ArgumentsImpl)args
-														: null;
+        QL.require(ConvertibleBondOption.ArgumentsImpl.class.isAssignableFrom(args.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+        ConvertibleBondOption.ArgumentsImpl moreArgs = args instanceof ConvertibleBondOption.ArgumentsImpl 
+                                                        ? (ConvertibleBondOption.ArgumentsImpl)args
+                                                        : null;
         QL.require(moreArgs != null, "wrong argument type");
 
         moreArgs.conversionRatio = conversionRatio_;
@@ -129,15 +129,15 @@ public class ConvertibleBondOption extends OneAssetOption {
         
         for (int i=0; i<n; i++) {
             if (!callability_.get(i).hasOccurred(settlement)) {
-            	
+                
                 moreArgs.callabilityTypes.add(callability_.get(i).type());
                 moreArgs.callabilityDates.add(callability_.get(i).date());
                 moreArgs.callabilityPrices.add(callability_.get(i).price().amount());
                 
                 if (callability_.get(i).price().type() == Callability.Price.Type.Clean ) {
-                	int lastIdx = moreArgs.callabilityPrices.size()-1;
-                	double d = moreArgs.callabilityPrices.get(lastIdx) +
-                    			bond_.accruedAmount(callability_.get(i).date());
+                    int lastIdx = moreArgs.callabilityPrices.size()-1;
+                    double d = moreArgs.callabilityPrices.get(lastIdx) +
+                                bond_.accruedAmount(callability_.get(i).date());
                     moreArgs.callabilityPrices.set(lastIdx, d);
                 }
                 Object obj = callability_.get(i);
@@ -178,14 +178,14 @@ public class ConvertibleBondOption extends OneAssetOption {
 
 //    @Override
 //    public void setupArguments(final PricingEngine.Arguments arguments) /* @ReadOnly */ {
-//		super.setupArguments(arguments);
+//      super.setupArguments(arguments);
 //
-//		QL.require(ConvertibleBondOption.ArgumentsImpl.class.isAssignableFrom(arguments.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
-//		final ConvertibleBondOption.ArgumentsImpl moreArgs = (ConvertibleBondOption.ArgumentsImpl)arguments;
+//      QL.require(ConvertibleBondOption.ArgumentsImpl.class.isAssignableFrom(arguments.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+//      final ConvertibleBondOption.ArgumentsImpl moreArgs = (ConvertibleBondOption.ArgumentsImpl)arguments;
 //        QL_REQUIRE(moreArgs != 0, "wrong argument type");
 //
-//		
-//		moreArgs.conversionRatio = conversionRatio_;
+//      
+//      moreArgs.conversionRatio = conversionRatio_;
 //        final Date settlement = bond_.settlementDate();
 //        final int n = callability_.size();
 //        moreArgs.callabilityTimes.clear();
@@ -200,16 +200,16 @@ public class ConvertibleBondOption extends OneAssetOption {
 //
 //                double d = callability_.get(i).getPrice().amount();
 //                if (callability_.get(i).getPrice().type() == Callability.Price.Type.Clean){
-//                	d += bond_.accruedAmount(callability_.get(i).date());
+//                  d += bond_.accruedAmount(callability_.get(i).date());
 //                }
 //                moreArgs.callabilityPrices.add(d);
 //                Object obj = callability_.get(i);
 //                final SoftCallability softCall = obj instanceof SoftCallability ? (SoftCallability)obj : null;
-//				if(softCall != null){
+//              if(softCall != null){
 //                    moreArgs.callabilityTriggers.add(softCall.getTrigger());
-//				}else{
-//					moreArgs.callabilityTriggers.add(0.0);
-//				}
+//              }else{
+//                  moreArgs.callabilityTriggers.add(0.0);
+//              }
 //            }
 //        }
 //
@@ -239,7 +239,7 @@ public class ConvertibleBondOption extends OneAssetOption {
 //        moreArgs.settlementDate = settlement;
 //        moreArgs.settlementDays = settlementDays_;
 //        moreArgs.redemption = redemption_;
-//	}
+//  }
 
 
 
@@ -260,7 +260,7 @@ public class ConvertibleBondOption extends OneAssetOption {
 
     static public class ArgumentsImpl extends OneAssetOption.ArgumentsImpl implements Arguments {
 
-    	public double conversionRatio;
+        public double conversionRatio;
         public Handle<Quote> creditSpread;
         public DividendSchedule dividends;
         public List<Date> dividendDates;
@@ -292,27 +292,27 @@ public class ConvertibleBondOption extends OneAssetOption {
 
         public void validate() {
 
-        	QL.require(conversionRatio != Constants.NULL_REAL, "null conversion ratio");
-        	QL.require(conversionRatio > 0.0,
+            QL.require(conversionRatio != Constants.NULL_REAL, "null conversion ratio");
+            QL.require(conversionRatio > 0.0,
                    "positive conversion ratio required: "
                    + conversionRatio + " not allowed");
 
-        	QL.require(redemption != Constants.NULL_REAL, "null redemption");
-        	QL.require(redemption >= 0.0, "positive redemption required: "
-        								+ redemption + " not allowed");
+            QL.require(redemption != Constants.NULL_REAL, "null redemption");
+            QL.require(redemption >= 0.0, "positive redemption required: "
+                                        + redemption + " not allowed");
 
-        	QL.require(!settlementDate.isNull(), "null settlement date");
+            QL.require(!settlementDate.isNull(), "null settlement date");
 
-        	QL.require(settlementDays != Constants.NULL_NATURAL, "null settlement days");
+            QL.require(settlementDays != Constants.NULL_NATURAL, "null settlement days");
 
-        	QL.require(callabilityDates.size() == callabilityTypes.size(),
+            QL.require(callabilityDates.size() == callabilityTypes.size(),
                    "different number of callability dates and types");
-        	QL.require(callabilityDates.size() == callabilityPrices.size(),
+            QL.require(callabilityDates.size() == callabilityPrices.size(),
                    "different number of callability dates and prices");
-        	QL.require(callabilityDates.size() == callabilityTriggers.size(),
+            QL.require(callabilityDates.size() == callabilityTriggers.size(),
                    "different number of callability dates and triggers");
 
-        	QL.require(couponDates.size() == couponAmounts.size(),
+            QL.require(couponDates.size() == couponAmounts.size(),
                    "different number of coupon dates and amounts");
     }
 //        @Override

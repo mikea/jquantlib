@@ -78,10 +78,10 @@ public class DiscretizedConvertible extends DiscretizedAsset {
     // public methods
     //
     public DiscretizedConvertible(final ConvertibleBondOption.ArgumentsImpl args,
-            					  final GeneralizedBlackScholesProcess process,
-            					  final TimeGrid grid) {
-    	this.arguments_ = args;
-    	this.process_ = process; 
+                                  final GeneralizedBlackScholesProcess process,
+                                  final TimeGrid grid) {
+        this.arguments_ = args;
+        this.process_ = process; 
 
        dividendValues_ = new Array(arguments_.dividends.size()).fill(0.0);
 
@@ -89,7 +89,7 @@ public class DiscretizedConvertible extends DiscretizedAsset {
        for (int i=0; i<arguments_.dividends.size(); i++) {
            if (arguments_.dividends.get(i).date().ge(settlementDate)) {
                double value =  arguments_.dividends.get(i).amount() *
-                   				process_.riskFreeRate().currentLink().discount(
+                                process_.riskFreeRate().currentLink().discount(
                                             arguments_.dividends.get(i).date());
                dividendValues_.set(i, value);
            }
@@ -175,7 +175,7 @@ public class DiscretizedConvertible extends DiscretizedAsset {
     public  void setDividendValues(Array a) {dividendValues_ = a; }
     
     public List<Double> mandatoryTimes() {
-    	
+        
         List<Double> result = new ArrayList<Double>();
         Std.copy(stoppingTimes_, 0, stoppingTimes_.size(), result);
         Std.copy(callabilityTimes_, 0, callabilityTimes_.size(),result);
@@ -185,10 +185,10 @@ public class DiscretizedConvertible extends DiscretizedAsset {
 
     
     protected void postAdjustValuesImpl() {
-    	Exercise.Type American = Exercise.Type.American;
-    	Exercise.Type European = Exercise.Type.European;
-    	Exercise.Type Bermudan = Exercise.Type.Bermudan;
-    	
+        Exercise.Type American = Exercise.Type.American;
+        Exercise.Type European = Exercise.Type.European;
+        Exercise.Type Bermudan = Exercise.Type.Bermudan;
+        
         boolean convertible = false;
         switch (arguments_.exercise.type()) {
           case American:
@@ -252,7 +252,7 @@ public class DiscretizedConvertible extends DiscretizedAsset {
                         // ...and might trigger conversion
                         values_.set(j, 
                             Math.min(Math.max(arguments_.callabilityPrices.get(i),
-                                          	  arguments_.conversionRatio*grid.get(j)),
+                                              arguments_.conversionRatio*grid.get(j)),
                                      values_.get(j)));
                     }
                 }
@@ -295,7 +295,7 @@ public class DiscretizedConvertible extends DiscretizedAsset {
             if (dividendTime >= t || Closeness.isCloseEnough(dividendTime,t)) {
                Dividend d = arguments_.dividends.get(i);
                 for (int j=0; j<grid.size(); j++) {
-                	double v = grid.get(j);
+                    double v = grid.get(j);
                     v += d.amount(v);
                     grid.set(j,v);// += d->amount(grid[j]);
                 }
