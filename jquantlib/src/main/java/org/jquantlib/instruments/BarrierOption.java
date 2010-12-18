@@ -211,7 +211,7 @@ public class BarrierOption extends OneAssetOption {
 
         protected EngineImpl() {
             super(new ArgumentsImpl(), new ResultsImpl());
-            this.a = (BarrierOption.ArgumentsImpl)arguments;
+            this.a = (BarrierOption.ArgumentsImpl)arguments_;
         }
 
         protected boolean triggered(final /*@Real*/ double underlying) /* @ReadOnly */ {

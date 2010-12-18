@@ -21,13 +21,11 @@
  */
 package org.jquantlib.instruments.bonds;
 
-import java.util.List;
-
-import org.jquantlib.cashflow.Callability;
-import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.cashflow.Leg;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.instruments.CallabilitySchedule;
+import org.jquantlib.instruments.DividendSchedule;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.time.Date;
@@ -42,6 +40,7 @@ import org.jquantlib.time.Schedule;
  * convertibility and callability into account.
  *
  * @author Daniel Kong
+ * @author Zahid Hussain
  */
 //TODO: Work in progress
 public class ConvertibleZeroCouponBond extends ConvertibleBond {
@@ -49,8 +48,8 @@ public class ConvertibleZeroCouponBond extends ConvertibleBond {
 	public ConvertibleZeroCouponBond(
 	          final Exercise exercise,
 	          final double conversionRatio,
-	          final List<Dividend> dividends,
-	          final List<Callability> callability,
+	          final DividendSchedule dividends,
+	          final CallabilitySchedule callability,
 	          final Handle<Quote> creditSpread,
 	          final Date issueDate,
 	          final int settlementDays,
@@ -63,8 +62,8 @@ public class ConvertibleZeroCouponBond extends ConvertibleBond {
 	public ConvertibleZeroCouponBond(
 			final Exercise exercise,
 			final double conversionRatio,
-			final List<Dividend> dividends,
-			final List<Callability> callability,
+	        final DividendSchedule dividends,
+	        final CallabilitySchedule callability,
 			final Handle<Quote> creditSpread,
 			final Date issueDate,
 			final int settlementDays,

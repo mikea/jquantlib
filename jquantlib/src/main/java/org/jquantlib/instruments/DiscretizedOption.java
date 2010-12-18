@@ -74,7 +74,7 @@ public class DiscretizedOption extends DiscretizedAsset {
     @Override
     public void reset(final int size) {
         QL.require(method().equals(underlying.method()) , "option and underlying were initialized on different methods");
-        values = new Array(size);
+        values_ = new Array(size);
         adjustValues();
     }
 
@@ -92,8 +92,8 @@ public class DiscretizedOption extends DiscretizedAsset {
     }
 
     protected void applyExerciseCondition() {
-        for (int i = 0; i < values.size(); i++) {
-            values.set(i, Math.max(underlying.values().get(i), values.get(i)));
+        for (int i = 0; i < values_.size(); i++) {
+            values_.set(i, Math.max(underlying.values().get(i), values_.get(i)));
         }
     }
 

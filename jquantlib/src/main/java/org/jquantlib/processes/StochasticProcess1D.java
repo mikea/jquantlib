@@ -166,13 +166,13 @@ public abstract class StochasticProcess1D extends StochasticProcess {
 
     @Override
     public final /*@Real*/ Array initialValues() {
-        return new Array().fill( x0() );
+        return new Array(1).fill( x0() );
     }
 
     @Override
     public final /*@Real*/ Array drift(final /*@Time*/ double t, /*@Real*/ final Array x) {
         QL.require(x.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
-        return new Array().fill( drift(t, x.first()) );
+        return new Array(1).fill( drift(t, x.first()) );//ZH:QL097, fill requires atleast one element
     }
 
     @Override
@@ -185,7 +185,7 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     @Override
     public final /*@Expectation*/ Array expectation(final /*@Time*/ double t0, final /*@Real*/ Array x0, final /*@Time*/ double dt) {
         QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
-        return new Array().fill( expectation(t0, x0.first(), dt) );
+        return new Array(1).fill( expectation(t0, x0.first(), dt) );//ZH: not same code as QL097, guessed size 1
     }
 
     @Override
@@ -206,14 +206,14 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     public final Array evolve(final /*@Time*/ double t0, final /*@Real*/ Array x0, final /*@Time*/ double dt, final Array dw) {
         QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         QL.require(dw.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
-        return new Array().fill( evolve(t0, x0.first(), dt, dw.first()) );
+        return new Array(1).fill( evolve(t0, x0.first(), dt, dw.first()) );//ZH: Method different than QL097, set size 1
     }
 
     @Override
     public final /*@Real*/ Array apply(final /*@Real*/ Array x0, final Array dx) {
         QL.require(x0.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
         QL.require(dx.size()==1 , ARRAY_1D_REQUIRED); // QA:[RG]::verified // TODO: message
-        return new Array().fill( apply(x0.first(), dx.first()) );
+        return new Array(1).fill( apply(x0.first(), dx.first()) );//ZH: TBD review code with QL097
     }
 
 

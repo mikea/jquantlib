@@ -25,8 +25,8 @@ public class DiscountingSwapEngine extends Swap.EngineImpl implements /* Swap.En
     public void calculate() /* @ReadOnly */ {
         QL.require(!discountCurve.empty() , "no discounting term structure set"); // QA:[RG]::verified // TODO: message
 
-        final Swap.ArgumentsImpl a = (Swap.ArgumentsImpl)arguments;
-        final Swap.ResultsImpl   r = (Swap.ResultsImpl)results;
+        final Swap.ArgumentsImpl a = (Swap.ArgumentsImpl)arguments_;
+        final Swap.ResultsImpl   r = (Swap.ResultsImpl)results_;
         r.value = 0.0;
         r.errorEstimate = Constants.NULL_REAL;
         r.legNPV = new double[a.legs.size()];

@@ -82,8 +82,8 @@ public class AnalyticContinuousGeometricAveragePriceAsianEngine extends Continuo
 
     public AnalyticContinuousGeometricAveragePriceAsianEngine(final GeneralizedBlackScholesProcess process) {
         this.process = process;
-        this.a = arguments;
-        this.r = results;
+        this.a = arguments_;
+        this.r = results_;
         this.greeks = r.greeks();
         this.moreGreeks = r.moreGreeks();
         process.addObserver(this);
@@ -101,7 +101,7 @@ public class AnalyticContinuousGeometricAveragePriceAsianEngine extends Continuo
         final Date exercise = a.exercise.lastDate();
 
         QL.require(a.payoff instanceof PlainVanillaPayoff , "non-plain payoff given"); // QA:[RG]::verified // TODO: message
-        final PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments.payoff;
+        final PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments_.payoff;
 
         /*@Volatility*/ final double volatility = process.blackVolatility().currentLink().blackVol(exercise, payoff.strike());
         /*@Real*/ final double variance = process.blackVolatility().currentLink().blackVariance(exercise, payoff.strike());

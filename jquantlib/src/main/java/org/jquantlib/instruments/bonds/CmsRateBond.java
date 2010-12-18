@@ -87,8 +87,8 @@ public class CmsRateBond extends Bond {
 				0,								//default fixing days
 				new Array(1).fill(1.0),			//default gearings
 				new Array(1).fill(0.0), 		//default spread
-				new Array(), 					//default caps
-				new Array(), 					//default floor
+				new Array(0), 					//default caps
+				new Array(0), 					//default floor
 				false, 							//defaul in Arrears
 				100.0,							// default redemption
 				new Date() 						// default issue date

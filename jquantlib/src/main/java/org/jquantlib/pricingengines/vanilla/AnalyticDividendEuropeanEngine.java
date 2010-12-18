@@ -78,8 +78,8 @@ public class AnalyticDividendEuropeanEngine extends DividendVanillaOption.Engine
     //
 
     public AnalyticDividendEuropeanEngine(final GeneralizedBlackScholesProcess process) {
-        this.a = (DividendVanillaOption.ArgumentsImpl)arguments;
-        this.r = (DividendVanillaOption.ResultsImpl)results;
+        this.a = (DividendVanillaOption.ArgumentsImpl)arguments_;
+        this.r = (DividendVanillaOption.ResultsImpl)results_;
         this.greeks = r.greeks();
         this.moreGreeks = r.moreGreeks();
         this.process = process;

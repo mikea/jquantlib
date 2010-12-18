@@ -1,8 +1,8 @@
 /*
- Copyright (C) 2008 Daniel Kong
- 
+ Copyright (C) 2009 Ueli Hofstetter
+
  This source code is release under the BSD License.
- 
+
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/
 
@@ -15,35 +15,45 @@
  This program is distributed in the hope that it will be useful, but WITHOUT
  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the license for more details.
- 
+
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-package org.jquantlib.instruments.bonds;
 
-import org.jquantlib.cashflow.Callability;
-import org.jquantlib.time.Date;
+package org.jquantlib.instruments;
+
+import java.util.ArrayList;
+
+import org.jquantlib.QL;
+import org.jquantlib.cashflow.Dividend;
 
 /**
- * %callability leaving to the holder the possibility to convert
- * 
- * @author Daniel Kong
+ * @author Zahid Hussain
  */
+public class DividendSchedule extends ArrayList<Dividend> implements Cloneable {
+	private static final long serialVersionUID = 1L;
 
-public class SoftCallability extends Callability {
+	public DividendSchedule() {
+        super();
+    }
 
-	private double trigger;
-	
-	public SoftCallability(final Price price, final Date date, double trigger){
-		super(price, Callability.Type.Call, date);
-		this.trigger = trigger;
-	}
-	
-	@Deprecated
-	public double getTrigger(){
-		return trigger;
-	}
-	public double trigger(){
-		return trigger;
-	}
+    public DividendSchedule(final int n) {
+        super(n);
+    }
+
+    public Dividend first() {
+        QL.require(this.size() > 0 , "no Dividend"); 
+        return this.get(0);
+    }
+
+    public Dividend last() {
+        QL.require(this.size() > 0 , "no Dividend");
+        return this.get(this.size()-1);
+    }
+
+    @Override
+    public Object clone() {
+    	return (DividendSchedule)super.clone();
+    }
+
 }

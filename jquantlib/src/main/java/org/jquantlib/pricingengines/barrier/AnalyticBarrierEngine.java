@@ -97,8 +97,8 @@ public class AnalyticBarrierEngine extends BarrierOption.EngineImpl {
 
     public AnalyticBarrierEngine(final GeneralizedBlackScholesProcess process) {
         this.f = new CumulativeNormalDistribution();
-        this.a = (BarrierOption.ArgumentsImpl)arguments;
-        this.r = (BarrierOption.ResultsImpl)results;
+        this.a = (BarrierOption.ArgumentsImpl)arguments_;
+        this.r = (BarrierOption.ResultsImpl)results_;
         this.process = process;
         this.process.addObserver(this);
     }

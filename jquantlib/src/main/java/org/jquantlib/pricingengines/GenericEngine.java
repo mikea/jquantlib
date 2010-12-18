@@ -65,16 +65,16 @@ public abstract class GenericEngine
     // protected fields
     //
 
-    protected A arguments;
-    protected R results;
+    protected A arguments_;
+    protected R results_;
 
     //
     // protected constructors
     //
 
     protected GenericEngine(final A arguments, final R results) {
-        this.arguments = arguments;
-        this.results = results;
+        this.arguments_ = arguments;
+        this.results_ = results;
     }
 
     //
@@ -83,17 +83,17 @@ public abstract class GenericEngine
 
     @Override
     public final A getArguments() {
-        return arguments;
+        return arguments_;
     }
 
     @Override
     public final R getResults() {
-        return results;
+        return results_;
     }
 
     @Override
     public void reset() {
-        results.reset();
+        results_.reset();
     }
 
     //

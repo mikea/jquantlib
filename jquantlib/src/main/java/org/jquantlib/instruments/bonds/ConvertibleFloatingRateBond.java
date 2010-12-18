@@ -30,6 +30,8 @@ import org.jquantlib.cashflow.IborLeg;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.indexes.IborIndex;
+import org.jquantlib.instruments.CallabilitySchedule;
+import org.jquantlib.instruments.DividendSchedule;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
@@ -45,6 +47,7 @@ import org.jquantlib.time.Schedule;
  * convertibility and callability into account.
  *
  * @author Daniel Kong
+ * @author Zahid Hussain
  */
 //TODO: Work in progress
 public class ConvertibleFloatingRateBond extends ConvertibleBond {
@@ -52,8 +55,8 @@ public class ConvertibleFloatingRateBond extends ConvertibleBond {
 	public ConvertibleFloatingRateBond(
 	          final Exercise exercise,
 	          final double conversionRatio,
-	          final List<Dividend> dividends,
-	          final List<Callability> callability,
+	          final DividendSchedule dividends,
+	          final CallabilitySchedule callability,
 	          final Handle<Quote> creditSpread,
 	          final Date issueDate,
 	          final int settlementDays,
@@ -69,8 +72,8 @@ public class ConvertibleFloatingRateBond extends ConvertibleBond {
 	public ConvertibleFloatingRateBond(
 			final Exercise exercise,
 			final double conversionRatio,
-			final List<Dividend> dividends,
-			final List<Callability> callability,
+	          final DividendSchedule dividends,
+	          final CallabilitySchedule callability,
 			final Handle<Quote> creditSpread,
 			final Date issueDate,
 			final int settlementDays,

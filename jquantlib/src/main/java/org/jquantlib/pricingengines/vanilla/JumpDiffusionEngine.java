@@ -120,8 +120,8 @@ public class JumpDiffusionEngine extends VanillaOption.EngineImpl {
             final int maxIterations) {
         this.maxIterations = maxIterations;
         this.relativeAccuracy = relativeAccuracy;
-        this.A = (VanillaOption.ArgumentsImpl)arguments;
-        this.R = (VanillaOption.ResultsImpl)results;
+        this.A = (VanillaOption.ArgumentsImpl)arguments_;
+        this.R = (VanillaOption.ResultsImpl)results_;
         this.greeks = R.greeks();
         this.moreGreeks = R.moreGreeks();
         this.process = process;

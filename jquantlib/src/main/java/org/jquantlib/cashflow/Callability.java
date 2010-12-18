@@ -70,10 +70,20 @@ public class Callability extends Event {
 		return date;
 	}
 
+	public Price price(){
+		return price;
+	}
+	
+	@Deprecated
 	public Price getPrice(){
 		return price;
 	}
 
+	public Type type(){
+		return type;
+	}
+	
+	@Deprecated
 	public Type getType(){
 		return type;
 	}

@@ -154,7 +154,7 @@ public class SABRInterpolation extends AbstractInterpolation {
 			betaIsFixed_ = false;
 			nuIsFixed_ = false;
 			rhoIsFixed_ = false;
-			weights_ = new Array();
+			weights_ = new Array(0);//ZH:TBD:verify with QL097, it is vector<Real> in QL097
 			error_ = Constants.NULL_REAL;
 			maxError_ = Constants.NULL_REAL;
 			SABREndCriteria_ = EndCriteria.Type.None;

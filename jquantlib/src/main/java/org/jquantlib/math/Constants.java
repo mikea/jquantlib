@@ -166,6 +166,7 @@ final public class Constants {
     public final static double QL_EPSILON           =   Math.ulp(1.0);
 
     public static final int    NULL_INTEGER         =   Integer.MAX_VALUE;
+    public static final int    NULL_NATURAL         =   NULL_INTEGER;
     public static final double NULL_REAL            =   Double.MAX_VALUE;  // QL define as max double: std::numeric_limits<float>::max)
     public static final double NULL_RATE            =   NULL_REAL;
     public static final double NULL_TIME            =   NULL_REAL;

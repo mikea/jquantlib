@@ -21,14 +21,18 @@
  */
 package org.jquantlib.instruments.bonds;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.cashflow.Callability;
 import org.jquantlib.cashflow.CashFlow;
 import org.jquantlib.cashflow.Dividend;
+import org.jquantlib.cashflow.Leg;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
+import org.jquantlib.instruments.CallabilitySchedule;
+import org.jquantlib.instruments.DividendSchedule;
 import org.jquantlib.instruments.Instrument;
 import org.jquantlib.instruments.OneAssetOption;
 import org.jquantlib.instruments.Option;
@@ -42,6 +46,8 @@ import org.jquantlib.instruments.Option.MoreGreeks;
 import org.jquantlib.instruments.Option.Type;
 import org.jquantlib.lang.reflect.ReflectConstants;
 import org.jquantlib.math.Constants;
+import org.jquantlib.methods.lattices.BinomialTree;
+import org.jquantlib.methods.lattices.Tree;
 import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.quotes.Handle;
@@ -52,112 +58,188 @@ import org.jquantlib.time.Schedule;
 /**
  *
  * @author Daniel Kong
+ * @author Zahid Hussain
  */
 //TODO: Work in progress
 public class ConvertibleBondOption extends OneAssetOption {
 
-    private final ConvertibleBond bond;
-    private final double conversionRatio;
-    private final List<Callability> callability;
-    private final List<Dividend>  dividends;
-    private final Handle<Quote> creditSpread;
-    private final List<CashFlow> cashFlows;
-    private final DayCounter dayCounter;
-    private final Date issueDate;
-    private final Schedule schedule;
-    private final int settlementDays;
-    private final double redemption;
+	private final ConvertibleBond bond_;
+    private double conversionRatio_;
+    private CallabilitySchedule callability_;
+    private DividendSchedule  dividends_;
+    private Handle<Quote> creditSpread_;
+    private Leg cashflows_;
+    private DayCounter dayCounter_;
+    private Date issueDate_;
+    private Schedule schedule_;
+    private int settlementDays_;
+    private double redemption_;
 
-    public ConvertibleBondOption(
-            final ConvertibleBond bond,
-            final Exercise exercise,
-            final double conversionRatio,
-            final List<Dividend> dividends,
-            final List<Callability> callability,
-            final Handle<Quote> creditSpread,
-            final List<CashFlow> cashFlows,
-            final DayCounter dayCounter,
-            final Schedule schedule,
-            final Date issueDate,
-            final int settlementDays,
-            final double redemption){
-    	super(new PlainVanillaPayoff(Option.Type.Call, bond.faceAmount()/100.0*redemption/conversionRatio),exercise);
-    	this.bond = bond;
-    	this.conversionRatio = conversionRatio;
-    	this.dividends =dividends;
-    	this.callability = callability;
-    	this.creditSpread = creditSpread;
-    	this.cashFlows = cashFlows;
-    	this.dayCounter = dayCounter;
-    	this.schedule = schedule;
-    	this.issueDate = issueDate;
-    	this.settlementDays = settlementDays;
-    	this.redemption = redemption;
+    public ConvertibleBondOption(final ConvertibleBond bond,
+            					 final Exercise exercise,
+            					 double conversionRatio,
+            					 final DividendSchedule dividends,
+            					 final CallabilitySchedule callability,
+            					 final Handle<Quote> creditSpread,
+            					 final Leg cashflows,
+            					 final DayCounter dayCounter,
+            					 final Schedule schedule,
+            					 final Date issueDate,
+            					 int  settlementDays,
+            					 double redemption) {
+    	super(new PlainVanillaPayoff(Option.Type.Call,bond.faceAmount()/100.0 * redemption/conversionRatio), exercise);
+    	this.bond_ = bond;
+    	this.conversionRatio_ = conversionRatio;
+    	this.callability_ = callability;
+    	this.dividends_ = dividends;
+    	this.creditSpread_ = creditSpread;
+    	this.cashflows_ = cashflows;
+    	this.dayCounter_ = dayCounter;
+    	this.issueDate_ = issueDate;
+    	this.schedule_ = schedule;
+    	this.settlementDays_ = settlementDays;
+    	this.redemption_ = redemption;
     }
 
-    @Override
-    public void setupArguments(final PricingEngine.Arguments arguments) /* @ReadOnly */ {
-		super.setupArguments(arguments);
+    public void setupArguments(PricingEngine.Arguments args) {
 
-		QL.require(ConvertibleBondOption.Arguments.class.isAssignableFrom(arguments.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
-		final ConvertibleBondOption.ArgumentsImpl moreArgs = (ConvertibleBondOption.ArgumentsImpl)arguments;
+        super.setupArguments(args);
+        
+		QL.require(ConvertibleBondOption.ArgumentsImpl.class.isAssignableFrom(args.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+		ConvertibleBondOption.ArgumentsImpl moreArgs = args instanceof ConvertibleBondOption.ArgumentsImpl 
+														? (ConvertibleBondOption.ArgumentsImpl)args
+														: null;
+        QL.require(moreArgs != null, "wrong argument type");
 
-		moreArgs.conversionRatio = conversionRatio;
-        final Date settlement = bond.settlementDate();
-        final int n = callability.size();
-        moreArgs.callabilityTimes.clear();
+        moreArgs.conversionRatio = conversionRatio_;
+
+        Date settlement = bond_.settlementDate().clone();
+
+        int n = callability_.size();
+        moreArgs.callabilityDates.clear();
         moreArgs.callabilityTypes.clear();
         moreArgs.callabilityPrices.clear();
         moreArgs.callabilityTriggers.clear();
 
+        //Not required in Java:
+        //moreArgs.callabilityDates.reserve(n);
+        //moreArgs.callabilityTypes.reserve(n);
+        //moreArgs.callabilityPrices.reserve(n);
+        //moreArgs.callabilityTriggers.reserve(n);
+        
         for (int i=0; i<n; i++) {
-            if (!callability.get(i).hasOccurred(settlement)) {
-                moreArgs.callabilityTypes.add(callability.get(i).getType());
-                moreArgs.callabilityTimes.add(dayCounter.yearFraction(settlement, callability.get(i).date()));
-
-                double d = callability.get(i).getPrice().amount();
-                if (callability.get(i).getPrice().type() == Callability.Price.Type.Clean){
-                	d += bond.accruedAmount(callability.get(i).date());
+            if (!callability_.get(i).hasOccurred(settlement)) {
+            	
+                moreArgs.callabilityTypes.add(callability_.get(i).type());
+                moreArgs.callabilityDates.add(callability_.get(i).date());
+                moreArgs.callabilityPrices.add(callability_.get(i).price().amount());
+                
+                if (callability_.get(i).price().type() == Callability.Price.Type.Clean ) {
+                	int lastIdx = moreArgs.callabilityPrices.size()-1;
+                	double d = moreArgs.callabilityPrices.get(lastIdx) +
+                    			bond_.accruedAmount(callability_.get(i).date());
+                    moreArgs.callabilityPrices.set(lastIdx, d);
                 }
-                moreArgs.callabilityPrices.add(d);
-
-                final SoftCallability softCall = (SoftCallability)callability.get(i);
-				if(softCall != null){
-                    moreArgs.callabilityTriggers.add(softCall.getTrigger());
-				}else{
-					moreArgs.callabilityTriggers.add(0.0);
-				}
+                Object obj = callability_.get(i);
+                SoftCallability softCall = obj instanceof SoftCallability ? (SoftCallability)obj : null;
+                if (softCall != null)
+                    moreArgs.callabilityTriggers.add(softCall.trigger());
+                else
+                    moreArgs.callabilityTriggers.add(Constants.NULL_REAL);
             }
         }
 
-        final List<CashFlow> cashFlows = bond.cashflows();
+        final Leg cashflows = bond_.cashflows();
 
-        moreArgs.couponTimes.clear();
+        moreArgs.couponDates.clear();
         moreArgs.couponAmounts.clear();
-        for (int i=0; i<cashFlows.size()-1; i++) {
-            if (!cashFlows.get(i).hasOccurred(settlement)) {
-                moreArgs.couponTimes.add(dayCounter.yearFraction(settlement,cashFlows.get(i).date()));
-                moreArgs.couponAmounts.add(cashFlows.get(i).amount());
+        for (int i=0; i<cashflows.size()-1; i++) {
+            if (!cashflows.get(i).hasOccurred(settlement)) {
+                moreArgs.couponDates.add(cashflows.get(i).date());
+                moreArgs.couponAmounts.add(cashflows.get(i).amount());
             }
         }
 
         moreArgs.dividends.clear();
-        moreArgs.dividendTimes.clear();
-        for (int i=0; i<dividends.size(); i++) {
-            if (!dividends.get(i).hasOccurred(settlement)) {
-                moreArgs.dividends.add(dividends.get(i));
-                moreArgs.dividendTimes.add(dayCounter.yearFraction(settlement,dividends.get(i).date()));
+        moreArgs.dividendDates.clear();
+        for (int i=0; i<dividends_.size(); i++) {
+            if (!dividends_.get(i).hasOccurred(settlement)) {
+                moreArgs.dividends.add(dividends_.get(i));
+                moreArgs.dividendDates.add(dividends_.get(i).date());
             }
         }
 
-        moreArgs.creditSpread = creditSpread;
-        moreArgs.dayCounter = dayCounter;
-        moreArgs.issueDate = issueDate;
-        moreArgs.settlementDate = settlement;
-        moreArgs.settlementDays = settlementDays;
-        moreArgs.redemption = redemption;
+        moreArgs.creditSpread = creditSpread_;
+        moreArgs.issueDate = issueDate_.clone();
+        moreArgs.settlementDate = settlement.clone();
+        moreArgs.settlementDays = settlementDays_;
+        moreArgs.redemption = redemption_;
+    }
 
-	}
+//    @Override
+//    public void setupArguments(final PricingEngine.Arguments arguments) /* @ReadOnly */ {
+//		super.setupArguments(arguments);
+//
+//		QL.require(ConvertibleBondOption.ArgumentsImpl.class.isAssignableFrom(arguments.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+//		final ConvertibleBondOption.ArgumentsImpl moreArgs = (ConvertibleBondOption.ArgumentsImpl)arguments;
+//        QL_REQUIRE(moreArgs != 0, "wrong argument type");
+//
+//		
+//		moreArgs.conversionRatio = conversionRatio_;
+//        final Date settlement = bond_.settlementDate();
+//        final int n = callability_.size();
+//        moreArgs.callabilityTimes.clear();
+//        moreArgs.callabilityTypes.clear();
+//        moreArgs.callabilityPrices.clear();
+//        moreArgs.callabilityTriggers.clear();
+//
+//        for (int i=0; i<n; i++) {
+//            if (!callability_.get(i).hasOccurred(settlement)) {
+//                moreArgs.callabilityTypes.add(callability_.get(i).getType());
+//                moreArgs.callabilityTimes.add(dayCounter_.yearFraction(settlement, callability_.get(i).date()));
+//
+//                double d = callability_.get(i).getPrice().amount();
+//                if (callability_.get(i).getPrice().type() == Callability.Price.Type.Clean){
+//                	d += bond_.accruedAmount(callability_.get(i).date());
+//                }
+//                moreArgs.callabilityPrices.add(d);
+//                Object obj = callability_.get(i);
+//                final SoftCallability softCall = obj instanceof SoftCallability ? (SoftCallability)obj : null;
+//				if(softCall != null){
+//                    moreArgs.callabilityTriggers.add(softCall.getTrigger());
+//				}else{
+//					moreArgs.callabilityTriggers.add(0.0);
+//				}
+//            }
+//        }
+//
+//        final List<CashFlow> cashFlows = bond_.cashflows();
+//
+//        moreArgs.couponTimes.clear();
+//        moreArgs.couponAmounts.clear();
+//        for (int i=0; i<cashFlows.size()-1; i++) {
+//            if (!cashFlows.get(i).hasOccurred(settlement)) {
+//                moreArgs.couponTimes.add(dayCounter_.yearFraction(settlement,cashFlows.get(i).date()));
+//                moreArgs.couponAmounts.add(cashFlows.get(i).amount());
+//            }
+//        }
+//
+//        moreArgs.dividends.clear();
+//        moreArgs.dividendTimes.clear();
+//        for (int i=0; i<dividends_.size(); i++) {
+//            if (!dividends_.get(i).hasOccurred(settlement)) {
+//                moreArgs.dividends.add(dividends_.get(i));
+//                moreArgs.dividendTimes.add(dayCounter_.yearFraction(settlement,dividends_.get(i).date()));
+//            }
+//        }
+//
+//        moreArgs.creditSpread = creditSpread_;
+//        moreArgs.dayCounter = dayCounter_;
+//        moreArgs.issueDate = issueDate_;
+//        moreArgs.settlementDate = settlement;
+//        moreArgs.settlementDays = settlementDays_;
+//        moreArgs.redemption = redemption_;
+//	}
 
 
 
@@ -176,64 +258,79 @@ public class ConvertibleBondOption extends OneAssetOption {
     //
 
 
-    static public class ArgumentsImpl extends OneAssetOption.ArgumentsImpl {
+    static public class ArgumentsImpl extends OneAssetOption.ArgumentsImpl implements Arguments {
 
-        //
-        // public fields
-        //
-
-        // FIXME: public fields here is a bad design technique :(
-
-        public double conversionRatio;
+    	public double conversionRatio;
         public Handle<Quote> creditSpread;
-        public List<Dividend> dividends;
-        public /*@Time*/ List<Double> dividendTimes;
+        public DividendSchedule dividends;
+        public List<Date> dividendDates;
         public List<Date> callabilityDates;
-        public /*@Time*/ List<Double> callabilityTimes;
         public List<Callability.Type> callabilityTypes;
         public List<Double> callabilityPrices;
         public List<Double> callabilityTriggers;
-        public /*@Time*/ List<Double> couponTimes;
         public List<Date> couponDates;
         public List<Double> couponAmounts;
-        public DayCounter dayCounter;
         public Date issueDate;
         public Date settlementDate;
         public int settlementDays;
         public double redemption;
 
-
-        //
-        // public constructors
-        //
-
         public ArgumentsImpl() {
             conversionRatio = Constants.NULL_REAL;
             settlementDays = Constants.NULL_INTEGER;
             redemption = Constants.NULL_REAL;
+
+            dividends = new DividendSchedule();
+            dividendDates = new ArrayList<Date>();
+            callabilityDates = new ArrayList<Date>();
+            callabilityTypes = new ArrayList<Callability.Type>();
+            callabilityPrices = new ArrayList<Double>();
+            callabilityTriggers = new ArrayList<Double>();
+            couponDates = new ArrayList<Date>();
+            couponAmounts = new ArrayList<Double>();
         }
 
+        public void validate() {
 
-        //
-        // public methods
-        //
+        	QL.require(conversionRatio != Constants.NULL_REAL, "null conversion ratio");
+        	QL.require(conversionRatio > 0.0,
+                   "positive conversion ratio required: "
+                   + conversionRatio + " not allowed");
 
-        @Override
-        public void validate() /*@ReadOnly*/ {
-            super.validate();
+        	QL.require(redemption != Constants.NULL_REAL, "null redemption");
+        	QL.require(redemption >= 0.0, "positive redemption required: "
+        								+ redemption + " not allowed");
 
-            // TODO: message
-            QL.require(!Double.isNaN(conversionRatio), "null conversion ratio");
-            QL.require(conversionRatio > 0.0, "positive conversion ratio required");
-            QL.require(!Double.isNaN(redemption), "null redemption");
-            QL.require(redemption >= 0.0, "positive redemption required");
-            QL.require(!settlementDate.isNull(), "null settlement date");
-            QL.require(settlementDays != Constants.NULL_INTEGER, "null settlement days");
-            QL.require(callabilityDates.size() == callabilityTypes.size(),    "different number of callability dates and types");
-            QL.require(callabilityDates.size() == callabilityPrices.size(),   "different number of callability dates and prices");
-            QL.require(callabilityDates.size() == callabilityTriggers.size(), "different number of callability dates and triggers");
-            QL.require(couponDates.size() == couponAmounts.size(), "different number of coupon dates and amounts");
-        }
+        	QL.require(!settlementDate.isNull(), "null settlement date");
+
+        	QL.require(settlementDays != Constants.NULL_NATURAL, "null settlement days");
+
+        	QL.require(callabilityDates.size() == callabilityTypes.size(),
+                   "different number of callability dates and types");
+        	QL.require(callabilityDates.size() == callabilityPrices.size(),
+                   "different number of callability dates and prices");
+        	QL.require(callabilityDates.size() == callabilityTriggers.size(),
+                   "different number of callability dates and triggers");
+
+        	QL.require(couponDates.size() == couponAmounts.size(),
+                   "different number of coupon dates and amounts");
+    }
+//        @Override
+//        public void validate() /*@ReadOnly*/ {
+//            super.validate();
+//
+//            // TODO: message
+//            QL.require(!Double.isNaN(conversionRatio), "null conversion ratio");
+//            QL.require(conversionRatio > 0.0, "positive conversion ratio required");
+//            QL.require(!Double.isNaN(redemption), "null redemption");
+//            QL.require(redemption >= 0.0, "positive redemption required");
+//            QL.require(!settlementDate.isNull(), "null settlement date");
+//            QL.require(settlementDays != Constants.NULL_INTEGER, "null settlement days");
+//            QL.require(callabilityDates.size() == callabilityTypes.size(),    "different number of callability dates and types");
+//            QL.require(callabilityDates.size() == callabilityPrices.size(),   "different number of callability dates and prices");
+//            QL.require(callabilityDates.size() == callabilityTriggers.size(), "different number of callability dates and triggers");
+//            QL.require(couponDates.size() == couponAmounts.size(), "different number of coupon dates and amounts");
+//        }
 
     }
 

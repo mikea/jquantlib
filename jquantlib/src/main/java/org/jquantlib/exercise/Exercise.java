@@ -94,6 +94,9 @@ public abstract class Exercise {
 		return type;
 	}
 	
+	public List<Date> dates() {
+		return dates;
+	}
 	public final int size() {
 		return dates.size();
 	}

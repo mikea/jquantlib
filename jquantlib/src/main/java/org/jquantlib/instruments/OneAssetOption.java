@@ -45,6 +45,7 @@ import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.lang.reflect.ReflectConstants;
+import org.jquantlib.math.Constants;
 import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.time.Date;
@@ -54,115 +55,148 @@ import org.jquantlib.util.Observer;
  * Base class for options on a single asset
  *
  * @author Richard Gomes
+ * @author Zahid Hussain
  */
 public class OneAssetOption extends Option {
 
+    private double delta_;
+    private double deltaForward_;
+    private double elasticity_;
+    private double gamma_;
+    private double theta_;
+    private double thetaPerDay_;
+    private double vega_;
+    private double rho_;
+    private double dividendRho_;
+    private double strikeSensitivity_;
+    private double itmCashProbability_;
 
-    //
-    // private fields
-    //
-
-    // results
-    private double delta;
-    private double deltaForward;
-    private double elasticity;
-    private double gamma;
-    private double theta;
-    private double thetaPerDay;
-    private double vega;
-    private double rho;
-    private double dividendRho;
-    private double itmCashProbability;
-
-
-    //
-    // public constructors
-    //
-
-    public OneAssetOption(
-            final Payoff payoff,
-            final Exercise exercise) {
+    public OneAssetOption(final Payoff payoff,
+            			  final Exercise exercise) {
         super(payoff, exercise);
     }
-
-    //
-    // public methods
-    //
-
-    public double delta() /* @ReadOnly */ {
-        calculate();
-        QL.ensure(!Double.isNaN(delta) , "delta not provided"); // QA:[RG]::verified // TODO: message
-        return delta;
+    
+    public boolean isExpired() /* @ReadOnly */ {
+        return exercise.lastDate().lt(new Settings().evaluationDate() );
     }
-
+    
+    public double delta() {
+        calculate();
+        QL.require(delta_ != Constants.NULL_REAL, "delta not provided");
+        return delta_;
+    }
+    
     public double deltaForward() /* @ReadOnly */ {
         calculate();
-        QL.ensure(!Double.isNaN(deltaForward) , "forward delta not provided"); // QA:[RG]::verified // TODO: message
-        return deltaForward;
+        QL.require(deltaForward_ != Constants.NULL_REAL , "forward delta not provided");
+        return deltaForward_;
     }
 
-    public double elasticity() /* @ReadOnly */ {
+    public double elasticity() {
         calculate();
-        QL.ensure(!Double.isNaN(elasticity) , "elasticity not provided"); // QA:[RG]::verified // TODO: message
-        return elasticity;
+        QL.require(elasticity_ != Constants.NULL_REAL, "elasticity not provided");
+        return elasticity_;
     }
-
-    public double gamma() /* @ReadOnly */ {
+    
+    public double gamma(){
         calculate();
-        QL.ensure(!Double.isNaN(gamma) , "gamma not provided"); // QA:[RG]::verified // TODO: message
-        return gamma;
+        QL.require(gamma_ != Constants.NULL_REAL, "gamma not provided");
+        return gamma_;
     }
-
-    public double theta() /* @ReadOnly */ {
+    
+    public double theta() {
         calculate();
-        QL.ensure(!Double.isNaN(theta) , "theta not provided"); // QA:[RG]::verified // TODO: message
-        return theta;
+        QL.require(theta_ != Constants.NULL_REAL, "theta not provided");
+        return theta_;
     }
 
-    public double thetaPerDay() /* @ReadOnly */ {
+    public double thetaPerDay() {
         calculate();
-        QL.ensure(!Double.isNaN(thetaPerDay) , "theta per-day not provided"); // QA:[RG]::verified // TODO: message
-        return thetaPerDay;
+        QL.require(thetaPerDay_ != Constants.NULL_REAL, "theta per-day not provided");
+        return thetaPerDay_;
     }
-
-    public double vega() /* @ReadOnly */ {
+    public double vega() {
         calculate();
-        QL.ensure(!Double.isNaN(vega) , "vega not provided"); // QA:[RG]::verified // TODO: message
-        return vega;
+        QL.require(vega_ != Constants.NULL_REAL, "vega not provided");
+        return vega_;
     }
-
-    public double rho() /* @ReadOnly */ {
+    
+    public double rho() {
         calculate();
-        QL.ensure(!Double.isNaN(rho) , "rho not provided"); // QA:[RG]::verified // TODO: message
-        return rho;
+        QL.require(rho_ != Constants.NULL_REAL, "rho not provided");
+        return rho_;
     }
-
-    public double dividendRho() /* @ReadOnly */ {
+    
+    public double dividendRho() {
         calculate();
-        QL.ensure(!Double.isNaN(dividendRho) , "dividend rho not provided"); // QA:[RG]::verified // TODO: message
-        return dividendRho;
+        QL.require(dividendRho_ != Constants.NULL_REAL, "dividend rho not provided");
+        return dividendRho_;
     }
-
-    public double itmCashProbability() /* @ReadOnly */ {
+    
+    public double strikeSensitivity() {
         calculate();
-        QL.ensure(!Double.isNaN(itmCashProbability) , "in-the-money cash probability not provided"); // QA:[RG]::verified // TODO: message
-        return itmCashProbability;
+        QL.require(strikeSensitivity_ != Constants.NULL_REAL,
+                   "strike sensitivity not provided");
+        return strikeSensitivity_;
     }
 
-    //
-    // overrides Instrument
-    //
-
-    @Override
-    public boolean isExpired() /* @ReadOnly */ {
-        final Date evaluationDate = new Settings().evaluationDate();
-        return exercise.lastDate().le( evaluationDate );
+    public double itmCashProbability() {
+        calculate();
+        QL.require(itmCashProbability_ != Constants.NULL_REAL,
+                   "in-the-money cash probability not provided");
+        return itmCashProbability_;
+    }
+    
+    public void setupExpired() {
+        super.setupExpired();
+        delta_ = deltaForward_ = elasticity_ = gamma_ = theta_ =
+            thetaPerDay_ = vega_ = rho_ = dividendRho_ =
+            strikeSensitivity_ = itmCashProbability_ = 0.0;
     }
 
+    public void fetchResults(final PricingEngine.Results r) {
+        super.fetchResults(r);
+        
+        QL.require(OneAssetOption.Results.class.isAssignableFrom(r.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+        //final Greeks results = (Greeks)(r);
 
-    //
-    // overrides Instrument
-    //
+        final OneAssetOption.ResultsImpl ri = (OneAssetOption.ResultsImpl)r;
+        final GreeksImpl     results = ri.greeks();
+        
+        QL.ensure(results != null,
+                  "no greeks returned from pricing engine");
+        /* no check on null values - just copy.
+           this allows:
+           a) to decide in derived options what to do when null
+           results are returned (throw? numerical calculation?)
+           b) to implement slim engines which only calculate the
+           value---of course care must be taken not to call
+           the greeks methods when using these.
+        */
+        delta_          = results.delta;
+        gamma_          = results.gamma;
+        theta_          = results.theta;
+        vega_           = results.vega;
+        rho_            = results.rho;
+        dividendRho_    = results.dividendRho;
+
+        final MoreGreeksImpl moreResults = ri.moreGreeks();
+        QL.ensure(moreResults != null,
+                  "no more greeks returned from pricing engine");
+        /* no check on null values - just copy.
+           this allows:
+           a) to decide in derived options what to do when null
+           results are returned (throw? numerical calculation?)
+           b) to implement slim engines which only calculate the
+           value---of course care must be taken not to call
+           the greeks methods when using these.
+        */
+        deltaForward_       = moreResults.deltaForward;
+        elasticity_         = moreResults.elasticity;
+        thetaPerDay_        = moreResults.thetaPerDay;
+        strikeSensitivity_  = moreResults.strikeSensitivity;
+        itmCashProbability_ = moreResults.itmCashProbability;
+    }
 
     /**
      * {@inheritDoc}
@@ -173,55 +207,62 @@ public class OneAssetOption extends Option {
      * @see MoreGreeks
      * @see PricingEngine
      */
-    @Override
-    public void fetchResults(final PricingEngine.Results results) /* @ReadOnly */ {
-        super.fetchResults(results);
-
-        // bind a Results interface to specific classes
-        QL.require(OneAssetOption.Results.class.isAssignableFrom(results.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
-        final OneAssetOption.ResultsImpl r = (OneAssetOption.ResultsImpl)results;
-        final GreeksImpl     greeks = r.greeks();
-        final MoreGreeksImpl moreGreeks = r.moreGreeks();
-
-        //
-        // No check on Double.NaN values - just copy. this allows:
-        // a) To decide in derived options what to do when null results are returned
-        //    (throw numerical calculation?)
-        // b) To implement slim engines which only calculate the value.
-        //    Of course care must be taken not to call the greeks methods when using these.
-        //
-        delta          = greeks.delta;
-        gamma          = greeks.gamma;
-        theta          = greeks.theta;
-        vega           = greeks.vega;
-        rho            = greeks.rho;
-        dividendRho    = greeks.dividendRho;
-
-        //
-        // No check on Double.NaN values - just copy. this allows:
-        // a) To decide in derived options what to do when null results are returned
-        //    (throw numerical calculation?)
-        // b) To implement slim engines which only calculate the value.
-        //    Of course care must be taken not to call the greeks methods when using these.
-        //
-        deltaForward       = moreGreeks.deltaForward;
-        elasticity         = moreGreeks.elasticity;
-        thetaPerDay        = moreGreeks.thetaPerDay;
-        itmCashProbability = moreGreeks.itmCashProbability;
-    }
-
-    @Override
-    protected void setupExpired() /* @ReadOnly */ {
-        super.setupExpired();
-        delta = deltaForward = elasticity = gamma = theta =
-            thetaPerDay = vega = rho = dividendRho =
-                itmCashProbability = 0.0;
-    }
+//    @Override
+//    public void fetchResults(final PricingEngine.Results results) /* @ReadOnly */ {
+//        super.fetchResults(results);
+//
+//        // bind a Results interface to specific classes
+//        QL.require(OneAssetOption.Results.class.isAssignableFrom(results.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+//        final OneAssetOption.ResultsImpl r = (OneAssetOption.ResultsImpl)results;
+//        final GreeksImpl     greeks = r.greeks();
+//        final MoreGreeksImpl moreGreeks = r.moreGreeks();
+//
+//        //
+//        // No check on Double.NaN values - just copy. this allows:
+//        // a) To decide in derived options what to do when null results are returned
+//        //    (throw numerical calculation?)
+//        // b) To implement slim engines which only calculate the value.
+//        //    Of course care must be taken not to call the greeks methods when using these.
+//        //
+//        delta          = greeks.delta;
+//        gamma          = greeks.gamma;
+//        theta          = greeks.theta;
+//        vega           = greeks.vega;
+//        rho            = greeks.rho;
+//        dividendRho    = greeks.dividendRho;
+//
+//        //
+//        // No check on Double.NaN values - just copy. this allows:
+//        // a) To decide in derived options what to do when null results are returned
+//        //    (throw numerical calculation?)
+//        // b) To implement slim engines which only calculate the value.
+//        //    Of course care must be taken not to call the greeks methods when using these.
+//        //
+//        deltaForward       = moreGreeks.deltaForward;
+//        elasticity         = moreGreeks.elasticity;
+//        thetaPerDay        = moreGreeks.thetaPerDay;
+//        itmCashProbability = moreGreeks.itmCashProbability;
+//    }
 
 
     //
     // public inner interfaces
     //
+    //! %Results from single-asset option calculation
+//    class OneAssetOption::results : public Instrument::results,
+//                                    public Greeks,
+//                                    public MoreGreeks {
+//      public:
+//        void reset() {
+//            Instrument::results::reset();
+//            Greeks::reset();
+//            MoreGreeks::reset();
+//        }
+//    };
+//
+//    class OneAssetOption::engine :
+//        public GenericEngine<OneAssetOption::arguments,
+//                             OneAssetOption::results> {};
 
     /**
      * basic option arguments

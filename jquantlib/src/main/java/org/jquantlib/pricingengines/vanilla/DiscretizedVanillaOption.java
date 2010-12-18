@@ -98,8 +98,8 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
 
     private void applySpecificCondition() {
         final Array grid = method().grid(time());
-        for (int j = 0; j < values.size(); j++) {
-            values.set(j, Math.max(values.get(j), a.payoff.get(grid.get(j))));
+        for (int j = 0; j < values_.size(); j++) {
+            values_.set(j, Math.max(values_.get(j), a.payoff.get(grid.get(j))));
         }
     }
 
@@ -110,7 +110,7 @@ public class DiscretizedVanillaOption extends DiscretizedAsset {
 
     @Override
     public void reset(final int size) {
-        values = new Array(size);
+        values_ = new Array(size);
         adjustValues();
     }
 

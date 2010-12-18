@@ -89,7 +89,7 @@ public class ConvertibleBond extends Bond {
     @Override
     protected void performCalculations() /* @ReadOnly */ {
         option.setPricingEngine(engine);
-        NPV = this.settlementValue_ = option.NPV();
+        NPV = settlementValue_ = option.NPV();
         errorEstimate = Constants.NULL_REAL;
     }
 

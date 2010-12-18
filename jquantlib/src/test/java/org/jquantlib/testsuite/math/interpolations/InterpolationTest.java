@@ -452,7 +452,7 @@ public class InterpolationTest {
 //            for (int j = 0; j < dim[i]; temp += r, ++j) {
 //                grid[i].push_back(temp);
 //            }
-            grid[i] = new Array(); //XXX: just to compile
+            grid[i] = new Array(0); //XXX: just to compile
         }
 
         r = 0.01;

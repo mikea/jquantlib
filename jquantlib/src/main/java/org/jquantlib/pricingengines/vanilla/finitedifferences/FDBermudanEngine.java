@@ -115,9 +115,9 @@ public class FDBermudanEngine extends OneAssetOption.EngineImpl {
 
     @Override
     public void calculate() {
-        final Option.ArgumentsImpl a = (Option.ArgumentsImpl)arguments;
+        final Option.ArgumentsImpl a = (Option.ArgumentsImpl)arguments_;
         fdVanillaEngine.setupArguments(a);
-        fdVanillaEngine.calculate(results);
+        fdVanillaEngine.calculate(results_);
     }
 
 

@@ -56,7 +56,7 @@ public abstract class DiscretizedAsset {
     protected double /* @Time */latestPreAdjustment;
     protected double /* @Time */latestPostAdjustment;
     protected double /* @Time */time;
-    protected Array values;
+    protected Array values_;
 
 	private Lattice method;
 
@@ -84,7 +84,7 @@ public abstract class DiscretizedAsset {
 	}
 
 	public Array values() {
-		return values;
+		return values_;
 	}
 
 	public Lattice method() {
@@ -202,7 +202,7 @@ public abstract class DiscretizedAsset {
 	}
 
 	public void setValues(final Array newValues) {
-		this.values = newValues;
+		this.values_ = newValues;
 	}
 
 

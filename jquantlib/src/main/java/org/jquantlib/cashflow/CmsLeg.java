@@ -79,11 +79,11 @@ public class CmsLeg {
         inArrears_ = false;
         zeroPayments_ = false;
         
-        fixingDays_ = new Array();
-        gearings_ = new Array();
-        spreads_ = new Array();
-        caps_ = new Array();
-        floors_ = new Array();
+        fixingDays_ = new Array(0);
+        gearings_ = new Array(0);
+        spreads_ = new Array(0);
+        caps_ = new Array(0);
+        floors_ = new Array(0);
     }
 
 

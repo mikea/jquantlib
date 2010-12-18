@@ -43,8 +43,8 @@ public class DiscountingBondEngine extends Bond.EngineImpl {
         // QL.require(Bond.Arguments.class.isAssignableFrom(arguments.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
         // QL.require(Bond.Results.class.isAssignableFrom(results.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
 
-        final Bond.ArgumentsImpl a = (Bond.ArgumentsImpl)arguments;
-        final Bond.ResultsImpl   r = (Bond.ResultsImpl)results;
+        final Bond.ArgumentsImpl a = (Bond.ArgumentsImpl)arguments_;
+        final Bond.ResultsImpl   r = (Bond.ResultsImpl)results_;
 
     	final Leg cashflows = a.cashflows;
     	final Date settlementDate = a.settlementDate;

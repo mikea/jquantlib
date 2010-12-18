@@ -112,7 +112,7 @@ public class FloatingRateBond extends Bond {
 		this(settlementDays, faceAmount, schedule,index, accrualDayCounter, 
 				BusinessDayConvention.Following, Constants.NULL_INTEGER, 
 				new Array(new double[] { 1.0 }), new Array(new double[] { 0.0 }), 
-				new Array(), new Array(), false, 100.0, new Date());
+				new Array(0), new Array(0), false, 100.0, new Date());
 
 	}
 
@@ -197,7 +197,7 @@ public class FloatingRateBond extends Bond {
 				couponFrequency, calendar, index,
 				accrualDayCounter, BusinessDayConvention.Following, BusinessDayConvention.Following,
 				Constants.NULL_INTEGER, new Array(new double[] { 1.0 }),
-				new Array(new double[] { 0.0 }), new Array(), new Array(),
+				new Array(new double[] { 0.0 }), new Array(0), new Array(0),
 				false, 100.0, new Date(), new Date(),
 				DateGeneration.Rule.Backward, false);
 	}

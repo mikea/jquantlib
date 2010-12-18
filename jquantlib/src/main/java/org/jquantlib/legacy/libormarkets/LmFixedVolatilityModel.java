@@ -63,7 +63,7 @@ public class LmFixedVolatilityModel extends LmVolatilityModel {
 
         for (int i = ti; i < size_; ++i)
             tmp.set(i, volatilities_.get(i - ti));
-        final Array ret = new Array();
+        final Array ret = new Array(tmp.size());//ZH: translation not as QL097
         for (int i = 0; i < tmp.size(); i++)
             ret.set(i, tmp.get(i));
         return ret;

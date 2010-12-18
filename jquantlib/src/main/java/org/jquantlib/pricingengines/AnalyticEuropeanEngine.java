@@ -96,8 +96,8 @@ public class AnalyticEuropeanEngine extends OneAssetOption.EngineImpl {
     //
 
     public AnalyticEuropeanEngine(final GeneralizedBlackScholesProcess process) {
-        this.a = (OneAssetOption.ArgumentsImpl)arguments;
-        this.r = (OneAssetOption.ResultsImpl)results;
+        this.a = (OneAssetOption.ArgumentsImpl)arguments_;
+        this.r = (OneAssetOption.ResultsImpl)results_;
         this.greeks = r.greeks();
         this.moreGreeks = r.moreGreeks();
         this.process = process;

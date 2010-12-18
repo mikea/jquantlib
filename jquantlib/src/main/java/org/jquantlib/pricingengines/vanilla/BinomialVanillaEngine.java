@@ -117,8 +117,8 @@ public abstract class BinomialVanillaEngine<T extends Tree> extends VanillaOptio
         this.clazz = (Class<T>) TypeToken.getClazz(this.getClass());
         QL.require(timeSteps > 0 , "timeSteps must be positive"); // QA:[RG]::verified // TODO: message
         this.timeSteps_ = timeSteps;
-        this.a = (VanillaOption.ArgumentsImpl)arguments;
-        this.r = (VanillaOption.ResultsImpl)results;
+        this.a = (VanillaOption.ArgumentsImpl)arguments_;
+        this.r = (VanillaOption.ResultsImpl)results_;
         this.greeks = r.greeks();
         this.moreGreeks = r.moreGreeks();
         this.process = process;

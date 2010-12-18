@@ -94,7 +94,7 @@ public class Problem {
     //
 
     public Problem(final CostFunction  costFunction, final Constraint  constraint) {
-        this(costFunction, constraint, new Array());
+        this(costFunction, constraint, new Array(0));//ZH: Verified QL097
     }
 
     public Problem(final CostFunction  costFunction, final Constraint  constraint, final Array  initialValue) {

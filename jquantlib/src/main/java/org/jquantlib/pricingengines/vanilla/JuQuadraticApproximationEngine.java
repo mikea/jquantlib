@@ -87,8 +87,8 @@ public class JuQuadraticApproximationEngine extends VanillaOption.EngineImpl {
     //
 
     public JuQuadraticApproximationEngine(final GeneralizedBlackScholesProcess process) {
-        this.a = (VanillaOption.ArgumentsImpl)arguments;
-        this.r = (VanillaOption.ResultsImpl)results;
+        this.a = (VanillaOption.ArgumentsImpl)arguments_;
+        this.r = (VanillaOption.ResultsImpl)results_;
         this.greeks = r.greeks();
         this.moreGreeks = r.moreGreeks();
         this.process = process;

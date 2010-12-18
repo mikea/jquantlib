@@ -714,8 +714,8 @@ public class BondTest {
 	    FloatingRateBond bond1 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
 	                           index, new ActualActual(ActualActual.Convention.ISMA),
 	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
-	                           new Array(), new Array(),
-	                           new Array(), new Array(),
+	                           new Array(0), new Array(0),
+	                           new Array(0), new Array(0),
 	                           false,
 	                           100.0, new Date(30,Month.November,2004));
 
@@ -746,8 +746,8 @@ public class BondTest {
 	    FloatingRateBond bond2 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
 	                           index, new ActualActual(ActualActual.Convention.ISMA),
 	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
-	                           new Array(), new Array(),
-	                           new Array(), new Array(),
+	                           new Array(0), new Array(0),
+	                           new Array(0), new Array(0),
 	                           false,
 	                           100.0, new Date(30,Month.November,2004));
 
@@ -777,8 +777,8 @@ public class BondTest {
 	    FloatingRateBond bond3 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
 	                           index, new ActualActual(ActualActual.Convention.ISMA),
 	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
-	                           new Array(), new Array(spreads),
-	                           new Array(), new Array(),
+	                           new Array(0), new Array(spreads),
+	                           new Array(0), new Array(0),
 	                           false,
 	                           100.0, new Date(30,Month.November,2004));
 

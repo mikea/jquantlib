@@ -71,7 +71,7 @@ public class FDEuropeanEngine extends OneAssetOption.EngineImpl {
 
     @Override
     public void calculate() {
-        fdVanillaEngine.setupArguments(arguments);
+        fdVanillaEngine.setupArguments(arguments_);
         fdVanillaEngine.setGridLimits();
         fdVanillaEngine.initializeInitialCondition();
         fdVanillaEngine.initializeOperator();
@@ -82,7 +82,7 @@ public class FDEuropeanEngine extends OneAssetOption.EngineImpl {
         prices = new SampledCurve(fdVanillaEngine.intrinsicValues);
         prices.setValues( model.rollback(prices.values(), fdVanillaEngine.getResidualTime(), 0, fdVanillaEngine.timeSteps) );
 
-        final OneAssetOption.ResultsImpl r = (OneAssetOption.ResultsImpl)results;
+        final OneAssetOption.ResultsImpl r = (OneAssetOption.ResultsImpl)results_;
         r.value = prices.valueAtCenter();
         final Option.GreeksImpl greeks = r.greeks();
         greeks.delta = prices.firstDerivativeAtCenter();

@@ -51,7 +51,7 @@ public abstract class LfmCovarianceParameterization {
     public abstract Matrix diffusion(/* @Time */double t, final Array x);
 
     public Matrix diffusion(/* @Time */final double t) {
-        return diffusion(t, new Array());
+        return diffusion(t, new Array(0)); //ZH:QL097 using Null<Array>
     }
 
     public Matrix covariance(/* @Time */final double t, final Array x) {
@@ -60,7 +60,7 @@ public abstract class LfmCovarianceParameterization {
     }
 
     public Matrix covariance(/* @Time */final double t) {
-        return diffusion(t, new Array());
+        return diffusion(t, new Array(0)); //ZH:QL097 using Null<Array> which is new Array(), see Null.hpp
     }
 
     public Matrix integratedCovariance(/* @Time */final double t, final Array x) {
@@ -86,7 +86,7 @@ public abstract class LfmCovarianceParameterization {
     }
 
     public Matrix integratedCovariance(/* @Time */final double t) {
-        return integratedCovariance(t, new Array());
+        return integratedCovariance(t, new Array(0)); //ZH QL097 using Null<Array>
     }
 
     private static class Var_Helper implements Ops.DoubleOp {

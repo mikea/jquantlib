@@ -70,7 +70,7 @@ public abstract class LmCorrelationModel {
 
     public double correlation(final int i, final int j, /* @Time */final double t) {
         // inefficient implementation, please overload in derived classes
-        return correlation(t, new Array()).get(i, j);
+        return correlation(t, new Array(j)).get(i, j);//ZH: Should be size j
     }
 
     public abstract Matrix correlation(
@@ -78,7 +78,7 @@ public abstract class LmCorrelationModel {
 
     public Matrix correlation(
     /* @Time */final double t) {
-        return correlation(t, new Array());
+        return correlation(t, new Array(0));//ZH:Default Null<Array>
     }
 
     public List<Parameter> params() {

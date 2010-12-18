@@ -89,7 +89,7 @@ public class OptimizerTest {
         // Set Constraint for optimizers: unconstrained problem
         constraints_.add(new NoConstraint());
         // Set initial guess for optimizer
-        final Array initialValue = new Array();
+        final Array initialValue = new Array(0);
         initialValue.add(-100.0);
         initialValues_.add(initialValue);
         // Set end criteria for optimizer

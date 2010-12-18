@@ -73,7 +73,7 @@ public abstract class Option extends Instrument {
 
     @Override
     protected void setupArguments(final PricingEngine.Arguments a) /* @ReadOnly */ {
-        QL.require(Option.Arguments.class.isAssignableFrom(a.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
+        QL.require(Option.ArgumentsImpl.class.isAssignableFrom(a.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
         final Option.ArgumentsImpl arguments = (Option.ArgumentsImpl)a;
         arguments.payoff = payoff;
         arguments.exercise = exercise;

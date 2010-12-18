@@ -92,8 +92,8 @@ public class AnalyticDiscreteGeometricAveragePriceAsianEngine extends DiscreteAv
 
     public AnalyticDiscreteGeometricAveragePriceAsianEngine(final GeneralizedBlackScholesProcess process) {
         this.process = process;
-        this.a = (DiscreteAveragingAsianOption.ArgumentsImpl)arguments;
-        this.r = (DiscreteAveragingAsianOption.ResultsImpl)results;
+        this.a = (DiscreteAveragingAsianOption.ArgumentsImpl)arguments_;
+        this.r = (DiscreteAveragingAsianOption.ResultsImpl)results_;
         this.greeks = r.greeks();
         this.moreGreeks = r.moreGreeks();
         process.addObserver(this);

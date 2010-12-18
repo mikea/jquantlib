@@ -55,7 +55,7 @@ public abstract class LmVolatilityModel {
     }
 
     public double volatility(final int i, final double t){
-        return volatility(t, new Array()).get(i);
+        return volatility(t, new Array(i)).get(i);//ZH size should be atleast i
     }
 
     public double volatility(final int i, final double t, final Array x){
@@ -63,7 +63,7 @@ public abstract class LmVolatilityModel {
     }
 
     public Array volatility(final double t) {
-        return volatility(t, new Array());
+        return volatility(t, new Array(0));//ZH Default value as Null<Array>
     }
 
     public abstract Array volatility(double t, Array x);

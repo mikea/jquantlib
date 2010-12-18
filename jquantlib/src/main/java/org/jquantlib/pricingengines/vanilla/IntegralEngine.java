@@ -80,8 +80,8 @@ public class IntegralEngine extends OneAssetOption.EngineImpl {
     //
 
     public IntegralEngine(final GeneralizedBlackScholesProcess process) {
-        this.a = (Option.ArgumentsImpl)arguments;
-        this.r = (Instrument.ResultsImpl)results;
+        this.a = (Option.ArgumentsImpl)arguments_;
+        this.r = (Instrument.ResultsImpl)results_;
         this.process = process;
         this.process.addObserver(this);
     }

@@ -67,7 +67,7 @@ public class LevenbergMarquardt extends OptimizationMethod {
         final int m = ProblemData.getProblemData().initCostValues_.size();
         final int n = x_.size();
 
-        final Array  xx = new Array();
+        final Array  xx = new Array(0);
         //TODO: correct?
         xx.addAssign(x_);
 
@@ -80,7 +80,7 @@ public class LevenbergMarquardt extends OptimizationMethod {
         final int info = 0;
         final int nfev = 0;
 
-        final Array fjac = new Array();
+        final Array fjac = new Array(0);//ZH Just removed compilation error, code not as per QL097
         final int ldfjac = m;
 
         //TODO: to be completed....
