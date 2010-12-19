@@ -62,7 +62,7 @@ public class FraRateHelper extends RelativeDateRateHelper {
 	//
 	// public constructors
 	//
-	
+
 	public FraRateHelper(
 			final Handle<Quote> rate,
 			final/* @Natural */int monthsToStart,

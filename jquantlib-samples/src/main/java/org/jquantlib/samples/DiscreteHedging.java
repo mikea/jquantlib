@@ -85,8 +85,7 @@ public class DiscreteHedging implements Runnable {
 			/* @Rate */    		final Number riskFreeRate = new Double(0.05); // 5%
 			final Option.Type Call = Option.Type.Call;
 
-			final ReplicationError rp = new ReplicationError(Call, maturity, strike,
-					underlying, volatility, riskFreeRate);
+			final ReplicationError rp = new ReplicationError(Call, maturity, strike, underlying, volatility, riskFreeRate);
 
 			final int scenarios = 50000;
 			int hedgesNum;

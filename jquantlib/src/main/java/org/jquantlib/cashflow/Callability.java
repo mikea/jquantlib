@@ -46,7 +46,6 @@ import org.jquantlib.time.Date;
 /**
  * @author Daniel Kong
  */
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class Callability extends Event {
 
 	public enum Type { Call, Put }
@@ -59,8 +58,6 @@ public class Callability extends Event {
         this.price=price;
         this.type=type;
         this.date=date;
-
-        QL.validateExperimentalMode();
 	}
 
 	@Override

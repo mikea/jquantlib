@@ -89,17 +89,16 @@ import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.DateGeneration;
+import org.jquantlib.time.DateGeneration.Rule;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
-import org.jquantlib.time.DateGeneration.Rule;
 import org.jquantlib.time.calendars.Brazil;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.time.calendars.UnitedStates;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class BondTest {
@@ -126,7 +125,6 @@ public class BondTest {
 	}
 
 
-	@Ignore
 	@Test
 	//FIXME: http://bugs.jquantlib.org/view.php?id=472
 	public void testYield() {
@@ -683,27 +681,27 @@ public class BondTest {
 
 	    QL.info("Testing floating-rate bond prices against cached values...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
-	    Date today = new Date(22,Month.November,2004);
-	    Settings settings = new Settings();
+	    final Date today = new Date(22,Month.November,2004);
+	    final Settings settings = new Settings();
 	    settings.setEvaluationDate(today);
 
-	    int settlementDays = 1;
+	    final int settlementDays = 1;
 
-		Handle<YieldTermStructure> riskFreeRate = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.025, new Actual360()));
-		Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.03, new Actual360()));
+		final Handle<YieldTermStructure> riskFreeRate = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.025, new Actual360()));
+		final Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(Utilities.flatRate(today, 0.03, new Actual360()));
 
-		IborIndex index = new USDLibor(new Period(6,TimeUnit.Months), riskFreeRate);
-	    int fixingDays = 1;
+		final IborIndex index = new USDLibor(new Period(6,TimeUnit.Months), riskFreeRate);
+	    final int fixingDays = 1;
 
-	    double tolerance = 1.0e-6;
+	    final double tolerance = 1.0e-6;
 
-	    IborCouponPricer pricer = new BlackIborCouponPricer(new Handle<OptionletVolatilityStructure>());
+	    final IborCouponPricer pricer = new BlackIborCouponPricer(new Handle<OptionletVolatilityStructure>());
 
 	    // plain
 
-	    Schedule sch = new Schedule(new Date(30,Month.November,2004),
+	    final Schedule sch = new Schedule(new Date(30,Month.November,2004),
 	    							new Date(30,Month.November,2008),
 	    							new Period(Frequency.Semiannual),
 	    							new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
@@ -711,7 +709,7 @@ public class BondTest {
 	    							BusinessDayConvention.ModifiedFollowing,
 	    							DateGeneration.Rule.Backward, false);
 
-	    FloatingRateBond bond1 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
+	    final FloatingRateBond bond1 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
 	                           index, new ActualActual(ActualActual.Convention.ISMA),
 	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
 	                           new Array(0), new Array(0),
@@ -719,19 +717,14 @@ public class BondTest {
 	                           false,
 	                           100.0, new Date(30,Month.November,2004));
 
-	    PricingEngine bondEngine = new DiscountingBondEngine(riskFreeRate);
+	    final PricingEngine bondEngine = new DiscountingBondEngine(riskFreeRate);
 	    bond1.setPricingEngine(bondEngine);
 
 	    PricerSetter.setCouponPricer(bond1.cashflows(),pricer);
 
-
-	    double cachedPrice1 = 99.874645;
-//	    #if defined(QL_USE_INDEXED_COUPON)
-//	    Real cachedPrice1 = 99.874645;
-//	    #else
-//	    Real cachedPrice1 = 99.874646;
-//	    #endif
-
+	    final boolean indexedCoupon = new Settings().isUseIndexedCoupon();
+	    
+	    final double cachedPrice1 = indexedCoupon ? 99.874645 : 99.874646;
 
 	    double price = bond1.cleanPrice();
 	    if (Math.abs(price-cachedPrice1) > tolerance) {
@@ -743,7 +736,7 @@ public class BondTest {
 
 	    // different risk-free and discount curve
 
-	    FloatingRateBond bond2 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
+	    final FloatingRateBond bond2 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
 	                           index, new ActualActual(ActualActual.Convention.ISMA),
 	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
 	                           new Array(0), new Array(0),
@@ -751,18 +744,13 @@ public class BondTest {
 	                           false,
 	                           100.0, new Date(30,Month.November,2004));
 
-	    PricingEngine bondEngine2 = new DiscountingBondEngine(discountCurve);
+	    final PricingEngine bondEngine2 = new DiscountingBondEngine(discountCurve);
 	    bond2.setPricingEngine(bondEngine2);
 
 	    PricerSetter.setCouponPricer(bond2.cashflows(),pricer);
 
-//	    #if defined(QL_USE_INDEXED_COUPON)
-//	    Real cachedPrice2 = 97.955904;
-//	    #else
-//	    Real cachedPrice2 = 97.955904;
-//	    #endif
+        final double cachedPrice2 = indexedCoupon ? 97.955904 : 97.955904; // yes, they are the same, according to QuantLib/C++
 
-	    double cachedPrice2 = 97.955904;
 	    price = bond2.cleanPrice();
 	    if (Math.abs(price-cachedPrice2) > tolerance) {
 	        fail("failed to reproduce cached price:\n"
@@ -772,9 +760,9 @@ public class BondTest {
 	    }
 
 	    // varying spread
-	    double [] spreads = new double[] { 0.001, 0.0012, 0.0014, 0.0016 };
+	    final double [] spreads = new double[] { 0.001, 0.0012, 0.0014, 0.0016 };
 
-	    FloatingRateBond bond3 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
+	    final FloatingRateBond bond3 = new FloatingRateBond(settlementDays, vars.faceAmount, sch,
 	                           index, new ActualActual(ActualActual.Convention.ISMA),
 	                           BusinessDayConvention.ModifiedFollowing, fixingDays,
 	                           new Array(0), new Array(spreads),
@@ -786,13 +774,8 @@ public class BondTest {
 
 	    PricerSetter.setCouponPricer(bond3.cashflows(),pricer);
 
-//	    #if defined(QL_USE_INDEXED_COUPON)
-//	    Real cachedPrice3 = 98.495458;
-//	    #else
-//	    Real cachedPrice3 = 98.495459;
-//	    #endif
-
-	    double cachedPrice3 = 98.495458;
+        final double cachedPrice3 = indexedCoupon ? 98.495458 : 98.495459;
+        
 	    price = bond3.cleanPrice();
 	    if (Math.abs(price-cachedPrice3) > tolerance) {
 	        fail("failed to reproduce cached price:\n"

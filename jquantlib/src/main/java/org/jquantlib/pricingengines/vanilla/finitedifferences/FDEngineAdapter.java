@@ -55,6 +55,7 @@ import org.jquantlib.util.Observer;
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
+//FIXME: http://bugs.jquantlib.org/view.php?id=405
 public abstract class FDEngineAdapter
 <Base extends FDVanillaEngine, Engine extends OneAssetOption.Engine>
 implements OneAssetOption.Engine {

@@ -15,7 +15,7 @@ import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.Thirty360;
 import org.jquantlib.daycounters.Thirty360.Convention;
-import org.jquantlib.indexes.Euribor;
+import org.jquantlib.indexes.Euribor6M;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
@@ -47,8 +47,6 @@ public class Bonds implements Runnable {
 
     @Override
     public void run() {
-
-        QL.validateExperimentalMode();
 
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 
@@ -307,7 +305,7 @@ public class Bonds implements Runnable {
                 throw new UnsupportedOperationException();
             }
         };
-        final IborIndex swFloatingLegIndex = Euribor.getEuribor6M(new Handle<YieldTermStructure>(nullYieldTermStructure));
+        final IborIndex swFloatingLegIndex = new Euribor6M(new Handle<YieldTermStructure>(nullYieldTermStructure));
 
 
         final Period forwardStart = new Period(1, TimeUnit.Days);

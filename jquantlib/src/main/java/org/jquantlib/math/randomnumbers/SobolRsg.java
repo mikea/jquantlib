@@ -83,7 +83,7 @@ import org.jquantlib.methods.montecarlo.Sample;
  * @author Dominik Holenstein
  * @author Q.Boiler
  */
-// TODO: code review :: please verify against QL/C++ code
+//FIXME: http://bugs.jquantlib.org/view.php?id=332
 public class SobolRsg implements UniformRandomSequenceGenerator {
 
     // Sobol' Levitan coefficients of the free direction integers as given by Bratley, P., Fox, B.L. (1988)

@@ -80,8 +80,6 @@ public abstract class RelativeDateRateHelper extends RateHelper {
 
     public RelativeDateRateHelper(final Handle<Quote> quote) {
         super(quote);
-        QL.validateExperimentalMode();
-
         this.evaluationDate = new Settings().evaluationDate();
         this.evaluationDate.addObserver(this);
         // XXX:registerWith

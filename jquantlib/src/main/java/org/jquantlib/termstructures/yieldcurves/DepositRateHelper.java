@@ -83,8 +83,6 @@ public class DepositRateHelper extends RelativeDateRateHelper {
                 final boolean endOfMonth,
                 final DayCounter dayCounter) {
         super(rate);
-        QL.validateExperimentalMode();
-
         this.iborIndex = new IborIndex(
                       "no-fix", // never take fixing into account
                       tenor, fixingDays,

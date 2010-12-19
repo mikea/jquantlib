@@ -41,7 +41,7 @@ import org.jquantlib.time.calendars.Target;
  * @author Srinivas Hasti
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-// TODO: code review :: Please review this class! :S
+// TODO: code review :: Please review this class/** :S
 public class Euribor extends IborIndex {
 
 
@@ -55,73 +55,7 @@ public class Euribor extends IborIndex {
                 euriborEOM(tenor),
                 new Actual360(),
                 h);
-        QL.require(tenor().units() != TimeUnit.Days , "for daily tenors dedicated DailyTenor constructor must be used"); // QA:[RG]::verified // TODO: message
-    }
-
-
-
-    public static Euribor getEuribor1W(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(1, TimeUnit.Weeks), h);
-    }
-
-    public static Euribor getEuribor2W(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(2, TimeUnit.Weeks), h);
-    }
-
-    public static Euribor getEuribor3W(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(3, TimeUnit.Weeks), h);
-    }
-
-    public static Euribor getEuribor1M(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(1, TimeUnit.Months), h);
-    }
-
-    public static Euribor getEuribor2M(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(1, TimeUnit.Months), h);
-    }
-
-    public static Euribor getEuribor3M(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(3, TimeUnit.Months), h);
-    }
-
-    public static Euribor getEuribor4M(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(4, TimeUnit.Months), h);
-    }
-
-    public static Euribor getEuribor5M(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(5, TimeUnit.Months), h);
-    }
-
-    public static Euribor getEuribor6M(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(6, TimeUnit.Months), h);
-    }
-
-    public static Euribor getEuribor7M(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(7, TimeUnit.Months), h);
-    }
-
-    public static Euribor getEuribor8M(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(8, TimeUnit.Months), h);
-    }
-
-    public static Euribor getEuribor9M(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(9, TimeUnit.Months), h);
-    }
-
-    public static Euribor getEuribor10M(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(10, TimeUnit.Months), h);
-    }
-
-    public static Euribor getEuribor11M(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(11, TimeUnit.Months), h);
-    }
-
-    public static Euribor getEuribor1Y(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(1, TimeUnit.Years), h);
-    }
-
-    public static Euribor getEuribor_SW(final Handle<YieldTermStructure> h) {
-        return new Euribor(new Period(1, TimeUnit.Weeks), h);
+        QL.require(tenor().units() != TimeUnit.Days , "for daily tenors dedicated DailyTenor constructor must be used");
     }
 
 }

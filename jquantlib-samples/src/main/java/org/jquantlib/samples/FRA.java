@@ -51,13 +51,15 @@ import org.jquantlib.Settings;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.ActualActual.Convention;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.indexes.Euribor365;
+import org.jquantlib.indexes.Euribor365_3M;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
+import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.yieldcurves.FraRateHelper;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
@@ -81,9 +83,8 @@ public class FRA implements Runnable {
          ***  MARKET DATA  ***
          *********************/
 
-        //FIXME: What kind of yieldtermstructure, how to initialize?
-        final RelinkableHandle<YieldTermStructure> euriborTermStructure = null;
-        final Handle<IborIndex> euribor3m = new Handle<IborIndex>(Euribor365.getEuribor365_3M(euriborTermStructure));
+        final RelinkableHandle<YieldTermStructure> euriborTermStructure = new RelinkableHandle<YieldTermStructure>();
+        final Handle<IborIndex> euribor3m = new Handle<IborIndex>(new Euribor365_3M(euriborTermStructure));
 
         final Date todaysDate = new Date(23, Month.May, 2006);
         new Settings().setEvaluationDate(todaysDate);
@@ -137,42 +138,11 @@ public class FRA implements Runnable {
         final BusinessDayConvention convention = euribor3m.currentLink().businessDayConvention();
         final boolean endOfMonth = euribor3m.currentLink().endOfMonth();
 
-        /*RateHelper fra1x4 = new FraRateHelper(h1x4, 1, 4, fixingDays, calendar, convention,endOfMonth,);/*(h1x4, 1, 4,
-                                  fixingDays, calendar, convention,
-                                  endOfMonth, fixingDays,
-                                  fraDayCounter);*/
-        //FIXME....
-        /*
-        boost::shared_ptr<RateHelper> fra1x4(
-                new FraRateHelper(h1x4, 1, 4,
-                                  fixingDays, calendar, convention,
-                                  endOfMonth, fixingDays,
-                                  fraDayCounter));
-
-        boost::shared_ptr<RateHelper> fra2x5(
-                new FraRateHelper(h2x5, 2, 5,
-                                  fixingDays, calendar, convention,
-                                  endOfMonth, fixingDays,
-                                  fraDayCounter));
-
-        boost::shared_ptr<RateHelper> fra3x6(
-                new FraRateHelper(h3x6, 3, 6,
-                                  fixingDays, calendar, convention,
-                                  endOfMonth, fixingDays,
-                                  fraDayCounter));
-
-        boost::shared_ptr<RateHelper> fra6x9(
-                new FraRateHelper(h6x9, 6, 9,
-                                  fixingDays, calendar, convention,
-                                  endOfMonth, fixingDays,
-                                  fraDayCounter));
-
-        boost::shared_ptr<RateHelper> fra9x12(
-                new FraRateHelper(h9x12, 9, 12,
-                                  fixingDays, calendar, convention,
-                                  endOfMonth, fixingDays,
-                                  fraDayCounter));
-         */
+        final RateHelper fra1x4  = new FraRateHelper(h1x4,  1,  4, fixingDays, calendar, convention, endOfMonth, fraDayCounter);
+        final RateHelper fra2x5  = new FraRateHelper(h2x5,  2,  5, fixingDays, calendar, convention, endOfMonth, fraDayCounter);
+        final RateHelper fra3x6  = new FraRateHelper(h3x6,  3,  6, fixingDays, calendar, convention, endOfMonth, fraDayCounter);
+        final RateHelper fra6x9  = new FraRateHelper(h6x9,  6,  9, fixingDays, calendar, convention, endOfMonth, fraDayCounter);
+        final RateHelper fra9x12 = new FraRateHelper(h9x12, 9, 12, fixingDays, calendar, convention, endOfMonth, fraDayCounter);
 
         /*********************
          **  CURVE BUILDING **

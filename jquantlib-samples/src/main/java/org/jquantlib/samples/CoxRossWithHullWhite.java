@@ -161,7 +161,7 @@ public class CoxRossWithHullWhite implements Runnable {
         final int bermudanForwards = 4;
         final Date[] exerciseDates = new Date[bermudanForwards];
         for (int i = 1; i <= bermudanForwards; i++) {
-            exerciseDates[i] = settlementDate.add(new Period(3 * i, TimeUnit.Months));
+            exerciseDates[i-1] = settlementDate.add(new Period(3 * i, TimeUnit.Months));
         }
         final Exercise bermudanExercise = new BermudanExercise(exerciseDates);
 
@@ -195,23 +195,18 @@ public class CoxRossWithHullWhite implements Runnable {
         final StochasticProcess hwProcess = new HullWhiteProcess(flatDividendTS, 0, 0);
         //XXX final BlackScholesMertonProcess bsmProcess = new BlackScholesMertonProcess(underlyingH, flatDividendTS, flatTermStructure, flatVolTS);
 
-
-
-
         final String method = "CoxRossRubinstein with HullWhite";
         final int timeSteps = 801;
 
-        throw new UnsupportedOperationException("work in progress");
-
-
-//        europeanOption.setPricingEngine(new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(hwProcess, timeSteps){} );
-//        bermudanOption.setPricingEngine(new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(hwProcess, timeSteps){} );
-//        americanOption.setPricingEngine(new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(hwProcess, timeSteps){} );
+//        europeanOption.setPricingEngine(new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(hwProcess, timeSteps) { /* anpnymous */ } );
+//        bermudanOption.setPricingEngine(new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(hwProcess, timeSteps) { /* anpnymous */ } );
+//        americanOption.setPricingEngine(new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(hwProcess, timeSteps) { /* anpnymous */ } );
 //        System.out.printf(fmt, method, europeanOption.NPV(), bermudanOption.NPV(), americanOption.NPV() );
-//
 //
 //        clock.stopClock();
 //        clock.log();
+
+        throw new UnsupportedOperationException();
 
     }
 

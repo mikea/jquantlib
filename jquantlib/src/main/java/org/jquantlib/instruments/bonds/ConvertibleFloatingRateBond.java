@@ -21,11 +21,7 @@
  */
 package org.jquantlib.instruments.bonds;
 
-import java.util.List;
-
 import org.jquantlib.QL;
-import org.jquantlib.cashflow.Callability;
-import org.jquantlib.cashflow.Dividend;
 import org.jquantlib.cashflow.IborLeg;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.Exercise;
@@ -39,8 +35,8 @@ import org.jquantlib.time.Date;
 import org.jquantlib.time.Schedule;
 
 /**
- * convertible floating-rate bond
- *
+ * Convertible floating-rate bond
+ * <p>
  * Warning Most methods inherited from Bond (such as yield or
  * the yield-based dirtyPrice and cleanPrice) refer to
  * the underlying plain-vanilla bond and do not take
@@ -49,7 +45,6 @@ import org.jquantlib.time.Schedule;
  * @author Daniel Kong
  * @author Zahid Hussain
  */
-//TODO: Work in progress
 public class ConvertibleFloatingRateBond extends ConvertibleBond {
 
 	public ConvertibleFloatingRateBond(
