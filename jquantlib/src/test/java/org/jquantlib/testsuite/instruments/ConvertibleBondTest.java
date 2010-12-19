@@ -52,6 +52,7 @@ import org.jquantlib.exercise.AmericanExercise;
 import org.jquantlib.exercise.EuropeanExercise;
 import org.jquantlib.exercise.Exercise;
 import org.jquantlib.indexes.Euribor;
+import org.jquantlib.indexes.Euribor1Y;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.instruments.CallabilitySchedule;
 import org.jquantlib.instruments.DividendSchedule;
@@ -279,7 +280,7 @@ public class ConvertibleBondTest {
 
 		// floating-rate
 
-		IborIndex index = Euribor.getEuribor1Y(discountCurve);
+		IborIndex index = new Euribor1Y(discountCurve);
 		int fixingDays = 2;
 		Array gearings = new Array(1).fill(1.0);
 		Array spreadsArr = new Array(0);
