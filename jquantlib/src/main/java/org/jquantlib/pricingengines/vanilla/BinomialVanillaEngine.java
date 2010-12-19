@@ -50,6 +50,7 @@ import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.methods.lattices.BinomialTree;
 import org.jquantlib.methods.lattices.BlackScholesLattice;
 import org.jquantlib.methods.lattices.Tree;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
@@ -89,7 +90,8 @@ import org.jquantlib.time.TimeGrid;
  * @author Srinivas Hasti
  * @author Richard Gomes
  */
-public abstract class BinomialVanillaEngine<T extends Tree> extends VanillaOption.EngineImpl {
+//ZH: remove abstract
+public class BinomialVanillaEngine<T extends Tree> extends VanillaOption.EngineImpl {
 
     //
     // private final fields
