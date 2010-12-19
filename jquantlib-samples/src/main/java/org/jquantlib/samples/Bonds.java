@@ -172,9 +172,7 @@ public class Bonds implements Runnable {
                     BusinessDayConvention.Unadjusted,
                     BusinessDayConvention.Unadjusted,
                     DateGeneration.Rule.Backward,
-                    false,
-                    Date.todaysDate(),
-                    Date.todaysDate());
+                    false);
             final FixedRateBondHelper bondHelper = (
                     new FixedRateBondHelper(quoteHandle.get(i), settlementDays,
                             100.0, schedule,
