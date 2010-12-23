@@ -67,9 +67,10 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     protected final Handle<Quote> spread;
     protected final Period fwdStart;
 
-
+    //
     //
     // public constructors
+    //
     //
     /**
      * 
