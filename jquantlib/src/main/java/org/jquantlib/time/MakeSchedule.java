@@ -27,11 +27,12 @@ import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
 
 /**
+ * Helper class
+ * <p>
+ * This class provides a more comfortable interface to the argument list of Schedule's constructor. 
  * 
  * @author Zahid Hussain
- * 
  */
-//Separated from Schedule.java
 @QualityAssurance(quality = Quality.Q0_UNFINISHED, version = Version.V097, reviewers = "Richard Gomes")
 public class MakeSchedule implements Cloneable {
 	private Calendar calendar_;

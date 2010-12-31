@@ -98,6 +98,7 @@ public class EquityOptions implements Runnable {
         new EquityOptions().run();
     }
 
+    @Override
     public void run() {
 
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
@@ -220,7 +221,7 @@ public class EquityOptions implements Runnable {
         }
         System.out.printf(fmt, method, europeanOption.NPV(), bNPV, americanOption.NPV() );
 
-        method = "Additive equiprobabilities";
+        method = "Additive EquiProbabilities";
         europeanOption.setPricingEngine(new BinomialVanillaEngine<AdditiveEQPBinomialTree>(bsmProcess, timeSteps) { /*anonymous*/ });
         bermudanOption.setPricingEngine(new BinomialVanillaEngine<AdditiveEQPBinomialTree>(bsmProcess, timeSteps) { /*anonymous*/ });
         americanOption.setPricingEngine(new BinomialVanillaEngine<AdditiveEQPBinomialTree>(bsmProcess, timeSteps) { /*anonymous*/ });

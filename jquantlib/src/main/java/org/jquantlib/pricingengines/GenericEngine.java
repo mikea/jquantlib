@@ -42,8 +42,6 @@ package org.jquantlib.pricingengines;
 import java.util.List;
 
 import org.jquantlib.instruments.Instrument;
-import org.jquantlib.pricingengines.PricingEngine.Arguments;
-import org.jquantlib.pricingengines.PricingEngine.Results;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;

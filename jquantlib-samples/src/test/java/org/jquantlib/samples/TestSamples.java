@@ -12,9 +12,7 @@ public class TestSamples {
         Calendars.class, 
         ConvertibleBonds.class, 
         Dates.class, 
-        Bonds.class, 
         VolatilityTermStructures.class, 
-        YieldCurveTermStructures.class
     };
 
     private static final Class<?> incomplete[] = {
@@ -23,6 +21,8 @@ public class TestSamples {
 
     
     private static final Class<?> pending[] = {
+        Bonds.class, 
+        YieldCurveTermStructures.class, 
         BermudanSwaption.class, 
         FRA.class, 
         Processes.class, 
@@ -41,7 +41,7 @@ public class TestSamples {
     }
     
     @Test
-    public void testInompleteSamples() {
+    public void testIncompleteSamples() {
         testSamples(incomplete);
     }
     

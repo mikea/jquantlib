@@ -97,8 +97,8 @@ public abstract class BinomialDividendVanillaEngine<T extends Tree> extends Divi
        this.clazz = (Class<T>) TypeToken.getClazz(this.getClass());
        QL.require(timeSteps > 0 , "timeSteps must be positive"); // QA:[RG]::verified // TODO: message
        this.timeSteps = timeSteps;
-       this.a = (DividendVanillaOption.ArgumentsImpl)arguments;
-       this.r = (DividendVanillaOption.ResultsImpl)results;
+       this.a = (DividendVanillaOption.ArgumentsImpl)arguments_;
+       this.r = (DividendVanillaOption.ResultsImpl)results_;
        this.greeks = r.greeks();
        this.moreGreeks = r.moreGreeks();
        this.process = process;

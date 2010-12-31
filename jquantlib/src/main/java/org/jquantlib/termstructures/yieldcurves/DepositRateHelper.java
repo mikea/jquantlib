@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2008 Richard Gomes
+ Copyright (C) 2008 Srinivas Hasti
  Copyright (C) 2010 Neel Sheyal
  
  This source code is release under the BSD License.
@@ -43,7 +43,6 @@ import org.jquantlib.util.TypedVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
- * 
  * Rate helper for bootstrapping over deposit rates
  * 
  * @author Srinivas Hasti

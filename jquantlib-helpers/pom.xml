@@ -31,9 +31,9 @@
 
     <parent>
         <groupId>org.jquantlib</groupId>
-        <artifactId>jquantlib-all</artifactId>
+        <artifactId>jquantlib-parent</artifactId>
         <version>0.2.4-SNAPSHOT</version>
-        <relativePath>../jquantlib-all/pom.xml</relativePath>
+        <!-- relativePath>../jquantlib-parent/pom.xml</relativePath -->
     </parent>
 
     <groupId>org.jquantlib</groupId>
@@ -42,6 +42,7 @@
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
+    <description>Shortcuts to common use cases</description>
     <url>http://www.jquantlib.org/sites/${project.artifactId}/</url>
 
     <distributionManagement>

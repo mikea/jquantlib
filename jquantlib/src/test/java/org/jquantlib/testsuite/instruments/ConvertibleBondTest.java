@@ -51,7 +51,6 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.exercise.AmericanExercise;
 import org.jquantlib.exercise.EuropeanExercise;
 import org.jquantlib.exercise.Exercise;
-import org.jquantlib.indexes.Euribor;
 import org.jquantlib.indexes.Euribor1Y;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.instruments.CallabilitySchedule;
@@ -172,19 +171,19 @@ public class ConvertibleBondTest {
 
 		QL.info("Testing out-of-the-money convertible bonds against vanilla bonds...");
 
-		CommonVars vars = new CommonVars();
+		final CommonVars vars = new CommonVars();
 
 		vars.conversionRatio = 1.0e-16;
 
-		Exercise euExercise = new EuropeanExercise(vars.maturityDate);
-		Exercise amExercise = new AmericanExercise(vars.issueDate,
+		final Exercise euExercise = new EuropeanExercise(vars.maturityDate);
+		final Exercise amExercise = new AmericanExercise(vars.issueDate,
 				vars.maturityDate);
 
-		int timeSteps = 1001;
-		PricingEngine engine = new BinomialConvertibleEngine<CoxRossRubinstein>(
+		final int timeSteps = 1001;
+		final PricingEngine engine = new BinomialConvertibleEngine<CoxRossRubinstein>(
 				vars.process, timeSteps) {};
 
-		Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(
+		final Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(
 				new ForwardSpreadedTermStructure(vars.riskFreeRate,
 						vars.creditSpread));
 
@@ -193,24 +192,24 @@ public class ConvertibleBondTest {
 				new Period(Frequency.Once), vars.calendar,
 				BusinessDayConvention.Following).backwards().schedule();
 
-		ConvertibleZeroCouponBond euZero = new ConvertibleZeroCouponBond(
+		final ConvertibleZeroCouponBond euZero = new ConvertibleZeroCouponBond(
 				euExercise, vars.conversionRatio, vars.no_dividends,
 				vars.no_callability, vars.creditSpread, vars.issueDate,
 				vars.settlementDays, vars.dayCounter, schedule, vars.redemption);
 		euZero.setPricingEngine(engine);
 
-		ConvertibleZeroCouponBond amZero = new ConvertibleZeroCouponBond(
+		final ConvertibleZeroCouponBond amZero = new ConvertibleZeroCouponBond(
 				amExercise, vars.conversionRatio, vars.no_dividends,
 				vars.no_callability, vars.creditSpread, vars.issueDate,
 				vars.settlementDays, vars.dayCounter, schedule, vars.redemption);
 		amZero.setPricingEngine(engine);
 
-		ZeroCouponBond zero = new ZeroCouponBond(vars.settlementDays,
+		final ZeroCouponBond zero = new ZeroCouponBond(vars.settlementDays,
 				vars.calendar, 100.0, vars.maturityDate,
 				BusinessDayConvention.Following, vars.redemption,
 				vars.issueDate);
 
-		PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
+		final PricingEngine bondEngine = new DiscountingBondEngine(discountCurve);
 		zero.setPricingEngine(bondEngine);
 
 		double tolerance = 1.0e-2 * (vars.faceAmount / 100.0);
@@ -233,27 +232,27 @@ public class ConvertibleBondTest {
 
 		// coupon
 
-		double[] coupons = { 0.05 };
+		final double[] coupons = { 0.05 };
 
 		schedule = new MakeSchedule(vars.issueDate, vars.maturityDate,
 				new Period(vars.frequency), vars.calendar,
 				BusinessDayConvention.Following).backwards().schedule();
 
-		ConvertibleFixedCouponBond euFixed = new ConvertibleFixedCouponBond(
+		final ConvertibleFixedCouponBond euFixed = new ConvertibleFixedCouponBond(
 				euExercise, vars.conversionRatio, vars.no_dividends,
 				vars.no_callability, vars.creditSpread, vars.issueDate,
 				vars.settlementDays, coupons, vars.dayCounter, schedule,
 				vars.redemption);
 		euFixed.setPricingEngine(engine);
 
-		ConvertibleFixedCouponBond amFixed = new ConvertibleFixedCouponBond(
+		final ConvertibleFixedCouponBond amFixed = new ConvertibleFixedCouponBond(
 				amExercise, vars.conversionRatio, vars.no_dividends,
 				vars.no_callability, vars.creditSpread, vars.issueDate,
 				vars.settlementDays, coupons, vars.dayCounter, schedule,
 				vars.redemption);
 		amFixed.setPricingEngine(engine);
 
-		FixedRateBond fixed = new FixedRateBond(vars.settlementDays,
+		final FixedRateBond fixed = new FixedRateBond(vars.settlementDays,
 				vars.faceAmount, schedule, coupons, vars.dayCounter,
 				BusinessDayConvention.Following, vars.redemption,
 				vars.issueDate);
@@ -280,36 +279,36 @@ public class ConvertibleBondTest {
 
 		// floating-rate
 
-		IborIndex index = new Euribor1Y(discountCurve);
-		int fixingDays = 2;
-		Array gearings = new Array(1).fill(1.0);
-		Array spreadsArr = new Array(0);
-		double[] spreads = { 0 };
+		final IborIndex index = new Euribor1Y(discountCurve);
+		final int fixingDays = 2;
+		final Array gearings = new Array(1).fill(1.0);
+		final Array spreadsArr = new Array(0);
+		final double[] spreads = { 0 };
 
-		ConvertibleFloatingRateBond euFloating = new ConvertibleFloatingRateBond(
+		final ConvertibleFloatingRateBond euFloating = new ConvertibleFloatingRateBond(
 				euExercise, vars.conversionRatio, vars.no_dividends,
 				vars.no_callability, vars.creditSpread, vars.issueDate,
 				vars.settlementDays, index, fixingDays, spreads,
 				vars.dayCounter, schedule, vars.redemption);
 		euFloating.setPricingEngine(engine);
 
-		ConvertibleFloatingRateBond amFloating = new ConvertibleFloatingRateBond(
+		final ConvertibleFloatingRateBond amFloating = new ConvertibleFloatingRateBond(
 				amExercise, vars.conversionRatio, vars.no_dividends,
 				vars.no_callability, vars.creditSpread, vars.issueDate,
 				vars.settlementDays, index, fixingDays, spreads,
 				vars.dayCounter, schedule, vars.redemption);
 		amFloating.setPricingEngine(engine);
 
-		IborCouponPricer pricer = new BlackIborCouponPricer(
+		final IborCouponPricer pricer = new BlackIborCouponPricer(
 				new Handle<OptionletVolatilityStructure>());
 
-		Schedule floatSchedule = new Schedule(vars.issueDate,
+		final Schedule floatSchedule = new Schedule(vars.issueDate,
 				vars.maturityDate, new Period(vars.frequency), vars.calendar,
 				BusinessDayConvention.Following,
 				BusinessDayConvention.Following, DateGeneration.Rule.Backward,
 				false);
 
-		FloatingRateBond floating = new FloatingRateBond(vars.settlementDays,
+		final FloatingRateBond floating = new FloatingRateBond(vars.settlementDays,
 				vars.faceAmount, floatSchedule, index, vars.dayCounter,
 				BusinessDayConvention.Following, fixingDays, gearings,
 				spreadsArr, new Array(0), new Array(0), false, vars.redemption,
@@ -348,47 +347,47 @@ public class ConvertibleBondTest {
 
 		QL.info("Testing zero-coupon convertible bonds against vanilla option...");
 
-		CommonVars vars = new CommonVars();
+		final CommonVars vars = new CommonVars();
 
-		Exercise euExercise = new EuropeanExercise(vars.maturityDate);
+		final Exercise euExercise = new EuropeanExercise(vars.maturityDate);
 
 		vars.settlementDays = 0;
 
-		int timeSteps = 1001;
-		PricingEngine engine = new BinomialConvertibleEngine<CoxRossRubinstein>(
+		final int timeSteps = 1001;
+		final PricingEngine engine = new BinomialConvertibleEngine<CoxRossRubinstein>(
 				vars.process, timeSteps) { /*anonymous*/ };
-		PricingEngine vanillaEngine = new BinomialVanillaEngine<CoxRossRubinstein>(
+		final PricingEngine vanillaEngine = new BinomialVanillaEngine<CoxRossRubinstein>(
 				vars.process, timeSteps) {
 		};
 
 		vars.creditSpread.linkTo(new SimpleQuote(0.0));
 
-		double conversionStrike = vars.redemption / vars.conversionRatio;
-		StrikedTypePayoff payoff = new PlainVanillaPayoff(Option.Type.Call,
+		final double conversionStrike = vars.redemption / vars.conversionRatio;
+		final StrikedTypePayoff payoff = new PlainVanillaPayoff(Option.Type.Call,
 				conversionStrike);
 
-		Schedule schedule = new MakeSchedule(vars.issueDate, vars.maturityDate,
+		final Schedule schedule = new MakeSchedule(vars.issueDate, vars.maturityDate,
 				new Period(Frequency.Once), vars.calendar,
 				BusinessDayConvention.Following).backwards().schedule();
 
-		ConvertibleZeroCouponBond euZero = new ConvertibleZeroCouponBond(
+		final ConvertibleZeroCouponBond euZero = new ConvertibleZeroCouponBond(
 				euExercise, vars.conversionRatio, vars.no_dividends,
 				vars.no_callability, vars.creditSpread, vars.issueDate,
 				vars.settlementDays, vars.dayCounter, schedule, vars.redemption);
 		euZero.setPricingEngine(engine);
 
-		VanillaOption euOption = new VanillaOption(payoff, euExercise);
+		final VanillaOption euOption = new VanillaOption(payoff, euExercise);
 		euOption.setPricingEngine(vanillaEngine);
 
-		double tolerance = 5.0e-2 * (vars.faceAmount / 100.0);
+		final double tolerance = 5.0e-2 * (vars.faceAmount / 100.0);
 
-		double expected = vars.faceAmount
+		final double expected = vars.faceAmount
 				/ 100.0
 				* (vars.redemption
 						* vars.riskFreeRate.currentLink().discount(
 								vars.maturityDate) + vars.conversionRatio
 						* euOption.NPV());
-		double error = Math.abs(euZero.NPV() - expected);
+		final double error = Math.abs(euZero.NPV() - expected);
 		if (error > tolerance) {
 			fail("failed to reproduce plain-option price:"
 					+ "\n    calculated: " + euZero.NPV()

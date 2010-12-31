@@ -80,9 +80,7 @@
     <url>http://www.jquantlib.org/sites/${project.artifactId}/</url>
 
     <description>
-        JQuantLib is a free, open-source and comprehensive framework for quantitative finance, offering
-        several mathematical and statistical tools needed for financial instrument valuation, calculation
-        of VaR, portfolio valuation, etc.
+        This project contains the parent pom.xml for all JQuantLib projects.
     </description>
 
     <prerequisites>
@@ -335,6 +333,27 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[1.6.0-21,1.7)</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
