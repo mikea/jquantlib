@@ -58,7 +58,7 @@
 
 
     <properties>
-        <props.jar.manifest.samples.class>org.jquantlib.samples.EquityOptions</props.jar.manifest.samples.class>
+        <props.jar.manifest.samples.class>org.jquantlib.samples.AllSamples</props.jar.manifest.samples.class>
     </properties>
 
     <dependencies>
