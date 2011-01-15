@@ -62,6 +62,21 @@ public class QL {
      */
     public static void require(
             final boolean condition,
+            final String format,
+            final Object...objects) throws RuntimeException {
+        if (!condition)
+            throw new LibraryException(String.format(format, objects));
+    }
+
+    /**
+     * Throws an error if a <b>pre-condition</b> is not verified
+     * <p>
+     * @param condition is a condition to be verified
+     * @param message is a message emitted.
+     * @throws a LibraryException if the condition is not met
+     */
+    public static void require(
+            final boolean condition,
             final String message) throws RuntimeException {
         if (!condition)
             throw new LibraryException(message);
@@ -101,6 +116,16 @@ public class QL {
 
 
 
+    
+    public static void ensure(
+            final boolean condition,
+            final String format,
+            final Object...objects) throws RuntimeException {
+        if (!condition)
+            throw new LibraryException(String.format(format, objects));
+    }
+
+    
     /**
      * Throws an error if a <b>post-condition</b> is not verified
      * <p>

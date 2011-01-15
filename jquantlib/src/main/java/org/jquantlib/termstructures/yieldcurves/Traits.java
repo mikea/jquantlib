@@ -34,6 +34,11 @@ import org.jquantlib.util.Pair;
  *
  * @author Richard Gomes
  */
+
+
+//FIXME: This class needs full code review
+
+
 public interface Traits {
 
     /**
@@ -73,6 +78,7 @@ public interface Traits {
 
     public interface Curve extends YieldTermStructure {
 
+        @Override
         public Date maxDate() /* @ReadOnly */;
         public Date[] dates() /* @ReadOnly */;
         public /*@Time*/ double[] times() /* @ReadOnly */;
@@ -82,9 +88,12 @@ public interface Traits {
         public double[] data();
         public /*@DiscountFactor*/ double discountImpl(final /*@Time*/ double t) /* @ReadOnly */;
 
+        @Override
         public Date referenceDate() /* @ReadOnly */;
+        @Override
         public double timeFromReference(final Date date) /* @ReadOnly */;
 
+        @Override
         public void update();
 
         public Interpolator interpolator() /* @ReadOnly */;

@@ -71,15 +71,15 @@ public class BinomialConvertibleEngine<T extends BinomialTree> extends Convertib
     private final ConvertibleBondOption.ArgumentsImpl a;
     private final ConvertibleBondOption.ResultsImpl   r;
 
-    private final Class<T> clazz;
+    private final Class<T> typeT;
 
     //
     // public constructors
     //
 
     public BinomialConvertibleEngine(final GeneralizedBlackScholesProcess process, final int timeSteps) {
-        this.clazz = (Class<T>)new TypeTokenTree(this.getClass()).getElement(0);
-        QL.require(timeSteps>0, "timeSteps must be positive"); // TODO: message
+        this.typeT = (Class<T>)new TypeTokenTree(this.getClass()).getElement(0);
+        QL.require(timeSteps>0, "timeSteps must be positive");
         this.timeSteps_ = timeSteps;
         this.a = this.arguments_;
         this.r = this.results_;
@@ -87,11 +87,10 @@ public class BinomialConvertibleEngine<T extends BinomialTree> extends Convertib
         this.process_.addObserver(this);
     }
 
-    public BinomialConvertibleEngine(final Class<T> tcls, 
+    public BinomialConvertibleEngine(final Class<T> typeT, 
     								 final GeneralizedBlackScholesProcess process, 
     								 final int timeSteps) {
-        //this.clazz = (Class<T>)new TypeTokenTree(this.getClass()).getElement(0);//failing here
-    	this.clazz = tcls;
+    	this.typeT = typeT;
         this.a = this.arguments_;
         this.r = this.results_;
     	this.process_ = process;
@@ -149,8 +148,8 @@ public class BinomialConvertibleEngine<T extends BinomialTree> extends Convertib
         // final T tree = new T(bs, maturity, timeSteps_, payoff.strike());
         final T tree;
         try {
-            final Constructor<T> c = clazz.getConstructor(StochasticProcess1D.class, double.class, int.class, double.class);
-            tree = clazz.cast( c.newInstance(bs, maturity, timeSteps_, payoff.strike() ));
+            final Constructor<T> c = typeT.getConstructor(StochasticProcess1D.class, double.class, int.class, double.class);
+            tree = typeT.cast( c.newInstance(bs, maturity, timeSteps_, payoff.strike() ));
         } catch (final Exception e) {
             throw new LibraryException(e); // QA:[RG]::verified
         }

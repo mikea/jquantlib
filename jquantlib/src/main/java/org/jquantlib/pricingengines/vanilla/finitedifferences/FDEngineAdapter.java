@@ -56,8 +56,9 @@ import org.jquantlib.util.Observer;
  * @author Richard Gomes
  */
 //FIXME: http://bugs.jquantlib.org/view.php?id=405
-public abstract class FDEngineAdapter
-<Base extends FDVanillaEngine, Engine extends OneAssetOption.Engine>
+public abstract class FDEngineAdapter<
+            Base extends FDVanillaEngine, 
+            Engine extends OneAssetOption.Engine>
 implements OneAssetOption.Engine {
 
     //
@@ -76,7 +77,8 @@ implements OneAssetOption.Engine {
     // because extended classes are responsible for initialize the p-impl reference, which also implies that it belongs
     // to the expect type, i.e.: the type the extend class expects for it.
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private final Class<Engine> engineClass;
+    private final Class<Base>   typeBase;       // first generic type parameter
+    private final Class<Engine> typeEngine;     // second generic type parameter
 
     protected OneAssetOption.Engine impl;
 
@@ -86,20 +88,39 @@ implements OneAssetOption.Engine {
     //
 
     public FDEngineAdapter(
+            final Class<Base> typeBase,
+            final Class<Engine> typeEngine,
             final GeneralizedBlackScholesProcess process,
             final int timeSteps,
             final int gridPoints,
             final boolean timeDependent) {
-
+        // obtain generic type parameters
+        this.typeBase   = typeBase;
+        this.typeEngine = typeEngine;
+        
         try {
             // instantiate 1st generic parameter : a base FD engine
-            final Class<Base> fdBaseClass = (Class<Base>) new TypeTokenTree(this.getClass()).getElement(0);
-            final Constructor<Base> baseConstructor = fdBaseClass.getConstructor(GeneralizedBlackScholesProcess.class, int.class, int.class, boolean.class);
+            final Constructor<Base> baseConstructor = this.typeBase.getConstructor(GeneralizedBlackScholesProcess.class, int.class, int.class, boolean.class);
             baseInstance = baseConstructor.newInstance(process, timeSteps, gridPoints, timeDependent);
-
-            // instantiate 2nd generic parameter : a pricing engine ( SEE COMMENTS on field engineClass )
-            engineClass = (Class<Engine>) new TypeTokenTree(this.getClass()).getElement(1);
-
+        } catch (final Exception e) {
+            throw new LibraryException(e);
+        }
+        process.addObserver(this);
+    }
+    
+    public FDEngineAdapter(
+            final GeneralizedBlackScholesProcess process,
+            final int timeSteps,
+            final int gridPoints,
+            final boolean timeDependent) {
+        // obtain generic type parameters
+        this.typeBase   = (Class<Base>)   new TypeTokenTree(this.getClass()).getElement(0);
+        this.typeEngine = (Class<Engine>) new TypeTokenTree(this.getClass()).getElement(1);
+        
+        try {
+            // instantiate 1st generic parameter : a base FD engine
+            final Constructor<Base> baseConstructor = this.typeBase.getConstructor(GeneralizedBlackScholesProcess.class, int.class, int.class, boolean.class);
+            baseInstance = baseConstructor.newInstance(process, timeSteps, gridPoints, timeDependent);
         } catch (final Exception e) {
             throw new LibraryException(e);
         }
@@ -117,7 +138,7 @@ implements OneAssetOption.Engine {
         if (impl==null) {
             throw new LibraryException(PRICING_ENGINE_NOT_SET);
         }
-        if (!engineClass.isAssignableFrom(impl.getClass())) {
+        if (!this.typeEngine.isAssignableFrom(impl.getClass())) {
             throw new LibraryException(ReflectConstants.ILLEGAL_TYPE_PARAMETER);
         }
         baseInstance.setupArguments(impl.getArguments());

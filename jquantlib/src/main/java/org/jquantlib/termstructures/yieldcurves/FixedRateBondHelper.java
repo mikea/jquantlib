@@ -22,8 +22,6 @@
 
 package org.jquantlib.termstructures.yieldcurves;
 
-import java.util.List;
-
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
 import org.jquantlib.daycounters.DayCounter;
@@ -35,7 +33,6 @@ import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.termstructures.BootstrapHelper;
 import org.jquantlib.termstructures.RateHelper;
-import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Date;
@@ -52,12 +49,6 @@ import org.jquantlib.util.Visitor;
  * @category instruments
  * 
  */
-//
-//
-// COMMENTS::
-// 1. In QL, the variable coupons is passed as a std::vector. Should we be pass a List? Then FixedRateBond needs a new ctor
-//
-//
 public class FixedRateBondHelper extends RateHelper {
 
 	//
@@ -118,7 +109,7 @@ public class FixedRateBondHelper extends RateHelper {
 		this.latestDate = this.bond.maturityDate();
 		new Settings().evaluationDate().addObserver(this);
 		
-		PricingEngine bondEngine = new DiscountingBondEngine(this.termStructureHandle);
+		final PricingEngine bondEngine = new DiscountingBondEngine(this.termStructureHandle);
 		this.bond.setPricingEngine(bondEngine);
 			 		
 }
@@ -141,7 +132,7 @@ public class FixedRateBondHelper extends RateHelper {
 		this.latestDate = bond.maturityDate();
 		new Settings().evaluationDate().addObserver(this);
 		
-		PricingEngine bondEngine = new DiscountingBondEngine(this.termStructureHandle);
+		final PricingEngine bondEngine = new DiscountingBondEngine(this.termStructureHandle);
 		this.bond.setPricingEngine(bondEngine);
 			
 	}
@@ -154,7 +145,7 @@ public class FixedRateBondHelper extends RateHelper {
      * 
      */
 	@Override
-	public void  setTermStructure(YieldTermStructure t) {
+	public void  setTermStructure(final YieldTermStructure t) {
 		// do not set the relinkable handle as an observer -
         // force recalculation when needed
 		this.termStructureHandle.linkTo(t,false);

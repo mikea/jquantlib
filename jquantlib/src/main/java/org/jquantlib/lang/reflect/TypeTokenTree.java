@@ -8,7 +8,7 @@ import org.jquantlib.QL;
 /**
  * TypeTokenTree is a helper class intended to return a {@link TypeNode} root.
  * <p>
- * A typical usage consists on obtain a {@link TypeNode} root which can be used to traverse a hierarchy of generic parameters.
+ * A typical usage consists on obtaining a {@link TypeNode} root which can be used to traverse a hierarchy of generic parameters.
  * Each {@link TypeNode} holds a Class information and contains a list of children nodes. A typical usage is in the context of
  * retrieving actual generic parameters. The example below shows how a generic class can verify at instantiation time
  * which actual generic parameters where passed by the caller.

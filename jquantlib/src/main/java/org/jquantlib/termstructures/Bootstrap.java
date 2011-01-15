@@ -22,13 +22,14 @@ When applicable, the original copyright notice follows this notice.
 
 package org.jquantlib.termstructures;
 
-import org.jquantlib.termstructures.yieldcurves.PiecewiseCurve;
+import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldCurve;
 
-public interface Bootstrap {
+
+public interface Bootstrap<Curve extends PiecewiseYieldCurve> {
 
     public void calculate();
 
-    public void setup(PiecewiseCurve curve);
+    public void setup(Curve curve);
     //XXX
     //    public void setup(
     //            final YieldTermStructure termStructure,

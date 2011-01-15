@@ -43,16 +43,20 @@ import org.jquantlib.util.Pair;
  */
 public interface PiecewiseCurve<I extends Interpolator> extends YieldTermStructure {
 
+    @Override
     public Date maxDate() /* @ReadOnly */;
+    public RateHelper[] instruments() /* @ReadOnly */;
     public Date[] dates() /* @ReadOnly */;
-    public/* @Time */double[] times() /* @ReadOnly */;
+    public/* @Time */ double[] times() /* @ReadOnly */;
+    public double accuracy() /* @ReadOnly */;
+
+    public Date[] jumpDates() /* @ReadOnly */;
+    public/* @Time */ double[] jumpTimes() /* @ReadOnly */;
+    
     public List<Pair<Date, /* @Rate */Double>> nodes() /* @ReadOnly */;
     public double[] data();
-    public Date[] jumpDates() /* @ReadOnly */;
-    public/* @Time */double[] jumpTimes() /* @ReadOnly */;
+
     public Traits traits() /* @ReadOnly */;
-    public RateHelper[] instruments() /* @ReadOnly */;
-    public double accuracy() /* @ReadOnly */;
 
     public Interpolator                         interpolator() /* @ReadOnly */;
     public Interpolation                        interpolation() /* @ReadOnly */;

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2009 John Martin
+Copyright (C) 2011 Richard Gomes
 
 This source code is release under the BSD License.
 
@@ -26,11 +26,6 @@ package org.jquantlib.termstructures;
 import java.util.Arrays;
 
 import org.jquantlib.QL;
-import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.reflect.ReflectConstants;
-import org.jquantlib.lang.reflect.TypeTokenTree;
-import org.jquantlib.math.interpolations.Interpolation;
-import org.jquantlib.math.interpolations.Interpolation.Interpolator;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.optimization.Constraint;
 import org.jquantlib.math.optimization.CostFunction;
@@ -38,196 +33,221 @@ import org.jquantlib.math.optimization.EndCriteria;
 import org.jquantlib.math.optimization.LevenbergMarquardt;
 import org.jquantlib.math.optimization.NoConstraint;
 import org.jquantlib.math.optimization.PositiveConstraint;
-import org.jquantlib.math.optimization.Problem;
-import org.jquantlib.termstructures.yieldcurves.PiecewiseCurve;
-import org.jquantlib.termstructures.yieldcurves.Traits;
+import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldCurve;
 import org.jquantlib.time.Date;
 
-//FIXME: This class should be declared generic, like this:
-//
-//      class LocalBootstrap<Curve extends Traits.Curve> implements Bootstrap
-//
-// ... in spite that there's no real value on doing it unless strict API resemblance to QL/C++
-//
-public class LocalBootstrap implements Bootstrap {
 
+/**
+ * Localised-term-structure bootstrapper for most curve types.
+ * <p>
+ * This algorithm enables a localised fitting for non-local
+    interpolation methods.
+
+    As in the similar class (IterativeBootstrap) the input term
+    structure is solved on a number of market instruments which
+    are passed as a vector of handles to BootstrapHelper
+    instances. Their maturities mark the boundaries of the
+    interpolated segments.
+
+    Unlike the IterativeBootstrap class, the solution for each
+    interpolated segment is derived using a local
+    approximation. This restricts the risk profile s.t.  the risk
+    is localised. Therefore, we obtain a local IR risk profile
+    whilst using a smoother interpolation method. Particularly
+    good for the convex-monotone spline method.
+*/
+
+
+//FIXME: This class needs full code review
+
+
+public class LocalBootstrap<Curve extends PiecewiseYieldCurve> {
+
+    
+    //    typedef typename Curve::traits_type Traits;
+    //    typedef typename Curve::interpolator_type Interpolator;
+
+
+    //
+    // private final fields
+    //
+    
+    private Curve ts_;
+    private final /*Size*/ int localisation_;
+    private final boolean forcePositive_;
+    
+    
     //
     // private fields
     //
+    
+    private boolean validCurve_;
 
-    private boolean         validCurve;
-    private PiecewiseCurve  ts;
-    private RateHelper[]    instruments;
-
-    private final int               localisation;
-    private final boolean           forcePositive;
-
-    private Traits          traits;
-    private Interpolator    interpolator;
-    private Interpolation   interpolation;
-
-
-    //
-    // final private fields
-    //
-
-    final private Class<?>  classB;
-
-
-    //
-    // public constructors
-    //
-
-    public LocalBootstrap(final int localisation, final boolean forcePositive) {
-        this(new TypeTokenTree(LocalBootstrap.class).getElement(0), localisation, forcePositive);
+    public LocalBootstrap() {
+        this(2, true);
     }
 
-    public LocalBootstrap(final Class<?> klass, final int localisation, final boolean forcePositive) {
+    public LocalBootstrap(/*Size*/ final int localisation) {
+        this(localisation, true);
+    }
+
+    public LocalBootstrap(/*Size*/ final int localisation, final boolean forcePositive) {
+        
         QL.validateExperimentalMode();
-
-        if (klass==null) {
-            throw new LibraryException("null PiecewiseCurve"); // TODO: message
-        }
-        if (!PiecewiseCurve.class.isAssignableFrom(klass)) {
-            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
-        }
-        this.classB = klass;
-
-        this.validCurve = false;
-        this.ts = null;
-        this.localisation = localisation;
-        this.forcePositive = forcePositive;
+        
+        this.validCurve_ = false;
+        this.ts_ = null;
+        this.localisation_ = localisation;
+        this.forcePositive_ = forcePositive;
     }
 
 
-    //
-    // public methods
-    //
-
-    public void setup(final PiecewiseCurve ts) {
-
-        QL.ensure (ts != null, "TermStructure cannot be null");
-        if (!classB.isAssignableFrom(ts.getClass())) {
-            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
-        }
-
-        this.ts            = ts;
-        this.interpolator  = ts.interpolator();
-        this.interpolation = ts.interpolation();
-        this.traits        = ts.traits();
-        this.instruments   = ts.instruments();
-
-        final int n = instruments.length;
-        QL.require(n+1 >= ts.interpolator().requiredPoints(), "not enough instruments provided");
-        QL.require (n >= localisation, "Not enough instruments provided");
-
-        for (int i=0; i<n; ++i) {
-            instruments[i].addObserver(ts);
+    public void setup(final Curve ts) {
+        this.ts_ = ts;
+        /*Size*/ final int n = ts_.instruments().length;
+        
+        QL.require(n >= ts.interpolator().requiredPoints(),
+                "not enough instruments: %d provided, %d required",
+                n, ts.interpolator().requiredPoints());
+        QL.require(n > localisation_,
+                "not enough instruments: %d provided, %d required.",
+                n, localisation_);
+        
+        for (/*Size*/ int i=0; i<n; ++i) {
+            ts_.instruments()[i].addObserver(ts_);
         }
     }
 
-    public void calculate () {
 
-        final int nInsts = instruments.length;
-        final Date dates[] = ts.dates();
-        /*@Time*/ final double times[] = ts.times();
-        double data[] = ts.data();
+    public void calculate() /*@ReadOnly*/ {
+        validCurve_ = false;
+        final /*Size*/ int nInsts = ts_.instruments().length;
 
         // ensure rate helpers are sorted
-        Arrays.sort(instruments, new BootstrapHelperSorter());
+        Arrays.sort(ts_.instruments(), new BootstrapHelperSorter());
 
         // check that there is no instruments with the same maturity
-        for (int i=1; i<nInsts; ++i) {
-            final Date m1 = instruments[i-1].latestDate();
-            final Date m2 = instruments[i].latestDate();
+        for (/*Size*/ int i=1; i<nInsts; ++i) {
+            final Date m1 = ts_.instruments()[i-1].latestDate();
+            final Date m2 = ts_.instruments()[i].latestDate();
             QL.require(m1 != m2, "two instruments have the same maturity");
         }
 
         // check that there is no instruments with invalid quote
-        for (int i=0; i<nInsts; ++i) {
-            QL.require(instruments[i].quoteIsValid(), " instrument has an invalid quote");
-        }
+        for (/*Size*/ int i=0; i<nInsts; ++i)
+            QL.require(ts_.instruments()[i].quoteIsValid(),
+                    " instrument #%d (maturity: %s) has infalic quote",
+                    i+1, ts_.instruments()[i].latestDate());
 
         // setup instruments
-        for (int i=0; i<nInsts; ++i) {
+        for (/*Size*/ int i=0; i<nInsts; ++i) {
             // don't try this at home!
             // This call creates instruments, and removes "const".
             // There is a significant interaction with observability.
-            instruments[i].setTermStructure(ts);
+            ts_.instruments()[i].setTermStructure(ts_); // const_cast<Curve*>(ts_)
+        }
+        // set initial guess only if the current curve cannot be used as guess
+        if (validCurve_)
+            QL.ensure(ts_.data().length == nInsts+1,
+                      "dimension mismatch: expected %d, actual %d",
+                      nInsts+1, ts_.data().length);
+        else {
+            final double[] data = new double[nInsts+1];
+            data[0] = ts_.traits().initialValue(ts_);
+            ts_.setData(data);
         }
 
-        if (validCurve) {
-            QL.ensure (data.length == nInsts + 1, "Dimensions mismatch expected");
-        } else {
-            data = new double[nInsts+1];
-            data = ts.data();
-            data[0] = traits.initialValue(ts);
+        // calculate dates
+        {
+            final Date[] dates = new Date[nInsts+1];
+            dates[0] = ts_.traits().initialDate(ts_);
+            ts_.setDates(dates);
         }
-
-
-        dates[0] = traits.initialDate (ts);
-        times[0] = ts.timeFromReference (dates[0]);
-        for (int i = 0; i < nInsts - 1; ++ i) {
-            dates[i + 1] = instruments[i].latestDate();
-            times[i+1] = ts.timeFromReference (dates[i+1]);
-            if (! validCurve) {
-                data[i+1] = data[i];
-            }
+        
+        // calculate times
+        {
+            final double[] times = new double[nInsts+1];
+            times[0] = ts_.timeFromReference(ts_.dates()[0]);
+            ts_.setTimes(times);
         }
-
-        final LevenbergMarquardt solver = new LevenbergMarquardt (ts.accuracy(), ts.accuracy(), ts.accuracy());
-
-        final EndCriteria endCriteria = new EndCriteria (100, 10, 0.00, ts.accuracy(), 0.00);
-        final Constraint solverConstraint = (forcePositive ? new PositiveConstraint() : new NoConstraint());
-        int i = localisation -1;
-        //FIXME, convexmonotone interpolation?
-        final int dataAdjust = 1;
-
-        for (; i < nInsts; ++ i) {
-            final int initialDataPoint = i + 1 - localisation + dataAdjust;
-            final double startArray[] = new double[localisation+1-dataAdjust];
-            for (int j=0; j < startArray.length-1; ++j) {
-                startArray[j] = data[initialDataPoint+j];
-
-                // here we are extending the interpolation a point at a
-                // time... but the local interpolator can make an
-                // approximation for the final localisation period.
-                // e.g. if the localisation is 2, then the first section
-                // of the curve will be solved using the first 2
-                // instruments... with the local interpolator making
-                // suitable boundary conditions.
-
-                /*
-                           ts_->interpolation_ =
-                               ts_->interpolator_.localInterpolate(
-                                                    ts_->times_.begin(),
-                                              ts_->times_.begin()+(iInst + 2),
-                                              ts_->data_.begin(),
-                                              localisation_,
-                                              ts_->interpolation_,
-                                              nInsts+1);
-                */
-                //bootstrapable.getInterpolation ().update ();
-
-                ts.setInterpolation(interpolator.interpolate(new Array(times, i+2), new Array(data)));
-
-                if (i >= localisation) {
-                    startArray[localisation-dataAdjust] = traits.guess(ts, dates[i]);
-                } else {
-                    startArray[localisation-dataAdjust] = data[0];
-                }
-
-                final PenaltyFunction currentCost = new PenaltyFunction(initialDataPoint, (i - localisation + 1), (i + 1));
-
-                final Problem toSolve = new Problem(currentCost, solverConstraint, new Array(startArray));
-                final EndCriteria.Type endType = solver.minimize (toSolve, endCriteria);
-
-                QL.require (endType == EndCriteria.Type.StationaryFunctionAccuracy ||
-                            endType == EndCriteria.Type.StationaryFunctionValue,
-                            "Unable to strip yieldcurve to required accuracy");
-            }
+        
+        for (/*Size*/ int i=0; i<nInsts; ++i) {
+            ts_.dates()[i+1] = ts_.instruments()[i].latestDate();
+            ts_.times()[i+1] = ts_.timeFromReference(ts_.dates()[i+1]);
+            if (!validCurve_)
+                ts_.data()[i+1] = ts_.data()[i];
         }
-        validCurve = true;
+        
+        
+        
+        
+
+        final LevenbergMarquardt solver = new LevenbergMarquardt(ts_.accuracy(), ts_.accuracy(), ts_.accuracy());
+        final EndCriteria endCriteria = new EndCriteria(100, 10, 0.00, ts_.accuracy(), 0.00);
+        final Constraint solverConstraint = forcePositive_ ? new PositiveConstraint() : new NoConstraint();
+
+        // now start the bootstrapping.
+        /*Size*/ final int iInst = localisation_-1;
+
+        
+        //=========================================================================
+        
+        //FIXME: uncomment and review this block
+        
+        
+//        /*Size*/ final int dataAdjust = ts_.interpolator().dataSizeAdjustment;
+//
+//        do {
+//            /*Size*/ final int initialDataPt = iInst+1-localisation_+dataAdjust;
+//            final double[] startArray = new double[localisation_+1-dataAdjust];
+//            for (/*Size*/ int j = 0; j < startArray.length-1; ++j)
+//                startArray[j] = ts_.data()[initialDataPt+j];
+//
+//            // here we are extending the interpolation a point at a
+//            // time... but the local interpolator can make an
+//            // approximation for the final localisation period.
+//            // e.g. if the localisation is 2, then the first section
+//            // of the curve will be solved using the first 2
+//            // instruments... with the local interpolator making
+//            // suitable boundary conditions.
+//
+//            
+//            ts_.setInterpolation(
+//                ts_.interpolator().localInterpolate(
+//                                              ts_.times_.begin(),
+//                                              ts_.times_.begin()+(iInst + 2),
+//                                              ts_.data_.begin(),
+//                                              localisation_,
+//                                              ts_.interpolation_,
+//                                              nInsts+1) );
+//
+//            if (iInst >= localisation_) {
+//                startArray[localisation_-dataAdjust] = ts_.traits().guess(ts_, ts_.dates()[iInst]);
+//            } else {
+//                startArray[localisation_-dataAdjust] = ts_.data()[0];
+//            }
+//
+//            final PenaltyFunction currentCost = new PenaltyFunction(
+//                        ts_,
+//                        initialDataPt,
+//                        ts_.instruments().begin() + (iInst - localisation_+1),
+//                        ts_.instruments().begin() + (iInst+1));
+//
+//            final Problem toSolve = new Problem(currentCost, solverConstraint, startArray);
+//
+//            final EndCriteria.Type endType = solver.minimize(toSolve, endCriteria);
+//
+//            // check the end criteria
+//            QL.require(endType == EndCriteria.Type.StationaryFunctionAccuracy ||
+//                       endType == EndCriteria.Type.StationaryFunctionValue,
+//                       "Unable to strip yieldcurve to required accuracy " );
+//
+//            ++iInst;
+//        } while ( iInst < nInsts );
+        //=========================================================================
+        
+        
+        validCurve_ = true;
     }
 
 
@@ -241,7 +261,7 @@ public class LocalBootstrap implements Bootstrap {
         private final int rateHelpersEnd;
         private final int penaltylocalisation;
 
-        public PenaltyFunction (final int initialIndex, final int rateHelpersStart, final int rateHelpersEnd) {
+        private PenaltyFunction(final int initialIndex, final int rateHelpersStart, final int rateHelpersEnd) {
             this.initialIndex = initialIndex;
             this.rateHelpersStart = rateHelpersStart;
             this.rateHelpersEnd = rateHelpersEnd;
@@ -249,35 +269,34 @@ public class LocalBootstrap implements Bootstrap {
         }
 
         @Override
-        public double value (final Array x) {
+        public double value(final Array x) {
             int i = initialIndex;
             int guessIt = 0;
-            for (;guessIt < x.size(); ++guessIt, ++i) {
-                traits.updateGuess (ts.data(), guessIt, i);
+            for (; guessIt < x.size(); ++guessIt, ++i) {
+                ts_.traits().updateGuess(ts_.data(), guessIt, i);
             }
 
-            ts.interpolation().update();
+            ts_.interpolation().update();
 
             double penalty = 0.0;
             int j = rateHelpersStart;
-            for (; j != rateHelpersEnd; ++j)
-            {
-                penalty += Math.abs (instruments[j].quoteError());
+            for (; j != rateHelpersEnd; ++j) {
+                penalty += Math.abs(ts_.instruments()[j].quoteError());
             }
             return penalty;
         }
 
         @Override
-        public Array values (final Array x) {
+        public Array values(final Array x) {
             int guessIt = 0;
             for (int i = initialIndex; guessIt < x.size(); ++guessIt, ++i) {
-                traits.updateGuess (ts.data(), x.get (guessIt), i);
+                ts_.traits().updateGuess(ts_.data(), x.get(guessIt), i);
             }
-            interpolation.update();
-            final Array penalties = new Array (penaltylocalisation);
+            ts_.interpolation().update();
+            final Array penalties = new Array(penaltylocalisation);
             int instIterator = rateHelpersStart;
-            for (int penIt = 0; instIterator != rateHelpersEnd; ++ instIterator, ++ penIt) {
-                penalties.set (penIt, Math.abs (instruments[instIterator].quoteError()));
+            for (int penIt = 0; instIterator != rateHelpersEnd; ++instIterator, ++penIt) {
+                penalties.set(penIt, Math.abs(ts_.instruments()[instIterator].quoteError()));
             }
             return penalties;
         }

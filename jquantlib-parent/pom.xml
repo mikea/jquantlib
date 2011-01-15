@@ -263,6 +263,38 @@
     </ciManagement>
 
     <repositories>
+    
+    
+		<repository>
+		    <id>central</id>
+		    <name>central</name>
+		    <url>http://repo1.maven.org/maven2</url>
+		    <layout>default</layout>
+		</repository>
+
+        <!-- 
+        // TODO: joda-primitives must be replaces by fastutil
+        // see: http://bugs.jquantlib.org/view.php?id=504
+         -->
+        <repository>
+            <id>joda-primitives</id>
+            <name>joda-primitives</name>
+            <url>http://joda-primitives.sourceforge.net/repo/</url>
+            <layout>default</layout>
+        </repository>
+
+<!--
+
+    //
+    // We are not using our Artifactory anymore due to restricted bandwidth availability
+    //
+    
+    //
+    // We DO NOT HAVE our artifacts published to any public repository YET.
+    // I'm sorry for that. This is expected to be corrected relatively soon.
+    //
+    
+    
         <repository>
             <id>jquantlib</id>
             <name>JQuantLib Repository</name>
@@ -275,6 +307,7 @@
             <url>http://download.java.net/maven/2/</url>
             <layout>default</layout>
         </repository>
+-->
     </repositories>
  
     <build>

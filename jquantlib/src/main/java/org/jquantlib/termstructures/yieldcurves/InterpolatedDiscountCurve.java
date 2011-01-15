@@ -178,15 +178,15 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     }
 
     protected InterpolatedDiscountCurve(
-            final Date [] dates,
-            final double[] discounts,
+            final Date[]     dates,
+            final double[]   discounts,
             final DayCounter dc,
             final Calendar cal) {
         this(dates, discounts, dc, cal, new TypeTokenTree(InterpolatedDiscountCurve.class).getElement(0));
     }
     protected InterpolatedDiscountCurve(
-            final Date [] dates,
-            final double[] discounts,
+            final Date[]     dates,
+            final double[]   discounts,
             final DayCounter dc,
             final Calendar cal,
             final Class<?> interpolator) {
@@ -199,12 +199,13 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     //
 
     public InterpolatedDiscountCurve (
-            final Date [] dates,
+            final Date[] dates,
             final double[] discounts,
             final DayCounter dc,
             final Calendar calendar,
             final Interpolator interpolator) {
-        super (dates[0], calendar, dc);
+        super(dates[0], calendar, dc);
+        
         QL.validateExperimentalMode();
 
         this.classI = new TypeTokenTree(this.getClass()).getElement(0);
@@ -224,10 +225,10 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
         times[0] = 0.0;
 
         for (int i = 1; i < dates.length; ++ i) {
-            QL.require (dates[i].gt (dates[i - 1]), "Dates must be in ascending order"); // TODO: message
-            QL.require (data[i] > 0, "Negative discount"); // TODO: message
+            QL.require (dates[i].gt (dates[i-1]), "Dates must be in ascending order"); // TODO: message
+            QL.require (data[0] > 0, "Negative discount"); // TODO: message
             times[i] = dc.yearFraction (dates[0], dates[i]);
-            QL.require(Closeness.isClose(times[i],times[i-1]),
+            QL.require(Closeness.isClose(times[i], times[i-1]),
             "two dates correspond to the same time under this curve's day count convention"); // TODO: message
         }
 
@@ -247,7 +248,8 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
 
     @Override
     public Date maxDate() {
-        return dates[dates.length - 1];
+        final int last = dates.length-1;
+        return dates[last];
     }
 
     @Override
@@ -260,7 +262,7 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     }
 
     @Override
-    public /*@Time*/ double[] times() {
+    public double[] times() {
         return times;
     }
 

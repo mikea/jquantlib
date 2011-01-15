@@ -1,6 +1,8 @@
 /*
 Copyright (C) 2009 Ueli Hofstetter
 Copyright (C) 2009 John Martin
+Copyright (C) 2010 Zahid Hussein
+Copyright (C) 2011 Richard Gomes
 
 This source code is release under the BSD License.
 
@@ -64,17 +66,24 @@ import org.jquantlib.time.Schedule;
  * @author Ueli Hofstetter
  * @author John Martin
  * @author Zahid Hussain
+ * @author Richard Gomes
  */
-//ZH: Fixed code to match QL097
-//TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public class FloatingLeg< InterestRateIndexType extends InterestRateIndex,
                           FloatingCouponType extends FloatingRateCoupon,
                           CappedFlooredCouponType
                          > extends Leg {
 	//Make compiler happy
 	private static final long serialVersionUID = 1L;
-	
-	public FloatingLeg(
+
+    private final Class<?> typeFCT;
+    private final Class<?> typeCFC;
+
+    
+    //
+    // public constructors
+    //
+    
+    public FloatingLeg(
             final Array nominals,
             final Schedule schedule,
             final InterestRateIndexType index,
@@ -87,10 +96,59 @@ public class FloatingLeg< InterestRateIndexType extends InterestRateIndex,
             final Array floors,
             final boolean isInArrears,
             final boolean isZero) {
-		
         super(schedule.size() - 1);
+        this.typeFCT = new TypeTokenTree(this.getClass()).getElement(1);
+        this.typeCFC = new TypeTokenTree(this.getClass()).getElement(2);
+        constructor(
+                nominals,
+                schedule,
+                index,
+                paymentDayCounter, paymentAdj,
+                fixingDays, gearings, spreads, caps, floors,
+                isInArrears, isZero);
+    }
+    
+	public FloatingLeg(
+	        final Class<?> typeFCT,
+	        final Class<?> typeCFC,
+            final Array nominals,
+            final Schedule schedule,
+            final InterestRateIndexType index,
+            final DayCounter paymentDayCounter,
+            final BusinessDayConvention paymentAdj,
+            final Array fixingDays,
+            final Array gearings,
+            final Array spreads,
+            final Array caps,
+            final Array floors,
+            final boolean isInArrears,
+            final boolean isZero) {
+        super(schedule.size() - 1);
+        this.typeFCT = typeFCT;
+        this.typeCFC = typeCFC;
+        constructor(
+                nominals,
+                schedule,
+                index,
+                paymentDayCounter, paymentAdj,
+                fixingDays, gearings, spreads, caps, floors,
+                isInArrears, isZero);
+	}
 
-        int n = schedule.size()-1;
+	private void constructor(
+            final Array nominals,
+            final Schedule schedule,
+            final InterestRateIndexType index,
+            final DayCounter paymentDayCounter,
+            final BusinessDayConvention paymentAdj,
+            final Array fixingDays,
+            final Array gearings,
+            final Array spreads,
+            final Array caps,
+            final Array floors,
+            final boolean isInArrears,
+            final boolean isZero) {
+        final int n = schedule.size()-1;
         QL.require(nominals != null && nominals.size() <= n,
                    "too many nominals (" + nominals.size() +
                    "), only " + n + " required");
@@ -110,38 +168,36 @@ public class FloatingLeg< InterestRateIndexType extends InterestRateIndex,
                    "in-arrears and zero features are not compatible");
 
         // the following is not always correct
-        Calendar calendar = schedule.calendar();
+        final Calendar calendar = schedule.calendar();
 
         Date refStart, start, refEnd, end;
-        Date lastPaymentDate = calendar.adjust(schedule.date(n), paymentAdj);
+        final Date lastPaymentDate = calendar.adjust(schedule.date(n), paymentAdj);
 
         for (int i=0; i<n; ++i) {
             refStart = start = schedule.date(i);
             refEnd   =   end = schedule.date(i+1);
-            Date paymentDate =
+            final Date paymentDate =
                 isZero ? lastPaymentDate : calendar.adjust(end, paymentAdj);
             if (i==0   && !schedule.isRegular(i+1)) {
-                BusinessDayConvention bdc = schedule.businessDayConvention();
+                final BusinessDayConvention bdc = schedule.businessDayConvention();
                 refStart = calendar.adjust(end.sub(schedule.tenor()), bdc);
             }
             if (i==n-1 && !schedule.isRegular(i+1)) {
-                BusinessDayConvention bdc = schedule.businessDayConvention();
+                final BusinessDayConvention bdc = schedule.businessDayConvention();
                 refEnd = calendar.adjust(start.add(schedule.tenor()), bdc);
             }
-            if (Detail.get(gearings, i, 1.0) == 0.0) { // fixed coupon
-                add(new FixedRateCoupon(Detail.get(nominals, i, 1.0),
+            if (get(gearings, i, 1.0) == 0.0) { // fixed coupon
+                add(new FixedRateCoupon(get(nominals, i, 1.0),
                                     paymentDate,
-                                    Detail.effectiveFixedRate(spreads,caps,floors,i),
+                                    effectiveFixedRate(spreads,caps,floors,i),
                                     paymentDayCounter,
                                     start, end, refStart, refEnd));
             }
-           else if (Detail.noOption(caps, floors, i)) { //// floating coupon
-        	   // get the generic type
-        	   final Class<?> fctklass = new TypeTokenTree(this.getClass()).getElement(1);
+           else if (noOption(caps, floors, i)) { //// floating coupon
         	   // construct a new instance using reflection. first get the
         	   FloatingCouponType frc;
         	   try {
-        		   frc = (FloatingCouponType) fctklass.getConstructor(
+        		   frc = (FloatingCouponType) typeFCT.getConstructor(
                       Date.class, // paymentdate
                       double.class, // nominal
                       Date.class, // start date
@@ -157,28 +213,27 @@ public class FloatingLeg< InterestRateIndexType extends InterestRateIndex,
                       // then create a new instance
                       .newInstance(
                               paymentDate,
-                              Detail.get(nominals, i, 1.0),
+                              get(nominals, i, 1.0),
                               start,
                               end,
-                              (int)Detail.get(fixingDays, i, index.fixingDays()),
+                              (int)get(fixingDays, i, index.fixingDays()),
                               index,
-                              Detail.get(gearings, i, 1.0),
-                              Detail.get(spreads, i, 0.0), 
+                              get(gearings, i, 1.0),
+                              get(spreads, i, 0.0), 
                               refStart,
                               refEnd, 
                               paymentDayCounter, 
                               isInArrears);
-        	   } catch (Exception e) {
+        	   } catch (final Exception e) {
         		   throw new LibraryException(
         		   "Couldn't construct new instance from generic type for floating coupon"); // QA:[RG]::verified
         	   }
         	   add(frc);
           }
          else {
-                final Class<?> cfcklass = new TypeTokenTree(this.getClass()).getElement(2);
                 CappedFlooredCouponType cfctc;
                 try {
-                    cfctc = (CappedFlooredCouponType) cfcklass.getConstructor(
+                    cfctc = (CappedFlooredCouponType) typeCFC.getConstructor(
                             Date.class, // paymentdate
                             double.class, // nominal
                             Date.class, // start date
@@ -196,15 +251,15 @@ public class FloatingLeg< InterestRateIndexType extends InterestRateIndex,
                             // then create a new instance
                             .newInstance (
                                     paymentDate,
-                                    Detail.get(nominals,i, 1.0),
+                                    get(nominals,i, 1.0),
                                     start,
                                     end,
-                                    (int) Detail.get(fixingDays, i, index.fixingDays()),
+                                    (int)get(fixingDays, i, index.fixingDays()),
                                     index,
-                                    Detail.get(gearings, i, 1.0),
-                                    Detail.get(spreads, i, 0.0),
-                                    Detail.get(caps, i, Constants.NULL_RATE),
-                                    Detail.get(floors, i, Constants.NULL_RATE),
+                                    get(gearings, i, 1.0),
+                                    get(spreads, i, 0.0),
+                                    get(caps, i, Constants.NULL_RATE),
+                                    get(floors, i, Constants.NULL_RATE),
                                     refStart,
                                     refEnd,
                                     paymentDayCounter,
@@ -218,78 +273,45 @@ public class FloatingLeg< InterestRateIndexType extends InterestRateIndex,
     }
 
 
+	//
+	// public methods
+	//
+	
+    public double get(
+            final Array v,
+            final int i,
+            final double defaultValue) {
+        if (v == null || v.empty())
+            return defaultValue;
+        else if (i < v.size())
+            return v.get(i);
+        else
+            return v.get(v.size() - 1);
+    }
 
-    private static class Detail {
-
-        //TODO: Do we really need this generic method?
-        // its a one to one translation from quantlib.
-        // we could use the implementations below instead
-        //XXX : unused
-        //        public static <T extends Number, U extends Number> T get(
-        //                final ArrayList<T> v,
-        //                final int i,
-        //                final U defaultValue) {
-        //            if (v == null || v.size() == 0) {
-        //                return (T) defaultValue;
-        //            } else if (i < v.size()) {
-        //                return v.get(i);
-        //            } else {
-        //                return v.get(v.size() - 1);
-        //            }
-        //        }
-        //
-        //        public static double get(
-        //                final double[] v,
-        //                final int i,
-        //                final double defaultValue){
-        //            if (v == null || v.length == 0) {
-        //                return defaultValue;
-        //            } else if (i < v.length) {
-        //                return v[i];
-        //            } else {
-        //                return v[v.length - 1];
-        //            }
-        //        }
- /*
-  * 
-*/
-        public static double get(
-                final Array v,
-                final int i,
-                final double defaultValue) {
-            if (v == null || v.empty())
-                return defaultValue;
-            else if (i < v.size())
-                return v.get(i);
-            else
-                return v.get(v.size() - 1);
+    public /* @Rate */ double effectiveFixedRate(
+            final Array spreads,
+            final Array caps,
+            final Array floors,
+            final /* @Size */ int i) {
+       
+        double result = get(spreads, i, 0.0);
+        final double floor = get(floors, i, Constants.NULL_RATE);
+        if (floor != Constants.NULL_RATE ) {
+            result = Math.max(floor, result);
         }
-
-        public static /* @Rate */ double effectiveFixedRate(
-                final Array spreads,
-                final Array caps,
-                final Array floors,
-                final /* @Size */ int i) {
-           
-        	double result = get(spreads, i, 0.0);
-            double floor = get(floors, i, Constants.NULL_RATE);
-            if (floor != Constants.NULL_RATE ) {
-                result = Math.max(floor, result);
-            }
-            double cap = get(caps, i, Constants.NULL_RATE);
-            if (cap != Constants.NULL_RATE ) {
-                result = Math.min(cap, result);
-            }
-            return result;
+        final double cap = get(caps, i, Constants.NULL_RATE);
+        if (cap != Constants.NULL_RATE ) {
+            result = Math.min(cap, result);
         }
+        return result;
+    }
 
-        public static boolean noOption(final Array caps, 
-        							   final Array floors, 
-        							   int /* @Size */ i) {
-            return (get(caps, i, Constants.NULL_RATE) == Constants.NULL_RATE) && 
-                   (get(floors, i, Constants.NULL_REAL) == Constants.NULL_RATE);
-        }
-
+    public boolean noOption(final Array caps, 
+                                   final Array floors, 
+                                   final int /* @Size */ i) {
+        return (get(caps, i, Constants.NULL_RATE) == Constants.NULL_RATE) && 
+               (get(floors, i, Constants.NULL_REAL) == Constants.NULL_RATE);
     }
 
 }

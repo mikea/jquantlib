@@ -3,7 +3,6 @@ package org.jquantlib.samples;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,7 +20,6 @@ import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
-import org.jquantlib.samples.util.StopClock;
 import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
@@ -49,9 +47,6 @@ public class Bonds implements Runnable {
     public void run() {
 
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
-
-        final StopClock clock = new StopClock();
-        clock.startClock();
 
         /*********************
          *** MARKET DATA ***
@@ -176,8 +171,7 @@ public class Bonds implements Runnable {
             final FixedRateBondHelper bondHelper = (
                     new FixedRateBondHelper(quoteHandle.get(i), settlementDays,
                             100.0, schedule,
-                            // std::vector<Rate>(1,couponRates[i]),
-                            Arrays.asList(new double[] { couponRates[i] }),
+                            new double[] { couponRates[i] },
                             new ActualActual(ActualActual.Convention.Bond),
                             BusinessDayConvention.Unadjusted,
                             redemption,

@@ -1,3 +1,24 @@
+/*
+Copyright (C) 2011 Richard Gomes
+
+This source code is release under the BSD License.
+
+This file is part of JQuantLib, a free-software/open-source library
+for financial quantitative analysts and developers - http://jquantlib.org/
+
+JQuantLib is free software: you can redistribute it and/or modify it
+under the terms of the JQuantLib license.  You should have received a
+copy of the license along with this program; if not, please email
+<jquant-devel@lists.sourceforge.net>. The license is also available online at
+<http://www.jquantlib.org/index.php/LICENSE.TXT>.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the license for more details.
+
+JQuantLib is based on QuantLib. http://quantlib.org/
+When applicable, the original copyright notice follows this notice.
+ */
 package org.jquantlib.termstructures;
 
 import java.util.Arrays;
@@ -12,16 +33,21 @@ import org.jquantlib.math.interpolations.factories.Linear;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.solvers1D.Brent;
 import org.jquantlib.termstructures.yieldcurves.PiecewiseCurve;
+import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldCurve;
 import org.jquantlib.termstructures.yieldcurves.Traits;
 import org.jquantlib.time.Date;
 
-//FIXME: This class should be declared generic, like this:
-//
-//      class IterativeBootstrap<Curve extends Traits.Curve> implements Bootstrap
-//
-// ... in spite that there's no real value on doing it unless strict API resemblance to QL/C++
-//
-public class IterativeBootstrap implements Bootstrap {
+/**
+ * Universal piecewise-term-structure boostrapper.
+ * 
+ * @author Richard Gomes
+ */
+
+
+//FIXME: This class needs full code review
+
+
+public class IterativeBootstrap<Curve extends PiecewiseYieldCurve> implements Bootstrap<Curve> {
 
     //
     // private fields
@@ -39,7 +65,7 @@ public class IterativeBootstrap implements Bootstrap {
     // final private fields
     //
 
-    final private Class<?>  classB;
+    final private Class<?>  typeCurve;
 
 
     //
@@ -50,16 +76,19 @@ public class IterativeBootstrap implements Bootstrap {
         this(new TypeTokenTree(IterativeBootstrap.class).getElement(0));
     }
 
-    public IterativeBootstrap(final Class<?> klass) {
+    
+    public IterativeBootstrap(final Class<?> typeCurve) {
+
         QL.validateExperimentalMode();
 
-        if (klass==null) {
+        
+        if (typeCurve==null) {
             throw new LibraryException("null PiecewiseCurve"); // TODO: message
         }
-        if (!PiecewiseCurve.class.isAssignableFrom(klass)) {
+        if (!PiecewiseCurve.class.isAssignableFrom(typeCurve)) {
             throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
         }
-        this.classB = klass;
+        this.typeCurve = typeCurve;
 
         this.validCurve = false;
         this.ts = null;
@@ -67,13 +96,14 @@ public class IterativeBootstrap implements Bootstrap {
 
 
     //
-    // public methods
+    // implements Bootstrap
     //
 
-    public void setup(final PiecewiseCurve ts) {
+    @Override
+    public void setup(final Curve ts) {
 
         QL.ensure (ts != null, "TermStructure cannot be null");
-        if (!classB.isAssignableFrom(ts.getClass())) {
+        if (!this.typeCurve.isAssignableFrom(ts.getClass())) {
             throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
         }
 
@@ -91,7 +121,7 @@ public class IterativeBootstrap implements Bootstrap {
         }
     }
 
-
+    @Override
     public void calculate () {
 
         final int n = instruments.length;

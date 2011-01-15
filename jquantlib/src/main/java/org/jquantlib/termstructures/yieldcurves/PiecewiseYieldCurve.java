@@ -53,6 +53,7 @@ import org.jquantlib.quotes.Quote;
 import org.jquantlib.termstructures.Bootstrap;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
+import org.jquantlib.termstructures.IterativeBootstrap;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
@@ -78,8 +79,13 @@ import org.jquantlib.util.Pair;
  *
  * @author Richard Gomes
  */
+
+
+//FIXME: This class needs full code review
+
+
 public class PiecewiseYieldCurve<
-                C extends Traits,
+                T extends Traits,
                 I extends Interpolator,
                 B extends Bootstrap>
         extends LazyObject implements PiecewiseCurve<I> {
@@ -88,153 +94,609 @@ public class PiecewiseYieldCurve<
     // private final fields
     //
 
-    //std::vector<boost::shared_ptr<typename Traits::helper> > instruments_;
-    private final RateHelper[] instruments;
+    private Class<T> classT; ////
+    private Class<I> classI; ////
+    private Class<B> classB; ////
+    private Traits.Curve baseCurve; ////
 
-    private final Handle<Quote>[] jumps;
-    private final int nJumps;
-    private final double accuracy;
+
+    //=========================================================================================
+    // Translation Notes
+    //
+    // We are purposedly diverging from QuantLib in regards to usage of std::vector.
+    // The normal way of translating std::vector<T> would be employing List<T> but, in the
+    // specific case of PiecewiseYieldCurve, it would impose more complexity, would require 
+    // data transformations which would directly impact performance.
+    // On the other hand, benefits provided by Lists are not necessary because only indexed
+    // access is required, nothing else.
+    // In this case, we opted by using regular arrays instead.
+    //
+    // Richard Gomes 15-JAN-2011
+    //=========================================================================================
+    
+    private RateHelper[] instruments; ////
+    private Handle<Quote>[] jumps; ////
+    private double accuracy; ////
+
+
 
     //
     // private fields
     //
 
-    private Date[] jumpDates_;
+    private Date[] jumpDates;
     private /*@Time*/ double[] jumpTimes;
     private Date latestReference;
-
-
-    //XXX
-    //
-    //    /**
-    //     * Intended to hold a reference to <code>this</code> instance.
-    //     */
-    //    // typedef PiecewiseYieldCurve<Traits,Interpolator,Bootstrap> this_curve;
-    //    private final PiecewiseCurve thisCurve;
-
-    /**
-     * Intended to hold a reference to a concrete implementation of <code>super</code>
-     * as the base class of PiecewiseYieldCurve is virtual.
-     * <p>
-     * In order to provide a virtual base class in Java, we do not extend directly
-     * but we implement the interface that the base class needs to implement and
-     * we use a Delegate Pattern in order to forward calls to the base class.
-     * <p>
-     * The actual concrete implementation of <code>super</code> is chosen based
-     * on class parameter <code>C</code>. The other class parameter <code>I</code>
-     * is passed to the constructor.
-     */
-    // typedef typename Traits::template curve<Interpolator>::type base_curve;
-    private final Traits.Curve baseCurve;
-
-
-
-
 
 
     //
     // package private fields
     //
-
-    // THESE ARE ORIGINAL COMMENTS FROM QuantLib/C++ sources:
-    //
-    // bootstrapper classes are declared as friend to manipulate
-    // the curve data. They might be passed the data instead, but
-    // it would increase the complexity---which is high enough
-    // already.
-    //
-    // friend class Bootstrap<this_curve>;
-    // friend class BootstrapError<this_curve> ;
-    // friend class PenaltyFunction<this_curve>;
+    private Traits        traits; ////
+    private Interpolator  interpolator; ////
+    private Bootstrap     bootstrap; ////
 
 
-    //
-    // intended to hold class type of generic parameters
-    //
-    final private Traits        traits;
-    final private Interpolator  interpolator;
-    final private Bootstrap     bootstrap;
-
-
-
+    
+    
+    
+    
+    // *********************************************************
+    // * Case 1 : initByReference with Formal Class Parameters *
+    // *********************************************************
+    
     public PiecewiseYieldCurve(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB,
+            //--
+            final Date referenceDate,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter) {
+        initGenericParams(classT, classI, classB);
+        initByReferenceDate(
+                referenceDate, instruments, dayCounter,
+                new Handle /*<Quote>*/ [0],
+                new Date[0],
+                1.0e-12,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB,
+            //--
             final Date referenceDate,
             final RateHelper[] instruments,
             final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps) {
+        initGenericParams(classT, classI, classB);
+        initByReferenceDate(
+                referenceDate, instruments, dayCounter,
+                jumps,
+                new Date[0],
+                1.0e-12,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB,
+            //--
+            final Date referenceDate,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
             final Handle<Quote>[] jumps,
             final Date[] jumpDates) {
-        this(referenceDate, instruments, dayCounter, jumps, jumpDates,
+        initGenericParams(classT, classI, classB);
+        initByReferenceDate(
+                referenceDate, instruments, dayCounter,
+                jumps,
+                jumpDates,
                 1.0e-12,
-                new TypeTokenTree(PiecewiseYieldCurve.class).getElement(1),
-                new TypeTokenTree(PiecewiseYieldCurve.class).getElement(2));
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
     }
-
     public PiecewiseYieldCurve(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB,
+            //--
             final Date referenceDate,
             final RateHelper[] instruments,
             final DayCounter dayCounter,
+            //----
             final Handle<Quote>[] jumps,
             final Date[] jumpDates,
             final /*@Real*/ double accuracy) {
-        this(referenceDate, instruments, dayCounter, jumps, jumpDates,
+        initGenericParams(classT, classI, classB);
+        initByReferenceDate(
+                referenceDate, instruments, dayCounter,
+                jumps,
+                jumpDates,
                 accuracy,
-                new TypeTokenTree(PiecewiseYieldCurve.class).getElement(1),
-                new TypeTokenTree(PiecewiseYieldCurve.class).getElement(2));
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB,
+            //--
+            final Date referenceDate,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy,
+            final Interpolator interpolator) {
+        initGenericParams(classT, classI, classB);
+        initByReferenceDate(
+                referenceDate, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                accuracy,
+                interpolator,
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB,
+            //--
+            final Date referenceDate,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy,
+            final Interpolator interpolator,
+            final Bootstrap bootstrap) {
+        initGenericParams(classT, classI, classB);
+        initByReferenceDate(
+                referenceDate, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                accuracy,
+                interpolator,
+                bootstrap);
     }
 
+
+
+    // ****************************************************
+    // * Case 2 : initByReference with Generic Parameters *
+    // ****************************************************
+    
+    public PiecewiseYieldCurve(
+            final Date referenceDate,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter) {
+        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
+        initGenericParams(
+                (Class<T>) ttt.getElement(0),
+                (Class<I>) ttt.getElement(1),
+                (Class<B>) ttt.getElement(2));
+        initByReferenceDate(
+                referenceDate, instruments, dayCounter,
+                new Handle /*<Quote>*/ [0],
+                new Date[0],
+                1.0e-12,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
     public PiecewiseYieldCurve(
             final Date referenceDate,
             final RateHelper[] instruments,
             final DayCounter dayCounter,
-            final Handle<Quote>[] jumps,
-            final Date[] jumpDates,
-            final /*@Real*/ double accuracy, //TODO: default value: 1.0e-12
-            final Class<?> interpolator) {
-        this(referenceDate, instruments, dayCounter, jumps, jumpDates,
-                accuracy,
-                constructInterpolator(interpolator),
-                constructBootstrap(new TypeTokenTree(PiecewiseYieldCurve.class).getElement(2)));
+            //----
+            final Handle<Quote>[] jumps) {
+        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
+        initGenericParams(
+                (Class<T>) ttt.getElement(0),
+                (Class<I>) ttt.getElement(1),
+                (Class<B>) ttt.getElement(2));
+        initByReferenceDate(
+                referenceDate, instruments, dayCounter,
+                jumps,
+                new Date[0],
+                1.0e-12,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
     }
-
     public PiecewiseYieldCurve(
             final Date referenceDate,
             final RateHelper[] instruments,
             final DayCounter dayCounter,
+            //----
             final Handle<Quote>[] jumps,
-            final Date[] jumpDates,
-            final /*@Real*/ double accuracy, //TODO: default value: 1.0e-12
-            final Class<?> interpolator,
-            final Class<?> bootstrap) {
-        this(referenceDate, instruments, dayCounter, jumps, jumpDates,
-                accuracy,
-                constructInterpolator(interpolator),
-                constructBootstrap(bootstrap));
+            final Date[] jumpDates) {
+        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
+        initGenericParams(
+                (Class<T>) ttt.getElement(0),
+                (Class<I>) ttt.getElement(1),
+                (Class<B>) ttt.getElement(2));
+        initByReferenceDate(
+                referenceDate, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                1.0e-12,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
     }
-
     public PiecewiseYieldCurve(
             final Date referenceDate,
             final RateHelper[] instruments,
             final DayCounter dayCounter,
+            //----
             final Handle<Quote>[] jumps,
             final Date[] jumpDates,
-            final /*@Real*/ double accuracy, //TODO: default value: 1.0e-12
-            final Interpolator interpolator, //TODO: default value: Interpolator()
-            final Bootstrap bootstrap) { //TODO: default value: Bootstrap<this_curve>()
+            final /*@Real*/ double accuracy) {
+        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
+        initGenericParams(
+                (Class<T>) ttt.getElement(0),
+                (Class<I>) ttt.getElement(1),
+                (Class<B>) ttt.getElement(2));
+        initByReferenceDate(
+                referenceDate, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                accuracy,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final Date referenceDate,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy,
+            final Interpolator interpolator) {
+        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
+        initGenericParams(
+                (Class<T>) ttt.getElement(0),
+                (Class<I>) ttt.getElement(1),
+                (Class<B>) ttt.getElement(2));
+        initByReferenceDate(
+                referenceDate, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                accuracy,
+                interpolator,
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final Date referenceDate,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy,
+            final Interpolator interpolator,
+            final Bootstrap bootstrap) {
+        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
+        initGenericParams(
+                (Class<T>) ttt.getElement(0),
+                (Class<I>) ttt.getElement(1),
+                (Class<B>) ttt.getElement(2));
+        initByReferenceDate(
+                referenceDate, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                accuracy,
+                interpolator,
+                bootstrap);
+    }
+
+
+
+    // ********************************************************
+    // * Case 3 : initByCalendar with Formal Class Parameters *
+    // ********************************************************
+    
+    public PiecewiseYieldCurve(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB,
+            //--
+            final /*@Natural*/ int settlementDays,
+            final Calendar calendar,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter) {
+        initGenericParams(classT, classI, classB);
+        initByCalendar(
+                settlementDays, calendar, instruments, dayCounter,
+                new Handle /*<Quote>*/ [0],
+                new Date[0],
+                1.0e-12,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB,
+            //--
+            final /*@Natural*/ int settlementDays,
+            final Calendar calendar,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps) {
+        initGenericParams(classT, classI, classB);
+        initByCalendar(
+                settlementDays, calendar, instruments, dayCounter,
+                jumps,
+                new Date[0],
+                1.0e-12,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB,
+            //--
+            final /*@Natural*/ int settlementDays,
+            final Calendar calendar,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates) {
+        initGenericParams(classT, classI, classB);
+        initByCalendar(
+                settlementDays, calendar, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                1.0e-12,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB,
+            //--
+            final /*@Natural*/ int settlementDays,
+            final Calendar calendar,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy) {
+        initGenericParams(classT, classI, classB);
+        initByCalendar(
+                settlementDays, calendar, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                accuracy,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB,
+            //--
+            final /*@Natural*/ int settlementDays,
+            final Calendar calendar,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy,
+            final Interpolator interpolator) {
+        initGenericParams(classT, classI, classB);
+        initByCalendar(
+                settlementDays, calendar, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                accuracy,
+                interpolator,
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB,
+            //--
+            final /*@Natural*/ int settlementDays,
+            final Calendar calendar,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy,
+            final Interpolator interpolator,
+            final Bootstrap bootstrap) {
+        initGenericParams(classT, classI, classB);
+        initByCalendar(
+                settlementDays, calendar, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                accuracy,
+                interpolator,
+                bootstrap);
+    }
+
+
+
+    // ***************************************************
+    // * Case 4 : initByCalendar with Generic Parameters *
+    // ***************************************************
+    
+    public PiecewiseYieldCurve(
+            final /*@Natural*/ int settlementDays,
+            final Calendar calendar,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter) {
+        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
+        initGenericParams(
+                (Class<T>) ttt.getElement(0),
+                (Class<I>) ttt.getElement(1),
+                (Class<B>) ttt.getElement(2));
+        initByCalendar(
+                settlementDays, calendar, instruments, dayCounter,
+                new Handle /*<Quote>*/ [0],
+                new Date[0],
+                1.0e-12,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final /*@Natural*/ int settlementDays,
+            final Calendar calendar,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps) {
+        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
+        initGenericParams(
+                (Class<T>) ttt.getElement(0),
+                (Class<I>) ttt.getElement(1),
+                (Class<B>) ttt.getElement(2));
+        initByCalendar(
+                settlementDays, calendar, instruments, dayCounter,
+                jumps,
+                new Date[0],
+                1.0e-12,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final /*@Natural*/ int settlementDays,
+            final Calendar calendar,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates) {
+        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
+        initGenericParams(
+                (Class<T>) ttt.getElement(0),
+                (Class<I>) ttt.getElement(1),
+                (Class<B>) ttt.getElement(2));
+        initByCalendar(
+                settlementDays, calendar, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                1.0e-12,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final /*@Natural*/ int settlementDays,
+            final Calendar calendar,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy) {
+        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
+        initGenericParams(
+                (Class<T>) ttt.getElement(0),
+                (Class<I>) ttt.getElement(1),
+                (Class<B>) ttt.getElement(2));
+        initByCalendar(
+                settlementDays, calendar, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                accuracy,
+                constructInterpolator(classI),
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final /*@Natural*/ int settlementDays,
+            final Calendar calendar,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy,
+            final Interpolator interpolator) {
+        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
+        initGenericParams(
+                (Class<T>) ttt.getElement(0),
+                (Class<I>) ttt.getElement(1),
+                (Class<B>) ttt.getElement(2));
+        initByCalendar(
+                settlementDays, calendar, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                accuracy,
+                interpolator,
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+    }
+    public PiecewiseYieldCurve(
+            final /*@Natural*/ int settlementDays,
+            final Calendar calendar,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            //----
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy,
+            final Interpolator interpolator,
+            final Bootstrap bootstrap) {
+        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
+        initGenericParams(
+                (Class<T>) ttt.getElement(0),
+                (Class<I>) ttt.getElement(1),
+                (Class<B>) ttt.getElement(2));
+        initByCalendar(
+                settlementDays, calendar, instruments, dayCounter,
+                jumps,
+                jumpDates,
+                accuracy,
+                interpolator,
+                bootstrap);
+    }
+
+    
+    
+    
+    private void initGenericParams(
+            final Class<T> classT,
+            final Class<I> classI,
+            final Class<B> classB) {
 
         QL.validateExperimentalMode();
 
-        // retrieve generic parameters
-        // *** NOTE:: NOT SURE IF THIS CODE IS CORRECT: I (interpolator) and B (bootstrap) are being passed as formal parameters.
-        // *** See InterpolatedDiscountCurve: default formal arguments are "guessed" from generic parameters via ...
-        // ***         new TypeTokenTree(InterpolatedDiscountCurve.class).getElement(0)
-        // *** in some constructors, which assume defaults.
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        final Class<?> classT = ttt.getElement(0);
-        final Class<?> classI = ttt.getElement(1);
-        final Class<?> classB = ttt.getElement(2);
-        QL.require(classT!=null , "T is null"); // TODO: message
-        QL.require(classI!=null , "I is null"); // TODO: message
-        QL.require(classB!=null , "B is null"); // TODO: message
+        QL.require(classT!=null , "T is null"); // TODO: review messages
+        QL.require(classI!=null , "I is null");
+        QL.require(classB!=null , "B is null");
+        this.classT = classT;
+        this.classI = classI;
+        this.classB = classB;
+
+    }
+    
+    private void initByReferenceDate(
+            final Date referenceDate,
+            final RateHelper[] instruments,
+            final DayCounter dayCounter,
+            final Handle<Quote>[] jumps,
+            final Date[] jumpDates,
+            final /*@Real*/ double accuracy,
+            final Interpolator interpolator,
+            final Bootstrap<PiecewiseYieldCurve<T,I,B>> bootstrap) {
+
+        QL.validateExperimentalMode();
 
         // instantiate base class and call super constructor
         this.baseCurve = constructBaseClass(referenceDate, dayCounter, classI, classT);
@@ -246,44 +708,37 @@ public class PiecewiseYieldCurve<
 
         this.instruments = instruments; // TODO: clone() ?
         this.jumps = jumps; // TODO: clone() ?
-        this.nJumps = jumps.length;
-        this.jumpDates_ = jumpDates; // TODO: clone() ?
+        this.jumpDates = jumpDates; // TODO: clone() ?
         this.jumpTimes = new double[jumpDates.length];
         this.accuracy = accuracy;
 
         setJumps();
-        for (int i=0; i<jumps.length; ++i) {
-            jumps[i].addObserver(this);
+        for (final Handle<Quote> jump : jumps) {
+            jump.addObserver(this);
         }
         bootstrap.setup(this);
     }
-
-
-    public PiecewiseYieldCurve(
+    
+    private void initByCalendar(
             final /*@Natural*/ int settlementDays,
             final Calendar calendar,
             final RateHelper[] instruments,
             final DayCounter dayCounter,
+            //------
             final Handle<Quote>[] jumps,
             final Date[] jumpDates,
-            final /*@Real*/ double accuracy, //TODO: default value: 1.0e-12
-            final Interpolator interpolator, //TODO: default value: Interpolator()
-            final Bootstrap bootstrap) { //TODO: default value: Bootstrap<this_curve>()
+            final /*@Real*/ double accuracy,
+            final Interpolator interpolator,
+            final Bootstrap bootstrap) {
 
         QL.validateExperimentalMode();
 
-        // retrieve generic parameters
-        // *** NOTE:: NOT SURE IF THIS CODE IS CORRECT: I (interpolator) and B (bootstrap) are being passed as formal parameters.
-        // *** See InterpolatedDiscountCurve: default formal arguments are "guessed" from generic parameters via ...
-        // ***         new TypeTokenTree(InterpolatedDiscountCurve.class).getElement(0)
-        // *** in some constructors, which assume defaults.
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        final Class<?> classT = ttt.getElement(0);
-        final Class<?> classI = ttt.getElement(1);
-        final Class<?> classB = ttt.getElement(2);
-        QL.require(classT!=null , "T is null"); // TODO: message
-        QL.require(classI!=null , "I is null"); // TODO: message
-        QL.require(classB!=null , "B is null"); // TODO: message
+        QL.require(classT!=null , "T is null"); // TODO: review messages
+        QL.require(classI!=null , "I is null");
+        QL.require(classB!=null , "B is null");
+        this.classT = classT;
+        this.classI = classI;
+        this.classB = classB;
 
         // instantiate base class and call super constructor
         this.baseCurve = constructBaseClass(settlementDays, calendar, dayCounter, classT);
@@ -294,28 +749,29 @@ public class PiecewiseYieldCurve<
 
         this.instruments = instruments; // TODO: clone() ?
         this.jumps = jumps; // TODO: clone() ?
-        this.nJumps = jumps.length;
-        this.jumpDates_ = jumpDates; // TODO: clone() ?
+        this.jumpDates = jumpDates; // TODO: clone() ?
         this.jumpTimes = new double[jumpDates.length];
         this.accuracy = accuracy;
 
         setJumps();
-        for (int i=0; i<jumps.length; ++i) {
-            jumps[i].addObserver(this);
+        for (final Handle<Quote> jump : jumps) {
+            jump.addObserver(this);
         }
         bootstrap.setup(this);
     }
-
-
-
-
+    
+    
+    
+    
+    
     static private Traits.Curve constructBaseClass(
             final Date referenceDate,
             final DayCounter dayCounter,
             final Class<?> classI,
             final Class<?> classT) {
         if (classT == Discount.class)
-            return new InterpolatedDiscountCurve(referenceDate, dayCounter, classI);
+            //TODO : return new InterpolatedDiscountCurve(referenceDate, dayCounter, classI);
+        throw new UnsupportedOperationException();
         else if (classT == ForwardRate.class)
             //TODO: this.baseCurve = new InterpolatedForwardCurve(referenceDate, dayCounter, classI);
             throw new UnsupportedOperationException();
@@ -332,7 +788,8 @@ public class PiecewiseYieldCurve<
             final DayCounter dayCounter,
             final Class<?> classT) {
         if (classT == Discount.class)
-            return new InterpolatedDiscountCurve(settlementDays, calendar, dayCounter, classT);
+            //TODO: return new InterpolatedDiscountCurve(settlementDays, calendar, dayCounter, classT);
+            throw new UnsupportedOperationException();
         else if (classT == ForwardRate.class)
             //TODO: this.baseCurve = new InterpolatedForwardCurve(settlementDays, calendar, dayCounter, classT);
             throw new UnsupportedOperationException();
@@ -381,6 +838,19 @@ public class PiecewiseYieldCurve<
     }
 
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
     //
@@ -397,6 +867,7 @@ public class PiecewiseYieldCurve<
         return interpolator;
     }
 
+    @Override
     public RateHelper[] instruments() /* @ReadOnly */ {
         return instruments;
     }
@@ -413,7 +884,7 @@ public class PiecewiseYieldCurve<
     }
 
     @Override
-    public /*@Time*/ double[] times() /* @ReadOnly */ {
+    public double[] times() /* @ReadOnly */ {
         calculate();
         return baseCurve.times();
     }
@@ -443,7 +914,7 @@ public class PiecewiseYieldCurve<
     }
 
     @Override
-    public /*@Time*/ double[] jumpTimes() /* @ReadOnly */ {
+    public double[] jumpTimes() /* @ReadOnly */ {
         calculate();
         return baseCurve.times();
     }
@@ -497,7 +968,7 @@ public class PiecewiseYieldCurve<
 
         if (jumps.length > 0) {
             /*@DiscountFactor*/ double jumpEffect = 1.0;
-            for (int i=0; i<nJumps && jumpTimes[i]<t; ++i) {
+            for (int i=0; i<jumps.length && jumpTimes[i]<t; ++i) {
                 QL.require(jumps[i].currentLink().isValid(), "invalid jump quote");
                 /*@DiscountFactor*/ final double thisJump = jumps[i].currentLink().value();
                 QL.require(thisJump > 0.0 && thisJump <= 1.0, "invalid  jump value");
@@ -510,18 +981,19 @@ public class PiecewiseYieldCurve<
     }
 
     public void setJumps() {
+        final int nJumps = jumps.length;
         final Date referenceDate = baseCurve.referenceDate();
-        if (jumpDates_.length==0 && jumps.length!=0) { // turn of year dates
-            this.jumpDates_ = new Date[nJumps];
+        if (this.jumpDates.length==0 && jumps.length!=0) { // turn of year dates
+            this.jumpDates = new Date[nJumps];
             this.jumpTimes = new double[nJumps];
-            for (int i=0; i<nJumps; ++i) {
-                jumpDates_[i] = new Date(31, Month.December, referenceDate.year()+i);
+            for (int i=0; i<jumps.length; ++i) {
+                jumpDates[i] = new Date(31, Month.December, referenceDate.year()+i);
             }
-        } else { // fixed dats
-            QL.require(jumpDates_.length==nJumps, "mismatch between number of jumps and jump dates");
+        } else { // fixed dates
+            QL.require(jumpDates.length==nJumps, "mismatch between number of jumps and jump dates");
         }
         for (int i=0; i<nJumps; ++i) {
-            jumpTimes[i] = baseCurve.timeFromReference(jumpDates_[i]);
+            jumpTimes[i] = baseCurve.timeFromReference(jumpDates[i]);
         }
         this.latestReference = referenceDate;
     }
@@ -748,7 +1220,7 @@ public class PiecewiseYieldCurve<
     //            super(dates[0], cal, dayCounter);
     //
     //            QL.require(dates.length > 1 , "too few dates"); // TODO: message
-    //            QL.require(dates.length == discounts.size() , "dates/discount factors count mismatch"); // TODO: message
+    //            QL.require(dates.length == discounts.length , "dates/discount factors count mismatch"); // TODO: message
     //            QL.require(discounts.first() == 1.0 , "the first discount must be == 1.0 to flag the corrsponding date as settlement date"); // TODO: message
     //
     //            isNegativeRates = new Settings().isNegativeRates();
@@ -871,7 +1343,7 @@ public class PiecewiseYieldCurve<
     //            // FIXME: code review: calendar
     //            super(dates[0], new Target(), dayCounter);
     //            QL.require(dates.length > 1 , "too few dates"); // TODO: message
-    //            QL.require(dates.length == forwards.size() , "dates/yields count mismatch"); // TODO: message
+    //            QL.require(dates.length == forwards.length , "dates/yields count mismatch"); // TODO: message
     //
     //            isNegativeRates = new Settings().isNegativeRates();
     //            container.times = new Array(dates.length);
