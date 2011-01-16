@@ -343,7 +343,7 @@ public class Bonds { //implements Runnable {
 
         final Period forwardStart = new Period(1, TimeUnit.Days);
         
-        if ( System.getProperty("DEBUG_BOND") == null ) {
+        if ( System.getProperty("DEBUG_BOND_EXAMPLE") == null ) {
         	System.out.println("Still in PROGRESS!");
         	return;
         }
