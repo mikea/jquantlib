@@ -163,6 +163,9 @@ public class Calendar {
 
     /**
      * Adds a date to the set of holidays for the given calendar.
+     * <p>
+     * <b>NOTE</b>: This method does not affect <i>pre-defined</i> calendars, returning
+     * silently.
      * */
     public void addHoliday(final Date d) {
         // if d was a genuine holiday previously removed, revert the change
@@ -176,6 +179,9 @@ public class Calendar {
 
     /**
      * Removes a date from the set of holidays for the given calendar.
+     * <p>
+     * <b>NOTE</b>: This method does not affect <i>pre-defined</i> calendars, returning
+     * silently.
      */
     public void removeHoliday(final Date d) {
         // if d was an artificially-added holiday, revert the change
