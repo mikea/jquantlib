@@ -31,9 +31,13 @@ import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
+import org.jquantlib.time.calendars.Japan;
 import org.jquantlib.time.calendars.NullCalendar;
 import org.jquantlib.time.calendars.Target;
+import org.jquantlib.time.calendars.UnitedKingdom;
 import org.jquantlib.time.calendars.UnitedStates;
+import org.jquantlib.time.calendars.JointCalendar;
+import org.jquantlib.time.calendars.JointCalendar.JointCalendarRule;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -156,6 +160,73 @@ public class CalendarTest {
             final Date result = unitedStatesCalendar.adjust(entry.date, BusinessDayConvention.ModifiedPreceding);
             System.out.println("adjusted is " + result.isoDate() + "  ::  expected is " + entry.expected.isoDate());
             assertEquals(result, entry.expected);
+        }
+    }
+    
+    @Test
+    public void testJointCalendars() {
+
+    	System.out.println("Testing joint calendars...");
+
+        Calendar c1 = new Target(),
+                 c2 = new UnitedKingdom(),
+                 c3 = new UnitedStates(UnitedStates.Market.NYSE),
+                 c4 = new Japan();
+
+        Calendar c12h = new JointCalendar(c1,c2,JointCalendarRule.JoinHolidays),
+                 c12b = new JointCalendar(c1,c2,JointCalendarRule.JoinBusinessDays),
+                 c123h = new JointCalendar(c1,c2,c3,JointCalendarRule.JoinHolidays),
+                 c123b = new JointCalendar(c1,c2,c3,JointCalendarRule.JoinBusinessDays),
+                 c1234h = new JointCalendar(c1,c2,c3,c4,JointCalendarRule.JoinHolidays),
+                 c1234b = new JointCalendar(c1,c2,c3,c4,JointCalendarRule.JoinBusinessDays);
+
+        // test one year, starting today
+        Date firstDate = Date.todaysDate(),
+             endDate = firstDate.add(new Period(1, TimeUnit.Years));
+
+        for (Date d = firstDate; d.lt(endDate); d.inc()) {
+
+            boolean b1 = c1.isBusinessDay(d),
+                 b2 = c2.isBusinessDay(d),
+                 b3 = c3.isBusinessDay(d),
+                 b4 = c4.isBusinessDay(d);
+
+            if ((b1 && b2) != c12h.isBusinessDay(d))
+            	Assert.fail("At date " + d + ":\n"
+                           + "    inconsistency between joint calendar "
+                           + c12h.name() + " (joining holidays)\n"
+                           + "    and its components");
+
+            if ((b1 || b2) != c12b.isBusinessDay(d))
+            	Assert.fail("At date " + d + ":\n"
+                           + "    inconsistency between joint calendar "
+                           + c12b.name() + " (joining business days)\n"
+                           + "    and its components");
+
+            if ((b1 && b2 && b3) != c123h.isBusinessDay(d))
+            	Assert.fail("At date " + d + ":\n"
+                           + "    inconsistency between joint calendar "
+                           + c123h.name() + " (joining holidays)\n"
+                           + "    and its components");
+
+            if ((b1 || b2 || b3) != c123b.isBusinessDay(d))
+            	Assert.fail("At date " + d + ":\n"
+                           + "    inconsistency between joint calendar "
+                           + c123b.name() + " (joining business days)\n"
+                           + "    and its components");
+
+            if ((b1 && b2 && b3 && b4) != c1234h.isBusinessDay(d))
+            	Assert.fail("At date " + d + ":\n"
+                           + "    inconsistency between joint calendar "
+                           + c1234h.name() + " (joining holidays)\n"
+                           + "    and its components");
+
+            if ((b1 || b2 || b3 || b4) != c1234b.isBusinessDay(d))
+            	Assert.fail("At date " + d + ":\n"
+                           + "    inconsistency between joint calendar "
+                           + c1234b.name() + " (joining business days)\n"
+                           + "    and its components");
+
         }
     }
 

@@ -23,6 +23,9 @@
 
 package org.jquantlib.time.calendars;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
@@ -40,6 +43,7 @@ import org.jquantlib.time.Weekday;
  *
  * @author Srinivas Hasti
  * @author Richard Gomes
+ * @author Zahid Hussain
  *
  */
 @QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Richard Gomes" })
@@ -62,56 +66,51 @@ public class JointCalendar extends Calendar {
         JoinBusinessDays
     };
 
-
-    //
-    // private fields
-    //
-
-    private final JointCalendarRule joinRule;
-    private final Calendar[]        calendars;
-
-
-    //
-    // public constructors
-    //
-
-    public JointCalendar(final Calendar c1, final Calendar c2, final JointCalendarRule rule) {
+    public JointCalendar(final Calendar c1, final Calendar c2, JointCalendarRule rule) {
         this(rule, c1, c2);
     }
+    public JointCalendar(final Calendar c1, final Calendar c2) {
+        this(JointCalendarRule.JoinHolidays, c1, c2);
+    }
 
-    public JointCalendar(final Calendar c1, final Calendar c2, final Calendar c3, final JointCalendarRule rule) {
+    public JointCalendar(final Calendar c1, final Calendar c2, final Calendar c3, JointCalendarRule rule) {
         this(rule, c1, c2, c3);
     }
+    public JointCalendar(final Calendar c1, final Calendar c2, final Calendar c3) {
+        this(JointCalendarRule.JoinHolidays, c1, c2, c3);
+    }
 
-    public JointCalendar(final Calendar c1, final Calendar c2, final Calendar c3, final Calendar c4, final JointCalendarRule rule) {
+    public JointCalendar(final Calendar c1, final Calendar c2, final Calendar c3, final Calendar c4, JointCalendarRule rule) {
         this(rule, c1, c2, c3, c4);
     }
-
-
-    //
-    // private constructors
-    //
-
-    private JointCalendar(final JointCalendarRule rule, final Calendar ...calendars) {
-        this.calendars = new Calendar[calendars.length];
-        for (int i=0; i<calendars.length; i++) {
-            this.calendars[i] = calendars[i];
-        }
-        this.joinRule = rule;
-        this.impl = new Impl();
+    public JointCalendar(final Calendar c1, final Calendar c2, final Calendar c3, final Calendar c4) {
+        this(JointCalendarRule.JoinHolidays, c1, c2, c3, c4);
     }
 
+    //internal
+    private JointCalendar(JointCalendarRule rule, final Calendar ...calendars) {
+        this.impl = new Impl(rule, calendars);
+    }
 
-    //
     // private final inner classes
-    //
-
     private final class Impl extends Calendar.Impl {
+
+    	private JointCalendarRule rule_;
+        private List<Calendar> calendars_;
+                
+        protected Impl(final JointCalendarRule rule, final Calendar ...calendars) {
+            this.calendars_ = new ArrayList<Calendar>(calendars.length);
+            for (int i=0; i<calendars.length; i++) {
+                this.calendars_.add(calendars[i]);
+            }
+            this.rule_ = rule;
+        }
+
         @Override
         public String name() /* @ReadOnly */{
             final StringBuilder sb = new StringBuilder();
 
-            switch (joinRule) {
+            switch (rule_) {
             case JoinHolidays:
                 sb.append("JoinHolidays(");
                 break;
@@ -119,11 +118,11 @@ public class JointCalendar extends Calendar {
                 sb.append("JoinBusinessDays(");
                 break;
             default:
-                throw new LibraryException(UNKNOWN_MARKET);
+                throw new LibraryException("unknown joint calendar rule");
             }
 
             int count = 0;
-            for (final Calendar calendar : calendars) {
+            for (final Calendar calendar : calendars_) {
                 if (count > 0) {
                     sb.append(", ");
                 }
@@ -135,18 +134,18 @@ public class JointCalendar extends Calendar {
         }
 
         @Override
-        public boolean isWeekend(final Weekday weekday) /* @ReadOnly */{
-            switch (joinRule) {
+        public boolean isWeekend(final Weekday w) /* @ReadOnly */{
+            switch (rule_) {
             case JoinHolidays:
-                for (final Calendar calendar : calendars) {
-                    if (calendar.isWeekend(weekday)) {
+                for (final Calendar calendar : calendars_) {
+                    if (calendar.isWeekend(w)) {
                         return true;
                     }
                 }
                 return false;
             case JoinBusinessDays:
-                for (final Calendar calendar : calendars) {
-                    if (! calendar.isWeekend(weekday)) {
+                for (final Calendar calendar : calendars_) {
+                    if (!calendar.isWeekend(w)) {
                         return false;
                     }
                 }
@@ -158,21 +157,21 @@ public class JointCalendar extends Calendar {
 
         @Override
         public boolean isBusinessDay(final Date date) /* @ReadOnly */{
-            switch (joinRule) {
+            switch (rule_) {
             case JoinHolidays:
-                for (final Calendar calendar : calendars) {
+                for (final Calendar calendar : calendars_) {
+                    if (calendar.isHoliday(date)) {
+                        return false;
+                    }
+                }
+                return true;
+            case JoinBusinessDays:
+                for (final Calendar calendar : calendars_) {
                     if (calendar.isBusinessDay(date)) {
                         return true;
                     }
                 }
                 return false;
-            case JoinBusinessDays:
-                for (final Calendar calendar : calendars) {
-                    if (! calendar.isBusinessDay(date)) {
-                        return false;
-                    }
-                }
-                return true;
             default:
                 throw new LibraryException(UNKNOWN_MARKET);
             }
