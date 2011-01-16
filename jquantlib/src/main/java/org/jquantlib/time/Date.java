@@ -22,6 +22,7 @@
 
 package org.jquantlib.time;
 
+import java.util.Calendar;
 import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
@@ -249,7 +250,13 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * @author Richard Gomes
      */
     public Date(final java.util.Date date) {
-    	this(25569+(date.getTime()/86400000L));
+//    	this(25569+(date.getTime()/86400000L));
+    	Calendar c = Calendar.getInstance();
+    	c.setTime(date);
+    	int d = c.get(Calendar.DAY_OF_MONTH); 
+    	int m = c.get(Calendar.MONTH);
+    	int y = c.get(Calendar.YEAR);
+    	this.serialNumber = fromDMY(d, m+1, y);
     }
     
     
@@ -915,7 +922,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * @return
      */
     private static final long fromDMY(final int d, final int m, final int y) {
-        QL.require(y > 1900 && y <= 2199 , "year out of bound. It must be in [1901,2199]"); // QA:[RG]::verified // TODO: message
+        QL.require(y > 1900 && y <= 2199 , "year(" + y + ") out of bound. It must be in [1901,2199]"); // QA:[RG]::verified // TODO: message
         QL.require(m > 0 && m < 13 , "month outside JANUARY-December range [1,12]"); // QA:[RG]::verified // TODO: message
         final boolean leap = isLeap(y);
         final int len = monthLength(m, leap);
@@ -1081,9 +1088,17 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * In other words, a day <i>always</i> has exactly 84,600 seconds, or 84,600,000 milliseconds.
      */
     private final class ISODate extends java.util.Date {
+    	//Make compiler happy
+		private static final long serialVersionUID = 1L;
 
-        private ISODate() {
-            super((serialNumber-25569)*86400000L);
+		private ISODate() {
+//            super((serialNumber-25569)*86400000L);
+            Calendar c = Calendar.getInstance();
+            boolean b = isNull();
+            c.set(Calendar.MONTH, b ? 0 : month().value() -1);
+            c.set(Calendar.DAY_OF_MONTH, b ? 1 : dayOfMonth());
+            c.set(Calendar.YEAR, b ? 1970 : year());
+            this.setTime(c.getTimeInMillis());
         }
 
         @Override
@@ -1093,7 +1108,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             else {
                 final StringBuilder sb = new StringBuilder();
                 final Formatter formatter = new Formatter(sb, Locale.US);
-                formatter.format("%04d-%02d-%02d", year(), month().value(), dayOfMonth());
+                Calendar c = Calendar.getInstance();
+                c.setTime(this);
+                formatter.format("%04d-%02d-%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, c.get(Calendar.DAY_OF_MONTH));
                 return sb.toString();
             }
         }

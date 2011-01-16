@@ -101,7 +101,7 @@ public class DayCountersTest {
         }
 
         private String dumpDate(final Date date) {
-            if (date == null)
+            if (date == null || date.isNull())
                 return "null";
             else
                 return date.isoDate().toString();

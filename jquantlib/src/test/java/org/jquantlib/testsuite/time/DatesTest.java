@@ -223,11 +223,16 @@ public class DatesTest {
             int day   = jqlDate.dayOfMonth();
             int month = jqlDate.month().value();
             int year  = jqlDate.year();
-
+            Calendar c = Calendar.getInstance();
+            c.setTime(isoDate);
+            int jday = c.get(Calendar.DAY_OF_MONTH);
+            int jmonth = c.get(Calendar.MONTH);
+            int jyear = c.get(Calendar.YEAR);
             boolean test = true;
-            test &= ( year  == (isoDate.getYear()  + 1900) ); 
-            test &= ( month == (isoDate.getMonth() + 1) ); 
-            test &= ( day   == (isoDate.getDate()) ); 
+            test &= ( year  == jyear ); 
+            test &= ( month == jmonth + 1); //Java month range:0 - 11( 0=Jan, 1=Feb,.. 11=Dec)
+            test &= ( day   == jday );
+            
             success &= test; 
             
             if (!test) {
@@ -251,25 +256,28 @@ public class DatesTest {
         
         boolean success = true;
         for (;;) {
-            int year  = javaDate.getYear()  + 1900;
-            int month = javaDate.getMonth() + 1;
-            int day   = javaDate.getDate();
+            
+            Calendar c = Calendar.getInstance();
+            c.setTime(javaDate);
+            int jday = c.get(Calendar.DAY_OF_MONTH);
+            int jmonth = c.get(Calendar.MONTH);
+            int jyear = c.get(Calendar.YEAR);
 
         	// obtain a JQL Date from a Java Date
         	jqlDate = new Date(javaDate);
 
         	// compare d,m,y
             boolean test = true;
-            test &= ( jqlDate.year()          == year ); 
-            test &= ( jqlDate.month().value() == month ); 
-            test &= ( jqlDate.dayOfMonth()    == day ); 
+            test &= ( jqlDate.year()          == jyear ); 
+            test &= ( jqlDate.month().value() == jmonth + 1); //Java month is 0-11
+            test &= ( jqlDate.dayOfMonth()    == jday ); 
             success &= test; 
 
             if (!test) {
                 QL.info(String.format("JQL Date = %s   :::   ISODate = %s", jqlDate.toString(), javaDate.toString()));
             }
 
-            if (year==2199 && month==12 && day==31) break;
+            if (jyear==2199 && jmonth==Calendar.DECEMBER && jday==31) break;
 
             // Increment Java Date by 1 day
             // Lets assume a day has *always* 86400 seconds, i.e: discard leap seconds and timezone info
