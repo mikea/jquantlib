@@ -80,7 +80,10 @@
         <module>../jquantlib</module>
         <module>../jquantlib-helpers</module>
         <module>../jquantlib-samples</module>
-        <module>../jquantlib-experimental</module>
+
+        <!-- Only JQuantLib developers are interested on this module -->
+        <!-- module>../jquantlib-experimental</module -->
+        
     </modules>
 
 </project>

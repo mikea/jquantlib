@@ -56,6 +56,15 @@
         </site>
     </distributionManagement>
 
+    <repositories>
+        <repository>
+            <id>joda-primitives</id>
+            <name>joda-primitives</name>
+            <url>http://joda-primitives.sourceforge.net/repo/</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+
 	<dependencies>
         <dependency>
             <groupId>org.jquantlib</groupId>

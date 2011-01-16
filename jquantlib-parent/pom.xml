@@ -272,42 +272,34 @@
 		    <layout>default</layout>
 		</repository>
 
-        <!-- 
-        // TODO: joda-primitives must be replaces by fastutil
-        // see: http://bugs.jquantlib.org/view.php?id=504
-         -->
-        <repository>
-            <id>joda-primitives</id>
-            <name>joda-primitives</name>
-            <url>http://joda-primitives.sourceforge.net/repo/</url>
-            <layout>default</layout>
-        </repository>
-
-<!--
-
-    //
-    // We are not using our Artifactory anymore due to restricted bandwidth availability
-    //
-    
-    //
-    // We DO NOT HAVE our artifacts published to any public repository YET.
-    // I'm sorry for that. This is expected to be corrected relatively soon.
-    //
-    
-    
-        <repository>
+        <!--
+        // TODO: this repository will be removed as soon as we deploy
+        // latextaglet and jquantlib artifacts onto public repositories
+        // like Apache or SourceForge
+        //
+        // This repository is kept here for the time being otherwise
+        // a build which produces UML diagrams will fail because
+        // UmlGraph-4.9 cannot be found on public repositories.
+        // Also, the same applies to latextaglet.
+        //
+        // =================== N O T E ===================
+        // This repository is commented out because it does not harm
+        // the great majority of users. If you need to generate Javadocs with
+        // UML diagrams, then please uncomment the repository below and give
+        // it a try with profile "with-uml". Please run Maven with "-X" option
+        // and observe if it blocks trying to retrieve stuff from 
+        // http://artifactory.jquantlib.org:8080/...
+        // If it blocks, please forgive us for the trouble and let us know in
+        // our forum http://forums.jquantlib.org/
+        // 
+        -->
+        <!-- repository>
             <id>jquantlib</id>
             <name>JQuantLib Repository</name>
             <url>http://artifactory.jquantlib.org:8080/artifactory/repo/</url>
             <layout>default</layout>
-        </repository>
-        <repository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/2/</url>
-            <layout>default</layout>
-        </repository>
--->
+        </repository -->
+
     </repositories>
  
     <build>
@@ -774,7 +766,6 @@
                             ]]></bottom>
                             <links>
                                 <link>http://java.sun.com/j2se/6/docs/api/index.html</link>
-                                <!--  link>http://joda-primitives.sourceforge.net/apidocs/index.html</link  -->
                                 <link>http://www.slf4j.org/apidocs/</link>
                                 <link>http://junit.sourceforge.net/javadoc/</link>
                             </links>
