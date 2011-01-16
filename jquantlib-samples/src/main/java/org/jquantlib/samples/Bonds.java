@@ -1,13 +1,12 @@
 package org.jquantlib.samples;
-
-
-
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
+import org.jquantlib.cashflow.BlackIborCouponPricer;
+import org.jquantlib.cashflow.IborCouponPricer;
+import org.jquantlib.cashflow.PricerSetter;
 import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.ActualActual;
@@ -16,15 +15,30 @@ import org.jquantlib.daycounters.Thirty360;
 import org.jquantlib.daycounters.Thirty360.Convention;
 import org.jquantlib.indexes.Euribor6M;
 import org.jquantlib.indexes.IborIndex;
+import org.jquantlib.indexes.ibor.USDLibor;
+import org.jquantlib.instruments.bonds.FixedRateBond;
+import org.jquantlib.instruments.bonds.FloatingRateBond;
+import org.jquantlib.instruments.bonds.ZeroCouponBond;
+import org.jquantlib.math.interpolations.factories.LogLinear;
+import org.jquantlib.math.matrixutilities.Array;
+import org.jquantlib.pricingengines.PricingEngine;
+import org.jquantlib.pricingengines.bond.DiscountingBondEngine;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
-import org.jquantlib.termstructures.AbstractYieldTermStructure;
+import org.jquantlib.samples.util.StopClock;
+import org.jquantlib.termstructures.Compounding;
+import org.jquantlib.termstructures.IterativeBootstrap;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.volatilities.optionlet.ConstantOptionletVolatility;
+import org.jquantlib.termstructures.volatilities.optionlet.OptionletVolatilityStructure;
 import org.jquantlib.termstructures.yieldcurves.DepositRateHelper;
+import org.jquantlib.termstructures.yieldcurves.Discount;
 import org.jquantlib.termstructures.yieldcurves.FixedRateBondHelper;
+import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldCurve;
+import org.jquantlib.termstructures.yieldcurves.SwapRateHelper;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
@@ -36,18 +50,24 @@ import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Target;
 import org.jquantlib.time.calendars.UnitedStates;
-
-public class Bonds implements Runnable {
+/**
+ * 
+ * @author Zahid Hussain
+ *
+ */
+public class Bonds { //implements Runnable {
 
     public static void main(final String[] args) {
         new Bonds().run();
     }
 
-    @Override
     public void run() {
 
         QL.info("::::: " + this.getClass().getSimpleName() + " :::::");
 
+        final StopClock clock = new StopClock();
+        clock.startClock();
+        QL.info("Started calculation at: " + clock.getElapsedTime());
         /*********************
          *** MARKET DATA ***
          *********************/
@@ -60,14 +80,13 @@ public class Bonds implements Runnable {
         settlementDate = calendar.adjust(settlementDate);
 
         final int fixingDays = 3;
-        /* Natural */final int settlementDays = 3;
+        final int settlementDays = 3;
 
         final Date todaysDate = calendar.advance(settlementDate, -fixingDays, TimeUnit.Days);
         new Settings().setEvaluationDate(todaysDate);
 
-        System.out.println("Today: " + todaysDate.weekday() + ", " + todaysDate);
-
-        System.out.println("Settlement date: " + settlementDate.weekday() + ", " + settlementDate);
+        QL.info("Evaluation date: " + todaysDate.weekday() + ", " + todaysDate);
+        QL.info("Settlement date: " + settlementDate.weekday() + ", " + settlementDate);
 
         // Building of the bonds discounting yield curve
 
@@ -76,18 +95,20 @@ public class Bonds implements Runnable {
          *********************/
 
         // RateHelpers are built from the above quotes together with
-        // other instrument dependant infos. Quotes are passed in
+        // other instrument dependent infos. Quotes are passed in
         // relinkable handles which could be relinked to some other
         // data source later.
+        
         // Common data
+        
         // ZC rates for the short end
-        /* @Rate */final double zc3mQuote = 0.0096;
-        /* @Rate */final double zc6mQuote = 0.0145;
-        /* @Rate */final double zc1yQuote = 0.0194;
+        final double zc3mQuote = 0.0096;
+        final double zc6mQuote = 0.0145;
+        final double zc1yQuote = 0.0194;
 
-        final Quote zc3mRate = (new SimpleQuote(zc3mQuote));
-        final Quote zc6mRate = (new SimpleQuote(zc6mQuote));
-        final Quote zc1yRate = (new SimpleQuote(zc1yQuote));
+        final Quote zc3mRate = new SimpleQuote(zc3mQuote);
+        final Quote zc6mRate = new SimpleQuote(zc6mQuote);
+        final Quote zc1yRate = new SimpleQuote(zc1yQuote);
 
         final DayCounter zcBondsDayCounter = new Actual365Fixed();
 
@@ -105,9 +126,8 @@ public class Bonds implements Runnable {
                 BusinessDayConvention.ModifiedFollowing, true, zcBondsDayCounter);
 
         // setup bonds
-        /* @Real */final double redemption = 100.0;
-
-        final/* @Size */int numberOfBonds = 5;
+        final double redemption = 100.0;
+        final int numberOfBonds = 5;
 
         final Date issueDates[] = {
                 new Date(15, Month.March,    2005),
@@ -123,43 +143,34 @@ public class Bonds implements Runnable {
                 new Date(15, Month.August, 2018),
                 new Date(15, Month.May,    2038) };
 
-        /* @Real */final double couponRates[] = { 0.02375, 0.04625, 0.03125, 0.04000, 0.04500 };
+        final double couponRates[] = {	0.02375, 
+        								0.04625, 
+        								0.03125, 
+        								0.04000, 
+        								0.04500 
+        								};
 
-        /* @Real */final double marketQuotes[] = { 100.390625, 106.21875, 100.59375, 101.6875, 102.140625 };
+        final double marketQuotes[] = { 100.390625, 
+        								106.21875, 
+        								100.59375, 
+        								101.6875, 
+        								102.140625 
+        								};
 
-        final List<SimpleQuote> quote = new LinkedList<SimpleQuote>();
-        for (/* @Size */int i = 0; i < numberOfBonds; i++) {
-            final SimpleQuote cp = (new SimpleQuote(marketQuotes[i]));
-            quote.add(cp);
-        }
-
+        final List<SimpleQuote> quote = new ArrayList<SimpleQuote>(numberOfBonds);
         final List<RelinkableHandle<Quote>> quoteHandle = new ArrayList<RelinkableHandle<Quote>>(numberOfBonds);
-        for(int i = 0; i<numberOfBonds; i++) {
-            // quoteHandle.add(new RelinkableHandle<Quote>(Quote.class)); //FIXME::RG::Handle
-
-            final Quote nullQuote = new Quote() {
-                @Override
-                public boolean isValid() {
-                    throw new UnsupportedOperationException();
-                }
-                @Override
-                public double value() {
-                    throw new UnsupportedOperationException();
-                }
-            };
-            quoteHandle.add(new RelinkableHandle<Quote>(nullQuote));
-        }
-
-        for (/* @Size */int i = 0; i < numberOfBonds; i++) {
-            quoteHandle.get(i).linkTo(quote.get(i));
+        for (int i = 0; i < numberOfBonds; i++) {
+        	SimpleQuote sq = new SimpleQuote(marketQuotes[i]);
+        	RelinkableHandle<Quote> handle = new RelinkableHandle<Quote>(sq);
+            quote.add(sq);
+            quoteHandle.add(handle);   
         }
 
         // Definition of the rate helpers
-        final List<FixedRateBondHelper> bondsHelpers = new LinkedList<FixedRateBondHelper>();
+//        final List<FixedRateBondHelper<YieldTermStructure>> bondsHelpers = new ArrayList<FixedRateBondHelper<YieldTermStructure>>();
+        final List<FixedRateBondHelper> bondsHelpers = new ArrayList<FixedRateBondHelper>();
 
-        for (/* @Size */int i = 0; i < numberOfBonds; i++) {
-            // TODO: check this constructor, last two date parameters shouldn't
-            // be passed
+        for (int i = 0; i < numberOfBonds; i++) {
             final Schedule schedule = new Schedule(
                     issueDates[i], maturities[i],
                     new Period(Frequency.Semiannual),
@@ -168,14 +179,16 @@ public class Bonds implements Runnable {
                     BusinessDayConvention.Unadjusted,
                     DateGeneration.Rule.Backward,
                     false);
-            final FixedRateBondHelper bondHelper = (
-                    new FixedRateBondHelper(quoteHandle.get(i), settlementDays,
-                            100.0, schedule,
-                            new double[] { couponRates[i] },
-                            new ActualActual(ActualActual.Convention.Bond),
-                            BusinessDayConvention.Unadjusted,
-                            redemption,
-                            issueDates[i]));
+        		final FixedRateBondHelper bondHelper = new FixedRateBondHelper(
+            								quoteHandle.get(i), 
+            								settlementDays,
+            								100.0, 
+            								schedule,
+            								new double[]{ couponRates[i] },
+            								new ActualActual(ActualActual.Convention.Bond),
+            								BusinessDayConvention.Unadjusted,
+            								redemption,
+            								issueDates[i]);
 
             bondsHelpers.add(bondHelper);
         }
@@ -191,7 +204,7 @@ public class Bonds implements Runnable {
         final double tolerance = 1.0e-15;
 
         // A depo-bond curve
-        final List<RateHelper> bondInstruments = new LinkedList<RateHelper>();
+        final List<RateHelper> bondInstruments = new ArrayList<RateHelper>();
 
         // Adding the ZC bonds to the curve for the short end
         bondInstruments.add(zc3m);
@@ -199,37 +212,42 @@ public class Bonds implements Runnable {
         bondInstruments.add(zc1y);
 
         // Adding the Fixed rate bonds to the curve for the long end
-        for (/* @Size */int i = 0; i < numberOfBonds; i++) {
+        for (int i = 0; i < numberOfBonds; i++) {
             bondInstruments.add(bondsHelpers.get(i));
         }
-
-        //		YieldTermStructure bondDiscountingTermStructur = new PiecewiseYieldCurve<Discount, LogLinear>
-        //		(settlementDate, bondInstruments, termStructureDayCounter, tolerance, null);
-
-        // TODO: PieceWiseYieldTermStructure to be translated by Richard!
-        // YieldTermStructure bondDiscountingTermStructure = new
-        // YieldTermStructure(
-        // new PiecewiseYieldCurve<Discount,LogLinear>(
-        // settlementDate, bondInstruments,
-        // termStructureDayCounter,
-        // std::vector<Handle<Quote> >(),
-        // std::vector<Date>(),
-        // tolerance));
+        RateHelper[] instruments1 = new RateHelper[bondInstruments.size()];
+        bondInstruments.toArray(instruments1);
+        Handle[] jumps1 = new Handle[0];
+        Date[] jumpDates1 = new Date[0];
+        final double tolerance1 = 1.0e-15;
+        final LogLinear interpolator = null;
+        final IterativeBootstrap bootstrap = null;
+        
+        YieldTermStructure  bondDiscountingTermStructur = 
+    	 					new PiecewiseYieldCurve<Discount,LogLinear,IterativeBootstrap>(
+    	 							settlementDate, 
+    	 							instruments1,
+    	 							termStructureDayCounter,
+    	 							jumps1,
+    	 							jumpDates1,
+    	 							tolerance1,
+    	 							interpolator,
+    	 							bootstrap){/* anonymous */};
 
         // Building of the Libor forecasting curve
         // deposits
-        /* @Rate */final double d1wQuote = 0.043375;
-        /* @Rate */final double d1mQuote = 0.031875;
-        /* @Rate */final double d3mQuote = 0.0320375;
-        /* @Rate */final double d6mQuote = 0.03385;
-        /* @Rate */final double d9mQuote = 0.0338125;
-        /* @Rate */final double d1yQuote = 0.0335125;
+        final double d1wQuote = 0.043375;
+        final double d1mQuote = 0.031875;
+        final double d3mQuote = 0.0320375;
+        final double d6mQuote = 0.03385;
+        final double d9mQuote = 0.0338125;
+        final double d1yQuote = 0.0335125;
         // swaps
-        /* @Rate */final double s2yQuote = 0.0295;
-        /* @Rate */final double s3yQuote = 0.0323;
-        /* @Rate */final double s5yQuote = 0.0359;
-        /* @Rate */final double s10yQuote = 0.0412;
-        /* @Rate */final double s15yQuote = 0.0433;
+        final double s2yQuote = 0.0295;
+        final double s3yQuote = 0.0323;
+        final double s5yQuote = 0.0359;
+        final double s10yQuote = 0.0412;
+        final double s15yQuote = 0.0433;
 
         /********************
          *** QUOTES ***
@@ -265,323 +283,331 @@ public class Bonds implements Runnable {
         // deposits
         final DayCounter depositDayCounter = new Actual360();
 
-        final RateHelper d1w = (new DepositRateHelper(new Handle<Quote>(d1wRate), new Period(1, TimeUnit.Weeks), fixingDays, calendar,
-                BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));
-        final RateHelper d1m = (new DepositRateHelper(new Handle<Quote>(d1mRate), new Period(1, TimeUnit.Months), fixingDays, calendar,
-                BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));
-        final RateHelper d3m = (new DepositRateHelper(new Handle<Quote>(d3mRate), new Period(3, TimeUnit.Months), fixingDays, calendar,
-                BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));
-        final RateHelper d6m = (new DepositRateHelper(new Handle<Quote>(d6mRate), new Period(6, TimeUnit.Months), fixingDays, calendar,
-                BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));
-        final RateHelper d9m = (new DepositRateHelper(new Handle<Quote>(d9mRate), new Period(9, TimeUnit.Months), fixingDays, calendar,
-                BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));
-        final RateHelper d1y = (new DepositRateHelper(new Handle<Quote>(d1yRate), new Period(1, TimeUnit.Years), fixingDays, calendar,
-                BusinessDayConvention.ModifiedFollowing, true, depositDayCounter));
+        final RateHelper d1w = new DepositRateHelper(
+        					new Handle<Quote>(d1wRate), 
+        					new Period(1, TimeUnit.Weeks), 
+        					fixingDays, calendar,
+        					BusinessDayConvention.ModifiedFollowing, 
+        					true, depositDayCounter);
+        final RateHelper d1m = new DepositRateHelper(
+        					new Handle<Quote>(d1mRate), 
+        					new Period(1, TimeUnit.Months), 
+        					fixingDays, calendar,
+        					BusinessDayConvention.ModifiedFollowing, 
+        					true, depositDayCounter);
+        final RateHelper d3m = new DepositRateHelper(
+        					new Handle<Quote>(d3mRate), 
+        					new Period(3, TimeUnit.Months), 
+        					fixingDays, calendar,
+        					BusinessDayConvention.ModifiedFollowing, 
+        					true, depositDayCounter);
+        final RateHelper d6m = new DepositRateHelper(
+        					new Handle<Quote>(d6mRate), 
+        					new Period(6, TimeUnit.Months), 
+        					fixingDays, calendar,
+        					BusinessDayConvention.ModifiedFollowing, 
+        					true, depositDayCounter);
+        final RateHelper d9m = new DepositRateHelper(
+        				new Handle<Quote>(d9mRate), 
+        				new Period(9, TimeUnit.Months), 
+        				fixingDays, calendar,
+        				BusinessDayConvention.ModifiedFollowing, 
+        				true, depositDayCounter);
+        final RateHelper d1y = new DepositRateHelper(
+        				new Handle<Quote>(d1yRate), 
+        				new Period(1, TimeUnit.Years), 
+        				fixingDays, calendar,
+        				BusinessDayConvention.ModifiedFollowing, 
+        				true, depositDayCounter);
 
         // setup swaps
         final Frequency swFixedLegFrequency = Frequency.Annual;
         final BusinessDayConvention swFixedLegConvention = BusinessDayConvention.Unadjusted;
         final DayCounter swFixedLegDayCounter = new Thirty360(Convention.European);
-
+        final IborIndex  swFloatingLegIndex = new Euribor6M(new Handle<YieldTermStructure>());
 
         // TODO and FIXME: not sure whether the class stuff works properly
         // final IborIndex swFloatingLegIndex = Euribor.getEuribor6M(new Handle<YieldTermStructure>(YieldTermStructure.class)); //FIXME::RG::Handle
-
-        final YieldTermStructure nullYieldTermStructure = new AbstractYieldTermStructure() {
-            @Override
-            protected double discountImpl(final double t) {
-                throw new UnsupportedOperationException();
-            }
-            @Override
-            public Date maxDate() {
-                throw new UnsupportedOperationException();
-            }
-        };
-        final IborIndex swFloatingLegIndex = new Euribor6M(new Handle<YieldTermStructure>(nullYieldTermStructure));
+//        final YieldTermStructure nullYieldTermStructure = new AbstractYieldTermStructure() {
+//            @Override
+//            protected double discountImpl(final double t) {
+//                throw new UnsupportedOperationException();
+//            }
+//            @Override
+//            public Date maxDate() {
+//                throw new UnsupportedOperationException();
+//            }
+//        };
+//        final IborIndex swFloatingLegIndex = new Euribor6M(new Handle<YieldTermStructure>(nullYieldTermStructure));
 
 
         final Period forwardStart = new Period(1, TimeUnit.Days);
+        
+        if ( System.getProperty("DEBUG_BOND") == null ) {
+        	System.out.println("Still in PROGRESS!");
+        	return;
+        }
+        RateHelper s2y = new SwapRateHelper(
+        			new Handle<Quote>(s2yRate), 
+        			new Period(2, TimeUnit.Years),
+        			calendar, 
+        			swFixedLegFrequency,
+        			swFixedLegConvention, 
+        			swFixedLegDayCounter,
+        			swFloatingLegIndex, 
+        			new Handle<Quote>(),
+        			forwardStart);
+         RateHelper s3y = new SwapRateHelper(
+        		 		new Handle<Quote>(s3yRate), 
+        		 		new Period(3, TimeUnit.Years),
+        		 		calendar, 
+        		 		swFixedLegFrequency,
+        		 		swFixedLegConvention, 
+        		 		swFixedLegDayCounter,        			
+        		 		swFloatingLegIndex, 
+        		 		new Handle<Quote>(),
+        		 		forwardStart);
+        RateHelper  s5y = new SwapRateHelper(
+        				new Handle<Quote>(s5yRate), 
+        				new Period(5, TimeUnit.Years),
+        				calendar, 
+        				swFixedLegFrequency,
+        				swFixedLegConvention, 
+        				swFixedLegDayCounter,
+        				swFloatingLegIndex, 
+        				new Handle<Quote>(),
+        				forwardStart);
+        RateHelper s10y = new SwapRateHelper(
+        				new Handle<Quote>(s10yRate), 
+        				new Period(10, TimeUnit.Years),
+        				calendar, 
+        				swFixedLegFrequency,
+        				swFixedLegConvention, 
+        				swFixedLegDayCounter,
+        				swFloatingLegIndex, 
+        				new Handle<Quote>(),
+        				forwardStart);
+        RateHelper  s15y = new SwapRateHelper(
+        				new Handle<Quote>(s15yRate), 
+        				new Period(15, TimeUnit.Years),
+        				calendar, 
+        				swFixedLegFrequency,
+        				swFixedLegConvention, 
+        				swFixedLegDayCounter,
+        				swFloatingLegIndex, 
+        				new Handle<Quote>(),
+        				forwardStart);
 
-        // RateHelper s2y = (new SwapRateHelper(
-        // new Handle<Quote>(s2yRate), new Period(2, TimeUnit.YEARS),
-        // calendar, swFixedLegFrequency,
-        // swFixedLegConvention, swFixedLegDayCounter,
-        // swFloatingLegIndex, new Handle<Quote>(Quote.class),forwardStart));
-        // RateHelper> s3y(new SwapRateHelper(
-        // Handle<Quote>(s3yRate), 3*Years,
-        // calendar, swFixedLegFrequency,
-        // swFixedLegConvention, swFixedLegDayCounter,
-        // swFloatingLegIndex, Handle<Quote>(),forwardStart));
-        // boost::shared_ptr<RateHelper> s5y(new SwapRateHelper(
-        // Handle<Quote>(s5yRate), 5*Years,
-        // calendar, swFixedLegFrequency,
-        // swFixedLegConvention, swFixedLegDayCounter,
-        // swFloatingLegIndex, Handle<Quote>(),forwardStart));
-        // boost::shared_ptr<RateHelper> s10y(new SwapRateHelper(
-        // Handle<Quote>(s10yRate), 10*Years,
-        // calendar, swFixedLegFrequency,
-        // swFixedLegConvention, swFixedLegDayCounter,
-        // swFloatingLegIndex, Handle<Quote>(),forwardStart));
-        // boost::shared_ptr<RateHelper> s15y(new SwapRateHelper(
-        // Handle<Quote>(s15yRate), 15*Years,
-        // calendar, swFixedLegFrequency,
-        // swFixedLegConvention, swFixedLegDayCounter,
-        // swFloatingLegIndex, Handle<Quote>(),forwardStart));
+         /*********************
+         ** CURVE BUILDING **
+         *********************/
+        
+         // Any DayCounter would be fine.
+         // ActualActual::ISDA ensures that 30 years is 30.0
+        
+         // A depo-swap curve
+         List<RateHelper> depoSwapInstruments = new ArrayList<RateHelper>();
+         depoSwapInstruments.add(d1w);
+         depoSwapInstruments.add(d1m);
+         depoSwapInstruments.add(d3m);
+         depoSwapInstruments.add(d6m);
+         depoSwapInstruments.add(d9m);
+         depoSwapInstruments.add(d1y);
+         depoSwapInstruments.add(s2y);
+         depoSwapInstruments.add(s3y);
+         depoSwapInstruments.add(s5y);
+         depoSwapInstruments.add(s10y);
+         depoSwapInstruments.add(s15y);
+         
+         RateHelper[] instruments = new RateHelper[depoSwapInstruments.size()];
+         depoSwapInstruments.toArray(instruments);
+         Handle[] jumps= new Handle[0];//]<Quote>[]) new ArrayList<Handle<Quote>>().toArray();
+         Date[] jumpDates = new Date[0];// new ArrayList<Date>().toArray();
+         
+         YieldTermStructure  depoSwapTermStructure = 
+        	 	new PiecewiseYieldCurve<Discount,LogLinear,IterativeBootstrap>(
+        	 			settlementDate, 
+        	 			instruments,
+        	 			termStructureDayCounter,
+        	 			jumps,
+        	 			jumpDates,
+        	 			tolerance,
+						interpolator,/*Hack*/
+ 						bootstrap /*Hack*/){/* anonymous */};
 
-        // /*********************
-        // ** CURVE BUILDING **
-        // *********************/
-        //
-        // // Any DayCounter would be fine.
-        // // ActualActual::ISDA ensures that 30 years is 30.0
-        //
-        // // A depo-swap curve
-        // std::vector<boost::shared_ptr<RateHelper> > depoSwapInstruments;
-        // depoSwapInstruments.push_back(d1w);
-        // depoSwapInstruments.push_back(d1m);
-        // depoSwapInstruments.push_back(d3m);
-        // depoSwapInstruments.push_back(d6m);
-        // depoSwapInstruments.push_back(d9m);
-        // depoSwapInstruments.push_back(d1y);
-        // depoSwapInstruments.push_back(s2y);
-        // depoSwapInstruments.push_back(s3y);
-        // depoSwapInstruments.push_back(s5y);
-        // depoSwapInstruments.push_back(s10y);
-        // depoSwapInstruments.push_back(s15y);
-        // boost::shared_ptr<YieldTermStructure> depoSwapTermStructure(
-        // new PiecewiseYieldCurve<Discount,LogLinear>(
-        // settlementDate, depoSwapInstruments,
-        // termStructureDayCounter,
-        // std::vector<Handle<Quote> >(),
-        // std::vector<Date>(),
-        // tolerance));
-        //
-        // // Term structures that will be used for pricing:
-        // // the one used for discounting cash flows
-        // RelinkableHandle<YieldTermStructure> discountingTermStructure;
-        // // the one used for forward rate forecasting
-        // RelinkableHandle<YieldTermStructure> forecastingTermStructure;
-        //
-        // /*********************
-        // * BONDS TO BE PRICED *
-        // **********************/
-        //
-        // // Common data
-        // Real faceAmount = 100;
-        //
-        // // Pricing engine
-        // boost::shared_ptr<PricingEngine> bondEngine(
-        // new DiscountingBondEngine(discountingTermStructure));
-        //
-        // // Zero coupon bond
-        // ZeroCouponBond zeroCouponBond(
-        // settlementDays,
-        // UnitedStates(UnitedStates::GovernmentBond),
-        // faceAmount,
-        // Date(15,August,2013),
-        // Following,
-        // Real(116.92),
-        // Date(15,August,2003));
-        //
-        // zeroCouponBond.setPricingEngine(bondEngine);
-        //
-        // // Fixed 4.5% US Treasury Note
-        // Schedule fixedBondSchedule(Date(15, May, 2007),
-        // Date(15,May,2017), Period(Semiannual),
-        // UnitedStates(UnitedStates::GovernmentBond),
-        // Unadjusted, Unadjusted, DateGeneration::Backward, false);
-        //
-        // FixedRateBond fixedRateBond(
-        // settlementDays,
-        // faceAmount,
-        // fixedBondSchedule,
-        // std::vector<Rate>(1, 0.045),
-        // ActualActual(ActualActual::Bond),
-        // BusinessDayConvention.MODIFIED_FOLLOWING,
-        // 100.0, Date(15, May, 2007));
-        //
-        // fixedRateBond.setPricingEngine(bondEngine);
-        //
-        // // Floating rate bond (3M USD Libor + 0.1%)
-        // // Should and will be priced on another curve later...
-        //
-        // RelinkableHandle<YieldTermStructure> liborTermStructure;
-        // const boost::shared_ptr<IborIndex> libor3m(
-        // new USDLibor(Period(3,Months),liborTermStructure));
-        // libor3m->addFixing(Date(17, July, 2008),0.0278625);
-        //
-        // Schedule floatingBondSchedule(Date(21, October, 2005),
-        // Date(21, October, 2010), Period(Quarterly),
-        // UnitedStates(UnitedStates::NYSE),
-        // Unadjusted, Unadjusted, DateGeneration::Backward, true);
-        //
-        // FloatingRateBond floatingRateBond(
-        // settlementDays,
-        // faceAmount,
-        // floatingBondSchedule,
-        // libor3m,
-        // Actual360(),
-        // BusinessDayConvention.MODIFIED_FOLLOWING,
-        // Natural(2),
-        // // Gearings
-        // std::vector<Real>(1, 1.0),
-        // // Spreads
-        // std::vector<Rate>(1, 0.001),
-        // // Caps
-        // std::vector<Rate>(),
-        // // Floors
-        // std::vector<Rate>(),
-        // // Fixing in arrears
-        // true,
-        // Real(100.0),
-        // Date(21, October, 2005));
-        //
-        // floatingRateBond.setPricingEngine(bondEngine);
-        //
-        // // Coupon pricers
-        // boost::shared_ptr<IborCouponPricer> pricer(new
-        // BlackIborCouponPricer);
-        //
-        // // optionLet volatilities
-        // Volatility volatility = 0.0;
-        // Handle<OptionletVolatilityStructure> vol;
-        // vol = Handle<OptionletVolatilityStructure>(
-        // boost::shared_ptr<OptionletVolatilityStructure>(new
-        // ConstantOptionletVolatility(
-        // settlementDays,
-        // calendar,
-        // BusinessDayConvention.MODIFIED_FOLLOWING,
-        // volatility,
-        // Actual365Fixed())));
-        //
-        // pricer->setCapletVolatility(vol);
-        // setCouponPricer(floatingRateBond.cashflows(),pricer);
-        //
-        // // Yield curve bootstrapping
-        // forecastingTermStructure.linkTo(depoSwapTermStructure);
-        // discountingTermStructure.linkTo(bondDiscountingTermStructure);
-        //
-        // // We are using the depo & swap curve to estimate the future Libor
-        // rates
-        // liborTermStructure.linkTo(depoSwapTermStructure);
-        //
-        // /***************
-        // * BOND PRICING *
-        // ****************/
-        //
-        // std::cout << std::endl;
-        //
-        // // write column headings
-        // Size widths[] = { 18, 10, 10, 10 };
-        //
-        // std::cout << std::setw(widths[0]) << "                 "
-        // << std::setw(widths[1]) << "ZC"
-        // << std::setw(widths[2]) << "Fixed"
-        // << std::setw(widths[3]) << "Floating"
-        // << std::endl;
-        //
-        // std::string separator = " | ";
-        // Size width = widths[0]
-        // + widths[1]
-        // + widths[2]
-        // + widths[3];
-        // std::string rule(width, '-'), dblrule(width, '=');
-        // std::string tab(8, ' ');
-        //
-        // std::cout << rule << std::endl;
-        //
-        // std::cout << std::fixed;
-        // std::cout << std::setprecision(2);
-        //
-        // std::cout << std::setw(widths[0]) << "Net present value"
-        // << std::setw(widths[1]) << zeroCouponBond.NPV()
-        // << std::setw(widths[2]) << fixedRateBond.NPV()
-        // << std::setw(widths[3]) << floatingRateBond.NPV()
-        // << std::endl;
-        //
-        // std::cout << std::setw(widths[0]) << "Clean price"
-        // << std::setw(widths[1]) << zeroCouponBond.cleanPrice()
-        // << std::setw(widths[2]) << fixedRateBond.cleanPrice()
-        // << std::setw(widths[3]) << floatingRateBond.cleanPrice()
-        // << std::endl;
-        //
-        // std::cout << std::setw(widths[0]) << "Dirty price"
-        // << std::setw(widths[1]) << zeroCouponBond.dirtyPrice()
-        // << std::setw(widths[2]) << fixedRateBond.dirtyPrice()
-        // << std::setw(widths[3]) << floatingRateBond.dirtyPrice()
-        // << std::endl;
-        //
-        // std::cout << std::setw(widths[0]) << "Accrued coupon"
-        // << std::setw(widths[1]) << zeroCouponBond.accruedAmount()
-        // << std::setw(widths[2]) << fixedRateBond.accruedAmount()
-        // << std::setw(widths[3]) << floatingRateBond.accruedAmount()
-        // << std::endl;
-        //
-        // std::cout << std::setw(widths[0]) << "Previous coupon"
-        // << std::setw(widths[1]) << "N/A" // zeroCouponBond
-        // << std::setw(widths[2]) << io::rate(fixedRateBond.previousCoupon())
-        // << std::setw(widths[3]) <<
-        // io::rate(floatingRateBond.previousCoupon())
-        // << std::endl;
-        //
-        // std::cout << std::setw(widths[0]) << "Next coupon"
-        // << std::setw(widths[1]) << "N/A" // zeroCouponBond
-        // << std::setw(widths[2]) << io::rate(fixedRateBond.nextCoupon())
-        // << std::setw(widths[3]) << io::rate(floatingRateBond.nextCoupon())
-        // << std::endl;
-        //
-        // std::cout << std::setw(widths[0]) << "Yield"
-        // << std::setw(widths[1])
-        // << io::rate(zeroCouponBond.yield(Actual360(),Compounded,Annual))
-        // << std::setw(widths[2])
-        // << io::rate(fixedRateBond.yield(Actual360(),Compounded,Annual))
-        // << std::setw(widths[3])
-        // << io::rate(floatingRateBond.yield(Actual360(),Compounded,Annual))
-        // << std::endl;
-        //
-        // std::cout << std::endl;
-        //
-        // // Other computations
-        // std::cout <<
-        // "Sample indirect computations (for the floating rate bond): " <<
-        // std::endl;
-        // std::cout << rule << std::endl;
-        //
-        // std::cout << "Yield to Clean Price: "
-        // <<
-        // floatingRateBond.cleanPrice(floatingRateBond.yield(Actual360(),Compounded,Annual),Actual360(),Compounded,Annual,settlementDate)
-        // << std::endl;
-        //
-        // std::cout << "Clean Price to Yield: "
-        // <<
-        // io::rate(floatingRateBond.yield(floatingRateBond.cleanPrice(),Actual360(),Compounded,Annual,settlementDate))
-        // << std::endl;
-        //
-        // /* "Yield to Price"
-        // "Price to Yield" */
-        //
-        // Real seconds = timer.elapsed();
-        // Integer hours = int(seconds/3600);
-        // seconds -= hours * 3600;
-        // Integer minutes = int(seconds/60);
-        // seconds -= minutes * 60;
-        // std::cout << " \nRun completed in ";
-        // if (hours > 0)
-        // std::cout << hours << " h ";
-        // if (hours > 0 || minutes > 0)
-        // std::cout << minutes << " m ";
-        // std::cout << std::fixed << std::setprecision(0)
-        // << seconds << " s\n" << std::endl;
-        //
-        // return 0;
-        //
-        // } catch (std::exception& e) {
-        // std::cout << e.what() << std::endl;
-        // return 1;
-        // } catch (...) {
-        // std::cout << "unknown error" << std::endl;
-        // return 1;
-        // }
+         // Term structures that will be used for pricing:
+         // the one used for discounting cash flows
+         RelinkableHandle<YieldTermStructure> discountingTermStructure = new RelinkableHandle<YieldTermStructure>();
+         // the one used for forward rate forecasting
+         RelinkableHandle<YieldTermStructure> forecastingTermStructure = new RelinkableHandle<YieldTermStructure>();
+        
+         /*********************
+         * BONDS TO BE PRICED *
+         **********************/
+        
+         // Common data
+         double faceAmount = 100;
+        
+         // Pricing engine
+        PricingEngine  bondEngine = new DiscountingBondEngine(discountingTermStructure);
+        
+         // Zero coupon bond
+         ZeroCouponBond zeroCouponBond = new ZeroCouponBond(
+        		 							settlementDays,
+        		 							new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
+        		 							faceAmount,
+        		 							new Date(15,Month.August,2013),
+        		 							BusinessDayConvention.Following,
+        		 							116.92,
+        		 							new Date(15,Month.August,2003));
+        
+         zeroCouponBond.setPricingEngine(bondEngine);
+        
+         // Fixed 4.5% US Treasury Note
+         Schedule fixedBondSchedule = new Schedule(
+        		 				new Date(15, Month.May, 2007),
+        		 				new Date(15,Month.May,2017), 
+        		 				new Period(Frequency.Semiannual),
+        		 				new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
+        		 				BusinessDayConvention.Unadjusted, 
+        		 				BusinessDayConvention.Unadjusted, 
+        		 				DateGeneration.Rule.Backward, false);
+        
+         FixedRateBond fixedRateBond = new FixedRateBond(
+         						settlementDays,
+         						faceAmount,
+         						fixedBondSchedule,
+         						new double[]{0.045},
+         						new ActualActual(ActualActual.Convention.Bond),
+         						BusinessDayConvention.ModifiedFollowing,
+         						100.0, 
+         						new Date(15, Month.May, 2007));
+        
+         fixedRateBond.setPricingEngine(bondEngine);
+        
+         // Floating rate bond (3M USD Libor + 0.1%)
+         // Should and will be priced on another curve later...
+        
+         RelinkableHandle<YieldTermStructure> liborTermStructure = new RelinkableHandle<YieldTermStructure>();
+         IborIndex libor3m =  new USDLibor(new Period(3,TimeUnit.Months),liborTermStructure);
+         libor3m.addFixing(new Date(17, Month.July, 2008),0.0278625, false);
+        
+         Schedule floatingBondSchedule = new Schedule(
+        		 				new Date(21, Month.October, 2005),
+        		 				new Date(21, Month.October, 2010), new Period(Frequency.Quarterly),
+        		 				new UnitedStates(UnitedStates.Market.NYSE),
+        		 				BusinessDayConvention.Unadjusted, 
+        		 				BusinessDayConvention.Unadjusted, 
+        		 				DateGeneration.Rule.Backward, true);
+        
+         FloatingRateBond floatingRateBond = new FloatingRateBond(
+        		 				settlementDays,
+        		 				faceAmount,
+        		 				floatingBondSchedule,
+        		 				libor3m,
+        		 				new Actual360(),
+        		 				BusinessDayConvention.ModifiedFollowing,
+        		 				2,        		 				
+        		 				new Array(1).fill(1.0),  //Gearings        		 				
+        		 				new Array(1).fill(0.001),//Spreads
+        		 				new Array(0),		     // Caps
+        		 				new Array(0),		     // Floors
+        		 				true,				     // Fixing in arrears
+        		 				100.0,
+        		 				new Date(21, Month.October, 2005));
+        
+         floatingRateBond.setPricingEngine(bondEngine);
+               
+         // optionLet volatilities
+         double volatility = 0.0;
+         Handle<OptionletVolatilityStructure> vol =
+        	 		new Handle<OptionletVolatilityStructure>(
+         						new ConstantOptionletVolatility(
+         								settlementDays,
+         								calendar,
+         								BusinessDayConvention.ModifiedFollowing,
+         								volatility,
+         								new Actual365Fixed()));
+        
+         // Coupon pricers
+         IborCouponPricer pricer = new BlackIborCouponPricer(vol);
+         PricerSetter.setCouponPricer(floatingRateBond.cashflows(),pricer);
+        
+         // Yield curve bootstrapping
+         forecastingTermStructure.linkTo(depoSwapTermStructure);
+         discountingTermStructure.linkTo(bondDiscountingTermStructur);
+        
+         // We are using the depo & swap curve to estimate the future Libor
+         // rates
+         liborTermStructure.linkTo(depoSwapTermStructure);
+        
+         /***************
+         * BOND PRICING *
+         ****************/
+        
+        QL.info("Results:");
+        
+         System.out.println("                 "
+        		 + "  " +  "ZC"
+        		 + "  " +  "Fixed"
+        		 + "  " +  "Floating"
+        		 );
+                
+         System.out.println( "Net present value"
+        		 	+  "  " + zeroCouponBond.NPV()
+        		 	+  "  " + fixedRateBond.NPV()
+        		 	+  "  " + floatingRateBond.NPV());
+                
+        System.out.println("Clean Price      "
+        		+ "  " +zeroCouponBond.cleanPrice()
+        		+ "  " +fixedRateBond.cleanPrice()
+        		+ "  " + floatingRateBond.cleanPrice()
+        		);
+        
+        System.out.println("Dirty price      "
+        			+ " " + zeroCouponBond.dirtyPrice()
+        			+ " " + fixedRateBond.dirtyPrice()
+        			+ " " + floatingRateBond.dirtyPrice()
+        			);
+        
+        System.out.println( "Accrued coupon  "
+    			+ " " + zeroCouponBond.accruedAmount()
+    			+ " " + fixedRateBond.accruedAmount()
+    			+ " " + floatingRateBond.accruedAmount()
+        		);
+
+        System.out.println( "Previous coupon "
+    			+ " " + "N/A"  //zeroCouponBond
+    			+ " " + fixedRateBond.previousCoupon()
+    			+ " " + floatingRateBond.previousCoupon()
+        		);
+
+        System.out.println( "Next coupon     "
+    			+ " " + "N/A"  //zeroCouponBond
+    			+ " " + fixedRateBond.nextCoupon()
+    			+ " " + floatingRateBond.nextCoupon()
+        		);
+        System.out.println( "Yield           "
+    			+ " " + zeroCouponBond.yield(new Actual360(),Compounding.Compounded, Frequency.Annual)
+    			+ " " + fixedRateBond.yield(new Actual360(),Compounding.Compounded, Frequency.Annual)
+    			+ " " + floatingRateBond.yield(new Actual360(),Compounding.Compounded, Frequency.Annual)
+        		);
+
+         // Other computations
+        System.out.println("Sample indirect computations (for the floating rate bond): " );
+        System.out.println( "Yield to Clean Price: " +
+        		floatingRateBond.cleanPrice(floatingRateBond.yield(new Actual360(),Compounding.Compounded,Frequency.Annual),new Actual360(),Compounding.Compounded,Frequency.Annual,settlementDate)
+        );
+        
+        System.out.println("Clean Price to Yield: " +
+         floatingRateBond.yield(floatingRateBond.cleanPrice(),new Actual360(),Compounding.Compounded,Frequency.Annual,settlementDate)
+        );
+        
+         /* "Yield to Price"
+         	"Price to Yield" 
+         */
+        clock.stopClock();
+        clock.log();
     }
 
 }
