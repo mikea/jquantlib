@@ -37,7 +37,7 @@
     
     <groupId>org.jquantlib</groupId>
     <artifactId>jquantlib-all</artifactId>
-    <version>0.2.4</version>
+    <version>0.2.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
