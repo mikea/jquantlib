@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2007 Srinivas Hasti, Daniel Kong
+ Copyright (C) 2008 Srinivas Hasti, Daniel Kong
 
  This source code is release under the BSD License.
 

@@ -19,12 +19,13 @@
       <item name="Features"                 href="http://www.jquantlib.org/index.php/Features" />
       <item name="Samples"                  href="http://www.jquantlib.org/index.php/Samples"/>
       <!-- item name="Release Notes"        href="http://www.jquantlib.org/index.php/ReleaseNotes" / -->
-      <item name="Javadocs" collapse="false">
-        <item name="current"                href="apidocs/current/index.html"/>
-        <item name="${project.version}"     href="apidocs/${project.version}/index.html"/>
+      <item name="Releases" collapse="false">
+        <item name="0.2.4 (current)"        href="apidocs/0.2.4/index.html"/>
+        <item name="0.2.3"                  href="apidocs/0.2.3/index.html"/>
         <item name="0.1.2"                  href="apidocs/0.1.2/index.html"/>
       </item>
       <item name="Developer" collapse="false">
+        <item name="0.2.5-SNAPSHOT"         href="apidocs/0.2.5-SNAPSHOT/index.html"/>
         <item name="Building from source"   href="http://www.jquantlib.org/index.php/ReadMe" />
         <item name="Guidelines"             href="http://www.jquantlib.org/index.php/Translation_Guidelines" />
         <item name="Design Patterns"        href="http://www.jquantlib.org/index.php/Design_Patterns" />

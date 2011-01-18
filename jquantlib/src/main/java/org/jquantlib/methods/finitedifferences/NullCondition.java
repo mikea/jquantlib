@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2007 Srinivas Hasti
+ Copyright (C) 2008 Srinivas Hasti
 
  This file is part of JQuantLib, a free-software/open-source library
  for financial quantitative analysts and developers - http://jquantlib.org/

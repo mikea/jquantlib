@@ -75,7 +75,7 @@
     
     <groupId>org.jquantlib</groupId>
     <artifactId>jquantlib-parent</artifactId>
-    <version>0.2.4-SNAPSHOT</version>
+    <version>0.2.4</version>
     <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
@@ -261,94 +261,151 @@
             </notifier>
         </notifiers>
     </ciManagement>
-
+    
     <repositories>
-    
-    
-		<repository>
-		    <id>central</id>
-		    <name>central</name>
-		    <url>http://repo1.maven.org/maven2</url>
-		    <layout>default</layout>
-		</repository>
-
-        <!--
-        // TODO: this repository will be removed as soon as we deploy
-        // latextaglet and jquantlib artifacts onto public repositories
-        // like Apache or SourceForge
-        //
-        // This repository is kept here for the time being otherwise
-        // a build which produces UML diagrams will fail because
-        // UmlGraph-4.9 cannot be found on public repositories.
-        // Also, the same applies to latextaglet.
-        //
-        // =================== N O T E ===================
-        // This repository is commented out because it does not harm
-        // the great majority of users. If you need to generate Javadocs with
-        // UML diagrams, then please uncomment the repository below and give
-        // it a try with profile "with-uml". Please run Maven with "-X" option
-        // and observe if it blocks trying to retrieve stuff from 
-        // http://artifactory.jquantlib.org:8080/...
-        // If it blocks, please forgive us for the trouble and let us know in
-        // our forum http://forums.jquantlib.org/
-        // 
-        -->
-        <!-- repository>
-            <id>jquantlib</id>
-            <name>JQuantLib Repository</name>
-            <url>http://artifactory.jquantlib.org:8080/artifactory/repo/</url>
+        <repository>
+            <id>central</id>
+            <name>central</name>
+            <url>http://repo1.maven.org/maven2</url>
             <layout>default</layout>
-        </repository -->
-
+        </repository>
+        <repository>
+            <id>jquantlib</id>
+            <name>jquantlib</name>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/libs-release</url>
+           <layout>default</layout>
+        </repository>
     </repositories>
- 
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>codehaus</id>
+            <name>codehaus</name>
+            <url>http://repository.codehaus.org</url>
+            <layout>default</layout>
+        </pluginRepository>
+        <pluginRepository>
+            <id>central</id>
+            <name>central</name>
+            <url>http://repo1.maven.org/maven2</url>
+            <layout>default</layout>
+        </pluginRepository>
+        <pluginRepository>
+            <id>jquantlib</id>
+            <name>jquantlib</name>
+            <url>http://artifactory.jquantlib.org:8080/artifactory/libs-release</url>
+           <layout>default</layout>
+        </pluginRepository>
+    </pluginRepositories>
+    
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+		    <version>2.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
                     <artifactId>properties-maven-plugin</artifactId>
+		    <version>1.0-alpha-2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
+		    <version>1.0-beta-1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+		    <version>2.0.2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
+		    <version>2.4.3</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>failsafe-maven-plugin</artifactId>
+		    <version>2.4.3</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>jdepend-maven-plugin</artifactId>
+		    <version>2.0-beta-2</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>findbugs-maven-plugin</artifactId>
+		    <version>2.3</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
+		    <version>2.4</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jxr-plugin</artifactId>
+		    <version>2.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>taglist-maven-plugin</artifactId>
+		    <version>2.4</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
+		    <version>2.0-beta-7</version>
                 </plugin>
+		<plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+		    <version>1.3</version>
+		</plugin>
+		<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-jar-plugin</artifactId>
+		    <version>2.2</version>
+		</plugin>
+		<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-javadoc-plugin</artifactId>
+		    <version>2.6.1</version>
+		</plugin>
+		<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-scm-plugin</artifactId>
+		    <version>1.3</version>
+		</plugin>
+		<plugin>
+		    <groupId>org.codehaus.mojo</groupId>
+		    <artifactId>buildnumber-maven-plugin</artifactId>
+		    <version>1.0-beta-4</version>
+		</plugin>
+		<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-changelog-plugin</artifactId>
+		    <version>2.1</version>
+		</plugin>
+		<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-dependency-plugin</artifactId>
+		    <version>2.1</version>
+		</plugin>
+		<plugin>
+		    <groupId>org.codehaus.mojo</groupId>
+		    <artifactId>cobertura-maven-plugin</artifactId>
+		    <version>2.3</version>
+		</plugin>
+		<plugin>
+		    <groupId>org.codehaus.mojo</groupId>
+		    <artifactId>clirr-maven-plugin</artifactId>
+		    <version>LATEST</version>
+		</plugin>
             </plugins>
         </pluginManagement>
 
@@ -764,11 +821,12 @@
                                 <a href="http://www.jquantlib.org/index.php/LICENSE.TXT">http://www.jquantlib.org/index.php/LICENSE.TXT</a>.
                                 </font>
                             ]]></bottom>
-                            <links>
+                            
+                            <!-- links>
                                 <link>http://java.sun.com/j2se/6/docs/api/index.html</link>
                                 <link>http://www.slf4j.org/apidocs/</link>
                                 <link>http://junit.sourceforge.net/javadoc/</link>
-                            </links>
+                            </links -->
 
                             <doclet>gr.spinellis.umlgraph.doclet.UmlGraphDoc</doclet>
                             <docletArtifact>
