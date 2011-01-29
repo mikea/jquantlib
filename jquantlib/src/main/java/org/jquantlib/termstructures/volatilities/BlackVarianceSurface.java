@@ -50,7 +50,7 @@ import org.jquantlib.math.matrixutilities.Matrix;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.time.Date;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -108,9 +108,9 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
             final Extrapolation upperExtrapolation) {
 
         super(referenceDate);
-        QL.require(dates.length == blackVolMatrix.columns() , "mismatch between date vector and vol matrix colums"); // QA:[RG]::verified // TODO: message
-        QL.require(strikes.size() == blackVolMatrix.rows() , "mismatch between money-strike vector and vol matrix rows"); // QA:[RG]::verified // TODO: message
-        QL.require(dates[0].gt(referenceDate) , "cannot have dates[0] <= referenceDate"); // QA:[RG]::verified // TODO: message
+        QL.require(dates.length == blackVolMatrix.columns() , "mismatch between date vector and vol matrix colums"); // TODO: message
+        QL.require(strikes.size() == blackVolMatrix.rows() , "mismatch between money-strike vector and vol matrix rows"); // TODO: message
+        QL.require(dates[0].gt(referenceDate) , "cannot have dates[0] <= referenceDate"); // TODO: message
 
         this.dayCounter = dayCounter;
         this.maxDate = dates[dates.length-1]; // TODO: code review: index seems to be wrong
@@ -130,12 +130,12 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 
         for (int j = 1; j <= blackVolMatrix.columns(); j++) {
             times.set(j, timeFromReference(dates[j-1]));
-            QL.require(times.get(j) > times.get(j-1) , "dates must be sorted unique!"); // QA:[RG]::verified // TODO: message
+            QL.require(times.get(j) > times.get(j-1) , "dates must be sorted unique!"); // TODO: message
             for (int i = 0; i < blackVolMatrix.rows(); i++) {
                 final double elem = blackVolMatrix.get(i, j-1);
                 final double ijvar = times.get(j) * elem * elem;
                 variances.set(i, j, ijvar);
-                QL.require(ijvar >= variances.get(i, j-1) , "variance must be non-decreasing"); // QA:[RG]::verified // TODO: message
+                QL.require(ijvar >= variances.get(i, j-1) , "variance must be non-decreasing"); // TODO: message
             }
         }
         // default: bilinear interpolation
@@ -211,16 +211,16 @@ public class BlackVarianceSurface extends BlackVarianceTermStructure {
 
 
     //
-    // implements TypedVisitable
+    // implements PolymorphicVisitable
     //
 
     @Override
-    public void accept(final TypedVisitor<TermStructure> v) {
-        final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
-            v1.visit(this);
+    public void accept(final PolymorphicVisitor pv) {
+        final Visitor<BlackVarianceSurface> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
         } else {
-            super.accept(v);
+            super.accept(pv);
         }
     }
 

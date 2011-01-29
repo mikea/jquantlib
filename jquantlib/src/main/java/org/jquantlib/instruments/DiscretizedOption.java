@@ -124,7 +124,7 @@ public class DiscretizedOption extends DiscretizedAsset {
             }
             break;
         default:
-            throw new LibraryException("invalid exercise type"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("invalid exercise type"); // TODO: message
         }
         underlying.postAdjustValues();
     }

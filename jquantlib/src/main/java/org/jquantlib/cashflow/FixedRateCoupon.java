@@ -28,7 +28,7 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.time.Date;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -129,17 +129,16 @@ public class FixedRateCoupon extends Coupon {
 
 
 	//
-	// implements TypedVisitable
+	// implements PolymorphicVisitable
 	//
 
 	@Override
-	public void accept(final TypedVisitor<Object> v) {
-		final Visitor<Object> v1 = (v != null) ? v.getVisitor(this.getClass()
-				.getSuperclass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
-		} else {
-			super.accept(v);
-		}
+	public void accept(final PolymorphicVisitor pv) {
+		final Visitor<FixedRateCoupon> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
+        } else {
+            super.accept(pv);
+        }
 	}
 }

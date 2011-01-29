@@ -110,7 +110,7 @@ public class InverseCumulativeNormal implements InverseCumulative {
     }
 
     public InverseCumulativeNormal(final double average, final double sigma) {
-        QL.require(sigma > 0.0 , SIGMA_MUST_BE_POSITIVE); // QA:[RG]::verified // TODO: message
+        QL.require(sigma > 0.0 , SIGMA_MUST_BE_POSITIVE); // TODO: message
         this.average = average;
         this.sigma = sigma;
         this.highPrecision = new Settings().isRefineHighPrecisionUsingHalleysMethod();
@@ -128,7 +128,7 @@ public class InverseCumulativeNormal implements InverseCumulative {
      */
     @Override
     public double op(double x)/* @ReadOnly */{
-        QL.require(sigma > 0.0 , SIGMA_MUST_BE_POSITIVE); // QA:[RG]::verified // TODO: message
+        QL.require(sigma > 0.0 , SIGMA_MUST_BE_POSITIVE); // TODO: message
 
         double z;
         double r;

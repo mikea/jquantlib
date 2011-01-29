@@ -47,8 +47,8 @@ import org.jquantlib.termstructures.volatilities.VolatilityTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
-import org.jquantlib.util.TypedVisitable;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitable;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -57,7 +57,7 @@ import org.jquantlib.util.Visitor;
  * @author Richard Gomes
  */
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-public abstract class LocalVolTermStructure extends VolatilityTermStructure implements TypedVisitable<TermStructure> {
+public abstract class LocalVolTermStructure extends VolatilityTermStructure implements PolymorphicVisitable {
 
     //
     // public constructors
@@ -216,14 +216,18 @@ public abstract class LocalVolTermStructure extends VolatilityTermStructure impl
 
 
 
-    /*! \name Calculations
-
-            These methods must be implemented in derived classes to perform
-            the actual volatility calculations. When they are called,
-            range check has already been performed; therefore, they must
-            assume that extrapolation is required.
+    //
+    // Calculations
+    //
+    //        These methods must be implemented in derived classes to perform
+    //        the actual volatility calculations. When they are called,
+    //        range check has already been performed; therefore, they must
+    //        assume that extrapolation is required.
+    //
+    
+    /**
+     * Local Vol calculation
      */
-    //! local vol calculation
     protected abstract /*@Volatility*/ double localVolImpl(final /*@Time*/ double t, final /*@Real*/ double strike);
 
 
@@ -232,20 +236,22 @@ public abstract class LocalVolTermStructure extends VolatilityTermStructure impl
         super.checkRange(t, extrapolate);
         /*@Real*/ final double minStrike = minStrike();
         /*@Real*/ final double maxStrike = maxStrike();
-        QL.require(extrapolate||allowsExtrapolation()||(strike>=minStrike&&strike<=maxStrike) , "strike is outside curve domain"); // QA:[RG]::verified // TODO: message
+        QL.require(extrapolate||allowsExtrapolation()||(strike>=minStrike&&strike<=maxStrike) , "strike is outside curve domain"); // TODO: message
     }
 
+    
     //
-    // implements TypedVisitable
+    // implements PolymorphicVisitable
     //
 
     @Override
-    public void accept(final TypedVisitor<TermStructure> v) {
-        final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
-            v1.visit(this);
-        } else
-            throw new LibraryException("not a local-volatility term structure visitor"); // QA:[RG]::verified // TODO: message
+    public void accept(final PolymorphicVisitor pv) {
+        final Visitor<LocalVolTermStructure> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
+        } else {
+            throw new LibraryException("not a local-volatility term structure visitor"); // TODO: message
+        }
     }
 
 }

@@ -93,7 +93,7 @@ public class ExtendedCoxIngersollRoss extends CoxIngersollRoss {
             final double strike,
             final double t,
             final double s) {
-        QL.require(strike > 0.0 , STRIKE_MUST_BE_POSITIVE); // QA:[RG]::verified // TODO: message
+        QL.require(strike > 0.0 , STRIKE_MUST_BE_POSITIVE); // TODO: message
         final double discountT = termstructureConsistentModel.termStructure().currentLink().discount(t);
         final double discountS = termstructureConsistentModel.termStructure().currentLink().discount(s);
         if (t<Constants.QL_EPSILON)

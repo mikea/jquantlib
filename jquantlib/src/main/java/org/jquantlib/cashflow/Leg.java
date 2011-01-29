@@ -45,12 +45,12 @@ public class Leg extends ArrayList<CashFlow> implements Cloneable {
     }
 
     public CashFlow first() {
-        QL.require(this.size() > 0 , "no cashflows");  // QA:[RG]::verified // TODO: message
+        QL.require(this.size() > 0 , "no cashflows");  // TODO: message
         return this.get(0);
     }
 
     public CashFlow last() {
-        QL.require(this.size() > 0 , "no cashflows");  // QA:[RG]::verified // TODO: message
+        QL.require(this.size() > 0 , "no cashflows");  // TODO: message
         return this.get(this.size()-1);
     }
 

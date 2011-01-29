@@ -55,7 +55,7 @@ import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Observer;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -197,13 +197,17 @@ public class FloatingRateCoupon extends Coupon implements Observer {
         notifyObservers();
     }
 
+    //
+    // implements TypeVisitable
+    //
+    
     @Override
-    public void accept(final TypedVisitor<Object> v) {
-        final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
-            v1.visit(this);
+    public void accept(final PolymorphicVisitor pv) {
+        final Visitor<FloatingRateCoupon> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
         } else {
-            super.accept(v) ;
+            super.accept(pv);
         }
     }
 }

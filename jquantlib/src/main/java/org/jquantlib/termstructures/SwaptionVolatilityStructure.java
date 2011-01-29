@@ -160,7 +160,7 @@ public abstract class SwaptionVolatilityStructure extends AbstractTermStructure 
     public Pair<Double, Double> convertDates(final Date optionDate, final Period swapTenor) {
         final Date end = optionDate.add(swapTenor);
         // TODO: code review :: please verify against QL/C++ code
-        QL.require(end.gt(optionDate) , "negative swap tenorgiven"); // QA:[RG]::verified // TODO: message
+        QL.require(end.gt(optionDate) , "negative swap tenorgiven"); // TODO: message
         final double optionTime = timeFromReference(optionDate);
         final double timeLength = dayCounter().yearFraction(optionDate, end);
         return new Pair<Double, Double>(optionTime, timeLength);

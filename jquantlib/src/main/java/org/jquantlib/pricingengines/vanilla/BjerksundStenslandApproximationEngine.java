@@ -172,7 +172,7 @@ public class BjerksundStenslandApproximationEngine extends VanillaOption.EngineI
         double /* @DiscountFactor */dividendDiscount = process.dividendYield().currentLink().discount(ex.lastDate());
         double /* @DiscountFactor */riskFreeDiscount = process.riskFreeRate().currentLink().discount(ex.lastDate());
         double /* @Real */spot = process.stateVariable().currentLink().value();
-        QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
+        QL.require(spot > 0.0, "negative or null underlying given"); // TODO: message
         double /* @Real */strike = payoff.strike();
 
         if (payoff.optionType()==Option.Type.Put) {

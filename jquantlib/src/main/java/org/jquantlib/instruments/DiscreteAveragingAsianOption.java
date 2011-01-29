@@ -135,20 +135,20 @@ public class DiscreteAveragingAsianOption extends OneAssetOption {
         @Override
         public void validate() /*@ReadOnly*/{
             super.validate();
-            QL.require(averageType!=null , "unspecified average type"); // QA:[RG]::verified // TODO: message
-            QL.require(pastFixings!=Constants.NULL_INTEGER, "null past-fixing number"); // QA:[RG]::verified // TODO: message
-            QL.require(!Double.isNaN(runningAccumulator), "null running product"); // QA:[RG]::verified // TODO: message
+            QL.require(averageType!=null , "unspecified average type"); // TODO: message
+            QL.require(pastFixings!=Constants.NULL_INTEGER, "null past-fixing number"); // TODO: message
+            QL.require(!Double.isNaN(runningAccumulator), "null running product"); // TODO: message
 
             // TODO: code review :: please verify against QL/C++ code
             switch (averageType) {
             case Arithmetic:
-                QL.require(runningAccumulator >= 0.0 , "non negative running sum required: not allowed"); // QA:[RG]::verified // TODO: message
+                QL.require(runningAccumulator >= 0.0 , "non negative running sum required: not allowed"); // TODO: message
                 break;
             case Geometric:
-                QL.require(runningAccumulator > 0.0 , "positive running product required: not allowed"); // QA:[RG]::verified // TODO: message
+                QL.require(runningAccumulator > 0.0 , "positive running product required: not allowed"); // TODO: message
                 break;
             default:
-                throw new LibraryException("invalid average type"); // QA:[RG]::verified // TODO: message
+                throw new LibraryException("invalid average type"); // TODO: message
             }
         }
 

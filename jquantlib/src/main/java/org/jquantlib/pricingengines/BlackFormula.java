@@ -112,11 +112,11 @@ public class BlackFormula {
             @DiscountFactor final double discount,
             @Real final double displacement) {
 
-        QL.require(strike >= 0.0       , "strike must be non-negative"); // QA:[RG]::verified // TODO: message
-        QL.require(forward > 0.0       , "forward must be positive"); // QA:[RG]::verified // TODO: message
-        QL.require(stddev >= 0.0       , "stddev must be non-negative"); // QA:[RG]::verified // TODO: message
-        QL.require(discount > 0.0      , "discount must be positive"); // QA:[RG]::verified // TODO: message
-        QL.require(displacement >= 0.0 , "displacement must be non-negative"); // QA:[RG]::verified // TODO: message
+        QL.require(strike >= 0.0       , "strike must be non-negative"); // TODO: message
+        QL.require(forward > 0.0       , "forward must be positive"); // TODO: message
+        QL.require(stddev >= 0.0       , "stddev must be non-negative"); // TODO: message
+        QL.require(discount > 0.0      , "discount must be positive"); // TODO: message
+        QL.require(displacement >= 0.0 , "displacement must be non-negative"); // TODO: message
 
         forward = forward + displacement;
         strike = strike + displacement;
@@ -681,11 +681,11 @@ public class BlackFormula {
             @DiscountFactor final double discount,
             @Real final double displacement) {
 
-        QL.require(strike >= 0.0       , "strike must be non-negative"); // QA:[RG]::verified // TODO: message
-        QL.require(forward > 0.0       , "forward must be positive"); // QA:[RG]::verified // TODO: message
-        QL.require(stddev >= 0.0       , "blackPrice must be non-negative"); // QA:[RG]::verified // TODO: message
-        QL.require(discount > 0.0      , "discount must be positive"); // QA:[RG]::verified // TODO: message
-        QL.require(displacement >= 0.0 , "displacement must be non-negative"); // QA:[RG]::verified // TODO: message
+        QL.require(strike >= 0.0       , "strike must be non-negative"); // TODO: message
+        QL.require(forward > 0.0       , "forward must be positive"); // TODO: message
+        QL.require(stddev >= 0.0       , "blackPrice must be non-negative"); // TODO: message
+        QL.require(discount > 0.0      , "discount must be positive"); // TODO: message
+        QL.require(displacement >= 0.0 , "displacement must be non-negative"); // TODO: message
 
         forward = forward + displacement;
         strike = strike + displacement;
@@ -793,8 +793,8 @@ public class BlackFormula {
             @StdDev final double stddev,
             final @DiscountFactor double discount) {
 
-        QL.require(stddev >= 0.0 , "blackPrice must be non-negative"); // QA:[RG]::verified // TODO: message
-        QL.require(discount > 0.0 , "discount must be positive"); // QA:[RG]::verified // TODO: message
+        QL.require(stddev >= 0.0 , "blackPrice must be non-negative"); // TODO: message
+        QL.require(discount > 0.0 , "discount must be positive"); // TODO: message
 
         final double d = (forward - strike) * optionType.ordinal(), h = d / stddev;
         if (stddev == 0.0) return discount * Math.max(d, 0.0);
@@ -872,10 +872,10 @@ public class BlackFormula {
                 final double undiscountedBlackPrice,
                 final double displacement) {
 
-            QL.require(strike >= 0.0       , "strike must be non-negative"); // QA:[RG]::verified // TODO: message
-            QL.require(forward > 0.0       , "forward must be positive"); // QA:[RG]::verified // TODO: message
-            QL.require(displacement >= 0.0 , "displacement must be non-negative"); // QA:[RG]::verified // TODO: message
-            QL.require(undiscountedBlackPrice >= 0.0 , "undiscounted Black price must be non-negative"); // QA:[RG]::verified // TODO: message
+            QL.require(strike >= 0.0       , "strike must be non-negative"); // TODO: message
+            QL.require(forward > 0.0       , "forward must be positive"); // TODO: message
+            QL.require(displacement >= 0.0 , "displacement must be non-negative"); // TODO: message
+            QL.require(undiscountedBlackPrice >= 0.0 , "undiscounted Black price must be non-negative"); // TODO: message
 
             this.halfOptionType_ = (0.5 * optionType.toInteger());
             this.signedStrike_ = (optionType.toInteger() * (strike + displacement));
@@ -888,7 +888,7 @@ public class BlackFormula {
         }
 
         public double op(@NonNegative final double stddev) {
-            QL.require(stddev >= 0.0 , "stddev must be non-negative"); // QA:[RG]::verified // TODO: message
+            QL.require(stddev >= 0.0 , "stddev must be non-negative"); // TODO: message
             if (stddev == 0.0) return Math.max(signedForward_ - signedStrike_, 0.0d) - undiscountedBlackPrice_;
 
             final double temp = halfOptionType_ * stddev;
@@ -901,7 +901,7 @@ public class BlackFormula {
         }
 
         public double derivative(@NonNegative final double stddev) {
-            QL.require(stddev >= 0.0 , "stddev must be non-negative"); // QA:[RG]::verified // TODO: message
+            QL.require(stddev >= 0.0 , "stddev must be non-negative"); // TODO: message
 
             final double signedD1 = signedMoneyness_ / stddev + halfOptionType_ * stddev;
             return signedForward_ * N_.derivative(signedD1);

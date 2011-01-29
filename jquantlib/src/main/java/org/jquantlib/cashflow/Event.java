@@ -30,8 +30,8 @@ import org.jquantlib.time.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
-import org.jquantlib.util.TypedVisitable;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitable;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -39,7 +39,7 @@ import org.jquantlib.util.Visitor;
  *
  * @author Richard Gomes
  */
-public abstract class Event implements Observable, TypedVisitable<Object> {
+public abstract class Event implements Observable, PolymorphicVisitable {
 
     //
     // protected constructors
@@ -156,16 +156,16 @@ public abstract class Event implements Observable, TypedVisitable<Object> {
 
 
     //
-    // implements TypedVisitable
+    // implements PolymorphicVisitable
     //
 
     @Override
-    public void accept(final TypedVisitor<Object> v) {
-        final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
-            v1.visit(this);
+    public void accept(final PolymorphicVisitor pv) {
+        final Visitor<Event> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
         } else {
-            throw new LibraryException("null event visitor"); // QA:[RG]::verified //TODO: message
+            throw new LibraryException("null event visitor"); // TODO: message
         }
     }
 

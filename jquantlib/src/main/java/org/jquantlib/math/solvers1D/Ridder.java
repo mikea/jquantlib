@@ -88,7 +88,7 @@ public class Ridder extends AbstractSolver1D<Ops.DoubleOp> {
                 xMin=root;
                 fxMin=froot;
             } else
-                throw new LibraryException("internal error"); // QA:[RG]::verified // TODO: message
+                throw new LibraryException("internal error"); // TODO: message
 
             if (Math.abs(xMax-xMin) <= xAccuracy_)
                 return root;

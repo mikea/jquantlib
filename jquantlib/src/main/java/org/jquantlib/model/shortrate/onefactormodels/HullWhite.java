@@ -144,10 +144,10 @@ public class HullWhite extends Vasicek implements TermStructureConsistentModel {
             final double sigma,
             final double a) {
 
-        QL.require(futurePrice >= 0.0 , "negative futures price not allowed"); // QA:[RG]::verified // TODO: message
-        QL.require(t >= 0.0 , "negative t not allowed"); // QA:[RG]::verified // TODO: message
-        QL.require(T >= t , "T must not be less than t"); // QA:[RG]::verified // TODO: message
-        QL.require(a >= 0.0 , "negative a not allowed"); // QA:[RG]::verified // TODO: message
+        QL.require(futurePrice >= 0.0 , "negative futures price not allowed"); // TODO: message
+        QL.require(t >= 0.0 , "negative t not allowed"); // TODO: message
+        QL.require(T >= t , "T must not be less than t"); // TODO: message
+        QL.require(a >= 0.0 , "negative a not allowed"); // TODO: message
 
         final double /* @Time */deltaT = (T - t);
         final double /* @Real */tempDeltaT = (1. - Math.exp(-a * deltaT)) / a;

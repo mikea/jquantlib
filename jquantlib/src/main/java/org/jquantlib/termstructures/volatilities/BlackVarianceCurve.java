@@ -48,7 +48,7 @@ import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.time.Date;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -101,11 +101,11 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
             final boolean forceMonotoneVariance) {
         super(referenceDate);
 
-        QL.require(dates.length==blackVolCurve.length , "mismatch between date vector and black vol vector"); // QA:[RG]::verified // TODO: message
+        QL.require(dates.length==blackVolCurve.length , "mismatch between date vector and black vol vector"); // TODO: message
         // cannot have dates[0]==referenceDate, since the
         // value of the volatility at dates[0] would be lost
         // (variance at referenceDate must be zero)
-        QL.require(dates[0].gt(referenceDate) , "cannot have dates[0] <= referenceDate"); // QA:[RG]::verified // TODO: message
+        QL.require(dates[0].gt(referenceDate) , "cannot have dates[0] <= referenceDate"); // TODO: message
 
         this.dayCounter = dayCounter;
         this.dates = dates.clone();
@@ -117,10 +117,10 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
         times.set(0, 0.0);
         for (int j=1; j<=blackVolCurve.length; j++) {
             times.set(j, timeFromReference(this.dates[j-1]));
-            QL.require(times.get(j)>times.get(j-1) , "times must be sorted unique"); // QA:[RG]::verified // TODO: message
+            QL.require(times.get(j)>times.get(j-1) , "times must be sorted unique"); // TODO: message
             final double value = times.get(j) * blackVolCurve[j-1]*blackVolCurve[j-1];
             variances.set(j, value);
-            QL.require(variances.get(j)>=variances.get(j-1) || !forceMonotoneVariance , "variance must be non-decreasing"); // QA:[RG]::verified // TODO: message
+            QL.require(variances.get(j)>=variances.get(j-1) || !forceMonotoneVariance , "variance must be non-decreasing"); // TODO: message
         }
 
         // default: linear interpolation
@@ -187,16 +187,16 @@ public class BlackVarianceCurve extends BlackVarianceTermStructure {
 
 
     //
-    // implements TypedVisitable
+    // implements PolymorphicVisitable
     //
 
     @Override
-    public void accept(final TypedVisitor<TermStructure> v) {
-        final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
-            v1.visit(this);
+    public void accept(final PolymorphicVisitor pv) {
+        final Visitor<BlackVarianceCurve> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
         } else {
-            super.accept(v);
+            super.accept(pv);
         }
     }
 

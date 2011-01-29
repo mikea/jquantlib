@@ -145,7 +145,7 @@ public class Rounding {
             }
             break;
           default:
-            throw new LibraryException("unknown rounding method"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("unknown rounding method"); // TODO: message
         }
         return (neg) ? -(lvalue/mult) : lvalue/mult;
     }

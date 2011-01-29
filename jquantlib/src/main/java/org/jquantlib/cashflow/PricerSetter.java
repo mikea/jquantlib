@@ -7,7 +7,7 @@ import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -16,7 +16,7 @@ import org.jquantlib.util.Visitor;
  * @author Richard Gomes
  */
 @QualityAssurance(quality=Quality.Q0_UNFINISHED, version=Version.V097, reviewers="Richard Gomes")
-public class PricerSetter implements TypedVisitor<Object> {
+public class PricerSetter implements PolymorphicVisitor {
 
     private static final String INCOMPATIBLE_PRICER = "incompatible pricer";
     private static final String UNKNOWN_VISITABLE = "unknown visitable";
@@ -61,39 +61,45 @@ public class PricerSetter implements TypedVisitor<Object> {
 
 
     //
-    // implements TypedVisitor
+    // implements PolymorphicVisitor
     //
 
     @Override
-    public Visitor<Object> getVisitor(final Class<? extends Object> klass) {
-        if (klass==CashFlow.class ) {
-            return new CashFlowVisitor();
+    public <CashFlow> Visitor<CashFlow> visitor(Class<? extends CashFlow> klass) {
+        if (klass==org.jquantlib.cashflow.CashFlow.class ) {
+            return (Visitor<CashFlow>) new CashFlowVisitor();
         }
         if ( klass == SimpleCashFlow.class) {
-            return new CashFlowVisitor();
+            return (Visitor<CashFlow>) new SimpleCashFlowVisitor();
         }
         if (klass==Coupon.class) {
-            return new CouponVisitor();
+            return (Visitor<CashFlow>) new CouponVisitor();
         }
         if (klass==IborCoupon.class) {
-            return new IborCouponVisitor();
+            return (Visitor<CashFlow>) new IborCouponVisitor();
         }
-
-//        if (klass == CmsCoupon.class)
-//            return new CmsCouponVisitor();
-//        if (klass == CappedFlooredIborCoupon.class)
-//            return new CappedFlooredIborCouponVisitor();
-//        if (klass == CappedFlooredCmsCoupon.class)
-//            return new CappedFlooredCmsCouponVisitor();
-//        if (klass == DigitalIborCoupon.class)
-//            return new DigitalIborCouponVisitor();
-//        if (klass == DigitalCmsCoupon.class)
-//            return new DigitalCmsCouponVisitor();
-//        if (klass == RangeAccrualFloatersCoupon.class)
-//            return new RangeAccrualFloatersCouponVisitor();
-//        if (klass == SubPeriodsCoupon.class)
-//            return new SubPeriodsCouponVisitor();
-
+        if (klass == CmsCoupon.class) {
+            return (Visitor<CashFlow>) new CmsCouponVisitor();
+        }
+        
+//        if (klass == CappedFlooredIborCoupon.class) {
+//            return (Visitor<CashFlow>) new CappedFlooredIborCouponVisitor();
+//        }
+//        if (klass == CappedFlooredCmsCoupon.class) {
+//            return (Visitor<CashFlow>) new CappedFlooredCmsCouponVisitor();
+//        }
+//        if (klass == DigitalIborCoupon.class) {
+//            return (Visitor<CashFlow>) new DigitalIborCouponVisitor();
+//        }
+//        if (klass == DigitalCmsCoupon.class) {
+//            return (Visitor<CashFlow>) new DigitalCmsCouponVisitor();
+//        }
+//        if (klass == RangeAccrualFloatersCoupon.class) {
+//            return (Visitor<CashFlow>) new RangeAccrualFloatersCouponVisitor();
+//        }
+//        if (klass == SubPeriodsCoupon.class) {
+//            return (Visitor<CashFlow>) new SubPeriodsCouponVisitor();
+//        }
 
         throw new LibraryException(UNKNOWN_VISITABLE); // QA:[RG]::verified
     }
@@ -103,29 +109,29 @@ public class PricerSetter implements TypedVisitor<Object> {
     // private inner classes
     //
 
-    private class CashFlowVisitor implements Visitor<Object> {
+    private class CashFlowVisitor implements Visitor<CashFlow> {
         @Override
-        public void visit(final Object o) {
+        public void visit(final CashFlow o) {
             // nothing
         }
     }
-    private class SimpleCashFlowVisitor implements Visitor<Object> {
+    private class SimpleCashFlowVisitor implements Visitor<CashFlow> {
         @Override
-        public void visit(final Object o) {
-            // nothing
-        }
-    }
-
-    private class CouponVisitor implements Visitor<Object> {
-        @Override
-        public void visit(final Object o) {
+        public void visit(final CashFlow o) {
             // nothing
         }
     }
 
-    private class IborCouponVisitor implements Visitor<Object> {
+    private class CouponVisitor implements Visitor<CashFlow> {
         @Override
-        public void visit(final Object o) {
+        public void visit(final CashFlow o) {
+            // nothing
+        }
+    }
+
+    private class IborCouponVisitor implements Visitor<CashFlow> {
+        @Override
+        public void visit(final CashFlow o) {
             if (IborCouponPricer.class.isAssignableFrom(pricer.getClass())) {
                 final IborCoupon c = (IborCoupon) o;
                 c.setPricer(pricer);
@@ -135,30 +141,39 @@ public class PricerSetter implements TypedVisitor<Object> {
         }
     }
 
-//    private class CmsCouponVisitor implements Visitor<Object> {
-//        @Override
-//        public void visit(final Object o) {
-//            if (CmsCouponPricer.class.isAssignableFrom(pricer.getClass())) {
-//                final CmsCoupon c = (CmsCoupon) o;
-//                c.setPricer((CmsCouponPricer)pricer);
-//            } else {
-//                throw new LibraryException(INCOMPATIBLE_PRICER); // QA:[RG]::verified
-//            }
-//        }
-//    }
-//
-//    private class CappedFlooredIborCouponVisitor implements Visitor<Object> {
-//        @Override
-//        public void visit(final Object o) {
-//            if (CappedFlooredIborCouponPricer.class.isAssignableFrom(pricer.getClass())) {
-//                final CappedFlooredIborCoupon c = (CappedFlooredIborCoupon) o;
-//                c.setPricer((CappedFlooredIborCouponPricer)pricer);
-//            } else {
-//                throw new LibraryException(INCOMPATIBLE_PRICER); // QA:[RG]::verified
-//            }
-//        }
-//    }
-//
+    private class CmsCouponVisitor implements Visitor<CashFlow> {
+        @Override
+        public void visit(final CashFlow o) {
+            if (CmsCouponPricer.class.isAssignableFrom(pricer.getClass())) {
+                final CmsCoupon c = (CmsCoupon) o;
+                c.setPricer((CmsCouponPricer)pricer);
+            } else {
+                throw new LibraryException(INCOMPATIBLE_PRICER); // QA:[RG]::verified
+            }
+        }
+    }
+
+
+    
+    //
+    // TODO: Uncomment the following code as soon the corresponding classes become translated
+    //
+    
+    
+    
+//	private class CappedFlooredIborCouponVisitor implements Visitor<CashFlow> {
+//		@Override
+//		public void visit(final CashFlow o) {
+//			if (CappedFlooredIborCouponPricer.class.isAssignableFrom(pricer
+//					.getClass())) {
+//				final CappedFlooredIborCoupon c = (CappedFlooredIborCoupon) o;
+//				c.setPricer((CappedFlooredIborCouponPricer) pricer);
+//			} else {
+//				throw new LibraryException(INCOMPATIBLE_PRICER); // QA:[RG]::verified
+//			}
+//		}
+//	}
+//    
 //    private class CappedFlooredCmsCouponVisitor implements Visitor<Object> {
 //        @Override
 //        public void visit(final Object o) {
@@ -171,9 +186,9 @@ public class PricerSetter implements TypedVisitor<Object> {
 //        }
 //    }
 //
-//    private class DigitalIborCouponVisitor implements Visitor<Object> {
+//    private class DigitalIborCouponVisitor implements Visitor<CashFlow> {
 //        @Override
-//        public void visit(final Object o) {
+//        public void visit(final CashFlow o) {
 //            if (DigitalIborCouponPricer.class.isAssignableFrom(pricer.getClass())) {
 //                final DigitalIborCoupon c = (DigitalIborCoupon) o;
 //                c.setPricer((DigitalIborCouponPricer)pricer);
@@ -183,9 +198,9 @@ public class PricerSetter implements TypedVisitor<Object> {
 //        }
 //    }
 //
-//    private class DigitalCmsCouponVisitor implements Visitor<Object> {
+//    private class DigitalCmsCouponVisitor implements Visitor<CashFlow> {
 //        @Override
-//        public void visit(final Object o) {
+//        public void visit(final CashFlow o) {
 //            if (DigitalCmsCouponPricer.class.isAssignableFrom(pricer.getClass())) {
 //                final DigitalCmsCoupon c = (DigitalCmsCoupon) o;
 //                c.setPricer((DigitalCmsCouponPricer)pricer);
@@ -195,9 +210,9 @@ public class PricerSetter implements TypedVisitor<Object> {
 //        }
 //    }
 //
-//    private class RangeAccrualFloatersCouponVisitor implements Visitor<Object> {
+//    private class RangeAccrualFloatersCouponVisitor implements Visitor<CashFlow> {
 //        @Override
-//        public void visit(final Object o) {
+//        public void visit(final CashFlow o) {
 //            if (RangeAccrualFloatersCouponPricer.class.isAssignableFrom(pricer.getClass())) {
 //                final RangeAccrualFloatersCoupon c = (RangeAccrualFloatersCoupon) o;
 //                c.setPricer((RangeAccrualFloatersCouponPricer)pricer);
@@ -207,9 +222,9 @@ public class PricerSetter implements TypedVisitor<Object> {
 //        }
 //    }
 //
-//    private class SubPeriodsCouponVisitor implements Visitor<Object> {
+//    private class SubPeriodsCouponVisitor implements Visitor<CashFlow> {
 //        @Override
-//        public void visit(final Object o) {
+//        public void visit(final CashFlow o) {
 //            if (SubPeriodsCouponPricer.class.isAssignableFrom(pricer.getClass())) {
 //                final SubPeriodsCoupon c = (SubPeriodsCoupon) o;
 //                c.setPricer((SubPeriodsCouponPricer)pricer);

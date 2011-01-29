@@ -42,7 +42,7 @@ import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -298,16 +298,16 @@ public class SwapRateHelper extends RelativeDateRateHelper {
 
 
     //
-    // implements TypedVisitable
+    // implements PolymorphicVisitable
     //
 
     @Override
-    public void accept(final TypedVisitor<BootstrapHelper> v) {
-        final Visitor<BootstrapHelper> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
-            v1.visit(this);
+    public void accept(final PolymorphicVisitor pv) {
+        final Visitor<SwapRateHelper> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
         } else {
-            super.accept(v);
+            super.accept(pv);
         }
     }
 

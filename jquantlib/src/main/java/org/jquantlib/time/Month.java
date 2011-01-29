@@ -124,7 +124,7 @@ public enum Month {
             returnMonth =  Month.December;
             break;
         default:
-            throw new LibraryException("value must be [1,12]"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("value must be [1,12]"); // TODO: message
         }
         return returnMonth;
     }
@@ -175,7 +175,7 @@ public enum Month {
             returnChar =  'Z';
             break;
         default:
-            throw new LibraryException("value must be [1,12]"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("value must be [1,12]"); // TODO: message
         }
         return returnChar;
     }
@@ -202,7 +202,7 @@ public enum Month {
         case 'X': returnMonth = Month.November;break;
         case 'Z': returnMonth = Month.December;break;
         default:
-            throw new LibraryException("value must be one of F,G,H,J,K,M,N,Q,U,V,X,Z"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("value must be one of F,G,H,J,K,M,N,Q,U,V,X,Z"); // TODO: message
         }
         return returnMonth;
     }
@@ -248,7 +248,7 @@ public enum Month {
             returnString = "December";
             break;
         default:
-            throw new LibraryException("value must be [1,12]"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("value must be [1,12]"); // TODO: message
         }
         return returnString;
     }

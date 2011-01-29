@@ -72,7 +72,7 @@ public class CurveDependentStepCondition implements StepCondition<Array> {
     }
 
     protected double applyToValue(final double a, final double b) {
-        throw new LibraryException("not yet implemented"); // QA:[RG]::verified // TODO: message
+        throw new LibraryException("not yet implemented"); // TODO: message
     }
 
     @Override

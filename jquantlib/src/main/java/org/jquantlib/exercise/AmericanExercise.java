@@ -75,7 +75,7 @@ public class AmericanExercise extends EarlyExercise {
 	 */
 	public AmericanExercise(final Date earliestDate, final Date latestDate, final boolean payoffAtExpiry) {
 		super(Exercise.Type.American, payoffAtExpiry);
-		QL.require(earliestDate.le(latestDate) , "earliest > latest exercise date");  // QA:[RG]::verified // TODO: message
+		QL.require(earliestDate.le(latestDate) , "earliest > latest exercise date");  // TODO: message
 		super.dates.add(earliestDate.clone());
 		super.dates.add(latestDate.clone());
     }

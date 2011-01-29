@@ -56,7 +56,7 @@ public class PoissonDistribution implements Ops.IntToDouble {
      * @param the mean value {@latex$ \mu}
      */
     public PoissonDistribution(final double mu) {
-        QL.require(mu >= 0.0 , "mu must be non negative"); // QA:[RG]::verified // TODO: message
+        QL.require(mu >= 0.0 , "mu must be non negative"); // TODO: message
         this.mu = mu;
     }
 

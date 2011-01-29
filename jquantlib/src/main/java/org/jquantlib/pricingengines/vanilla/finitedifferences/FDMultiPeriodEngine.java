@@ -167,7 +167,7 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
         final double dateTolerance = 1e-6;
 
         if (dateNumber > 0) {
-            QL.require(getDividendTime(0) >= 0, "first date cannot be negative"); // QA:[RG]::verified // TODO: message
+            QL.require(getDividendTime(0) >= 0, "first date cannot be negative"); // TODO: message
             if (getDividendTime(0) < getResidualTime() * dateTolerance) {
                 firstDateIsZero = true;
                 firstIndex = 0;
@@ -186,7 +186,7 @@ public abstract class FDMultiPeriodEngine extends FDVanillaEngine {
 
             if (dateNumber >= 2) {
                 for (int j = 1; j < dateNumber; j++) {
-                    QL.require(getDividendTime(j - 1) < getDividendTime(j) , "dates must be in strictly increasing order"); // QA:[RG]::verified // TODO: message
+                    QL.require(getDividendTime(j - 1) < getDividendTime(j) , "dates must be in strictly increasing order"); // TODO: message
                 }
             }
         }

@@ -104,7 +104,7 @@ public class InterestRate {
 
         if (this.compound == Compounding.Compounded || this.compound == Compounding.SimpleThenCompounded) {
             freqMakesSense = true;
-            QL.require(freq != Frequency.Once && freq != Frequency.NoFrequency , "frequency not allowed for this interest rate"); // QA:[RG]::verified // TODO: message
+            QL.require(freq != Frequency.Once && freq != Frequency.NoFrequency , "frequency not allowed for this interest rate"); // TODO: message
             this.freq = freq.toInteger();
         }
     }
@@ -122,8 +122,8 @@ public class InterestRate {
      */
     public final/* @CompoundFactor */double compoundFactor(final/* @Time */double time) {
         /* @Time */final double t = time;
-        QL.require(t >= 0.0 , "negative time not allowed"); // QA:[RG]::verified // TODO: message
-        QL.require(!Double.isNaN(rate) , "null interest rate"); // QA:[RG]::verified // TODO: message
+        QL.require(t >= 0.0 , "negative time not allowed"); // TODO: message
+        QL.require(!Double.isNaN(rate) , "null interest rate"); // TODO: message
 
         // TODO: code review :: please verify against QL/C++ code
         // if (rate<0.0) throw new IllegalArgumentException("null interest rate");
@@ -148,7 +148,7 @@ public class InterestRate {
                 return Math.pow((1 + r / freq), (freq * t));
             }
         } else {
-            throw new LibraryException("unknown compounding convention"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("unknown compounding convention"); // TODO: message
         }
     }
 
@@ -271,7 +271,7 @@ public class InterestRate {
             final DayCounter resultDC,
             final Compounding comp,
             final Frequency freq) {
-        QL.require(d1.lt(d2) , "d1 later than or equal to d2"); // QA:[RG]::verified // TODO: message
+        QL.require(d1.lt(d2) , "d1 later than or equal to d2"); // TODO: message
         /* @Time */final double t1 = this.dc.yearFraction(d1, d2);
         /* @Time */final double t2 = resultDC.yearFraction(d1, d2);
         return impliedRate(compoundFactor(t1), t2, resultDC, comp, freq);
@@ -288,8 +288,8 @@ public class InterestRate {
 
         /* @Time */final double t = time;
         final double f = freq.toInteger();
-        QL.require(c > 0.0 , "positive compound factor required"); // QA:[RG]::verified // TODO: message
-        QL.require(t > 0.0 , "positive time required"); // QA:[RG]::verified // TODO: message
+        QL.require(c > 0.0 , "positive compound factor required"); // TODO: message
+        QL.require(t > 0.0 , "positive time required"); // TODO: message
 
         /* @Rate */double rate;
         switch (comp) {
@@ -315,7 +315,7 @@ public class InterestRate {
             }
             break;
         default:
-            throw new LibraryException("unknown compounding convention"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("unknown compounding convention"); // TODO: message
         }
         return new InterestRate(rate, resultDC, comp, freq);
     }
@@ -336,7 +336,7 @@ public class InterestRate {
      */
     static public InterestRate impliedRate(final/* @CompoundFactor */double compound, final Date d1, final Date d2,
             final DayCounter resultDC, final Compounding comp, final Frequency freq) {
-        QL.require(d1.le(d2) , "d1 later than or equal to d2"); // QA:[RG]::verified // TODO: message
+        QL.require(d1.le(d2) , "d1 later than or equal to d2"); // TODO: message
         /* @Time */final double t = resultDC.yearFraction(d1, d2);
         return impliedRate(compound, t, resultDC, comp, freq);
     }
@@ -366,7 +366,7 @@ public class InterestRate {
                 sb.append("simple compounding up to " + (12 / freq) + " months, then " + freq + " compounding");
             }
         } else {
-            throw new LibraryException("unknown compounding convention"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("unknown compounding convention"); // TODO: message
         }
         return sb.toString();
     }

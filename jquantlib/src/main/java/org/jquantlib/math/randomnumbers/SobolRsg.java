@@ -1406,13 +1406,13 @@ public class SobolRsg implements UniformRandomSequenceGenerator {
             throw new UnsupportedOperationException("Work in progress");
         }
 
-        QL.require(dimensionality > 0 , "dimensionality must be greater than 0"); // QA:[RG]::verified // TODO: message
+        QL.require(dimensionality > 0 , "dimensionality must be greater than 0"); // TODO: message
 
         // In QuantLib/C++ PrimitivePolinomials is initialized in a template given its maximum dimensionality
         // defined via macros. In Java we allocate at runtime.
         final PrimitivePolynomials pp = new PrimitivePolynomials();
 
-        QL.require(dimensionality <= pp.getPpmtMaxDim() , "dimensionality exceeds available primitive polynomials module two"); // QA:[RG]::verified // TODO: message
+        QL.require(dimensionality <= pp.getPpmtMaxDim() , "dimensionality exceeds available primitive polynomials module two"); // TODO: message
 
         this.dimensionality = dimensionality;
         this.sequenceCounter = 0;

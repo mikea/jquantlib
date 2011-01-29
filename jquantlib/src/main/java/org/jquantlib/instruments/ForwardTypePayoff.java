@@ -117,4 +117,5 @@ public class ForwardTypePayoff extends Payoff {
     public String name () {
         return "Forward";
     }
+    
 }

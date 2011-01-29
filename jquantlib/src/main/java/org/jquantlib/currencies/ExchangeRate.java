@@ -111,7 +111,7 @@ public class ExchangeRate {
             } else if (amount.currency().equals(target_)) {
                 return new Money(amount.value() / rate_, source_);
             } else {
-                throw new LibraryException("exchange rate not applicable"); // QA:[RG]::verified // TODO: message
+                throw new LibraryException("exchange rate not applicable"); // TODO: message
             }
         case Derived:
             if (amount.currency() == rateChain_.first().source() || amount.currency() == rateChain_.first().target()) {
@@ -119,10 +119,10 @@ public class ExchangeRate {
             } else if (amount.currency() == rateChain_.second().source() || amount.currency() == rateChain_.second().target()) {
                 return rateChain_.first().exchange(rateChain_.second().exchange(amount));
             } else {
-                throw new LibraryException("exchange rate not applicable"); // QA:[RG]::verified // TODO: message
+                throw new LibraryException("exchange rate not applicable"); // TODO: message
             }
         default:
-            throw new LibraryException("unknown exchange-rate type"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("unknown exchange-rate type"); // TODO: message
         }
     }
 
@@ -155,7 +155,7 @@ public class ExchangeRate {
             result.target_ = r2.source_;
             result.rate_ = r1.rate_/r2.rate_;
         } else {
-            throw new LibraryException("exchange rates not chainable"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("exchange rates not chainable"); // TODO: message
         }
         return result;
     }

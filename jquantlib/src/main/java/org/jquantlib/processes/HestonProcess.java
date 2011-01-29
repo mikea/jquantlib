@@ -291,7 +291,7 @@ public class HestonProcess extends StochasticProcess {
                 retVal[0] = x00 * Math.exp(dy + rhov_ / sigmav_ * (retVal[1] - x01));
                 break;
             default:
-                throw new LibraryException("unknown discretization schema"); // QA:[RG]::verified // TODO: message
+                throw new LibraryException("unknown discretization schema"); // TODO: message
         }
 
         return new Array( retVal );

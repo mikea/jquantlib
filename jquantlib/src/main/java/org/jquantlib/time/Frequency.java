@@ -100,7 +100,7 @@ public enum Frequency {
         case 999:
             return Frequency.OtherFrequency;
         default:
-            throw new LibraryException("value must be one of -1,0,1,2,3,4,6,12,13,26,52,365,999"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("value must be one of -1,0,1,2,3,4,6,12,13,26,52,365,999"); // TODO: message
         }
     }
 

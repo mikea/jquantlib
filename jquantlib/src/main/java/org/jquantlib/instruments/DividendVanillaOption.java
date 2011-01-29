@@ -195,7 +195,7 @@ public class DividendVanillaOption extends VanillaOption {
             final Date exerciseDate = exercise.lastDate();
             for (int i = 0; i < cashFlow.size(); i++) {
                 final Date d = cashFlow.get(i).date();
-                QL.require(d.le(exerciseDate), "dividend date later than the exercise date"); // QA:[RG]::verified // TODO: message
+                QL.require(d.le(exerciseDate), "dividend date later than the exercise date"); // TODO: message
             }
         }
     }

@@ -118,7 +118,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
             }
             return Math.max(a - b, 0.0)* coupon_.accrualPeriod()*discount_;
         } else {
-            QL.require(capletVolatility()!=null , missing_caplet_volatility); // QA:[RG]::verified // TODO: message
+            QL.require(capletVolatility()!=null , missing_caplet_volatility); // TODO: message
             // not yet determined, use Black model
             final double fixing =
                 BlackFormula.blackFormula(
@@ -141,7 +141,7 @@ public class BlackIborCouponPricer extends IborCouponPricer {
             adjustement = 0.0;
         else {
             // see Hull, 4th ed., page 550
-            QL.require(capletVolatility() != null , missing_caplet_volatility); // QA:[RG]::verified // TODO: message
+            QL.require(capletVolatility() != null , missing_caplet_volatility); // TODO: message
             final Date d1 = coupon_.fixingDate();
             final Date referenceDate = capletVolatility().currentLink().referenceDate();
             if (d1.le(referenceDate))

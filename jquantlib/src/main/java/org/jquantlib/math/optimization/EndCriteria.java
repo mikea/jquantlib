@@ -66,7 +66,7 @@ public class EndCriteria {
 //            case Unknown:
 //                return "Unknown";
 //            default:
-//                throw new LibraryException("unknown EndCriteria"); // QA:[RG]::verified // TODO: message
+//                throw new LibraryException("unknown EndCriteria"); // TODO: message
 //            }
 //        }
 
@@ -105,8 +105,8 @@ public class EndCriteria {
             this.maxStationaryStateIterations_ = (maxStationaryStateIterations != 0) ? maxStationaryStateIterations : Math.min(maxIterations/2, 100);
             this.gradientNormEpsilon_ = (Double.isNaN(gradientNormEpsilon)) ? functionEpsilon_ : gradientNormEpsilon;
 
-            QL.require(this.maxStationaryStateIterations_ >= 1 , "maxStationaryStateIterations must be greater than one"); // QA:[RG]::verified // TODO: message
-            QL.require(this.maxStationaryStateIterations_ <= this.maxIterations_ , "maxStationaryStateIterations_ must be less than maxIterations_"); // QA:[RG]::verified // TODO: message
+            QL.require(this.maxStationaryStateIterations_ >= 1 , "maxStationaryStateIterations must be greater than one"); // TODO: message
+            QL.require(this.maxStationaryStateIterations_ <= this.maxIterations_ , "maxStationaryStateIterations_ must be less than maxIterations_"); // TODO: message
         }
 
 

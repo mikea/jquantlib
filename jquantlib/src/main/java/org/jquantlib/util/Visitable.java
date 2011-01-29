@@ -28,8 +28,8 @@ package org.jquantlib.util;
  * @author Richard Gomes
  * 
  * @see Visitor
- * @see TypedVisitor
- * @see TypedVisitable
+ * @see PolymorphicVisitor
+ * @see PolymorphicVisitable
  * 
  * @see <a href="http://www.exciton.cs.rice.edu/JavaResources/DesignPatterns/VisitorPattern.htm">The Visitor Design Pattern</a>
  *
@@ -42,11 +42,11 @@ public interface Visitable<T> {
 	 * kept by <code>this</code> class. In the affirmative case, <code>accept</code> is responsible for passing <code>this</code>
 	 * data structures to the Visitor. 
 	 * 
-	 * @param v is the Visitor
+	 * @param v is the Visitor<T>
 	 * 
 	 * @see Visitor
-	 * @see TypedVisitor
-	 * @see TypedVisitable
+	 * @see PolymorphicVisitor
+	 * @see PolymorphicVisitable
 	 */
     public void accept(Visitor<T> v);
 	

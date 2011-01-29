@@ -55,7 +55,7 @@ public class FractionalDividend extends Dividend {
 
 	@Override
 	public double amount() {
-		QL.require(!Double.isNaN(nominal) , "no nominal given"); // QA:[RG]::verified // TODO: message
+		QL.require(!Double.isNaN(nominal) , "no nominal given"); // TODO: message
 		return rate*nominal;
 	}
 

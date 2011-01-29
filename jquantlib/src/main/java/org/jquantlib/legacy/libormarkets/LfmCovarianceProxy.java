@@ -102,7 +102,7 @@ public class LfmCovarianceProxy extends LfmCovarianceParameterization {
               }
         }
 
-          QL.require(!x.empty() , "can not handle given x here"); // QA:[RG]::verified // TODO: message
+          QL.require(!x.empty() , "can not handle given x here"); // TODO: message
 
           double tmp=0.0;
           final Var_Helper helper = new Var_Helper(this, i, j);

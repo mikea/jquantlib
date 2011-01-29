@@ -61,7 +61,7 @@ public class GammaFunction {
      * @return <code>-temp+Math.log(2.5066282746310005*ser/x)</code>
      */
     public double logValue(final double x) /* Read-only */{
-        QL.require(x > 0.0 , "positive argument required"); // QA:[RG]::verified // TODO: message
+        QL.require(x > 0.0 , "positive argument required"); // TODO: message
     	double temp = x + 5.5;
     	temp -= (x + 0.5) * Math.log(temp);
     	double ser = 1.000000000190015;

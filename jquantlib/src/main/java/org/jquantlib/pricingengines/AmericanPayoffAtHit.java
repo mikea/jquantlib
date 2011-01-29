@@ -85,10 +85,10 @@ public class AmericanPayoffAtHit {
     public AmericanPayoffAtHit(
             final double spot, final double discount, final double dividendDiscount, final double variance,
             final StrikedTypePayoff strikedTypePayoff) {
-        QL.require(spot > 0.0 , "positive spot value required"); // QA:[RG]::verified // TODO: message
-        QL.require(discount > 0.0 , "positive discount required"); // QA:[RG]::verified // TODO: message
-        QL.require(dividendDiscount > 0.0 , "positive dividend discount required"); // QA:[RG]::verified // TODO: message
-        QL.require(variance >= 0.0 , "non-negative variance required"); // QA:[RG]::verified // TODO: message
+        QL.require(spot > 0.0 , "positive spot value required"); // TODO: message
+        QL.require(discount > 0.0 , "positive discount required"); // TODO: message
+        QL.require(dividendDiscount > 0.0 , "positive dividend discount required"); // TODO: message
+        QL.require(variance >= 0.0 , "non-negative variance required"); // TODO: message
 
         this.spot = spot;
         this.variance = variance;
@@ -103,7 +103,7 @@ public class AmericanPayoffAtHit {
                 mu      = - 0.5;
                 lambda  = 0.5;
             } else if (discount == 0.0)
-                throw new LibraryException("null discount not handled yet"); // QA:[RG]::verified // TODO: message
+                throw new LibraryException("null discount not handled yet"); // TODO: message
             else {
                 mu = Math.log(dividendDiscount / discount) / variance - 0.5;
                 lambda = Math.sqrt( mu * mu - 2.0 * Math.log(discount) / variance);
@@ -267,7 +267,7 @@ public class AmericanPayoffAtHit {
     }
 
     public double rho(final /* @Time */ double maturity) /* @ReadOnly */ {
-        QL.require(maturity > 0.0 , "negative maturity not allowed"); // QA:[RG]::verified // TODO: message
+        QL.require(maturity > 0.0 , "negative maturity not allowed"); // TODO: message
         final double DalphaDr = -DalphaDd1/(lambda*stdDev) * (1.0 + mu);
         final double DbetaDr  =  DbetaDd2 /(lambda*stdDev) * (1.0 + mu);
         double DforwardDr, DXDr;

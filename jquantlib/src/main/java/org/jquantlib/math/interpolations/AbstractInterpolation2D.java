@@ -207,7 +207,7 @@ public class AbstractInterpolation2D implements Interpolation2D {
             this.vy = vy; // TODO: clone?
             this.mz = mz; // TODO: clone?
 
-            QL.require(vx.size() >= 2 && vy.size() >= 2, "not enough points to interpolate"); // QA:[RG]::verified // TODO: message
+            QL.require(vx.size() >= 2 && vy.size() >= 2, "not enough points to interpolate"); // TODO: message
             for (int i = 0; i < vx.size() - 1; i++) {
                 QL.require(vx.get(i) <= vx.get(i + 1), "unsorted values on array X"); // TODO: message
                 QL.require(vy.get(i) <= vy.get(i + 1), "unsorted values on array Y"); // TODO: message

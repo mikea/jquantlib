@@ -37,7 +37,7 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.yieldcurves.FlatForward;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -656,7 +656,7 @@ public class CashFlows {
                 if (cf instanceof Coupon) {
                     final Coupon cp = (Coupon) cf;
                     if (firstCouponFound) {
-                        QL.require(nominal == cp.nominal() && accrualPeriod == cp.accrualPeriod() && dc == cp.dayCounter() , "cannot aggregate two different coupons");  // QA:[RG]::verified // TODO: message
+                        QL.require(nominal == cp.nominal() && accrualPeriod == cp.accrualPeriod() && dc == cp.dayCounter() , "cannot aggregate two different coupons");  // TODO: message
                     } else {
                         firstCouponFound = true;
                         nominal = cp.nominal();
@@ -667,7 +667,7 @@ public class CashFlows {
                 }
             }
         }
-        QL.ensure((firstCouponFound) , "next cashflow (" + paymentDate + ") is not a coupon"); // QA:[RG]::verified // TODO: message
+        QL.ensure((firstCouponFound) , "next cashflow (" + paymentDate + ") is not a coupon"); // TODO: message
         return result;
     }
 
@@ -751,7 +751,7 @@ public class CashFlows {
         }
     }
 
-    private class BPSCalculator implements TypedVisitor<Object> {
+    private class BPSCalculator implements PolymorphicVisitor {
 
         private static final String UNKNOWN_VISITABLE = "unknow visitable object";
 
@@ -777,36 +777,36 @@ public class CashFlows {
         // private inner classes
         //
 
-        private class CashFlowVisitor implements Visitor<Object> {
+        private class CashFlowVisitor implements Visitor<CashFlow> {
             @Override
-            public void visit(final Object o) {
+            public void visit(final CashFlow o) {
                 // nothing
             }
         }
 
-        private class CouponVisitor implements Visitor<Object> {
+        private class CouponVisitor implements Visitor<CashFlow> {
             @Override
-            public void visit(final Object o) {
+            public void visit(final CashFlow o) {
                 final Coupon c = (Coupon) o;
                 result += c.accrualPeriod() * c.nominal() * termStructure.currentLink().discount(c.date());
             }
         }
 
         //
-        // implements TypedVisitor
+        // implements PolymorphicVisitor
         //
 
         @Override
-        public Visitor<Object> getVisitor(final Class<? extends Object> klass) {
+        public <CashFlow> Visitor<CashFlow> visitor(final Class<? extends CashFlow> klass) {
 
             //FIXME
-            //Coupon is a Cashflow, therfore any Coupon types will never get to the CashflowVisitor.
-            //This may be fine for now, but could become problematic if other types are introduced.
+            // Coupon is a CashFlow, therefore any Coupon types will never get to the CashFlowVisitor.
+            // This may be fine for now, but could become problematic if other types are introduced.
 
             if (Coupon.class.isAssignableFrom (klass))
-                return new CouponVisitor();
-            if (CashFlow.class.isAssignableFrom (klass))
-                return new CashFlowVisitor();
+                return (Visitor<CashFlow>) new CouponVisitor();
+            if (org.jquantlib.cashflow.CashFlow.class.isAssignableFrom (klass))
+                return (Visitor<CashFlow>) new CashFlowVisitor();
             throw new LibraryException(UNKNOWN_VISITABLE); // QA:[RG]::verified
         }
     }

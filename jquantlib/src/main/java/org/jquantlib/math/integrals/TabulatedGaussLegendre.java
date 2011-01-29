@@ -173,7 +173,7 @@ public class TabulatedGaussLegendre {
             order_=order; x_=x20; w_=w20; n_=n20;
             break;
         default:
-            throw new LibraryException("order not supported"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("order not supported"); // TODO: message
         }
     }
 

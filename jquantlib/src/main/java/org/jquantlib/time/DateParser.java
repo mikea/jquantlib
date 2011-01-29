@@ -44,7 +44,7 @@ public class DateParser {
      * @return Date
      */
     public static Date parseISO(final String str) {
-        QL.require(str.length() == 10 && str.charAt(4) == '-' && str.charAt(7) == '-', "invalid format"); // QA:[RG]::verified // TODO: message
+        QL.require(str.length() == 10 && str.charAt(4) == '-' && str.charAt(7) == '-', "invalid format"); // TODO: message
 
         final int year = Integer.parseInt(str.substring(0, 4));
         final int month = Integer.parseInt(str.substring(5, 7));

@@ -51,8 +51,8 @@ import org.jquantlib.time.Date;
 import org.jquantlib.util.DefaultObservable;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.Observer;
-import org.jquantlib.util.TypedVisitable;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitable;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -64,7 +64,7 @@ import org.jquantlib.util.Visitor;
  * instrument class to ensure consistancy between the algorithms used during bootstrapping and later
  * instrument pricing. This is not yet fully enforced in the available rate helpers.
  */
-public abstract class BootstrapHelper <TS extends TermStructure> implements Observer, Observable, TypedVisitable<BootstrapHelper> {
+public abstract class BootstrapHelper <TS extends TermStructure> implements Observer, Observable, PolymorphicVisitable {
 
     protected Handle <Quote> quote;
     protected TS termStructure;
@@ -161,14 +161,14 @@ public abstract class BootstrapHelper <TS extends TermStructure> implements Obse
 
 
     //
-    // implements TypedVisitable
+    // implements PolymorphicVisitable
     //
 
     @Override
-    public void accept(final TypedVisitor<BootstrapHelper> v) {
-        final Visitor<BootstrapHelper> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
-            v1.visit(this);
+    public void accept(final PolymorphicVisitor pv) {
+        final Visitor<BootstrapHelper> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
         } else {
             throw new LibraryException("not a bootstrap helper visitor");//TODO: message
         }

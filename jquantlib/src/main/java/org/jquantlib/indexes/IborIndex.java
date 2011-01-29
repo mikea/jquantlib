@@ -123,7 +123,7 @@ public class IborIndex extends InterestRateIndex {
         case Years:
             return BusinessDayConvention.ModifiedFollowing;
         default:
-            throw new LibraryException("invalid time units"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("invalid time units"); // TODO: message
         }
     }
 
@@ -136,7 +136,7 @@ public class IborIndex extends InterestRateIndex {
         case Years:
             return true;
         default:
-            throw new LibraryException("invalid time units");  // QA:[RG]::verified // TODO: message
+            throw new LibraryException("invalid time units");  // TODO: message
         }
     }
 
@@ -148,7 +148,7 @@ public class IborIndex extends InterestRateIndex {
      */
     @Override
     protected double forecastFixing(final Date fixingDate) {
-        QL.require(! termStructure_.empty() , "no forecasting term structure set to " + name());  // QA:[RG]::verified // TODO: message
+        QL.require(! termStructure_.empty() , "no forecasting term structure set to " + name());  // TODO: message
         final Date fixingValueDate = valueDate(fixingDate);
         final Date endValueDate = maturityDate(fixingValueDate);
         final double fixingDiscount = termStructure_.currentLink().discount(fixingValueDate);

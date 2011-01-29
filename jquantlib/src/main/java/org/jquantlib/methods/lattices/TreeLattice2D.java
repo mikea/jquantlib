@@ -70,7 +70,7 @@ public abstract class TreeLattice2D<T extends TrinomialTree> extends TreeLattice
 
 	@Override
     public Array grid(final double t) {
-		throw new LibraryException("not implemented"); // QA:[RG]::verified // TODO: message
+		throw new LibraryException("not implemented"); // TODO: message
 	}
 
 	@Override

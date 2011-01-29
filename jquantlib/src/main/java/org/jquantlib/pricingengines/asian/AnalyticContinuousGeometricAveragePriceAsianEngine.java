@@ -96,11 +96,11 @@ public class AnalyticContinuousGeometricAveragePriceAsianEngine extends Continuo
 
     @Override
     public void calculate() /*@ReadOnly*/ {
-        QL.require(a.averageType==AverageType.Geometric , "not a geometric average option"); // QA:[RG]::verified // TODO: message
-        QL.require(a.exercise.type()==Exercise.Type.European , "not an European Option"); // QA:[RG]::verified // TODO: message
+        QL.require(a.averageType==AverageType.Geometric , "not a geometric average option"); // TODO: message
+        QL.require(a.exercise.type()==Exercise.Type.European , "not an European Option"); // TODO: message
         final Date exercise = a.exercise.lastDate();
 
-        QL.require(a.payoff instanceof PlainVanillaPayoff , "non-plain payoff given"); // QA:[RG]::verified // TODO: message
+        QL.require(a.payoff instanceof PlainVanillaPayoff , "non-plain payoff given"); // TODO: message
         final PlainVanillaPayoff payoff = (PlainVanillaPayoff)arguments_.payoff;
 
         /*@Volatility*/ final double volatility = process.blackVolatility().currentLink().blackVol(exercise, payoff.strike());
@@ -125,7 +125,7 @@ public class AnalyticContinuousGeometricAveragePriceAsianEngine extends Continuo
                 process.dividendYield().currentLink().referenceDate(), exercise);
         /*@DiscountFactor*/ final double dividendDiscount = Math.exp(-dividendYield*t_q);
         /*@Real*/ final double spot = process.stateVariable().currentLink().value();
-        QL.require(spot > 0.0, "negative or null underlying given"); // QA:[RG]::verified // TODO: message
+        QL.require(spot > 0.0, "negative or null underlying given"); // TODO: message
         /*@Real*/ final double forward = spot * dividendDiscount / riskFreeDiscount;
 
         final BlackCalculator black = new BlackCalculator(payoff, forward, Math.sqrt(variance/3.0),riskFreeDiscount);

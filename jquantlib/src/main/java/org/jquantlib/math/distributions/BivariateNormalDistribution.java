@@ -99,7 +99,7 @@ public class BivariateNormalDistribution implements Ops.BinaryDoubleOp {
      * @param rho correlation
      */
     public BivariateNormalDistribution(final double rho) {
-        QL.require(rho >= -1.0 && rho <= 1.0 , "rho must be >= -1.0 and <= 1.0"); // QA:[RG]::verified // TODO: message
+        QL.require(rho >= -1.0 && rho <= 1.0 , "rho must be >= -1.0 and <= 1.0"); // TODO: message
         correlation = rho;
     }
 

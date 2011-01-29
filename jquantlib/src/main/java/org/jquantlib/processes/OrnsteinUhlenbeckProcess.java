@@ -66,8 +66,8 @@ public class OrnsteinUhlenbeckProcess extends StochasticProcess1D {
             final double /* @Real */level) {
         super();
 
-        QL.require(speed >= 0.0, NEGATIVE_SPEED_GIVEN); // QA:[RG]::verified // TODO: message
-        QL.require(vol >= 0.0, NEGATIVE_VOLATILITY_GIVEN); // QA:[RG]::verified // TODO: message
+        QL.require(speed >= 0.0, NEGATIVE_SPEED_GIVEN); // TODO: message
+        QL.require(vol >= 0.0, NEGATIVE_VOLATILITY_GIVEN); // TODO: message
 
         x0_ = (x0);
         speed_ = (speed);

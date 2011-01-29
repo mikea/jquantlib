@@ -165,7 +165,7 @@ public class SampledCurve implements Cloneable {
 
 
     public double valueAtCenter() /* @Readonly */{
-        QL.require(!empty() , "empty sampled curve"); // QA:[RG]::verified // TODO: message
+        QL.require(!empty() , "empty sampled curve"); // TODO: message
         final int jmid = size() / 2;
         if (size() % 2 != 0)
             return values.get(jmid);
@@ -174,7 +174,7 @@ public class SampledCurve implements Cloneable {
     }
 
     public double firstDerivativeAtCenter() /* @Readonly */{
-        QL.require(size() >= 3 , "the size of the curve must be at least 3"); // QA:[RG]::verified // TODO: message
+        QL.require(size() >= 3 , "the size of the curve must be at least 3"); // TODO: message
         final int jmid = size() / 2;
         if (size() % 2 != 0)
             return (values.get(jmid + 1) - values.get(jmid - 1)) / (grid.get(jmid + 1) - grid.get(jmid - 1));
@@ -183,7 +183,7 @@ public class SampledCurve implements Cloneable {
     }
 
     public double secondDerivativeAtCenter() /* @Readonly */{
-        QL.require(size() >= 4 , "the size of the curve must be at least 4"); // QA:[RG]::verified // TODO: message
+        QL.require(size() >= 4 , "the size of the curve must be at least 4"); // TODO: message
         final int jmid = size() / 2;
         if (size() % 2 != 0) {
             final double deltaPlus = (values.get(jmid + 1) - values.get(jmid)) / ((grid.get(jmid + 1) - grid.get(jmid)));

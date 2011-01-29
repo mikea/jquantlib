@@ -116,10 +116,10 @@ public abstract class TypeReference<T> {
      * Gets the referenced Class of the n-th generic parameter
      */
     public Class<?> getGenericParameterClass(final int n) {
-        QL.require(n < types.length , "Missing parameter"); // QA:[RG]::verified // TODO: message
+        QL.require(n < types.length , "Missing parameter"); // TODO: message
         final Type type = types[n];
         final Class<?> clazz = (type instanceof Class<?>) ? (Class<?>) type : (Class<?>) ((ParameterizedType) type).getRawType();
-        QL.require(((clazz.getModifiers() & Modifier.ABSTRACT) == 0) , "generic parameter must be a concrete class"); // QA:[RG]::verified // TODO: message
+        QL.require(((clazz.getModifiers() & Modifier.ABSTRACT) == 0) , "generic parameter must be a concrete class"); // TODO: message
         return clazz;
     }
 

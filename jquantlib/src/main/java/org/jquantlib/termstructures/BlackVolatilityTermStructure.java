@@ -44,7 +44,7 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -199,17 +199,17 @@ abstract public class BlackVolatilityTermStructure extends BlackVolTermStructure
 
 
 	//
-	// implements TypedVisitable
+	// implements PolymorphicVisitable
 	//
 
 	@Override
-	public void accept(final TypedVisitor<TermStructure> v) {
-		final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
-		} else {
-			super.accept(v);
-		}
+	public void accept(final PolymorphicVisitor pv) {
+		final Visitor<BlackVolatilityTermStructure> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
+        } else {
+            super.accept(pv);
+        }
 	}
 
 }

@@ -40,8 +40,8 @@ public class CurveState {
     }
 
     public /*@Rate*/ double swapRate(final int begin, final int end)  {
-        QL.require(end > begin , "empty range specified"); // QA:[RG]::verified // TODO: message
-        QL.require(end <= numberOfRates_ , "taus/end mismatch"); // QA:[RG]::verified // TODO: message
+        QL.require(end > begin , "empty range specified"); // TODO: message
+        QL.require(end <= numberOfRates_ , "taus/end mismatch"); // TODO: message
 
         final double sum = 0.0;
 

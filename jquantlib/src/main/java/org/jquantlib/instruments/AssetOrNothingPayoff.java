@@ -43,7 +43,7 @@
 package org.jquantlib.instruments;
 
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -100,21 +100,22 @@ public class AssetOrNothingPayoff extends StrikedTypePayoff {
         else if (type == Option.Type.Put)
             return (strike - price > 0.0) ? price : 0.0;
         else
-            throw new LibraryException("unknown/illegal option type"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("unknown/illegal option type"); // TODO: message
 	}
 
 
 	//
-	// implements TypedVisitable
+	// implements PolymorphicVisitable
 	//
 
 	@Override
-	public void accept(final TypedVisitor<Payoff> v) {
-		final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null)
-            v1.visit(this);
-        else
-            super.accept(v);
+	public void accept(final PolymorphicVisitor pv) {
+		final Visitor<AssetOrNothingPayoff> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
+        } else {
+            super.accept(pv);
+        }
 	}
 
 }

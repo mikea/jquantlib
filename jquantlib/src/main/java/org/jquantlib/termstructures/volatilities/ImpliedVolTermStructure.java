@@ -45,7 +45,7 @@ import org.jquantlib.termstructures.BlackVarianceTermStructure;
 import org.jquantlib.termstructures.BlackVolTermStructure;
 import org.jquantlib.termstructures.TermStructure;
 import org.jquantlib.time.Date;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -118,16 +118,16 @@ public class ImpliedVolTermStructure extends BlackVarianceTermStructure {
 
 
     //
-    // implements TypedVisitable
+    // implements PolymorphicVisitable
     //
 
     @Override
-    public void accept(final TypedVisitor<TermStructure> v) {
-        final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
-            v1.visit(this);
+    public void accept(final PolymorphicVisitor pv) {
+        final Visitor<ImpliedVolTermStructure> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
         } else {
-            super.accept(v);
+            super.accept(pv);
         }
     }
 

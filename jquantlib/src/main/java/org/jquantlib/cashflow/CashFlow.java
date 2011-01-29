@@ -22,7 +22,8 @@
 
 package org.jquantlib.cashflow;
 
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitable;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 
@@ -68,18 +69,17 @@ public abstract class CashFlow extends Event implements Comparable<CashFlow> {
 
 
 	//
-	// implements TypedVisitable
+	// implements PolymorphicVisitable
 	//
 
-	// TODO: code review :: object model needs to be validated and eventually refactored
 	@Override
-	public void accept(final TypedVisitor<Object> v) {
-		final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
-		} else {
-			super.accept(v);
-		}
+	public void accept(final PolymorphicVisitor pv) {
+		final Visitor<CashFlow> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
+        } else {
+            super.accept(pv);
+        }
 	}
 
 }

@@ -101,7 +101,7 @@ abstract public class AbstractSolver1D<F extends Ops.DoubleOp> {
      */
     public double solve(final F f, double accuracy, final double guess, final double step) {
 
-        QL.require(accuracy > 0.0 , "accuracy must be positive"); // QA:[RG]::verified // TODO: message
+        QL.require(accuracy > 0.0 , "accuracy must be positive"); // TODO: message
         // check whether we really want to use epsilon
         accuracy = Math.max(accuracy, Constants.QL_EPSILON);
 
@@ -177,10 +177,10 @@ abstract public class AbstractSolver1D<F extends Ops.DoubleOp> {
      */
     public double solve(final F f, double accuracy, final double guess, final double xMin, final double xMax) {
         // TODO: Design by Contract? http://bugs.jquantlib.org/view.php?id=291
-        QL.require(accuracy > 0.0 , "accuracy must be positive"); // QA:[RG]::verified // TODO: message
-        QL.require(xMin < xMax , "invalid range: xMin >= xMax"); // QA:[RG]::verified // TODO: message
-        QL.require(!lowerBoundEnforced || xMin >= lowerBound , "xMin < enforced low bound"); // QA:[RG]::verified // TODO: message
-        QL.require(!upperBoundEnforced || xMax <= upperBound , "xMax > enforced hi bound"); // QA:[RG]::verified // TODO: message
+        QL.require(accuracy > 0.0 , "accuracy must be positive"); // TODO: message
+        QL.require(xMin < xMax , "invalid range: xMin >= xMax"); // TODO: message
+        QL.require(!lowerBoundEnforced || xMin >= lowerBound , "xMin < enforced low bound"); // TODO: message
+        QL.require(!upperBoundEnforced || xMax <= upperBound , "xMax > enforced hi bound"); // TODO: message
 
         // check whether we really want to use epsilon
         accuracy = Math.max(accuracy, Constants.QL_EPSILON);
@@ -198,9 +198,9 @@ abstract public class AbstractSolver1D<F extends Ops.DoubleOp> {
         evaluationNumber = 2;
 
         // TODO: code review :: please verify against QL/C++ code
-        QL.require(fxMin * fxMax < 0.0 , "root not bracketed"); // QA:[RG]::verified // TODO: message
-        QL.require(guess > this.xMin , "guess must be greather than xMin"); // QA:[RG]::verified // TODO: message
-        QL.require(guess < this.xMax , "guess must be lesser than xMax"); // QA:[RG]::verified // TODO: message
+        QL.require(fxMin * fxMax < 0.0 , "root not bracketed"); // TODO: message
+        QL.require(guess > this.xMin , "guess must be greather than xMin"); // TODO: message
+        QL.require(guess < this.xMax , "guess must be lesser than xMax"); // TODO: message
 
         root = guess;
 

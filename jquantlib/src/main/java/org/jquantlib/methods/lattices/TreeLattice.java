@@ -172,7 +172,7 @@ public abstract class TreeLattice extends Lattice {
         if (Closeness.isClose(from, to))
             return;
 
-        QL.require(from > to, "cannot roll the asset"); // QA:[RG]::verified // TODO: message
+        QL.require(from > to, "cannot roll the asset"); // TODO: message
 
         final int iFrom = t.index(from);
         final int iTo = t.index(to);

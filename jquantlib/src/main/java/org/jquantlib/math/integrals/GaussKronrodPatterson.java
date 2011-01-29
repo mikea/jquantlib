@@ -124,7 +124,7 @@ public class GaussKronrodPatterson extends Integrator {
 
         double err;
 
-        QL.require(a < b , "b must be greater than a"); // QA:[RG]::verified // TODO: message
+        QL.require(a < b , "b must be greater than a"); // TODO: message
 
         final double halfLength = 0.5 * (b - a);
         final double center = 0.5 * (b + a);

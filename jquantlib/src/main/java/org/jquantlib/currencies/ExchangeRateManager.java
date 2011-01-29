@@ -365,7 +365,7 @@ public class ExchangeRateManager {
             throw new UnsupportedOperationException("Work in progress");
 
         ExchangeRate rate = null;
-        QL.require(((rate = fetch(source, target, date)) != null) , "no direct conversion available");  // QA:[RG]::verified // TODO: message
+        QL.require(((rate = fetch(source, target, date)) != null) , "no direct conversion available");  // TODO: message
 
         return rate;
     }
@@ -431,7 +431,7 @@ public class ExchangeRateManager {
         }
 
         // if the loop completed, we have no way to return the requested rate.
-        throw new LibraryException("no conversion available"); // QA:[RG]::verified // TODO: message
+        throw new LibraryException("no conversion available"); // TODO: message
     }
 
     /**

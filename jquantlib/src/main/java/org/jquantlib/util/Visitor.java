@@ -29,8 +29,8 @@ package org.jquantlib.util;
  * @author Richard Gomes
  *
  * @see Visitable
- * @see TypedVisitor
- * @see TypedVisitable
+ * @see PolymorphicVisitor
+ * @see PolymorphicVisitable
  * 
  * @see <a href="http://www.exciton.cs.rice.edu/JavaResources/DesignPatterns/VisitorPattern.htm">The Visitor Design Pattern</a>
  *
@@ -41,11 +41,11 @@ public interface Visitor<T> {
 	/**
 	 * This method is responsible for processing a data structure.
 	 *  
-	 * @param o is a data structure
+	 * @param element is one element of the data structure
 	 * 
 	 * @see Visitable
-	 * @see TypedVisitor
-	 * @see TypedVisitable
+	 * @see PolymorphicVisitor
+	 * @see PolymorphicVisitable
 	 */
-    public void visit(T  o);
+    public void visit(T element);
 }

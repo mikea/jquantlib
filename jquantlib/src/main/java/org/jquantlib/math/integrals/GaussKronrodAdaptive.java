@@ -90,7 +90,7 @@ public class GaussKronrodAdaptive extends KronrodIntegral {
 
     public GaussKronrodAdaptive(final double absoluteAccuracy, final int maxEvaluations) {
         super(absoluteAccuracy, maxEvaluations);
-        QL.require(maxEvaluations >= 15 , "required maxEvaluations must be >= 15"); // QA:[RG]::verified // TODO: message
+        QL.require(maxEvaluations >= 15 , "required maxEvaluations must be >= 15"); // TODO: message
     }
 
     @Override
@@ -140,7 +140,7 @@ public class GaussKronrodAdaptive extends KronrodIntegral {
         if (Math.abs(k15 - g7) < tolerance)
             return k15;
         else {
-            QL.require(numberOfEvaluations() + 30 <= maxEvaluations() , "maximum number of function evaluations exceeded"); // QA:[RG]::verified // TODO: message
+            QL.require(numberOfEvaluations() + 30 <= maxEvaluations() , "maximum number of function evaluations exceeded"); // TODO: message
             return integrateRecursively(f, a, center, tolerance / 2) + integrateRecursively(f, center, b, tolerance / 2);
         }
     }

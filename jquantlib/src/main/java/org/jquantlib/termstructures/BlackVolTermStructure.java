@@ -29,8 +29,8 @@ import org.jquantlib.termstructures.volatilities.VolatilityTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
-import org.jquantlib.util.TypedVisitable;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitable;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -43,7 +43,7 @@ import org.jquantlib.util.Visitor;
  *
  * @author Richard Gomes
  */
-public abstract class BlackVolTermStructure extends VolatilityTermStructure implements TypedVisitable<TermStructure> {
+public abstract class BlackVolTermStructure extends VolatilityTermStructure implements PolymorphicVisitable {
 
     static private final double dT = 1.0/365.0;
 
@@ -269,7 +269,7 @@ public abstract class BlackVolTermStructure extends VolatilityTermStructure impl
      * @return
      */
     public final /*@Volatility*/ double blackForwardVol(final Date date1, final Date date2, final /*@Real*/ double strike, final boolean extrapolate) {
-        QL.require(date1.le(date2), "date1 later than date2"); // QA:[RG]::verified // TODO: message
+        QL.require(date1.le(date2), "date1 later than date2"); // TODO: message
         /*@Time*/ final double time1 = timeFromReference(date1);
         /*@Time*/ final double time2 = timeFromReference(date2);
         return blackForwardVol(time1, time2, strike, extrapolate);
@@ -287,7 +287,7 @@ public abstract class BlackVolTermStructure extends VolatilityTermStructure impl
     public final /*@Volatility*/ double blackForwardVol(final /*@Time*/ double time1, final /*@Time*/ double time2, final /*@Real*/ double strike, final boolean extrapolate) {
         /*@Time*/ final double t1 = time1;
         /*@Time*/ final double t2 = time2;
-        QL.require(t1 <= t2 , "t1 later than t2"); // QA:[RG]::verified // TODO: message
+        QL.require(t1 <= t2 , "t1 later than t2"); // TODO: message
         checkRange(time2, extrapolate);
         checkStrike(strike, extrapolate);
         if (t1==t2) {
@@ -299,13 +299,13 @@ public abstract class BlackVolTermStructure extends VolatilityTermStructure impl
                 final double epsilon = Math.min(1.0e-5, t1);
                 /*@Variance*/ final double var1 = blackVarianceImpl(t1-epsilon, strike);
                 /*@Variance*/ final double var2 = blackVarianceImpl(t1+epsilon, strike);
-                QL.require(var2 >= var1 , "variances must be non-decreasing"); // QA:[RG]::verified // TODO: message
+                QL.require(var2 >= var1 , "variances must be non-decreasing"); // TODO: message
                 return  Math.sqrt((var2-var1) / (2*epsilon));
             }
         } else {
             /*@Variance*/ final double var1 = blackVarianceImpl(time1, strike);
             /*@Variance*/ final double var2 = blackVarianceImpl(time2, strike);
-            QL.require(var2 >= var1 , "variances must be non-decreasing"); // QA:[RG]::verified // TODO: message
+            QL.require(var2 >= var1 , "variances must be non-decreasing"); // TODO: message
             return  Math.sqrt((var2-var1)/(t2-t1));
         }
     }
@@ -320,7 +320,7 @@ public abstract class BlackVolTermStructure extends VolatilityTermStructure impl
      * @return
      */
     public final /*@Variance*/ double blackForwardVariance(final Date date1, final Date date2, final /*@Real*/ double strike, final boolean extrapolate) {
-        QL.require(date1.le(date2) , "date1 later than date2"); // QA:[RG]::verified // TODO: message
+        QL.require(date1.le(date2) , "date1 later than date2"); // TODO: message
         /*@Time*/ final double time1 = timeFromReference(date1);
         /*@Time*/ final double time2 = timeFromReference(date2);
         return blackForwardVariance(time1, time2, strike, extrapolate);
@@ -338,26 +338,28 @@ public abstract class BlackVolTermStructure extends VolatilityTermStructure impl
     public final /*@Variance*/ double blackForwardVariance(final /*@Time*/ double time1, final /*@Time*/ double time2, final /*@Real*/ double strike, final boolean extrapolate) {
         /*@Time*/ final double t1 = time1;
         /*@Time*/ final double t2 = time2;
-        QL.require(t1<=t2 , "t1 later than t2"); // QA:[RG]::verified // TODO: message
+        QL.require(t1<=t2 , "t1 later than t2"); // TODO: message
         checkRange(time2, extrapolate);
         checkStrike(strike, extrapolate);
         /*@Variance*/ final double v1 = blackVarianceImpl(time1, strike);
         /*@Variance*/ final double v2 = blackVarianceImpl(time2, strike);
-        QL.require(v2 >= v1 , "variances must be non-decreasing"); // QA:[RG]::verified // TODO: message
+        QL.require(v2 >= v1 , "variances must be non-decreasing"); // TODO: message
         return v2-v1;
     }
 
+    
     //
-    // implements TypedVisitable
+    // implements PolymorphicVisitable
     //
 
     @Override
-    public void accept(final TypedVisitor<TermStructure> v) {
-        final Visitor<TermStructure> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
-            v1.visit(this);
-        } else
-            throw new LibraryException("not a Black-volatility term structure visitor"); // QA:[RG]::verified // TODO: message
+    public void accept(final PolymorphicVisitor pv) {
+        final Visitor<BlackVolTermStructure> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
+        } else {
+            throw new LibraryException("not a Black-volatility term structure visitor"); // TODO: message
+        }
     }
 
 }

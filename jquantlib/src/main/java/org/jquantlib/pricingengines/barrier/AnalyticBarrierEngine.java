@@ -110,9 +110,9 @@ public class AnalyticBarrierEngine extends BarrierOption.EngineImpl {
 
     @Override
     public void calculate() {
-        QL.require(a.payoff instanceof PlainVanillaPayoff, NON_PLAIN_PAYOFF_GIVEN); // QA:[RG]::verified // TODO: message
+        QL.require(a.payoff instanceof PlainVanillaPayoff, NON_PLAIN_PAYOFF_GIVEN); // TODO: message
         this.payoff = (PlainVanillaPayoff)a.payoff;
-        QL.require(payoff.strike()>0.0 , STRIKE_MUST_BE_POSITIVE); // QA:[RG]::verified // TODO: message
+        QL.require(payoff.strike()>0.0 , STRIKE_MUST_BE_POSITIVE); // TODO: message
 
         final double strike = payoff.strike();
         final BarrierType barrierType = a.barrierType;

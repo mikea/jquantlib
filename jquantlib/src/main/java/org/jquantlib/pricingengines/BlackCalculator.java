@@ -51,7 +51,7 @@ import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.distributions.CumulativeNormalDistribution;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -160,7 +160,7 @@ public class BlackCalculator {
             beta = 1.0 - cum_d2;// N(-d2)
             dBeta_dD2 = -n_d2;// -n( d2)
         } else
-            throw new LibraryException("invalid option type"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("invalid option type"); // TODO: message
 
         // now dispatch on type.
 
@@ -399,7 +399,7 @@ public class BlackCalculator {
     // inner classes
     //
 
-    private static class Calculator implements TypedVisitor<Payoff> {
+    private static class Calculator implements PolymorphicVisitor {
 
         // TODO: refactor messages?
         private static final String INVALID_OPTION_TYPE = "invalid option type";
@@ -422,19 +422,19 @@ public class BlackCalculator {
 
 
         //
-        // implements TypedVisitor<Payoff>
+        // implements PolymorphicVisitor<Payoff>
         //
 
-        @Override
-        public Visitor<Payoff> getVisitor(final Class<? extends Payoff> klass) {
+		@Override
+        public <Payoff> Visitor<Payoff> visitor(final Class<? extends Payoff> klass) {
             if (klass==PlainVanillaPayoff.class)
-                return plainVanillaPayoffVisitor;
+                return (Visitor<Payoff>) plainVanillaPayoffVisitor;
             else if (klass==CashOrNothingPayoff.class)
-                return cashOrNothingPayoffVisitor;
+                return (Visitor<Payoff>) cashOrNothingPayoffVisitor;
             else if (klass==AssetOrNothingPayoff.class)
-                return assetOrNothingPayoffVisitor;
+                return (Visitor<Payoff>) assetOrNothingPayoffVisitor;
             else if (klass==GapPayoff.class)
-                return gapPayoffVisitor;
+                return (Visitor<Payoff>) gapPayoffVisitor;
             else
                 throw new UnsupportedOperationException(INVALID_PAYOFF_TYPE + klass);
         }

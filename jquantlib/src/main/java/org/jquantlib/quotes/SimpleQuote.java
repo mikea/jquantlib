@@ -102,7 +102,7 @@ public class SimpleQuote extends Quote {
 
     @Override
     public final double value() /* @ReadOnly */ {
-        QL.require(isValid() , "invalid simple quote: no value available"); // QA:[RG]::verified // TODO: message
+        QL.require(isValid() , "invalid simple quote: no value available"); // TODO: message
         return value;
     }
 

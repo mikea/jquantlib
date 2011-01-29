@@ -108,8 +108,8 @@ public abstract class Index implements Observable {
             noInvalidFixing = false;
         }
 
-        QL.ensure(noInvalidFixing , "at least one invalid fixing provided");  // QA:[RG]::verified // TODO: message
-        QL.ensure(noDuplicatedFixing , "at least one duplicated fixing provided");  // QA:[RG]::verified // TODO: message
+        QL.ensure(noInvalidFixing , "at least one invalid fixing provided");  // TODO: message
+        QL.ensure(noDuplicatedFixing , "at least one duplicated fixing provided");  // TODO: message
 	}
 
 	/**
@@ -158,8 +158,8 @@ public abstract class Index implements Observable {
 
 		IndexManager.getInstance().put(tag, ts);
 
-		QL.ensure(noInvalidFixing , "at least one invalid fixing provided");  // QA:[RG]::verified // TODO: message
-		QL.ensure(noDuplicatedFixing , "at least one duplicated fixing provided");  // QA:[RG]::verified // TODO: message
+		QL.ensure(noInvalidFixing , "at least one invalid fixing provided");  // TODO: message
+		QL.ensure(noDuplicatedFixing , "at least one duplicated fixing provided");  // TODO: message
 	}
 
 

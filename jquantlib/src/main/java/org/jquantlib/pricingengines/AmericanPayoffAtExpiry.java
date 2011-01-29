@@ -75,10 +75,10 @@ public class AmericanPayoffAtExpiry {
 
     public AmericanPayoffAtExpiry(final double spot, final double discount, final double dividendDiscount, final double variance, final StrikedTypePayoff strikedTypePayoff) {
         super();
-        QL.require(spot > 0.0 , "positive spot value required"); // QA:[RG]::verified // TODO: message
-        QL.require(discount > 0.0 , "positive discount required"); // QA:[RG]::verified // TODO: message
-        QL.require(dividendDiscount > 0.0 , "positive dividend discount required"); // QA:[RG]::verified // TODO: message
-        QL.require(variance >= 0.0 , "non-negative variance required"); // QA:[RG]::verified // TODO: message
+        QL.require(spot > 0.0 , "positive spot value required"); // TODO: message
+        QL.require(discount > 0.0 , "positive discount required"); // TODO: message
+        QL.require(dividendDiscount > 0.0 , "positive dividend discount required"); // TODO: message
+        QL.require(variance >= 0.0 , "non-negative variance required"); // TODO: message
 
         this.discount = discount;
         this.forward = spot * dividendDiscount / discount;

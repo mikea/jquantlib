@@ -175,13 +175,13 @@ public class VanillaSwap extends Swap {
 
     public /*@Rate*/ double  fairRate() /* @ReadOnly */ {
         calculate();
-        QL.require(!Double.isNaN(fairRate) , "result not available"); // QA:[RG]::verified // TODO: message
+        QL.require(!Double.isNaN(fairRate) , "result not available"); // TODO: message
         return fairRate;
     }
 
     public /*@Spread*/ double fairSpread() /* @ReadOnly */ {
         calculate();
-        QL.require(!Double.isNaN(fairSpread) , "result not available"); // QA:[RG]::verified // TODO: message
+        QL.require(!Double.isNaN(fairSpread) , "result not available"); // TODO: message
         return fairSpread;
     }
 
@@ -197,7 +197,7 @@ public class VanillaSwap extends Swap {
 
     public /*@Real*/ double fixedLegBPS() /* @ReadOnly */ {
         calculate();
-        QL.require(!Double.isNaN(legBPS[0]) , "result not available"); // QA:[RG]::verified // TODO: message
+        QL.require(!Double.isNaN(legBPS[0]) , "result not available"); // TODO: message
         return legBPS[0];
     }
 
@@ -209,13 +209,13 @@ public class VanillaSwap extends Swap {
 
     public /*@Real*/ double fixedLegNPV() /* @ReadOnly */ {
         calculate();
-        QL.require(!Double.isNaN(legNPV[0]) , "result not available"); // QA:[RG]::verified // TODO: message
+        QL.require(!Double.isNaN(legNPV[0]) , "result not available"); // TODO: message
         return legNPV[0];
     }
 
     public /*@Real*/ double floatingLegNPV() /* @ReadOnly */ {
         calculate();
-        QL.require(!Double.isNaN(legNPV[1]) , "result not available"); // QA:[RG]::verified // TODO: message
+        QL.require(!Double.isNaN(legNPV[1]) , "result not available"); // TODO: message
         return legNPV[1];
     }
 
@@ -333,7 +333,7 @@ public class VanillaSwap extends Swap {
             case 1:
                 return Type.Payer;
             default:
-                throw new LibraryException("value must be one of -1, 1"); // QA:[RG]::verified // TODO: message
+                throw new LibraryException("value must be one of -1, 1"); // TODO: message
             }
         }
 
@@ -388,7 +388,7 @@ public class VanillaSwap extends Swap {
         @Override
         public void validate() /* @ReadOnly */ {
             super.validate();
-            QL.require(!Double.isNaN(nominal) , "nominal null or not set"); // QA:[RG]::verified // TODO: message
+            QL.require(!Double.isNaN(nominal) , "nominal null or not set"); // TODO: message
             QL.require(fixedResetDates.size() == fixedPayDates.size() , "number of fixed start dates different from number of fixed payment dates");
             QL.require(fixedPayDates.size() == fixedCoupons.size() , "number of fixed payment dates different from number of fixed coupon amounts");
             QL.require(floatingResetDates.size() == floatingPayDates.size() , "number of floating start dates different from number of floating payment dates");

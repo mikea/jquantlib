@@ -155,7 +155,7 @@ public abstract class Instrument extends LazyObject {
      */
     public final/*@Real*/double NPV() /*@ReadOnly*/{
         calculate();
-        QL.require(!Double.isNaN(this.NPV) , "NPV not provided");  // QA:[RG]::verified // TODO: message
+        QL.require(!Double.isNaN(this.NPV) , "NPV not provided");  // TODO: message
         return NPV;
     }
 
@@ -164,7 +164,7 @@ public abstract class Instrument extends LazyObject {
      */
     public final/*@Real*/double errorEstimate() /*@ReadOnly*/{
         calculate();
-        QL.require(!Double.isNaN(this.errorEstimate) , "error estimate not provided"); // QA:[RG]::verified // TODO: message
+        QL.require(!Double.isNaN(this.errorEstimate) , "error estimate not provided"); // TODO: message
         return errorEstimate;
     }
 

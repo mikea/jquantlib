@@ -24,6 +24,7 @@ package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
+import org.jquantlib.cashflow.FixedRateCoupon;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.bonds.FixedRateBond;
 import org.jquantlib.pricingengines.PricingEngine;
@@ -37,7 +38,7 @@ import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Schedule;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -169,17 +170,17 @@ public class FixedRateBondHelper extends RateHelper {
 	}
     
 	//
-	// implements TypedVisitable
+	// implements PolymorphicVisitable
 	//
+	
 	@Override
-	public void accept(final TypedVisitor<BootstrapHelper> v) {
-		final Visitor<BootstrapHelper> v1 = (v != null) ? v.getVisitor(this
-				.getClass()) : null;
-		if (v1 != null) {
-			v1.visit(this);
-		} else {
-			super.accept(v);
-		}
+	public void accept(final PolymorphicVisitor pv) {
+		final Visitor<FixedRateBondHelper> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
+        } else {
+            super.accept(pv);
+        }
 	}
 
 }

@@ -67,7 +67,7 @@ public class SegmentIntegral extends Integrator {
 
     public SegmentIntegral(final int intervals) {
         super(1, 1);
-        QL.require(intervals >= 1 , "at least 1 interval needed"); // QA:[RG]::verified // TODO: message
+        QL.require(intervals >= 1 , "at least 1 interval needed"); // TODO: message
         this.intervals = intervals;
     }
 

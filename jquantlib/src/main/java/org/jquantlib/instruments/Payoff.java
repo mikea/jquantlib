@@ -41,8 +41,8 @@
 package org.jquantlib.instruments;
 
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.util.TypedVisitable;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitable;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -50,7 +50,7 @@ import org.jquantlib.util.Visitor;
  *
  * @author Richard Gomes
  */
-public abstract class Payoff implements TypedVisitable<Payoff> {
+public abstract class Payoff implements PolymorphicVisitable {
 
     //
     // protected static final
@@ -80,21 +80,6 @@ public abstract class Payoff implements TypedVisitable<Payoff> {
     public abstract double get(double price) /* @ReadOnly */;
 
 
-	//
-	// implements TypedVisitable
-	//
-
-	@Override
-	public void accept(final TypedVisitor<Payoff> v) {
-		final Visitor<Payoff> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-		if (v1 != null) {
-            v1.visit(this);
-        } else {
-            throw new LibraryException("null payoff visitor"); // QA:[RG]::verified //TODO: message
-        }
-	}
-
-
     //
     // overrides Object
     //
@@ -103,5 +88,20 @@ public abstract class Payoff implements TypedVisitable<Payoff> {
     public String toString() {
         return description();
     }
+
+
+	//
+	// implements PolymorphicVisitable
+	//
+
+	@Override
+	public void accept(final PolymorphicVisitor pv) {
+		final Visitor<Payoff> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
+        } else {
+            throw new LibraryException("null payoff visitor"); // TODO: message
+        }
+	}
 
 }

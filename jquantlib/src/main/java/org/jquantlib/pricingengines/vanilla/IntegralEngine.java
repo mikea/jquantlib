@@ -94,8 +94,8 @@ public class IntegralEngine extends OneAssetOption.EngineImpl {
     // TODO: define tolerance for calculate()
     @Override
     public void calculate() {
-        QL.require(a.exercise.type()==Exercise.Type.European , NOT_AN_AMERICAN_OPTION); // QA:[RG]::verified // TODO: message
-        QL.require(a.payoff instanceof StrikedTypePayoff , NON_STRIKED_PAYOFF_GIVEN); // QA:[RG]::verified // TODO: message
+        QL.require(a.exercise.type()==Exercise.Type.European , NOT_AN_AMERICAN_OPTION); // TODO: message
+        QL.require(a.payoff instanceof StrikedTypePayoff , NON_STRIKED_PAYOFF_GIVEN); // TODO: message
         final StrikedTypePayoff payoff = (StrikedTypePayoff) a.payoff;
 
         final double variance = process.blackVolatility().currentLink().blackVariance(a.exercise.lastDate(), payoff.strike());

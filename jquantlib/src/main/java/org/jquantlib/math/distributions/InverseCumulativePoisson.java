@@ -80,7 +80,7 @@ public class InverseCumulativePoisson implements Ops.DoubleOp {
      */
     @Override
     public double op (final double x) /* @Read-only */ {
-        QL.require(x >= 0.0 && x <= 1.0 , "undefined outside interval [0,1]"); // QA:[RG]::verified // TODO: message
+        QL.require(x >= 0.0 && x <= 1.0 , "undefined outside interval [0,1]"); // TODO: message
 
         if (x == 1.0) {
             return Constants.QL_MAX_REAL;

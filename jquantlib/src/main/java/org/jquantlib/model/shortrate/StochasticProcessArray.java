@@ -53,8 +53,8 @@ public class StochasticProcessArray extends StochasticProcess {
         if (System.getProperty("EXPERIMENTAL") == null)
             throw new UnsupportedOperationException("Work in progress");
 
-        QL.require(!processes.isEmpty() , no_process_given); // QA:[RG]::verified // TODO: message
-        QL.require(correlation.rows() == processes.size() , mismatch_processnumber_sizecorrelationmatrix); // QA:[RG]::verified // TODO: message
+        QL.require(!processes.isEmpty() , no_process_given); // TODO: message
+        QL.require(correlation.rows() == processes.size() , mismatch_processnumber_sizecorrelationmatrix); // TODO: message
 
         this.processes_ = processes;
         this.sqrtCorrelation_ = PseudoSqrt.pseudoSqrt(correlation, SalvagingAlgorithm.Spectral);

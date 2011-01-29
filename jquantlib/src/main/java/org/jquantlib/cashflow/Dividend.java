@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.jquantlib.QL;
 import org.jquantlib.time.Date;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
@@ -70,7 +70,7 @@ public abstract class Dividend extends CashFlow {
 	//
 
 	public static List<? extends Dividend> DividendVector(final List<Date> dividendDates, final List<Double> dividends) {
-	    QL.require(dividendDates.size() == dividends.size() , "size mismatch between dividend dates and amounts");  // QA:[RG]::verified // TODO: message
+	    QL.require(dividendDates.size() == dividends.size() , "size mismatch between dividend dates and amounts");  // TODO: message
         final List<Dividend> items = new ArrayList<Dividend>(dividendDates.size());
         for (int i=0; i<dividendDates.size(); i++) {
             items.add(new FixedDividend(dividends.get(i), dividendDates.get(i)));
@@ -80,16 +80,16 @@ public abstract class Dividend extends CashFlow {
 
 
     //
-    // implements TypedVisitable
+    // implements PolymorphicVisitable
     //
 
     @Override
-    public void accept(final TypedVisitor<Object> v) {
-        final Visitor<Object> v1 = (v!=null) ? v.getVisitor(this.getClass()) : null;
-        if (v1 != null) {
-            v1.visit(this);
+    public void accept(final PolymorphicVisitor pv) {
+        final Visitor<Dividend> v = (pv!=null) ? pv.visitor(this.getClass()) : null;
+        if (v != null) {
+            v.visit(this);
         } else {
-            super.accept(v);
+            super.accept(pv);
         }
     }
 

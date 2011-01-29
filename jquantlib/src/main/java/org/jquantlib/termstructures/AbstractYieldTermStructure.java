@@ -302,7 +302,7 @@ abstract public class AbstractYieldTermStructure extends AbstractTermStructure i
             /*@CompoundFactor*/ final double compound = discount1 / discount2;
             return InterestRate.impliedRate(compound, d1, d2, dayCounter, comp, freq);
         } else
-            throw new LibraryException("d1 later than d2"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("d1 later than d2"); // TODO: message
     }
 
     /* (non-Javadoc)
@@ -332,7 +332,7 @@ abstract public class AbstractYieldTermStructure extends AbstractTermStructure i
         if (t2==t1) {
             t2 = t1+0.0001;
         }
-        QL.require(t1 <= t2 , "time1 must be <= time2"); // QA:[RG]::verified // TODO: message
+        QL.require(t1 <= t2 , "time1 must be <= time2"); // TODO: message
         /*@DiscountFactor*/ final double discount1 = discount(t1, extrapolate);
         /*@DiscountFactor*/ final double discount2 = discount(t2, extrapolate);
         /*@CompoundFactor*/ final double compound = discount1 / discount2;
@@ -426,7 +426,7 @@ abstract public class AbstractYieldTermStructure extends AbstractTermStructure i
      */
     @Override
     public /*@Rate*/ double parRate(final /*@Time*/ double[] times, final Frequency frequency, final boolean extrapolate) {
-        QL.require(times.length >= 2 , "at least two times are required"); // QA:[RG]::verified // TODO: message
+        QL.require(times.length >= 2 , "at least two times are required"); // TODO: message
         /*@Time*/ final double last = times[times.length - 1];
         checkRange(last, extrapolate);
         /*@DiscountFactor*/ double sum = 0.0;

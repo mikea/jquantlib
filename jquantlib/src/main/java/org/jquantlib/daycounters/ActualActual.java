@@ -114,7 +114,7 @@ public class ActualActual extends DayCounter {
             Date refPeriodStart = (!d3.isNull() ? d3 : d1);
             Date refPeriodEnd   = (!d4.isNull() ? d4 : d2);
 
-            QL.ensure(refPeriodEnd.gt(refPeriodStart) && refPeriodEnd.gt(d1) , "invalid reference period");  // QA:[RG]::verified // TODO: message
+            QL.ensure(refPeriodEnd.gt(refPeriodStart) && refPeriodEnd.gt(d1) , "invalid reference period");  // TODO: message
 
             // estimate roughly the length in months of a period
             int months = (int) (0.5 + 12 * (refPeriodEnd.sub(refPeriodStart)) / 365.0);

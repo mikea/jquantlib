@@ -68,7 +68,7 @@ public abstract class LfmCovarianceParameterization {
         // because it is too slow and too inefficient.
         // This method is useful for testing and R&D.
         // Please overload the method within derived classes.
-        QL.require(!x.empty() , "can not handle given x here"); // QA:[RG]::verified // TODO: message
+        QL.require(!x.empty() , "can not handle given x here"); // TODO: message
 
         final Matrix tmp = new Matrix(size_, size_);
         for (int i = 0; i < size_; ++i) {

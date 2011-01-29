@@ -49,8 +49,8 @@ public class IncompleteGamma {
     //
 
     public double incompleteGammaFunction(final double a, final double x, final double accuracy, final int maxIteration) {
-        QL.require(a > 0.0  , "non-positive a is not allowed"); // QA:[RG]::verified // TODO: message
-        QL.require(x >= 0.0 , "negative x non allowed"); // QA:[RG]::verified // TODO: message
+        QL.require(a > 0.0  , "non-positive a is not allowed"); // TODO: message
+        QL.require(x >= 0.0 , "negative x non allowed"); // TODO: message
 
         if (x < (a+1.0))
             // Use the series representation

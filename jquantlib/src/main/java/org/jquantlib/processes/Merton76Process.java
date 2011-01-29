@@ -135,17 +135,17 @@ public class Merton76Process extends StochasticProcess1D {
 
     @Override
     public double /* @Real */drift(final double /* @Time */t, final double /* @Real */x) {
-        throw new LibraryException("not implemented"); // QA:[RG]::verified // TODO: message
+        throw new LibraryException("not implemented"); // TODO: message
     }
 
     @Override
     public double /* @Real */diffusion(final double /* @Time */t, final double /* @Real */x) {
-        throw new LibraryException("not implemented"); // QA:[RG]::verified // TODO: message
+        throw new LibraryException("not implemented"); // TODO: message
     }
 
     @Override
     public double /* @Real */apply(final double /* @Real */x, final double /* @Real */y) {
-        throw new LibraryException("not implemented"); // QA:[RG]::verified // TODO: message
+        throw new LibraryException("not implemented"); // TODO: message
     }
 
 

@@ -130,9 +130,9 @@ public class BinomialDistribution implements Ops.IntToDouble {
      * @return Natural logarithm of the binomial coefficient
      */
     private double binomialCoefficientLn(final int n, final int k) {
-        QL.require(n >= 0 , "n < 0 not allowed"); // QA:[RG]::verified // TODO: message
-        QL.require(k >= 0 , "k < 0 not allowed"); // QA:[RG]::verified // TODO: message
-        QL.require(n >= k , "n < k not allowed"); // QA:[RG]::verified // TODO: message
+        QL.require(n >= 0 , "n < 0 not allowed"); // TODO: message
+        QL.require(k >= 0 , "k < 0 not allowed"); // TODO: message
+        QL.require(n >= k , "n < k not allowed"); // TODO: message
         return factorial.ln(n) - factorial.ln(k) - factorial.ln(n - k);
     }
 

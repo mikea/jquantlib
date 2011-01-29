@@ -23,26 +23,26 @@
 package org.jquantlib.util;
 
 /**
- * This interface works together with {@link TypedVisitor} in order to provide
+ * This interface works together with {@link PolymorphicVisitor} in order to provide
  * the functionality of obtaining a specific {@link Visitor}.
  * <p>
  * This functionality is needed every time a class acts as a Visitor of more
  * than one data structure or when a class acting as a Visitable requires a
  * certain kind of Visitor.
  * 
- * @note A class which implements {@link TypedVisitable} probably does not need
+ * @note A class which implements {@link PolymorphicVisitable} probably does not need
  * to implement {@link Visitable}
  * 
  * @see Visitor
  * @see Visitable
- * @see TypedVisitor
+ * @see PolymorphicVisitor
  * @see <a href="http://www.exciton.cs.rice.edu/JavaResources/DesignPatterns/VisitorPattern.htm">The Visitor Design Pattern</a>
  *
  * @param <T> defines the data structure to be visited
  * 
  * @author Richard Gomes
  */
-public interface TypedVisitable<T> {
+public interface PolymorphicVisitable {
 
 	/**
      * This method is intended to extend the semantics of method {@link Visitable#accept(Visitor)}
@@ -53,20 +53,17 @@ public interface TypedVisitable<T> {
      * structure to be visited also implements {@link Visitable} in order to properly grant access when the expected {@link Visitor}
      * is received.
      * <p>
-     * In the case of a {@link TypedVisitable}, a {@link TypedVisitor} is passed instead of a {@link Visitor}. A
-     * {@link TypedVisitor} is in fact, a composition of {@link Visitor}s and not only a single {@link Visitor}. A
-     * {@link TypedVisitor} is responsible for returning the correct {@link Visitor} responsible for processing a certain data
+     * In the case of a {@link PolymorphicVisitable}, a {@link PolymorphicVisitor} is passed instead of a {@link Visitor}. A
+     * {@link PolymorphicVisitor} is in fact, a composition of {@link Visitor}s and not only a single {@link Visitor}. A
+     * {@link PolymorphicVisitor} is responsible for returning the correct {@link Visitor} responsible for processing a certain data
      * structure.
      * <p>
      * The initial design of pairs made of &lt;{@link Visitor},{@link Visitable}&gt; is extended to a concept of a matrix made
-     * of multiple {@link Visitor}s against multiple {@link Visitable}s. Every class which implements {@link TypedVisitable}
-     * passes different data structures when querying {@link TypedVisitor}s.
+     * of multiple {@link Visitor}s against multiple {@link Visitable}s. Every class which implements {@link PolymorphicVisitable}
+     * passes different data structures when querying {@link PolymorphicVisitor}s.
      * 
-     * @param v
-     *            is a {@link TypedVisitor} which keeps data structures extended from <code>T</code>
-     *            
-     * @see TypedVisitor#getVisitor(Class)
+     * @see PolymorphicVisitor#getVisitor(Class)
      */
-    public void accept(TypedVisitor<T> v);
+    public void accept(PolymorphicVisitor pv);
 
 }

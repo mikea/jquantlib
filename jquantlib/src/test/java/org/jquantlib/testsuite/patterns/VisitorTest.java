@@ -25,8 +25,8 @@ package org.jquantlib.testsuite.patterns;
 import static org.junit.Assert.fail;
 
 import org.jquantlib.QL;
-import org.jquantlib.util.TypedVisitable;
-import org.jquantlib.util.TypedVisitor;
+import org.jquantlib.util.PolymorphicVisitable;
+import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 import org.junit.Test;
 
@@ -41,107 +41,107 @@ public class VisitorTest {
 	}
 
 	@Test
-	public void testTypedVisitorPattern() {
+	public void testPolymorphicVisitorPattern() {
 
-		final NumberTypedVisitable  numberTypedVisitable  = new NumberTypedVisitable();
-		final DoubleTypedVisitable  doubleTypedVisitable  = new DoubleTypedVisitable();
-		final IntegerTypedVisitable integerTypedVisitable = new IntegerTypedVisitable();
+		final NumberPolymorphicVisitable  numberPolymorphicVisitable  = new NumberPolymorphicVisitable();
+		final DoublePolymorphicVisitable  doublePolymorphicVisitable  = new DoublePolymorphicVisitable();
+		final IntegerPolymorphicVisitable integerPolymorphicVisitable = new IntegerPolymorphicVisitable();
 
-		final NumberTypedVisitor  numberTypedVisitor  = new NumberTypedVisitor();
-		final DoubleTypedVisitor  doubleTypedVisitor  = new DoubleTypedVisitor();
-		final IntegerTypedVisitor integerTypedVisitor = new IntegerTypedVisitor();
+		final NumberPolymorphicVisitor  numberPolymorphicVisitor  = new NumberPolymorphicVisitor();
+		final DoublePolymorphicVisitor  doublePolymorphicVisitor  = new DoublePolymorphicVisitor();
+		final IntegerPolymorphicVisitor integerPolymorphicVisitor = new IntegerPolymorphicVisitor();
 
 		// these tests must pass
-		numberTypedVisitable.accept(numberTypedVisitor);
-		doubleTypedVisitable.accept(numberTypedVisitor);
-		doubleTypedVisitable.accept(doubleTypedVisitor);
-		integerTypedVisitable.accept(numberTypedVisitor);
-		integerTypedVisitable.accept(integerTypedVisitor);
+		numberPolymorphicVisitable.accept(numberPolymorphicVisitor);
+		doublePolymorphicVisitable.accept(numberPolymorphicVisitor);
+		doublePolymorphicVisitable.accept(doublePolymorphicVisitor);
+		integerPolymorphicVisitable.accept(numberPolymorphicVisitor);
+		integerPolymorphicVisitable.accept(integerPolymorphicVisitor);
 
 		// the following must fail
 		try {
-			numberTypedVisitable.accept(doubleTypedVisitor);
-			fail("numberTypedVisitable.accept(doubleTypedVisitor) should fail!");
+			numberPolymorphicVisitable.accept(doublePolymorphicVisitor);
+			fail("numberPolymorphicVisitable.accept(doublePolymorphicVisitor) should fail!");
 		} catch (final Exception e) {
 			// OK, as expected
 		}
 
 		// the following must fail
 		try {
-			numberTypedVisitable.accept(integerTypedVisitor);
-			fail("numberTypedVisitable.accept(integerTypedVisitor) should fail");
+			numberPolymorphicVisitable.accept(integerPolymorphicVisitor);
+			fail("numberPolymorphicVisitable.accept(integerPolymorphicVisitor) should fail");
 		} catch (final Exception e) {
 			// OK, as expected
 		}
 
 		// the following must fail
 		try {
-			doubleTypedVisitable.accept(integerTypedVisitor);
-			fail("doubleTypedVisitable.accept(integerTypedVisitor) should fail");
+			doublePolymorphicVisitable.accept(integerPolymorphicVisitor);
+			fail("doublePolymorphicVisitable.accept(integerPolymorphicVisitor) should fail");
 		} catch (final Exception e) {
 			// OK, as expected
 		}
 
 		// the following must fail
 		try {
-			integerTypedVisitable.accept(doubleTypedVisitor);
-			fail("integerTypedVisitable.accept(doubleTypedVisitor) should fail");
+			integerPolymorphicVisitable.accept(doublePolymorphicVisitor);
+			fail("integerPolymorphicVisitable.accept(doublePolymorphicVisitor) should fail");
 		} catch (final Exception e) {
 			// OK, as expected
 		}
 
 	}
 
-	private class NumberTypedVisitable implements TypedVisitable<Number> {
+	private class NumberPolymorphicVisitable implements PolymorphicVisitable {
 		@Override
-		public void accept(final TypedVisitor<Number> v) {
-			final Visitor<Number> visitor = (v!=null) ? v.getVisitor(Number.class) : null;
-			if (visitor!=null)
-				visitor.visit(1.0);
+		public void accept(final PolymorphicVisitor pv) {
+			final Visitor<Number> v = (pv!=null) ? pv.visitor(Number.class) : null;
+			if (v!=null)
+				v.visit(1.0);
 			else
 				throw new IllegalArgumentException("not a Number visitor");
 		}
 	}
 
 
-	private class DoubleTypedVisitable extends NumberTypedVisitable  /* implements TypedVisitable<Double> */ {
+	private class DoublePolymorphicVisitable extends NumberPolymorphicVisitable  /* implements PolymorphicVisitable<Double> */ {
 		private final double data = 5.6;
 
 		@Override
-		public void accept(final TypedVisitor<Number> v) {
-			final Visitor<Number> visitor = (v!=null) ? v.getVisitor(Double.class) : null;
-			if (visitor!=null)
-				visitor.visit(data);
+		public void accept(final PolymorphicVisitor pv) {
+			final Visitor<Double> v = (pv!=null) ? pv.visitor(Double.class) : null;
+			if (v!=null)
+				v.visit(data);
 			else
-				super.accept(v);
+				super.accept(pv);
 		}
 	}
 
 
-	private class IntegerTypedVisitable extends NumberTypedVisitable  /* implements TypedVisitable<Double> */ {
+	private class IntegerPolymorphicVisitable extends NumberPolymorphicVisitable  /* implements PolymorphicVisitable<Double> */ {
 		private final int data = 3456;
 
 		@Override
-		public void accept(final TypedVisitor<Number> v) {
-			final Visitor<Number> visitor = (v!=null) ? v.getVisitor(Integer.class) : null;
-			if (visitor!=null)
-				visitor.visit(data);
+		public void accept(final PolymorphicVisitor pv) {
+			final Visitor<Integer> v = (pv!=null) ? pv.visitor(Integer.class) : null;
+			if (v!=null)
+				v.visit(data);
 			else
-				super.accept(v);
+				super.accept(pv);
 		}
 	}
 
 
 
 	//
-	// declare TypedVisitors and corresponding Visitors
+	// declare PolymorphicVisitors and corresponding Visitors
 	//
 
-	private static class NumberTypedVisitor implements TypedVisitor<Number> {
+	private static class NumberPolymorphicVisitor implements PolymorphicVisitor {
 
 		@Override
-		public Visitor<Number> getVisitor(final Class<? extends Number> klass) {
-			return (klass==Number.class) ? numberVisitor : null;
+		public <Number> Visitor<Number> visitor(final Class<? extends Number> klass) {
+			return (Visitor<Number>) ((klass==java.lang.Number.class) ? numberVisitor : null);
 		}
 
 		//
@@ -159,11 +159,11 @@ public class VisitorTest {
 	}
 
 
-	private static class DoubleTypedVisitor extends NumberTypedVisitor {
+	private static class DoublePolymorphicVisitor extends NumberPolymorphicVisitor {
 
 		@Override
-		public Visitor<Number> getVisitor(final Class<? extends Number> klass) {
-			return (klass==Double.class) ? doubleVisitor : null;
+		public <Number> Visitor<Number> visitor(final Class<? extends Number> klass) {
+			return (Visitor<Number>) ((klass==Double.class) ? doubleVisitor : null);
 		}
 
 		//
@@ -181,11 +181,11 @@ public class VisitorTest {
 		}
 	}
 
-	private static class IntegerTypedVisitor extends NumberTypedVisitor {
+	private static class IntegerPolymorphicVisitor extends NumberPolymorphicVisitor {
 
 		@Override
-		public Visitor<Number> getVisitor(final Class<? extends Number> klass) {
-			return (klass==Integer.class) ? integerVisitor : null;
+		public <Number> Visitor<Number> visitor(final Class<? extends Number> klass) {
+			return (Visitor<Number>) ((klass==Integer.class) ? integerVisitor : null);
 		}
 
 		//

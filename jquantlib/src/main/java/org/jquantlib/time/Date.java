@@ -690,7 +690,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     private void checkSerialNumber() {
         QL.ensure((serialNumber >= minimumSerialNumber()) && (serialNumber <= maximumSerialNumber()),
-        "Date's serial number is outside allowed range"); // QA:[RG]::verified // TODO: message
+        "Date's serial number is outside allowed range"); // TODO: message
     }
 
 
@@ -713,7 +713,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
                 y -= 1;
             }
 
-            QL.ensure(y > 1900 && y <= 2199 , "year out of bounds. It must be in [1901,2199]"); // QA:[RG]::verified // TODO: message
+            QL.ensure(y > 1900 && y <= 2199 , "year out of bounds. It must be in [1901,2199]"); // TODO: message
             final int length = monthLength(m, isLeap(y));
             if (d > length) {
                 d = length;
@@ -727,7 +727,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             final int m = date.month().value();
             final int y = date.year() + n;
 
-            QL.ensure(y > 1900 && y <= 2199 , "year out of bounds. It must be in [1901,2199]"); // QA:[RG]::verified // TODO: message
+            QL.ensure(y > 1900 && y <= 2199 , "year out of bounds. It must be in [1901,2199]"); // TODO: message
             if (d == 29 && m == Month.February.value() && !isLeap(y)) {
                 d = 28;
             }
@@ -737,7 +737,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
             return result;
         }
         default:
-            throw new LibraryException("undefined time units"); // QA:[RG]::verified // TODO: message
+            throw new LibraryException("undefined time units"); // TODO: message
         }
     }
 
@@ -851,8 +851,8 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * @return a new instance
      */
     public static final Date nthWeekday(final int nth, final Weekday dayOfWeek, final int month, final int year) {
-        QL.require(nth > 0, "zeroth day of week in a given (month, year) is undefined"); // QA:[RG]::verified //TODO: message
-        QL.require(nth < 6, "no more than 5 weekday in a given (month, year)"); // QA:[RG]::verified //TODO: message
+        QL.require(nth > 0, "zeroth day of week in a given (month, year) is undefined"); // TODO: message
+        QL.require(nth < 6, "no more than 5 weekday in a given (month, year)"); // TODO: message
         final int m = month;
         final int y = year;
         final int dow = dayOfWeek.value();
@@ -866,7 +866,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * Return the minimum Date in a range.
      */
     public static Date min(final Date... t) {
-        QL.require(t!=null , "argument cannot be null"); // QA:[RG]::verified // TODO: message
+        QL.require(t!=null , "argument cannot be null"); // TODO: message
         if (t.length == 0)
             return new Date();
         else {
@@ -885,7 +885,7 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * Return the maximum Date in a range.
      */
     public static Date max(final Date... t) {
-        QL.require(t!=null , "argument cannot be null"); // QA:[RG]::verified // TODO: message
+        QL.require(t!=null , "argument cannot be null"); // TODO: message
         if (t.length == 0)
             return new Date();
         else {
@@ -922,12 +922,12 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * @return
      */
     private static final long fromDMY(final int d, final int m, final int y) {
-        QL.require(y > 1900 && y <= 2199 , "year(" + y + ") out of bound. It must be in [1901,2199]"); // QA:[RG]::verified // TODO: message
-        QL.require(m > 0 && m < 13 , "month outside JANUARY-December range [1,12]"); // QA:[RG]::verified // TODO: message
+        QL.require(y > 1900 && y <= 2199 , "year(" + y + ") out of bound. It must be in [1901,2199]"); // TODO: message
+        QL.require(m > 0 && m < 13 , "month outside JANUARY-December range [1,12]"); // TODO: message
         final boolean leap = isLeap(y);
         final int len = monthLength(m, leap);
         final int offset = monthOffset(m, leap);
-        QL.ensure(d > 0 && d <= len , "day outside month day-range"); // QA:[RG]::verified // TODO: message
+        QL.ensure(d > 0 && d <= len , "day outside month day-range"); // TODO: message
         final long result = d + offset + yearOffset(y);
         return result;
     }
