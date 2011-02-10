@@ -103,7 +103,7 @@ public class Libor extends IborIndex {
 				"for daily tenors (" + this.tenor() +
 						") dedicated DailyTenor constructor must be used");
 
-		QL.require(!currency.equals(new EURCurrency()),
+		QL.require(!currency.eq(new EURCurrency()),
 			"for EUR Libor dedicated EurLibor constructor must be used");
 
 	}

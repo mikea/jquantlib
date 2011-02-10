@@ -584,9 +584,17 @@ public class Period implements Cloneable {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
-            return false;
-        final Period other = (Period) obj;
+    	
+        return obj instanceof Period &&
+        ((Period) obj).fEquals(this);
+    }
+
+
+    //
+    // protected methods
+    //
+
+    protected boolean fEquals(Period other) {
         if (length != other.length)
             return false;
         if (units == null) {
@@ -594,11 +602,8 @@ public class Period implements Cloneable {
                 return false;
         } else if (!units.equals(other.units))
             return false;
-        return true;
+        return true;	
     }
-
-
-
 
 
 

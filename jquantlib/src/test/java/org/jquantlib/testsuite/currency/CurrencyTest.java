@@ -26,10 +26,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashSet;
+
 import org.jquantlib.QL;
 import org.jquantlib.currencies.Currency;
 import org.jquantlib.currencies.Europe.CHFCurrency;
 import org.jquantlib.currencies.Europe.EURCurrency;
+import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Rounding;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -42,7 +45,6 @@ public class CurrencyTest {
     }
 
 
-    @Ignore
     @Test
     public void testCurrencies(){
         QL.info("testing currencies...");
@@ -63,11 +65,23 @@ public class CurrencyTest {
         QL.info("testing overloaded operators....(only class based)");
         final EURCurrency euro = new EURCurrency();
         final CHFCurrency chf2 = new CHFCurrency();
-        assertFalse(euro.equals(chf));
-        assertTrue(euro.notEquals(chf));
-        assertFalse(chf2.notEquals(chf));
-        assertTrue(chf2.equals(chf));
-
+        assertFalse(euro.eq(chf));
+        assertTrue(euro.ne(chf));
+        assertFalse(chf2.ne(chf));
+        assertTrue(chf2.eq(chf));
+        
+        assertFalse(euro.eq(null));
+        assertTrue(chf.eq(chf2));
+        assertTrue(chf.eq(chf));
+        
+        assertTrue(Currency.operatorEquals(chf, chf2));
+        assertTrue(Currency.operatorNotEquals(chf, euro));
+        
+        HashSet<Currency> testSet = new HashSet<Currency>();
+        testSet.add(chf);
+        
+        assertTrue(testSet.contains(chf));
+        assertFalse(testSet.contains(euro));
     }
 
 

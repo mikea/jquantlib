@@ -41,19 +41,27 @@
 package org.jquantlib.testsuite.daycounters;
 
 import static java.lang.Math.abs;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.HashSet;
+
 import org.jquantlib.QL;
+import org.jquantlib.daycounters.Actual360;
+import org.jquantlib.daycounters.Actual365Fixed;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.Business252;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.daycounters.SimpleDayCounter;
+import org.jquantlib.daycounters.Thirty360;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.Brazil;
+import org.jquantlib.time.calendars.China;
 import org.junit.Test;
 
 /**
@@ -340,6 +348,46 @@ public class DayCountersTest {
                     abs(calculated - expected[i]) <= 1.0e-12);
         }
     }
+    
+    @Test
+    public void testEqualityHashCode() {
 
+        QL.info("Testing Equality and HashCode ...");
+        final DayCounter business252Brazil = new Business252(new Brazil(Brazil.Market.SETTLEMENT));
+        final DayCounter business252Brazil1 = new Business252(new Brazil(Brazil.Market.SETTLEMENT));
+
+        
+        final DayCounter business252China = new Business252(new China(China.Market.SSE));
+        final DayCounter simpleDayCounter = new SimpleDayCounter();      
+        final DayCounter actual360 = new Actual360();        
+        final DayCounter actual365Fixed = new Actual365Fixed();        
+        final DayCounter actualActual = new ActualActual();        
+        final DayCounter thirty360 = new Thirty360();        
+        final DayCounter thirty360_2 = new Thirty360(); 
+        
+        assertFalse(thirty360.equals(null));
+        assertEquals(thirty360, thirty360);
+        assertEquals(thirty360, thirty360_2);
+        
+        assertFalse(simpleDayCounter.equals(business252Brazil));
+        assertFalse(business252Brazil.equals(simpleDayCounter));
+        assertFalse(actual360.equals(actual365Fixed));
+        assertFalse(actual365Fixed.equals(actual360));
+        assertFalse(actualActual.equals(thirty360));
+        assertFalse(thirty360.equals(actualActual));
+        assertFalse(business252Brazil.equals(business252China));
+        assertFalse(business252China.equals(business252Brazil));
+        assertTrue(business252Brazil.equals(business252Brazil1));
+        
+        assertTrue(business252Brazil.eq(business252Brazil1));
+        assertFalse(business252Brazil.ne(business252Brazil1));
+        
+        HashSet<DayCounter> testSet = new HashSet<DayCounter>();
+        testSet.add(thirty360);
+        
+        assertTrue(testSet.contains(thirty360));
+        assertFalse(testSet.contains(actualActual));
+        
+    }
 
 }

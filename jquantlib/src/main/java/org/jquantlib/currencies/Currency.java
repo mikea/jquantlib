@@ -40,6 +40,7 @@
 package org.jquantlib.currencies;
 
 import org.jquantlib.QL;
+import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Rounding;
 
 //FIXME: http://bugs.jquantlib.org/view.php?id=474
@@ -101,18 +102,18 @@ public class Currency implements Cloneable {
     // /OPERATORS
 
     //  class
-    public final boolean equals(final Currency currency) {
-        return name().equals(currency.name());
+    public final boolean eq(final Currency currency) {
+        return equals(currency);
     }
 
-    public final boolean notEquals(final Currency currency) {
+    public final boolean ne(final Currency currency) {
         // eating our own dogfood
-        return !(equals(currency));
+        return !(eq(currency));
     }
 
     //  static
     public static final boolean operatorEquals(final Currency c1, final Currency c2) {
-        return c1.name().equals(c2.name());
+        return c1.equals(c2);
     }
 
     public static final boolean operatorNotEquals(final Currency c1, final Currency c2) {
@@ -120,6 +121,30 @@ public class Currency implements Cloneable {
         return !(Currency.operatorEquals(c1, c2));
     }
 
+    @Override
+  	public boolean equals(final Object obj) {
+    	if (this == obj)
+    		return true;
+    	if (obj == null)
+    		return false;
+    	
+        return obj instanceof Currency &&
+        ((Currency) obj).fEquals(this);
+   	
+    }	
+    
+    //
+    // protected methods
+    //
+
+    protected boolean fEquals(Currency other) {
+    	if (this.empty() && other.empty())
+    		return true;
+    	if (this.name().equals(other.name()))
+    		return true;
+    	return false;  	
+    }   
+    
     //
     // Overrides Object
     //
@@ -151,7 +176,14 @@ public class Currency implements Cloneable {
 
     }
 
-
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((data_ == null) ? 0 : data_.hashCode());
+        result = prime * result + ((data_ == null) ? 0 : name().hashCode());
+        return result;
+    }
 
     //
     // package protected inner classes

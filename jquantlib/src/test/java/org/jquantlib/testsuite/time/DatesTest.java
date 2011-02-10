@@ -23,14 +23,17 @@
 package org.jquantlib.testsuite.time;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 
 import org.jquantlib.QL;
+import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.testsuite.util.Flag;
 import org.jquantlib.time.Date;
@@ -400,4 +403,28 @@ public class DatesTest {
         }
     }
 
+    @Test
+    public void testEqualsandHashCode() {
+
+        QL.info("Testing equals and hashcode");
+
+        final Date today = Date.todaysDate();
+        final Date tomorrow1 = Date.todaysDate().add(1);
+        final Date tomorrow2 = Date.todaysDate().add(1);
+        final Date manyana = Date.todaysDate().add(123);
+        
+        assertFalse(today.equals(null));
+        assertEquals(today, today);
+        assertFalse(today.equals(tomorrow1));
+        assertEquals(tomorrow1, tomorrow2);      
+        
+        HashSet<Date> testSet = new HashSet<Date>();
+        testSet.add(today);
+        testSet.add(tomorrow1);
+               
+        assertTrue(testSet.contains(today));
+        assertFalse(testSet.contains(manyana));      
+
+    }
+    
 }

@@ -208,7 +208,7 @@ public class ExchangeRateManager {
      * @return The exchange rate fulfilling all these properties. ExchangeRate
      */
     public ExchangeRate lookup(final Currency source, final Currency target, Date date, final ExchangeRate.Type type) {
-        if (source.equals(target))
+        if (source.eq(target))
             return new ExchangeRate(source, target, 1.0);
 
         if (date.isToday()) {
@@ -219,13 +219,13 @@ public class ExchangeRateManager {
             return directLookup(source, target, date);
         else if (!source.triangulationCurrency().empty()) {
             final Currency link = source.triangulationCurrency();
-            if (link.equals(target))
+            if (link.eq(target))
                 return directLookup(source, link, date);
             else
                 return ExchangeRate.chain(directLookup(source, link, date), lookup(link, target, date));
         } else if (!target.triangulationCurrency().empty()) {
             final Currency link = target.triangulationCurrency();
-            if (source.equals(link))
+            if (source.eq(link))
                 return directLookup(link, target, date);
             else
                 return ExchangeRate.chain(lookup(source, link, date), directLookup(link, target, date));

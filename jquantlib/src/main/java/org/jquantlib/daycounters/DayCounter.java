@@ -164,27 +164,51 @@ public class DayCounter {
         return result;
     }
 
+//    @Override
+//    public boolean equals(final Object obj) {
+//        if (this == obj)
+//            return true;
+//        if (obj == null || !(obj instanceof DayCounter))
+//            return false;
+//
+//        final DayCounter other = (DayCounter) obj;
+//        if (this.empty() && other.empty())
+//            return true;
+//        if (this.name().equals(other.name()))
+//            return true;
+//        return false;
+//    }
+    
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || !(obj instanceof DayCounter))
-            return false;
-
-        final DayCounter other = (DayCounter) obj;
-        if (this.empty() && other.empty())
-            return true;
-        if (this.name().equals(other.name()))
-            return true;
-        return false;
-    }
-
+  	public boolean equals(final Object obj) {
+    	if (this == obj)
+    		return true;
+    	if (obj == null)
+    		return false;
+    	
+        return obj instanceof DayCounter &&
+        ((DayCounter) obj).fEquals(this);
+   	
+    }	
+    
     @Override
     public String toString() {
         return (impl == null) ? "null" : impl.name();
     }
 
+    
+    //
+    // protected methods
+    //
 
+    protected boolean fEquals(DayCounter other) {
+    	if (this.empty() && other.empty())
+    		return true;
+    	if (this.name().equals(other.name()))
+    		return true;
+    	return false;  	
+    }
+    
     //
     // protected inner classes
     //

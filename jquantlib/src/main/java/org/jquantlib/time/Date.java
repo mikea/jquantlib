@@ -613,13 +613,20 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
 
     @Override
     public boolean equals(final Object anObject) {
-        if (anObject==null)
-            return false;
-        if (!(anObject instanceof Date))
-            return false;
-        return eq((Date)anObject);
+    	if (this == anObject)
+    		return true;
+    	if (anObject == null)
+    		return false;
+    	
+        return anObject instanceof Date &&
+        ((Date) anObject).fEquals(this);
     }
 
+    protected boolean fEquals(Date other) {
+        return eq(other);
+    }
+    
+    
     @Override
     //-- std::ostream& operator<<(std::ostream&, const Date&);
     public String toString() {

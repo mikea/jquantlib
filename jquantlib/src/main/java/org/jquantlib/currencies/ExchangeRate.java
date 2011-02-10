@@ -106,9 +106,9 @@ public class ExchangeRate {
     public Money exchange(final Money amount) {
         switch (type_) {
         case Direct:
-            if (amount.currency().equals(source_)) {
+            if (amount.currency().eq(source_)) {
                 return new Money(amount.value() * rate_, target_);
-            } else if (amount.currency().equals(target_)) {
+            } else if (amount.currency().eq(target_)) {
                 return new Money(amount.value() / rate_, source_);
             } else {
                 throw new LibraryException("exchange rate not applicable"); // TODO: message
@@ -138,19 +138,19 @@ public class ExchangeRate {
         final ExchangeRate result = new ExchangeRate();
         result.type_ = ExchangeRate.Type.Derived;
         result.rateChain_ = new Pair<ExchangeRate, ExchangeRate>( new ExchangeRate(r1), new ExchangeRate(r2));
-        if (r1.source_.equals(r2.source_)) {
+        if (r1.source_.eq(r2.source_)) {
             result.source_ = r1.target_;
             result.target_ = r2.target_;
             result.rate_ = r2.rate_/r1.rate_;
-        } else if (r1.source_.equals(r2.target_)) {
+        } else if (r1.source_.eq(r2.target_)) {
             result.source_ = r1.target_;
             result.target_ = r2.source_;
             result.rate_ = 1.0/(r1.rate_*r2.rate_);
-        } else if (r1.target_.equals(r2.source_)) {
+        } else if (r1.target_.eq(r2.source_)) {
             result.source_ = r1.source_;
             result.target_ = r2.target_;
             result.rate_ = r1.rate_*r2.rate_;
-        } else if (r1.target_.equals(r2.target_)) {
+        } else if (r1.target_.eq(r2.target_)) {
             result.source_ = r1.source_;
             result.target_ = r2.source_;
             result.rate_ = r1.rate_/r2.rate_;
