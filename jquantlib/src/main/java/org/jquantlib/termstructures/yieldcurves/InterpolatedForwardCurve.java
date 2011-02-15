@@ -52,23 +52,22 @@ import org.jquantlib.math.Closeness;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolation.Interpolator;
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.util.Pair;
 
+
 /**
- * Term structure based on interpolation of discount factors.
+ * Term structure based on interpolation of forward rates
  * <p>
- * Log-linear interpolation guarantees piecewise-constant forward rates.
- *
  * @category yieldtermstructures
- *
+ * 
  * @author Richard Gomes
  *
  * @param <I> Interpolator
  */
-public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractYieldTermStructure implements Traits.Curve {
+
+public class InterpolatedForwardCurve<I extends Interpolator> extends ForwardRateStructure implements Traits.Curve {
 
     //
     // private fields
@@ -93,22 +92,22 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     // public constructors
     //
     
-    public InterpolatedDiscountCurve(
+    public InterpolatedForwardCurve(
     		final Date[] dates,
-			final double[] discounts, 
+			final double[] forwards, 
 			final DayCounter dc) {
-    	this(dates, discounts, dc, null, null);
+    	this(dates, forwards, dc, null, null);
     }
-    public InterpolatedDiscountCurve(
+    public InterpolatedForwardCurve(
     		final Date[] dates,
-			final double[] discounts, 
+			final double[] forwards, 
 			final DayCounter dc,
 			final Calendar calendar) {
-    	this(dates, discounts, dc, calendar, null);
+    	this(dates, forwards, dc, calendar, null);
     }
-    public InterpolatedDiscountCurve(
+    public InterpolatedForwardCurve(
     		final Date[] dates,
-			final double[] discounts, 
+			final double[] forwards, 
 			final DayCounter dc,
 			final Calendar calendar, 
 			final Interpolator interpolator) {
@@ -119,12 +118,12 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
         this.classI = (Class<I>) ttt.getElement(0);
 		
 		QL.require(dates.length != 0, "Dates cannot be empty"); // TODO: message
-		QL.require(discounts.length != 0, "Discounts cannot be empty"); // TODO: message
-		QL.require(dates.length == discounts.length, "Dates must be the same size as Discounts"); // TODO: message
-		QL.require(discounts[0] == 1.0, "Initial discount factor must be 1.0"); // TODO: message
+		QL.require(forwards.length != 0, "forwards cannot be empty"); // TODO: message
+		QL.require(dates.length == forwards.length, "Dates must be the same size as forwards"); // TODO: message
+		QL.require(forwards[0] == 1.0, "Initial discount factor must be 1.0"); // TODO: message
 		
 		this.dates = dates; // TODO: clone() ?
-		this.data = discounts; // TODO: clone() ?
+		this.data = forwards; // TODO: clone() ?
 		this.interpolator = interpolator;
 		this.times = new double[dates.length]; times[0] = 0.0;
 
@@ -141,27 +140,25 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
 	}
     
 
-    
-    
-    public InterpolatedDiscountCurve(
+    public InterpolatedForwardCurve(
             final Class<I> classI,
     		final Date[] dates,
-			final double[] discounts, 
+			final double[] forwards, 
 			final DayCounter dc) {
-    	this(classI, dates, discounts, dc, null, null);
+    	this(classI, dates, forwards, dc, null, null);
     }
-    public InterpolatedDiscountCurve(
+    public InterpolatedForwardCurve(
             final Class<I> classI,
     		final Date[] dates,
-			final double[] discounts, 
+			final double[] forwards, 
 			final DayCounter dc,
 			final Calendar calendar) {
-    	this(classI, dates, discounts, dc, calendar, null);
+    	this(classI, dates, forwards, dc, calendar, null);
     }
-    public InterpolatedDiscountCurve(
+    public InterpolatedForwardCurve(
             final Class<I> classI,
     		final Date[] dates,
-			final double[] discounts, 
+			final double[] forwards, 
 			final DayCounter dc,
 			final Calendar calendar, 
 			final Interpolator interpolator) {
@@ -172,12 +169,12 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
         this.classI = classI;
 		
 		QL.require(dates.length != 0, "Dates cannot be empty"); // TODO: message
-		QL.require(discounts.length != 0, "Discounts cannot be empty"); // TODO: message
-		QL.require(dates.length == discounts.length, "Dates must be the same size as Discounts"); // TODO: message
-		QL.require(discounts[0] == 1.0, "Initial discount factor must be 1.0"); // TODO: message
+		QL.require(forwards.length != 0, "forwards cannot be empty"); // TODO: message
+		QL.require(dates.length == forwards.length, "Dates must be the same size as forwards"); // TODO: message
+		QL.require(forwards[0] == 1.0, "Initial discount factor must be 1.0"); // TODO: message
 		
 		this.dates = dates; // TODO: clone() ?
-		this.data = discounts; // TODO: clone() ?
+		this.data = forwards; // TODO: clone() ?
 		this.times = new double[dates.length]; times[0] = 0.0;
 
 		for (int i = 1; i < dates.length; ++i) {
@@ -197,10 +194,10 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     // protected constructors
     //
 
-    protected InterpolatedDiscountCurve(final DayCounter dc) {
+    protected InterpolatedForwardCurve(final DayCounter dc) {
         this(dc, null);
     }
-    protected InterpolatedDiscountCurve(
+    protected InterpolatedForwardCurve(
             final DayCounter dc,
             final Interpolator interpolator) {
         super(dc);
@@ -212,12 +209,12 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     }
 
 
-    protected InterpolatedDiscountCurve(
+    protected InterpolatedForwardCurve(
             final Date referenceDate,
             final DayCounter dc) {
         this(referenceDate, dc, null);
     }
-    protected InterpolatedDiscountCurve(
+    protected InterpolatedForwardCurve(
             final Date referenceDate,
             final DayCounter dc,
             final Interpolator interpolator) {
@@ -229,13 +226,13 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     }
 
 
-    protected InterpolatedDiscountCurve(
+    protected InterpolatedForwardCurve(
     		final /*@Natural*/ int settlementDays,
             final Calendar calendar,
             final DayCounter dc) {
         this(settlementDays, calendar, dc, null);
     }
-    protected InterpolatedDiscountCurve(
+    protected InterpolatedForwardCurve(
     		final /*@Natural*/ int settlementDays,
             final Calendar calendar,
             final DayCounter dc,
@@ -248,14 +245,12 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     }
 
 
-
-
-    protected InterpolatedDiscountCurve(
+    protected InterpolatedForwardCurve(
             final Class<I> classI,
     		final DayCounter dc) {
         this(dc, null);
     }
-    protected InterpolatedDiscountCurve(
+    protected InterpolatedForwardCurve(
             final Class<I> classI,
             final DayCounter dc,
             final Interpolator interpolator) {
@@ -268,13 +263,13 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     }
 
 
-    protected InterpolatedDiscountCurve(
+    protected InterpolatedForwardCurve(
             final Class<I> classI,
             final Date referenceDate,
             final DayCounter dc) {
         this(referenceDate, dc, null);
     }
-    protected InterpolatedDiscountCurve(
+    protected InterpolatedForwardCurve(
             final Class<I> classI,
             final Date referenceDate,
             final DayCounter dc,
@@ -287,14 +282,14 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     }
 
 
-    protected InterpolatedDiscountCurve(
+    protected InterpolatedForwardCurve(
             final Class<I> classI,
     		final /*@Natural*/ int settlementDays,
             final Calendar calendar,
             final DayCounter dc) {
         this(settlementDays, calendar, dc, null);
     }
-    protected InterpolatedDiscountCurve(
+    protected InterpolatedForwardCurve(
             final Class<I> classI,
     		final /*@Natural*/ int settlementDays,
             final Calendar calendar,
@@ -324,56 +319,56 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
             throw new LibraryException("cannot create Interpolator", e); // TODO: message
         }
     }
-    
-    
-    //
-    // implement Traits.Curve
-    //
 
-    @Override
-    public Date maxDate() {
+    
+    //
+	// implements Traits.Curve
+	//
+	
+	@Override
+	public Date maxDate() {
         final int last = dates.length-1;
         return dates[last];
-    }
+	}
 
-    @Override
-    public Date[] dates() {
+	@Override
+	public Date[] dates() {
         return dates;
-    }
+	}
 
-    @Override
-    public double[] times() {
+	@Override
+	public double[] times() {
         return times;
-    }
+	}
 
-    @Override
-    public List<Pair<Date, Double>> nodes() {
+	@Override
+	public List<Pair<Date, Double>> nodes() {
         final List<Pair<Date, Double>> nodes = new ArrayList<Pair<Date, Double>>();
         for (int i = 0; i < dates.length; ++i) {
             nodes.add(new Pair<Date, Double>(dates[i], data[i]));
         }
         return nodes;
-    }
+	}
 
-    @Override
-    public double[] data() {
+	@Override
+	public double[] data() {
         return data;
-    }
+	}
 
-    @Override
-    public Interpolator interpolator() {
+	@Override
+	public Interpolator interpolator() {
         return interpolator;
-    }
+	}
 
-    @Override
-    public Interpolation interpolation() {
+	@Override
+	public Interpolation interpolation() {
         return interpolation;
-    }
+	}
 
-    @Override
-    public void setInterpolation(final Interpolation interpolation) {
+	@Override
+	public void setInterpolation(Interpolation interpolation) {
         this.interpolation = interpolation;
-    }
+	}
 
     @Override
     public void setDates(final Date[] dates) {
@@ -386,6 +381,7 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
         this.times = times; // TODO: clone() ?
     }
 
+
     @Override
     public void setData(final double[] data) {
         this.data = data; // TODO: clone() ?
@@ -395,25 +391,43 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
 	public double discount(double t) {
 		return discountImpl(t);
 	}
-	
+
 	@Override
 	public double forward(double t) {
-		throw new UnsupportedOperationException();
+		return forwardImpl(t);
 	}
 	
 	@Override
 	public double zeroYield(double t) {
-		throw new UnsupportedOperationException();
+		return zeroYieldImpl(t);
 	}
 
 	
 	//
 	// overrides AbstractYieldTermStructure
 	//
+
+	@Override
+    public double discountImpl(final double t) {
+		throw new UnsupportedOperationException();
+    }
+	
+	
+	//
+	// overrides ForwardRateStructure
+	//
+    
+	@Override
+	public double forwardImpl(double t) {
+        return interpolation.op(t, true);
+	}
 	
 	@Override
-    protected double discountImpl(final double t) {
-        return interpolation.op(t, true);
-    }
-    
+	public double zeroYieldImpl(double t) {
+		if (t == 0.0)
+			return forwardImpl(0.0);
+		else
+			return interpolation.primitive(t, true) / t;
+	}
+	
 }

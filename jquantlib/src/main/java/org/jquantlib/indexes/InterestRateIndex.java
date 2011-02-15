@@ -46,12 +46,12 @@ import org.jquantlib.util.Observer;
 // TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
 public abstract class InterestRateIndex extends Index implements Observer {
 
-    protected String familyName_;
-    protected Period tenor_;
-    protected /*Natural*/ int fixingDays_;
-    protected Calendar fixingCalendar_;
-    protected Currency currency_;
-    protected DayCounter dayCounter_;
+    protected String familyName;
+    protected Period tenor;
+    protected /*Natural*/ int fixingDays;
+    protected Calendar fixingCalendar;
+    protected Currency currency;
+    protected DayCounter dayCounter;
     
     public InterestRateIndex(final String familyName,
             				 final Period tenor,
@@ -59,68 +59,68 @@ public abstract class InterestRateIndex extends Index implements Observer {
             				 final Currency currency,
             				 final Calendar fixingCalendar,
             				 final DayCounter dayCounter) {
-        this.familyName_ = familyName;
-        this.tenor_ = tenor;
-        this.fixingDays_ = fixingDays;
-        this.fixingCalendar_ = fixingCalendar;
-        this.currency_ = currency;
-        this.dayCounter_ = dayCounter;
+        this.familyName = familyName;
+        this.tenor = tenor;
+        this.fixingDays = fixingDays;
+        this.fixingCalendar = fixingCalendar;
+        this.currency = currency;
+        this.dayCounter = dayCounter;
         
-        tenor_.normalize();
+        this.tenor.normalize();
 
-         new Settings().evaluationDate().addObserver(this);
+        new Settings().evaluationDate().addObserver(this);
         IndexManager.getInstance().notifier(name()).addObserver(this);
     }
     
     @Override
     public String name() {
-        final StringBuilder builder = new StringBuilder(familyName_);
-        if (tenor_.equals(new Period(1,TimeUnit.Days))) {
-            if (fixingDays_ == 0) {
+        final StringBuilder builder = new StringBuilder(familyName);
+        if (tenor.equals(new Period(1,TimeUnit.Days))) {
+            if (fixingDays == 0) {
                 builder.append("ON");
-            } else if (fixingDays_ == 1) {
+            } else if (fixingDays == 1) {
                 builder.append("TN");
-            } else if (fixingDays_ == 2) {
+            } else if (fixingDays == 2) {
                 builder.append("SN");
             } else {
-                builder.append(tenor_.getShortFormat());
+                builder.append(tenor.getShortFormat());
             }
         } else {
-            builder.append(tenor_.getShortFormat());
+            builder.append(tenor.getShortFormat());
         }
-        builder.append(dayCounter_.name());
+        builder.append(dayCounter.name());
         return builder.toString();
     }
     
     @Override
     public Calendar fixingCalendar() {
-        return fixingCalendar_;
+        return fixingCalendar;
     }
 
     @Override
     public boolean isValidFixingDate(final Date fixingDate) {
-        return fixingCalendar_.isBusinessDay(fixingDate);
+        return fixingCalendar.isBusinessDay(fixingDate);
     }
 
     public String familyName() {
-        return familyName_;
+        return familyName;
     }
 
     public Period tenor() {
-        return tenor_;
+        return tenor;
     }
 
     public int fixingDays() {
-        return fixingDays_;
+        return fixingDays;
     }
 
 
     public Currency currency() {
-        return currency_;
+        return currency;
     }
 
     public DayCounter dayCounter() {
-        return dayCounter_;
+        return dayCounter;
     }
 
 
@@ -181,14 +181,14 @@ public abstract class InterestRateIndex extends Index implements Observer {
     }
 
     public Date fixingDate(final Date valueDate) {
-        final Date fixingDate = fixingCalendar().advance(valueDate, fixingDays_, TimeUnit.Days);
+        final Date fixingDate = fixingCalendar().advance(valueDate, fixingDays, TimeUnit.Days);
         QL.ensure(isValidFixingDate(fixingDate) , "fixing date " + fixingDate + " is not valid"); 
         return fixingDate;
     }
 
     public Date valueDate(final Date fixingDate) {
         QL.require(isValidFixingDate(fixingDate) , "Fixing date is not valid"); // TODO: message
-        return fixingCalendar().advance(fixingDate, fixingDays_, TimeUnit.Days);
+        return fixingCalendar().advance(fixingDate, fixingDays, TimeUnit.Days);
     }
 
 

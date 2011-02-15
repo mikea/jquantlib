@@ -76,20 +76,22 @@ public interface Traits {
     public int maxIterations() /* @ReadOnly */;
 
 
-    public interface Curve extends YieldTermStructure {
+    public interface Curve extends YieldTermStructure /* TODO: public boost::noncopyable*/ {
 
         @Override
         public Date maxDate() /* @ReadOnly */;
+        
         public Date[] dates() /* @ReadOnly */;
+        
         public /*@Time*/ double[] times() /* @ReadOnly */;
 
         public List<Pair<Date, /* @Rate */Double>> nodes() /* @ReadOnly */;
 
         public double[] data();
-        public /*@DiscountFactor*/ double discountImpl(final /*@Time*/ double t) /* @ReadOnly */;
-
+        
         @Override
         public Date referenceDate() /* @ReadOnly */;
+        
         @Override
         public double timeFromReference(final Date date) /* @ReadOnly */;
 
@@ -97,22 +99,22 @@ public interface Traits {
         public void update();
 
         public Interpolator interpolator() /* @ReadOnly */;
+        
         public Interpolation interpolation() /* @ReadOnly */;
+        
         public void setInterpolation(final Interpolation interpolation);
 
-
-        //FIXME:: remove these methods. SEE: http://bugs.jquantlib.org/view.php?id=464
-        // Ideally, we should employ Array<T> which could mimick closer std::vector (which is a dynamic array).
-        // Doing so, we would not be obliged to overwrite an existing data structure, but we could simply
-        // rezise it and add more data. Then these 3 methods below could be removed.
-        //
-        // Other methods in this interface would be affected too, as the client code employs the same
-        // variables to call all methods defined here.
-        //
-        // These same issues appear in Traits.Curve too.
         public void setDates (final Date[] dates);
+        
         public void setTimes (/*@Time*/ double[] times);
+        
         public void setData (final double[] data);
+
+        public /*@DiscountFactor*/ double discount(final /*@Time*/ double t) /* @ReadOnly */;
+
+        public /*@DiscountFactor*/ double forward(final /*@Time*/ double t) /* @ReadOnly */;
+
+        public /*@DiscountFactor*/ double zeroYield(final /*@Time*/ double t) /* @ReadOnly */;
 
     }
 

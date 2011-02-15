@@ -72,8 +72,8 @@ public class Libor extends IborIndex {
     // private final fields
     //
 
-    private final Calendar financialCenterCalendar_;
-    private final Calendar jointCalendar_;
+    private final Calendar financialCenterCalendar;
+    private final Calendar jointCalendar;
 
 
     //
@@ -95,8 +95,8 @@ public class Libor extends IborIndex {
 		super(familyName, tenor, settlementDays, currency, 
 			  new UnitedKingdom(UnitedKingdom.Market.Exchange),
 			  liborConvention(tenor), liborEOM(tenor), dayCounter, h);
-		financialCenterCalendar_ = financialCenterCalendar;
-		jointCalendar_ = new JointCalendar(new UnitedKingdom(UnitedKingdom.Market.Exchange),
+		this.financialCenterCalendar = financialCenterCalendar;
+		this.jointCalendar = new JointCalendar(new UnitedKingdom(UnitedKingdom.Market.Exchange),
 				financialCenterCalendar,
 				JointCalendarRule.JoinHolidays);
 		QL.require(this.tenor().units()!= TimeUnit.Days,
@@ -166,7 +166,7 @@ public class Libor extends IborIndex {
 		// of the currency concerned, the next following day which is a
 		// business day in both centres shall be the Value Date.
 		final Date d = fixingCalendar().advance(fixingDate, fixingDays(), TimeUnit.Days);
-		return jointCalendar_.adjust(d);
+		return jointCalendar.adjust(d);
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public class Libor extends IborIndex {
 		// are dealt on an end-end basis. For instance a one month
 		// deposit for value 28th February would mature on 31st March,
 		// not the 28th of March.
-		return jointCalendar_.advance(valueDate, tenor(), businessDayConvention(),
+		return jointCalendar.advance(valueDate, tenor(), businessDayConvention(),
 				endOfMonth());
 	}
 

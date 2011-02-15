@@ -170,10 +170,11 @@ public class IborLeg {
 
     public Leg Leg() /* @ReadOnly */{
 
-        final Leg cashflows = new FloatingLeg<IborIndex, IborCoupon, CappedFlooredIborCoupon>(
+        final Leg cashflows = new FloatingLeg(
+        		IborIndex.class, IborCoupon.class, CappedFlooredIborCoupon.class,
                 notionals_, schedule_, index_,
                 paymentDayCounter_, paymentAdjustment_, fixingDays_,
-                gearings_, spreads_, caps_, floors_, inArrears_, zeroPayments_) { /* anonymous */ };
+                gearings_, spreads_, caps_, floors_, inArrears_, zeroPayments_);
 
         if (caps_.empty() && floors_.empty() && !inArrears_) {
             PricerSetter.setCouponPricer(cashflows, new BlackIborCouponPricer(new Handle <OptionletVolatilityStructure>()));

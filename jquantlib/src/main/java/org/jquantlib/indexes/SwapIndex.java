@@ -86,7 +86,7 @@ public class SwapIndex extends InterestRateIndex {
         return new MakeVanillaSwap(tenor, iborIndex, fixedRate)
         .withEffectiveDate(valueDate(fixingDate))
         .withFixedLegCalendar(fixingCalendar())
-        .withFixedLegDayCount(dayCounter_)
+        .withFixedLegDayCount(dayCounter)
         .withFixedLegTenor(fixedLegTenor)
         .withFixedLegConvention(fixedLegConvention)
         .withFixedLegTerminationDateConvention(fixedLegConvention).value();

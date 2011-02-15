@@ -180,7 +180,7 @@ public class ForwardRateAgreement extends Forward {
         return notional * compoundFactor * discount;
     }
 
-    private InterestRate forwardRate() {
+    public InterestRate forwardRate() {
         calculate();
         return forwardRate;
     }

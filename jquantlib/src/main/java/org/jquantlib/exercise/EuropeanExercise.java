@@ -43,6 +43,9 @@
 package org.jquantlib.exercise;
 
 import org.jquantlib.QL;
+import org.jquantlib.lang.annotation.QualityAssurance;
+import org.jquantlib.lang.annotation.QualityAssurance.Quality;
+import org.jquantlib.lang.annotation.QualityAssurance.Version;
 import org.jquantlib.time.Date;
 
 /**
@@ -50,6 +53,7 @@ import org.jquantlib.time.Date;
  *
  * @author Richard Gomes
  */
+@QualityAssurance(quality = Quality.Q3_DOCUMENTATION, version = Version.V097, reviewers = { "Richard Gomes" })
 public class EuropeanExercise extends Exercise {
 
 	/**

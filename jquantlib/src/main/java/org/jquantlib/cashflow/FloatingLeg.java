@@ -75,6 +75,7 @@ public class FloatingLeg< InterestRateIndexType extends InterestRateIndex,
 	//Make compiler happy
 	private static final long serialVersionUID = 1L;
 
+    private final Class<?> typeIRT;
     private final Class<?> typeFCT;
     private final Class<?> typeCFC;
 
@@ -97,6 +98,7 @@ public class FloatingLeg< InterestRateIndexType extends InterestRateIndex,
             final boolean isInArrears,
             final boolean isZero) {
         super(schedule.size() - 1);
+        this.typeIRT = new TypeTokenTree(this.getClass()).getElement(0);
         this.typeFCT = new TypeTokenTree(this.getClass()).getElement(1);
         this.typeCFC = new TypeTokenTree(this.getClass()).getElement(2);
         constructor(
@@ -109,6 +111,7 @@ public class FloatingLeg< InterestRateIndexType extends InterestRateIndex,
     }
     
 	public FloatingLeg(
+	        final Class<?> typeIRT,
 	        final Class<?> typeFCT,
 	        final Class<?> typeCFC,
             final Array nominals,
@@ -124,6 +127,7 @@ public class FloatingLeg< InterestRateIndexType extends InterestRateIndex,
             final boolean isInArrears,
             final boolean isZero) {
         super(schedule.size() - 1);
+        this.typeIRT = typeIRT;
         this.typeFCT = typeFCT;
         this.typeCFC = typeCFC;
         constructor(
