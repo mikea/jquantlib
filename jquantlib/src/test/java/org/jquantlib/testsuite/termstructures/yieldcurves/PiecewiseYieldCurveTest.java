@@ -33,36 +33,58 @@ import org.jquantlib.indexes.Euribor;
 import org.jquantlib.indexes.Euribor3M;
 import org.jquantlib.indexes.Euribor6M;
 import org.jquantlib.indexes.IborIndex;
+import org.jquantlib.indexes.ibor.USDLibor;
 import org.jquantlib.instruments.ForwardRateAgreement;
 import org.jquantlib.instruments.MakeVanillaSwap;
 import org.jquantlib.instruments.Position;
 import org.jquantlib.instruments.VanillaSwap;
 import org.jquantlib.instruments.bonds.FixedRateBond;
+import org.jquantlib.math.interpolations.CubicInterpolation;
 import org.jquantlib.math.interpolations.Interpolation.Interpolator;
+import org.jquantlib.math.interpolations.factories.BackwardFlat;
+import org.jquantlib.math.interpolations.factories.Cubic;
+import org.jquantlib.math.interpolations.factories.Linear;
+import org.jquantlib.math.interpolations.factories.LogCubic;
+import org.jquantlib.math.interpolations.factories.LogLinear;
 import org.jquantlib.pricingengines.PricingEngine;
 import org.jquantlib.pricingengines.bond.DiscountingBondEngine;
+import org.jquantlib.pricingengines.swap.DiscountingSwapEngine;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.Bootstrap;
+import org.jquantlib.termstructures.IterativeBootstrap;
+import org.jquantlib.termstructures.LocalBootstrap;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.yieldcurves.DepositRateHelper;
+import org.jquantlib.termstructures.yieldcurves.Discount;
 import org.jquantlib.termstructures.yieldcurves.FixedRateBondHelper;
+import org.jquantlib.termstructures.yieldcurves.FlatForward;
+import org.jquantlib.termstructures.yieldcurves.ForwardRate;
 import org.jquantlib.termstructures.yieldcurves.FraRateHelper;
 import org.jquantlib.termstructures.yieldcurves.PiecewiseYieldCurve;
 import org.jquantlib.termstructures.yieldcurves.SwapRateHelper;
 import org.jquantlib.termstructures.yieldcurves.Traits;
+import org.jquantlib.termstructures.yieldcurves.ZeroYield;
+import org.jquantlib.testsuite.util.Flag;
 import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.DateGeneration;
 import org.jquantlib.time.Frequency;
+import org.jquantlib.time.MakeSchedule;
+import org.jquantlib.time.Month;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.Schedule;
 import org.jquantlib.time.TimeUnit;
+import org.jquantlib.time.Weekday;
+import org.jquantlib.time.calendars.Japan;
+import org.jquantlib.time.calendars.JointCalendar;
+import org.jquantlib.time.calendars.JointCalendar.JointCalendarRule;
 import org.jquantlib.time.calendars.Target;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -132,12 +154,6 @@ public class PiecewiseYieldCurveTest {
         QL.info("::::: "+this.getClass().getSimpleName()+" :::::");
     }
     
-    @Test
-    public void dummyTest() {
-    	// this is not a test
-    }
-    
-    
     
     //
     // private inner classes
@@ -204,10 +220,10 @@ public class PiecewiseYieldCurveTest {
 		public final int swaps;
 		public final int bonds;
 		public final int bmas;
-		public final Quote[] rates;
-		public final Quote[] fraRates;
-		public final Quote[] prices;
-		public final Quote[] fractions;
+		public final SimpleQuote[] rates;
+		public final SimpleQuote[] fraRates;
+		public final SimpleQuote[] prices;
+		public final SimpleQuote[] fractions;
 		public final RateHelper[] instruments;
 		public final RateHelper[] fraHelpers;
 		public final RateHelper[] bondHelpers;
@@ -499,445 +515,484 @@ public class PiecewiseYieldCurveTest {
     }
 
 
-//    template <class T, class I, template<class C> class B>
-//    void testBMACurveConsistency(CommonVars& vars,
-//                                 const I& interpolator = I(),
-//                                 Real tolerance = 1.0e-9) {
-//
+
+//    private <T extends Traits, I extends Interpolator, B extends Bootstrap> void testBMACurveConsistency(
+//    		Class<T> classT,
+//    		Class<I> classI,
+//    		Class<B> classB,
+//    		final CommonVars vars) {
+//    	I interpolator;
+//		try {
+//			interpolator = classI.newInstance();
+//		} catch (Exception e) {
+//			throw new RuntimeException(e);
+//		}
+//    	testCurveConsistency(classT, classI, classB, vars, interpolator, 1.0e-9);
+//    }
+//    private <T extends Traits, I extends Interpolator, B extends Bootstrap> void testBMACurveConsistency(
+//    		Class<T> classT,
+//    		Class<I> classI,
+//    		Class<B> classB,
+//    		final CommonVars vars,
+//            final Interpolator interpolator) {
+//    	testCurveConsistency(classT, classI, classB, vars, interpolator, 1.0e-9);
+//    }
+//    private <T extends Traits, I extends Interpolator, B extends Bootstrap> void testBMACurveConsistency(
+//    		Class<T> classT,
+//    		Class<I> classI,
+//    		Class<B> classB,
+//    		final CommonVars vars,
+//            final Interpolator interpolator,
+//            /*@Real*/ double tolerance) {
+//    	
 //        // re-adjust settlement
-//        vars.calendar = JointCalendar(BMAIndex().fixingCalendar(),
-//                                      USDLibor(3*Months).fixingCalendar(),
-//                                      JoinHolidays);
-//        vars.today = vars.calendar.adjust(Date::todaysDate());
-//        Settings::instance().evaluationDate() = vars.today;
-//        vars.settlement =
-//            vars.calendar.advance(vars.today,vars.settlementDays,Days);
+//        vars.calendar = new JointCalendar(new BMAIndex().fixingCalendar(),
+//                                          new USDLibor(new Period(3, TimeUnit.Months)).fixingCalendar(),
+//                                          JointCalendarRule.JoinHolidays);
+//        vars.today = vars.calendar.adjust(Date.todaysDate());
+//        new Settings().setEvaluationDate(vars.today);
+//        vars.settlement = vars.calendar.advance(vars.today, vars.settlementDays, TimeUnit.Days);
 //
 //
-//        Handle<YieldTermStructure> riskFreeCurve(
-//            boost::shared_ptr<YieldTermStructure>(
-//                        new FlatForward(vars.settlement, 0.04, Actual360())));
+//        Handle<YieldTermStructure> riskFreeCurve = new Handle<YieldTermStructure>(new FlatForward(vars.settlement, 0.04, new Actual360()));
 //
-//        boost::shared_ptr<BMAIndex> bmaIndex(new BMAIndex);
-//        boost::shared_ptr<IborIndex> liborIndex(
-//                                        new USDLibor(3*Months,riskFreeCurve));
-//        for (Size i=0; i<vars.bmas; ++i) {
-//            Handle<Quote> f(vars.fractions[i]);
-//            vars.bmaHelpers[i] = boost::shared_ptr<RateHelper>(
-//                      new BMASwapRateHelper(f, bmaData[i].n*bmaData[i].units,
+//        BMAIndex bmaIndex = new BMAIndex();
+//        IborIndex liborIndex = new USDLibor(new Period(3, TimeUnit.Months), riskFreeCurve);
+//        for (int i=0; i<vars.bmas; ++i) {
+//            Handle<Quote> f = new Handle<Quote>(vars.fractions[i]);
+//            vars.bmaHelpers[i] = // boost::shared_ptr<RateHelper>(
+//                      new BMASwapRateHelper(f, new Period(bmaData[i].n, bmaData[i].units),
 //                                            vars.settlementDays,
 //                                            vars.calendar,
-//                                            Period(vars.bmaFrequency),
+//                                            new Period(vars.bmaFrequency),
 //                                            vars.bmaConvention,
 //                                            vars.bmaDayCounter,
 //                                            bmaIndex,
-//                                            liborIndex));
+//                                            liborIndex);
 //        }
 //
 //        Weekday w = vars.today.weekday();
-//        Date lastWednesday =
-//            (w >= 4) ? vars.today - (w - 4) : vars.today + (4 - w - 7);
-//        Date lastFixing = bmaIndex->fixingCalendar().adjust(lastWednesday);
-//        bmaIndex->addFixing(lastFixing, 0.03);
+//        Date lastWednesday = (w.ordinal() >= 4) ? vars.today.sub(w.ordinal() - 4) : vars.today.add(4 - w.ordinal() - 7);
+//        Date lastFixing = bmaIndex.fixingCalendar().adjust(lastWednesday);
+//        bmaIndex.addFixing(lastFixing, 0.03);
 //
-//        vars.termStructure = boost::shared_ptr<YieldTermStructure>(new
-//            PiecewiseYieldCurve<T,I,B>(vars.settlement, vars.bmaHelpers,
-//                                       Actual360(),
-//                                       std::vector<Handle<Quote> >(),
-//                                       std::vector<Date>(),
-//                                       1.0e-12,
-//                                       interpolator));
+//        vars.termStructure = new PiecewiseYieldCurve<T,I,B>(
+//        							vars.settlement, vars.bmaHelpers,
+//                                    new Actual360(),
+//                                    new Handle/*<Quote>*/[0],
+//                                    new Date[0],
+//                                    1.0e-12,
+//                                    interpolator);
 //
 //        RelinkableHandle<YieldTermStructure> curveHandle;
 //        curveHandle.linkTo(vars.termStructure);
 //
 //        // check BMA swaps
-//        boost::shared_ptr<BMAIndex> bma(new BMAIndex(curveHandle));
-//        boost::shared_ptr<IborIndex> libor3m(new USDLibor(3*Months,
-//                                                          riskFreeCurve));
-//        for (Size i=0; i<vars.bmas; i++) {
-//            Period tenor = bmaData[i].n*bmaData[i].units;
+//        BMAIndex bma = new BMAIndex(curveHandle);
+//        IborIndex libor3m = new USDLibor(new Period(3, TimeUnit.Months), riskFreeCurve);
+//        for (int i=0; i<vars.bmas; i++) {
+//            Period tenor = new Period(bmaData[i].n, bmaData[i].units);
 //
-//            Schedule bmaSchedule = MakeSchedule(vars.settlement,
-//                                                vars.settlement+tenor,
-//                                                Period(vars.bmaFrequency),
-//                                                bma->fixingCalendar(),
-//                                                vars.bmaConvention).backwards();
-//            Schedule liborSchedule = MakeSchedule(vars.settlement,
-//                                                  vars.settlement+tenor,
-//                                                  libor3m->tenor(),
-//                                                  libor3m->fixingCalendar(),
-//                                                  libor3m->businessDayConvention())
-//                .endOfMonth(libor3m->endOfMonth())
-//                .backwards();
+//            Schedule bmaSchedule = new MakeSchedule(vars.settlement,
+//                                                	vars.settlement.add(tenor),
+//                                                	new Period(vars.bmaFrequency),
+//                                                	bma.fixingCalendar(),
+//                                                	vars.bmaConvention)
+//            												.backwards()
+//            												.schedule();
+//            Schedule liborSchedule = new MakeSchedule(vars.settlement,
+//                                                  	  vars.settlement.add(tenor),
+//                                                  	  libor3m.tenor(),
+//                                                  	  libor3m.fixingCalendar(),
+//                                                  	  libor3m.businessDayConvention())
+//										                	.endOfMonth(libor3m.endOfMonth())
+//										                	.backwards()
+//										                	.schedule();
 //
 //
-//            BMASwap swap(BMASwap::Payer, 100.0,
-//                         liborSchedule, 0.75, 0.0,
-//                         libor3m, libor3m->dayCounter(),
-//                         bmaSchedule, bma, vars.bmaDayCounter);
-//            swap.setPricingEngine(boost::shared_ptr<PricingEngine>(
-//                        new DiscountingSwapEngine(libor3m->termStructure())));
+//            BMASwap swap = new BMASwap(BMASwap::Payer, 100.0,
+//				                       liborSchedule, 0.75, 0.0,
+//				                       libor3m, libor3m.dayCounter(),
+//				                       bmaSchedule, bma, vars.bmaDayCounter);
+//            swap.setPricingEngine(new DiscountingSwapEngine(libor3m.termStructure()));
 //
-//            Real expectedFraction = bmaData[i].rate/100,
-//                 estimatedFraction = swap.fairLiborFraction();
-//            Real error = std::fabs(expectedFraction-estimatedFraction);
+//            /*@Real*/ double expectedFraction = bmaData[i].rate/100;
+//            /*@Real*/ double estimatedFraction = swap.fairLiborFraction();
+//            /*@Real*/ double error = Math.abs(expectedFraction-estimatedFraction);
 //            if (error > tolerance) {
-//                BOOST_ERROR(bmaData[i].n << " year(s) BMA swap:\n"
-//                            << std::setprecision(8)
-//                            << "\n estimated libor fraction: " << estimatedFraction
-//                            << "\n expected libor fraction:  " << expectedFraction
-//                            << "\n error:          " << error
-//                            << "\n tolerance:      " << tolerance);
+//            	throw new RuntimeException(
+//            			String.format("%d %s %s %f %s %f %s %f %s %f",
+//                            bmaData[i].n, " year(s) BMA swap:\n",
+//                            "\n estimated libor fraction: ", estimatedFraction,
+//                            "\n expected libor fraction:  ", expectedFraction,
+//                            "\n error:          ", error,
+//                            "\n tolerance:      ", tolerance));
 //            }
 //        }
-//    }
+//	  }
 
     
-//	@Test
-//	public void testLogCubicDiscountConsistency() {
-//
-//	    BOOST_MESSAGE(
-//	        "Testing consistency of piecewise-log-cubic discount curve...");
-//
-//	    CommonVars vars;
-//
-//	    testCurveConsistency<Discount,LogCubic,IterativeBootstrap>(
+	@Ignore
+	@Test
+	public void testLogCubicDiscountConsistency() {
+
+		QL.info("Testing consistency of piecewise-log-cubic discount curve...");
+
+	    CommonVars vars = new CommonVars();
+
+	    testCurveConsistency(
+	    	Discount.class, LogCubic.class, IterativeBootstrap.class,
+	        vars,
+	        new LogCubic(CubicInterpolation.DerivativeApprox.Spline, true,
+	                     CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
+	                     CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
+//	    testBMACurveConsistency(
+//		    Discount.class, LogCubic.class, IterativeBootstrap.class,
 //	        vars,
-//	        LogCubic(CubicInterpolation::Spline, true,
-//	                 CubicInterpolation::SecondDerivative, 0.0,
-//	                 CubicInterpolation::SecondDerivative, 0.0));
-//	    testBMACurveConsistency<Discount,LogCubic,IterativeBootstrap>(
-//	        vars,
-//	        LogCubic(CubicInterpolation::Spline, true,
-//	                 CubicInterpolation::SecondDerivative, 0.0,
-//	                 CubicInterpolation::SecondDerivative, 0.0));
-//	}
-//
-//	@Test
-//	public void testLogLinearDiscountConsistency() {
-//
-//	    BOOST_MESSAGE(
-//	        "Testing consistency of piecewise-log-linear discount curve...");
-//
-//	    CommonVars vars;
-//
-//	    testCurveConsistency<Discount,LogLinear,IterativeBootstrap>(vars);
-//	    testBMACurveConsistency<Discount,LogLinear,IterativeBootstrap>(vars);
-//	}
-//
-//	@Test
-//	public void testLinearDiscountConsistency() {
-//
-//	    BOOST_MESSAGE(
-//	        "Testing consistency of piecewise-linear discount curve...");
-//
-//	    CommonVars vars;
-//
-//	    testCurveConsistency<Discount,Linear,IterativeBootstrap>(vars);
-//	    testBMACurveConsistency<Discount,Linear,IterativeBootstrap>(vars);
-//	}
-//
-//	@Test
-//	public void testLogLinearZeroConsistency() {
-//
-//	    BOOST_MESSAGE(
-//	        "Testing consistency of piecewise-log-linear zero-yield curve...");
-//
-//	    CommonVars vars;
-//
-//	    testCurveConsistency<ZeroYield,LogLinear,IterativeBootstrap>(vars);
-//	    testBMACurveConsistency<ZeroYield,LogLinear,IterativeBootstrap>(vars);
-//	}
-//
-//	@Test
-//	public void testLinearZeroConsistency() {
-//
-//	    BOOST_MESSAGE("Testing consistency of piecewise-linear zero-yield curve...");
-//
-//	    CommonVars vars;
-//
-//	    testCurveConsistency<ZeroYield,Linear,IterativeBootstrap>(vars);
-//	    testBMACurveConsistency<ZeroYield,Linear,IterativeBootstrap>(vars);
-//	}
-//
-//	@Test
-//	public void testSplineZeroConsistency() {
-//
-//	    BOOST_MESSAGE("Testing consistency of piecewise-cubic zero-yield curve...");
-//
-//	    CommonVars vars;
-//
-//	    testCurveConsistency<ZeroYield,Cubic,IterativeBootstrap>(
-//	                   vars,
-//	                   Cubic(CubicInterpolation::Spline, true,
-//	                         CubicInterpolation::SecondDerivative, 0.0,
-//	                         CubicInterpolation::SecondDerivative, 0.0));
-//	    testBMACurveConsistency<ZeroYield,Cubic,IterativeBootstrap>(
-//	                   vars,
-//	                   Cubic(CubicInterpolation::Spline, true,
-//	                         CubicInterpolation::SecondDerivative, 0.0,
-//	                         CubicInterpolation::SecondDerivative, 0.0));
-//	}
-//
-//	@Test
-//	public void testLinearForwardConsistency() {
-//
-//	    BOOST_MESSAGE("Testing consistency of piecewise-linear forward-rate curve...");
-//
-//	    CommonVars vars;
-//
-//	    testCurveConsistency<ForwardRate,Linear,IterativeBootstrap>(vars);
-//	    testBMACurveConsistency<ForwardRate,Linear,IterativeBootstrap>(vars);
-//	}
-//
-//	@Test
-//	public void testFlatForwardConsistency() {
-//
-//	    BOOST_MESSAGE("Testing consistency of piecewise-flat forward-rate curve...");
-//
-//	    CommonVars vars;
-//
-//	    testCurveConsistency<ForwardRate,BackwardFlat,IterativeBootstrap>(vars);
-//	    testBMACurveConsistency<ForwardRate,BackwardFlat,IterativeBootstrap>(vars);
-//	}
-//
-//	@Test
-//	public void testSplineForwardConsistency() {
-//
-//	    BOOST_MESSAGE("Testing consistency of piecewise-cubic forward-rate curve...");
-//
-//	    CommonVars vars;
-//
-//	    testCurveConsistency<ForwardRate,Cubic,IterativeBootstrap>(
-//	                   vars,
-//	                   Cubic(CubicInterpolation::Spline, true,
-//	                         CubicInterpolation::SecondDerivative, 0.0,
-//	                         CubicInterpolation::SecondDerivative, 0.0));
-//	    testBMACurveConsistency<ForwardRate,Cubic,IterativeBootstrap>(
-//	                   vars,
-//	                   Cubic(CubicInterpolation::Spline, true,
-//	                         CubicInterpolation::SecondDerivative, 0.0,
-//	                         CubicInterpolation::SecondDerivative, 0.0));
-//	}
-//
+//	        new LogCubic(CubicInterpolation.DerivativeApprox.Spline, true,
+//	                     CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
+//	                     CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
+	}
+
+	@Ignore
+	@Test
+	public void testLogLinearDiscountConsistency() {
+
+	    QL.info("Testing consistency of piecewise-log-linear discount curve...");
+
+	    CommonVars vars = new CommonVars();
+
+	    testCurveConsistency(Discount.class, LogLinear.class, IterativeBootstrap.class, vars);
+//	    testBMACurveConsistency(Discount.class, LogLinear.class, IterativeBootstrap.class, vars);
+	}
+
+	@Ignore
+	@Test
+	public void testLinearDiscountConsistency() {
+
+	    QL.info("Testing consistency of piecewise-linear discount curve...");
+
+	    CommonVars vars = new CommonVars();
+
+	    testCurveConsistency(Discount.class, Linear.class, IterativeBootstrap.class, vars);
+//	    testBMACurveConsistency(Discount.class, Linear.class, IterativeBootstrap.class, vars);
+	}
+
+	@Ignore
+	@Test
+	public void testLogLinearZeroConsistency() {
+
+	    QL.info("Testing consistency of piecewise-log-linear zero-yield curve...");
+
+	    CommonVars vars = new CommonVars();
+
+	    testCurveConsistency(ZeroYield.class, LogLinear.class, IterativeBootstrap.class, vars);
+//	    testBMACurveConsistency(ZeroYield.class, LogLinear.class, IterativeBootstrap.class, vars);
+	}
+
+	@Ignore
+	@Test
+	public void testLinearZeroConsistency() {
+
+	    QL.info("Testing consistency of piecewise-linear zero-yield curve...");
+
+	    CommonVars vars = new CommonVars();
+
+	    testCurveConsistency(ZeroYield.class, Linear.class, IterativeBootstrap.class, vars);
+//	    testBMACurveConsistency(ZeroYield.class, Linear.class, IterativeBootstrap.class, vars);
+	}
+
+	@Ignore
+	@Test
+	public void testSplineZeroConsistency() {
+
+	    QL.info("Testing consistency of piecewise-cubic zero-yield curve...");
+
+	    CommonVars vars = new CommonVars();
+
+	    testCurveConsistency(
+	    				ZeroYield.class, Cubic.class, IterativeBootstrap.class, 
+	                    vars,
+	                    new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
+	                              CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
+	                              CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
+//	    testBMACurveConsistency(
+//				ZeroYield.class, Cubic.class, IterativeBootstrap.class, 
+//	                    vars,
+//	                    new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
+//	                              CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
+//	                              CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
+	}
+
+	@Ignore
+	@Test
+	public void testLinearForwardConsistency() {
+
+	    QL.info("Testing consistency of piecewise-linear forward-rate curve...");
+
+	    CommonVars vars = new CommonVars();
+
+	    testCurveConsistency(ForwardRate.class, Linear.class, IterativeBootstrap.class, vars);
+//	    testBMACurveConsistency(ForwardRate.class, Linear.class, IterativeBootstrap.class, vars);
+	}
+
+	@Ignore
+	@Test
+	public void testFlatForwardConsistency() {
+
+	    QL.info("Testing consistency of piecewise-flat forward-rate curve...");
+
+	    CommonVars vars = new CommonVars();
+
+	    testCurveConsistency(ForwardRate.class, BackwardFlat.class, IterativeBootstrap.class, vars);
+//	    testBMACurveConsistency(ForwardRate.class, BackwardFlat.class, IterativeBootstrap.class, vars);
+	}
+
+	@Ignore
+	@Test
+	public void testSplineForwardConsistency() {
+
+	    QL.info("Testing consistency of piecewise-cubic forward-rate curve...");
+
+	    CommonVars vars = new CommonVars();
+
+	    testCurveConsistency(
+	    				ForwardRate.class, Cubic.class, IterativeBootstrap.class,
+	                    vars,
+	                    new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
+	                         CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
+	                         CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
+//	    testBMACurveConsistency(
+//				ForwardRate.class, Cubic.class, IterativeBootstrap.class,
+//                vars,
+//                new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
+//                     CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
+//                     CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
+	}
+
+//	@Ignore
 //	@Test
 //	public void testConvexMonotoneForwardConsistency() {
-//	    BOOST_MESSAGE("Testing consistency of convex monotone forward-rate curve...");
+//	    QL.info("Testing consistency of convex monotone forward-rate curve...");
 //
-//	    CommonVars vars;
-//	    testCurveConsistency<ForwardRate,ConvexMonotone,IterativeBootstrap>(vars);
-//
-//	    testBMACurveConsistency<ForwardRate,ConvexMonotone,
-//	                            IterativeBootstrap>(vars);
+//	    CommonVars vars = new CommonVars();
+//	    
+//	    testCurveConsistency(ForwardRate.class, ConvexMonotone.class, IterativeBootstrap.class, vars);
+//	    testBMACurveConsistency(ForwardRate.class, ConvexMonotone.class, IterativeBootstrap.class, vars);
 //	}
-//
-//
+
+
+//	@Ignore
 //	@Test
 //	public void testLocalBootstrapConsistency() {
-//	    BOOST_MESSAGE("Testing consistency of local-bootstrap algorithm...");
+//	    QL.info("Testing consistency of local-bootstrap algorithm...");
 //
-//	    CommonVars vars;
-//	    testCurveConsistency<ForwardRate,ConvexMonotone,LocalBootstrap>(
-//	                                              vars, ConvexMonotone(), 1.0e-7);
-//	    testBMACurveConsistency<ForwardRate,ConvexMonotone,LocalBootstrap>(
-//	                                              vars, ConvexMonotone(), 1.0e-7);
+//	    CommonVars vars = new CommonVars();
+//	    
+//	    testCurveConsistency(
+//	    		ForwardRate.class, ConvexMonotone.class, LocalBootstrap.class, 
+//	            vars, 
+//	            new ConvexMonotone(), 1.0e-7);
+//	    testBMACurveConsistency(
+//	    		ForwardRate.class, ConvexMonotone.class, LocalBootstrap.class, 
+//	            vars, 
+//	            new ConvexMonotone(), 1.0e-7);
 //	}
-//
-//
-//	@Test
-//	public void testObservability() {
-//
-//	    BOOST_MESSAGE("Testing observability of piecewise yield curve...");
-//
-//	    CommonVars vars;
-//
-//	    vars.termStructure = boost::shared_ptr<YieldTermStructure>(
-//	       new PiecewiseYieldCurve<Discount,LogLinear>(vars.settlementDays,
-//	                                                   vars.calendar,
-//	                                                   vars.instruments,
-//	                                                   Actual360()));
-//	    Flag f;
-//	    f.registerWith(vars.termStructure);
-//
-//	    for (Size i=0; i<vars.deposits+vars.swaps; i++) {
-//	        Time testTime =
-//	            Actual360().yearFraction(vars.settlement,
-//	                                     vars.instruments[i]->latestDate());
-//	        DiscountFactor discount = vars.termStructure->discount(testTime);
-//	        f.lower();
-//	        vars.rates[i]->setValue(vars.rates[i]->value()*1.01);
-//	        if (!f.isUp())
-//	            BOOST_FAIL("Observer was not notified of underlying rate change");
-//	        if (vars.termStructure->discount(testTime,true) == discount)
-//	            BOOST_FAIL("rate change did not trigger recalculation");
-//	        vars.rates[i]->setValue(vars.rates[i]->value()/1.01);
-//	    }
-//
-//	    f.lower();
-//	    Settings::instance().evaluationDate() =
-//	        vars.calendar.advance(vars.today,15,Days);
-//	    if (!f.isUp())
-//	        BOOST_FAIL("Observer was not notified of date change");
-//	}
-//
-//
-//	@Test
-//	public void testLiborFixing() {
-//
-//	    BOOST_MESSAGE("Testing use of today's LIBOR fixings in swap curve...");
-//
-//	    CommonVars vars;
-//
-//	    std::vector<boost::shared_ptr<RateHelper> > swapHelpers(vars.swaps);
-//	    boost::shared_ptr<IborIndex> euribor6m(new Euribor6M);
-//
-//	    for (Size i=0; i<vars.swaps; i++) {
-//	        Handle<Quote> r(vars.rates[i+vars.deposits]);
-//	        swapHelpers[i] = boost::shared_ptr<RateHelper>(new
-//	            SwapRateHelper(r, Period(swapData[i].n, swapData[i].units),
-//	                           vars.calendar,
-//	                           vars.fixedLegFrequency, vars.fixedLegConvention,
-//	                           vars.fixedLegDayCounter, euribor6m));
-//	    }
-//
-//	    vars.termStructure = boost::shared_ptr<YieldTermStructure>(new
-//	        PiecewiseYieldCurve<Discount,LogLinear>(vars.settlement,
-//	                                                swapHelpers,
-//	                                                Actual360()));
-//
-//	    Handle<YieldTermStructure> curveHandle =
-//	        Handle<YieldTermStructure>(vars.termStructure);
-//
-//	    boost::shared_ptr<IborIndex> index(new Euribor6M(curveHandle));
-//	    for (Size i=0; i<vars.swaps; i++) {
-//	        Period tenor = swapData[i].n*swapData[i].units;
-//
-//	        VanillaSwap swap = MakeVanillaSwap(tenor, index, 0.0)
-//	            .withEffectiveDate(vars.settlement)
-//	            .withFixedLegDayCount(vars.fixedLegDayCounter)
-//	            .withFixedLegTenor(Period(vars.fixedLegFrequency))
-//	            .withFixedLegConvention(vars.fixedLegConvention)
-//	            .withFixedLegTerminationDateConvention(vars.fixedLegConvention);
-//
-//	        Rate expectedRate = swapData[i].rate/100,
-//	             estimatedRate = swap.fairRate();
-//	        Real tolerance = 1.0e-9;
-//	        if (std::fabs(expectedRate-estimatedRate) > tolerance) {
-//	            BOOST_ERROR("before LIBOR fixing:\n"
-//	                        << swapData[i].n << " year(s) swap:\n"
-//	                        << std::setprecision(8)
-//	                        << "    estimated rate: "
-//	                        << io::rate(estimatedRate) << "\n"
-//	                        << "    expected rate:  "
-//	                        << io::rate(expectedRate));
-//	        }
-//	    }
-//
-//	    Flag f;
-//	    f.registerWith(vars.termStructure);
-//	    f.lower();
-//
-//	    index->addFixing(vars.today, 0.0425);
-//
-//	    if (!f.isUp())
-//	        BOOST_ERROR("Observer was not notified of rate fixing");
-//
-//	    for (Size i=0; i<vars.swaps; i++) {
-//	        Period tenor = swapData[i].n*swapData[i].units;
-//
-//	        VanillaSwap swap = MakeVanillaSwap(tenor, index, 0.0)
-//	            .withEffectiveDate(vars.settlement)
-//	            .withFixedLegDayCount(vars.fixedLegDayCounter)
-//	            .withFixedLegTenor(Period(vars.fixedLegFrequency))
-//	            .withFixedLegConvention(vars.fixedLegConvention)
-//	            .withFixedLegTerminationDateConvention(vars.fixedLegConvention);
-//
-//	        Rate expectedRate = swapData[i].rate/100,
-//	             estimatedRate = swap.fairRate();
-//	        Real tolerance = 1.0e-9;
-//	        if (std::fabs(expectedRate-estimatedRate) > tolerance) {
-//	            BOOST_ERROR("after LIBOR fixing:\n"
-//	                        << swapData[i].n << " year(s) swap:\n"
-//	                        << std::setprecision(8)
-//	                        << "    estimated rate: "
-//	                        << io::rate(estimatedRate) << "\n"
-//	                        << "    expected rate:  "
-//	                        << io::rate(expectedRate));
-//	        }
-//	    }
-//	}
-//
+
+
+	@Ignore
+	@Test
+	public void testObservability() {
+
+	    QL.info("Testing observability of piecewise yield curve...");
+
+	    CommonVars vars = new CommonVars();
+
+	    vars.termStructure = new PiecewiseYieldCurve(
+							    		Discount.class, LogLinear.class, IterativeBootstrap.class,
+							    		vars.settlementDays,
+							    		vars.calendar,
+							            vars.instruments,
+							            new Actual360());
+	    Flag f = new Flag();
+	    vars.termStructure.addObserver(f);
+
+	    for (int i=0; i<vars.deposits+vars.swaps; i++) {
+	        /*@Time*/ double testTime = new Actual360().yearFraction(vars.settlement, vars.instruments[i].latestDate());
+	        /*@DiscountFactor*/ double discount = vars.termStructure.discount(testTime);
+	        f.lower();
+	        vars.rates[i].setValue(vars.rates[i].value()*1.01);
+	        if (!f.isUp())
+	            throw new RuntimeException("Observer was not notified of underlying rate change");
+	        if (vars.termStructure.discount(testTime,true) == discount)
+	        	throw new RuntimeException("rate change did not trigger recalculation");
+	        vars.rates[i].setValue(vars.rates[i].value()/1.01);
+	    }
+
+	    f.lower();
+	    new Settings().setEvaluationDate(vars.calendar.advance(vars.today, 15, TimeUnit.Days));
+	    if (!f.isUp())
+	    	throw new RuntimeException("Observer was not notified of date change");
+	}
+
+
+	@Ignore
+	@Test
+	public void testLiborFixing() {
+
+	    QL.info("Testing use of today's LIBOR fixings in swap curve...");
+
+	    CommonVars vars = new CommonVars();
+
+	    RateHelper[] swapHelpers = new RateHelper[vars.swaps];
+	    IborIndex euribor6m = new Euribor6M();
+
+	    for (int i=0; i<vars.swaps; i++) {
+	        Handle<Quote> r = new Handle<Quote>(vars.rates[i+vars.deposits]);
+	        swapHelpers[i] = new SwapRateHelper(r, new Period(swapData[i].n, swapData[i].units),
+	                           vars.calendar,
+	                           vars.fixedLegFrequency, vars.fixedLegConvention,
+	                           vars.fixedLegDayCounter, euribor6m);
+	    }
+
+	    vars.termStructure = new PiecewiseYieldCurve(
+			    				Discount.class, LogLinear.class, IterativeBootstrap.class, 
+			    				vars.settlement, 
+			    				swapHelpers, 
+			                    new Actual360());
+
+	    Handle<YieldTermStructure> curveHandle = new Handle<YieldTermStructure>(vars.termStructure);
+
+	    IborIndex index = new Euribor6M(curveHandle);
+	    for (int i=0; i<vars.swaps; i++) {
+	        Period tenor = new Period(swapData[i].n, swapData[i].units);
+
+	        VanillaSwap swap = new MakeVanillaSwap(tenor, index, 0.0)
+	            .withEffectiveDate(vars.settlement)
+	            .withFixedLegDayCount(vars.fixedLegDayCounter)
+	            .withFixedLegTenor(new Period(vars.fixedLegFrequency))
+	            .withFixedLegConvention(vars.fixedLegConvention)
+	            .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
+	            		.value();
+
+	        /*@Rate*/ double expectedRate = swapData[i].rate/100;
+	        /*@Rate*/ double estimatedRate = swap.fairRate();
+	        /*@Real*/ double tolerance = 1.0e-9;
+	        if (Math.abs(expectedRate-estimatedRate) > tolerance) {
+	        	throw new RuntimeException(
+	        			String.format("%s %d %s %s %f %s %s %f",
+	        				"before LIBOR fixing:\n",
+	                        swapData[i].n, " year(s) swap:\n",
+	                        "    estimated rate: ", estimatedRate, "\n",
+	                        "    expected rate:  ", expectedRate));
+	        }
+	    }
+
+	    Flag f = new Flag();
+	    vars.termStructure.addObserver(f);
+	    f.lower();
+
+	    index.addFixing(vars.today, 0.0425);
+
+	    if (!f.isUp())
+	        throw new RuntimeException("Observer was not notified of rate fixing");
+
+	    for (int i=0; i<vars.swaps; i++) {
+	        Period tenor = new Period(swapData[i].n, swapData[i].units);
+
+	        VanillaSwap swap = new MakeVanillaSwap(tenor, index, 0.0)
+	            .withEffectiveDate(vars.settlement)
+	            .withFixedLegDayCount(vars.fixedLegDayCounter)
+	            .withFixedLegTenor(new Period(vars.fixedLegFrequency))
+	            .withFixedLegConvention(vars.fixedLegConvention)
+	            .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
+	            		.value();
+
+	        /*@Rate*/ double expectedRate = swapData[i].rate/100;
+	        /*@Rate*/ double estimatedRate = swap.fairRate();
+	        /*@Real*/ double tolerance = 1.0e-9;
+	        if (Math.abs(expectedRate-estimatedRate) > tolerance) {
+	        	throw new RuntimeException(
+	        			String.format("%s %d %s %s %f %s %s %f",
+	                        "after LIBOR fixing:\n", 
+	                        swapData[i].n, " year(s) swap:\n",
+	                        "    estimated rate: ", estimatedRate, "\n",
+	                        "    expected rate:  ", expectedRate));
+	        }
+	    }
+	}
+
+//	@Ignore
 //	@Test
 //	public void testJpyLibor() {
-//	    BOOST_MESSAGE("Testing bootstrap over JPY LIBOR swaps...");
+//	    QL.info("Testing bootstrap over JPY LIBOR swaps...");
 //
-//	    CommonVars vars;
+//	    CommonVars vars = new CommonVars();
 //
-//	    vars.today = Date(4, October, 2007);
-//	    Settings::instance().evaluationDate() = vars.today;
+//	    vars.today = new Date(4, Month.October, 2007);
+//	    new Settings().setEvaluationDate(vars.today);
 //
-//	    vars.calendar = Japan();
-//	    vars.settlement =
-//	        vars.calendar.advance(vars.today,vars.settlementDays,Days);
+//	    vars.calendar = new Japan();
+//	    vars.settlement = vars.calendar.advance(vars.today,  vars.settlementDays, TimeUnit.Days);
 //
 //	    // market elements
-//	    vars.rates = std::vector<boost::shared_ptr<SimpleQuote> >(vars.swaps);
-//	    for (Size i=0; i<vars.swaps; i++) {
-//	        vars.rates[i] = boost::shared_ptr<SimpleQuote>(
-//	                                       new SimpleQuote(swapData[i].rate/100));
+//	    vars.rates = new SimpleQuote[vars.swaps];
+//	    for (int i=0; i<vars.swaps; i++) {
+//	        vars.rates[i] = new SimpleQuote(swapData[i].rate/100);
 //	    }
 //
 //	    // rate helpers
-//	    vars.instruments = std::vector<boost::shared_ptr<RateHelper> >(vars.swaps);
+//	    vars.instruments = new RateHelper[vars.swaps];
 //
-//	    boost::shared_ptr<IborIndex> index(new JPYLibor(6*Months));
-//	    for (Size i=0; i<vars.swaps; i++) {
-//	        Handle<Quote> r(vars.rates[i]);
-//	        vars.instruments[i] = boost::shared_ptr<RateHelper>(
-//	           new SwapRateHelper(r, swapData[i].n*swapData[i].units,
-//	                              vars.calendar,
-//	                              vars.fixedLegFrequency, vars.fixedLegConvention,
-//	                              vars.fixedLegDayCounter, index));
+//	    IborIndex index = new JPYLibor(new Period(6, TimeUnit.Months));
+//	    for (int i=0; i<vars.swaps; i++) {
+//	        Handle<Quote> r = new Handle<Quote>(vars.rates[i]);
+//	        vars.instruments[i] = new SwapRateHelper(
+//	        							r, new Period(swapData[i].n, swapData[i].units),
+//	        							vars.fixedLegFrequency, vars.fixedLegConvention,
+//			                            vars.fixedLegDayCounter, index);
 //	    }
 //
-//	    vars.termStructure = boost::shared_ptr<YieldTermStructure>(
-//	        new PiecewiseYieldCurve<Discount,LogLinear>(
-//	                                       vars.settlement, vars.instruments,
-//	                                       Actual360(),
-//	                                       std::vector<Handle<Quote> >(),
-//	                                       std::vector<Date>(),
-//	                                       1.0e-12));
+//	    vars.termStructure = new PiecewiseYieldCurve(
+//	    								Discount.class, LogLinear.class, IterativeBootstrap.class, 
+//	                                    vars.settlement, vars.instruments,
+//	                                    new Actual360(),
+//										new Handle/*<Quote>*/[0],
+//										new Date[0],
+//	                                    1.0e-12);
 //
 //	    RelinkableHandle<YieldTermStructure> curveHandle;
 //	    curveHandle.linkTo(vars.termStructure);
 //
 //	    // check swaps
-//	    boost::shared_ptr<IborIndex> jpylibor6m(new JPYLibor(6*Months,curveHandle));
-//	    for (Size i=0; i<vars.swaps; i++) {
-//	        Period tenor = swapData[i].n*swapData[i].units;
+//	    IborIndex jpylibor6m = new JPYLibor(new Period(6, TimeUnit.Months), curveHandle);
+//	    for (int i=0; i<vars.swaps; i++) {
+//	        Period tenor = new Period(swapData[i].n, swapData[i].units);
 //
-//	        VanillaSwap swap = MakeVanillaSwap(tenor, jpylibor6m, 0.0)
+//	        VanillaSwap swap = new MakeVanillaSwap(tenor, jpylibor6m, 0.0)
 //	            .withEffectiveDate(vars.settlement)
 //	            .withFixedLegDayCount(vars.fixedLegDayCounter)
-//	            .withFixedLegTenor(Period(vars.fixedLegFrequency))
+//	            .withFixedLegTenor(new Period(vars.fixedLegFrequency))
 //	            .withFixedLegConvention(vars.fixedLegConvention)
 //	            .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
 //	            .withFixedLegCalendar(vars.calendar)
-//	            .withFloatingLegCalendar(vars.calendar);
+//	            .withFloatingLegCalendar(vars.calendar)
+//	            		.value();
 //
-//	        Rate expectedRate = swapData[i].rate/100,
-//	             estimatedRate = swap.fairRate();
-//	        Spread error = std::fabs(expectedRate-estimatedRate);
-//	        Real tolerance = 1.0e-9;
+//	        /*@Rate*/ double expectedRate = swapData[i].rate/100;
+//	        /*@Rate*/ double estimatedRate = swap.fairRate();
+//	        /*@Spread*/ double error = Math.abs(expectedRate-estimatedRate);
+//	        /*@Real*/ double tolerance = 1.0e-9;
 //
+//	        
 //	        if (error > tolerance) {
-//	            BOOST_ERROR(swapData[i].n << " year(s) swap:\n"
-//	                        << std::setprecision(8)
-//	                        << "\n estimated rate: " << io::rate(estimatedRate)
-//	                        << "\n expected rate:  " << io::rate(expectedRate)
-//	                        << "\n error:          " << io::rate(error)
-//	                        << "\n tolerance:      " << io::rate(tolerance));
+//	        	throw new RuntimeException(
+//	        			String.format("%d %s %s %f %s %f %s %f %s %f",
+//	        				swapData[i].n, " year(s) swap:\n",
+//	                        "\n estimated rate: ", estimatedRate,
+//	                        "\n expected rate:  ", expectedRate,
+//	                        "\n error:          ", error,
+//	                        "\n tolerance:      ", tolerance));
 //	        }
 //	    }
 //	}	

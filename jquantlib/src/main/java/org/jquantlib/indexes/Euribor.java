@@ -19,7 +19,6 @@
  JQuantLib is based on QuantLib. http://quantlib.org/
  When applicable, the original copyright notice follows this notice.
  */
-
 package org.jquantlib.indexes;
 
 import org.jquantlib.QL;
@@ -40,10 +39,7 @@ import org.jquantlib.time.calendars.Target;
  *
  * @author Srinivas Hasti
  */
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-// TODO: code review :: Please review this class/** :S
 public class Euribor extends IborIndex {
-
 
     public Euribor(final Period tenor, final Handle<YieldTermStructure> h) {
         super("Euribor",

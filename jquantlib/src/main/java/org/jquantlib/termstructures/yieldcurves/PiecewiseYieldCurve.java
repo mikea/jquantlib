@@ -147,7 +147,7 @@ public class PiecewiseYieldCurve<
             final DayCounter dayCounter) {
     	this(	classT, classI, classB,
                 referenceDate, instruments, dayCounter,
-                new Handle /*<Quote>*/ [0],
+                new Handle/*<Quote>*/[0],
                 new Date[0],
                 1.0e-12,
                 constructInterpolator(classI),

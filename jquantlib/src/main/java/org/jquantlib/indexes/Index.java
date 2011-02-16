@@ -87,6 +87,16 @@ public abstract class Index implements Observable {
 	 * The date passed as arguments must be the actual calendar date of the
 	 * fixing; no settlement days must be used.
 	 */
+	public void addFixing(final Date date, final double value) {
+		addFixing(date, value, false);
+	}
+	
+	/**
+	 * Stores the historical fixing at the given date
+	 * <p>
+	 * The date passed as arguments must be the actual calendar date of the
+	 * fixing; no settlement days must be used.
+	 */
 	public void addFixing(final Date date, final double value, final boolean forceOverwrite) {
         final String tag = name();
         final TimeSeries<Double> ts = IndexManager.getInstance().get(tag);

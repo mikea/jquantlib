@@ -62,80 +62,84 @@ import org.jquantlib.time.TimeUnit;
  *
  * @author John Martin
  */
-// TODO: code review :: license, class comments, comments for access modifiers, comments for @Override
-// TODO: consider refactoring this class and make it an inner class
 public class MakeVanillaSwap {
 
-    private final Period swapTenor_;
-    private final IborIndex iborIndex_;
-    private final /*Rate*/ double fixedRate_;
-    private final Period forwardStart_;
+    private final Period swapTenor;
+    private final IborIndex iborIndex;
+    private final /*@Rate*/ double fixedRate;
+    private final Period forwardStart;
 
-    private Date effectiveDate_, terminationDate_;
-    private Calendar fixedCalendar_, floatCalendar_;
+    private Date effectiveDate;
+    private Calendar fixedCalendar;
+	private Calendar floatCalendar;
 
-    private VanillaSwap.Type type_;
-    private /*@Real*/ double nominal_;
-    private Period fixedTenor_, floatTenor_;
-    private BusinessDayConvention fixedConvention_, fixedTerminationDateConvention_;
-    private BusinessDayConvention floatConvention_, floatTerminationDateConvention_;
-    private DateGeneration.Rule fixedRule_, floatRule_;
-    private boolean fixedEndOfMonth_, floatEndOfMonth_;
-    private Date fixedFirstDate_, fixedNextToLastDate_;
-    private Date floatFirstDate_, floatNextToLastDate_;
-    private /*@Spread*/ double floatSpread_;
-    private DayCounter fixedDayCount_, floatDayCount_;
-    private PricingEngine engine_;
+    private VanillaSwap.Type type;
+    private /*@Real*/ double nominal;
+    private Period fixedTenor;
+	private Period floatTenor;
+    private BusinessDayConvention fixedConvention;
+	private BusinessDayConvention fixedTerminationDateConvention;
+    private BusinessDayConvention floatConvention;
+	private BusinessDayConvention floatTerminationDateConvention;
+    private DateGeneration.Rule fixedRule;
+	private DateGeneration.Rule floatRule;
+    private boolean fixedEndOfMonth;
+	private boolean floatEndOfMonth;
+    private Date fixedFirstDate;
+	private Date fixedNextToLastDate;
+    private Date floatFirstDate;
+	private Date floatNextToLastDate;
+    private /*@Spread*/ double floatSpread;
+    private DayCounter fixedDayCount;
+	private DayCounter floatDayCount;
+    private Date terminationDate;
+    private PricingEngine engine;
 
-    //XXX: remove
-    // private Array fixingDays;
-
+    
+    
     public MakeVanillaSwap (
             final Period swapTenor,
             final IborIndex index) {
         this(swapTenor, index, 0.0, new Period(0,TimeUnit.Days));
     }
-
     public MakeVanillaSwap (
             final Period swapTenor,
             final IborIndex index,
             final /*Rate*/ double fixedRate) {
         this(swapTenor, index, fixedRate, new Period(0,TimeUnit.Days));
     }
-
     public MakeVanillaSwap(
             final Period swapTenor,
             final IborIndex index,
-            final /* @Rate */ double fixedRate,
+            final /*@Rate*/ double fixedRate,
             final Period forwardStart) {
-        this.swapTenor_ = (swapTenor);
-        iborIndex_ = (index);
-        fixedRate_ = (fixedRate);
-        forwardStart_ = (forwardStart);
-        //FIXME : JM port from quantlib :: code review :: effectiveDate_ = Date.maxDate();
-        fixedCalendar_ = (index.fixingCalendar());
-        floatCalendar_ = (index.fixingCalendar());
-        type_ = (VanillaSwap.Type.Payer);
-        nominal_ = (1.0);
-        fixedTenor_ = (new Period(1, TimeUnit.Years));
-        floatTenor_ = (index.tenor());
-        fixedConvention_ = (BusinessDayConvention.ModifiedFollowing);
-        fixedTerminationDateConvention_ = (BusinessDayConvention.ModifiedFollowing);
-        floatConvention_ = (index.businessDayConvention());
-        floatTerminationDateConvention_ = (index.businessDayConvention());
-        fixedRule_ = (DateGeneration.Rule.Backward);
-        floatRule_ = (DateGeneration.Rule.Backward);
-        fixedEndOfMonth_ = (false);
-        floatEndOfMonth_ = (false);
-        //FIXME : JM port from quantlib
-        //fixedFirstDate_ = Date.maxDate();
-        //fixedNextToLastDate_ = Date.maxDate();
-        //floatFirstDate_ = Date.maxDate();
-        //floatNextToLastDate_ = Date.maxDate();
-        floatSpread_ = (0.0);
-        fixedDayCount_ = (new Thirty360());
-        floatDayCount_ = (index.dayCounter());
-        engine_ = new DiscountingSwapEngine(index.termStructure());
+        this.swapTenor 	= swapTenor;
+        this.iborIndex 	= index;
+        this.fixedRate 	= fixedRate;
+        this.forwardStart 	= forwardStart;
+        this.effectiveDate = new Date();
+        this.fixedCalendar = index.fixingCalendar();
+        this.floatCalendar = index.fixingCalendar();
+        this.type 					= VanillaSwap.Type.Payer;
+        this.nominal 				= 1.0;
+        this.fixedTenor 			= new Period(1, TimeUnit.Years);
+        this.floatTenor 			= index.tenor();
+        this.fixedConvention 					= BusinessDayConvention.ModifiedFollowing;
+        this.fixedTerminationDateConvention 	= BusinessDayConvention.ModifiedFollowing;
+        this.floatConvention 					= index.businessDayConvention();
+        this.floatTerminationDateConvention 	= index.businessDayConvention();
+        this.fixedRule 			= DateGeneration.Rule.Backward;
+        this.floatRule 			= DateGeneration.Rule.Backward;
+        this.fixedEndOfMonth 		= false;
+        this.floatEndOfMonth 		= false;
+        this.fixedFirstDate      	= new Date();
+        this.fixedNextToLastDate 	= new Date();
+        this.floatFirstDate      	= new Date();
+        this.floatNextToLastDate 	= new Date();
+        this.floatSpread 			= 0.0;
+        this.fixedDayCount 		= new Thirty360();
+        this.floatDayCount 		= index.dayCounter();
+        this.engine 				= new DiscountingSwapEngine(index.termStructure());
     }
 
 
@@ -143,240 +147,204 @@ public class MakeVanillaSwap {
         QL.validateExperimentalMode();
 
         Date startDate;
-        if (!effectiveDate_.isNull()) {
-            startDate = effectiveDate_;
+        if (!effectiveDate.isNull()) {
+            startDate = effectiveDate;
         } else {
-            /*@Natural*/ final int fixingDays = iborIndex_.fixingDays();
+            /*@Natural*/ final int fixingDays = iborIndex.fixingDays();
             final Date referenceDate = new Settings().evaluationDate();
-            final Date spotDate = floatCalendar_.advance(referenceDate, fixingDays, TimeUnit.Days);
-            startDate = spotDate.add(forwardStart_);
+            final Date spotDate = floatCalendar.advance(referenceDate, fixingDays, TimeUnit.Days);
+            startDate = spotDate.add(forwardStart);
         }
 
-//XXX: remove this block
-//
-//        Date startDate;
-//        if (effectiveDate_ != null) {
-//            startDate = effectiveDate_;
-//        } else {
-//            Date spotDate;
-//            if (fixingDays == null) {
-//                final int firstFixing = iborIndex_.fixingDays();
-//                final Date referenceDate = new Settings().evaluationDate();
-//                spotDate = floatCalendar_.advance (referenceDate, firstFixing, TimeUnit.Days);
-//            } else {
-//                final int firstFixing = (int) fixingDays.get(0);
-//                final Date referenceDate = new Settings().evaluationDate();
-//                spotDate = floatCalendar_.advance (referenceDate, firstFixing, TimeUnit.Days);
-//            }
-//            startDate = spotDate.add (forwardStart_);
-//        }
-
-
-
         Date endDate;
-        if (!terminationDate_.isNull()) {
-            endDate = terminationDate_;
+        if (terminationDate != null && !terminationDate.isNull()) {
+            endDate = terminationDate;
         } else {
-            endDate = startDate.add (swapTenor_);
+            endDate = startDate.add (swapTenor);
         }
 
         final Schedule fixedSchedule = new Schedule(startDate, endDate,
-                fixedTenor_, fixedCalendar_,
-                fixedConvention_,
-                fixedTerminationDateConvention_,
-                fixedRule_, fixedEndOfMonth_,
-                fixedFirstDate_, fixedNextToLastDate_);
+                fixedTenor, fixedCalendar,
+                fixedConvention,
+                fixedTerminationDateConvention,
+                fixedRule, fixedEndOfMonth,
+                fixedFirstDate, fixedNextToLastDate);
 
         final Schedule floatSchedule = new Schedule(startDate, endDate,
-                floatTenor_, floatCalendar_,
-                floatConvention_,
-                floatTerminationDateConvention_,
-                floatRule_ , floatEndOfMonth_,
-                floatFirstDate_, floatNextToLastDate_);
+                floatTenor, floatCalendar,
+                floatConvention,
+                floatTerminationDateConvention,
+                floatRule , floatEndOfMonth,
+                floatFirstDate, floatNextToLastDate);
 
-        double usedFixedRate = fixedRate_;
+        double usedFixedRate = fixedRate;
 
-        if (Double.isNaN (fixedRate_)) {
-            QL.require(!iborIndex_.termStructure().empty(), "no forecasting term structure set to " + iborIndex_.name()); // TODO: message
+        if (Double.isNaN (fixedRate)) {
+            QL.require(!iborIndex.termStructure().empty(), "no forecasting term structure set to " + iborIndex.name()); // TODO: message
 
             final VanillaSwap temp = new VanillaSwap(
-                    type_,
-                    nominal_,
+                    type,
+                    nominal,
                     fixedSchedule,
                     0.0,
-                    fixedDayCount_,
+                    fixedDayCount,
                     floatSchedule,
-                    iborIndex_,
-                    floatSpread_,
-                    floatDayCount_,
-                    BusinessDayConvention.Following
-                    /* , fixingDays */);
+                    iborIndex,
+                    floatSpread,
+                    floatDayCount,
+                    BusinessDayConvention.Following);
 
             // ATM on the forecasting curve
-            temp.setPricingEngine(new DiscountingSwapEngine(iborIndex_.termStructure()));
+            temp.setPricingEngine(new DiscountingSwapEngine(iborIndex.termStructure()));
             usedFixedRate = temp.fairRate();
         }
 
-        //FIXME: remove parameter "fixingDays"
         final VanillaSwap swap = new VanillaSwap (
-                type_,
-                nominal_,
+                type,
+                nominal,
                 fixedSchedule,
                 usedFixedRate,
-                fixedDayCount_,
+                fixedDayCount,
                 floatSchedule,
-                iborIndex_,
-                floatSpread_,
-                floatDayCount_,
-                BusinessDayConvention.Following
-                /*, fixingDays */);
-        swap.setPricingEngine (engine_);
+                iborIndex,
+                floatSpread,
+                floatDayCount,
+                BusinessDayConvention.Following);
+        swap.setPricingEngine (engine);
         return swap;
     }
 
 
 
     public MakeVanillaSwap receiveFixed(final boolean flag) {
-        type_ = flag ? VanillaSwap.Type.Receiver : VanillaSwap.Type.Payer;
+        this.type = flag ? VanillaSwap.Type.Receiver : VanillaSwap.Type.Payer;
         return this;
     }
 
     public MakeVanillaSwap withType(final VanillaSwap.Type type) {
-        type_ = type;
+    	this.type = type;
         return this;
     }
 
     public MakeVanillaSwap withNominal(/* Real */final double n) {
-        nominal_ = n;
+    	this.nominal = n;
         return this;
     }
 
     public MakeVanillaSwap withEffectiveDate(final Date effectiveDate) {
-        effectiveDate_ = effectiveDate;
+        this.effectiveDate = effectiveDate;
         return this;
     }
 
     public MakeVanillaSwap withTerminationDate(final Date terminationDate) {
-        terminationDate_ = terminationDate;
+    	this.terminationDate = terminationDate;
         return this;
     }
 
     public MakeVanillaSwap withRule(final DateGeneration.Rule r) {
-        fixedRule_ = r;
-        floatRule_ = r;
+    	this.fixedRule = r;
+    	this.floatRule = r;
         return this;
     }
 
     public MakeVanillaSwap withDiscountingTermStructure(final Handle<YieldTermStructure> discountingTermStructure) {
-        engine_ = (new DiscountingSwapEngine(discountingTermStructure));
+    	this.engine = (new DiscountingSwapEngine(discountingTermStructure));
         return this;
     }
 
     public MakeVanillaSwap withFixedLegTenor(final Period t) {
-        fixedTenor_ = t;
+    	this.fixedTenor = t;
         return this;
     }
 
     public MakeVanillaSwap withFixedLegCalendar(final Calendar cal) {
-        fixedCalendar_ = cal;
+    	this.fixedCalendar = cal;
         return this;
     }
 
     public MakeVanillaSwap withFixedLegConvention(final BusinessDayConvention bdc) {
-        fixedConvention_ = bdc;
+    	this.fixedConvention = bdc;
         return this;
     }
 
     public MakeVanillaSwap withFixedLegTerminationDateConvention(final BusinessDayConvention bdc) {
-        fixedTerminationDateConvention_ = bdc;
+    	this.fixedTerminationDateConvention = bdc;
         return this;
     }
 
     public MakeVanillaSwap withFixedLegRule(final DateGeneration.Rule r) {
-        fixedRule_ = r;
+    	this.fixedRule = r;
         return this;
     }
 
     public MakeVanillaSwap withFixedLegEndOfMonth(final boolean flag) {
-        fixedEndOfMonth_ = flag;
+    	this.fixedEndOfMonth = flag;
         return this;
     }
 
     public MakeVanillaSwap withFixedLegFirstDate(final Date d) {
-        fixedFirstDate_ = d;
+    	this.fixedFirstDate = d;
         return this;
     }
 
     public MakeVanillaSwap withFixedLegNextToLastDate(final Date d) {
-        fixedNextToLastDate_ = d;
+    	this.fixedNextToLastDate = d;
         return this;
     }
 
     public MakeVanillaSwap withFixedLegDayCount(final DayCounter dc) {
-        fixedDayCount_ = dc;
+    	this.fixedDayCount = dc;
         return this;
     }
 
     public MakeVanillaSwap withFloatingLegTenor(final Period t) {
-        floatTenor_ = t;
+    	this.floatTenor = t;
         return this;
     }
 
     public MakeVanillaSwap withFloatingLegCalendar(final Calendar cal) {
-        floatCalendar_ = cal;
+    	this.floatCalendar = cal;
         return this;
     }
 
     public MakeVanillaSwap withFloatingLegConvention(final BusinessDayConvention bdc) {
-        floatConvention_ = bdc;
+    	this.floatConvention = bdc;
         return this;
     }
 
     public MakeVanillaSwap withFloatingLegTerminationDateConvention(final BusinessDayConvention bdc) {
-        floatTerminationDateConvention_ = bdc;
+    	this.floatTerminationDateConvention = bdc;
         return this;
     }
 
     public MakeVanillaSwap withFloatingLegRule(final DateGeneration.Rule r) {
-        floatRule_ = r;
+    	this.floatRule = r;
         return this;
     }
 
     public MakeVanillaSwap withFloatingLegEndOfMonth(final boolean flag) {
-        floatEndOfMonth_ = flag;
+    	this.floatEndOfMonth = flag;
         return this;
     }
 
     public MakeVanillaSwap withFloatingLegFirstDate(final Date d) {
-        floatFirstDate_ = d;
+    	this.floatFirstDate = d;
         return this;
     }
 
     public MakeVanillaSwap withFloatingLegNextToLastDate(final Date d) {
-        floatNextToLastDate_ = d;
+    	this.floatNextToLastDate = d;
         return this;
     }
 
     public MakeVanillaSwap withFloatingLegDayCount(final DayCounter dc) {
-        floatDayCount_ = dc;
+    	this.floatDayCount = dc;
         return this;
     }
 
     public MakeVanillaSwap withFloatingLegSpread(/* Spread */final double sp) {
-        floatSpread_ = sp;
+    	this.floatSpread = sp;
         return this;
     }
-
-    //FIXME: remove these methods
-//    public MakeVanillaSwap withFixingDays (final int fixingDays) {
-//        this.fixingDays = new Array (1);
-//        this.fixingDays.set(0, fixingDays);
-//        return this;
-//    }
-//
-//    public MakeVanillaSwap withFixingDays (final Array fixingDays) {
-//        this.fixingDays = fixingDays;
-//        return this;
-//    }
 
 }
