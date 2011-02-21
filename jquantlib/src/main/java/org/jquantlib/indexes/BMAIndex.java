@@ -72,6 +72,9 @@ public class BMAIndex extends InterestRateIndex {
 
     private final Handle<YieldTermStructure> termStructure;
     
+    public BMAIndex() {
+    	this(new Handle<YieldTermStructure>());
+    }
     public BMAIndex(final Handle<YieldTermStructure> h) {
         super("BMA", new Period(1,TimeUnit.Weeks), 1, new USDCurrency(), new UnitedStates(UnitedStates.Market.NYSE), new ActualActual(ActualActual.Convention.ISDA));
 
