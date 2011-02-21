@@ -114,6 +114,14 @@ public class IborIndex extends InterestRateIndex {
     }
 
 
+    //
+    // protected methods
+    //
+    
+    /**
+     * This is the fixing established by ECB.
+     * Use eurliborConvention if you're interested in the London rate fixed by the BBA.
+     */
     protected static BusinessDayConvention euriborConvention(final Period p) {
         switch (p.units()) {
         case Days:
@@ -127,6 +135,10 @@ public class IborIndex extends InterestRateIndex {
         }
     }
 
+    /**
+     * This is the London fixing by BBA.
+     * Use euriborConvention if you're interested in the rate fixed by the ECB.
+     */
     protected static BusinessDayConvention eurliborConvention(final Period p) {
         switch (p.units()) {
         case Days:
@@ -140,6 +152,11 @@ public class IborIndex extends InterestRateIndex {
         }
     }
     
+
+    /**
+     * This is the fixing established by ECB.
+     * Use eurliborEOM if you're interested in the London rate fixed by the BBA.
+     */
     protected static boolean euriborEOM(final Period p) {
         switch (p.units()) {
         case Days:
@@ -153,6 +170,10 @@ public class IborIndex extends InterestRateIndex {
         }
     }
 
+    /**
+     * This is the London fixing by BBA.
+     * Use euriborConvention if you're interested in the rate fixed by the ECB.
+     */
     protected static boolean eurliborEOM(final Period p) {
         switch (p.units()) {
         case Days:
@@ -165,13 +186,25 @@ public class IborIndex extends InterestRateIndex {
             throw new LibraryException("invalid time units");  // TODO: message
         }
     }
-    
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.jquantlib.indexes.InterestRateIndex#forecastFixing(org.jquantlib.util.Date)
-     */
+
+    //
+    // public methods
+    //
+    
+    public BusinessDayConvention businessDayConvention() {
+        return convention;
+    }
+
+    public boolean endOfMonth() {
+        return endOfMonth;
+    }
+
+
+    //
+    // overrides InterestRateIndex
+    //
+    
     @Override
     protected double forecastFixing(final Date fixingDate) {
         QL.require(! termStructure.empty() , "no forecasting term structure set to " + name());  // TODO: message
@@ -183,32 +216,14 @@ public class IborIndex extends InterestRateIndex {
         return (fixingDiscount / endDiscount - 1.0) / fixingPeriod;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.jquantlib.indexes.InterestRateIndex#getTermStructure()
-     */
     @Override
     public Handle<YieldTermStructure> termStructure() {
         return termStructure;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.jquantlib.indexes.InterestRateIndex#maturityDate(org.jquantlib.util.Date)
-     */
     @Override
     public Date maturityDate(final Date valueDate) {
         return fixingCalendar().advance(valueDate, tenor, convention, endOfMonth);
-    }
-
-    public BusinessDayConvention businessDayConvention() {
-        return convention;
-    }
-
-    public boolean endOfMonth() {
-        return endOfMonth;
     }
 
 }

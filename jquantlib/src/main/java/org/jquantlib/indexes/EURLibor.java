@@ -50,10 +50,11 @@ public class EURLibor extends IborIndex {
     
 	private Calendar target;
     
-	/** http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1412 :
-     * JoinBusinessDays is the fixing calendar for
-     *	all indexes but o/n
-     **/
+	/**
+     * JoinBusinessDays is the fixing calendar for all indexes but o/n
+     *
+     * @see <a href="http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1412">http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1412</a>
+     */
     public EURLibor(final Period tenor, final Handle<YieldTermStructure> h) {
         super("EURLibor",
                 tenor,
