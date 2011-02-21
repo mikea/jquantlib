@@ -127,6 +127,19 @@ public class IborIndex extends InterestRateIndex {
         }
     }
 
+    protected static BusinessDayConvention eurliborConvention(final Period p) {
+        switch (p.units()) {
+        case Days:
+        case Weeks:
+            return BusinessDayConvention.Following;
+        case Months:
+        case Years:
+            return BusinessDayConvention.ModifiedFollowing;
+        default:
+            throw new LibraryException("invalid time units"); // TODO: message
+        }
+    }
+    
     protected static boolean euriborEOM(final Period p) {
         switch (p.units()) {
         case Days:
@@ -140,6 +153,19 @@ public class IborIndex extends InterestRateIndex {
         }
     }
 
+    protected static boolean eurliborEOM(final Period p) {
+        switch (p.units()) {
+        case Days:
+        case Weeks:
+            return false;
+        case Months:
+        case Years:
+            return true;
+        default:
+            throw new LibraryException("invalid time units");  // TODO: message
+        }
+    }
+    
 
     /*
      * (non-Javadoc)
