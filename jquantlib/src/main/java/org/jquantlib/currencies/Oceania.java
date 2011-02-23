@@ -47,7 +47,7 @@ public class Oceania {
      * The ISO three-letter code is AUD; the numeric code is 36. It is divided in 100 cents.
      * @category currencies
      */
-    class AUDCurrency extends  Currency {
+    public static class AUDCurrency extends  Currency {
       public AUDCurrency() {
             Data audData=new Data("Australian dollar", "AUD", 36,
                                                "A$", "", 100,
@@ -62,7 +62,7 @@ public class Oceania {
      * The ISO three-letter code is NZD; the numeric code is 554. It is divided in 100 cents.
      * @category currencies
      */
-    class NZDCurrency extends Currency {
+    public static class NZDCurrency extends Currency {
       public NZDCurrency() {
             Data nzdData=new Data("New Zealand dollar", "NZD", 554,
                                              "NZ$", "", 100,
@@ -71,6 +71,5 @@ public class Oceania {
             data_ = nzdData;
         }
     };
-
 
 }
