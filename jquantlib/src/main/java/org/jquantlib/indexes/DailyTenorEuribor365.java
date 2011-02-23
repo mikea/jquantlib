@@ -39,6 +39,10 @@ public class DailyTenorEuribor365 extends IborIndex {
     //
     // public constructors
     //
+    public DailyTenorEuribor365(final int settlementDays) {
+    	this(settlementDays, new Handle<YieldTermStructure>());
+    }
+	
     public DailyTenorEuribor365(final int settlementDays, final Handle<YieldTermStructure> h) {
         super("Euribor",
                 new Period(1,TimeUnit.Days),

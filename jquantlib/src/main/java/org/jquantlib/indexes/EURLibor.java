@@ -55,6 +55,10 @@ public class EURLibor extends IborIndex {
      *
      * @see <a href="http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1412">http://www.bba.org.uk/bba/jsp/polopoly.jsp?d=225&a=1412</a>
      */
+    public EURLibor(final Period tenor) {
+    	this(tenor, new Handle<YieldTermStructure>());
+    }
+	
     public EURLibor(final Period tenor, final Handle<YieldTermStructure> h) {
         super("EURLibor",
                 tenor,

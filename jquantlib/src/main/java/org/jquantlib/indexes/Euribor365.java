@@ -41,7 +41,10 @@ import org.jquantlib.time.calendars.Target;
  */
 public class Euribor365 extends IborIndex {
 
-
+    public Euribor365(final Period tenor) {
+    	this(tenor, new Handle<YieldTermStructure>());
+    }
+    
     public Euribor365(final Period tenor, final Handle<YieldTermStructure> h) {
         super("Euribor365", tenor,
                 2, // settlement days

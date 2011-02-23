@@ -41,6 +41,10 @@ import org.jquantlib.time.calendars.Target;
  */
 public class Euribor extends IborIndex {
 
+    public Euribor(final Period tenor) {
+    	this(tenor, new Handle<YieldTermStructure>());
+    }
+	
     public Euribor(final Period tenor, final Handle<YieldTermStructure> h) {
         super("Euribor",
                 tenor,
