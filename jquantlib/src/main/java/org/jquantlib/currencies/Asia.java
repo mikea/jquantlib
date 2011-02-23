@@ -61,7 +61,7 @@ public class Asia {
      * The ISO three-letter code is BDT; the numeric code is 50. It is divided in 100 paisa.
      * @category currencies
      */
-    class BDTCurrency extends  Currency {
+	 public static class BDTCurrency extends  Currency {
       public
         BDTCurrency() {
             Data bdtData =
@@ -78,7 +78,7 @@ public class Asia {
      * The ISO three-letter code is CNY; the numeric code is 156. It is divided in 100 fen.
      * @category currencies
      */
-    class CNYCurrency extends Currency {
+    public static class CNYCurrency extends Currency {
       public
         CNYCurrency() {
             Data cnyData 
@@ -95,7 +95,7 @@ public class Asia {
      * The ISO three-letter code is HKD; the numeric code is 344. It is divided in 100 cents.
      * @category currencies
      */
-    class HKDCurrency extends Currency {
+    public static class HKDCurrency extends Currency {
       public
         HKDCurrency() {
             Data hkdData 
@@ -112,7 +112,7 @@ public class Asia {
      * The ISO three-letter code is ILS; the numeric code is 376. It is divided in 100 agorot.
      * @category currencies
      */
-    class ILSCurrency extends Currency {
+    public static class ILSCurrency extends Currency {
       public
         ILSCurrency() {
             Data ilsData 
@@ -130,7 +130,7 @@ public class Asia {
      * The ISO three-letter code is INR; the numeric code is 356. It is divided in 100 paise.
      * @category currencies
      */
-    class INRCurrency extends Currency {
+    public static class INRCurrency extends Currency {
       public
         INRCurrency() {
             Data inrData 
@@ -147,7 +147,7 @@ public class Asia {
      * The ISO three-letter code is IQD; the numeric code is 368. It is divided in 100 fils.
      * @category currencies
      */
-    class IQDCurrency extends Currency {
+    public static class IQDCurrency extends Currency {
       public
         IQDCurrency() {
             Data iqdData 
@@ -165,7 +165,7 @@ public class Asia {
      * The ISO three-letter code is IRR; the numeric code is 364. It has no subdivisions.
      * @category currencies
      */
-    class IRRCurrency extends Currency {
+    public static class IRRCurrency extends Currency {
       public
         IRRCurrency() {
             Data irrData 
@@ -182,7 +182,7 @@ public class Asia {
      * The ISO three-letter code is JPY; the numeric code is 392. It is divided in 100 sen.
      * @category currencies
      */
-    class JPYCurrency extends Currency {
+    public static class JPYCurrency extends Currency {
       public
         JPYCurrency() {
             Data jpyData 
@@ -200,7 +200,7 @@ public class Asia {
      * The ISO three-letter code is KRW; the numeric code is 410. It is divided in 100 chon.
      * @category currencies
      */
-    class KRWCurrency extends Currency {
+    public static class KRWCurrency extends Currency {
       public
         KRWCurrency() {
             Data krwData 
@@ -218,7 +218,7 @@ public class Asia {
      * The ISO three-letter code is KWD; the numeric code is 414. It is divided in 100 fils.
      * @category currencies
      */
-    class KWDCurrency extends Currency {
+    public static class KWDCurrency extends Currency {
       public
         KWDCurrency() {
             Data kwdData 
@@ -236,7 +236,7 @@ public class Asia {
      * The ISO three-letter code is NPR; the numeric code is 524. It is divided in 100 paise.
      * @category currencies
      */
-    class NPRCurrency extends Currency {
+    public static class NPRCurrency extends Currency {
       public
         NPRCurrency() {
             Data nprData 
@@ -254,7 +254,7 @@ public class Asia {
      * The ISO three-letter code is PKR; the numeric code is 586. It is divided in 100 paisa.
      * @category currencies
      */
-    class PKRCurrency extends Currency {
+    public static class PKRCurrency extends Currency {
       public
         PKRCurrency() {
             Data pkrData 
@@ -271,7 +271,7 @@ public class Asia {
      * The ISO three-letter code is SAR; the numeric code is 682. It is divided in 100 halalat.
      * @category currencies
      */
-    class SARCurrency extends Currency {
+    public static class SARCurrency extends Currency {
       public
         SARCurrency() {
             Data sarData 
@@ -289,7 +289,7 @@ public class Asia {
      * The ISO three-letter code is SGD; the numeric code is 702. It is divided in 100 cents.
      * @category currencies
      */
-    class SGDCurrency extends Currency {
+    public static class SGDCurrency extends Currency {
       public
         SGDCurrency() {
             Data sgdData 
@@ -306,7 +306,7 @@ public class Asia {
      * The ISO three-letter code is THB; the numeric code is 764. It is divided in 100 stang.
      * @category currencies
      */
-    class THBCurrency extends Currency {
+    public static class THBCurrency extends Currency {
       public
         THBCurrency() {
             Data thbData 
@@ -323,7 +323,7 @@ public class Asia {
      * The ISO three-letter code is TWD; the numeric code is 901. It is divided in 100 cents.
      * @category currencies
      */
-    class TWDCurrency extends Currency {
+    public static class TWDCurrency extends Currency {
       public
         TWDCurrency() {
             Data twdData 
