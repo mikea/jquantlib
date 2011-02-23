@@ -99,7 +99,7 @@ public class IborIndex extends InterestRateIndex {
     }
 
 
-    public IborIndex clone(final Handle<YieldTermStructure> h) {
+    public Handle<IborIndex> clone(final Handle<YieldTermStructure> h) {
         final IborIndex clone = new IborIndex(
                 					this.familyName(),
                 					this.tenor(),
@@ -110,7 +110,7 @@ public class IborIndex extends InterestRateIndex {
                 					this.endOfMonth(),
                 					this.dayCounter(),
                 					h);
-        return clone;
+        return new Handle<IborIndex>(clone) ;
     }
 
 
@@ -188,6 +188,33 @@ public class IborIndex extends InterestRateIndex {
     }
 
 
+    protected static BusinessDayConvention liborConvention(final Period p) {
+        switch (p.units()) {
+	        case Days:
+	        case Weeks:
+	            return BusinessDayConvention.Following;
+	        case Months:
+	        case Years:
+	            return BusinessDayConvention.ModifiedFollowing;
+	        default:
+	            throw new LibraryException("invalid time units"); // TODO: message
+        }
+    }
+
+    protected static boolean liborEOM(final Period p) {
+        switch (p.units()) {
+	        case Days:
+	        case Weeks:
+	            return false;
+	        case Months:
+	        case Years:
+	            return true;
+	        default:
+	            throw new LibraryException("invalid time units"); // TODO: message
+        }
+    }
+
+    
     //
     // public methods
     //

@@ -255,7 +255,7 @@ public class SwapRateHelper extends RelativeDateRateHelper {
     @Override
     protected void initializeDates() {
         // dummy ibor index with curve/swap arguments
-        final IborIndex clonedIborIndex = iborIndex.clone(this.termStructureHandle);
+        final IborIndex clonedIborIndex = iborIndex.clone(this.termStructureHandle).currentLink();
 
         // do not pass the spread here, as it might be a Quote i.e. it can dynamically change
         this.swap = new MakeVanillaSwap(tenor, clonedIborIndex, 0.0, fwdStart)
