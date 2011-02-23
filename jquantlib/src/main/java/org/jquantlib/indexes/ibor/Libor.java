@@ -45,16 +45,14 @@ import org.jquantlib.currencies.Europe.EURCurrency;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.quotes.Handle;
-import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.YieldTermStructure;
-import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.time.calendars.JointCalendar;
-import org.jquantlib.time.calendars.UnitedKingdom;
 import org.jquantlib.time.calendars.JointCalendar.JointCalendarRule;
+import org.jquantlib.time.calendars.UnitedKingdom;
 
 /**
  * base class for all BBA LIBOR indexes but the EUR, O/N, and S/N ones
@@ -92,9 +90,15 @@ public class Libor extends IborIndex {
 		// UnitedKingdom::Exchange is the fixing calendar for
 		// a) all currencies but EUR
 		// b) all indexes but o/n and s/n
-		super(familyName, tenor, settlementDays, currency, 
+		super(familyName, 
+			  tenor, 
+			  settlementDays, 
+			  currency, 
 			  new UnitedKingdom(UnitedKingdom.Market.Exchange),
-			  liborConvention(tenor), liborEOM(tenor), dayCounter, h);
+			  liborConvention(tenor), 
+			  liborEOM(tenor), 
+			  dayCounter, 
+			  h);
 		this.financialCenterCalendar = financialCenterCalendar;
 		this.jointCalendar = new JointCalendar(new UnitedKingdom(UnitedKingdom.Market.Exchange),
 				financialCenterCalendar,
@@ -115,37 +119,14 @@ public class Libor extends IborIndex {
 			final Currency currency,
 			final Calendar financialCenterCalendar,
 			final DayCounter dayCounter) {
-	        	this(familyName,tenor,settlementDays,currency,financialCenterCalendar,
-	        			dayCounter,	new Handle<YieldTermStructure>());
+	        	this(familyName,
+	        		tenor,
+	        		settlementDays,
+	        		currency,
+	        		financialCenterCalendar,
+	        		dayCounter,	
+	        		new Handle<YieldTermStructure>());
 	        }
-//	public Libor(
-//            final String familyName,
-//			final Period tenor,
-//			final int settlementDays,
-//			final Currency currency,
-//			final Calendar financialCenterCalendar,
-//			final DayCounter dayCounter) {
-//		this(familyName, tenor, settlementDays,
-//				currency, financialCenterCalendar, dayCounter,
-//				new Handle<YieldTermStructure>(
-//						new AbstractYieldTermStructure() {
-//							@Override
-//							protected double discountImpl(final double t) {
-//								throw new UnsupportedOperationException();
-//							}
-//							@Override
-//							public Date maxDate() {
-//								throw new UnsupportedOperationException();
-//							}
-//						}
-//				));
-//	}
-
-
-
-	//
-	// overrides InterestRateIndex
-	//
 
 	/**
      * Date calculations
@@ -183,54 +164,16 @@ public class Libor extends IborIndex {
 				endOfMonth());
 	}
 
-//TODO: code review :: InterestRateIndex#clone returns IborIndex whilst this class returns Handle<IborIndex>
-//
-//	@Override
-//    public Handle<IborIndex> clone(final Handle<YieldTermStructure> h) {
-//		return new Handle<IborIndex>(
-//		        new Libor(familyName(),
-//				tenor(),
-//				fixingDays(),
-//				currency(),
-//				financialCenterCalendar_,
-//				dayCounter(),
-//				h));
-//
-//	}
+	@Override
+    public Handle<IborIndex> clone(final Handle<YieldTermStructure> h) {
+		return new Handle<IborIndex>(
+		        new Libor(familyName(),
+				tenor(),
+				fixingDays(),
+				currency(),
+				financialCenterCalendar,
+				dayCounter(),
+				h));
 
-
-	//
-	// private static methods
-	//
-
-    private static BusinessDayConvention liborConvention(final Period p) {
-        switch (p.units()) {
-	        case Days:
-	        case Weeks:
-	            return BusinessDayConvention.Following;
-	        case Months:
-	        case Years:
-	            return BusinessDayConvention.ModifiedFollowing;
-	        default:
-	            QL.error("invalid time units");
-        }
-        // Keep the compiler happy, can not reach here
-        return null;
-    }
-
-    private static boolean liborEOM(final Period p) {
-        switch (p.units()) {
-	        case Days:
-	        case Weeks:
-	            return false;
-	        case Months:
-	        case Years:
-	            return true;
-	        default:
-	            QL.error("invalid time units");
-        }
-        // Keep the compiler happy, can not reach here
-        return false;
-    }
-
+	}
 }
