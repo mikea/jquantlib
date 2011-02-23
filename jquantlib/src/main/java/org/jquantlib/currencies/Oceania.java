@@ -53,7 +53,7 @@ public class Oceania {
                                                "A$", "", 100,
                                                new Rounding(),
                                                "%3% %1$.2f");
-            data_ = audData;
+            data = audData;
         }
     };
 
@@ -68,7 +68,7 @@ public class Oceania {
                                              "NZ$", "", 100,
                                              new Rounding(),
                                              "%3% %1$.2f");
-            data_ = nzdData;
+            data = nzdData;
         }
     };
 

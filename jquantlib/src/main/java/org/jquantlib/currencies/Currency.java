@@ -39,69 +39,70 @@
 */
 package org.jquantlib.currencies;
 
-import org.jquantlib.QL;
-import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.math.Rounding;
 
-//FIXME: http://bugs.jquantlib.org/view.php?id=474
+
 public class Currency implements Cloneable {
 
     /** The data object of this currency*/
-    protected Data data_;
+    protected Data data;
+    
 
     /**
-     * Instances built via this constructor have undefined behavior. Such instances can only act as placeholders and must be
+     * Instances built via this constructor have undefined behavior.
+     * <p>
+     * Such instances can only act as placeholders and must be
      * reassigned to a valid currency before being used.
      */
     public Currency() {
-//        QL.validateExperimentalMode();// ZH: Enabled to test FloatingRateBond
+    	// Instances built via this constructor have undefined behavior.
     }
 
-    //accessors
+    //
+    // public methods
+    //
+    
     public final String name() {
-        return data_.name;
+        return data.name;
     }
 
     public final String code() {
-        return data_.code;
+        return data.code;
     }
 
     public final int numericCode() {
-        return data_.numeric;
+        return data.numeric;
     }
 
     public final String symbol() {
-        return data_.symbol;
+        return data.symbol;
     }
 
     public final String fractionSymbol() {
-        return data_.fractionSymbol;
+        return data.fractionSymbol;
     }
 
     public final int fractionsPerUnit() {
-        return data_.fractionsPerUnit;
+        return data.fractionsPerUnit;
     }
 
     public final Rounding rounding() {
-        return data_.rounding;
+        return data.rounding;
     }
 
     public final String format() {
-        return data_.formatString;
+        return data.formatString;
     }
 
     //is this a usable instance?
     public final boolean empty() {
-        return data_ == null;
+        return data == null;
     }
 
     public final Currency triangulationCurrency() {
-        return data_.triangulated;
+        return data.triangulated;
     }
 
-    // /OPERATORS
-
-    //  class
     public final boolean eq(final Currency currency) {
         return equals(currency);
     }
@@ -111,7 +112,11 @@ public class Currency implements Cloneable {
         return !(eq(currency));
     }
 
-    //  static
+    
+    //
+    //  public static methods
+    //
+    
     public static final boolean operatorEquals(final Currency c1, final Currency c2) {
         return c1.equals(c2);
     }
@@ -119,6 +124,19 @@ public class Currency implements Cloneable {
     public static final boolean operatorNotEquals(final Currency c1, final Currency c2) {
         // eating our own dogfood
         return !(Currency.operatorEquals(c1, c2));
+    }
+
+    
+    //
+    // Overrides Object
+    //
+
+    @Override
+    public String toString() {
+        if (!empty())
+            return code();
+        else
+            return "(null currency)";
     }
 
     @Override
@@ -133,6 +151,16 @@ public class Currency implements Cloneable {
    	
     }	
     
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((data == null) ? 0 : data.hashCode());
+        result = prime * result + ((data == null) ? 0 : name().hashCode());
+        return result;
+    }
+
+
     //
     // protected methods
     //
@@ -143,21 +171,9 @@ public class Currency implements Cloneable {
     	if (this.name().equals(other.name()))
     		return true;
     	return false;  	
-    }   
-    
-    //
-    // Overrides Object
-    //
-
-    @Override
-    public String toString() {
-        if (!empty())
-            return code();
-        else
-            return "(null currency)";
     }
-
-
+    
+    
     //
     // Implements Cloneable
     //
@@ -169,30 +185,22 @@ public class Currency implements Cloneable {
     @Override
     protected Currency clone() {
         final Currency currency = new Currency();
-        if (data_ != null) {
-            currency.data_ = data_.clone();
+        if (data != null) {
+            currency.data = data.clone();
         }
         return currency;
 
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((data_ == null) ? 0 : data_.hashCode());
-        result = prime * result + ((data_ == null) ? 0 : name().hashCode());
-        return result;
-    }
-
+    
     //
-    // package protected inner classes
+    // protected inner classes
     //
 
     /**
      * Inner class containing all information of a specific currency.
      */
-    static class Data implements Cloneable {
+    protected static class Data implements Cloneable {
         /**  The currency name, e.g, "U.S. Dollar"*/
         private final String name;
         /**  ISO 4217 three-letter code, e.g, "USD"*/

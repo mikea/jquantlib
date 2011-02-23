@@ -48,7 +48,7 @@ public class America {
     public static class ARSCurrency extends Currency {
         public ARSCurrency() {
             Data arsData = new Data("Argentinian peso", "ARS", 32, "", "", 100, new Rounding(), "%2% %1$.2f");
-            data_ = arsData;
+            data = arsData;
         }
     };
 
@@ -60,7 +60,7 @@ public class America {
     public static class BRLCurrency extends Currency {
         public BRLCurrency() {
             Data brlData = new Data("Brazilian real", "BRL", 986, "R$", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = brlData;
+            data = brlData;
         }
     };
 
@@ -72,7 +72,7 @@ public class America {
     public static class CADCurrency extends Currency {
         public CADCurrency() {
             Data cadData = new Data("Canadian dollar", "CAD", 124, "Can$", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = cadData;
+            data = cadData;
         }
     };
 
@@ -84,7 +84,7 @@ public class America {
     public static class CLPCurrency extends Currency {
         public CLPCurrency() {
             Data clpData = new Data("Chilean peso", "CLP", 152, "Ch$", "", 100, new Rounding(), "%3% %1$.0f");
-            data_ = clpData;
+            data = clpData;
         }
     };
 
@@ -96,7 +96,7 @@ public class America {
     public static class COPCurrency extends Currency {
         public COPCurrency() {
             Data copData = new Data("Colombian peso", "COP", 170, "Col$", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = copData;
+            data = copData;
         }
     };
 
@@ -108,7 +108,7 @@ public class America {
     public static class MXNCurrency extends Currency {
         public MXNCurrency() {
             Data mxnData = new Data("Mexican peso", "MXN", 484, "Mex$", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = mxnData;
+            data = mxnData;
         }
     };
 
@@ -120,7 +120,7 @@ public class America {
     public static class PENCurrency extends Currency {
         public PENCurrency() {
             Data penData = new Data("Peruvian nuevo sol", "PEN", 604, "S/.", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = penData;
+            data = penData;
         }
     };
 
@@ -135,7 +135,7 @@ public class America {
     public static class PEICurrency extends Currency {
         public PEICurrency() {
             Data peiData = new Data("Peruvian inti", "PEI", 998, "I/.", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = peiData;
+            data = peiData;
         }
     };
 
@@ -150,7 +150,7 @@ public class America {
     public static class PEHCurrency extends Currency {
         public PEHCurrency() {
             Data pehData = new Data("Peruvian sol", "PEH", 999, "S./", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = pehData;
+            data = pehData;
         }
     };
 
@@ -162,7 +162,7 @@ public class America {
     public static class TTDCurrency extends Currency {
         public TTDCurrency() {
             Data ttdData = new Data("Trinidad & Tobago dollar", "TTD", 780, "TT$", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = ttdData;
+            data = ttdData;
         }
     };
 
@@ -174,7 +174,7 @@ public class America {
     public static class USDCurrency extends Currency {
         public USDCurrency() {
             Data usdData = new Data("U.S. dollar", "USD", 840, "$", "\\xA2", 100, new Rounding(), "%3% %1$.2f");
-            data_ = usdData;
+            data = usdData;
         }
     };
 
@@ -186,7 +186,7 @@ public class America {
     public static class VEBCurrency extends Currency {
         public VEBCurrency() {
             Data vebData = new Data("Venezuelan bolivar", "VEB", 862, "Bs", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = vebData;
+            data = vebData;
         }
     };
 

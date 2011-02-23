@@ -54,7 +54,7 @@ public class Africa {
                                              "R", "", 100,
                                              new Rounding(),
                                              "%3% %1$.2f");
-            data_ = zarData;
+            data = zarData;
         }
     };
 }

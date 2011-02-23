@@ -49,7 +49,7 @@ public class Europe {
     public static class BGLCurrency extends Currency {
         public BGLCurrency() {
             Data bglData = new Data("Bulgarian lev", "BGL", 100, "lv", "", 100, new Rounding(), "%1$.2f %3%");
-            data_ = bglData;
+            data = bglData;
         }
     };
 
@@ -61,7 +61,7 @@ public class Europe {
     public static class BYRCurrency extends Currency {
         public BYRCurrency() {
             Data byrData = new Data("Belarussian ruble", "BYR", 974, "BR", "", 1, new Rounding(), "%2% %1$.0f");
-            data_ = byrData;
+            data = byrData;
         }
     };
 
@@ -73,7 +73,7 @@ public class Europe {
     public static class CHFCurrency extends Currency {
         public CHFCurrency() {
             Data chfData = new Data("Swiss franc", "CHF", 756, "SwF", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = chfData;
+            data = chfData;
         }
     };
 
@@ -85,7 +85,7 @@ public class Europe {
     public static class CYPCurrency extends Currency {
         public CYPCurrency() {
             Data cypData = new Data("Cyprus pound", "CYP", 196, "\\xA3 C", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = cypData;
+            data = cypData;
         }
     };
 
@@ -97,7 +97,7 @@ public class Europe {
     public static class CZKCurrency extends Currency {
         public CZKCurrency() {
             Data czkData = new Data("Czech koruna", "CZK", 203, "Kc", "", 100, new Rounding(), "%1$.2f %3%");
-            data_ = czkData;
+            data = czkData;
         }
     };
 
@@ -109,7 +109,7 @@ public class Europe {
     public static class DKKCurrency extends Currency {
         public DKKCurrency() {
             Data dkkData = new Data("Danish krone", "DKK", 208, "Dkr", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = dkkData;
+            data = dkkData;
         }
     };
 
@@ -121,7 +121,7 @@ public class Europe {
     public static class EEKCurrency extends Currency {
         public EEKCurrency() {
             Data eekData = new Data("Estonian kroon", "EEK", 233, "KR", "", 100, new Rounding(), "%1$.2f %2%");
-            data_ = eekData;
+            data = eekData;
         }
     };
 
@@ -133,7 +133,7 @@ public class Europe {
     public static class EURCurrency extends Currency {
         public EURCurrency() {
             Data eurData = new Data("European Euro", "EUR", 978, "", "", 100, new Rounding.ClosestRounding(2), "%2% %1$.2f");
-            data_ = eurData;
+            data = eurData;
         }
     };
 
@@ -145,7 +145,7 @@ public class Europe {
     public static class GBPCurrency extends Currency {
         public GBPCurrency() {
             Data gbpData = new Data("British pound sterling", "GBP", 826, "\\xA3", "p", 100, new Rounding(), "%3% %1$.2f");
-            data_ = gbpData;
+            data = gbpData;
         }
     };
 
@@ -157,7 +157,7 @@ public class Europe {
     public static class HUFCurrency extends Currency {
         public HUFCurrency() {
             Data hufData = new Data("Hungarian forint", "HUF", 348, "Ft", "", 1, new Rounding(), "%1$.0f %3%");
-            data_ = hufData;
+            data = hufData;
         }
     };
 
@@ -169,7 +169,7 @@ public class Europe {
     public static class ISKCurrency extends Currency {
         public ISKCurrency() {
             Data iskData = new Data("Iceland krona", "ISK", 352, "IKr", "", 100, new Rounding(), "%1$.2f %3%");
-            data_ = iskData;
+            data = iskData;
         }
     };
 
@@ -181,7 +181,7 @@ public class Europe {
     public static class LTLCurrency extends Currency {
         public LTLCurrency() {
             Data ltlData = new Data("Lithuanian litas", "LTL", 440, "Lt", "", 100, new Rounding(), "%1$.2f %3%");
-            data_ = ltlData;
+            data = ltlData;
         }
     };
 
@@ -193,7 +193,7 @@ public class Europe {
     public static class LVLCurrency extends Currency {
         public LVLCurrency() {
             Data lvlData = new Data("Latvian lat", "LVL", 428, "Ls", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = lvlData;
+            data = lvlData;
         }
     };
 
@@ -205,7 +205,7 @@ public class Europe {
     public static class MTLCurrency extends Currency {
         public MTLCurrency() {
             Data mtlData = new Data("Maltese lira", "MTL", 470, "Lm", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = mtlData;
+            data = mtlData;
         }
     };
 
@@ -217,7 +217,7 @@ public class Europe {
     public static class NOKCurrency extends Currency {
         public NOKCurrency() {
             Data nokData = new Data("Norwegian krone", "NOK", 578, "NKr", "", 100, new Rounding(), "%3% %1$.2f");
-            data_ = nokData;
+            data = nokData;
         }
     };
 
@@ -229,7 +229,7 @@ public class Europe {
     public static class PLNCurrency extends Currency {
         public PLNCurrency() {
             Data plnData = new Data("Polish zloty", "PLN", 985, "zl", "", 100, new Rounding(), "%1$.2f %3%");
-            data_ = plnData;
+            data = plnData;
         }
     };
 
@@ -243,7 +243,7 @@ public class Europe {
     public static class ROLCurrency extends Currency {
         public ROLCurrency() {
             Data rolData = new Data("Romanian leu", "ROL", 642, "L", "", 100, new Rounding(), "%1$.2f %3%");
-            data_ = rolData;
+            data = rolData;
         }
     };
 
@@ -255,7 +255,7 @@ public class Europe {
     public static class RONCurrency extends Currency {
         public RONCurrency() {
             Data ronData = new Data("Romanian new leu", "RON", 946, "L", "", 100, new Rounding(), "%1$.2f %3%");
-            data_ = ronData;
+            data = ronData;
         }
     };
 
@@ -267,7 +267,7 @@ public class Europe {
     public static class SEKCurrency extends Currency {
         public SEKCurrency() {
             Data sekData = new Data("Swedish krona", "SEK", 752, "kr", "", 100, new Rounding(), "%1$.2f %3%");
-            data_ = sekData;
+            data = sekData;
         }
     };
 
@@ -279,7 +279,7 @@ public class Europe {
     public static class SITCurrency extends Currency {
         public SITCurrency() {
             Data sitData = new Data("Slovenian tolar", "SIT", 705, "SlT", "", 100, new Rounding(), "%1$.2f %3%");
-            data_ = sitData;
+            data = sitData;
         }
     };
 
@@ -291,7 +291,7 @@ public class Europe {
     public static class SKKCurrency extends Currency {
         public SKKCurrency() {
             Data skkData = new Data("Slovak koruna", "SKK", 703, "Sk", "", 100, new Rounding(), "%1$.2f %3%");
-            data_ = skkData;
+            data = skkData;
         }
     };
 
@@ -305,7 +305,7 @@ public class Europe {
     public static class TRLCurrency extends Currency {
         public TRLCurrency() {
             Data trlData = new Data("Turkish lira", "TRL", 792, "TL", "", 100, new Rounding(), "%1$.0f %3%");
-            data_ = trlData;
+            data = trlData;
         }
     };
 
@@ -317,7 +317,7 @@ public class Europe {
     public static class TRYCurrency extends Currency {
         public TRYCurrency() {
             Data tryData = new Data("New Turkish lira", "TRY", 949, "YTL", "", 100, new Rounding(), "%1$.2f %3%");
-            data_ = tryData;
+            data = tryData;
         }
     };
 
@@ -332,7 +332,7 @@ public class Europe {
     public static class ATSCurrency extends Currency {
         public ATSCurrency() {
             Data atsData = new Data("Austrian shilling", "ATS", 40, "", "", 100, new Rounding(), "%2% %1$.2f", new EURCurrency());
-            data_ = atsData;
+            data = atsData;
         }
     };
 
@@ -345,7 +345,7 @@ public class Europe {
     public static class BEFCurrency extends Currency {
         public BEFCurrency() {
             Data befData = new Data("Belgian franc", "BEF", 56, "", "", 1, new Rounding(), "%2% %1$.0f", new EURCurrency());
-            data_ = befData;
+            data = befData;
         }
     };
 
@@ -358,7 +358,7 @@ public class Europe {
     public static class DEMCurrency extends Currency {
         public DEMCurrency() {
             Data demData = new Data("Deutsche mark", "DEM", 276, "DM", "", 100, new Rounding(), "%1$.2f %3%", new EURCurrency());
-            data_ = demData;
+            data = demData;
         }
     };
 
@@ -371,7 +371,7 @@ public class Europe {
     public static class ESPCurrency extends Currency {
         public ESPCurrency() {
             Data espData = new Data("Spanish peseta", "ESP", 724, "Pta", "", 100, new Rounding(), "%1$.0f %3%", new EURCurrency());
-            data_ = espData;
+            data = espData;
         }
     };
 
@@ -384,7 +384,7 @@ public class Europe {
     public static class FIMCurrency extends Currency {
         public FIMCurrency() {
             Data fimData = new Data("Finnish markka", "FIM", 246, "mk", "", 100, new Rounding(), "%1$.2f %3%", new EURCurrency());
-            data_ = fimData;
+            data = fimData;
         }
     };
 
@@ -397,7 +397,7 @@ public class Europe {
     public static class FRFCurrency extends Currency {
         public FRFCurrency() {
             Data frfData = new Data("French franc", "FRF", 250, "", "", 100, new Rounding(), "%1$.2f %2%", new EURCurrency());
-            data_ = frfData;
+            data = frfData;
         }
     };
 
@@ -410,7 +410,7 @@ public class Europe {
     public static class GRDCurrency extends Currency {
         public GRDCurrency() {
             Data grdData = new Data("Greek drachma", "GRD", 300, "", "", 100, new Rounding(), "%1$.2f %2%", new EURCurrency());
-            data_ = grdData;
+            data = grdData;
         }
     };
 
@@ -423,7 +423,7 @@ public class Europe {
     public static class IEPCurrency extends Currency {
         public IEPCurrency() {
             Data iepData = new Data("Irish punt", "IEP", 372, "", "", 100, new Rounding(), "%2% %1$.2f", new EURCurrency());
-            data_ = iepData;
+            data = iepData;
         }
     };
 
@@ -436,7 +436,7 @@ public class Europe {
     public static class ITLCurrency extends Currency {
         public ITLCurrency() {
             Data itlData = new Data("Italian lira", "ITL", 380, "L", "", 1, new Rounding(), "%3% %1$.0f", new EURCurrency());
-            data_ = itlData;
+            data = itlData;
         }
     };
 
@@ -449,7 +449,7 @@ public class Europe {
     public static class LUFCurrency extends Currency {
         public LUFCurrency() {
             Data lufData = new Data("Luxembourg franc", "LUF", 442, "F", "", 100, new Rounding(), "%1$.0f %3%", new EURCurrency());
-            data_ = lufData;
+            data = lufData;
         }
     };
 
@@ -470,7 +470,7 @@ public class Europe {
     public static class NLGCurrency extends Currency {
         public NLGCurrency() {
             Data nlgData = new Data("Dutch guilder", "NLG", 528, "f", "", 100, new Rounding(), "%3% %1$.2f", new EURCurrency());
-            data_ = nlgData;
+            data = nlgData;
         }
     };
 
@@ -484,7 +484,7 @@ public class Europe {
         public PTECurrency() {
             Data pteData = new Data("Portuguese escudo", "PTE", 620, "Esc", "", 100, new Rounding(), "%1$.0f %3%",
                     new EURCurrency());
-            data_ = pteData;
+            data = pteData;
         }
     };
 
