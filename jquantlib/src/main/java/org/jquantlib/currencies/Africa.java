@@ -49,7 +49,7 @@ public class Africa {
      * @category currencies
      */
     public static class ZARCurrency extends Currency {
-        ZARCurrency() {
+    	public ZARCurrency() {
             Data zarData= new Data("South-African rand", "ZAR", 710,
                                              "R", "", 100,
                                              new Rounding(),
