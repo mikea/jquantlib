@@ -57,9 +57,9 @@ import org.jquantlib.time.calendars.Turkey;
  * TODO check end-of-month adjustment.
  * 
  */
-public class Tribor extends IborIndex {
+public class TRLibor extends IborIndex {
 
-	public Tribor(final Period tenor) {
+	public TRLibor(final Period tenor) {
 		this(tenor, new Handle<YieldTermStructure>(
 						new AbstractYieldTermStructure() {
 							@Override
@@ -74,7 +74,7 @@ public class Tribor extends IborIndex {
 				));
 	}
 
-	public Tribor(final Period tenor,
+	public TRLibor(final Period tenor,
 			final Handle<YieldTermStructure> h) {
 		super("TRLibor", tenor, 0,
 				new TRYCurrency(),

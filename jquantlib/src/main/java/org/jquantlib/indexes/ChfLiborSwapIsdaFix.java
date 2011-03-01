@@ -43,13 +43,13 @@ import org.jquantlib.time.calendars.Target;
  *
  * @author Tim Blackler
  */
-public class CHFLiborSwapIsdaFix extends SwapIndex {
+public class ChfLiborSwapIsdaFix extends SwapIndex {
 
-    public CHFLiborSwapIsdaFix(final Period tenor) {
+    public ChfLiborSwapIsdaFix(final Period tenor) {
     	this(tenor, new Handle<YieldTermStructure>());
     }
 	
-    public CHFLiborSwapIsdaFix(final Period tenor, final Handle<YieldTermStructure> h) {
+    public ChfLiborSwapIsdaFix(final Period tenor, final Handle<YieldTermStructure> h) {
         super( "ChfLiborSwapIsdaFix",
                 tenor,
                 2, // settlement days
