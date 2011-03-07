@@ -95,6 +95,11 @@
         <props.compile.meminitial>128m</props.compile.meminitial>
         <props.compile.maxmem>512m</props.compile.maxmem>
         <props.compile.fork>false</props.compile.fork> <!-- Be cautious: may fork a different JVM -->
+
+		<slf4j.version>1.4.0</slf4j.version>
+		<junit.version>4.4</junit.version>
+        <umlgraph.version>4.9.0</umlgraph.version>
+        <latextaglet.version>0.1.1</latextaglet.version>
     </properties>
 
     <distributionManagement>
@@ -753,12 +758,12 @@
                             <!-- UMLGraph-5.0, 5.1 and 5.2 do not work :( -->
                             <groupId>gr.spinellis</groupId>
                             <artifactId>UmlGraph</artifactId>
-                            <version>4.9.0</version>
+                            <version>${umlgraph.version}</version>
                         </plugin>
                         <plugin>
                             <groupId>net.sf.latextaglet</groupId>
                             <artifactId>latextaglet</artifactId>
-                            <version>0.1.1</version>
+                            <version>${latextaglet.version}</version>
                         </plugin>
                     </plugins>
                 </pluginManagement>

@@ -159,13 +159,13 @@ public class IborCoupon extends FloatingRateCoupon {
             final Date fixing_date = fixingDate();
             final IndexManager indexManager = IndexManager.getInstance();
             if (fixing_date.lt(today)) {
-                final double pastFixing = indexManager.get (index_.name()).get(fixing_date);
+                final double pastFixing = indexManager.getHistory(index_.name()).get(fixing_date);
                 QL.require(!Double.isNaN(pastFixing), "Missing fixing"); // TODO: message
                 return pastFixing;
             }
             if (fixing_date.equals(today)) {
                 try {
-                    final double pastFixing = indexManager.get(index_.name()).get(fixing_date);
+                    final double pastFixing = indexManager.getHistory(index_.name()).get(fixing_date);
                     if (! Double.isNaN (pastFixing))
                         return pastFixing;
                 } catch (final Exception e) {

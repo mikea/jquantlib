@@ -78,6 +78,7 @@
     <modules>
         <module>../jquantlib-parent</module>
         <module>../jquantlib</module>
+        <!-- module>../jquantlib-contrib</module -->
         <module>../jquantlib-helpers</module>
         <module>../jquantlib-samples</module>
 

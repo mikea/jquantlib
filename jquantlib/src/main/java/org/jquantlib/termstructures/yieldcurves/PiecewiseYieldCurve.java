@@ -151,7 +151,7 @@ public class PiecewiseYieldCurve<
                 new Date[0],
                 1.0e-12,
                 constructInterpolator(classI),
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
     	);
     }
     public PiecewiseYieldCurve(
@@ -170,7 +170,7 @@ public class PiecewiseYieldCurve<
                 new Date[0],
                 1.0e-12,
                 constructInterpolator(classI),
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
     	);
     }
     public PiecewiseYieldCurve(
@@ -190,7 +190,7 @@ public class PiecewiseYieldCurve<
                 jumpDates,
                 1.0e-12,
                 constructInterpolator(classI),
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
     	);
     }
     public PiecewiseYieldCurve(
@@ -211,7 +211,7 @@ public class PiecewiseYieldCurve<
                 jumpDates,
                 accuracy,
                 constructInterpolator(classI),
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
     	);
     }
     public PiecewiseYieldCurve(
@@ -233,7 +233,7 @@ public class PiecewiseYieldCurve<
                 jumpDates,
                 accuracy,
                 interpolator,
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
     	);
     }
     public PiecewiseYieldCurve(
@@ -260,16 +260,19 @@ public class PiecewiseYieldCurve<
         this.classI = classI;
         this.classB = classB;
         
+        this.interpolator = interpolator==null     ? constructInterpolator(classI) : interpolator;
+        this.bootstrap    = bootstrap==null        ? constructBootstrap(classB)    : bootstrap;
+
+        //TODO; validate types of interpolator and bootstrap
+        
         // instantiate base class and call super constructor
-        this.baseCurve = constructBaseClass(referenceDate, dayCounter, classI, classT);
+        this.baseCurve = constructBaseClass(classT, classI, referenceDate, dayCounter, this.interpolator);
         this.instruments = instruments; // TODO: clone() ?
         
         this.jumps        = jumps==null            ?  new Handle /*<Quote>*/ [0]   : jumps;
         this.jumpDates    = jumpDates==null        ? new Date[0]                   : jumpDates;
         this.accuracy     = Double.isNaN(accuracy) ? 1.0e-12                       : accuracy;
         this.traits       = constructTraits(classT);
-        this.interpolator = interpolator==null     ? constructInterpolator(classI) : interpolator;
-        this.bootstrap    = bootstrap==null        ? constructBootstrap(classB)    : bootstrap;
 
         this.jumpTimes = new double[jumpDates.length];
         setJumps();
@@ -295,7 +298,7 @@ public class PiecewiseYieldCurve<
                 new Date[0],
                 1.0e-12,
                 null, // will be initialized later
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class));
     }
     public PiecewiseYieldCurve(
             final Date referenceDate,
@@ -309,7 +312,7 @@ public class PiecewiseYieldCurve<
                 new Date[0],
                 1.0e-12,
                 null, // will be initialized later
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class));
     }
     public PiecewiseYieldCurve(
             final Date referenceDate,
@@ -324,7 +327,7 @@ public class PiecewiseYieldCurve<
                 jumpDates,
                 1.0e-12,
                 null, // will be initialized later
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {});
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class));
     }
     public PiecewiseYieldCurve(
             final Date referenceDate,
@@ -340,7 +343,7 @@ public class PiecewiseYieldCurve<
                 jumpDates,
                 accuracy,
                 null, // will be initialized later
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
         );
     }
     public PiecewiseYieldCurve(
@@ -358,7 +361,7 @@ public class PiecewiseYieldCurve<
                 jumpDates,
                 accuracy,
                 interpolator,
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
         );
     }
     public PiecewiseYieldCurve(
@@ -378,23 +381,26 @@ public class PiecewiseYieldCurve<
         this.classI = (Class<I>) ttt.getElement(1);
         this.classB = (Class<B>) ttt.getElement(2);
         
+        this.interpolator = interpolator==null     ? constructInterpolator(classI) : interpolator;
+        this.bootstrap    = bootstrap==null        ? constructBootstrap(classB)    : bootstrap;
+
+        //TODO; validate types of interpolator and bootstrap
+        
         // instantiate base class and call super constructor
-        this.baseCurve = constructBaseClass(referenceDate, dayCounter, classI, classT);
+        this.baseCurve = constructBaseClass(classT, classI, referenceDate, dayCounter, this.interpolator);
         this.instruments = instruments; // TODO: clone() ?
         
         this.jumps        = jumps==null            ? new Handle /*<Quote>*/ [0]    : jumps;
         this.jumpDates    = jumpDates==null        ? new Date[0]                   : jumpDates;
         this.accuracy     = Double.isNaN(accuracy) ? 1.0e-12                       : accuracy;
         this.traits       = constructTraits(classT);
-        this.interpolator = interpolator==null     ? constructInterpolator(classI) : interpolator;
-        this.bootstrap    = bootstrap==null        ? constructBootstrap(classB)    : bootstrap;
 
         this.jumpTimes = new double[jumpDates.length];
         setJumps();
         for (final Handle<Quote> jump : jumps) {
             jump.addObserver(this);
         }
-        bootstrap.setup(this);
+        this.bootstrap.setup(this);
     }
 
 
@@ -419,7 +425,7 @@ public class PiecewiseYieldCurve<
                 new Date[0],
                 1.0e-12,
                 constructInterpolator(classI),
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
         );
     }
     public PiecewiseYieldCurve(
@@ -440,7 +446,7 @@ public class PiecewiseYieldCurve<
                 new Date[0],
                 1.0e-12,
                 constructInterpolator(classI),
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
         );
     }
     public PiecewiseYieldCurve(
@@ -462,7 +468,7 @@ public class PiecewiseYieldCurve<
                 jumpDates,
                 1.0e-12,
                 constructInterpolator(classI),
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
         );
     }
     public PiecewiseYieldCurve(
@@ -485,7 +491,7 @@ public class PiecewiseYieldCurve<
                 jumpDates,
                 accuracy,
                 constructInterpolator(classI),
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
         );
     }
     public PiecewiseYieldCurve(
@@ -509,7 +515,7 @@ public class PiecewiseYieldCurve<
                 jumpDates,
                 accuracy,
                 interpolator,
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
         );
     }
     public PiecewiseYieldCurve(
@@ -537,16 +543,19 @@ public class PiecewiseYieldCurve<
         this.classI = classI;
         this.classB = classB;
         
+        this.interpolator = interpolator==null     ? constructInterpolator(classI) : interpolator;
+        this.bootstrap    = bootstrap==null        ? constructBootstrap(classB)    : bootstrap;
+
+        //TODO; validate types of interpolator and bootstrap
+        
         // instantiate base class and call super constructor
-        this.baseCurve = constructBaseClass(settlementDays, calendar, dayCounter, classT);
+        this.baseCurve = constructBaseClass(classT, classI, settlementDays, calendar, dayCounter, this.interpolator);
         this.instruments = instruments;
         
         this.jumps        = jumps==null            ? new Handle /*<Quote>*/ [0]    : jumps;
         this.jumpDates    = jumpDates==null        ? new Date[0]                   : jumpDates;
         this.accuracy     = Double.isNaN(accuracy) ? 1.0e-12                       : accuracy;
         this.traits       = constructTraits(classT);
-        this.interpolator = interpolator==null     ? constructInterpolator(classI) : interpolator;
-        this.bootstrap    = bootstrap==null        ? constructBootstrap(classB)    : bootstrap;
 
         this.jumpTimes = new double[jumpDates.length];
         setJumps();
@@ -573,7 +582,7 @@ public class PiecewiseYieldCurve<
                 new Date[0],
                 1.0e-12,
                 null, // will be initialized later
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
         );
     }
     public PiecewiseYieldCurve(
@@ -589,7 +598,7 @@ public class PiecewiseYieldCurve<
                 new Date[0],
                 1.0e-12,
                 null, // will be initialized later
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
         );
     }
     public PiecewiseYieldCurve(
@@ -606,7 +615,7 @@ public class PiecewiseYieldCurve<
                 jumpDates,
                 1.0e-12,
                 null, // will be initialized later
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
         );
     }
     public PiecewiseYieldCurve(
@@ -624,7 +633,7 @@ public class PiecewiseYieldCurve<
                 jumpDates,
                 accuracy,
                 null, // will be initialized later
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
         );
     }
     public PiecewiseYieldCurve(
@@ -643,7 +652,7 @@ public class PiecewiseYieldCurve<
                 jumpDates,
                 accuracy,
                 interpolator,
-                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>() {}
+                new IterativeBootstrap<PiecewiseYieldCurve<T,I,B>>(PiecewiseYieldCurve.class)
         );
     }
     public PiecewiseYieldCurve(
@@ -663,16 +672,21 @@ public class PiecewiseYieldCurve<
         this.classI = (Class<I>) ttt.getElement(1);
         this.classB = (Class<B>) ttt.getElement(2);
         
+        this.interpolator = interpolator==null     ? constructInterpolator(classI) : interpolator;
+        this.bootstrap    = bootstrap==null        ? constructBootstrap(classB)    : bootstrap;
+
+
+        //TODO: validate types of interpolator and bootstrap
+        
+        
         // instantiate base class and call super constructor
-        this.baseCurve = constructBaseClass(settlementDays, calendar, dayCounter, classT);
+        this.baseCurve = constructBaseClass(classT, classI, settlementDays, calendar, dayCounter, this.interpolator);
         this.instruments = instruments;
         
         this.jumps        = jumps==null            ? new Handle /*<Quote>*/ [0]    : jumps;
         this.jumpDates    = jumpDates==null        ? new Date[0]                   : jumpDates;
         this.accuracy     = Double.isNaN(accuracy) ? 1.0e-12                       : accuracy;
         this.traits       = constructTraits(classT);
-        this.interpolator = interpolator==null     ? constructInterpolator(classI) : interpolator;
-        this.bootstrap    = bootstrap==null        ? constructBootstrap(classB)    : bootstrap;
 
         this.jumpTimes = new double[jumpDates.length];
         setJumps();
@@ -683,34 +697,34 @@ public class PiecewiseYieldCurve<
     }
 
     static private Traits.Curve constructBaseClass(
+            final Class<?> classT,
+            final Class<?> classI,
             final Date referenceDate,
             final DayCounter dayCounter,
-            final Class<?> classI,
-            final Class<?> classT) {
+            final Interpolator interpolator) {
         if (classT == Discount.class)
-            //TODO : return new InterpolatedDiscountCurve(referenceDate, dayCounter, classI);
-        throw new UnsupportedOperationException();
+            return new InterpolatedDiscountCurve(classI, referenceDate, dayCounter, interpolator);
         else if (classT == ForwardRate.class)
-            //TODO: this.baseCurve = new InterpolatedForwardCurve(referenceDate, dayCounter, classI);
-            throw new UnsupportedOperationException();
+            return new InterpolatedForwardCurve(classI, referenceDate, dayCounter, interpolator);
         else if (classT == ZeroYield.class)
-            //TODO: this.baseCurve = new InterpolatedZeroCurve(referenceDate, dayCounter, classI);
-            throw new UnsupportedOperationException();
+            return new InterpolatedZeroCurve(classI, referenceDate, dayCounter, interpolator);
         else
             throw new LibraryException("only Discount, ForwardRate and ZeroYield are supported"); // TODO: message
     }
 
     static private Traits.Curve constructBaseClass(
+            final Class<?> classT,
+            final Class<?> classI,
             final /*@Natural*/ int settlementDays,
             final Calendar calendar,
             final DayCounter dayCounter,
-            final Class<?> classT) {
+            final Interpolator interpolator) {
         if (classT == Discount.class)
-            return new InterpolatedDiscountCurve(classT, settlementDays, calendar, dayCounter);
+            return new InterpolatedDiscountCurve(classI, settlementDays, calendar, dayCounter, interpolator);
         else if (classT == ForwardRate.class)
-            return new InterpolatedForwardCurve(classT, settlementDays, calendar, dayCounter);
+            return new InterpolatedForwardCurve(classI, settlementDays, calendar, dayCounter, interpolator);
         else if (classT == ZeroYield.class)
-            return new InterpolatedZeroCurve(classT, settlementDays, calendar, dayCounter);
+            return new InterpolatedZeroCurve(classI, settlementDays, calendar, dayCounter, interpolator);
         else
             throw new LibraryException("only Discount, ForwardRate and ZeroYield are supported"); // TODO: message
     }

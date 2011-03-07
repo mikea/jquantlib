@@ -173,7 +173,7 @@ public class America {
      */
     public static class USDCurrency extends Currency {
         public USDCurrency() {
-            Data usdData = new Data("U.S. dollar", "USD", 840, "$", "\\xA2", 100, new Rounding(), "%3% %1$.2f");
+            Data usdData = new Data("U.S. dollar", "USD", 840, "$", "\u00A2", 100, new Rounding(), "%3% %1$.2f");
             data = usdData;
         }
     };

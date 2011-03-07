@@ -29,10 +29,12 @@ import org.jquantlib.daycounters.Actual360;
 import org.jquantlib.daycounters.ActualActual;
 import org.jquantlib.daycounters.ActualActual.Convention;
 import org.jquantlib.daycounters.DayCounter;
+import org.jquantlib.indexes.BMAIndex;
 import org.jquantlib.indexes.Euribor;
 import org.jquantlib.indexes.Euribor3M;
 import org.jquantlib.indexes.Euribor6M;
 import org.jquantlib.indexes.IborIndex;
+import org.jquantlib.indexes.ibor.JPYLibor;
 import org.jquantlib.indexes.ibor.USDLibor;
 import org.jquantlib.instruments.ForwardRateAgreement;
 import org.jquantlib.instruments.MakeVanillaSwap;
@@ -84,6 +86,8 @@ import org.jquantlib.time.calendars.Japan;
 import org.jquantlib.time.calendars.JointCalendar;
 import org.jquantlib.time.calendars.JointCalendar.JointCalendarRule;
 import org.jquantlib.time.calendars.Target;
+import org.jquantlib.testsuite.util.Flag;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -200,10 +204,10 @@ public class PiecewiseYieldCurveTest {
 
 	private class CommonVars {
 		// global variables
-		public final Calendar calendar;
+		public Calendar calendar;
 		public final int settlementDays;
-		public final Date today;
-		public final Date settlement;
+		public Date today;
+		public Date settlement;
 		public final BusinessDayConvention fixedLegConvention;
 		public final Frequency fixedLegFrequency;
 		public final DayCounter fixedLegDayCounter;
@@ -220,11 +224,11 @@ public class PiecewiseYieldCurveTest {
 		public final int swaps;
 		public final int bonds;
 		public final int bmas;
-		public final SimpleQuote[] rates;
+		public SimpleQuote[] rates;
 		public final SimpleQuote[] fraRates;
 		public final SimpleQuote[] prices;
 		public final SimpleQuote[] fractions;
-		public final RateHelper[] instruments;
+		public RateHelper[] instruments;
 		public final RateHelper[] fraHelpers;
 		public final RateHelper[] bondHelpers;
 		public final RateHelper[] bmaHelpers;
@@ -426,7 +430,7 @@ public class PiecewiseYieldCurveTest {
                 .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
                 .value();
 
-            /*@Rate*/ double expectedRate = swapData[i].rate/100;
+            /*@Rate*/ double expectedRate  = swapData[i].rate/100;
             /*@Rate*/ double estimatedRate = swap.fairRate();
             /*@Spread*/ double error = Math.abs(expectedRate-estimatedRate);
             if (error > tolerance) {
@@ -503,7 +507,8 @@ public class PiecewiseYieldCurveTest {
             ForwardRateAgreement fra = new ForwardRateAgreement(start, end, Position.Long,
             													fraData[i].rate/100, 100.0,
             													euribor3m, curveHandle);
-            /*@Rate*/ double expectedRate = fraData[i].rate/100, estimatedRate = fra.forwardRate().rate();
+            /*@Rate*/ double expectedRate  = fraData[i].rate/100;
+            /*@Rate*/ double estimatedRate = fra.forwardRate().rate();
             if (Math.abs(expectedRate-estimatedRate) > tolerance) {
             	throw new RuntimeException(
             			String.format("#%d %s %s %f %s %f",
@@ -849,7 +854,8 @@ public class PiecewiseYieldCurveTest {
 
 	    for (int i=0; i<vars.swaps; i++) {
 	        Handle<Quote> r = new Handle<Quote>(vars.rates[i+vars.deposits]);
-	        swapHelpers[i] = new SwapRateHelper(r, new Period(swapData[i].n, swapData[i].units),
+	        swapHelpers[i] = new SwapRateHelper(
+	        		           r, new Period(swapData[i].n, swapData[i].units),
 	                           vars.calendar,
 	                           vars.fixedLegFrequency, vars.fixedLegConvention,
 	                           vars.fixedLegDayCounter, euribor6m);
@@ -875,7 +881,7 @@ public class PiecewiseYieldCurveTest {
 	            .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
 	            		.value();
 
-	        /*@Rate*/ double expectedRate = swapData[i].rate/100;
+	        /*@Rate*/ double expectedRate  = swapData[i].rate/100;
 	        /*@Rate*/ double estimatedRate = swap.fairRate();
 	        /*@Real*/ double tolerance = 1.0e-9;
 	        if (Math.abs(expectedRate-estimatedRate) > tolerance) {
@@ -908,7 +914,7 @@ public class PiecewiseYieldCurveTest {
 	            .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
 	            		.value();
 
-	        /*@Rate*/ double expectedRate = swapData[i].rate/100;
+	        /*@Rate*/ double expectedRate  = swapData[i].rate/100;
 	        /*@Rate*/ double estimatedRate = swap.fairRate();
 	        /*@Real*/ double tolerance = 1.0e-9;
 	        if (Math.abs(expectedRate-estimatedRate) > tolerance) {
@@ -922,79 +928,81 @@ public class PiecewiseYieldCurveTest {
 	    }
 	}
 
-//	@Ignore
-//	@Test
-//	public void testJpyLibor() {
-//	    QL.info("Testing bootstrap over JPY LIBOR swaps...");
-//
-//	    CommonVars vars = new CommonVars();
-//
-//	    vars.today = new Date(4, Month.October, 2007);
-//	    new Settings().setEvaluationDate(vars.today);
-//
-//	    vars.calendar = new Japan();
-//	    vars.settlement = vars.calendar.advance(vars.today,  vars.settlementDays, TimeUnit.Days);
-//
-//	    // market elements
-//	    vars.rates = new SimpleQuote[vars.swaps];
-//	    for (int i=0; i<vars.swaps; i++) {
-//	        vars.rates[i] = new SimpleQuote(swapData[i].rate/100);
-//	    }
-//
-//	    // rate helpers
-//	    vars.instruments = new RateHelper[vars.swaps];
-//
-//	    IborIndex index = new JPYLibor(new Period(6, TimeUnit.Months));
-//	    for (int i=0; i<vars.swaps; i++) {
-//	        Handle<Quote> r = new Handle<Quote>(vars.rates[i]);
-//	        vars.instruments[i] = new SwapRateHelper(
-//	        							r, new Period(swapData[i].n, swapData[i].units),
-//	        							vars.fixedLegFrequency, vars.fixedLegConvention,
-//			                            vars.fixedLegDayCounter, index);
-//	    }
-//
-//	    vars.termStructure = new PiecewiseYieldCurve(
-//	    								Discount.class, LogLinear.class, IterativeBootstrap.class, 
-//	                                    vars.settlement, vars.instruments,
-//	                                    new Actual360(),
-//										new Handle/*<Quote>*/[0],
-//										new Date[0],
-//	                                    1.0e-12);
-//
-//	    RelinkableHandle<YieldTermStructure> curveHandle;
-//	    curveHandle.linkTo(vars.termStructure);
-//
-//	    // check swaps
-//	    IborIndex jpylibor6m = new JPYLibor(new Period(6, TimeUnit.Months), curveHandle);
-//	    for (int i=0; i<vars.swaps; i++) {
-//	        Period tenor = new Period(swapData[i].n, swapData[i].units);
-//
-//	        VanillaSwap swap = new MakeVanillaSwap(tenor, jpylibor6m, 0.0)
-//	            .withEffectiveDate(vars.settlement)
-//	            .withFixedLegDayCount(vars.fixedLegDayCounter)
-//	            .withFixedLegTenor(new Period(vars.fixedLegFrequency))
-//	            .withFixedLegConvention(vars.fixedLegConvention)
-//	            .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
-//	            .withFixedLegCalendar(vars.calendar)
-//	            .withFloatingLegCalendar(vars.calendar)
-//	            		.value();
-//
-//	        /*@Rate*/ double expectedRate = swapData[i].rate/100;
-//	        /*@Rate*/ double estimatedRate = swap.fairRate();
-//	        /*@Spread*/ double error = Math.abs(expectedRate-estimatedRate);
-//	        /*@Real*/ double tolerance = 1.0e-9;
-//
-//	        
-//	        if (error > tolerance) {
-//	        	throw new RuntimeException(
-//	        			String.format("%d %s %s %f %s %f %s %f %s %f",
-//	        				swapData[i].n, " year(s) swap:\n",
-//	                        "\n estimated rate: ", estimatedRate,
-//	                        "\n expected rate:  ", expectedRate,
-//	                        "\n error:          ", error,
-//	                        "\n tolerance:      ", tolerance));
-//	        }
-//	    }
-//	}	
+	
+	@Ignore
+	@Test
+	public void testJpyLibor() {
+	    QL.info("Testing bootstrap over JPY LIBOR swaps...");
+
+	    CommonVars vars = new CommonVars();
+
+	    vars.today = new Date(4, Month.October, 2007);
+	    new Settings().setEvaluationDate(vars.today);
+
+	    vars.calendar = new Japan();
+	    vars.settlement = vars.calendar.advance(vars.today,  vars.settlementDays, TimeUnit.Days);
+
+	    // market elements
+	    vars.rates = new SimpleQuote[vars.swaps];
+	    for (int i=0; i<vars.swaps; i++) {
+	        vars.rates[i] = new SimpleQuote(swapData[i].rate/100);
+	    }
+
+	    // rate helpers
+	    vars.instruments = new RateHelper[vars.swaps];
+
+	    IborIndex index = new JPYLibor(new Period(6, TimeUnit.Months));
+	    for (int i=0; i<vars.swaps; i++) {
+	        Handle<Quote> r = new Handle<Quote>(vars.rates[i]);
+	        vars.instruments[i] = new SwapRateHelper(
+	        							r, new Period(swapData[i].n, swapData[i].units),
+	        							vars.calendar,                         // TODO: code review on this line!!!!
+	        							vars.fixedLegFrequency, vars.fixedLegConvention,
+			                            vars.fixedLegDayCounter, index);
+	    }
+	    
+	    vars.termStructure = new PiecewiseYieldCurve(
+	    								Discount.class, LogLinear.class, IterativeBootstrap.class, 
+	                                    vars.settlement, vars.instruments,
+	                                    new Actual360(),
+										new Handle/*<Quote>*/[0],
+										new Date[0],
+	                                    1.0e-12);
+
+        RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
+	    curveHandle.linkTo(vars.termStructure);
+
+	    // check swaps
+	    IborIndex jpylibor6m = new JPYLibor(new Period(6, TimeUnit.Months), curveHandle);
+	    for (int i=0; i<vars.swaps; i++) {
+	        Period tenor = new Period(swapData[i].n, swapData[i].units);
+
+	        VanillaSwap swap = new MakeVanillaSwap(tenor, jpylibor6m, 0.0)
+	            .withEffectiveDate(vars.settlement)
+	            .withFixedLegDayCount(vars.fixedLegDayCounter)
+	            .withFixedLegTenor(new Period(vars.fixedLegFrequency))
+	            .withFixedLegConvention(vars.fixedLegConvention)
+	            .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
+	            .withFixedLegCalendar(vars.calendar)
+	            .withFloatingLegCalendar(vars.calendar)
+	            		.value();
+
+	        /*@Rate*/ double expectedRate  = swapData[i].rate/100;
+	        /*@Rate*/ double estimatedRate = swap.fairRate();
+	        /*@Spread*/ double error = Math.abs(expectedRate-estimatedRate);
+	        /*@Real*/ double tolerance = 1.0e-9;
+
+	        
+	        if (error > tolerance) {
+	        	throw new RuntimeException(
+	        			String.format("%d %s %s %f %s %f %s %f %s %f",
+	        				swapData[i].n, " year(s) swap:\n",
+	                        "\n estimated rate: ", estimatedRate,
+	                        "\n expected rate:  ", expectedRate,
+	                        "\n error:          ", error,
+	                        "\n tolerance:      ", tolerance));
+	        }
+	    }
+	}	
 
 }

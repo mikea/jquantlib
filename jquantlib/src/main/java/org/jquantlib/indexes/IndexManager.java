@@ -22,27 +22,28 @@
 
 package org.jquantlib.indexes;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.jquantlib.time.TimeSeries;
 import org.jquantlib.util.Observable;
 import org.jquantlib.util.ObservableValue;
 
-//FIXME: code review
-public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> {
+
+public class IndexManager {
 
     private static final long serialVersionUID = -9204254124065694863L;
-
-    /**
-     * @see <a href="http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html">The "Double-Checked Locking is Broken" Declaration </a>
-     */
+    
+    private static Map<String, TimeSeries<Double>> data;
     private static volatile IndexManager instance;
 
-	private IndexManager() {
-	    // noone can directly instantiate
-	}
-
-	public static IndexManager getInstance() {
+    
+	//
+    // static public methods
+    //
+    
+    public static IndexManager getInstance() {
 		if (instance == null) {
 			synchronized (IndexManager.class) {
 				if (instance == null) {
@@ -53,21 +54,38 @@ public class IndexManager extends ConcurrentHashMap<String, TimeSeries<Double>> 
 		return instance;
 	}
 
+
+    //
+    // private constructors
+    //
+    
+    private IndexManager() {
+	    this.data = new ConcurrentHashMap<String, TimeSeries<Double>>();
+	}
+
+	public TimeSeries<Double> getHistory(final String name) {
+		return data.get(name);
+	}
+
+	public void setHistory(final String name, final TimeSeries<Double> history) {
+		data.put(name, history);
+	}
+
+	public void clearHistory(final String name) {
+		data.remove(name);
+	}
+
+	public void clearHistories() {
+		data.clear();
+	}
+
 	public Observable notifier(final String name) {
-	    TimeSeries<Double> value = super.get(name);
+	    TimeSeries<Double> value = data.get(name);
 		if (value == null){
 			value = new TimeSeries<Double>(){ /* anonymous class */ };
-			super.put(name, value);
+			data.put(name, value);
 		}
 		return new ObservableValue<TimeSeries<Double>>(value);
-	}
-
-	public void clearHistory(final String name){
-		super.remove(name);
-	}
-
-	public void clearHistories(){
-		super.clear();
 	}
 
 }

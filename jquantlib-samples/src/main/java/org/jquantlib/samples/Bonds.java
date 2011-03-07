@@ -343,10 +343,6 @@ public class Bonds { //implements Runnable {
 
         final Period forwardStart = new Period(1, TimeUnit.Days);
         
-        if ( System.getProperty("DEBUG_BOND_EXAMPLE") == null ) {
-        	System.out.println("Still in PROGRESS!");
-        	return;
-        }
         RateHelper s2y = new SwapRateHelper(
         			new Handle<Quote>(s2yRate), 
         			new Period(2, TimeUnit.Years),
@@ -489,8 +485,8 @@ public class Bonds { //implements Runnable {
          // Should and will be priced on another curve later...
         
          RelinkableHandle<YieldTermStructure> liborTermStructure = new RelinkableHandle<YieldTermStructure>();
-         IborIndex libor3m =  new USDLibor(new Period(3,TimeUnit.Months),liborTermStructure);
-         libor3m.addFixing(new Date(17, Month.July, 2008),0.0278625, false);
+         IborIndex libor3m =  new USDLibor(new Period(3, TimeUnit.Months), liborTermStructure);
+         libor3m.addFixing(new Date(17, Month.July, 2008), 0.0278625);
         
          Schedule floatingBondSchedule = new Schedule(
         		 				new Date(21, Month.October, 2005),

@@ -78,9 +78,7 @@ public class IterativeBootstrap<Curve extends PiecewiseYieldCurve> implements Bo
 
     
     public IterativeBootstrap(final Class<?> typeCurve) {
-
         QL.validateExperimentalMode();
-
         
         if (typeCurve==null) {
             throw new LibraryException("null PiecewiseCurve"); // TODO: message

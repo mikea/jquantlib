@@ -81,12 +81,11 @@ public enum TimeUnit {
     }
 
     /**
-     * Output time units in short format (e.g. "w")
+     * Output time units in short format (e.g. "W")
      */
     private String getShortFormatString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(toString().toLowerCase());
-        sb.setLength(1);
+        sb.append(toString().charAt(0));
         return sb.toString();
     }
 

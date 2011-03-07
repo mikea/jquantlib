@@ -22,6 +22,7 @@
 
 package org.jquantlib.time;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Formatter;
 import java.util.List;
@@ -40,9 +41,11 @@ import org.jquantlib.util.Observer;
  *
  * @author Richard Gomes
  */
-public class Date implements Observable, Comparable<Date>, Cloneable {
+public class Date implements Observable, Comparable<Date>, Serializable, Cloneable {
 
-    private /* @NonNegative */ long serialNumber;
+	private static final long serialVersionUID = -7150540867519744332L;
+
+	private /* @NonNegative */ long serialNumber;
 
     private static final int monthLength[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
@@ -1045,7 +1048,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      */
     private final class LongDate extends java.util.Date {
 
-        private LongDate() {
+		private static final long serialVersionUID = -8382775848256835100L;
+
+		private LongDate() {
             super((serialNumber-25569)*86400000L);
         }
 
@@ -1071,7 +1076,9 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      */
     private final class ShortDate extends java.util.Date {
 
-        private ShortDate() {
+		private static final long serialVersionUID = -4372510060405020533L;
+
+		private ShortDate() {
             super((serialNumber-25569)*86400000L);
         }
 
@@ -1095,11 +1102,10 @@ public class Date implements Observable, Comparable<Date>, Cloneable {
      * In other words, a day <i>always</i> has exactly 84,600 seconds, or 84,600,000 milliseconds.
      */
     private final class ISODate extends java.util.Date {
-    	//Make compiler happy
-		private static final long serialVersionUID = 1L;
+
+		private static final long serialVersionUID = 4824909887446169897L;
 
 		private ISODate() {
-//            super((serialNumber-25569)*86400000L);
             Calendar c = Calendar.getInstance();
             boolean b = isNull();
             c.set(Calendar.MONTH, b ? 0 : month().value() -1);

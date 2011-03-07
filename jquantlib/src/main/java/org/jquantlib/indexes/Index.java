@@ -78,7 +78,7 @@ public abstract class Index implements Observable {
 	 * @return the fixing TimeSeries
 	 */
 	public TimeSeries<Double> timeSeries() {
-		return IndexManager.getInstance().get(name());
+		return IndexManager.getInstance().getHistory(name());
 	}
 
 	/**
@@ -98,17 +98,19 @@ public abstract class Index implements Observable {
 	 * fixing; no settlement days must be used.
 	 */
 	public void addFixing(final Date date, final double value, final boolean forceOverwrite) {
-        final String tag = name();
-        final TimeSeries<Double> ts = IndexManager.getInstance().get(tag);
-        boolean noInvalidFixing = true;
-        boolean noDuplicatedFixing = true;
+		final String tag = name();
+		boolean missingFixing;
+		boolean validFixing;
+		boolean noInvalidFixing = true;
+		boolean noDuplicatedFixing = true;
+		final TimeSeries<Double> h = IndexManager.getInstance().getHistory(tag);
 
-        final boolean validFixing = isValidFixingDate(date);
-        final double currentValue = ts.get(date);
-        final boolean missingFixing = forceOverwrite || Closeness.isClose(currentValue, Constants.NULL_REAL);
+        validFixing = isValidFixingDate(date);
+        final double currentValue = h.get(date);
+        missingFixing = forceOverwrite || Closeness.isClose(currentValue, Constants.NULL_REAL);
         if (validFixing) {
             if (missingFixing) {
-                ts.put(date, value);
+                h.put(date, value);
             } else if (Closeness.isClose(currentValue, value)) {
                 // Do nothing
             } else {
@@ -118,22 +120,12 @@ public abstract class Index implements Observable {
             noInvalidFixing = false;
         }
 
-        QL.ensure(noInvalidFixing , "at least one invalid fixing provided");  // TODO: message
-        QL.ensure(noDuplicatedFixing , "at least one duplicated fixing provided");  // TODO: message
-	}
+		IndexManager.getInstance().setHistory(tag, h);
 
-	/**
-	 * Stores historical fixings from a TimeSeries
-	 * <p>
-	 * The dates in the TimeSeries must be the actual calendar dates of the
-	 * fixings; no settlement days must be used.
-	 */
-	public final void addFixings(final TimeSeries<Double> series, final boolean forceOverwrite) {
-	    final Iterator<Date> itk = series.navigableKeySet().iterator();
-	    final Iterator<Double> itv = series.values().iterator();
-		addFixings(itk, itv, forceOverwrite);
+		QL.ensure(noInvalidFixing , "at least one invalid fixing provided");  // TODO: message
+		QL.ensure(noDuplicatedFixing , "at least one duplicated fixing provided");  // TODO: message
 	}
-
+	
 	/**
 	 * Stores historical fixings at the given dates
 	 * <p>
@@ -146,16 +138,16 @@ public abstract class Index implements Observable {
 		boolean validFixing;
 		boolean noInvalidFixing = true;
 		boolean noDuplicatedFixing = true;
-		final TimeSeries<Double> ts = IndexManager.getInstance().get(tag);
+		final TimeSeries<Double> h = IndexManager.getInstance().getHistory(tag);
 
 		for (final Date date : Iterables.unmodifiableIterable(dates)) {
             final double value = values.next();
             validFixing = isValidFixingDate(date);
-            final double currentValue = ts.get(date);
+            final double currentValue = h.get(date);
             missingFixing = forceOverwrite || Closeness.isClose(currentValue, Constants.NULL_REAL);
             if (validFixing) {
                 if (missingFixing) {
-                    ts.put(date, value);
+                    h.put(date, value);
                 } else if (Closeness.isClose(currentValue, value)) {
                     // Do nothing
                 } else {
@@ -166,7 +158,7 @@ public abstract class Index implements Observable {
             }
 		}
 
-		IndexManager.getInstance().put(tag, ts);
+		IndexManager.getInstance().setHistory(tag, h);
 
 		QL.ensure(noInvalidFixing , "at least one invalid fixing provided");  // TODO: message
 		QL.ensure(noDuplicatedFixing , "at least one duplicated fixing provided");  // TODO: message

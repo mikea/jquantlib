@@ -253,7 +253,7 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     protected InterpolatedDiscountCurve(
             final Class<I> classI,
     		final DayCounter dc) {
-        this(dc, null);
+        this(classI, dc, null);
     }
     protected InterpolatedDiscountCurve(
             final Class<I> classI,
@@ -262,8 +262,7 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
         super(dc);
         
         QL.validateExperimentalMode();
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        this.classI = (Class<I>) ttt.getElement(0);
+        this.classI = classI;
         this.interpolator = interpolator==null ? constructInterpolator(classI) : interpolator;
     }
 
@@ -272,7 +271,7 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
             final Class<I> classI,
             final Date referenceDate,
             final DayCounter dc) {
-        this(referenceDate, dc, null);
+        this(classI, referenceDate, dc, null);
     }
     protected InterpolatedDiscountCurve(
             final Class<I> classI,
@@ -281,8 +280,9 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
             final Interpolator interpolator) {
         super(referenceDate, new Calendar(), dc);
         QL.validateExperimentalMode();
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        this.classI = (Class<I>) ttt.getElement(0);
+
+		QL.require(classI!=null, "Generic type for Interpolation is null");
+        this.classI = classI;
         this.interpolator = interpolator==null ? constructInterpolator(classI) : interpolator;
     }
 
@@ -292,7 +292,7 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
     		final /*@Natural*/ int settlementDays,
             final Calendar calendar,
             final DayCounter dc) {
-        this(settlementDays, calendar, dc, null);
+        this(classI, settlementDays, calendar, dc, null);
     }
     protected InterpolatedDiscountCurve(
             final Class<I> classI,
@@ -302,8 +302,9 @@ public class InterpolatedDiscountCurve<I extends Interpolator> extends AbstractY
             final Interpolator interpolator) {
         super(settlementDays, new Calendar(), dc);
         QL.validateExperimentalMode();
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        this.classI = (Class<I>) ttt.getElement(0);
+
+        QL.require(classI!=null, "Generic type for Interpolation is null");
+        this.classI = classI;
         this.interpolator = interpolator==null ? constructInterpolator(classI) : interpolator;
     }
 

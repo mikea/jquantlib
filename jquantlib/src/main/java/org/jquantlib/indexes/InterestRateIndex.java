@@ -88,7 +88,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
         } else {
             builder.append(tenor.getShortFormat());
         }
-        builder.append(dayCounter.name());
+        builder.append(' ').append(dayCounter.name());
         return builder.toString();
     }
     
@@ -152,7 +152,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
         if (fixingDate.lt(today) || (fixingDate.equals(today) && enforceTodaysHistoricFixings && !forecastTodaysFixing)) {
             // must have been fixed
              double /*Rate*/ pastFixing =
-                    IndexManager.getInstance().get(name()).get(fixingDate);
+                    IndexManager.getInstance().getHistory(name()).get(fixingDate);
              QL.require(pastFixing != Constants.NULL_REAL,
                           "Missing " + name() + " fixing for " + fixingDate);
             return pastFixing;
@@ -162,7 +162,7 @@ public abstract class InterestRateIndex extends Index implements Observer {
             // might have been fixed
             try {
                 double /*Rate*/ pastFixing =
-                	IndexManager.getInstance().get(name()).get(fixingDate);
+                	IndexManager.getInstance().getHistory(name()).get(fixingDate);
                 if (pastFixing != Constants.NULL_REAL)
                     return pastFixing;
                 else

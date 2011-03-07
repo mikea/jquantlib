@@ -163,8 +163,8 @@ public class InterpolatedForwardCurve<I extends Interpolator> extends ForwardRat
 			final Calendar calendar, 
 			final Interpolator interpolator) {
 		super(dates[0], calendar==null ? new Calendar() : calendar, dc);
-		
 		QL.validateExperimentalMode();
+
 		QL.require(classI!=null, "Generic type for Interpolation is null");
         this.classI = classI;
 		
@@ -248,17 +248,17 @@ public class InterpolatedForwardCurve<I extends Interpolator> extends ForwardRat
     protected InterpolatedForwardCurve(
             final Class<I> classI,
     		final DayCounter dc) {
-        this(dc, null);
+        this(classI, dc, null);
     }
     protected InterpolatedForwardCurve(
             final Class<I> classI,
             final DayCounter dc,
             final Interpolator interpolator) {
         super(dc);
-        
         QL.validateExperimentalMode();
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        this.classI = (Class<I>) ttt.getElement(0);
+
+		QL.require(classI!=null, "Generic type for Interpolation is null");
+        this.classI = classI;
         this.interpolator = interpolator==null ? constructInterpolator(classI) : interpolator;
     }
 
@@ -267,7 +267,7 @@ public class InterpolatedForwardCurve<I extends Interpolator> extends ForwardRat
             final Class<I> classI,
             final Date referenceDate,
             final DayCounter dc) {
-        this(referenceDate, dc, null);
+        this(classI, referenceDate, dc, null);
     }
     protected InterpolatedForwardCurve(
             final Class<I> classI,
@@ -276,8 +276,9 @@ public class InterpolatedForwardCurve<I extends Interpolator> extends ForwardRat
             final Interpolator interpolator) {
         super(referenceDate, new Calendar(), dc);
         QL.validateExperimentalMode();
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        this.classI = (Class<I>) ttt.getElement(0);
+
+		QL.require(classI!=null, "Generic type for Interpolation is null");
+        this.classI = classI;
         this.interpolator = interpolator==null ? constructInterpolator(classI) : interpolator;
     }
 
@@ -287,7 +288,7 @@ public class InterpolatedForwardCurve<I extends Interpolator> extends ForwardRat
     		final /*@Natural*/ int settlementDays,
             final Calendar calendar,
             final DayCounter dc) {
-        this(settlementDays, calendar, dc, null);
+        this(classI, settlementDays, calendar, dc, null);
     }
     protected InterpolatedForwardCurve(
             final Class<I> classI,
@@ -297,8 +298,9 @@ public class InterpolatedForwardCurve<I extends Interpolator> extends ForwardRat
             final Interpolator interpolator) {
         super(settlementDays, new Calendar(), dc);
         QL.validateExperimentalMode();
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        this.classI = (Class<I>) ttt.getElement(0);
+
+		QL.require(classI!=null, "Generic type for Interpolation is null");
+        this.classI = classI;
         this.interpolator = interpolator==null ? constructInterpolator(classI) : interpolator;
     }
 

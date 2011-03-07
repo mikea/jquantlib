@@ -104,12 +104,9 @@ public class Libor extends IborIndex {
 				financialCenterCalendar,
 				JointCalendarRule.JoinHolidays);
 		QL.require(this.tenor().units()!= TimeUnit.Days,
-				"for daily tenors (" + this.tenor() +
-						") dedicated DailyTenor constructor must be used");
+				"for daily tenors (" + this.tenor() + ") dedicated DailyTenor constructor must be used");
 
-		QL.require(!currency.eq(new EURCurrency()),
-			"for EUR Libor dedicated EurLibor constructor must be used");
-
+		QL.require(!currency.eq(new EURCurrency()), "for EUR Libor dedicated EurLibor constructor must be used");
 	}
 
 	public Libor(

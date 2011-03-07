@@ -40,6 +40,7 @@
 
 package org.jquantlib.math.interpolations.factories;
 
+import org.jquantlib.math.interpolations.CubicInterpolation;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.LogCubicInterpolation;
 import org.jquantlib.math.interpolations.CubicInterpolation.BoundaryCondition;
@@ -61,10 +62,10 @@ public class LogCubic implements Interpolation.Interpolator {
     private final double rightValue;
     private final boolean monotonic;
 
+
     public LogCubic(final DerivativeApprox da) {
         this(da, false, BoundaryCondition.SecondDerivative, 0.0, BoundaryCondition.SecondDerivative, 0.0);
     }
-
     public LogCubic(
             final DerivativeApprox da,
             final boolean monotonic,
