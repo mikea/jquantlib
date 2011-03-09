@@ -193,4 +193,34 @@ public class BMASwap extends Swap {
     	return legNPV[1];
     }
 
+    //
+    // inner public enums
+    //
+
+    public enum Type {
+        Receiver (-1),
+        Payer (1);
+
+        private final int enumValue;
+
+        private Type(final int frequency) {
+            this.enumValue = frequency;
+        }
+
+        static public Type valueOf(final int value) {
+            switch (value) {
+            case -1:
+                return Type.Receiver;
+            case 1:
+                return Type.Payer;
+            default:
+                throw new LibraryException("value must be one of -1, 1"); // TODO: message
+            }
+        }
+
+        public int toInteger() {
+            return this.enumValue;
+        }
+    }
+    
 }
