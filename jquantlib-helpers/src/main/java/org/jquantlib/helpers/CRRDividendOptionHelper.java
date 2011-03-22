@@ -165,7 +165,7 @@ public abstract class CRRDividendOptionHelper extends DividendVanillaOption {
 
         // obtain a pricing engine and assign to this option :: 3 intervals a day
         final int timeSteps = (int) (exercise.lastDate().sub(referenceDate) * 3);
-        final PricingEngine engine = new BinomialDividendVanillaEngine<CoxRossRubinstein>(stochProcess, timeSteps) { /* anonymous */ };
+        final PricingEngine engine = new BinomialDividendVanillaEngine<CoxRossRubinstein>(CoxRossRubinstein.class, stochProcess, timeSteps) { /* anonymous */ };
 
         // assign the pricing engine to this option
         this.setPricingEngine(engine);

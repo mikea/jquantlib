@@ -65,7 +65,7 @@ public abstract class GarmanKlassAbstract implements LocalVolatilityEstimator<In
 
 	@Override
 	public TimeSeries<Double> calculate(final TimeSeries<IntervalPrice> quotes) {
-		final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
+		final TimeSeries<Double> retval = new TimeSeries<Double>(Double.class);
 		for (final Date date : Iterables.unmodifiableIterable(quotes.navigableKeySet())) {
             final IntervalPrice curr = quotes.get(date);
             retval.put(date, Math.sqrt(Math.abs(calculatePoint(curr)) / yearFraction) );

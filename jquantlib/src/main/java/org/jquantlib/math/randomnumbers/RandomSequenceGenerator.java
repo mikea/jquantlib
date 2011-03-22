@@ -41,7 +41,6 @@ package org.jquantlib.math.randomnumbers;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.methods.montecarlo.Sample;
 
 /**
@@ -64,31 +63,44 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
     private final RNG                   rng;
     private final double[]              sequence;
     private final long[]                int32Sequence;
+    
+    private final Class<? extends RandomNumberGenerator>	classRNG;
 
 
     //
     // public constructors
     //
 
-    public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality, final RNG rng) {
+    public RandomSequenceGenerator(
+    		final Class<? extends RandomNumberGenerator> classRNG,
+    		final /*@NonNegative*/ int dimensionality, 
+    		final RNG rng) {
 
         if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
 
         QL.require(dimensionality >= 1 , "dimensionality must be greater than 0"); // TODO: message
+        this.classRNG = classRNG;
         this.dimension = dimensionality;
         this.rng = rng;
         this.sequence = new double[this.dimension];
         this.int32Sequence = new long[this.dimension];
     }
 
-    public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality) {
-        this(dimensionality, 0);
+    public RandomSequenceGenerator(
+    		final Class<? extends RandomNumberGenerator> classRNG,
+    		final /*@NonNegative*/ int dimensionality) {
+        this(classRNG, dimensionality, 0);
     }
 
-    public RandomSequenceGenerator(final /*@NonNegative*/ int dimensionality, final long seed) {
+    public RandomSequenceGenerator(
+    		final Class<? extends RandomNumberGenerator> classRNG,
+    		final /*@NonNegative*/ int dimensionality, 
+    		final long seed) {
 
         if (System.getProperty("EXPERIMENTAL")==null) throw new UnsupportedOperationException("Work in progress");
 
+        this.classRNG = classRNG;
+        
         if (dimensionality < 1) throw new IllegalArgumentException("dimensionality must be greater than 0");
         this.dimension = dimensionality;
         this.sequence = new double[this.dimension];
@@ -96,7 +108,7 @@ public class RandomSequenceGenerator<RNG extends RandomNumberGenerator> implemen
 
         // instantiate a generic RandomNumberGenerator
         try {
-            this.rng = (RNG) TypeToken.getClazz(this.getClass()).getConstructor(long.class).newInstance(seed);
+            this.rng = (RNG) classRNG.getConstructor(long.class).newInstance(seed);
         } catch (final Exception e) {
             throw new LibraryException(e); // QA:[RG]::verified
         }

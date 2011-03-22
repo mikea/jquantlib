@@ -110,7 +110,7 @@ public class BarrierOption extends OneAssetOption {
 //     *
 //     * @author Richard Gomes
 //     */
-//    public interface Arguments extends OneAssetOption.Arguments { }
+//    public interface Arguments extends OneAssetOption.Arguments { /* marking interface */ }
 //
 //
 //    /**
@@ -118,7 +118,7 @@ public class BarrierOption extends OneAssetOption {
 //     *
 //     * @author Richard Gomes
 //     */
-//    public interface Results extends OneAssetOption.Results { }
+//    public interface Results extends OneAssetOption.Results { /* marking interface */ }
 //
 //
 //    /**
@@ -126,7 +126,7 @@ public class BarrierOption extends OneAssetOption {
 //     *
 //     * @author Richard Gomes
 //     */
-//    public interface Engine extends PricingEngine, Observer { }
+//    public interface Engine extends PricingEngine, Observer { /* marking interface */ }
 
 
     //
@@ -196,7 +196,7 @@ public class BarrierOption extends OneAssetOption {
     }
 
 
-    static public class ResultsImpl extends OneAssetOption.ResultsImpl implements BarrierOption.Results { }
+    static public class ResultsImpl extends OneAssetOption.ResultsImpl implements BarrierOption.Results { /* marking class */ }
 
 
     /**

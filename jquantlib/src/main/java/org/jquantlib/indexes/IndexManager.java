@@ -81,7 +81,7 @@ public class IndexManager {
 	public Observable notifier(final String name) {
 	    TimeSeries<Double> value = data.get(name);
 		if (value == null){
-			value = new TimeSeries<Double>(){ /* anonymous class */ };
+			value = new TimeSeries<Double>(Double.class);
 			data.put(name, value);
 		}
 		return new ObservableValue<TimeSeries<Double>>(value);

@@ -32,15 +32,11 @@ import org.jquantlib.math.matrixutilities.Array;
 //TODO: code review:: This class should be parametrized
 public class TridiagonalOperator implements Operator {
 
-	// TODO: code review: consider refactor inner interface TimeSetter
-    public static interface TimeSetter {
-		public void setTime(double t, TridiagonalOperator l);
-	}
-
 	protected TimeSetter timeSetter;
 	protected Array lowerDiagonal;
 	protected Array diagonal;
 	protected Array upperDiagonal;
+
 
 	public TridiagonalOperator(final int size) {
 		if (size >= 3) {
@@ -375,5 +371,18 @@ public class TridiagonalOperator implements Operator {
 		swap(d);
 		return this;
 	}*/
+
+
+
+
+    //
+    // public static inner interfaces
+    //
+    
+    
+	// TODO: code review: consider refactor inner interface TimeSetter
+    public static interface TimeSetter {
+		public void setTime(double t, TridiagonalOperator l);
+	}
 
 }

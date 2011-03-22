@@ -51,20 +51,6 @@ public class GenericTimeSetter<T extends PdeSecondOrderParabolic> implements Tim
     private final TransformedGrid grid;
     private final T pde;
 
-    /**
-     * Signature of this method is different because
-     * TypeTokens doesn't work when type token is
-     * specifed by another type token upstream.
-     * For example,
-     *   class A<T>{
-     *      void method(){
-     *         B<T> b = new B<T>(): //Its not possible to determine T inside B class
-     *      }
-     *   }
-     *
-     * @param grid
-     * @param process
-     */
     public GenericTimeSetter(final Array grid, final T pde) {
         this.grid = pde.applyGridType(grid);
         this.pde = pde;

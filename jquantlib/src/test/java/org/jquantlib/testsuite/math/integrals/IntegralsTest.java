@@ -64,19 +64,19 @@ public class IntegralsTest {
     @Test
     public void testTrapezoid() {
         QL.info("Testing trapezoid integration...");
-        testSeveral(new TrapezoidIntegral<TrapezoidIntegral.Default>(tolerance, 10000) { /* anonymous */ } );
+        testSeveral(new TrapezoidIntegral<TrapezoidIntegral.Default>(TrapezoidIntegral.Default.class, tolerance, 10000));
     }
 
     @Test
     public void testMidPointTrapezoid() {
         QL.info("Testing mid-point trapezoid integration...");
-        testSeveral(new TrapezoidIntegral<TrapezoidIntegral.MidPoint>(tolerance, 10000) { /* anonymous */ } );
+        testSeveral(new TrapezoidIntegral<TrapezoidIntegral.MidPoint>(TrapezoidIntegral.MidPoint.class, tolerance, 10000));
     }
 
     @Test
     public void testSimpson() {
         QL.info("Testing Simpson integration...");
-        testSeveral(new SimpsonIntegral(tolerance, 10000) { /* anonymous */ } );
+        testSeveral(new SimpsonIntegral(tolerance, 10000));
     }
 
     @Test

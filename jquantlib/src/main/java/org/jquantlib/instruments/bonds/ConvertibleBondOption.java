@@ -170,9 +170,9 @@ public class ConvertibleBondOption extends OneAssetOption {
     // ????? inner interfaces
     //
 
-    public interface Arguments extends OneAssetOption.Arguments { }
+    public interface Arguments extends OneAssetOption.Arguments { /* marking interface */ }
 
-    public interface Results extends Instrument.Results, Option.Greeks, Option.MoreGreeks { }
+    public interface Results extends Instrument.Results, Option.Greeks, Option.MoreGreeks { /* marking interface */ }
 
 
 

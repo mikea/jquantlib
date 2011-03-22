@@ -28,7 +28,6 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.bonds.ConvertibleBondOption;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.methods.lattices.BinomialTree;
 import org.jquantlib.methods.lattices.Lattice;
 import org.jquantlib.methods.lattices.TsiveriotisFernandesLattice;
@@ -76,16 +75,6 @@ public class BinomialConvertibleEngine<T extends BinomialTree> extends Convertib
     //
     // public constructors
     //
-
-    public BinomialConvertibleEngine(final GeneralizedBlackScholesProcess process, final int timeSteps) {
-        this.typeT = (Class<T>)new TypeTokenTree(this.getClass()).getElement(0);
-        QL.require(timeSteps>0, "timeSteps must be positive");
-        this.timeSteps_ = timeSteps;
-        this.a = this.arguments_;
-        this.r = this.results_;
-        this.process_ = process;
-        this.process_.addObserver(this);
-    }
 
     public BinomialConvertibleEngine(final Class<T> typeT, 
     								 final GeneralizedBlackScholesProcess process, 

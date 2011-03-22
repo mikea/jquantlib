@@ -181,7 +181,8 @@ public class ConvertibleBondTest {
 
 		final int timeSteps = 1001;
 		final PricingEngine engine = new BinomialConvertibleEngine<CoxRossRubinstein>(
-				vars.process, timeSteps) {};
+				CoxRossRubinstein.class,
+				vars.process, timeSteps);
 
 		final Handle<YieldTermStructure> discountCurve = new Handle<YieldTermStructure>(
 				new ForwardSpreadedTermStructure(vars.riskFreeRate,
@@ -354,11 +355,8 @@ public class ConvertibleBondTest {
 		vars.settlementDays = 0;
 
 		final int timeSteps = 1001;
-		final PricingEngine engine = new BinomialConvertibleEngine<CoxRossRubinstein>(
-				vars.process, timeSteps) { /*anonymous*/ };
-		final PricingEngine vanillaEngine = new BinomialVanillaEngine<CoxRossRubinstein>(
-				vars.process, timeSteps) {
-		};
+		final PricingEngine engine = new BinomialConvertibleEngine<CoxRossRubinstein>(CoxRossRubinstein.class, vars.process, timeSteps);
+		final PricingEngine vanillaEngine = new BinomialVanillaEngine<CoxRossRubinstein>(CoxRossRubinstein.class, vars.process, timeSteps);
 
 		vars.creditSpread.linkTo(new SimpleQuote(0.0));
 

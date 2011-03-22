@@ -48,7 +48,6 @@ import org.jquantlib.lang.reflect.ReflectConstants;
 import org.jquantlib.math.Constants;
 import org.jquantlib.pricingengines.GenericEngine;
 import org.jquantlib.pricingengines.PricingEngine;
-import org.jquantlib.time.Date;
 import org.jquantlib.util.Observer;
 
 /**
@@ -76,7 +75,8 @@ public class OneAssetOption extends Option {
         super(payoff, exercise);
     }
     
-    public boolean isExpired() /* @ReadOnly */ {
+    @Override
+	public boolean isExpired() /* @ReadOnly */ {
         return exercise.lastDate().lt(new Settings().evaluationDate() );
     }
     
@@ -147,14 +147,16 @@ public class OneAssetOption extends Option {
         return itmCashProbability_;
     }
     
-    public void setupExpired() {
+    @Override
+	public void setupExpired() {
         super.setupExpired();
         delta_ = deltaForward_ = elasticity_ = gamma_ = theta_ =
             thetaPerDay_ = vega_ = rho_ = dividendRho_ =
             strikeSensitivity_ = itmCashProbability_ = 0.0;
     }
 
-    public void fetchResults(final PricingEngine.Results r) {
+    @Override
+	public void fetchResults(final PricingEngine.Results r) {
         super.fetchResults(r);
         
         QL.require(OneAssetOption.Results.class.isAssignableFrom(r.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); // QA:[RG]::verified
@@ -269,17 +271,17 @@ public class OneAssetOption extends Option {
      *
      * @author Richard Gomes
      */
-    public interface Arguments extends Option.Arguments { }
+    public interface Arguments extends Option.Arguments { /* marking interface */ }
 
     /**
      * Results from single-asset option calculation
      *
      * @author Richard Gomes
      */
-    public interface Results extends Instrument.Results, Option.Greeks, Option.MoreGreeks { }
+    public interface Results extends Instrument.Results, Option.Greeks, Option.MoreGreeks { /* marking interface */ }
 
 
-    public interface Engine extends PricingEngine, Observer { }
+    public interface Engine extends PricingEngine, Observer { /* marking interface */ }
 
 
 
@@ -287,7 +289,7 @@ public class OneAssetOption extends Option {
     // public inner classes
     //
 
-    static public class ArgumentsImpl extends Option.ArgumentsImpl implements OneAssetOption.Arguments { }
+    static public class ArgumentsImpl extends Option.ArgumentsImpl implements OneAssetOption.Arguments { /* marking interface */ }
 
 
     /**

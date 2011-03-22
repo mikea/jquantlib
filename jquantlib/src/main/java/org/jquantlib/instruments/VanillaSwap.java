@@ -351,10 +351,10 @@ public class VanillaSwap extends Swap {
     // inner interfaces
     //
 
-    public interface Arguments extends Swap.Arguments { }
+    public interface Arguments extends Swap.Arguments { /* marking interface */ }
 
 
-    public interface Results extends Swap.Results { }
+    public interface Results extends Swap.Results { /* marking interface */ }
 
 
     //

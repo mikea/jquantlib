@@ -159,7 +159,7 @@ public class LevenbergMarquardt extends OptimizationMethod {
         Array initCostValues_;
     };
     */
-    static class ProblemData{
+    private static class ProblemData{
 
         static ProblemData p = null;
         public static ProblemData getProblemData(){
@@ -168,8 +168,6 @@ public class LevenbergMarquardt extends OptimizationMethod {
             }
             return p;
         }
-
-        private ProblemData(){}
 
         public Problem problem(){
             return thisP_;

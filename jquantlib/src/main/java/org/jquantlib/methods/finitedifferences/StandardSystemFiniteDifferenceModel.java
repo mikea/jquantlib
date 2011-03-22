@@ -34,18 +34,16 @@ import org.jquantlib.math.matrixutilities.Array;
 // Code Review; Is this the best way ? Code duplication of FiniteDifferenceModel
 public class StandardSystemFiniteDifferenceModel {
 
-	ParallelEvolver<TridiagonalOperator, CrankNicolson<TridiagonalOperator>> evolver;
+	private final ParallelEvolver<TridiagonalOperator, CrankNicolson<TridiagonalOperator>> evolver;
 	private final List<Double> stoppingTimes;
 
 	//Doing this way so that we can dynamically determine Parameterized types
-	static class StandardSystemFiniteDifferenceModelParallelEvolver
-			extends
-			ParallelEvolver<TridiagonalOperator, CrankNicolson<TridiagonalOperator>> {
+	static class StandardSystemFiniteDifferenceModelParallelEvolver extends ParallelEvolver<TridiagonalOperator, CrankNicolson<TridiagonalOperator>> {
 
 		public StandardSystemFiniteDifferenceModelParallelEvolver(
 				final List<TridiagonalOperator> L,
 				final BoundaryConditionSet<BoundaryCondition<TridiagonalOperator>> bcs) {
-			super(L, bcs);
+			super(TridiagonalOperator.class, CrankNicolson.class, L, bcs);
 		}
 	}
 

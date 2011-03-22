@@ -201,7 +201,7 @@ public class DividendVanillaOption extends VanillaOption {
     }
 
 
-    public static class ResultsImpl extends VanillaOption.ResultsImpl implements DividendVanillaOption.Results { }
+    public static class ResultsImpl extends VanillaOption.ResultsImpl implements DividendVanillaOption.Results { /* marking interface */ }
 
 
     static public abstract class EngineImpl

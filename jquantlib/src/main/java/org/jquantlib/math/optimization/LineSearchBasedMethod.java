@@ -21,18 +21,20 @@
  */
 package org.jquantlib.math.optimization;
 
+import org.jquantlib.QL;
+
 
 
 public abstract class LineSearchBasedMethod extends OptimizationMethod {
     
     protected LineSearch lineSearch_;
     
-    protected LineSearchBasedMethod(){}
+    protected LineSearchBasedMethod() {
+    	QL.validateExperimentalMode();
+    }
     
-    public LineSearchBasedMethod(LineSearch lineSearch){
-        if (System.getProperty("EXPERIMENTAL") == null) {
-            throw new UnsupportedOperationException("Work in progress");
-        }
+    public LineSearchBasedMethod(final LineSearch lineSearch){
+    	QL.validateExperimentalMode();
         lineSearch_ = lineSearch;
         //FIXME: is this correct
         if(lineSearch_ == null){

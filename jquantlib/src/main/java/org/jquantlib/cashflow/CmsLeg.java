@@ -113,7 +113,7 @@ public class CmsLeg {
         return this;
     }
 
-    public CmsLeg withFixingDays(Array fixingDays) {
+    public CmsLeg withFixingDays(final Array fixingDays) {
         fixingDays_ = fixingDays.clone();
         return this;
     }
@@ -169,10 +169,11 @@ public class CmsLeg {
     }
 
     public Leg Leg() {
-        return new FloatingLeg<SwapIndex, CmsCoupon, CappedFlooredCmsCoupon>
-       						(notionals_, schedule_, swapIndex_, paymentDayCounter_,
-       							paymentAdjustment_, fixingDays_, gearings_, spreads_,
-       							caps_, floors_, inArrears_, zeroPayments_);
+        return new FloatingLeg<SwapIndex, CmsCoupon, CappedFlooredCmsCoupon> (
+        		SwapIndex.class, CmsCoupon.class, CappedFlooredCmsCoupon.class,
+        		notionals_, schedule_, swapIndex_, paymentDayCounter_,
+       			paymentAdjustment_, fixingDays_, gearings_, spreads_,
+       			caps_, floors_, inArrears_, zeroPayments_);
     }
 
 }

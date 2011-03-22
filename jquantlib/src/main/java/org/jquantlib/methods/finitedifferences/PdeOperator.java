@@ -39,7 +39,6 @@
 
 package org.jquantlib.methods.finitedifferences;
 
-import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
 
@@ -51,12 +50,18 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  * @param <T>
  */
 public abstract class PdeOperator<T extends PdeSecondOrderParabolic> extends TridiagonalOperator {
-
-	public PdeOperator(final Array grid, final GeneralizedBlackScholesProcess process, final double residualTime) {
+	
+	private final Class<? extends PdeSecondOrderParabolic> classT;
+	
+	public PdeOperator(
+			final Class<? extends PdeSecondOrderParabolic> classT,
+			final Array grid, 
+			final GeneralizedBlackScholesProcess process, 
+			final double residualTime) {
 		super(grid.size());
-		final Class<T> clazz = (Class<T>)TypeToken.getClazz(this.getClass());
-		final PdeSecondOrderParabolic pde = PdeTypeTokenUtil.getPdeInstance(clazz, process);
-		timeSetter = new GenericTimeSetter<PdeSecondOrderParabolic>(grid, pde){};
+		this.classT = classT;
+		final PdeSecondOrderParabolic pde = PdeTypeUtil.getPdeInstance(classT, process);
+		timeSetter = new GenericTimeSetter<PdeSecondOrderParabolic>(grid, pde);
 		setTime(residualTime);
 	}
 

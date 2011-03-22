@@ -42,7 +42,6 @@ package org.jquantlib.model.volatility;
 import java.util.Iterator;
 
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.IntervalPrice;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.TimeSeries;
@@ -64,15 +63,23 @@ public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements Loca
     private final double a;
     private T delegate;
 
+	private final Class<? extends GarmanKlassAbstract> classT;
+
+    
     //
     // public constructors
     //
 
     @SuppressWarnings("unchecked")
-    public GarmanKlassOpenClose(final double y, final double marketOpenFraction, final double a) {
+    public GarmanKlassOpenClose(
+    		final Class<? extends GarmanKlassAbstract> classT,
+    		final double y, 
+    		final double marketOpenFraction, 
+    		final double a) {
+		this.classT = classT;
         this.delegate = null;
         try {
-            delegate = (T) TypeToken.getClazz(this.getClass()).getConstructor(double.class).newInstance(y);
+            delegate = (T) classT.getConstructor(double.class).newInstance(y);
         } catch (final Exception e) {
             throw new LibraryException(e); // QA:[RG]::verified
         }
@@ -86,7 +93,7 @@ public class GarmanKlassOpenClose<T extends GarmanKlassAbstract> implements Loca
 
     @Override
     public TimeSeries<Double> calculate(final TimeSeries<IntervalPrice> quotes) {
-        final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */ };
+        final TimeSeries<Double> retval = new TimeSeries<Double>(Double.class);
         final Iterator<Date> it = quotes.navigableKeySet().iterator();
         Date date = it.next();
         IntervalPrice prev = quotes.get(date);

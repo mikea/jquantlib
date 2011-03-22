@@ -67,6 +67,11 @@ public class IntervalPrice {
     // public constructors
     //
 
+    public IntervalPrice() {
+    	this(Constants.NULL_REAL, Constants.NULL_REAL, Constants.NULL_REAL, Constants.NULL_REAL);
+    }
+    
+    
     public IntervalPrice(
             final /*@Real*/ double open,
             final /*@Real*/ double close,
@@ -146,6 +151,7 @@ public class IntervalPrice {
     //
 
     public static <K> Series<K, IntervalPrice> makeSeries(
+    		final Class<K> classK,
             final K[] date,
             final double[] open,
             final double[] close,
@@ -156,7 +162,7 @@ public class IntervalPrice {
         if (open.length != dsize || close.length != dsize || high.length != dsize || low.length != dsize)
             throw new LibraryException("array sizes mismatch"); // QA:[RG]::verified
 
-        final Series<K, IntervalPrice> retval = new Series<K, IntervalPrice>();
+        final Series<K, IntervalPrice> retval = new Series<K, IntervalPrice>(classK, IntervalPrice.class);
         for (int i=0; i< dsize; i++) {
             retval.put(date[i], new IntervalPrice(open[i], close[i], high[i], low[i]));
         }
@@ -176,9 +182,10 @@ public class IntervalPrice {
     }
 
     public static <K> Series<K, Double> extractComponent(
+    		final Class<K> classK,
             final Series<K, IntervalPrice> ts,
             final IntervalPrice.Type type) {
-        final Series<K, Double> result = new Series<K, Double>() { /* anonymous */ };
+        final Series<K, Double> result = new Series<K, Double>(classK, Double.class);
         for (final K date : ts.keySet()) {
             final IntervalPrice prices = ts.get(date);
             result.put(date, prices.value(type));

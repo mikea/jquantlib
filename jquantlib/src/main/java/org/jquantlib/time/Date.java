@@ -254,11 +254,11 @@ public class Date implements Observable, Comparable<Date>, Serializable, Cloneab
      */
     public Date(final java.util.Date date) {
 //    	this(25569+(date.getTime()/86400000L));
-    	Calendar c = Calendar.getInstance();
+    	final Calendar c = Calendar.getInstance();
     	c.setTime(date);
-    	int d = c.get(Calendar.DAY_OF_MONTH); 
-    	int m = c.get(Calendar.MONTH);
-    	int y = c.get(Calendar.YEAR);
+    	final int d = c.get(Calendar.DAY_OF_MONTH); 
+    	final int m = c.get(Calendar.MONTH);
+    	final int y = c.get(Calendar.YEAR);
     	this.serialNumber = fromDMY(d, m+1, y);
     }
     
@@ -520,33 +520,33 @@ public class Date implements Observable, Comparable<Date>, Serializable, Cloneab
     //
 
     /**
-     * Provides access to a long date formatter.
+     * Retuirns a java.util.Date configured for a long date formatter
      * <p>
-     * The only useful method is <code>toString()</code> which returns a date formated as Mon, dd yyyy
+     * Method <code>toString</code> would return something like <i>Mon, dd yyyy</i>
      *
-     * @return
+     * @return a java.util.Date configured for a long date formatter
      */
     public java.util.Date longDate() {
         return new LongDate();
     }
 
     /**
-     * Provides access to a long date formatter.
+     * Returns a java.util.Date configured for a short date formatter
      * <p>
-     * The only useful method is <code>toString()</code> which returns a date formated as mm/dd/yyyy
+     * Method <code>toString</code> would return something like <i>mm/dd/yyyy</i>
      *
-     * @return
+     * @return a java.util.Date configured for a short date formatter
      */
     public java.util.Date shortDate() {
         return new ShortDate();
     }
 
     /**
-     * Provides access to a ISO date formatter.
+     * Returns a java.util.Date configured for a ISO date formatter
      * <p>
-     * The only useful method is <code>toString()</code> which returns a date formated as yyyy-mm-dd
+     * Method <code>toString</code> would return something like <i>yyyy-mm-yy</i>
      *
-     * @return
+     * @return a java.util.Date configured for a ISO date formatter
      */
     public java.util.Date isoDate() {
         return new ISODate();
@@ -576,31 +576,38 @@ public class Date implements Observable, Comparable<Date>, Serializable, Cloneab
      */
     private final Observable delegatedObservable = new DefaultObservable(this);
 
-    public final void addObserver(final Observer observer) {
+    @Override
+	public final void addObserver(final Observer observer) {
         delegatedObservable.addObserver(observer);
     }
 
-    public final int countObservers() {
+    @Override
+	public final int countObservers() {
         return delegatedObservable.countObservers();
     }
 
-    public final void deleteObserver(final Observer observer) {
+    @Override
+	public final void deleteObserver(final Observer observer) {
         delegatedObservable.deleteObserver(observer);
     }
 
-    public final void notifyObservers() {
+    @Override
+	public final void notifyObservers() {
         delegatedObservable.notifyObservers();
     }
 
-    public final void notifyObservers(final Object arg) {
+    @Override
+	public final void notifyObservers(final Object arg) {
         delegatedObservable.notifyObservers(arg);
     }
 
-    public final void deleteObservers() {
+    @Override
+	public final void deleteObservers() {
         delegatedObservable.deleteObservers();
     }
 
-    public final List<Observer> getObservers() {
+    @Override
+	public final List<Observer> getObservers() {
         return delegatedObservable.getObservers();
     }
 
@@ -625,13 +632,12 @@ public class Date implements Observable, Comparable<Date>, Serializable, Cloneab
         ((Date) anObject).fEquals(this);
     }
 
-    protected boolean fEquals(Date other) {
+    protected boolean fEquals(final Date other) {
         return eq(other);
     }
     
     
     @Override
-    //-- std::ostream& operator<<(std::ostream&, const Date&);
     public String toString() {
         return longDate().toString();
     }
@@ -729,7 +735,6 @@ public class Date implements Observable, Comparable<Date>, Serializable, Cloneab
                 d = length;
             }
             final long result = fromDMY(d, m, y);
-            //QL.debug("{}", result);
             return result;
         }
         case Years: {
@@ -743,7 +748,6 @@ public class Date implements Observable, Comparable<Date>, Serializable, Cloneab
             }
 
             final long result = fromDMY(d, m, y);
-            //QL.debug("{}", result);
             return result;
         }
         default:
@@ -1106,12 +1110,7 @@ public class Date implements Observable, Comparable<Date>, Serializable, Cloneab
 		private static final long serialVersionUID = 4824909887446169897L;
 
 		private ISODate() {
-            Calendar c = Calendar.getInstance();
-            boolean b = isNull();
-            c.set(Calendar.MONTH, b ? 0 : month().value() -1);
-            c.set(Calendar.DAY_OF_MONTH, b ? 1 : dayOfMonth());
-            c.set(Calendar.YEAR, b ? 1970 : year());
-            this.setTime(c.getTimeInMillis());
+            super((serialNumber-25569)*86400000L);
         }
 
         @Override
@@ -1121,7 +1120,7 @@ public class Date implements Observable, Comparable<Date>, Serializable, Cloneab
             else {
                 final StringBuilder sb = new StringBuilder();
                 final Formatter formatter = new Formatter(sb, Locale.US);
-                Calendar c = Calendar.getInstance();
+                final Calendar c = Calendar.getInstance();
                 c.setTime(this);
                 formatter.format("%04d-%02d-%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH)+1, c.get(Calendar.DAY_OF_MONTH));
                 return sb.toString();

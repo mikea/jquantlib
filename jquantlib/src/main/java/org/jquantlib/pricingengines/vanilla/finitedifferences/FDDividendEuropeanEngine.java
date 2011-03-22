@@ -90,7 +90,7 @@ public class FDDividendEuropeanEngine
             final int timeSteps,
             final int gridPoints,
             final boolean timeDependent) {
-        super(process, timeSteps, gridPoints, timeDependent);
+        super(FDDividendEngine.class, DividendVanillaOption.Engine.class, process, timeSteps, gridPoints, timeDependent);
         super.impl = new Impl(this);
     }
 

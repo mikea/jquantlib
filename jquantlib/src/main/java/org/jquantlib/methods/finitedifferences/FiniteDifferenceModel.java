@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.matrixutilities.Array;
 
 /**
@@ -36,10 +35,22 @@ import org.jquantlib.math.matrixutilities.Array;
  *
  */
 public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>> {
+	
     private final T evolver;
     private final List<Double> stoppingTimes;
+    
+    private final Class<? extends Operator>		classS;
+    private final Class<? extends MixedScheme>	classT;
+    
 
-    public FiniteDifferenceModel(final S L, final List<BoundaryCondition<S>> bcs, final List<Double> stoppingTimes) {
+    public FiniteDifferenceModel(
+    	    final Class<? extends Operator>		classS,
+    	    final Class<? extends MixedScheme>	classT,
+    		final S L, 
+    		final List<BoundaryCondition<S>> bcs, 
+    		final List<Double> stoppingTimes) {
+    	this.classS = classS;
+    	this.classT = classT;
         this.evolver = getEvolver(L, bcs);
         // This takes care of removing duplicates
         final Set<Double> times = new HashSet<Double>(stoppingTimes);
@@ -48,11 +59,21 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
         Collections.sort(stoppingTimes);
     }
 
-    public FiniteDifferenceModel(final S L, final List<BoundaryCondition<S>> bcs) {
-        this(L,bcs, new ArrayList<Double>());
+    public FiniteDifferenceModel(
+    	    final Class<? extends Operator>		classS,
+    	    final Class<? extends MixedScheme>	classT,
+    		final S L, 
+    		final List<BoundaryCondition<S>> bcs) {
+        this(classS, classT, L,bcs, new ArrayList<Double>());
     }
 
-    public FiniteDifferenceModel(final T evolver, final List<Double> stoppingTimes) {
+    public FiniteDifferenceModel(
+    	    final Class<? extends Operator>		classS,
+    	    final Class<? extends MixedScheme>	classT,
+    		final T evolver, 
+    		final List<Double> stoppingTimes) {
+    	this.classS = classS;
+    	this.classT = classT;
         this.evolver = evolver;
         // This takes care of removing duplicates
         final Set<Double> times = new HashSet<Double>(stoppingTimes);
@@ -131,7 +152,7 @@ public class FiniteDifferenceModel<S extends Operator, T extends MixedScheme<S>>
 
     protected T getEvolver(final S l, final List<BoundaryCondition<S>> bcs) {
         try {
-            return (T) TypeToken.getClazz(this.getClass(),1).getConstructor(Operator.class, List.class).newInstance(l, bcs);
+            return (T) classT.getConstructor(Operator.class, List.class).newInstance(l, bcs);
         } catch (final Exception e) {
             throw new LibraryException(e); // QA:[RG]::verified
         }

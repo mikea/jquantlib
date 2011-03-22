@@ -55,7 +55,6 @@ import org.jquantlib.cashflow.Coupon;
 import org.jquantlib.cashflow.Leg;
 import org.jquantlib.cashflow.SimpleCashFlow;
 import org.jquantlib.daycounters.DayCounter;
-import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.iterators.Iterables;
 import org.jquantlib.lang.reflect.ReflectConstants;
 import org.jquantlib.math.Closeness;
@@ -68,19 +67,16 @@ import org.jquantlib.pricingengines.bond.DiscountingBondEngine;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.SimpleQuote;
-import org.jquantlib.termstructures.AbstractYieldTermStructure;
 import org.jquantlib.termstructures.Compounding;
 import org.jquantlib.termstructures.InterestRate;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.termstructures.yieldcurves.ZeroSpreadedTermStructure;
-import org.jquantlib.time.BusinessDayConvention;
 import org.jquantlib.time.Calendar;
 import org.jquantlib.time.Date;
 import org.jquantlib.time.Frequency;
 import org.jquantlib.time.Period;
 import org.jquantlib.time.TimeUnit;
 import org.jquantlib.util.Observer;
-import org.jquantlib.util.Std;
 
 /**
  * Base bond class
@@ -327,7 +323,7 @@ public class Bond extends Instrument {
         final Date d = date.isNull() ? new Settings().evaluationDate() : date;
 
         // usually, the settlement is at T+n...
-        Date settlement = calendar_.advance(d, settlementDays_, TimeUnit.Days);
+        final Date settlement = calendar_.advance(d, settlementDays_, TimeUnit.Days);
         
         // ...but the bond won't be traded until the issue date (if given.)
         return issueDate_.isNull() ? settlement : Date.max(settlement, issueDate_.clone());
@@ -386,7 +382,7 @@ public class Bond extends Instrument {
      */
     public/* @Real */double settlementValue(final /* @Real */double cleanPrice) {
     	
-        double dirtyPrice = cleanPrice + accruedAmount(settlementDate());
+        final double dirtyPrice = cleanPrice + accruedAmount(settlementDate());
         return dirtyPrice/100.0 * notional(settlementDate());
     }
 
@@ -513,9 +509,9 @@ public class Bond extends Instrument {
             settlementDate = settlementDate();
         }
 
-        Brent solver = new Brent();
+        final Brent solver = new Brent();
         solver.setMaxEvaluations(maxEvaluations);
-        double dirtyPrice = cleanPrice + accruedAmount(settlementDate);
+        final double dirtyPrice = cleanPrice + accruedAmount(settlementDate);
         final YieldFinder objective = new YieldFinder(notional(settlementDate),
                 							this.cashflows_,dirtyPrice,
                 							dc, comp, freq,	settlementDate);
@@ -554,7 +550,7 @@ public class Bond extends Instrument {
             					  final DayCounter dc, 
             					  final Compounding comp, 
             					  final Frequency freq,
-            					  Date settlementDate) {
+            					  final Date settlementDate) {
     	
         return yield(cleanPrice, dc, comp, freq, settlementDate, 1.0e-8, 100);
     }
@@ -708,7 +704,7 @@ public class Bond extends Instrument {
                 //TODO: Check with Richard, with break, code does not handle multiple CFs on paymentDate.
                 continue; //break; 
             }
-            Coupon cp = Coupon.class.isAssignableFrom(flow.getClass()) ? (Coupon)flow : null;
+            final Coupon cp = Coupon.class.isAssignableFrom(flow.getClass()) ? (Coupon)flow : null;
             if (cp != null) {
                 if (firstCouponFound) {
                     QL.require(nominal == cp.nominal() &&
@@ -728,7 +724,8 @@ public class Bond extends Instrument {
         return result/notional(settlement)*100.0;
     }
 
-    public boolean isExpired() {
+    @Override
+	public boolean isExpired() {
         return cashflows_.last().hasOccurred(settlementDate());
     }
 
@@ -796,7 +793,7 @@ public class Bond extends Instrument {
         super.fetchResults(r);
 
         QL.require(Bond.ResultsImpl.class.isAssignableFrom(r.getClass()), ReflectConstants.WRONG_ARGUMENT_TYPE); 
-        Bond.ResultsImpl results = (Bond.ResultsImpl)r;
+        final Bond.ResultsImpl results = (Bond.ResultsImpl)r;
         
         settlementValue_ = results.settlementValue;
     }
@@ -821,9 +818,9 @@ public class Bond extends Instrument {
         // the coupons.
         redemptions_.clear();
         for (int i=1; i<notionalSchedule_.size(); ++i) {
-            double R = i < redemptions.size() ? redemptions.get(i) :
+            final double R = i < redemptions.size() ? redemptions.get(i) :
             			!redemptions.isEmpty() ? redemptions.get(redemptions.size()-1) : 100.0;
-            double amount = (R/100.0)*(notionals_.get(i-1)-notionals_.get(i));
+            final double amount = (R/100.0)*(notionals_.get(i-1)-notionals_.get(i));
             final CashFlow  redemption = new SimpleCashFlow(amount, notionalSchedule_.get(i));
             cashflows_.add(redemption);
             redemptions_.add(redemption);
@@ -838,14 +835,14 @@ public class Bond extends Instrument {
      * Util methods
       @deprecated
      */
-    protected void addRedemptionsToCashflows(double redemption) {
-		List<Double> redemptions = new ArrayList<Double>();
+    protected void addRedemptionsToCashflows(final double redemption) {
+		final List<Double> redemptions = new ArrayList<Double>();
 		redemptions.add(redemption);
 		addRedemptionsToCashflows(redemptions);
     }
-    protected void addRedemptionsToCashflows(double[] redemptionsArr) {
-		List<Double> redemptions = new ArrayList<Double>();
-		for ( double d : redemptionsArr)
+    protected void addRedemptionsToCashflows(final double[] redemptionsArr) {
+		final List<Double> redemptions = new ArrayList<Double>();
+		for ( final double d : redemptionsArr)
 			redemptions.add(new Double(d));
 		
 		addRedemptionsToCashflows(redemptions);
@@ -861,12 +858,12 @@ public class Bond extends Instrument {
         Date lastPaymentDate = new Date();
         notionalSchedule_.add(new Date());
         for (int i=0; i<cashflows_.size(); ++i) {
-        	Object cfObj = cashflows_.get(i);
-        	Coupon coupon = Coupon.class.isAssignableFrom(cfObj.getClass()) ? (Coupon)cfObj : null;
+        	final Object cfObj = cashflows_.get(i);
+        	final Coupon coupon = Coupon.class.isAssignableFrom(cfObj.getClass()) ? (Coupon)cfObj : null;
             if (coupon==null){
                 continue;
             }
-            double notional = coupon.nominal();
+            final double notional = coupon.nominal();
             // we add the notional only if it is the first one...
             if (notionals_.isEmpty()) {
                 notionals_.add(coupon.nominal());
@@ -939,16 +936,16 @@ public class Bond extends Instrument {
                 continue;
             }
 
-            Date couponDate = cashflows.get(i).date();
-            /* @Real */double amount = cashflows.get(i).amount();
+            final Date couponDate = cashflows.get(i).date();
+            /* @Real */final double amount = cashflows.get(i).amount();
 
             if (lastDate.isNull()) {
                 // first not-expired coupon
                 if (i > 0) {
                     lastDate = cashflows.get(i - 1).date().clone();
                 } else {
-                    Object cpnObj = cashflows.get(i);
-                	Coupon coupon = Coupon.class.isAssignableFrom(cpnObj.getClass()) ? (Coupon)cpnObj : null;
+                    final Object cpnObj = cashflows.get(i);
+                	final Coupon coupon = Coupon.class.isAssignableFrom(cpnObj.getClass()) ? (Coupon)cpnObj : null;
                     if (coupon != null) {
                         lastDate = coupon.accrualStartDate().clone();
                     } else {
@@ -1032,7 +1029,7 @@ public class Bond extends Instrument {
          *   double operator()(double yield)
          */
         @Override
-        public double op(double yield) {
+        public double op(final double yield) {
             return dirtyPrice_
             - dirtyPriceFromYield(faceAmount_, 
             					  cashflows_, 
@@ -1057,10 +1054,10 @@ public class Bond extends Instrument {
 
         assert(freq!=Frequency.NoFrequency && freq != Frequency.Once):"invalid frequency:" + freq.toString();
 
-        Handle<Quote> zSpreadQuoteHandle = new Handle<Quote>(new SimpleQuote(
+        final Handle<Quote> zSpreadQuoteHandle = new Handle<Quote>(new SimpleQuote(
                 zSpread));
 
-        ZeroSpreadedTermStructure spreadedCurve = new ZeroSpreadedTermStructure(
+        final ZeroSpreadedTermStructure spreadedCurve = new ZeroSpreadedTermStructure(
                 discountCurve, zSpreadQuoteHandle, comp, freq, dc);
         /* @Real */double price = 0.0;
         for (int i = 0; i < cashflows.size(); ++i) {
@@ -1086,7 +1083,7 @@ public class Bond extends Instrument {
      *
      * @author Richard Gomes
      */
-    public interface Arguments extends Instrument.Arguments { }
+    public interface Arguments extends Instrument.Arguments { /* marking interface */ }
 
 
     /**
@@ -1094,7 +1091,7 @@ public class Bond extends Instrument {
      *
      * @author Richard Gomes
      */
-    public interface Results extends Instrument.Results { }
+    public interface Results extends Instrument.Results { /* marking interface */ }
 
 
     /**
@@ -1102,7 +1099,7 @@ public class Bond extends Instrument {
      *
      * @author Richard Gomes
      */
-    public interface Engine extends PricingEngine, Observer { }
+    public interface Engine extends PricingEngine, Observer { /* marking interface */ }
 
 
     //
@@ -1118,7 +1115,7 @@ public class Bond extends Instrument {
         public void validate() {
             QL.require(!settlementDate.isNull(), "no settlement date provided"); // QA:[RG]::verified 
             QL.require(!cashflows.isEmpty(), "no cash flow provided");
-            for (CashFlow cf: cashflows) {
+            for (final CashFlow cf: cashflows) {
                 QL.require(cf != null, "null cash flow provided");
             }
         }

@@ -160,8 +160,8 @@ public class Bonds { //implements Runnable {
         final List<SimpleQuote> quote = new ArrayList<SimpleQuote>(numberOfBonds);
         final List<RelinkableHandle<Quote>> quoteHandle = new ArrayList<RelinkableHandle<Quote>>(numberOfBonds);
         for (int i = 0; i < numberOfBonds; i++) {
-        	SimpleQuote sq = new SimpleQuote(marketQuotes[i]);
-        	RelinkableHandle<Quote> handle = new RelinkableHandle<Quote>(sq);
+        	final SimpleQuote sq = new SimpleQuote(marketQuotes[i]);
+        	final RelinkableHandle<Quote> handle = new RelinkableHandle<Quote>(sq);
             quote.add(sq);
             quoteHandle.add(handle);   
         }
@@ -215,16 +215,17 @@ public class Bonds { //implements Runnable {
         for (int i = 0; i < numberOfBonds; i++) {
             bondInstruments.add(bondsHelpers.get(i));
         }
-        RateHelper[] instruments1 = new RateHelper[bondInstruments.size()];
+        final RateHelper[] instruments1 = new RateHelper[bondInstruments.size()];
         bondInstruments.toArray(instruments1);
-        Handle[] jumps1 = new Handle[0];
-        Date[] jumpDates1 = new Date[0];
+        final Handle[] jumps1 = new Handle[0];
+        final Date[] jumpDates1 = new Date[0];
         final double tolerance1 = 1.0e-15;
         final LogLinear interpolator = null;
         final IterativeBootstrap bootstrap = null;
         
-        YieldTermStructure  bondDiscountingTermStructur = 
+        final YieldTermStructure  bondDiscountingTermStructur = 
     	 					new PiecewiseYieldCurve<Discount,LogLinear,IterativeBootstrap>(
+    	 							Discount.class, LogLinear.class, IterativeBootstrap.class,
     	 							settlementDate, 
     	 							instruments1,
     	 							termStructureDayCounter,
@@ -343,7 +344,7 @@ public class Bonds { //implements Runnable {
 
         final Period forwardStart = new Period(1, TimeUnit.Days);
         
-        RateHelper s2y = new SwapRateHelper(
+        final RateHelper s2y = new SwapRateHelper(
         			new Handle<Quote>(s2yRate), 
         			new Period(2, TimeUnit.Years),
         			calendar, 
@@ -353,7 +354,7 @@ public class Bonds { //implements Runnable {
         			swFloatingLegIndex, 
         			new Handle<Quote>(),
         			forwardStart);
-         RateHelper s3y = new SwapRateHelper(
+         final RateHelper s3y = new SwapRateHelper(
         		 		new Handle<Quote>(s3yRate), 
         		 		new Period(3, TimeUnit.Years),
         		 		calendar, 
@@ -363,7 +364,7 @@ public class Bonds { //implements Runnable {
         		 		swFloatingLegIndex, 
         		 		new Handle<Quote>(),
         		 		forwardStart);
-        RateHelper  s5y = new SwapRateHelper(
+        final RateHelper  s5y = new SwapRateHelper(
         				new Handle<Quote>(s5yRate), 
         				new Period(5, TimeUnit.Years),
         				calendar, 
@@ -373,7 +374,7 @@ public class Bonds { //implements Runnable {
         				swFloatingLegIndex, 
         				new Handle<Quote>(),
         				forwardStart);
-        RateHelper s10y = new SwapRateHelper(
+        final RateHelper s10y = new SwapRateHelper(
         				new Handle<Quote>(s10yRate), 
         				new Period(10, TimeUnit.Years),
         				calendar, 
@@ -383,7 +384,7 @@ public class Bonds { //implements Runnable {
         				swFloatingLegIndex, 
         				new Handle<Quote>(),
         				forwardStart);
-        RateHelper  s15y = new SwapRateHelper(
+        final RateHelper  s15y = new SwapRateHelper(
         				new Handle<Quote>(s15yRate), 
         				new Period(15, TimeUnit.Years),
         				calendar, 
@@ -402,7 +403,7 @@ public class Bonds { //implements Runnable {
          // ActualActual::ISDA ensures that 30 years is 30.0
         
          // A depo-swap curve
-         List<RateHelper> depoSwapInstruments = new ArrayList<RateHelper>();
+         final List<RateHelper> depoSwapInstruments = new ArrayList<RateHelper>();
          depoSwapInstruments.add(d1w);
          depoSwapInstruments.add(d1m);
          depoSwapInstruments.add(d3m);
@@ -415,13 +416,14 @@ public class Bonds { //implements Runnable {
          depoSwapInstruments.add(s10y);
          depoSwapInstruments.add(s15y);
          
-         RateHelper[] instruments = new RateHelper[depoSwapInstruments.size()];
+         final RateHelper[] instruments = new RateHelper[depoSwapInstruments.size()];
          depoSwapInstruments.toArray(instruments);
-         Handle[] jumps= new Handle[0];//]<Quote>[]) new ArrayList<Handle<Quote>>().toArray();
-         Date[] jumpDates = new Date[0];// new ArrayList<Date>().toArray();
+         final Handle[] jumps= new Handle[0];//]<Quote>[]) new ArrayList<Handle<Quote>>().toArray();
+         final Date[] jumpDates = new Date[0];// new ArrayList<Date>().toArray();
          
-         YieldTermStructure  depoSwapTermStructure = 
+         final YieldTermStructure  depoSwapTermStructure = 
         	 	new PiecewiseYieldCurve<Discount,LogLinear,IterativeBootstrap>(
+        	 			Discount.class, LogLinear.class, IterativeBootstrap.class,
         	 			settlementDate, 
         	 			instruments,
         	 			termStructureDayCounter,
@@ -433,22 +435,22 @@ public class Bonds { //implements Runnable {
 
          // Term structures that will be used for pricing:
          // the one used for discounting cash flows
-         RelinkableHandle<YieldTermStructure> discountingTermStructure = new RelinkableHandle<YieldTermStructure>();
+         final RelinkableHandle<YieldTermStructure> discountingTermStructure = new RelinkableHandle<YieldTermStructure>();
          // the one used for forward rate forecasting
-         RelinkableHandle<YieldTermStructure> forecastingTermStructure = new RelinkableHandle<YieldTermStructure>();
+         final RelinkableHandle<YieldTermStructure> forecastingTermStructure = new RelinkableHandle<YieldTermStructure>();
         
          /*********************
          * BONDS TO BE PRICED *
          **********************/
         
          // Common data
-         double faceAmount = 100;
+         final double faceAmount = 100;
         
          // Pricing engine
-        PricingEngine  bondEngine = new DiscountingBondEngine(discountingTermStructure);
+        final PricingEngine  bondEngine = new DiscountingBondEngine(discountingTermStructure);
         
          // Zero coupon bond
-         ZeroCouponBond zeroCouponBond = new ZeroCouponBond(
+         final ZeroCouponBond zeroCouponBond = new ZeroCouponBond(
         		 							settlementDays,
         		 							new UnitedStates(UnitedStates.Market.GOVERNMENTBOND),
         		 							faceAmount,
@@ -460,7 +462,7 @@ public class Bonds { //implements Runnable {
          zeroCouponBond.setPricingEngine(bondEngine);
         
          // Fixed 4.5% US Treasury Note
-         Schedule fixedBondSchedule = new Schedule(
+         final Schedule fixedBondSchedule = new Schedule(
         		 				new Date(15, Month.May, 2007),
         		 				new Date(15,Month.May,2017), 
         		 				new Period(Frequency.Semiannual),
@@ -469,7 +471,7 @@ public class Bonds { //implements Runnable {
         		 				BusinessDayConvention.Unadjusted, 
         		 				DateGeneration.Rule.Backward, false);
         
-         FixedRateBond fixedRateBond = new FixedRateBond(
+         final FixedRateBond fixedRateBond = new FixedRateBond(
          						settlementDays,
          						faceAmount,
          						fixedBondSchedule,
@@ -484,11 +486,11 @@ public class Bonds { //implements Runnable {
          // Floating rate bond (3M USD Libor + 0.1%)
          // Should and will be priced on another curve later...
         
-         RelinkableHandle<YieldTermStructure> liborTermStructure = new RelinkableHandle<YieldTermStructure>();
-         IborIndex libor3m =  new USDLibor(new Period(3, TimeUnit.Months), liborTermStructure);
+         final RelinkableHandle<YieldTermStructure> liborTermStructure = new RelinkableHandle<YieldTermStructure>();
+         final IborIndex libor3m =  new USDLibor(new Period(3, TimeUnit.Months), liborTermStructure);
          libor3m.addFixing(new Date(17, Month.July, 2008), 0.0278625);
         
-         Schedule floatingBondSchedule = new Schedule(
+         final Schedule floatingBondSchedule = new Schedule(
         		 				new Date(21, Month.October, 2005),
         		 				new Date(21, Month.October, 2010), new Period(Frequency.Quarterly),
         		 				new UnitedStates(UnitedStates.Market.NYSE),
@@ -496,7 +498,7 @@ public class Bonds { //implements Runnable {
         		 				BusinessDayConvention.Unadjusted, 
         		 				DateGeneration.Rule.Backward, true);
         
-         FloatingRateBond floatingRateBond = new FloatingRateBond(
+         final FloatingRateBond floatingRateBond = new FloatingRateBond(
         		 				settlementDays,
         		 				faceAmount,
         		 				floatingBondSchedule,
@@ -515,8 +517,8 @@ public class Bonds { //implements Runnable {
          floatingRateBond.setPricingEngine(bondEngine);
                
          // optionLet volatilities
-         double volatility = 0.0;
-         Handle<OptionletVolatilityStructure> vol =
+         final double volatility = 0.0;
+         final Handle<OptionletVolatilityStructure> vol =
         	 		new Handle<OptionletVolatilityStructure>(
          						new ConstantOptionletVolatility(
          								settlementDays,
@@ -526,7 +528,7 @@ public class Bonds { //implements Runnable {
          								new Actual365Fixed()));
         
          // Coupon pricers
-         IborCouponPricer pricer = new BlackIborCouponPricer(vol);
+         final IborCouponPricer pricer = new BlackIborCouponPricer(vol);
          PricerSetter.setCouponPricer(floatingRateBond.cashflows(),pricer);
         
          // Yield curve bootstrapping

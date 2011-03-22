@@ -44,7 +44,6 @@ package org.jquantlib.math.randomnumbers;
 import java.lang.reflect.Constructor;
 
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.reflect.TypeToken;
 
 /**
  * @param <RNG> represents the RandomNumberGenerator<T>
@@ -79,10 +78,21 @@ public abstract class GenericPseudoRandom <RNG extends RandomNumberGenerator, IC
 
 
 
+    private final Class<? extends UniformRandomSequenceGenerator>	classRNG;
+    private final Class<? extends InverseCumulative>		classIC;
+    
+    
 
+    protected GenericPseudoRandom(final Class<? extends UniformRandomSequenceGenerator> classRNG, final Class<? extends InverseCumulative> classIC) {
+    	this.classRNG = classRNG;
+    	this.classIC = classIC;
+    }
+
+    
 
     protected InverseCumulativeRsg<RandomSequenceGenerator<RNG>, IC> makeSequenceGenerator(
-            final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
+            final /*@NonNegative*/ int dimension, 
+            final /*@NonNegative*/ long seed) {
 
         if (System.getProperty("EXPERIMENTAL")==null)
             throw new UnsupportedOperationException("Work in progress");
@@ -91,8 +101,7 @@ public abstract class GenericPseudoRandom <RNG extends RandomNumberGenerator, IC
         final RNG rng;
         try {
             // obtain RNG Class from first generic parameter
-            final Class<RNG> rngClass = (Class<RNG>) TypeToken.getClazz(GenericPseudoRandom.class, 0);
-            final Constructor<RNG> c = rngClass.getConstructor(long.class);
+            final Constructor<RNG> c = (Constructor<RNG>) classRNG.getConstructor(long.class);
             rng = c.newInstance(seed);
         } catch (final Exception e) {
             throw new LibraryException(e); // QA:[RG]::verified
@@ -102,7 +111,17 @@ public abstract class GenericPseudoRandom <RNG extends RandomNumberGenerator, IC
         final RandomSequenceGenerator<RNG> rsg;
         try {
             // obtain Class from previously created RNG variable
-            final Class<RandomSequenceGenerator<RNG>> rsgClass = (Class<RandomSequenceGenerator<RNG>>) TypeToken.getClazz(rng.getClass());
+        	
+        	
+            //FIXME:
+        	// "looks like" we need to add a method to RNG interface in order to obtain a RSG from a RNG
+        	//
+        	
+        	final Class<RandomSequenceGenerator<RNG>> rsgClass = null;
+            
+            
+            
+            
             final Constructor<RandomSequenceGenerator<RNG>> c = rsgClass.getConstructor(int.class, rng.getClass());
             rsg = c.newInstance(dimension, rng);
         } catch (final Exception e) {
@@ -113,13 +132,12 @@ public abstract class GenericPseudoRandom <RNG extends RandomNumberGenerator, IC
         final IC ic;
         try {
             // obtain IC Class from second generic parameter
-            final Class<IC> icClass = (Class<IC>) TypeToken.getClazz(GenericPseudoRandom.class, 1);
             final Constructor<IC> c;
             if (icInstance!=null) {
-                c = icClass.getConstructor(rsg.getClass(), icClass.getClass());
+                c = (Constructor<IC>) classIC.getConstructor(rsg.getClass(), classIC.getClass());
                 ic = c.newInstance(rsg, icInstance);
             } else {
-                c = icClass.getConstructor(rsg.getClass());
+                c = (Constructor<IC>) classIC.getConstructor(rsg.getClass());
                 ic = c.newInstance(rsg);
             }
         } catch (final Exception e) {

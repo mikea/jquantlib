@@ -42,7 +42,6 @@ package org.jquantlib.math.integrals;
 
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.ReflectConstants;
-import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.math.Ops.DoubleOp;
 
 /**
@@ -75,18 +74,6 @@ public class TrapezoidIntegral<T extends TrapezoidIntegral.IntegrationPolicy> ex
     //
     // public constructors
     //
-
-    public TrapezoidIntegral(final double accuracy, final int maxEvaluations) {
-        super(accuracy, maxEvaluations);
-        final Class<?> klass = new TypeTokenTree(this.getClass()).getElement(0);
-        if (klass==Default.class) {
-            this.policy = new Default();
-        } else if (klass==MidPoint.class) {
-            this.policy = new MidPoint();
-        } else {
-            throw new LibraryException(ReflectConstants.WRONG_ARGUMENT_TYPE);
-        }
-    }
 
     public TrapezoidIntegral(
             final Class<? extends TrapezoidIntegral.IntegrationPolicy> klass,

@@ -111,8 +111,8 @@ public class ReplicationError {
         // Black Scholes equation rules the path generator:
         // at each step the log of the stock
         // will have drift and sigma^2 variance
-        final InverseCumulativeRsg<RandomSequenceGenerator<MersenneTwisterUniformRng>, InverseCumulativeNormal>
-        rsg = new PseudoRandom().makeSequenceGenerator(nTimeSteps, 0);
+        final InverseCumulativeRsg<RandomSequenceGenerator<MersenneTwisterUniformRng>, InverseCumulativeNormal> rsg = 
+        	new PseudoRandom(RandomSequenceGenerator.class, InverseCumulativeNormal.class).makeSequenceGenerator(nTimeSteps, 0L);
 
         final boolean brownianBridge = false;
 

@@ -27,7 +27,6 @@ package org.jquantlib.termstructures;
 import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.ReflectConstants;
-import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.math.Ops;
 import org.jquantlib.termstructures.yieldcurves.PiecewiseCurve;
 import org.jquantlib.termstructures.yieldcurves.Traits;
@@ -40,12 +39,7 @@ public class BootstrapError<T extends Traits> implements Ops.DoubleOp {
     private final RateHelper        helper;
     private final int               segment;
 
-    public BootstrapError(
-            final PiecewiseCurve curve,
-            final RateHelper helper,
-            final int segment) {
-        this(new TypeTokenTree(BootstrapError.class).getElement(0), curve, helper, segment);
-    }
+
     public BootstrapError(
             final Class<?> klass,
             final PiecewiseCurve curve,
@@ -75,7 +69,8 @@ public class BootstrapError<T extends Traits> implements Ops.DoubleOp {
     // public methods
     //
 
-    public double op (final double guess) {
+    @Override
+	public double op (final double guess) {
         //FIXME: find a way to solve this! :: ifndef DOXYGEN
         traits.updateGuess (curve.data(), guess, segment);
         curve.interpolation().update();

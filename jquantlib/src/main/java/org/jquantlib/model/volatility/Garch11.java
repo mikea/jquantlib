@@ -97,7 +97,7 @@ public class Garch11 implements VolatilityCompositor {
 	}
 
 	private TimeSeries<Double> calculate(final TimeSeries<Double> vs, final double alpha, final double beta, final double omega) {
-		final TimeSeries<Double> retValue = new TimeSeries<Double>() { /* anonymous */ };
+		final TimeSeries<Double> retValue = new TimeSeries<Double>(Double.class);
         final Iterator<Date> dates = vs.navigableKeySet().iterator();
 		Date date = dates.next();
 

@@ -157,7 +157,7 @@ public class DiscreteAveragingAsianOption extends OneAssetOption {
 
     static public class ResultsImpl
             extends OneAssetOption.ResultsImpl
-            implements DiscreteAveragingAsianOption.Results { }
+            implements DiscreteAveragingAsianOption.Results { /* marking interface */ }
 
 
     /**

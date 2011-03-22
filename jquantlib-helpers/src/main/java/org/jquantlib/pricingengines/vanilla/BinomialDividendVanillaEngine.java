@@ -28,7 +28,6 @@ import org.jquantlib.instruments.DividendVanillaOption;
 import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.methods.lattices.BlackScholesDividendLattice;
 import org.jquantlib.methods.lattices.Tree;
@@ -86,16 +85,19 @@ public abstract class BinomialDividendVanillaEngine<T extends Tree> extends Divi
    // private fields
    //
 
-   private final Class<T> clazz;
+   private final Class<? extends Tree> classT;
 
 
    //
    // public constructors
    //
 
-   public BinomialDividendVanillaEngine(final GeneralizedBlackScholesProcess process, final int timeSteps) {
-       this.clazz = (Class<T>) TypeToken.getClazz(this.getClass());
+   public BinomialDividendVanillaEngine(
+		   final Class<? extends Tree> classT,
+		   final GeneralizedBlackScholesProcess process, 
+		   final int timeSteps) {
        QL.require(timeSteps > 0 , "timeSteps must be positive"); // QA:[RG]::verified // TODO: message
+       this.classT = classT;
        this.timeSteps = timeSteps;
        this.a = (DividendVanillaOption.ArgumentsImpl)arguments_;
        this.r = (DividendVanillaOption.ResultsImpl)results_;
@@ -117,12 +119,12 @@ public abstract class BinomialDividendVanillaEngine<T extends Tree> extends Divi
            final int timeSteps,
            final /*@Real*/ double strike) {
        try {
-           if (this.clazz == ExtendedTian.class) {
-               final Constructor<T> c = clazz.getConstructor(StochasticProcess1D.class, double.class, int.class);
-               return clazz.cast(c.newInstance(bs, maturity, timeSteps));
+           if (this.classT == ExtendedTian.class) {
+               final Constructor<T> c = (Constructor<T>) classT.getConstructor(StochasticProcess1D.class, double.class, int.class);
+               return c.newInstance(bs, maturity, timeSteps);
            } else {
-               final Constructor<T> c = clazz.getConstructor(StochasticProcess1D.class, double.class, int.class, double.class);
-               return clazz.cast(c.newInstance(bs, maturity, timeSteps, strike));
+               final Constructor<T> c = (Constructor<T>) classT.getConstructor(StochasticProcess1D.class, double.class, int.class, double.class);
+               return c.newInstance(bs, maturity, timeSteps, strike);
            }
        } catch (final Exception e) {
            throw new LibraryException(e); // QA:[RG]::verified

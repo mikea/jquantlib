@@ -132,7 +132,7 @@ public abstract class Option extends Instrument {
      *
      * @author Richard Gomes
      */
-    public interface Arguments extends Instrument.Arguments { }
+    public interface Arguments extends Instrument.Arguments { /* marking interface */ }
 
 
     /**
@@ -140,7 +140,7 @@ public abstract class Option extends Instrument {
      *
      * @author Richard Gomes
      */
-    public interface Greeks extends Instrument.Results { }
+    public interface Greeks extends Instrument.Results { /* marking interface */ }
 
 
     /**
@@ -148,7 +148,7 @@ public abstract class Option extends Instrument {
      *
      * @author Richard Gomes
      */
-    public interface MoreGreeks extends Instrument.Results { }
+    public interface MoreGreeks extends Instrument.Results { /* marking interface */ }
 
 
 

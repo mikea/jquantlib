@@ -28,8 +28,8 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  */
 public class BSMTermOperator extends PdeOperator<PdeBSM> {
     
-    public BSMTermOperator(Array grid, GeneralizedBlackScholesProcess process, double residualTime) {
-        super(grid, process, residualTime);
+    public BSMTermOperator(final Array grid, final GeneralizedBlackScholesProcess process, final double residualTime) {
+        super(PdeBSM.class, grid, process, residualTime);
     }
     
 }

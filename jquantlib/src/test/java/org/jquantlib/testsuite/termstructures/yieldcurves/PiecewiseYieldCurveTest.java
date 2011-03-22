@@ -36,6 +36,7 @@ import org.jquantlib.indexes.Euribor6M;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.indexes.ibor.JPYLibor;
 import org.jquantlib.indexes.ibor.USDLibor;
+import org.jquantlib.instruments.BMASwap;
 import org.jquantlib.instruments.ForwardRateAgreement;
 import org.jquantlib.instruments.MakeVanillaSwap;
 import org.jquantlib.instruments.Position;
@@ -57,9 +58,9 @@ import org.jquantlib.quotes.RelinkableHandle;
 import org.jquantlib.quotes.SimpleQuote;
 import org.jquantlib.termstructures.Bootstrap;
 import org.jquantlib.termstructures.IterativeBootstrap;
-import org.jquantlib.termstructures.LocalBootstrap;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
+import org.jquantlib.termstructures.yieldcurves.BMASwapRateHelper;
 import org.jquantlib.termstructures.yieldcurves.DepositRateHelper;
 import org.jquantlib.termstructures.yieldcurves.Discount;
 import org.jquantlib.termstructures.yieldcurves.FixedRateBondHelper;
@@ -86,8 +87,6 @@ import org.jquantlib.time.calendars.Japan;
 import org.jquantlib.time.calendars.JointCalendar;
 import org.jquantlib.time.calendars.JointCalendar.JointCalendarRule;
 import org.jquantlib.time.calendars.Target;
-import org.jquantlib.testsuite.util.Flag;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -97,7 +96,7 @@ import org.junit.Test;
  */
 public class PiecewiseYieldCurveTest {
 
-	private Datum depositData[] = new Datum[] {
+	private final Datum depositData[] = new Datum[] {
     	new Datum( 1, TimeUnit.Weeks,  4.559 ),
     	new Datum( 1, TimeUnit.Months, 4.581 ),
     	new Datum( 2, TimeUnit.Months, 4.573 ),
@@ -106,7 +105,7 @@ public class PiecewiseYieldCurveTest {
     	new Datum( 9, TimeUnit.Months, 4.490 )
     };
 
-    private Datum fraData[] = {
+    private final Datum fraData[] = {
     	new Datum( 1, TimeUnit.Months, 4.581 ),
     	new Datum( 2, TimeUnit.Months, 4.573 ),
     	new Datum( 3, TimeUnit.Months, 4.557 ),
@@ -114,7 +113,7 @@ public class PiecewiseYieldCurveTest {
     	new Datum( 9, TimeUnit.Months, 4.490 )
     };
 
-    private Datum swapData[] = {
+    private final Datum swapData[] = {
     	new Datum(  1, TimeUnit.Years, 4.54 ),
     	new Datum(  2, TimeUnit.Years, 4.63 ),
     	new Datum(  3, TimeUnit.Years, 4.75 ),
@@ -132,7 +131,7 @@ public class PiecewiseYieldCurveTest {
     	new Datum( 30, TimeUnit.Years, 5.96 )
     };
 
-    private BondDatum bondData[] = {
+    private final BondDatum bondData[] = {
     	new BondDatum(  6, TimeUnit.Months, 5, Frequency.Semiannual, 4.75, 101.320 ),
     	new BondDatum(  1, TimeUnit.Years,  3, Frequency.Semiannual, 2.75, 100.590 ),
     	new BondDatum(  2, TimeUnit.Years,  5, Frequency.Semiannual, 5.00, 105.650 ),
@@ -140,7 +139,7 @@ public class PiecewiseYieldCurveTest {
     	new BondDatum( 10, TimeUnit.Years, 11, Frequency.Semiannual, 3.75, 104.070 )
     };
 
-    private Datum bmaData[] = {
+    private final Datum bmaData[] = {
     	new Datum(  1, TimeUnit.Years, 67.56 ),
     	new Datum(  2, TimeUnit.Years, 68.00 ),
     	new Datum(  3, TimeUnit.Years, 68.25 ),
@@ -302,9 +301,9 @@ public class PiecewiseYieldCurveTest {
             schedules   = new Schedule[bonds];
             bmaHelpers  = new RateHelper[bmas];
             
-            IborIndex euribor6m = new Euribor(new Period(6, TimeUnit.Months), new Handle<YieldTermStructure>());
+            final IborIndex euribor6m = new Euribor(new Period(6, TimeUnit.Months), new Handle<YieldTermStructure>());
             for (int i=0; i<deposits; i++) {
-                Handle<Quote> r = new Handle<Quote>(rates[i]);
+                final Handle<Quote> r = new Handle<Quote>(rates[i]);
                 instruments[i] = new
                     DepositRateHelper(r, new Period(depositData[i].n,depositData[i].units),
                                       euribor6m.fixingDays(), calendar,
@@ -314,7 +313,7 @@ public class PiecewiseYieldCurveTest {
             }
 
             for (int i=0; i<swaps; i++) {
-                Handle<Quote> r = new Handle<Quote>(rates[i+deposits]);
+                final Handle<Quote> r = new Handle<Quote>(rates[i+deposits]);
                 instruments[i+deposits] = new
                     SwapRateHelper(r, new Period(swapData[i].n, swapData[i].units),
                                    calendar,
@@ -322,9 +321,9 @@ public class PiecewiseYieldCurveTest {
                                    fixedLegDayCounter, euribor6m);
             }
 
-            Euribor euribor3m = new Euribor(new Period(3, TimeUnit.Months), new Handle<YieldTermStructure>());
+            final Euribor euribor3m = new Euribor(new Period(3, TimeUnit.Months), new Handle<YieldTermStructure>());
             for (int i=0; i<fras; i++) {
-                Handle<Quote> r = new Handle<Quote>(fraRates[i]);
+                final Handle<Quote> r = new Handle<Quote>(fraRates[i]);
                 fraHelpers[i] = new
                     FraRateHelper(r, fraData[i].n, fraData[i].n + 3,
                                   euribor3m.fixingDays(),
@@ -335,11 +334,11 @@ public class PiecewiseYieldCurveTest {
             }
 
             for (int i=0; i<bonds; i++) {
-                Handle<Quote> p = new Handle<Quote>(prices[i]);
-                Date maturity = calendar.advance(today, bondData[i].n, bondData[i].units);
-                Date issue = calendar.advance(maturity, -bondData[i].length, TimeUnit.Years);
+                final Handle<Quote> p = new Handle<Quote>(prices[i]);
+                final Date maturity = calendar.advance(today, bondData[i].n, bondData[i].units);
+                final Date issue = calendar.advance(maturity, -bondData[i].length, TimeUnit.Years);
                 
-                /*@Rate*/ double[] coupons = new double[1];
+                /*@Rate*/ final double[] coupons = new double[1];
                 coupons[0] = bondData[i].coupon/100.0;
 
                 schedules[i] = new Schedule(issue, maturity,
@@ -361,33 +360,33 @@ public class PiecewiseYieldCurveTest {
     
     
     private <T extends Traits, I extends Interpolator, B extends Bootstrap> void testCurveConsistency(
-    		Class<T> classT,
-    		Class<I> classI,
-    		Class<B> classB,
+    		final Class<T> classT,
+    		final Class<I> classI,
+    		final Class<B> classB,
     		final CommonVars vars) {
     	I interpolator;
 		try {
 			interpolator = classI.newInstance();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}
     	testCurveConsistency(classT, classI, classB, vars, interpolator, 1.0e-9);
     }
     private <T extends Traits, I extends Interpolator, B extends Bootstrap> void testCurveConsistency(
-    		Class<T> classT,
-    		Class<I> classI,
-    		Class<B> classB,
+    		final Class<T> classT,
+    		final Class<I> classI,
+    		final Class<B> classB,
     		final CommonVars vars,
             final Interpolator interpolator) {
     	testCurveConsistency(classT, classI, classB, vars, interpolator, 1.0e-9);
     }
     private <T extends Traits, I extends Interpolator, B extends Bootstrap> void testCurveConsistency(
-    		Class<T> classT,
-    		Class<I> classI,
-    		Class<B> classB,
+    		final Class<T> classT,
+    		final Class<I> classI,
+    		final Class<B> classB,
     		final CommonVars vars,
             final Interpolator interpolator,
-            /*@Real*/ double tolerance) {
+            /*@Real*/ final double tolerance) {
     	
         vars.termStructure = new PiecewiseYieldCurve<T,I,B>(
 										classT, classI, classB,
@@ -398,14 +397,14 @@ public class PiecewiseYieldCurveTest {
 										1.0e-12,
 										interpolator);
 
-        RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
+        final RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
         curveHandle.linkTo(vars.termStructure);
 
         // check deposits
         for (int i=0; i<vars.deposits; i++) {
-            Euribor index = new Euribor(new Period(depositData[i].n, depositData[i].units), curveHandle);
-            /*@Rate*/ double expectedRate  = depositData[i].rate/100;
-            /*@Rate*/ double estimatedRate = index.fixing(vars.today);
+            final Euribor index = new Euribor(new Period(depositData[i].n, depositData[i].units), curveHandle);
+            /*@Rate*/ final double expectedRate  = depositData[i].rate/100;
+            /*@Rate*/ final double estimatedRate = index.fixing(vars.today);
             if (Math.abs(expectedRate-estimatedRate) > tolerance) {
             	throw new RuntimeException(
 	                String.format("%d %s %s %s %f %s %f",
@@ -418,11 +417,11 @@ public class PiecewiseYieldCurveTest {
         }
 
         // check swaps
-        IborIndex euribor6m = new Euribor6M(curveHandle);
+        final IborIndex euribor6m = new Euribor6M(curveHandle);
         for (int i=0; i<vars.swaps; i++) {
-            Period tenor = new Period(swapData[i].n, swapData[i].units);
+            final Period tenor = new Period(swapData[i].n, swapData[i].units);
 
-            VanillaSwap swap = new MakeVanillaSwap(tenor, euribor6m, 0.0)
+            final VanillaSwap swap = new MakeVanillaSwap(tenor, euribor6m, 0.0)
                 .withEffectiveDate(vars.settlement)
                 .withFixedLegDayCount(vars.fixedLegDayCounter)
                 .withFixedLegTenor(new Period(vars.fixedLegFrequency))
@@ -430,9 +429,9 @@ public class PiecewiseYieldCurveTest {
                 .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
                 .value();
 
-            /*@Rate*/ double expectedRate  = swapData[i].rate/100;
-            /*@Rate*/ double estimatedRate = swap.fairRate();
-            /*@Spread*/ double error = Math.abs(expectedRate-estimatedRate);
+            /*@Rate*/ final double expectedRate  = swapData[i].rate/100;
+            /*@Rate*/ final double estimatedRate = swap.fairRate();
+            /*@Spread*/ final double error = Math.abs(expectedRate-estimatedRate);
             if (error > tolerance) {
             	throw new RuntimeException(
         			String.format("%d %s %s %f %s %f %s %f %s %f",
@@ -457,21 +456,21 @@ public class PiecewiseYieldCurveTest {
         curveHandle.linkTo(vars.termStructure);
 
         for (int i=0; i<vars.bonds; i++) {
-            Date maturity = vars.calendar.advance(vars.today, bondData[i].n, bondData[i].units);
-            Date issue = vars.calendar.advance(maturity, -bondData[i].length, TimeUnit.Years);
-            /*@Rate*/ double[] coupons = new double[1];
+            final Date maturity = vars.calendar.advance(vars.today, bondData[i].n, bondData[i].units);
+            final Date issue = vars.calendar.advance(maturity, -bondData[i].length, TimeUnit.Years);
+            /*@Rate*/ final double[] coupons = new double[1];
             coupons[0] = bondData[i].coupon/100.0;
 
-            FixedRateBond bond = new FixedRateBond(vars.bondSettlementDays, 100.0,
+            final FixedRateBond bond = new FixedRateBond(vars.bondSettlementDays, 100.0,
                                vars.schedules[i], coupons,
                                vars.bondDayCounter, vars.bondConvention,
                                vars.bondRedemption, issue);
 
-            PricingEngine bondEngine = new DiscountingBondEngine(curveHandle);
+            final PricingEngine bondEngine = new DiscountingBondEngine(curveHandle);
             bond.setPricingEngine(bondEngine);
 
-            /*@Real*/ double expectedPrice = bondData[i].price, estimatedPrice = bond.cleanPrice();
-            /*@Real*/ double error = Math.abs(expectedPrice-estimatedPrice);
+            /*@Real*/ final double expectedPrice = bondData[i].price, estimatedPrice = bond.cleanPrice();
+            /*@Real*/ final double error = Math.abs(expectedPrice-estimatedPrice);
             if (error > tolerance) {
             	throw new RuntimeException(
             			String.format("#%d %s %s %f %s %f %s %f",
@@ -493,22 +492,22 @@ public class PiecewiseYieldCurveTest {
                                     interpolator);
         curveHandle.linkTo(vars.termStructure);
 
-        IborIndex euribor3m = new Euribor3M(curveHandle);
+        final IborIndex euribor3m = new Euribor3M(curveHandle);
         for (int i=0; i<vars.fras; i++) {
-            Date start = vars.calendar.advance(vars.settlement,
+            final Date start = vars.calendar.advance(vars.settlement,
 		                                       fraData[i].n,
 		                                       fraData[i].units,
 		                                       euribor3m.businessDayConvention(),
 		                                       euribor3m.endOfMonth());
-            Date end = vars.calendar.advance(start, 3, TimeUnit.Months,
+            final Date end = vars.calendar.advance(start, 3, TimeUnit.Months,
                                              euribor3m.businessDayConvention(),
                                              euribor3m.endOfMonth());
 
-            ForwardRateAgreement fra = new ForwardRateAgreement(start, end, Position.Long,
+            final ForwardRateAgreement fra = new ForwardRateAgreement(start, end, Position.Long,
             													fraData[i].rate/100, 100.0,
             													euribor3m, curveHandle);
-            /*@Rate*/ double expectedRate  = fraData[i].rate/100;
-            /*@Rate*/ double estimatedRate = fra.forwardRate().rate();
+            /*@Rate*/ final double expectedRate  = fraData[i].rate/100;
+            /*@Rate*/ final double estimatedRate = fra.forwardRate().rate();
             if (Math.abs(expectedRate-estimatedRate) > tolerance) {
             	throw new RuntimeException(
             			String.format("#%d %s %s %f %s %f",
@@ -521,120 +520,121 @@ public class PiecewiseYieldCurveTest {
 
 
 
-//    private <T extends Traits, I extends Interpolator, B extends Bootstrap> void testBMACurveConsistency(
-//    		Class<T> classT,
-//    		Class<I> classI,
-//    		Class<B> classB,
-//    		final CommonVars vars) {
-//    	I interpolator;
-//		try {
-//			interpolator = classI.newInstance();
-//		} catch (Exception e) {
-//			throw new RuntimeException(e);
-//		}
-//    	testCurveConsistency(classT, classI, classB, vars, interpolator, 1.0e-9);
-//    }
-//    private <T extends Traits, I extends Interpolator, B extends Bootstrap> void testBMACurveConsistency(
-//    		Class<T> classT,
-//    		Class<I> classI,
-//    		Class<B> classB,
-//    		final CommonVars vars,
-//            final Interpolator interpolator) {
-//    	testCurveConsistency(classT, classI, classB, vars, interpolator, 1.0e-9);
-//    }
-//    private <T extends Traits, I extends Interpolator, B extends Bootstrap> void testBMACurveConsistency(
-//    		Class<T> classT,
-//    		Class<I> classI,
-//    		Class<B> classB,
-//    		final CommonVars vars,
-//            final Interpolator interpolator,
-//            /*@Real*/ double tolerance) {
-//    	
-//        // re-adjust settlement
-//        vars.calendar = new JointCalendar(new BMAIndex().fixingCalendar(),
-//                                          new USDLibor(new Period(3, TimeUnit.Months)).fixingCalendar(),
-//                                          JointCalendarRule.JoinHolidays);
-//        vars.today = vars.calendar.adjust(Date.todaysDate());
-//        new Settings().setEvaluationDate(vars.today);
-//        vars.settlement = vars.calendar.advance(vars.today, vars.settlementDays, TimeUnit.Days);
-//
-//
-//        Handle<YieldTermStructure> riskFreeCurve = new Handle<YieldTermStructure>(new FlatForward(vars.settlement, 0.04, new Actual360()));
-//
-//        BMAIndex bmaIndex = new BMAIndex();
-//        IborIndex liborIndex = new USDLibor(new Period(3, TimeUnit.Months), riskFreeCurve);
-//        for (int i=0; i<vars.bmas; ++i) {
-//            Handle<Quote> f = new Handle<Quote>(vars.fractions[i]);
-//            vars.bmaHelpers[i] = // boost::shared_ptr<RateHelper>(
-//                      new BMASwapRateHelper(f, new Period(bmaData[i].n, bmaData[i].units),
-//                                            vars.settlementDays,
-//                                            vars.calendar,
-//                                            new Period(vars.bmaFrequency),
-//                                            vars.bmaConvention,
-//                                            vars.bmaDayCounter,
-//                                            bmaIndex,
-//                                            liborIndex);
-//        }
-//
-//        Weekday w = vars.today.weekday();
-//        Date lastWednesday = (w.ordinal() >= 4) ? vars.today.sub(w.ordinal() - 4) : vars.today.add(4 - w.ordinal() - 7);
-//        Date lastFixing = bmaIndex.fixingCalendar().adjust(lastWednesday);
-//        bmaIndex.addFixing(lastFixing, 0.03);
-//
-//        vars.termStructure = new PiecewiseYieldCurve<T,I,B>(
-//        							vars.settlement, vars.bmaHelpers,
-//                                    new Actual360(),
-//                                    new Handle/*<Quote>*/[0],
-//                                    new Date[0],
-//                                    1.0e-12,
-//                                    interpolator);
-//
-//        RelinkableHandle<YieldTermStructure> curveHandle;
-//        curveHandle.linkTo(vars.termStructure);
-//
-//        // check BMA swaps
-//        BMAIndex bma = new BMAIndex(curveHandle);
-//        IborIndex libor3m = new USDLibor(new Period(3, TimeUnit.Months), riskFreeCurve);
-//        for (int i=0; i<vars.bmas; i++) {
-//            Period tenor = new Period(bmaData[i].n, bmaData[i].units);
-//
-//            Schedule bmaSchedule = new MakeSchedule(vars.settlement,
-//                                                	vars.settlement.add(tenor),
-//                                                	new Period(vars.bmaFrequency),
-//                                                	bma.fixingCalendar(),
-//                                                	vars.bmaConvention)
-//            												.backwards()
-//            												.schedule();
-//            Schedule liborSchedule = new MakeSchedule(vars.settlement,
-//                                                  	  vars.settlement.add(tenor),
-//                                                  	  libor3m.tenor(),
-//                                                  	  libor3m.fixingCalendar(),
-//                                                  	  libor3m.businessDayConvention())
-//										                	.endOfMonth(libor3m.endOfMonth())
-//										                	.backwards()
-//										                	.schedule();
-//
-//
-//            BMASwap swap = new BMASwap(BMASwap::Payer, 100.0,
-//				                       liborSchedule, 0.75, 0.0,
-//				                       libor3m, libor3m.dayCounter(),
-//				                       bmaSchedule, bma, vars.bmaDayCounter);
-//            swap.setPricingEngine(new DiscountingSwapEngine(libor3m.termStructure()));
-//
-//            /*@Real*/ double expectedFraction = bmaData[i].rate/100;
-//            /*@Real*/ double estimatedFraction = swap.fairLiborFraction();
-//            /*@Real*/ double error = Math.abs(expectedFraction-estimatedFraction);
-//            if (error > tolerance) {
-//            	throw new RuntimeException(
-//            			String.format("%d %s %s %f %s %f %s %f %s %f",
-//                            bmaData[i].n, " year(s) BMA swap:\n",
-//                            "\n estimated libor fraction: ", estimatedFraction,
-//                            "\n expected libor fraction:  ", expectedFraction,
-//                            "\n error:          ", error,
-//                            "\n tolerance:      ", tolerance));
-//            }
-//        }
-//	  }
+    private <T extends Traits, I extends Interpolator, B extends Bootstrap> void testBMACurveConsistency(
+    		final Class<T> classT,
+    		final Class<I> classI,
+    		final Class<B> classB,
+    		final CommonVars vars) {
+    	I interpolator;
+		try {
+			interpolator = classI.newInstance();
+		} catch (final Exception e) {
+			throw new RuntimeException(e);
+		}
+    	testCurveConsistency(classT, classI, classB, vars, interpolator, 1.0e-9);
+    }
+    private <T extends Traits, I extends Interpolator, B extends Bootstrap> void testBMACurveConsistency(
+    		final Class<T> classT,
+    		final Class<I> classI,
+    		final Class<B> classB,
+    		final CommonVars vars,
+            final Interpolator interpolator) {
+    	testCurveConsistency(classT, classI, classB, vars, interpolator, 1.0e-9);
+    }
+    private <T extends Traits, I extends Interpolator, B extends Bootstrap> void testBMACurveConsistency(
+    		final Class<T> classT,
+    		final Class<I> classI,
+    		final Class<B> classB,
+    		final CommonVars vars,
+            final Interpolator interpolator,
+            /*@Real*/ final double tolerance) {
+    	
+        // re-adjust settlement
+        vars.calendar = new JointCalendar(new BMAIndex().fixingCalendar(),
+                                          new USDLibor(new Period(3, TimeUnit.Months)).fixingCalendar(),
+                                          JointCalendarRule.JoinHolidays);
+        vars.today = vars.calendar.adjust(Date.todaysDate());
+        new Settings().setEvaluationDate(vars.today);
+        vars.settlement = vars.calendar.advance(vars.today, vars.settlementDays, TimeUnit.Days);
+
+
+        final Handle<YieldTermStructure> riskFreeCurve = new Handle<YieldTermStructure>(new FlatForward(vars.settlement, 0.04, new Actual360()));
+
+        final BMAIndex bmaIndex = new BMAIndex();
+        final IborIndex liborIndex = new USDLibor(new Period(3, TimeUnit.Months), riskFreeCurve);
+        for (int i=0; i<vars.bmas; ++i) {
+            final Handle<Quote> f = new Handle<Quote>(vars.fractions[i]);
+            vars.bmaHelpers[i] = // boost::shared_ptr<RateHelper>(
+                      new BMASwapRateHelper(f, new Period(bmaData[i].n, bmaData[i].units),
+                                            vars.settlementDays,
+                                            vars.calendar,
+                                            new Period(vars.bmaFrequency),
+                                            vars.bmaConvention,
+                                            vars.bmaDayCounter,
+                                            bmaIndex,
+                                            liborIndex);
+        }
+
+        final Weekday w = vars.today.weekday();
+        final Date lastWednesday = (w.ordinal() >= 4) ? vars.today.sub(w.ordinal() - 4) : vars.today.add(4 - w.ordinal() - 7);
+        final Date lastFixing = bmaIndex.fixingCalendar().adjust(lastWednesday);
+        bmaIndex.addFixing(lastFixing, 0.03);
+
+        vars.termStructure = new PiecewiseYieldCurve<T,I,B>(
+        							classT, classI, classB,
+        							vars.settlement, vars.bmaHelpers,
+                                    new Actual360(),
+                                    new Handle/*<Quote>*/[0],
+                                    new Date[0],
+                                    1.0e-12,
+                                    interpolator);
+
+        final RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
+        curveHandle.linkTo(vars.termStructure);
+
+        // check BMA swaps
+        final BMAIndex bma = new BMAIndex(curveHandle);
+        final IborIndex libor3m = new USDLibor(new Period(3, TimeUnit.Months), riskFreeCurve);
+        for (int i=0; i<vars.bmas; i++) {
+            final Period tenor = new Period(bmaData[i].n, bmaData[i].units);
+
+            final Schedule bmaSchedule = new MakeSchedule(vars.settlement,
+                                                	vars.settlement.add(tenor),
+                                                	new Period(vars.bmaFrequency),
+                                                	bma.fixingCalendar(),
+                                                	vars.bmaConvention)
+            												.backwards()
+            												.schedule();
+            final Schedule liborSchedule = new MakeSchedule(vars.settlement,
+                                                  	  vars.settlement.add(tenor),
+                                                  	  libor3m.tenor(),
+                                                  	  libor3m.fixingCalendar(),
+                                                  	  libor3m.businessDayConvention())
+										                	.endOfMonth(libor3m.endOfMonth())
+										                	.backwards()
+										                	.schedule();
+
+
+            final BMASwap swap = new BMASwap(BMASwap.Type.Payer, 100.0,
+				                       liborSchedule, 0.75, 0.0,
+				                       libor3m, libor3m.dayCounter(),
+				                       bmaSchedule, bma, vars.bmaDayCounter);
+            swap.setPricingEngine(new DiscountingSwapEngine(libor3m.termStructure()));
+
+            /*@Real*/ final double expectedFraction = bmaData[i].rate/100;
+            /*@Real*/ final double estimatedFraction = swap.fairLiborFraction();
+            /*@Real*/ final double error = Math.abs(expectedFraction-estimatedFraction);
+            if (error > tolerance) {
+            	throw new RuntimeException(
+            			String.format("%d %s %s %f %s %f %s %f %s %f",
+                            bmaData[i].n, " year(s) BMA swap:\n",
+                            "\n estimated libor fraction: ", estimatedFraction,
+                            "\n expected libor fraction:  ", expectedFraction,
+                            "\n error:          ", error,
+                            "\n tolerance:      ", tolerance));
+            }
+        }
+	  }
 
     
 	@Ignore
@@ -643,7 +643,7 @@ public class PiecewiseYieldCurveTest {
 
 		QL.info("Testing consistency of piecewise-log-cubic discount curve...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
 	    testCurveConsistency(
 	    	Discount.class, LogCubic.class, IterativeBootstrap.class,
@@ -665,10 +665,10 @@ public class PiecewiseYieldCurveTest {
 
 	    QL.info("Testing consistency of piecewise-log-linear discount curve...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
 	    testCurveConsistency(Discount.class, LogLinear.class, IterativeBootstrap.class, vars);
-//	    testBMACurveConsistency(Discount.class, LogLinear.class, IterativeBootstrap.class, vars);
+	    testBMACurveConsistency(Discount.class, LogLinear.class, IterativeBootstrap.class, vars);
 	}
 
 	@Ignore
@@ -677,10 +677,10 @@ public class PiecewiseYieldCurveTest {
 
 	    QL.info("Testing consistency of piecewise-linear discount curve...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
 	    testCurveConsistency(Discount.class, Linear.class, IterativeBootstrap.class, vars);
-//	    testBMACurveConsistency(Discount.class, Linear.class, IterativeBootstrap.class, vars);
+	    testBMACurveConsistency(Discount.class, Linear.class, IterativeBootstrap.class, vars);
 	}
 
 	@Ignore
@@ -689,10 +689,10 @@ public class PiecewiseYieldCurveTest {
 
 	    QL.info("Testing consistency of piecewise-log-linear zero-yield curve...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
 	    testCurveConsistency(ZeroYield.class, LogLinear.class, IterativeBootstrap.class, vars);
-//	    testBMACurveConsistency(ZeroYield.class, LogLinear.class, IterativeBootstrap.class, vars);
+	    testBMACurveConsistency(ZeroYield.class, LogLinear.class, IterativeBootstrap.class, vars);
 	}
 
 	@Ignore
@@ -701,10 +701,10 @@ public class PiecewiseYieldCurveTest {
 
 	    QL.info("Testing consistency of piecewise-linear zero-yield curve...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
 	    testCurveConsistency(ZeroYield.class, Linear.class, IterativeBootstrap.class, vars);
-//	    testBMACurveConsistency(ZeroYield.class, Linear.class, IterativeBootstrap.class, vars);
+	    testBMACurveConsistency(ZeroYield.class, Linear.class, IterativeBootstrap.class, vars);
 	}
 
 	@Ignore
@@ -713,7 +713,7 @@ public class PiecewiseYieldCurveTest {
 
 	    QL.info("Testing consistency of piecewise-cubic zero-yield curve...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
 	    testCurveConsistency(
 	    				ZeroYield.class, Cubic.class, IterativeBootstrap.class, 
@@ -721,12 +721,12 @@ public class PiecewiseYieldCurveTest {
 	                    new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
 	                              CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
 	                              CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
-//	    testBMACurveConsistency(
-//				ZeroYield.class, Cubic.class, IterativeBootstrap.class, 
-//	                    vars,
-//	                    new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
-//	                              CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
-//	                              CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
+	    testBMACurveConsistency(
+				ZeroYield.class, Cubic.class, IterativeBootstrap.class, 
+	                    vars,
+	                    new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
+	                              CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
+	                              CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
 	}
 
 	@Ignore
@@ -735,10 +735,10 @@ public class PiecewiseYieldCurveTest {
 
 	    QL.info("Testing consistency of piecewise-linear forward-rate curve...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
 	    testCurveConsistency(ForwardRate.class, Linear.class, IterativeBootstrap.class, vars);
-//	    testBMACurveConsistency(ForwardRate.class, Linear.class, IterativeBootstrap.class, vars);
+	    testBMACurveConsistency(ForwardRate.class, Linear.class, IterativeBootstrap.class, vars);
 	}
 
 	@Ignore
@@ -747,10 +747,10 @@ public class PiecewiseYieldCurveTest {
 
 	    QL.info("Testing consistency of piecewise-flat forward-rate curve...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
 	    testCurveConsistency(ForwardRate.class, BackwardFlat.class, IterativeBootstrap.class, vars);
-//	    testBMACurveConsistency(ForwardRate.class, BackwardFlat.class, IterativeBootstrap.class, vars);
+	    testBMACurveConsistency(ForwardRate.class, BackwardFlat.class, IterativeBootstrap.class, vars);
 	}
 
 	@Ignore
@@ -759,7 +759,7 @@ public class PiecewiseYieldCurveTest {
 
 	    QL.info("Testing consistency of piecewise-cubic forward-rate curve...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
 	    testCurveConsistency(
 	    				ForwardRate.class, Cubic.class, IterativeBootstrap.class,
@@ -767,12 +767,12 @@ public class PiecewiseYieldCurveTest {
 	                    new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
 	                         CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
 	                         CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
-//	    testBMACurveConsistency(
-//				ForwardRate.class, Cubic.class, IterativeBootstrap.class,
-//                vars,
-//                new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
-//                     CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
-//                     CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
+	    testBMACurveConsistency(
+				ForwardRate.class, Cubic.class, IterativeBootstrap.class,
+                vars,
+                new Cubic(CubicInterpolation.DerivativeApprox.Spline, true,
+                     CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0,
+                     CubicInterpolation.BoundaryCondition.SecondDerivative, 0.0));
 	}
 
 //	@Ignore
@@ -792,7 +792,7 @@ public class PiecewiseYieldCurveTest {
 //	public void testLocalBootstrapConsistency() {
 //	    QL.info("Testing consistency of local-bootstrap algorithm...");
 //
-//	    CommonVars vars = new CommonVars();
+//	    final CommonVars vars = new CommonVars();
 //	    
 //	    testCurveConsistency(
 //	    		ForwardRate.class, ConvexMonotone.class, LocalBootstrap.class, 
@@ -811,7 +811,7 @@ public class PiecewiseYieldCurveTest {
 
 	    QL.info("Testing observability of piecewise yield curve...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
 	    vars.termStructure = new PiecewiseYieldCurve(
 							    		Discount.class, LogLinear.class, IterativeBootstrap.class,
@@ -819,12 +819,12 @@ public class PiecewiseYieldCurveTest {
 							    		vars.calendar,
 							            vars.instruments,
 							            new Actual360());
-	    Flag f = new Flag();
+	    final Flag f = new Flag();
 	    vars.termStructure.addObserver(f);
 
 	    for (int i=0; i<vars.deposits+vars.swaps; i++) {
-	        /*@Time*/ double testTime = new Actual360().yearFraction(vars.settlement, vars.instruments[i].latestDate());
-	        /*@DiscountFactor*/ double discount = vars.termStructure.discount(testTime);
+	        /*@Time*/ final double testTime = new Actual360().yearFraction(vars.settlement, vars.instruments[i].latestDate());
+	        /*@DiscountFactor*/ final double discount = vars.termStructure.discount(testTime);
 	        f.lower();
 	        vars.rates[i].setValue(vars.rates[i].value()*1.01);
 	        if (!f.isUp())
@@ -847,13 +847,13 @@ public class PiecewiseYieldCurveTest {
 
 	    QL.info("Testing use of today's LIBOR fixings in swap curve...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
-	    RateHelper[] swapHelpers = new RateHelper[vars.swaps];
-	    IborIndex euribor6m = new Euribor6M();
+	    final RateHelper[] swapHelpers = new RateHelper[vars.swaps];
+	    final IborIndex euribor6m = new Euribor6M();
 
 	    for (int i=0; i<vars.swaps; i++) {
-	        Handle<Quote> r = new Handle<Quote>(vars.rates[i+vars.deposits]);
+	        final Handle<Quote> r = new Handle<Quote>(vars.rates[i+vars.deposits]);
 	        swapHelpers[i] = new SwapRateHelper(
 	        		           r, new Period(swapData[i].n, swapData[i].units),
 	                           vars.calendar,
@@ -867,13 +867,13 @@ public class PiecewiseYieldCurveTest {
 			    				swapHelpers, 
 			                    new Actual360());
 
-	    Handle<YieldTermStructure> curveHandle = new Handle<YieldTermStructure>(vars.termStructure);
+	    final Handle<YieldTermStructure> curveHandle = new Handle<YieldTermStructure>(vars.termStructure);
 
-	    IborIndex index = new Euribor6M(curveHandle);
+	    final IborIndex index = new Euribor6M(curveHandle);
 	    for (int i=0; i<vars.swaps; i++) {
-	        Period tenor = new Period(swapData[i].n, swapData[i].units);
+	        final Period tenor = new Period(swapData[i].n, swapData[i].units);
 
-	        VanillaSwap swap = new MakeVanillaSwap(tenor, index, 0.0)
+	        final VanillaSwap swap = new MakeVanillaSwap(tenor, index, 0.0)
 	            .withEffectiveDate(vars.settlement)
 	            .withFixedLegDayCount(vars.fixedLegDayCounter)
 	            .withFixedLegTenor(new Period(vars.fixedLegFrequency))
@@ -881,9 +881,9 @@ public class PiecewiseYieldCurveTest {
 	            .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
 	            		.value();
 
-	        /*@Rate*/ double expectedRate  = swapData[i].rate/100;
-	        /*@Rate*/ double estimatedRate = swap.fairRate();
-	        /*@Real*/ double tolerance = 1.0e-9;
+	        /*@Rate*/ final double expectedRate  = swapData[i].rate/100;
+	        /*@Rate*/ final double estimatedRate = swap.fairRate();
+	        /*@Real*/ final double tolerance = 1.0e-9;
 	        if (Math.abs(expectedRate-estimatedRate) > tolerance) {
 	        	throw new RuntimeException(
 	        			String.format("%s %d %s %s %f %s %s %f",
@@ -894,7 +894,7 @@ public class PiecewiseYieldCurveTest {
 	        }
 	    }
 
-	    Flag f = new Flag();
+	    final Flag f = new Flag();
 	    vars.termStructure.addObserver(f);
 	    f.lower();
 
@@ -904,9 +904,9 @@ public class PiecewiseYieldCurveTest {
 	        throw new RuntimeException("Observer was not notified of rate fixing");
 
 	    for (int i=0; i<vars.swaps; i++) {
-	        Period tenor = new Period(swapData[i].n, swapData[i].units);
+	        final Period tenor = new Period(swapData[i].n, swapData[i].units);
 
-	        VanillaSwap swap = new MakeVanillaSwap(tenor, index, 0.0)
+	        final VanillaSwap swap = new MakeVanillaSwap(tenor, index, 0.0)
 	            .withEffectiveDate(vars.settlement)
 	            .withFixedLegDayCount(vars.fixedLegDayCounter)
 	            .withFixedLegTenor(new Period(vars.fixedLegFrequency))
@@ -914,9 +914,9 @@ public class PiecewiseYieldCurveTest {
 	            .withFixedLegTerminationDateConvention(vars.fixedLegConvention)
 	            		.value();
 
-	        /*@Rate*/ double expectedRate  = swapData[i].rate/100;
-	        /*@Rate*/ double estimatedRate = swap.fairRate();
-	        /*@Real*/ double tolerance = 1.0e-9;
+	        /*@Rate*/ final double expectedRate  = swapData[i].rate/100;
+	        /*@Rate*/ final double estimatedRate = swap.fairRate();
+	        /*@Real*/ final double tolerance = 1.0e-9;
 	        if (Math.abs(expectedRate-estimatedRate) > tolerance) {
 	        	throw new RuntimeException(
 	        			String.format("%s %d %s %s %f %s %s %f",
@@ -934,7 +934,7 @@ public class PiecewiseYieldCurveTest {
 	public void testJpyLibor() {
 	    QL.info("Testing bootstrap over JPY LIBOR swaps...");
 
-	    CommonVars vars = new CommonVars();
+	    final CommonVars vars = new CommonVars();
 
 	    vars.today = new Date(4, Month.October, 2007);
 	    new Settings().setEvaluationDate(vars.today);
@@ -951,9 +951,9 @@ public class PiecewiseYieldCurveTest {
 	    // rate helpers
 	    vars.instruments = new RateHelper[vars.swaps];
 
-	    IborIndex index = new JPYLibor(new Period(6, TimeUnit.Months));
+	    final IborIndex index = new JPYLibor(new Period(6, TimeUnit.Months));
 	    for (int i=0; i<vars.swaps; i++) {
-	        Handle<Quote> r = new Handle<Quote>(vars.rates[i]);
+	        final Handle<Quote> r = new Handle<Quote>(vars.rates[i]);
 	        vars.instruments[i] = new SwapRateHelper(
 	        							r, new Period(swapData[i].n, swapData[i].units),
 	        							vars.calendar,                         // TODO: code review on this line!!!!
@@ -969,15 +969,15 @@ public class PiecewiseYieldCurveTest {
 										new Date[0],
 	                                    1.0e-12);
 
-        RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
+        final RelinkableHandle<YieldTermStructure> curveHandle = new RelinkableHandle<YieldTermStructure>();
 	    curveHandle.linkTo(vars.termStructure);
 
 	    // check swaps
-	    IborIndex jpylibor6m = new JPYLibor(new Period(6, TimeUnit.Months), curveHandle);
+	    final IborIndex jpylibor6m = new JPYLibor(new Period(6, TimeUnit.Months), curveHandle);
 	    for (int i=0; i<vars.swaps; i++) {
-	        Period tenor = new Period(swapData[i].n, swapData[i].units);
+	        final Period tenor = new Period(swapData[i].n, swapData[i].units);
 
-	        VanillaSwap swap = new MakeVanillaSwap(tenor, jpylibor6m, 0.0)
+	        final VanillaSwap swap = new MakeVanillaSwap(tenor, jpylibor6m, 0.0)
 	            .withEffectiveDate(vars.settlement)
 	            .withFixedLegDayCount(vars.fixedLegDayCounter)
 	            .withFixedLegTenor(new Period(vars.fixedLegFrequency))
@@ -987,10 +987,10 @@ public class PiecewiseYieldCurveTest {
 	            .withFloatingLegCalendar(vars.calendar)
 	            		.value();
 
-	        /*@Rate*/ double expectedRate  = swapData[i].rate/100;
-	        /*@Rate*/ double estimatedRate = swap.fairRate();
-	        /*@Spread*/ double error = Math.abs(expectedRate-estimatedRate);
-	        /*@Real*/ double tolerance = 1.0e-9;
+	        /*@Rate*/ final double expectedRate  = swapData[i].rate/100;
+	        /*@Rate*/ final double estimatedRate = swap.fairRate();
+	        /*@Spread*/ final double error = Math.abs(expectedRate-estimatedRate);
+	        /*@Real*/ final double tolerance = 1.0e-9;
 
 	        
 	        if (error > tolerance) {

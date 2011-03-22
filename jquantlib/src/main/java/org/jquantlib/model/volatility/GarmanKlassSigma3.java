@@ -44,7 +44,7 @@ package org.jquantlib.model.volatility;
 public class GarmanKlassSigma3 extends GarmanKlassOpenClose<ParkinsonSigma> {
 
 	public GarmanKlassSigma3(final double y, final double marketOpenFraction) {
-		super(y, marketOpenFraction, 0.17);
+		super(ParkinsonSigma.class, y, marketOpenFraction, 0.17);
 	}
 
 }

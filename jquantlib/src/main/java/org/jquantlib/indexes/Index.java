@@ -106,7 +106,7 @@ public abstract class Index implements Observable {
 		final TimeSeries<Double> h = IndexManager.getInstance().getHistory(tag);
 
         validFixing = isValidFixingDate(date);
-        final double currentValue = h.get(date);
+        final Double currentValue = h.get(date);
         missingFixing = forceOverwrite || Closeness.isClose(currentValue, Constants.NULL_REAL);
         if (validFixing) {
             if (missingFixing) {

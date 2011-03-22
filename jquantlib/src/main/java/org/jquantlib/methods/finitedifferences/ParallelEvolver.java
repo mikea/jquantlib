@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.matrixutilities.Array;
 
 /**
@@ -33,11 +32,21 @@ import org.jquantlib.math.matrixutilities.Array;
 // TODO: Code review
 //Using Type token to dynamically create instance of MixedScheme requires
 //a extension class, so making this class abstract to force a type hierarchy
-public abstract class ParallelEvolver<S extends Operator, T extends MixedScheme<S>>  {
-    private final List<T> evolvers;
 
-    public ParallelEvolver(final List<S> L,
+public abstract class ParallelEvolver<S extends Operator, T extends MixedScheme<S>>  {
+	
+    private final List<T> evolvers;
+    
+    private final Class<? extends Operator>		classS; 
+    private final Class<? extends MixedScheme>	classT; 
+
+    public ParallelEvolver(
+    	    final Class<? extends Operator>		classS, 
+    	    final Class<? extends MixedScheme>	classT, 
+    		final List<S> L,
             final BoundaryConditionSet<BoundaryCondition<S>> bcs) {
+    	this.classS = classS;
+    	this.classT = classT;
         evolvers = new Vector<T>(L.size());
         for (int i = 0; i < L.size(); i++)
             evolvers.add(getEvolver(L.get(i), bcs.get(i)));
@@ -58,7 +67,7 @@ public abstract class ParallelEvolver<S extends Operator, T extends MixedScheme<
     protected T getEvolver(final S l, final List<BoundaryCondition<S>> bcs) {
         try {
 
-            return (T) TypeToken.getClazz(this.getClass(), 1).getConstructor(Operator.class, List.class).newInstance(l, bcs);
+            return (T) classT.getConstructor(Operator.class, List.class).newInstance(l, bcs);
         } catch (final Exception e) {
             throw new LibraryException(e); // QA:[RG]::verified
         }

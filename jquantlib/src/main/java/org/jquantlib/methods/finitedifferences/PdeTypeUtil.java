@@ -26,7 +26,7 @@ import org.jquantlib.processes.GeneralizedBlackScholesProcess;
  * @author Srinivas Hasti
  *
  */
-public final class PdeTypeTokenUtil {
+public final class PdeTypeUtil {
     public static <T extends Object> T getPdeInstance(final Class<T> clazz, final GeneralizedBlackScholesProcess process) {
         try {
             return clazz.getConstructor(process.getClass()).newInstance(process);

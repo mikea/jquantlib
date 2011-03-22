@@ -48,9 +48,7 @@ import org.jquantlib.instruments.Option;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.VanillaOption;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.reflect.TypeToken;
 import org.jquantlib.math.matrixutilities.Array;
-import org.jquantlib.methods.lattices.BinomialTree;
 import org.jquantlib.methods.lattices.BlackScholesLattice;
 import org.jquantlib.methods.lattices.Tree;
 import org.jquantlib.processes.GeneralizedBlackScholesProcess;
@@ -68,13 +66,6 @@ import org.jquantlib.time.TimeGrid;
 
 /**
  * Pricing engine for vanilla options using binomial trees
- * <p>
- * This class was designed to be called with parametric types, typically
- * using anonymous instantiation. Below you can see an example:
- * <pre>
- * // instantiate an anonymous class :: notice '{ braces }' below
- * PricingEngine engine = new BinomialVanillaEngine<Trigeorgis>(timeSteps) {} ;
- * </pre>
  *
  * @category vanillaengines
  *
@@ -108,15 +99,18 @@ public class BinomialVanillaEngine<T extends Tree> extends VanillaOption.EngineI
     // private fields
     //
 
-    private final Class<T> clazz;
+    private final Class<? extends Tree> classT;
 
 
     //
     // public constructors
     //
 
-    public BinomialVanillaEngine(final GeneralizedBlackScholesProcess process, final int timeSteps) {
-        this.clazz = (Class<T>) TypeToken.getClazz(this.getClass());
+    public BinomialVanillaEngine(
+    		final Class<? extends Tree> classT,
+    		final GeneralizedBlackScholesProcess process, 
+    		final int timeSteps) {
+        this.classT = classT;
         QL.require(timeSteps > 0 , "timeSteps must be positive"); // TODO: message
         this.timeSteps_ = timeSteps;
         this.a = (VanillaOption.ArgumentsImpl)arguments_;
@@ -138,12 +132,12 @@ public class BinomialVanillaEngine<T extends Tree> extends VanillaOption.EngineI
             final int timeSteps,
             final /*@Real*/ double strike) {
         try {
-            if (this.clazz == ExtendedTian.class) {
-                final Constructor<T> c = clazz.getConstructor(StochasticProcess1D.class, double.class, int.class);
-                return clazz.cast(c.newInstance(bs, maturity, timeSteps));
+            if (this.classT == ExtendedTian.class) {
+                final Constructor<T> c = (Constructor<T>) classT.getConstructor(StochasticProcess1D.class, double.class, int.class);
+                return classT.cast(c.newInstance(bs, maturity, timeSteps));
             } else {
-                final Constructor<T> c = clazz.getConstructor(StochasticProcess1D.class, double.class, int.class, double.class);
-                return clazz.cast(c.newInstance(bs, maturity, timeSteps, strike));
+                final Constructor<T> c = (Constructor<T>) classT.getConstructor(StochasticProcess1D.class, double.class, int.class, double.class);
+                return classT.cast(c.newInstance(bs, maturity, timeSteps, strike));
             }
         } catch (final Exception e) {
             throw new LibraryException(e); // QA:[RG]::verified

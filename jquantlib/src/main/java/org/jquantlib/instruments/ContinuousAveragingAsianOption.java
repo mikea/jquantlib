@@ -117,7 +117,7 @@ public class ContinuousAveragingAsianOption extends OneAssetOption {
 
     public static class ResultsImpl
             extends OneAssetOption.ResultsImpl
-            implements ContinuousAveragingAsianOption.Results { }
+            implements ContinuousAveragingAsianOption.Results { /* marking interface */ }
 
 
     /**

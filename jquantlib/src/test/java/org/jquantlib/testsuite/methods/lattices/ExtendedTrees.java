@@ -57,10 +57,10 @@ import org.jquantlib.experimental.lattices.ExtendedTian;
 import org.jquantlib.experimental.lattices.ExtendedTrigeorgis;
 import org.jquantlib.instruments.EuropeanOption;
 import org.jquantlib.instruments.Option;
+import org.jquantlib.instruments.Option.Type;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.instruments.VanillaOption;
-import org.jquantlib.instruments.Option.Type;
 import org.jquantlib.math.Constants;
 import org.jquantlib.pricingengines.AnalyticEuropeanEngine;
 import org.jquantlib.pricingengines.PricingEngine;
@@ -303,25 +303,25 @@ public class ExtendedTrees {
             engine = new AnalyticEuropeanEngine(stochProcess);
             break;
         case JR:
-            engine = new BinomialVanillaEngine<ExtendedJarrowRudd>(stochProcess, binomialSteps) { /* anonymous */ };
+            engine = new BinomialVanillaEngine<ExtendedJarrowRudd>(ExtendedJarrowRudd.class, stochProcess, binomialSteps);
             break;
         case CRR:
-            engine = new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(stochProcess, binomialSteps) { /* anonymous */ };
+            engine = new BinomialVanillaEngine<ExtendedCoxRossRubinstein>(ExtendedCoxRossRubinstein.class, stochProcess, binomialSteps);
             break;
         case EQP:
-            engine = new BinomialVanillaEngine<ExtendedAdditiveEQPBinomialTree>(stochProcess, binomialSteps) { /* anonymous */ };
+            engine = new BinomialVanillaEngine<ExtendedAdditiveEQPBinomialTree>(ExtendedAdditiveEQPBinomialTree.class, stochProcess, binomialSteps);
             break;
         case TGEO:
-            engine = new BinomialVanillaEngine<ExtendedTrigeorgis>(stochProcess, binomialSteps) { /* anonymous */ };
+            engine = new BinomialVanillaEngine<ExtendedTrigeorgis>(ExtendedTrigeorgis.class, stochProcess, binomialSteps);
             break;
         case TIAN:
-            engine = new BinomialVanillaEngine<ExtendedTian>(stochProcess, binomialSteps) { /* anonymous */ };
+            engine = new BinomialVanillaEngine<ExtendedTian>(ExtendedTian.class, stochProcess, binomialSteps);
             break;
         case LR:
-            engine = new BinomialVanillaEngine<ExtendedLeisenReimer>(stochProcess, binomialSteps) { /* anonymous */ };
+            engine = new BinomialVanillaEngine<ExtendedLeisenReimer>(ExtendedLeisenReimer.class, stochProcess, binomialSteps);
             break;
         case JOSHI:
-            engine = new BinomialVanillaEngine<ExtendedJoshi4>(stochProcess, binomialSteps) { /* anonymous */ };
+            engine = new BinomialVanillaEngine<ExtendedJoshi4>(ExtendedJoshi4.class, stochProcess, binomialSteps);
             break;
         default:
             throw new IllegalStateException("unknown engine type");

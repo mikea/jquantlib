@@ -47,7 +47,6 @@ import org.jquantlib.QL;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.ReflectConstants;
-import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.math.Closeness;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolation.Interpolator;
@@ -90,54 +89,6 @@ public class InterpolatedZeroCurve<I extends Interpolator> extends ZeroYieldStru
     // public constructors
     //
     
-    public InterpolatedZeroCurve(
-    		final Date[] dates,
-			final double[] yields, 
-			final DayCounter dc) {
-    	this(dates, yields, dc, null, null);
-    }
-    public InterpolatedZeroCurve(
-    		final Date[] dates,
-			final double[] yields, 
-			final DayCounter dc,
-			final Calendar calendar) {
-    	this(dates, yields, dc, calendar, null);
-    }
-    public InterpolatedZeroCurve(
-    		final Date[] dates,
-			final double[] yields, 
-			final DayCounter dc,
-			final Calendar calendar, 
-			final Interpolator interpolator) {
-		super(dates[0], calendar==null ? new Calendar() : calendar, dc);
-		
-		QL.validateExperimentalMode();
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        this.classI = (Class<I>) ttt.getElement(0);
-		
-		QL.require(dates.length != 0, "Dates cannot be empty"); // TODO: message
-		QL.require(yields.length != 0, "yields cannot be empty"); // TODO: message
-		QL.require(dates.length == yields.length, "Dates must be the same size as yields"); // TODO: message
-		QL.require(yields[0] == 1.0, "Initial discount factor must be 1.0"); // TODO: message
-		
-		this.dates = dates; // TODO: clone() ?
-		this.data = yields; // TODO: clone() ?
-		this.interpolator = interpolator;
-		this.times = new double[dates.length]; times[0] = 0.0;
-
-		for (int i = 1; i < dates.length; ++i) {
-			QL.require(dates[i].gt(dates[i-1]), "Dates must be in ascending order"); // TODO: message
-			QL.require(data[0] > 0, "Negative discount"); // TODO: message
-			times[i] = dc.yearFraction(dates[0], dates[i]);
-			QL.require(Closeness.isClose(times[i], times[i-1]), "two dates correspond to the same time under this curve's day count convention"); // TODO: message
-		}
-
-		final Interpolator i = interpolator==null ? constructInterpolator(classI) : interpolator;
-		this.interpolation = i.interpolate(new Array(times), new Array(data));
-		this.interpolation.update();
-	}
-    
-
     public InterpolatedZeroCurve(
             final Class<I> classI,
     		final Date[] dates,
@@ -192,53 +143,20 @@ public class InterpolatedZeroCurve<I extends Interpolator> extends ZeroYieldStru
     // protected constructors
     //
 
-    protected InterpolatedZeroCurve(final DayCounter dc) {
-        this(dc, null);
-    }
     protected InterpolatedZeroCurve(
-            final DayCounter dc,
-            final Interpolator interpolator) {
-        super(dc);
-        
-        QL.validateExperimentalMode();
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        this.classI = (Class<I>) ttt.getElement(0);
-        this.interpolator = interpolator==null ? constructInterpolator(classI) : interpolator;
-    }
-
-
-    protected InterpolatedZeroCurve(
+            final Class<I> classI,
             final Date referenceDate,
             final DayCounter dc) {
-        this(referenceDate, dc, null);
+        this(classI, referenceDate, dc, null);
     }
     protected InterpolatedZeroCurve(
+            final Class<I> classI,
             final Date referenceDate,
             final DayCounter dc,
             final Interpolator interpolator) {
         super(referenceDate, new Calendar(), dc);
         QL.validateExperimentalMode();
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        this.classI = (Class<I>) ttt.getElement(0);
-        this.interpolator = interpolator==null ? constructInterpolator(classI) : interpolator;
-    }
-
-
-    protected InterpolatedZeroCurve(
-    		final /*@Natural*/ int settlementDays,
-            final Calendar calendar,
-            final DayCounter dc) {
-        this(settlementDays, calendar, dc, null);
-    }
-    protected InterpolatedZeroCurve(
-    		final /*@Natural*/ int settlementDays,
-            final Calendar calendar,
-            final DayCounter dc,
-            final Interpolator interpolator) {
-        super(settlementDays, new Calendar(), dc);
-        QL.validateExperimentalMode();
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        this.classI = (Class<I>) ttt.getElement(0);
+        this.classI = classI;
         this.interpolator = interpolator==null ? constructInterpolator(classI) : interpolator;
     }
 
@@ -255,27 +173,6 @@ public class InterpolatedZeroCurve<I extends Interpolator> extends ZeroYieldStru
         super(dc);
         
         QL.validateExperimentalMode();
-        final TypeTokenTree ttt = new TypeTokenTree(this.getClass());
-        this.classI = (Class<I>) ttt.getElement(0);
-        this.interpolator = interpolator==null ? constructInterpolator(classI) : interpolator;
-    }
-
-
-    protected InterpolatedZeroCurve(
-            final Class<I> classI,
-            final Date referenceDate,
-            final DayCounter dc) {
-        this(classI, referenceDate, dc, null);
-    }
-    protected InterpolatedZeroCurve(
-            final Class<I> classI,
-            final Date referenceDate,
-            final DayCounter dc,
-            final Interpolator interpolator) {
-        super(referenceDate, new Calendar(), dc);
-        QL.validateExperimentalMode();
-
-		QL.require(classI!=null, "Generic type for Interpolation is null");
         this.classI = classI;
         this.interpolator = interpolator==null ? constructInterpolator(classI) : interpolator;
     }
@@ -373,7 +270,7 @@ public class InterpolatedZeroCurve<I extends Interpolator> extends ZeroYieldStru
 	}
 
 	@Override
-	public void setInterpolation(Interpolation interpolation) {
+	public void setInterpolation(final Interpolation interpolation) {
         this.interpolation = interpolation;
 	}
 
@@ -395,17 +292,17 @@ public class InterpolatedZeroCurve<I extends Interpolator> extends ZeroYieldStru
     }
 
 	@Override
-	public double discount(double t) {
+	public double discount(final double t) {
 		return discountImpl(t);
 	}
 
 	@Override
-	public double forward(double t) {
+	public double forward(final double t) {
 		throw new UnsupportedOperationException();
 	}
 	
 	@Override
-	public double zeroYield(double t) {
+	public double zeroYield(final double t) {
 		return zeroYieldImpl(t);
 	}
 
@@ -415,7 +312,7 @@ public class InterpolatedZeroCurve<I extends Interpolator> extends ZeroYieldStru
 	//
 
 	@Override
-	protected double zeroYieldImpl(double t) {
+	protected double zeroYieldImpl(final double t) {
 		return interpolation.op(t, true);
 	}
 	

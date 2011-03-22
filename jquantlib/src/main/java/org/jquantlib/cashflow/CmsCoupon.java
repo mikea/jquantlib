@@ -51,7 +51,7 @@ import org.jquantlib.util.Visitor;
 
 /**
  * CMS coupon class
- * @author rgomes
+ * @author Richard Gomes
  *
  * @warning This class does not perform any date adjustment,
  *          i.e., the start and end date passed upon finalruction

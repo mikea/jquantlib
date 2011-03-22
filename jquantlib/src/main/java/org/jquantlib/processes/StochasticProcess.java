@@ -71,7 +71,9 @@ public abstract class StochasticProcess implements Observable, Observer {
     // protected constructors
     //
 
-    protected StochasticProcess() { }
+    protected StochasticProcess() {
+    	// only extended classes can instantiate
+    }
 
     /**
      * @param discretization is an Object that <b>must</b> implement {@link Discretization}.

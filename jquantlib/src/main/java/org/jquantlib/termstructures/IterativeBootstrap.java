@@ -26,7 +26,6 @@ import java.util.Arrays;
 import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.lang.reflect.ReflectConstants;
-import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.math.interpolations.Interpolation;
 import org.jquantlib.math.interpolations.Interpolation.Interpolator;
 import org.jquantlib.math.interpolations.factories.Linear;
@@ -72,11 +71,6 @@ public class IterativeBootstrap<Curve extends PiecewiseYieldCurve> implements Bo
     // public constructors
     //
 
-    public IterativeBootstrap() {
-        this(new TypeTokenTree(IterativeBootstrap.class).getElement(0));
-    }
-
-    
     public IterativeBootstrap(final Class<?> typeCurve) {
         QL.validateExperimentalMode();
         

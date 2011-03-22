@@ -52,7 +52,6 @@ import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.IborIndex;
 import org.jquantlib.indexes.InterestRateIndex;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.math.Constants;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.time.BusinessDayConvention;
@@ -83,32 +82,6 @@ public class FloatingLeg< InterestRateIndexType extends InterestRateIndex,
     //
     // public constructors
     //
-    
-    public FloatingLeg(
-            final Array nominals,
-            final Schedule schedule,
-            final InterestRateIndexType index,
-            final DayCounter paymentDayCounter,
-            final BusinessDayConvention paymentAdj,
-            final Array fixingDays,
-            final Array gearings,
-            final Array spreads,
-            final Array caps,
-            final Array floors,
-            final boolean isInArrears,
-            final boolean isZero) {
-        super(schedule.size() - 1);
-        this.typeIRT = new TypeTokenTree(this.getClass()).getElement(0);
-        this.typeFCT = new TypeTokenTree(this.getClass()).getElement(1);
-        this.typeCFC = new TypeTokenTree(this.getClass()).getElement(2);
-        constructor(
-                nominals,
-                schedule,
-                index,
-                paymentDayCounter, paymentAdj,
-                fixingDays, gearings, spreads, caps, floors,
-                isInArrears, isZero);
-    }
     
 	public FloatingLeg(
 	        final Class<?> typeIRT,

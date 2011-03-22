@@ -189,7 +189,7 @@ public class VanillaOption extends OneAssetOption {
     // public interfaces
     //
 
-    public interface Engine extends OneAssetOption.Engine {}
+    public interface Engine extends OneAssetOption.Engine { /* marking interface */ }
 
 
 

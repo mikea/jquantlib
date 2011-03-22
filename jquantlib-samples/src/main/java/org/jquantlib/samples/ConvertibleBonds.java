@@ -234,43 +234,43 @@ public class ConvertibleBonds implements Runnable {
         PricingEngine engine;
 
         method = "Jarrow-Rudd";
-        engine = new BinomialConvertibleEngine<JarrowRudd>(stochasticProcess, timeSteps) { /*anonymous*/ };
+        engine = new BinomialConvertibleEngine<JarrowRudd>(JarrowRudd.class, stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
         System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
         method = "Cox-Ross-Rubinstein";
-        engine = new BinomialConvertibleEngine<CoxRossRubinstein>(stochasticProcess, timeSteps) { /* anonymous */ };
+        engine = new BinomialConvertibleEngine<CoxRossRubinstein>(CoxRossRubinstein.class, stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
         System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
         method = "Additive equiprobabilities";
-        engine = new BinomialConvertibleEngine<AdditiveEQPBinomialTree>(stochasticProcess, timeSteps) { /* anonymous */ };
+        engine = new BinomialConvertibleEngine<AdditiveEQPBinomialTree>(AdditiveEQPBinomialTree.class, stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
         System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
         method = "Trigeorgis";
-        engine = new BinomialConvertibleEngine<Trigeorgis>(stochasticProcess, timeSteps) { /* anonymous */ };
+        engine = new BinomialConvertibleEngine<Trigeorgis>(Trigeorgis.class, stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
         System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
         method = "Tian";
-        engine = new BinomialConvertibleEngine<Tian>(stochasticProcess, timeSteps) { /* anonymous */ };
+        engine = new BinomialConvertibleEngine<Tian>(Tian.class, stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
         System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
         method = "Leisen-Reimer";
-        engine = new BinomialConvertibleEngine<LeisenReimer>(stochasticProcess, timeSteps) { /* anonymous */ };
+        engine = new BinomialConvertibleEngine<LeisenReimer>(LeisenReimer.class, stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
         System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );
 
         method = "Joshi";
-        engine = new BinomialConvertibleEngine<Joshi4>(stochasticProcess, timeSteps) { /* anonymous */ };
+        engine = new BinomialConvertibleEngine<Joshi4>(Joshi4.class, stochasticProcess, timeSteps);
         europeanBond.setPricingEngine(engine);
         americanBond.setPricingEngine(engine);
         System.out.printf(fmt, method, europeanBond.NPV(), americanBond.NPV() );

@@ -48,7 +48,6 @@ import org.jquantlib.cashflow.Leg;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.indexes.BMAIndex;
 import org.jquantlib.indexes.IborIndex;
-import org.jquantlib.instruments.VanillaSwap.Type;
 import org.jquantlib.lang.annotation.Real;
 import org.jquantlib.lang.exceptions.LibraryException;
 import org.jquantlib.time.BusinessDayConvention;
@@ -90,7 +89,7 @@ public class BMASwap extends Swap {
         this.liborFraction = liborFraction;
         this.liborSpread = liborSpread;
 
-        BusinessDayConvention convention = liborSchedule.businessDayConvention();
+        final BusinessDayConvention convention = liborSchedule.businessDayConvention();
         
         final Leg iborLeg = new IborLeg(liborSchedule, liborIndex)
 							        .withNotionals(nominal)
@@ -171,8 +170,10 @@ public class BMASwap extends Swap {
       
 	public /*@Real*/ double  fairLiborFraction() /* @ReadOnly */ {
 	
-		@Real double spreadNPV = (liborSpread/basisPoint)*liborLegBPS();
-		@Real double pureLiborNPV = liborLegNPV() - spreadNPV;
+		@Real
+		final double spreadNPV = (liborSpread/basisPoint)*liborLegBPS();
+		@Real
+		final double pureLiborNPV = liborLegNPV() - spreadNPV;
 		
 		return -liborFraction * (bmaLegNPV() + spreadNPV) / pureLiborNPV;
 	}   
@@ -197,7 +198,7 @@ public class BMASwap extends Swap {
     // inner public enums
     //
 
-    public enum Type {
+    public static enum Type {
         Receiver (-1),
         Payer (1);
 

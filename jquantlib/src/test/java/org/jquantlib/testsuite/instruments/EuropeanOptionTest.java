@@ -57,10 +57,10 @@ import org.jquantlib.instruments.CashOrNothingPayoff;
 import org.jquantlib.instruments.EuropeanOption;
 import org.jquantlib.instruments.GapPayoff;
 import org.jquantlib.instruments.Option;
+import org.jquantlib.instruments.Option.Type;
 import org.jquantlib.instruments.PlainVanillaPayoff;
 import org.jquantlib.instruments.StrikedTypePayoff;
 import org.jquantlib.instruments.VanillaOption;
-import org.jquantlib.instruments.Option.Type;
 import org.jquantlib.lang.annotation.NonNegative;
 import org.jquantlib.methods.lattices.AdditiveEQPBinomialTree;
 import org.jquantlib.methods.lattices.CoxRossRubinstein;
@@ -191,25 +191,25 @@ public class EuropeanOptionTest {
                 engine = new AnalyticEuropeanEngine(stochProcess);
                 break;
             case JR:
-                engine = new BinomialVanillaEngine<JarrowRudd>(stochProcess, binomialSteps) {};
+                engine = new BinomialVanillaEngine<JarrowRudd>(JarrowRudd.class, stochProcess, binomialSteps);
                 break;
             case CRR:
-                engine = new BinomialVanillaEngine<CoxRossRubinstein>(stochProcess, binomialSteps) {};
+                engine = new BinomialVanillaEngine<CoxRossRubinstein>(CoxRossRubinstein.class, stochProcess, binomialSteps);
                 break;
             case EQP:
-                engine = new BinomialVanillaEngine<AdditiveEQPBinomialTree>(stochProcess, binomialSteps) {};
+                engine = new BinomialVanillaEngine<AdditiveEQPBinomialTree>(AdditiveEQPBinomialTree.class, stochProcess, binomialSteps);
                 break;
             case TGEO:
-                engine = new BinomialVanillaEngine<Trigeorgis>(stochProcess, binomialSteps) {};
+                engine = new BinomialVanillaEngine<Trigeorgis>(Trigeorgis.class, stochProcess, binomialSteps);
                 break;
             case TIAN:
-                engine = new BinomialVanillaEngine<Tian>(stochProcess, binomialSteps) {};
+                engine = new BinomialVanillaEngine<Tian>(Tian.class, stochProcess, binomialSteps);
                 break;
             case LR:
-                engine = new BinomialVanillaEngine<LeisenReimer>(stochProcess, binomialSteps) {};
+                engine = new BinomialVanillaEngine<LeisenReimer>(LeisenReimer.class, stochProcess, binomialSteps);
                 break;
             case JOSHI:
-                engine = new BinomialVanillaEngine<Joshi4>(stochProcess, binomialSteps) {};
+                engine = new BinomialVanillaEngine<Joshi4>(Joshi4.class, stochProcess, binomialSteps);
                 break;
             case FiniteDifferences:
                 engine = new FDEuropeanEngine(stochProcess, binomialSteps,samples);

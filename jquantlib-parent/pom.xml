@@ -94,6 +94,7 @@
         <props.compile.jdk.target>1.6</props.compile.jdk.target>
         <props.compile.meminitial>128m</props.compile.meminitial>
         <props.compile.maxmem>512m</props.compile.maxmem>
+        <props.compile.encoding>UTF8</props.compile.encoding>
         <props.compile.fork>false</props.compile.fork> <!-- Be cautious: may fork a different JVM -->
 
 		<slf4j.version>1.4.0</slf4j.version>
@@ -513,7 +514,7 @@
                 <configuration>
                     <source>${props.compile.jdk.source}</source>
                     <target>${props.compile.jdk.target}</target>
-                    <encoding>UTF8</encoding>
+					<encoding>${props.compile.jdk.encoding}</encoding>
                     <meminitial>${props.compile.meminitial}</meminitial>
                     <maxmem>${props.compile.maxmem}</maxmem>
                     <fork>${props.compile.fork}</fork>

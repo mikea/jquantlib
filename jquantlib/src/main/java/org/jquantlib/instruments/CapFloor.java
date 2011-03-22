@@ -81,9 +81,8 @@ public class CapFloor extends Instrument {
             final Handle<YieldTermStructure> termStructure,
             final PricingEngine engine){
 
-        if (System.getProperty("EXPERIMENTAL") == null)
-            throw new UnsupportedOperationException("Work in progress");
-
+    	QL.validateExperimentalMode();
+    	
         this.type_ = type;
         this.floatingLeg_ = floatingLeg;
         this.capRates_ = capRates;

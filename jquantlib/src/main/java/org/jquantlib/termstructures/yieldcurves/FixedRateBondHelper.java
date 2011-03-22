@@ -24,7 +24,6 @@ package org.jquantlib.termstructures.yieldcurves;
 
 import org.jquantlib.QL;
 import org.jquantlib.Settings;
-import org.jquantlib.cashflow.FixedRateCoupon;
 import org.jquantlib.daycounters.DayCounter;
 import org.jquantlib.instruments.bonds.FixedRateBond;
 import org.jquantlib.pricingengines.PricingEngine;
@@ -32,7 +31,6 @@ import org.jquantlib.pricingengines.bond.DiscountingBondEngine;
 import org.jquantlib.quotes.Handle;
 import org.jquantlib.quotes.Quote;
 import org.jquantlib.quotes.RelinkableHandle;
-import org.jquantlib.termstructures.BootstrapHelper;
 import org.jquantlib.termstructures.RateHelper;
 import org.jquantlib.termstructures.YieldTermStructure;
 import org.jquantlib.time.BusinessDayConvention;
@@ -42,13 +40,15 @@ import org.jquantlib.util.PolymorphicVisitor;
 import org.jquantlib.util.Visitor;
 
 /**
- * fixed-coupon bond helper
- * 
- * {@literal WARNING:This class assumes that the reference date does not change
- * between calls of setTermStructure()}
+ * Fixed-coupon bond helper
+ * <p>
+ * WARNING: This class assumes that the reference date does not change
+ * between calls of setTermStructure()
  * 
  * @category instruments
  * 
+ * @author Srinivas Hasti
+ * @author Neel Sheyal
  */
 public class FixedRateBondHelper extends RateHelper {
 
@@ -138,37 +138,36 @@ public class FixedRateBondHelper extends RateHelper {
 			
 	}
 	
+	
 	//
 	// public methods
 	//
-	/*
-     *  * @see org.jquantlib.termstructures.BootstrapHelper.setTermStructure(TS ts)
-     * 
-     */
+	
+	public FixedRateBond  bond() {
+    	return this.bond;
+    }
+
+	
+	//
+	// overrides BootstrapHelper
+	//
+	
 	@Override
-	public void  setTermStructure(final YieldTermStructure t) {
+	public void setTermStructure(final YieldTermStructure t) {
 		// do not set the relinkable handle as an observer -
         // force recalculation when needed
 		this.termStructureHandle.linkTo(t,false);
 		super.setTermStructure(t);
     }
     
-    
-	public FixedRateBond  bond() {
-    	return this.bond;
-    }
-
-	/**
-	 * * @see org.jquantlib.termstructures.BootstrapHelper.impliedQuote()
-	 * 
-	 */
 	@Override
 	public/* Real */double impliedQuote() {
 		QL.require(this.termStructure != null, "term structure not set");
 		this.bond.recalculate();
 		return this.bond.cleanPrice();
 	}
-    
+
+	
 	//
 	// implements PolymorphicVisitable
 	//

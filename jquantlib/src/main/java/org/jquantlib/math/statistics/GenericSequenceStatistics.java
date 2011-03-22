@@ -44,8 +44,6 @@ import org.jquantlib.QL;
 import org.jquantlib.lang.annotation.QualityAssurance;
 import org.jquantlib.lang.annotation.QualityAssurance.Quality;
 import org.jquantlib.lang.annotation.QualityAssurance.Version;
-import org.jquantlib.lang.reflect.TypeToken;
-import org.jquantlib.lang.reflect.TypeTokenTree;
 import org.jquantlib.math.matrixutilities.Array;
 import org.jquantlib.math.matrixutilities.Matrix;
 
@@ -242,79 +240,79 @@ public class GenericSequenceStatistics {
 	
 	//-- single argument list
 
-	public Array gaussianPercentile(/*@Real*/ double y) /*@ReadOnly*/ {
+	public Array gaussianPercentile(/*@Real*/ final double y) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].gaussianPercentile(y);
 		return new Array(results);
 	}
 
-	public Array gaussianPotentialUpside(/*@Real*/ double percentile) /*@ReadOnly*/ {
+	public Array gaussianPotentialUpside(/*@Real*/ final double percentile) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].gaussianPotentialUpside(percentile);
 		return new Array(results);
 	}
 
-	public Array gaussianValueAtRisk(/*@Real*/ double percentile) /*@ReadOnly*/ {
+	public Array gaussianValueAtRisk(/*@Real*/ final double percentile) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].gaussianValueAtRisk(percentile);
 		return new Array(results);
 	}
 
-	public Array gaussianExpectedShortfall(/*@Real*/ double percentile) /*@ReadOnly*/ {
+	public Array gaussianExpectedShortfall(/*@Real*/ final double percentile) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].gaussianExpectedShortfall(percentile);
 		return new Array(results);
 	}
 
-	public Array gaussianShortfall(/*@Real*/ double target) /*@ReadOnly*/ {
+	public Array gaussianShortfall(/*@Real*/ final double target) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].gaussianShortfall(target);
 		return new Array(results);
 	}
 
-	public Array gaussianAverageShortfall(/*@Real*/ double target) /*@ReadOnly*/ {
+	public Array gaussianAverageShortfall(/*@Real*/ final double target) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].gaussianAverageShortfall(target);
 		return new Array(results);
 	}
 
-	public Array percentile(/*@Real*/ double y) /*@ReadOnly*/ {
+	public Array percentile(/*@Real*/ final double y) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].percentile(y);
 		return new Array(results);
 	}
 
-	public Array potentialUpside(/*@Real*/ double percentile) /*@ReadOnly*/ {
+	public Array potentialUpside(/*@Real*/ final double percentile) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].potentialUpside(percentile);
 		return new Array(results);
 	}
 
-	public Array valueAtRisk(/*@Real*/ double percentile) /*@ReadOnly*/ {
+	public Array valueAtRisk(/*@Real*/ final double percentile) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].valueAtRisk(percentile);
 		return new Array(results);
 	}
 
-	public Array expectedShortfall(/*@Real*/ double percentile) /*@ReadOnly*/ {
+	public Array expectedShortfall(/*@Real*/ final double percentile) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].expectedShortfall(percentile);
 		return new Array(results);
 	}
 
-	public Array regret(/*@Real*/ double target) /*@ReadOnly*/ {
+	public Array regret(/*@Real*/ final double target) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].regret(target);
 		return new Array(results);
 	}
 
-	public Array shortfall(/*@Real*/ double target) /*@ReadOnly*/ {
+	public Array shortfall(/*@Real*/ final double target) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].shortfall(target);
 		return new Array(results);
 	}
 
-	public Array averageShortfall(/*@Real*/ double target) /*@ReadOnly*/ {
+	public Array averageShortfall(/*@Real*/ final double target) /*@ReadOnly*/ {
 		for (/*@Size*/ int i=0; i<dimension_; i++)
 			results[i] = stats[i].averageShortfall(target);
 		return new Array(results);
@@ -365,7 +363,7 @@ public class GenericSequenceStatistics {
 			reset(/* @Size */dimension);
 		}
 		QL.require(datum.length == dimension_, SAMPLE_SIZE_MISMATCH);
-		Array array = new Array(datum);
+		final Array array = new Array(datum);
 		quadraticSum.addAssign(array.outerProduct(array).mulAssign(weight));
 		for (/* @Size */int i = 0; i < dimension_; i++) {
 			stats[i].add(datum[i], weight);

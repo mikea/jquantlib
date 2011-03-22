@@ -223,7 +223,7 @@ public class Swap extends Instrument {
      *
      * @author Richard Gomes
      */
-    public interface Arguments extends Instrument.Arguments { }
+    public interface Arguments extends Instrument.Arguments { /* marking interface */ }
 
 
     /**
@@ -231,7 +231,7 @@ public class Swap extends Instrument {
      *
      * @author Richard Gomes
      */
-    public interface Results extends Instrument.Results { }
+    public interface Results extends Instrument.Results { /* marking interface */ }
 
 
     //

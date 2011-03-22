@@ -75,7 +75,7 @@ public class ConstantEstimator implements VolatilityCompositor {
 	    //    thru its elements, which leaded us to adopt Iterators instead.
 	    //
 
-		final TimeSeries<Double> retval = new TimeSeries<Double>() { /* anonymous */};
+		final TimeSeries<Double> retval = new TimeSeries<Double>(Double.class);
 
 		final Iterator<Date> it1 = quotes.navigableKeySet().iterator();
 		double sumu2 = 0.0, sumu = 0.0;

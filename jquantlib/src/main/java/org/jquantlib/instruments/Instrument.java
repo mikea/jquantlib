@@ -238,14 +238,14 @@ public abstract class Instrument extends LazyObject {
      *
      * @author Richard Gomes
      */
-    public interface Arguments extends PricingEngine.Arguments { }
+    public interface Arguments extends PricingEngine.Arguments { /* marking interface */ }
 
     /**
      * Results from instrument calculation
      *
      * @author Richard Gomes
      */
-    public interface Results extends PricingEngine.Results { }
+    public interface Results extends PricingEngine.Results { /* marking interface */ }
 
 
 

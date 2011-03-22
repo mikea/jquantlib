@@ -66,7 +66,7 @@ public class EstimatorsTest {
 
         final double[] values = new double[] { 1.2, 2.3, 0.3, 2.0, 2.5 };
 
-        this.ts = new TimeSeries<Double>() { /* anonymous */ };
+        this.ts = new TimeSeries<Double>(Double.class);
         for (int i=0; i<dates.length; i++) {
             ts.put(dates[i], values[i]);
         }

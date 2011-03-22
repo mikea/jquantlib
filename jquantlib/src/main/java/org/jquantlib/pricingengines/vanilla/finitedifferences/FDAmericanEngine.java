@@ -58,20 +58,22 @@ public class FDAmericanEngine
         extends FDEngineAdapter<FDAmericanCondition<FDStepConditionEngine>, OneAssetOption.Engine>
         implements OneAssetOption.Engine {
 
+	
+	
     //
     // public constructors
     //
 
     public FDAmericanEngine(
             final GeneralizedBlackScholesProcess process) {
-        super(process, 100,100, false);
+        super(FDAmericanCondition.class, OneAssetOption.Engine.class, process, 100,100, false);
         super.impl = new Impl(this);
     }
 
     public FDAmericanEngine(
             final GeneralizedBlackScholesProcess process,
             final int timeSteps) {
-        super(process, timeSteps, 100, false);
+        super(FDAmericanCondition.class, OneAssetOption.Engine.class, process, timeSteps, 100, false);
         super.impl = new Impl(this);
     }
 
@@ -79,7 +81,7 @@ public class FDAmericanEngine
             final GeneralizedBlackScholesProcess process,
             final int timeSteps,
             final int gridPoints) {
-        super(process, timeSteps, gridPoints, false);
+        super(FDAmericanCondition.class, OneAssetOption.Engine.class, process, timeSteps, gridPoints, false);
         super.impl = new Impl(this);
     }
 
@@ -88,7 +90,7 @@ public class FDAmericanEngine
             final int timeSteps,
             final int gridPoints,
             final boolean timeDependent) {
-        super(process, timeSteps, gridPoints, timeDependent);
+        super(FDAmericanCondition.class, OneAssetOption.Engine.class, process, timeSteps, gridPoints, timeDependent);
         super.impl = new Impl(this);
     }
 

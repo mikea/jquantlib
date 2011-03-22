@@ -223,7 +223,7 @@ public class TermStructuresTest {
 
         //FIXME:: Fix RelinkableHandle. The initialization of "h" should be:
         //
-        //        final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>() { /* anonymous */ };
+        //        final RelinkableHandle<YieldTermStructure> h = new RelinkableHandle<YieldTermStructure>(YieldTermStructure.class);
         //
         // see: http://bugs.jquantlib.org/view.php?id=465
         //

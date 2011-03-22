@@ -69,7 +69,9 @@ public abstract class StochasticProcess1D extends StochasticProcess {
     // protected constructors
     //
 
-    protected StochasticProcess1D() { }
+    protected StochasticProcess1D() {
+    	// only extended classes can instantiate
+    }
 
     /**
      * @param discretization is an Object that <b>must</b> implement {@link Discretization} <b>and</b> {@link Discretization1D}.

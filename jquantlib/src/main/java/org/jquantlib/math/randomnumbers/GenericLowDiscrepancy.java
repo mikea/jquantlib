@@ -43,7 +43,7 @@ import java.lang.reflect.Constructor;
 
 import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
-import org.jquantlib.lang.reflect.TypeToken;
+
 
 /**
  *
@@ -76,19 +76,31 @@ public class GenericLowDiscrepancy<RSG extends UniformRandomSequenceGenerator, I
     // This can change as soon as we find what's the trick with it.
     //
     static final private GenericLowDiscrepancy icInstance = null;
+    
+    
+    
+    
+    private Class<? extends UniformRandomSequenceGenerator>	classRSG;
+    private Class<? extends InverseCumulative>				classIC;
+    
 
 
     protected InverseCumulativeRsg<RSG, IC> makeSequenceGenerator(
-            final /*@NonNegative*/ int dimension, final /*@NonNegative*/ long seed) {
+    	    final Class<? extends UniformRandomSequenceGenerator>	classRSG,
+    	    final Class<? extends InverseCumulative>				classIC,
+            final /*@NonNegative*/ int dimension, 
+            final /*@NonNegative*/ long seed) {
 
         QL.validateExperimentalMode();
 
+        this.classRSG = classRSG;
+        this.classIC = classIC;
+        
         // instantiate a RandomSequenceGenerator given its generic type (first generic parameter)
         final RSG rsg;
         try {
             // obtain RSG Class from first generic parameter
-            final Class<RSG> rsgClass = (Class<RSG>) TypeToken.getClazz(GenericLowDiscrepancy.class, 0);
-            final Constructor<RSG> c = rsgClass.getConstructor(int.class, long.class);
+            final Constructor<RSG> c = (Constructor<RSG>) classRSG.getConstructor(int.class, long.class);
             rsg = c.newInstance(dimension, seed);
         } catch (final Exception e) {
             throw new LibraryException(e); // QA:[RG]::verified
@@ -98,13 +110,12 @@ public class GenericLowDiscrepancy<RSG extends UniformRandomSequenceGenerator, I
         final IC ic;
         try {
             // obtain IC Class from second generic parameter
-            final Class<IC> icClass = (Class<IC>) TypeToken.getClazz(GenericPseudoRandom.class, 1);
             final Constructor<IC> c;
             if (icInstance!=null) {
-                c = icClass.getConstructor(rsg.getClass(), icClass.getClass());
+                c = (Constructor<IC>) classIC.getConstructor(rsg.getClass(), classIC.getClass());
                 ic = c.newInstance(rsg, icInstance);
             } else {
-                c = icClass.getConstructor(rsg.getClass());
+                c = (Constructor<IC>) classIC.getConstructor(rsg.getClass());
                 ic = c.newInstance(rsg);
             }
         } catch (final Exception e) {
