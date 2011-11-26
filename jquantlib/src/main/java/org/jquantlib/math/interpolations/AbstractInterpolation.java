@@ -305,7 +305,7 @@ public abstract class AbstractInterpolation implements Interpolation {
         public void update() {
             for (int i=0; i<logY_.size(); i++) {
                 QL.require(vy.get(i)>0.0, "invalid value"); // TODO: message
-                logY_.set(i, Math.log(vx.get(i)));
+                logY_.set(i, Math.log(vy.get(i)));
             }
             interpolation_.update();
         }
