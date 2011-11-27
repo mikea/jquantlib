@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
+<!-- 
+<![CDATA[
     Copyright (C) 2008 Richard Gomes
     
     This source code is release under the BSD License.
@@ -19,6 +20,7 @@
     FOR A PARTICULAR PURPOSE.  See the license for more details.
      
     JQuantLib is based on QuantLib. http://quantlib.org/
+]]>
 -->
 
 <project
@@ -59,6 +61,12 @@
     <dependencies>
         <!-- 'compile' scope dependencies -->
         <dependency>
+            <groupId>net.jcip</groupId>
+            <artifactId>jcip-annotations</artifactId>
+            <version>${jcip-annotations.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
@@ -78,5 +86,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    
+
 </project>

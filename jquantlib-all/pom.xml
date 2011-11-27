@@ -49,10 +49,6 @@
 		of VaR, portfolio valuation, etc.
 	</description>
 
-    <prerequisites>
-        <maven>2.2.1</maven>
-    </prerequisites>
-
     <distributionManagement>
         <!-- NOTES:
           **
@@ -78,13 +74,12 @@
     <modules>
         <module>../jquantlib-parent</module>
         <module>../jquantlib</module>
-        <!-- module>../jquantlib-contrib</module -->
         <module>../jquantlib-helpers</module>
         <module>../jquantlib-samples</module>
-
-        <!-- Only JQuantLib developers are interested on this module -->
-        <!-- module>../jquantlib-experimental</module -->
-        
+        <!--
+        <module>../jquantlib-contrib</module>
+        <module>../jquantlib-experimental</module>
+        -->
     </modules>
 
 </project>
