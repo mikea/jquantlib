@@ -76,9 +76,9 @@
         <module>../jquantlib</module>
         <module>../jquantlib-helpers</module>
         <module>../jquantlib-samples</module>
-        <!--
         <module>../jquantlib-contrib</module>
         <module>../jquantlib-experimental</module>
+        <!--
         -->
     </modules>
 

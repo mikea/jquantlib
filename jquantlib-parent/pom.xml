@@ -312,7 +312,7 @@
       <id>jquantlib</id>
       <name>jquantlib</name>
       <!-- url>http://artifactory.jquantlib.org:8080/artifactory/libs-release</url -->
-      <url>https://sourceforge.net/projects/jquant/files/repository</url>
+      <url>https://sourceforge.net/projects/jquant/files/m2-repo</url>
       <layout>default</layout>
     </repository>
   </repositories>
