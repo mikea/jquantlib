@@ -43,6 +43,7 @@ package org.jquantlib.math.randomnumbers;
 
 import java.lang.reflect.Constructor;
 
+import org.jquantlib.QL;
 import org.jquantlib.lang.exceptions.LibraryException;
 
 /**
@@ -84,6 +85,7 @@ public abstract class GenericPseudoRandom <RNG extends RandomNumberGenerator, IC
     
 
     protected GenericPseudoRandom(final Class<? extends UniformRandomSequenceGenerator> classRNG, final Class<? extends InverseCumulative> classIC) {
+    	QL.validateExperimentalMode();
     	this.classRNG = classRNG;
     	this.classIC = classIC;
     }
@@ -93,9 +95,6 @@ public abstract class GenericPseudoRandom <RNG extends RandomNumberGenerator, IC
     protected InverseCumulativeRsg<RandomSequenceGenerator<RNG>, IC> makeSequenceGenerator(
             final /*@NonNegative*/ int dimension, 
             final /*@NonNegative*/ long seed) {
-
-        if (System.getProperty("EXPERIMENTAL")==null)
-            throw new UnsupportedOperationException("Work in progress");
 
         // instantiate a RandomNumberGenerator given its generic type (first generic parameter)
         final RNG rng;

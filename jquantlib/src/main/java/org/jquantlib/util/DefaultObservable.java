@@ -70,7 +70,7 @@ public class DefaultObservable implements Observable {
     //
 
     public DefaultObservable(final Observable observable) {
-        QL.require(observable != null, OBSERVABLE_IS_NULL);
+        QL.require(observable != null, DefaultObservable.OBSERVABLE_IS_NULL);
         this.observers = new CopyOnWriteArrayList<Observer>();
         this.observable = observable;
     }
@@ -79,47 +79,54 @@ public class DefaultObservable implements Observable {
     // public methods
     //
 
+    @Override
     public void addObserver(final Observer observer) {
         observers.add(observer);
     }
 
+    @Override
     public int countObservers() {
         return observers.size();
     }
 
+    @Override
     public List<Observer> getObservers() {
         return Collections.unmodifiableList(this.observers);
     }
 
+    @Override
     public void deleteObserver(final Observer observer) {
         observers.remove(observer);
     }
 
+    @Override
     public void deleteObservers() {
         observers.clear();
     }
 
+    @Override
     public void notifyObservers() {
         notifyObservers(null);
     }
 
+    @Override
     public void notifyObservers(final Object arg) {
-        boolean successful = true;
+        Exception exception = null;
         for (final Observer observer : observers) {
             try {
                 wrappedNotify(observer, observable, arg);
             } catch (final Exception e) {
-                // quite a dilemma. If we don't catch the exception,
+                // Quite a dilemma. If we don't catch the exception,
                 // other observers will not receive the notification
                 // and might be left in an incorrect state. If we do
                 // catch it and continue the loop (as we do here) we
                 // lose the exception. The least evil might be to try
                 // and notify all observers, while raising an
                 // exception if something bad happened.
-                successful = false;
+                exception = e;
             }
         }
-        QL.ensure(successful, CANNOT_NOTIFY_OBSERVERS);
+        if (exception!=null) QL.error(DefaultObservable.CANNOT_NOTIFY_OBSERVERS, exception);
     }
 
     //
