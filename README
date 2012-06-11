@@ -1,0 +1,56 @@
+JQuantLib is a free, open-source, comprehensive framework for quantitative finance, written in 100% Java. It provides "quants" and Java application developers several mathematical and statistical tools needed for the valuation of shares, options, futures, swaps, and other financial instruments, also providing tools related to risk management and money management.
+
+JQuantLib is based on QuantLib, which is written in C++, aiming to be a complete rewrite of QuantLib, offering features Java developers expect to find. JQuantLib aims to be fast, correct, strongly typed, well-documented, and user-friendly.
+
+JQuantLib does its best efforts to mimic as close as possible the API exposed by QuantLib, offering a smooth transition path for developers and organizations willing to employ financial applications written in Java whilst keeping commitment to high performance and low latency. 
+
+
+More info: http://www.jquantlib.org
+
+
+
+Quick guide for the impatient
+-----------------------------
+
+  git clone http://github.com/frgomes/jquantlib
+  cd jquantlib/jquantlib-all
+  mvn clean test
+
+  More details at: http://www.jquantlib.org/index.php/JQuantLib_Users_Guide
+
+
+
+Modules
+-------
+
+The modules below are used for the Maven build:
+
+  jquantlib-all          -- build aggregator
+  jquantlib-parent       -- build parent module
+
+
+The modules below keep resemblance to QuantLib/C++ http://quantlib.org
+
+  jquantlib              -- main module
+  jquantlib-helpers      -- helpers
+  jquantlib-samples      -- samples
+  jquantlib-experimental -- experimental code
+
+
+The modules below do not aim to keep resemblance to QuantLib.
+
+  jquantlib-ooplugin     -- OpenOffice Calc plugin
+  jquantlib-contrib      -- 3rd party contributions
+
+
+The modules below are exploratory or abandoned
+
+  jquantlib-annotations
+  jquantlib-osgi
+  jquantlib-osgi-module-client
+  jquantlib-osgi-std-module-time
+  jquantlib-xmlrpc
+  jquantlib-xmlrpc-client
+
+
+-- Richard Gomes
