@@ -177,6 +177,8 @@ public class UnitedKingdom extends Calendar {
                     // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
                     // June 4rd, 2002 only (special Spring Bank Holiday)
                     || ((d == 3 || d == 4) && m == June && y == 2002)
+                    // June, 5th, 2012 only (Queens Diamond Jubilee)
+                    || (d == 5 && m == June && y == 2012)
                     // DECEMBER 31st, 1999 only
                     || (d == 31 && m == December && y == 1999)) {
                 return false;
