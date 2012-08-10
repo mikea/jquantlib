@@ -165,22 +165,24 @@ public class UnitedKingdom extends Calendar {
                     // Easter MONDAY
                     || (dd == em)
                     // first MONDAY of May (Early May Bank Holiday)
-                    || (d <= 7 && w == Monday && m == May)
+                    || (d <= 7 && w == Monday && m == Month.May)
                     // last MONDAY of MAY (Spring Bank Holiday)
-                    || (d >= 25 && w == Monday && m == May && y != 2002)
+                    || (d >= 25 && w == Monday && m == Month.May && y != 2002)
                     // last MONDAY of August (Summer Bank Holiday)
-                    || (d >= 25 && w == Monday && m == August)
+                    || (d >= 25 && w == Monday && m == Month.August)
                     // Christmas (possibly moved to MONDAY or Tuesday)
-                    || ((d == 25 || (d == 27 && (w == Monday || w == Tuesday))) && m == December)
+                    || ((d == 25 || (d == 27 && (w == Monday || w == Tuesday))) && m == Month.December)
                     // Boxing Day (possibly moved to MONDAY or TUESDAY)
-                    || ((d == 26 || (d == 28 && (w == Monday || w == Tuesday))) && m == December)
+                    || ((d == 26 || (d == 28 && (w == Monday || w == Tuesday))) && m == Month.December)
                     // June 3rd, 2002 only (Golden Jubilee Bank Holiday)
                     // June 4rd, 2002 only (special Spring Bank Holiday)
-                    || ((d == 3 || d == 4) && m == June && y == 2002)
+                    || ((d == 3 || d == 4) && m == Month.June && y == 2002)
                     // June, 5th, 2012 only (Queens Diamond Jubilee)
-                    || (d == 5 && m == June && y == 2012)
+                    || (d == 5 && m == Month.June && y == 2012)
+                    // April, 29th, 2011 only (Royal Wedding)
+                    || (d == 29 && m == Month.April && y == 2011)
                     // DECEMBER 31st, 1999 only
-                    || (d == 31 && m == December && y == 1999)) {
+                    || (d == 31 && m == Month.December && y == 1999)) {
                 return false;
             }
             return true;
@@ -208,22 +210,24 @@ public class UnitedKingdom extends Calendar {
                     // Easter MONDAY
                     || (dd == em)
                     // first MONDAY of MAY (Early MAY Bank Holiday)
-                    || (d <= 7 && w == Monday && m == May)
+                    || (d <= 7 && w == Monday && m == Month.May)
                     // last MONDAY of MAY (Spring Bank Holiday)
-                    || (d >= 25 && w == Monday && m == May && y != 2002)
+                    || (d >= 25 && w == Monday && m == Month.May && y != 2002)
                     // last MONDAY of AUGUST (Summer Bank Holiday)
-                    || (d >= 25 && w == Monday && m == August)
+                    || (d >= 25 && w == Monday && m == Month.August)
                     // Christmas (possibly moved to MONDAY or TUESDAY)
-                    || ((d == 25 || (d == 27 && (w == Monday || w == Tuesday))) && m == December)
+                    || ((d == 25 || (d == 27 && (w == Monday || w == Tuesday))) && m == Month.December)
                     // Boxing Day (possibly moved to MONDAY or TUESDAY)
-                    || ((d == 26 || (d == 28 && (w == Monday || w == Tuesday))) && m == December)
+                    || ((d == 26 || (d == 28 && (w == Monday || w == Tuesday))) && m == Month.December)
                     // JUNE 3rd, 2002 only (Golden Jubilee Bank Holiday)
                     // JUNE 4rd, 2002 only (special Spring Bank Holiday)
-                    || ((d == 3 || d == 4) && m == June && y == 2002)
+                    || ((d == 3 || d == 4) && m == Month.June && y == 2002)
                     // June, 5th, 2012 only (Queens Diamond Jubilee)
-                    || (d == 5 && m == June && y == 2012)
+                    || (d == 5 && m == Month.June && y == 2012)
+                    // April, 29th, 2011 only (Royal Wedding)
+                    || (d == 29 && m == Month.April && y == 2011)
                     // DECEMBER 31st, 1999 only
-                    || (d == 31 && m == December && y == 1999)) {
+                    || (d == 31 && m == Month.December && y == 1999)) {
                 return false;
             }
             return true;
@@ -251,22 +255,24 @@ public class UnitedKingdom extends Calendar {
                     // Easter MONDAY
                     || (dd == em)
                     // first MONDAY of MAY (Early MAY Bank Holiday)
-                    || (d <= 7 && w == Monday && m == May)
+                    || (d <= 7 && w == Monday && m == Month.May)
                     // last MONDAY of MAY (Spring Bank Holiday)
-                    || (d >= 25 && w == Monday && m == May && y != 2002)
+                    || (d >= 25 && w == Monday && m == Month.May && y != 2002)
                     // last MONDAY of AUGUST (Summer Bank Holiday)
-                    || (d >= 25 && w == Monday && m == August)
+                    || (d >= 25 && w == Monday && m == Month.August)
                     // Christmas (possibly moved to MONDAY or TUESDAY)
-                    || ((d == 25 || (d == 27 && (w == Monday || w == Tuesday))) && m == December)
+                    || ((d == 25 || (d == 27 && (w == Monday || w == Tuesday))) && m == Month.December)
                     // Boxing Day (possibly moved to MONDAY or TUESDAY)
-                    || ((d == 26 || (d == 28 && (w == Monday || w == Tuesday))) && m == December)
+                    || ((d == 26 || (d == 28 && (w == Monday || w == Tuesday))) && m == Month.December)
                     // JUNE 3rd, 2002 only (Golden Jubilee Bank Holiday)
                     // JUNE 4rd, 2002 only (special Spring Bank Holiday)
-                    || ((d == 3 || d == 4) && m == June && y == 2002)
+                    || ((d == 3 || d == 4) && m == Month.June && y == 2002)
                     // June, 5th, 2012 only (Queens Diamond Jubilee)
-                    || (d == 5 && m == June && y == 2012)
+                    || (d == 5 && m == Month.June && y == 2012)
+                    // April, 29th, 2011 only (Royal Wedding)
+                    || (d == 29 && m == Month.April && y == 2011)
                     // DECEMBER 31st, 1999 only
-                    || (d == 31 && m == December && y == 1999)) {
+                    || (d == 31 && m == Month.December && y == 1999)) {
                 return false;
             }
             return true;
